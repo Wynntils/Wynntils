@@ -6,8 +6,8 @@ package com.wynntils.features.map;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -28,7 +28,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.render.CustomBeaconRenderer;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -44,7 +43,7 @@ import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
@@ -55,6 +54,9 @@ import org.joml.Vector4f;
 public class WorldMarkersFeature extends Feature {
     private static final float MINIMUM_RENDER_VISIBILITY = 0.1f;
     private static final int RAINBOW_CHANGE_RATE = 10;
+
+    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
     private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null, "");
 
@@ -120,8 +122,6 @@ public class WorldMarkersFeature extends Feature {
         if (renderedMapLocations.isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
-        MultiBufferSource.BufferSource bufferSource =
-                MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 
         // render beacon beams
         for (RenderedMapLocation mapLocationPair : renderedMapLocations) {
@@ -155,31 +155,30 @@ public class WorldMarkersFeature extends Feature {
                     ? waypointBeamColor.get()
                     : resolvedMarkerOptions.beaconColor();
 
-            float[] colorArray;
+            int colorInt;
             if (color == CommonColors.RAINBOW) {
-                colorArray = currentRainbowColor.asFloatArray();
+                colorInt = currentRainbowColor.withAlpha((float) alpha).asInt();
             } else {
-                colorArray = color.asFloatArray();
+                colorInt = color.withAlpha((float) alpha).asInt();
             }
 
-            CustomBeaconRenderer.renderBeaconBeam(
+            BeaconRenderer.renderBeaconBeam(
                     poseStack,
-                    bufferSource,
+                    BUFFER_SOURCE,
                     BeaconRenderer.BEAM_LOCATION,
-                    event.getPartialTick(),
+                    event.getDeltaTracker().getGameTimeDeltaPartialTick(false),
                     1f,
                     McUtils.player().level().getGameTime(),
                     0,
-                    1024,
-                    colorArray,
-                    (float) alpha,
+                    BeaconRenderer.MAX_RENDER_Y,
+                    colorInt,
                     0.166f,
                     0.33f);
 
             poseStack.popPose();
         }
 
-        bufferSource.endLastBatch();
+        BUFFER_SOURCE.endBatch();
     }
 
     private void updateRenderedMapLocations(Matrix4f projectionMatrix, Camera camera) {
@@ -385,13 +384,11 @@ public class WorldMarkersFeature extends Feature {
                 poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
                 poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
-                MultiBufferSource.BufferSource bufferSource =
-                        MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
                 DUMMY_WAYPOINT
                         .getPointerPoi()
                         .renderAt(
                                 poseStack,
-                                bufferSource,
+                                BUFFER_SOURCE,
                                 pointerDisplayPositionX,
                                 pointerDisplayPositionY,
                                 false,
@@ -399,7 +396,7 @@ public class WorldMarkersFeature extends Feature {
                                 1,
                                 50,
                                 true);
-                bufferSource.endBatch();
+                BUFFER_SOURCE.endBatch();
                 poseStack.popPose();
             }
         }

@@ -10,12 +10,10 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.Dependency;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
@@ -34,34 +32,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public class GearInfoRegistry {
     private List<GearInfo> gearInfoRegistry = List.of();
     private Map<String, GearInfo> gearInfoLookup = Map.of();
     private Map<String, GearInfo> gearInfoLookupApiName = Map.of();
 
-    public GearInfoRegistry() {
-        WynntilsMod.registerEventListener(this);
-
-        loadData();
-    }
-
-    public void loadData() {
-        // We do not explicitly load the gear DB here,
-        // but when all of it's dependencies are loaded,
-        // the NetResultProcessedEvent will trigger the load.
-    }
-
-    @SubscribeEvent
-    public void onDataLoaded(NetResultProcessedEvent.ForUrlId event) {
-        UrlId urlId = event.getUrlId();
-        if (urlId == UrlId.DATA_STATIC_ITEM_SETS) {
-            if (!Models.Set.hasSetData()) return;
-
-            loadGearRegistry();
-            return;
-        }
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_GEAR, Dependency.simple(Models.Set, UrlId.DATA_STATIC_ITEM_SETS))
+                .handleJsonObject(this::handleGearInfo);
     }
 
     public GearInfo getFromDisplayName(String gearName) {
@@ -81,43 +60,40 @@ public class GearInfoRegistry {
         return gearInfoRegistry.stream();
     }
 
-    private void loadGearRegistry() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEAR_ADVANCED);
-        dl.handleJsonObject(json -> {
-            Gson gson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer())
-                    .create();
+    private void handleGearInfo(JsonObject json) {
+        Gson gson = new GsonBuilder()
+                .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer())
+                .create();
 
-            List<GearInfo> registry = new ArrayList<>();
+        List<GearInfo> gearRegistry = new ArrayList<>();
 
-            for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
-                JsonObject itemObject = entry.getValue().getAsJsonObject();
+        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
+            JsonObject itemObject = entry.getValue().getAsJsonObject();
 
-                // Inject the name into the object
-                itemObject.addProperty("name", entry.getKey());
+            // Inject the name into the object
+            itemObject.addProperty("name", entry.getKey());
 
-                // Deserialize the item
-                GearInfo gearInfo = gson.fromJson(itemObject, GearInfo.class);
+            // Deserialize the item
+            GearInfo gearInfo = gson.fromJson(itemObject, GearInfo.class);
 
-                // Add the item to the registry
-                registry.add(gearInfo);
+            // Add the item to the registry
+            gearRegistry.add(gearInfo);
+        }
+
+        // Create fast lookup maps
+        Map<String, GearInfo> lookupMap = new HashMap<>();
+        Map<String, GearInfo> altLookupMap = new HashMap<>();
+        for (GearInfo gearInfo : gearRegistry) {
+            lookupMap.put(gearInfo.name(), gearInfo);
+            if (gearInfo.metaInfo().apiName().isPresent()) {
+                altLookupMap.put(gearInfo.metaInfo().apiName().get(), gearInfo);
             }
+        }
 
-            // Create fast lookup maps
-            Map<String, GearInfo> lookupMap = new HashMap<>();
-            Map<String, GearInfo> altLookupMap = new HashMap<>();
-            for (GearInfo gearInfo : registry) {
-                lookupMap.put(gearInfo.name(), gearInfo);
-                if (gearInfo.metaInfo().apiName().isPresent()) {
-                    altLookupMap.put(gearInfo.metaInfo().apiName().get(), gearInfo);
-                }
-            }
-
-            // Make the result visisble to the world
-            gearInfoRegistry = registry;
-            gearInfoLookup = lookupMap;
-            gearInfoLookupApiName = altLookupMap;
-        });
+        // Make the result visisble to the world
+        gearInfoRegistry = gearRegistry;
+        gearInfoLookup = lookupMap;
+        gearInfoLookupApiName = altLookupMap;
     }
 
     private static final class GearInfoDeserializer extends AbstractItemInfoDeserializer<GearInfo> {
@@ -135,7 +111,7 @@ public class GearInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: item has no gear type");
             }
 
-            GearTier tier = GearTier.fromString(json.get("tier").getAsString());
+            GearTier tier = GearTier.fromString(json.get("rarity").getAsString());
             if (tier == null) {
                 throw new RuntimeException("Invalid Wynncraft data: item has no gear tier");
             }

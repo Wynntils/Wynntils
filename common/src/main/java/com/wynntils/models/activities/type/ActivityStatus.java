@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 
 public enum ActivityStatus {
     STARTED(
-            Pattern.compile(ChatFormatting.GREEN + "Currently in progress"),
+            Pattern.compile(ChatFormatting.GREEN + "Currently (in progress|tracking)"),
             Pattern.compile(ChatFormatting.GREEN + "Event has started")),
     AVAILABLE(
             Pattern.compile(ChatFormatting.YELLOW + "Can be .+"),

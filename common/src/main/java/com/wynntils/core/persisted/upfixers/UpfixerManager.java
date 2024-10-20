@@ -24,9 +24,11 @@ import com.wynntils.core.persisted.upfixers.config.NpcDialoguesOverlayConfigsMov
 import com.wynntils.core.persisted.upfixers.config.NpcDialoguesRenamedUpfixer;
 import com.wynntils.core.persisted.upfixers.config.OverlayConfigsIntegrationUpfixer;
 import com.wynntils.core.persisted.upfixers.config.OverlayRestructuringUpfixer;
+import com.wynntils.core.persisted.upfixers.config.ProfessionBadgesToLeaderboardBadgesUpfixer;
 import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
+import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WorldMarkersDistanceConfigRenameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WorldMarkersRenameUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
@@ -61,6 +63,8 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new TowerAuraVignetteNameUpfixer());
         registerConfigUpfixer(new TowerAuraVignetteAndOverlayMovedToCommonFeature());
         registerConfigUpfixer(new CombatXpGainToXpGainUpfixer());
+        registerConfigUpfixer(new ProfessionBadgesToLeaderboardBadgesUpfixer());
+        registerConfigUpfixer(new TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer());
         registerConfigUpfixer(new WorldMarkersRenameUpfixer());
         registerConfigUpfixer(new WorldMarkersDistanceConfigRenameUpfixer());
         registerConfigUpfixer(new BeaconBeamToWorldMarkersUpfixer());

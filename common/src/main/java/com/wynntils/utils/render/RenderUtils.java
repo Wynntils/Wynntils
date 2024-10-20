@@ -671,8 +671,7 @@ public final class RenderUtils {
     }
 
     public static void fillGradient(
-            Matrix4f matrix,
-            BufferBuilder builder,
+            PoseStack poseStack,
             float x1,
             float y1,
             float x2,
@@ -680,10 +679,55 @@ public final class RenderUtils {
             int blitOffset,
             CustomColor colorA,
             CustomColor colorB) {
-        builder.addVertex(matrix, x2, y1, blitOffset).setColor(colorA.r, colorA.g, colorA.b, colorA.a);
-        builder.addVertex(matrix, x1, y1, blitOffset).setColor(colorA.r, colorA.g, colorA.b, colorA.a);
-        builder.addVertex(matrix, x1, y2, blitOffset).setColor(colorB.r, colorB.g, colorB.b, colorB.a);
-        builder.addVertex(matrix, x2, y2, blitOffset).setColor(colorB.r, colorB.g, colorB.b, colorB.a);
+        Matrix4f matrix = poseStack.last().pose();
+
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
+        BufferBuilder bufferBuilder =
+                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+
+        bufferBuilder.addVertex(matrix, x2, y1, blitOffset).setColor(colorA.r, colorA.g, colorA.b, colorA.a);
+        bufferBuilder.addVertex(matrix, x1, y1, blitOffset).setColor(colorA.r, colorA.g, colorA.b, colorA.a);
+        bufferBuilder.addVertex(matrix, x1, y2, blitOffset).setColor(colorB.r, colorB.g, colorB.b, colorB.a);
+        bufferBuilder.addVertex(matrix, x2, y2, blitOffset).setColor(colorB.r, colorB.g, colorB.b, colorB.a);
+
+        BufferUploader.drawWithShader(bufferBuilder.build());
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableBlend();
+    }
+
+    public static void fillSidewaysGradient(
+            PoseStack poseStack,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            int blitOffset,
+            CustomColor colorA,
+            CustomColor colorB) {
+        Matrix4f matrix = poseStack.last().pose();
+
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
+        BufferBuilder bufferBuilder =
+                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+
+        bufferBuilder.addVertex(matrix, x1, y1, blitOffset).setColor(colorA.r, colorA.g, colorA.b, colorA.a);
+        bufferBuilder.addVertex(matrix, x1, y2, blitOffset).setColor(colorA.r, colorA.g, colorA.b, colorA.a);
+        bufferBuilder.addVertex(matrix, x2, y2, blitOffset).setColor(colorB.r, colorB.g, colorB.b, colorB.a);
+        bufferBuilder.addVertex(matrix, x2, y1, blitOffset).setColor(colorB.r, colorB.g, colorB.b, colorB.a);
+
+        BufferUploader.drawWithShader(bufferBuilder.build());
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableBlend();
     }
 
     /*
@@ -810,7 +854,7 @@ public final class RenderUtils {
 
             poseStack.translate(0, entity.getBbHeight() + 0.25F + customOffset, 0);
             poseStack.mulPose(dispatcher.cameraOrientation());
-            poseStack.scale(-0.025F, -0.025F, 0.025F);
+            poseStack.scale(0.025F, -0.025F, -0.025F);
 
             Matrix4f matrix = poseStack.last().pose();
 

@@ -28,6 +28,12 @@ public class ContentTrackerFeature extends Feature {
     @Persisted
     public final Config<Boolean> playSoundOnUpdate = new Config<>(true);
 
+    @Persisted
+    public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> hideOriginalMarker = new Config<>(true);
+
     @SubscribeEvent
     public void onTrackerUpdate(ActivityTrackerUpdatedEvent event) {
         // Don't play sounds for world events as the tracker needs to be updated to match the countdown

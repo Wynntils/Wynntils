@@ -8,28 +8,32 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
-import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketPriceConversionFeature extends Feature {
-    private static final Pattern PRICE_PATTERN =
-            Pattern.compile("^§6Type the price in emeralds or type 'cancel' to cancel:$");
-    private static final Pattern TRADE_MARKET_PATTERN = Pattern.compile("^What would you like to sell\\?$");
-    private static final Pattern CANCELLED_PATTERN = Pattern.compile("^You moved and your chat input was canceled\\.$");
+    private static final Pattern PRICE_PATTERN = Pattern.compile(
+            "^§5(\uE00A\uE002|\uE001) Type the price in emeralds or formatted \\(e\\.g '10eb', '10stx 5eb'\\) or type 'cancel' to cancel:$");
+    private static final Pattern CANCELLED_PATTERN =
+            Pattern.compile("^§4(\uE008\uE002|\uE001) You moved and your chat input was canceled.$");
 
     private boolean shouldConvert = false;
 
     @SubscribeEvent
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
-        if (event.getOriginalStyledText().matches(PRICE_PATTERN)) {
+        StyledText styledText =
+                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
+
+        if (styledText.matches(PRICE_PATTERN)) {
             shouldConvert = true;
         }
-        if (event.getStyledText().matches(CANCELLED_PATTERN)) {
+        if (styledText.matches(CANCELLED_PATTERN)) {
             shouldConvert = false;
         }
     }
@@ -43,15 +47,6 @@ public class TradeMarketPriceConversionFeature extends Feature {
         if (!price.isEmpty()) {
             event.setCanceled(true);
             McUtils.sendChat(price);
-        }
-    }
-
-    @SubscribeEvent
-    public void onGuiOpen(ScreenOpenedEvent.Post event) {
-        if (TRADE_MARKET_PATTERN
-                .matcher(event.getScreen().getTitle().getString())
-                .matches()) {
-            shouldConvert = false;
         }
     }
 }

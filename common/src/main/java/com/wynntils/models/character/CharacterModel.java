@@ -5,11 +5,13 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
@@ -17,8 +19,8 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
-import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.character.bossbar.DeathScreenBar;
 import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterMovedEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
@@ -64,14 +66,11 @@ public final class CharacterModel extends Model {
     private static final int COSMETICS_BACK_SLOT = 9;
     public static final int GUILD_MENU_SLOT = 26;
 
-    // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
-    // something weird)
-    private static final Pattern WYNN_DEATH_MESSAGE = Pattern.compile(".*§4§lYou have died\\.\\.\\.");
+    private static final DeathScreenBar deathScreenBar = new DeathScreenBar();
+
     public static final int MOVE_CHECK_FREQUENCY = 10;
     private int moveCheckTicks;
     private Position currentPosition;
-    private Position lastPositionBeforeTeleport;
-    private Location lastDeathLocation;
 
     private boolean inCharacterSelection;
     private boolean hasCharacter;
@@ -95,6 +94,8 @@ public final class CharacterModel extends Model {
 
     public CharacterModel() {
         super(List.of());
+
+        Handlers.BossBar.registerBar(deathScreenBar);
     }
 
     public boolean isSilverbullSubscriber() {
@@ -171,17 +172,6 @@ public final class CharacterModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent e) {
         StyledText message = e.getOriginalStyledText();
 
-        if (message.matches(WYNN_DEATH_MESSAGE)) {
-            lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
-            CharacterDeathEvent deathEvent = new CharacterDeathEvent(lastDeathLocation);
-            WynntilsMod.postEvent(deathEvent);
-
-            if (deathEvent.isCanceled()) {
-                e.setCanceled(true);
-            }
-            return;
-        }
-
         StyledText trimmedMessage = message.trim();
         if (trimmedMessage.matches(SILVERBULL_JOIN_PATTERN)) {
             silverbullSubscriber.store(ConfirmedBoolean.TRUE);
@@ -195,9 +185,11 @@ public final class CharacterModel extends Model {
     }
 
     @SubscribeEvent
-    public void beforePlayerTeleport(PlayerTeleportEvent e) {
-        if (McUtils.player() == null) return;
-        lastPositionBeforeTeleport = McUtils.player().position();
+    public void onBossBarAdd(BossBarAddedEvent event) {
+        if (event.getTrackedBar() == deathScreenBar) {
+            WynntilsMod.postEvent(
+                    new CharacterDeathEvent(new Location(McUtils.player().blockPosition())));
+        }
     }
 
     @SubscribeEvent

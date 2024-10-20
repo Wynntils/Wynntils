@@ -21,7 +21,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 public final class GatheringToolAnnotator implements GameItemAnnotator {
     private static final Pattern GATHERING_TOOL_PATTERN =
-            Pattern.compile("^§f[ⒸⒷⓀⒿ] Gathering (Axe|Rod|Scythe|Pickaxe) T(\\d+)$");
+            Pattern.compile("^§f[\uE003\uE001\uE000\uE002] Gathering (Axe|Rod|Scythe|Pickaxe) T(\\d+)$");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
 
     @Override

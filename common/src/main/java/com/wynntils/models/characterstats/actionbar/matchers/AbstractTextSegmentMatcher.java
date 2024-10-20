@@ -39,7 +39,7 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
             'b', 1_000_000_000L,
             't', 1_000_000_000_000L);
 
-    private static final Pattern VALUE_PATTERN = Pattern.compile("(?<current>\\d+)/(?<max>\\d+)");
+    private static final Pattern VALUE_PATTERN = Pattern.compile("(?<current>\\d+[kmbt]?)/(?<max>\\d+[kmbt]?)");
 
     /**
      * Get the separators of the segment text in the action bar.

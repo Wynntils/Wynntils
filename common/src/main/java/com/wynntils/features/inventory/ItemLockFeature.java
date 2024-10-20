@@ -136,7 +136,7 @@ public class ItemLockFeature extends Feature {
                 Texture.ITEM_LOCK.resource(),
                 ((containerScreen.leftPos + lockedSlot.x)) + 12,
                 ((containerScreen.topPos + lockedSlot.y)) - 4,
-                400,
+                399,
                 8,
                 8,
                 Texture.ITEM_LOCK.width() / 2,

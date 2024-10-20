@@ -161,4 +161,67 @@ public class CharacterFunctions {
             return Models.Character.getId();
         }
     }
+
+    public static class CappedAwakenedProgressFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.awakenedBar.isActive()
+                    ? Models.Ability.awakenedBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+    }
+
+    public static class CappedBloodPoolFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.bloodPoolBar.isActive()
+                    ? Models.Ability.bloodPoolBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+    }
+
+    public static class CappedCorruptedFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.corruptedBar.isActive()
+                    ? Models.Ability.corruptedBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+    }
+
+    public static class CappedFocusFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.focusBar.isActive()
+                    ? Models.Ability.focusBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+    }
+
+    public static class CappedManaBankFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.manaBankBar.isActive()
+                    ? Models.Ability.manaBankBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+    }
+
+    public static class CappedOphanimFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.ophanimBar.isActive()
+                    ? Models.Ability.ophanimBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+    }
+
+    public static class CappedSacredSurgeFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.sacredSurgeBar.isActive()
+                    ? Models.Ability.sacredSurgeBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+    }
 }

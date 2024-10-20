@@ -43,37 +43,11 @@ public class PoiService extends Service {
 
     public PoiService() {
         super(List.of());
-
-        loadData();
-    }
-
-    @Override
-    public void reloadData() {
-        loadData();
     }
 
     @Override
     public void onStorageLoad(Storage<?> storage) {
         loadCustomPoiProviders();
-    }
-
-    private void loadData() {
-        loadCustomPoiProviders();
-    }
-
-    public void loadCustomPoiProviders() {
-        for (CustomPoiProvider poiProvider : customPoiProviders.get()) {
-            Managers.Net.download(poiProvider.getUrl(), poiProvider.getName()).handleJsonArray(elements -> {
-                List<CustomPoi> pois = new ArrayList<>();
-
-                for (JsonElement jsonElement : elements) {
-                    CustomPoi poi = Managers.Json.GSON.fromJson(jsonElement, CustomPoi.class);
-                    pois.add(poi);
-                }
-
-                providedCustomPois.put(poiProvider, ImmutableList.copyOf(pois));
-            });
-        }
     }
 
     public List<CustomPoi> getProvidedCustomPois() {
@@ -94,10 +68,6 @@ public class PoiService extends Service {
         loadCustomPoiProviders();
     }
 
-    public boolean isPoiProvided(CustomPoi customPoi) {
-        return getProvidedCustomPois().contains(customPoi);
-    }
-
     public boolean removeCustomPoiProvider(String name) {
         Optional<CustomPoiProvider> provider = customPoiProviders.get().stream()
                 .filter(p -> p.getName().equals(name))
@@ -109,5 +79,24 @@ public class PoiService extends Service {
         providedCustomPois.remove(provider.get());
 
         return true;
+    }
+
+    public boolean isPoiProvided(CustomPoi customPoi) {
+        return getProvidedCustomPois().contains(customPoi);
+    }
+
+    public void loadCustomPoiProviders() {
+        for (CustomPoiProvider poiProvider : customPoiProviders.get()) {
+            Managers.Net.download(poiProvider.getUrl(), poiProvider.getName()).handleJsonArray(elements -> {
+                List<CustomPoi> pois = new ArrayList<>();
+
+                for (JsonElement jsonElement : elements) {
+                    CustomPoi poi = Managers.Json.GSON.fromJson(jsonElement, CustomPoi.class);
+                    pois.add(poi);
+                }
+
+                providedCustomPois.put(poiProvider, ImmutableList.copyOf(pois));
+            });
+        }
     }
 }

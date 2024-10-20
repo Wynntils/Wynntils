@@ -6,11 +6,13 @@ accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$OperationType
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$UpdateNameOperation
 accessible class net/minecraft/server/packs/FilePackResources$SharedZipFileAccess
+accessible class net/minecraft/world/item/ItemCooldowns$CooldownInstance
 accessible class net/minecraft/world/scores/PlayerScores
 accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platform/InputConstants$Key;
 accessible field net/minecraft/client/Minecraft gui Lnet/minecraft/client/gui/Gui;
 accessible field net/minecraft/client/OptionInstance value Ljava/lang/Object;
 accessible field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/components/ChatComponent;
+accessible field net/minecraft/client/gui/Gui CROSSHAIR_SPRITE Lnet/minecraft/resources/ResourceLocation;
 accessible field net/minecraft/client/gui/components/AbstractSelectionList hovered Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;
 accessible field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
 accessible field net/minecraft/client/gui/components/PlayerTabOverlay visible Z
@@ -37,10 +39,16 @@ accessible field net/minecraft/world/entity/Display$TextDisplay DATA_TEXT_ID Lne
 accessible field net/minecraft/world/entity/Entity DATA_CUSTOM_NAME Lnet/minecraft/network/syncher/EntityDataAccessor;
 accessible field net/minecraft/world/entity/Entity DATA_CUSTOM_NAME_VISIBLE Lnet/minecraft/network/syncher/EntityDataAccessor;
 accessible field net/minecraft/world/entity/item/ItemEntity DATA_ITEM Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible field net/minecraft/world/item/ItemCooldowns cooldowns Ljava/util/Map;
+accessible field net/minecraft/world/item/ItemCooldowns tickCount I
+accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance startTime I
+accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance endTime I
 accessible field net/minecraft/world/item/ItemStack count I
 accessible field net/minecraft/world/scores/PlayerScores scores Lit/unimi/dsi/fastutil/objects/Reference2ObjectOpenHashMap;
 accessible field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
 accessible method net/minecraft/client/gui/components/AbstractSelectionList getRowBottom (I)I
+accessible method net/minecraft/client/gui/components/AbstractSliderButton setValue (D)V
+accessible method net/minecraft/client/gui/screens/Screen addRenderableOnly (Lnet/minecraft/client/gui/components/Renderable;)Lnet/minecraft/client/gui/components/Renderable;
 accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
 accessible method net/minecraft/client/gui/screens/Screen clearWidgets ()V
 accessible method net/minecraft/client/gui/screens/Screen init ()V

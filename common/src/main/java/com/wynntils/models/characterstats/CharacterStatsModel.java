@@ -42,6 +42,8 @@ import java.util.Optional;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemCooldowns;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
@@ -113,6 +115,17 @@ public final class CharacterStatsModel extends Model {
                         (int) endY,
                         McUtils.player().blockPosition().getZ()));
         return McUtils.player().position().y - endY;
+    }
+
+    public CappedValue getItemCooldownTicks(Item item) {
+        ItemCooldowns cooldowns = McUtils.player().getCooldowns();
+        ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(item);
+        if (cooldown == null || cooldown.startTime >= cooldown.endTime) return CappedValue.EMPTY; // Sanity check
+
+        int remaining = cooldown.endTime - cooldowns.tickCount;
+        if (remaining <= 0) return CappedValue.EMPTY;
+
+        return new CappedValue(remaining, cooldown.endTime - cooldown.startTime);
     }
 
     public List<GearInfo> getWornGear() {
@@ -191,6 +204,14 @@ public final class CharacterStatsModel extends Model {
         } else {
             hiddenSegments.remove(ManaTextSegment.class);
             hiddenSegments.remove(ManaBarSegment.class);
+        }
+    }
+
+    public void setHidePowder(boolean shouldHide) {
+        if (shouldHide) {
+            hiddenSegments.add(PowderSpecialSegment.class);
+        } else {
+            hiddenSegments.remove(PowderSpecialSegment.class);
         }
     }
 

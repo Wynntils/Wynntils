@@ -85,6 +85,7 @@ public class BossBarHandler extends Handler {
             }
 
             trackedBar.onUpdateName(matcher);
+            trackedBar.onUpdateProgress(progress);
 
             presentBars.put(id, trackedBar);
         }

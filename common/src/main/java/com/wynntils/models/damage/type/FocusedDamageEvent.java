@@ -18,9 +18,9 @@ import net.neoforged.bus.api.Event;
 public abstract class FocusedDamageEvent extends Event {
     private final String mobName;
     private final String mobElementals;
-    private final int health;
+    private final long health;
 
-    protected FocusedDamageEvent(String mobName, String mobElementals, int health) {
+    protected FocusedDamageEvent(String mobName, String mobElementals, long health) {
         this.mobName = mobName;
         this.mobElementals = mobElementals;
         this.health = health;
@@ -34,25 +34,25 @@ public abstract class FocusedDamageEvent extends Event {
         return mobElementals;
     }
 
-    public int getHealth() {
+    public long getHealth() {
         return health;
     }
 
     public static final class MobFocused extends FocusedDamageEvent {
-        public MobFocused(String mobName, String mobElementals, int health) {
+        public MobFocused(String mobName, String mobElementals, long health) {
             super(mobName, mobElementals, health);
         }
     }
 
     public static final class MobDamaged extends FocusedDamageEvent {
-        private final int oldHealth;
+        private final long oldHealth;
 
-        public MobDamaged(String mobName, String mobElementals, int currentHealth, int oldHealth) {
+        public MobDamaged(String mobName, String mobElementals, long currentHealth, long oldHealth) {
             super(mobName, mobElementals, currentHealth);
             this.oldHealth = oldHealth;
         }
 
-        public int getOldHealth() {
+        public long getOldHealth() {
             return oldHealth;
         }
     }

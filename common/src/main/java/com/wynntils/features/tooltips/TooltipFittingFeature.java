@@ -15,6 +15,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.TooltipRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
@@ -60,15 +61,9 @@ public class TooltipFittingFeature extends Feature {
         if (fitToScreen.get()) {
             List<Component> tooltips = e.getTooltips();
 
-            List<ClientTooltipComponent> clientTooltipComponents = tooltips.stream()
-                    .map(Component::getVisualOrderText)
-                    .map(ClientTooltipComponent::create)
-                    .toList();
+            List<ClientTooltipComponent> clientTooltipComponents = TooltipUtils.getClientTooltipComponent(tooltips);
 
-            int tooltipHeight = clientTooltipComponents.size() == 1 ? -2 : 0;
-            tooltipHeight += clientTooltipComponents.stream()
-                    .mapToInt(ClientTooltipComponent::getHeight)
-                    .sum();
+            int tooltipHeight = TooltipUtils.getTooltipHeight(clientTooltipComponents);
 
             tooltipHeight *= universalScale.get();
 

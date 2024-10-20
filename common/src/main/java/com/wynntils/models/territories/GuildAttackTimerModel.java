@@ -49,7 +49,7 @@ import net.neoforged.bus.api.SubscribeEvent;
  */
 public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
-    private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§3.+§b (.+) defense is (.+)");
+    private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§b.+§b (.+) defense is (.+)");
     // Test in GuildAttackTimerModel_WAR_MESSAGE_PATTERN
     private static final Pattern WAR_MESSAGE_PATTERN = Pattern.compile(
             "§c\uE006\uE002 The war for (?<territory>.+) will start in ((?<minutes>\\d+) minute(?:s)?)?(?: and )?((?<seconds>\\d+) second(?:s)?)?\\.");
@@ -115,7 +115,7 @@ public final class GuildAttackTimerModel extends Model {
             return;
         }
 
-        matcher = event.getOriginalStyledText().getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
+        matcher = StyledTextUtils.unwrap(event.getOriginalStyledText()).getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
         if (matcher.matches()) {
             String territory = matcher.group(1);
             territoryDefenses.put(territory, GuildResourceValues.fromString(matcher.group(2)));

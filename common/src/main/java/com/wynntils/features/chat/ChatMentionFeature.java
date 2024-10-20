@@ -29,7 +29,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class ChatMentionFeature extends Feature {
-    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*[\\]:]\\s?");
+    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
     private static final Pattern NON_WORD_CHARACTERS =
             Pattern.compile("\\W"); // all non-alphanumeric-underscore characters
 

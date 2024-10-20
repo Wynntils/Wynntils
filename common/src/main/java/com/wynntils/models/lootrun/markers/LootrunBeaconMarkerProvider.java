@@ -7,7 +7,7 @@ package com.wynntils.models.lootrun.markers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
-import com.wynntils.models.beacons.type.LootrunBeaconKind;
+import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
@@ -37,7 +37,14 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider<MarkerPoi> {
                     entry.getValue().taskLocation().taskType().getTexture(),
                     entry.getKey().getDisplayColor(),
                     CommonColors.WHITE,
-                    entry.getKey().getDisplayColor()));
+                    entry.getKey().getDisplayColor(),
+                    // FIXME: Feature-Model dependency
+                    Managers.Feature.getFeatureInstance(CustomLootrunBeaconsFeature.class)
+                                    .showAdditionalTextInWorld
+                                    .get()
+                            ? entry.getValue().taskLocation().name() + " - "
+                                    + entry.getKey().name()
+                            : null));
         }
         taskMarkers = newTaskMarkers;
 

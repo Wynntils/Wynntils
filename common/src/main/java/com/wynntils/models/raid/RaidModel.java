@@ -10,7 +10,9 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
+import com.wynntils.models.damage.type.DamageDealtEvent;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
@@ -19,13 +21,17 @@ import com.wynntils.models.raid.type.RaidKind;
 import com.wynntils.models.raid.type.RaidRoomType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -33,8 +39,14 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class RaidModel extends Model {
     public static final int MAX_CHALLENGES = 3;
+    public static final int ROOM_DAMAGES_COUNT = 4;
     public static final int ROOM_TIMERS_COUNT = 5;
+    private static final Pattern CHALLENGE_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC5F§a§lChallenge Completed");
     private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
+    private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
+
+    private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
+            "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff((§o)?(\\w+))§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
 
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
@@ -42,12 +54,16 @@ public class RaidModel extends Model {
     private final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
 
     private final Map<RaidRoomType, Long> roomTimers = new EnumMap<>(RaidRoomType.class);
+    private final Map<RaidRoomType, Long> roomDamages = new EnumMap<>(RaidRoomType.class);
+
+    private Map<String, List<String>> partyRaidBuffs = new HashMap<>();
 
     private boolean completedCurrentChallenge = false;
     private CappedValue challenges = CappedValue.EMPTY;
     private int timeLeft = 0;
     private long raidStartTime;
     private long roomStartTime;
+    private long currentRoomDamage = 0;
     private RaidKind currentRaid = null;
     private RaidRoomType currentRoom = null;
 
@@ -71,11 +87,49 @@ public class RaidModel extends Model {
                 raidStartTime = System.currentTimeMillis();
                 completedCurrentChallenge = false;
             }
-        } else {
-            if (styledText.matches(RAID_COMPLETED_PATTERN)) {
-                completeRaid();
+        } else if (styledText.matches(RAID_COMPLETED_PATTERN)) {
+            completeRaid();
+        } else if (styledText.matches(RAID_FAILED_PATTERN)) {
+            failedRaid();
+        }
+    }
+
+    // One challenge in Nexus of Light does not display the scoreboard upon challenge completion
+    // so we have to check for the chat message
+    @SubscribeEvent
+    public void onChatMessage(ChatMessageReceivedEvent event) {
+        if (inBuffRoom()) {
+            Matcher matcher = event.getOriginalStyledText().stripAlignment().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
+            if (matcher.matches()) {
+                String playerName = matcher.group(4);
+                // if the player is nicknamed
+                if (matcher.group(3) != null) {
+                    playerName = StyledTextUtils.extractNameAndNick(event.getOriginalStyledText())
+                            .key();
+                    if (playerName == null) return;
+                }
+
+                String buff = matcher.group(5);
+
+                partyRaidBuffs
+                        .computeIfAbsent(playerName, k -> new ArrayList<>())
+                        .add(buff);
             }
         }
+
+        if (!inChallengeRoom()) return;
+
+        if (event.getStyledText().matches(CHALLENGE_COMPLETED_PATTERN)) {
+            completeChallenge();
+        }
+    }
+
+    @SubscribeEvent
+    public void onDamageDealtEvent(DamageDealtEvent event) {
+        if (currentRaid == null) return;
+
+        currentRoomDamage +=
+                event.getDamages().values().stream().mapToLong(d -> d).sum();
     }
 
     @SubscribeEvent
@@ -88,6 +142,8 @@ public class RaidModel extends Model {
             timeLeft = 0;
             challenges = CappedValue.EMPTY;
             roomTimers.clear();
+            roomDamages.clear();
+            partyRaidBuffs.clear();
 
             McUtils.sendMessageToClient(Component.literal(
                             "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
@@ -137,6 +193,11 @@ public class RaidModel extends Model {
     // Only check for entry to a buff room once after the challenge has been completed.
     public void enterBuffRoom() {
         if (completedCurrentChallenge) {
+            // We put the damage dealt here instead of in completeChallenge as you are still in
+            // the challenge room and can deal damage until you enter the buff room
+            roomDamages.put(currentRoom, currentRoomDamage);
+            currentRoomDamage = 0;
+
             currentRoom = RaidRoomType.values()[currentRoom.ordinal() + 1];
 
             completedCurrentChallenge = false;
@@ -158,16 +219,23 @@ public class RaidModel extends Model {
         long bossTime = System.currentTimeMillis() - roomStartTime;
         roomTimers.put(RaidRoomType.BOSS_FIGHT, bossTime);
 
-        WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid, getAllRoomTimes(), currentRaidTime()));
+        WynntilsMod.postEvent(new RaidEndedEvent.Completed(
+                currentRaid, getAllRoomTimes(), currentRaidTime(), getAllRoomDamages(), getRaidDamage()));
 
-        checkForNewPersonalBest(currentRaid, currentRaidTime());
+        // Need to add boss time to get correct intermission time since
+        // currentRoom will still be boss room when getIntermissionTime() is called
+        checkForNewPersonalBest(
+                currentRaid, currentRaidTime() - (getIntermissionTime() + getRoomTime(RaidRoomType.BOSS_FIGHT)));
 
         currentRaid = null;
         currentRoom = null;
         completedCurrentChallenge = false;
         timeLeft = 0;
+        currentRoomDamage = 0;
         challenges = CappedValue.EMPTY;
         roomTimers.clear();
+        roomDamages.clear();
+        partyRaidBuffs.clear();
     }
 
     public void failedRaid() {
@@ -177,10 +245,13 @@ public class RaidModel extends Model {
 
         currentRaid = null;
         currentRoom = null;
+        currentRoomDamage = 0;
         completedCurrentChallenge = false;
         timeLeft = 0;
         challenges = CappedValue.EMPTY;
         roomTimers.clear();
+        roomDamages.clear();
+        partyRaidBuffs.clear();
     }
 
     public void setTimeLeft(int seconds) {
@@ -205,6 +276,28 @@ public class RaidModel extends Model {
 
     public RaidKind getCurrentRaid() {
         return currentRaid;
+    }
+
+    public List<String> getRaidMajorIds(String playerName) {
+        if (!partyRaidBuffs.containsKey(playerName)) return List.of();
+
+        List<String> rawBuffNames = partyRaidBuffs.get(playerName);
+        List<String> majorIds = new ArrayList<>();
+
+        for (String rawBuffName : rawBuffNames) {
+            String[] buffParts = rawBuffName.split(" ");
+            if (buffParts.length < 2) continue;
+
+            String buffName = buffParts[0];
+            int buffTier = MathUtils.integerFromRoman(buffParts[1]);
+
+            String majorId = this.currentRaid.majorIdFromBuff(buffName, buffTier);
+            if (majorId == null) continue;
+
+            majorIds.add(majorId);
+        }
+
+        return majorIds;
     }
 
     public RaidRoomType getCurrentRoom() {
@@ -244,6 +337,23 @@ public class RaidModel extends Model {
         return intermissionTime;
     }
 
+    public long getRaidDamage() {
+        return currentRoomDamage
+                + roomDamages.values().stream().mapToLong(d -> d).sum();
+    }
+
+    public long getRoomDamage(RaidRoomType roomType) {
+        if (roomType == currentRoom) {
+            return getCurrentRoomDamage();
+        }
+
+        return roomDamages.getOrDefault(roomType, -1L);
+    }
+
+    public long getCurrentRoomDamage() {
+        return currentRoomDamage;
+    }
+
     private boolean inInstructionsRoom() {
         return currentRoom == RaidRoomType.INSTRUCTIONS_1
                 || currentRoom == RaidRoomType.INSTRUCTIONS_2
@@ -279,6 +389,17 @@ public class RaidModel extends Model {
         allRoomTimes.add(getIntermissionTime() + getRoomTime(RaidRoomType.BOSS_FIGHT));
 
         return allRoomTimes;
+    }
+
+    private List<Long> getAllRoomDamages() {
+        List<Long> allRoomDamages = new ArrayList<>();
+
+        allRoomDamages.add(getRoomDamage(RaidRoomType.CHALLENGE_1));
+        allRoomDamages.add(getRoomDamage(RaidRoomType.CHALLENGE_2));
+        allRoomDamages.add(getRoomDamage(RaidRoomType.CHALLENGE_3));
+        allRoomDamages.add(getRoomDamage(RaidRoomType.BOSS_FIGHT));
+
+        return allRoomDamages;
     }
 
     private void checkForNewPersonalBest(RaidKind raidKind, long time) {

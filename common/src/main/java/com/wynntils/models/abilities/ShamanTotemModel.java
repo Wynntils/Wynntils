@@ -16,12 +16,15 @@ import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,8 +48,11 @@ public class ShamanTotemModel extends Model {
     // TODO: CAST_MAX_DELAY could be a config when model configs eventually exist
     // it kind of depends on ping and server lag
 
-    private final ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT];
-    private final Integer[] pendingTotemVisibleIds = new Integer[MAX_TOTEM_COUNT];
+    private final ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT]; // 0-indexed list of totems 1-4
+    private final Integer[] timerlessTotemVisibleIds = new Integer[MAX_TOTEM_COUNT]; // ID of totems that need a timer
+    private final Map<Integer, Integer> orphanedTimers =
+            new HashMap<>(); // IDs of timers that can't really find a totem
+    // These orphaned timers will be checked at a lower rate, they are probably timers that aren't actually totems
     private int nextTotemSlot = 1;
     private long totemCastTimestamp = 0;
 
@@ -62,6 +68,9 @@ public class ShamanTotemModel extends Model {
 
     @SubscribeEvent
     public void onTotemSpawn(AddEntityEvent e) {
+        if (!Models.WorldState.onWorld()) return;
+        if (Models.Character.getClassType() != ClassType.SHAMAN) return;
+
         Entity entity = getBufferedEntity(e.getId());
         if (!(entity instanceof ArmorStand totemAS)) return;
 
@@ -71,7 +80,10 @@ public class ShamanTotemModel extends Model {
                 () -> {
                     // didn't come from a cast within the delay, probably not casted by the player
                     // this check needs to be ran with a delay, the cast/spawn order is not guaranteed
-                    if (System.currentTimeMillis() - totemCastTimestamp > CAST_MAX_DELAY_MS) return;
+                    if (System.currentTimeMillis() - totemCastTimestamp > CAST_MAX_DELAY_MS
+                            && !Models.Inventory.hasAutoCasterItem()) {
+                        return;
+                    }
 
                     // Checks to verify this is a totem
                     // These must be ran with a delay,
@@ -97,67 +109,15 @@ public class ShamanTotemModel extends Model {
                             totemNumber, -1, totemAS.getId(), -1, ShamanTotem.TotemState.SUMMONED, totemAS.position());
 
                     totems[totemNumber - 1] = newTotem;
-                    pendingTotemVisibleIds[totemNumber - 1] = totemAS.getId();
+                    timerlessTotemVisibleIds[totemNumber - 1] = totemAS.getId();
                 },
                 TOTEM_DATA_DELAY_TICKS);
     }
 
     @SubscribeEvent
-    public void onTimerSpawn(AddEntityEvent e) {
-        // We aren't looking for a new timer, skip
-        if (Arrays.stream(pendingTotemVisibleIds).allMatch(Objects::isNull)) return;
-        int entityId = e.getId();
-
-        // This timer is already bound to a totem but got respawned? skip
-        if (getBoundTotem(entityId) != null) return;
-
-        Entity possibleTimer = getBufferedEntity(entityId);
-        if (!(possibleTimer instanceof Display.TextDisplay)) return;
-
-        // Given timerId is not a totem, make a new totem
-        List<ArmorStand> possibleTotems = McUtils.mc()
-                .level
-                .getEntitiesOfClass(
-                        ArmorStand.class,
-                        new AABB(
-                                possibleTimer.position().x - TOTEM_SEARCH_RADIUS,
-                                possibleTimer.position().y
-                                        - TOTEM_SEARCH_RADIUS, // Don't modify this unless you are certain it is causing
-                                // issues
-                                possibleTimer.position().z - TOTEM_SEARCH_RADIUS,
-                                possibleTimer.position().x + TOTEM_SEARCH_RADIUS,
-                                // (a LOT) more vertical radius required for totems casted off high places
-                                // This increased radius requirement increases as you cast from higher places and as the
-                                // server gets laggier
-                                possibleTimer.position().y + TOTEM_SEARCH_RADIUS * 5,
-                                possibleTimer.position().z + TOTEM_SEARCH_RADIUS));
-
-        for (ArmorStand possibleTotem : possibleTotems) {
-            // Recreate position for each ArmorStand checked for most accurate coordinates
-            Position position = possibleTotem.position();
-
-            for (int i = 0; i < pendingTotemVisibleIds.length; i++) {
-                if (pendingTotemVisibleIds[i] != null && possibleTotem.getId() == pendingTotemVisibleIds[i]) {
-                    // we found the totem that this timer belongs to, bind it
-                    ShamanTotem totem = totems[i];
-
-                    totem.setTimerEntityId(entityId);
-                    totem.setPosition(position);
-                    totem.setState(ShamanTotem.TotemState.ACTIVE);
-
-                    WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), position));
-
-                    pendingTotemVisibleIds[i] = null;
-
-                    return;
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onTotemRename(TextDisplayChangedEvent.Text event) {
+    public void onTimerRename(TextDisplayChangedEvent.Text event) {
         if (!Models.WorldState.onWorld()) return;
+        if (Models.Character.getClassType() != ClassType.SHAMAN) return;
 
         Display.TextDisplay textDisplay = event.getTextDisplay();
 
@@ -167,22 +127,73 @@ public class ShamanTotemModel extends Model {
         if (!m.find()) return;
 
         int parsedTime = Integer.parseInt(m.group("time"));
-        Position position = textDisplay.position();
+        int timerId = textDisplay.getId();
 
-        int entityId = textDisplay.getId();
-        if (getBoundTotem(entityId) == null) return;
+        if (getBoundTotem(timerId) == null) {
+            // this is a new timer that needs to find a totem to link with
+            findAndLinkTotem(timerId, parsedTime, textDisplay);
+        } else {
+            updateTotem(timerId, parsedTime, textDisplay);
+        }
+    }
 
-        ShamanTotem boundTotem = getBoundTotem(entityId);
+    private void findAndLinkTotem(int timerId, int parsedTime, Display.TextDisplay textDisplay) {
+        List<ArmorStand> possibleTotems = McUtils.mc()
+                .level
+                .getEntitiesOfClass(
+                        ArmorStand.class,
+                        new AABB(
+                                textDisplay.position().x - TOTEM_SEARCH_RADIUS,
+                                textDisplay.position().y - TOTEM_SEARCH_RADIUS,
+                                textDisplay.position().z - TOTEM_SEARCH_RADIUS,
+                                textDisplay.position().x + TOTEM_SEARCH_RADIUS,
+                                // (a LOT) more vertical radius required for totems casted off high places
+                                // This increased radius requirement increases as you cast from higher places and as the
+                                // server gets laggier
+                                textDisplay.position().y + TOTEM_SEARCH_RADIUS * 5,
+                                textDisplay.position().z + TOTEM_SEARCH_RADIUS));
 
+        for (ArmorStand possibleTotem : possibleTotems) {
+            for (int i = 0; i < timerlessTotemVisibleIds.length; i++) {
+                if (timerlessTotemVisibleIds[i] != null && possibleTotem.getId() == timerlessTotemVisibleIds[i]) {
+                    // we found the totem that this timer belongs to, bind it
+                    ShamanTotem totem = totems[i];
+
+                    totem.setTimerEntityId(timerId);
+                    totem.setTime(parsedTime);
+                    totem.setPosition(possibleTotem.position());
+                    totem.setState(ShamanTotem.TotemState.ACTIVE);
+
+                    WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), possibleTotem.position()));
+
+                    timerlessTotemVisibleIds[i] = null;
+                    if (orphanedTimers.containsKey(timerId) && orphanedTimers.get(timerId) > 1) {
+                        WynntilsMod.info("Matched an orphaned totem timer " + timerId + " to a totem "
+                                + totem.getTotemNumber() + " after " + orphanedTimers.get(timerId) + " attempts.");
+                        orphanedTimers.remove(timerId);
+                    }
+
+                    return;
+                }
+            }
+        }
+        orphanedTimers.merge(timerId, 1, Integer::sum);
+        if (orphanedTimers.get(timerId) == 2) {
+            WynntilsMod.warn("Matched an unbound totem timer " + timerId + " but couldn't find a totem to bind it to.");
+        }
+    }
+
+    private void updateTotem(int timerId, int parsedTime, Display.TextDisplay textDisplay) {
+        ShamanTotem boundTotem = getBoundTotem(timerId);
         if (boundTotem == null) return;
 
         for (ShamanTotem totem : totems) {
             if (boundTotem == totem) {
                 totem.setTime(parsedTime);
-                totem.setPosition(position);
+                totem.setPosition(textDisplay.position());
 
-                WynntilsMod.postEvent(new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, position));
-
+                WynntilsMod.postEvent(
+                        new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, textDisplay.position()));
                 break;
             }
         }
@@ -231,7 +242,7 @@ public class ShamanTotemModel extends Model {
     private void removeTotem(int totem) {
         WynntilsMod.postEvent(new TotemEvent.Removed(totem, totems[totem - 1]));
         totems[totem - 1] = null;
-        pendingTotemVisibleIds[totem - 1] = null;
+        timerlessTotemVisibleIds[totem - 1] = null;
         nextTotemSlot = totem;
     }
 

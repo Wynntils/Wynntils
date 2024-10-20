@@ -35,6 +35,8 @@ subprojects {
                 property("devauth.configDir", getRootProject().file(".devauth").absolutePath)
                 if (usingHotswapAgent) {
                     vmArgs "-XX:+AllowEnhancedClassRedefinition"
+                    // https://youtrack.jetbrains.com/issue/JBR-7351/JVM-CodeCache-will-not-be-cleaned-using-G1GC-if-Hotswap-Agent-is-enabled-since-JBR-6419-jbr21.351
+                    vmArgs "-XX:+ClassUnloading"
                     vmArgs "-XX:HotswapAgent=fatjar"
                 }
                 vmArgs "-ea" // run dev builds with asserts
@@ -109,6 +111,8 @@ allprojects {
         }
         json {
             target "src/**/*.json"
+            // schemaVersion must be at the top or else Fabric will complain
+            targetExclude("src/main/resources/fabric.mod.json")
             gson()
                     .indentWithSpaces(2)
                     .sortByKeys()

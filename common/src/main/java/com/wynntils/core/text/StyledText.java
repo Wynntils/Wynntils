@@ -49,7 +49,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     /**
      * Note: All callers of this constructor should ensure that the event lists are collected from the parts.
-     *       Additionally, they should ensure that the events are distinct.
+     * Additionally, they should ensure that the events are distinct.
      */
     private StyledText(List<StyledTextPart> parts, List<ClickEvent> clickEvents, List<HoverEvent> hoverEvents) {
         this.parts = parts.stream()
@@ -236,6 +236,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     /**
      * Strips all of Wynncraft's unicode alignment characters from this {@link StyledText}.
+     *
      * @return the stripped {@link StyledText}
      */
     public StyledText stripAlignment() {
@@ -397,6 +398,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
     /**
      * Splits this {@link StyledText} into multiple {@link StyledText}s at the given index.
      * <p> Note that {@link PartStyle.StyleType.NONE} is used when splitting.
+     *
      * @param regex the regex to split at
      * @return the split {@link StyledText}s
      */
@@ -534,8 +536,9 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     /**
      * Splits this {@link StyledText} into multiple {@link StyledText}s at the given indexes.
+     *
      * @param styleType the style type to use when calculating indexes
-     * @param indexes the indexes to split at, in ascending order
+     * @param indexes   the indexes to split at, in ascending order
      * @return the split {@link StyledText}s as an array
      * @throws IllegalArgumentException if the indexes are not in ascending order or an index splits a formatting code
      */
@@ -565,13 +568,24 @@ public final class StyledText implements Iterable<StyledTextPart> {
     /**
      * Replaces the first occurrence of the given regex with the given replacement.
      * <p> Note that {@link PartStyle.StyleType.NONE} is used when matching and replacing.
-     * @param regex the regex to replace
+     *
+     * @param regex       the regex to replace
      * @param replacement the replacement
      * @return the new {@link StyledText}
      */
     public StyledText replaceFirst(String regex, String replacement) {
-        final Pattern pattern = Pattern.compile(regex);
+        return replaceFirst(Pattern.compile(regex), replacement);
+    }
 
+    /**
+     * Replaces the first occurrence of the given regex with the given replacement.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used when matching and replacing.
+     *
+     * @param pattern     the pattern to replace
+     * @param replacement the replacement
+     * @return the new {@link StyledText}
+     */
+    public StyledText replaceFirst(Pattern pattern, String replacement) {
         List<StyledTextPart> newParts = new ArrayList<>();
 
         for (StyledTextPart part : parts) {
@@ -598,13 +612,24 @@ public final class StyledText implements Iterable<StyledTextPart> {
     /**
      * Replaces all occurrences of the given regex with the given replacement.
      * <p> Note that {@link PartStyle.StyleType.NONE} is used when matching and replacing.
-     * @param regex the regex to replace
+     *
+     * @param regex       the regex to replace
      * @param replacement the replacement
      * @return the new {@link StyledText}
      */
     public StyledText replaceAll(String regex, String replacement) {
-        final Pattern pattern = Pattern.compile(regex);
+        return replaceAll(Pattern.compile(regex), replacement);
+    }
 
+    /**
+     * Replaces all occurrences of the given regex with the given replacement.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used when matching and replacing.
+     *
+     * @param pattern     the pattern to replace
+     * @param replacement the replacement
+     * @return the new {@link StyledText}
+     */
+    public StyledText replaceAll(Pattern pattern, String replacement) {
         List<StyledTextPart> newParts = new ArrayList<>();
 
         for (StyledTextPart part : parts) {
@@ -627,6 +652,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     /**
      * Returns the parts of this {@link StyledText} as a {@link StyledText} array.
+     *
      * @return the array
      */
     public StyledText[] getPartsAsTextArray() {
@@ -714,6 +740,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     /**
      * Returns the first part of this {@link StyledText} that matches the given event.
+     *
      * @param clickEvent the event to find
      * @return the 1-based index, or -1
      */
@@ -735,6 +762,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     /**
      * Returns the first part of this {@link StyledText} that matches the given event.
+     *
      * @param hoverEvent the event to find
      * @return the 1-based index, or -1
      */

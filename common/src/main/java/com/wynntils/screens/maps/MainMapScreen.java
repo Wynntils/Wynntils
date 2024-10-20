@@ -26,7 +26,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -385,18 +384,22 @@ public final class MainMapScreen extends AbstractMapScreen {
                                     new Location(hovered.getLocation()),
                                     iconPoi.getIcon(),
                                     customPoi.getColor(),
-                                    customPoi.getColor());
+                                    customPoi.getColor(),
+                                    hovered.getName());
                         } else {
                             Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                                    new Location(hovered.getLocation()), iconPoi.getIcon());
+                                    new Location(hovered.getLocation()), iconPoi.getIcon(), hovered.getName());
                         }
                     } else {
-                        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(hovered.getLocation()));
+                        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                                new Location(hovered.getLocation()), hovered.getName());
                     }
                 } else {
                     final Poi finalHovered = hovered;
-                    Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new DynamicLocationSupplier(
-                            () -> finalHovered.getLocation().asLocation()));
+                    Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                            new DynamicLocationSupplier(
+                                    () -> finalHovered.getLocation().asLocation()),
+                            finalHovered.getName());
                 }
                 return true;
             }
@@ -408,7 +411,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                     int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
                     int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
 
-                    McUtils.mc().setScreen(PoiCreationScreen.create(this, new PoiLocation(gameX, null, gameZ)));
+                    McUtils.mc().setScreen(PoiCreationScreen.create(this, new Location(gameX, 0, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {

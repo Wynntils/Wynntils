@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories.type;
@@ -7,6 +7,7 @@ package com.wynntils.models.territories.type;
 import net.minecraft.ChatFormatting;
 
 public enum GuildResourceValues {
+    NONE("None", ChatFormatting.WHITE, 0),
     VERY_LOW("Very Low", ChatFormatting.DARK_GREEN, 1),
     LOW("Low", ChatFormatting.GREEN, 2),
     MEDIUM("Medium", ChatFormatting.YELLOW, 3),

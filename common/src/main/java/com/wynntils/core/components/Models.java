@@ -4,10 +4,10 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.models.abilities.ArrowShieldModel;
-import com.wynntils.models.abilities.BossBarModel;
+import com.wynntils.models.abilities.AbilityModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
+import com.wynntils.models.abilities.ShieldModel;
 import com.wynntils.models.abilitytree.AbilityTreeModel;
 import com.wynntils.models.activities.ActivityModel;
 import com.wynntils.models.activities.caves.CaveModel;
@@ -65,12 +65,11 @@ import com.wynntils.models.wynnalphabet.WynnAlphabetModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
+    public static final AbilityModel Ability = new AbilityModel();
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
-    public static final ArrowShieldModel ArrowShield = new ArrowShieldModel();
     public static final BankModel Bank = new BankModel();
     public static final BeaconModel Beacon = new BeaconModel();
     public static final BombModel Bomb = new BombModel();
-    public static final BossBarModel BossBar = new BossBarModel();
     public static final CaveModel Cave = new CaveModel();
     public static final CharacterModel Character = new CharacterModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
@@ -87,6 +86,7 @@ public final class Models {
     public static final GuildModel Guild = new GuildModel();
     public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
     public static final HorseModel Horse = new HorseModel();
+    public static final IngredientModel Ingredient = new IngredientModel();
     public static final InventoryModel Inventory = new InventoryModel();
     public static final ItemEncodingModel ItemEncoding = new ItemEncodingModel();
     public static final ItemModel Item = new ItemModel();
@@ -101,11 +101,13 @@ public final class Models {
     public static final ProfessionModel Profession = new ProfessionModel();
     public static final QuestModel Quest = new QuestModel();
     public static final RaidModel Raid = new RaidModel();
+    public static final RewardsModel Rewards = new RewardsModel();
     public static final SeaskipperModel Seaskipper = new SeaskipperModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final SetModel Set = new SetModel();
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
+    public static final ShieldModel Shield = new ShieldModel();
     public static final ShinyModel Shiny = new ShinyModel();
     public static final SkillPointModel SkillPoint = new SkillPointModel();
     public static final SpellModel Spell = new SpellModel();
@@ -124,6 +126,4 @@ public final class Models {
     public static final ActivityModel Activity = new ActivityModel(Marker);
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel(Marker);
     public static final LootrunModel Lootrun = new LootrunModel(Marker);
-    public static final RewardsModel Rewards = new RewardsModel(WynnItem);
-    public static final IngredientModel Ingredient = new IngredientModel(WynnItem);
 }
