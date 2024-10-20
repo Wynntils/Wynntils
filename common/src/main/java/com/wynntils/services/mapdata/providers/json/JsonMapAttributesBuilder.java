@@ -4,8 +4,13 @@
  */
 package com.wynntils.services.mapdata.providers.json;
 
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.lang.reflect.Field;
 
 public class JsonMapAttributesBuilder {
     private String label;
@@ -63,8 +68,55 @@ public class JsonMapAttributesBuilder {
         return this;
     }
 
-    public JsonMapAttributes build() {
-        return new JsonMapAttributes(
-                label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility);
+    public JsonMapLocationAttributesBuilder asLocationAttributes() {
+        return new JsonMapLocationAttributesBuilder();
+    }
+
+    public JsonMapPathAttributesBuilder asPathAttributes() {
+        return new JsonMapPathAttributesBuilder();
+    }
+
+    public JsonMapAreaAttributesBuilder asAreaAttributes() {
+        return new JsonMapAreaAttributesBuilder();
+    }
+
+    protected void checkInvalidAttribute(String fieldName) {
+        if (!WynntilsMod.isDevelopmentBuild()) return;
+
+        try {
+            // Use reflection to get our field given by the name
+            Field field = JsonMapAttributesBuilder.class.getDeclaredField(fieldName);
+            if (field.get(this) != null) {
+                throw new IllegalStateException("Unsupported attribute set: " + fieldName);
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // Silently ignore invalid field checks
+        }
+    }
+
+    public final class JsonMapLocationAttributesBuilder extends JsonMapAttributesBuilder {
+        public JsonMapLocationAttributes build() {
+            MapLocationAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
+
+            return new JsonMapLocationAttributes(
+                    label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility);
+        }
+    }
+
+    public final class JsonMapPathAttributesBuilder extends JsonMapAttributesBuilder {
+        public JsonMapPathAttributes build() {
+            MapPathAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
+
+            return new JsonMapPathAttributes(label, priority, level, labelColor, labelShadow, labelVisibility);
+        }
+    }
+
+    public final class JsonMapAreaAttributesBuilder extends JsonMapAttributesBuilder {
+        public JsonMapAreaAttributes build() {
+            MapAreaAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
+
+            return new JsonMapAreaAttributes(
+                    label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility);
+        }
     }
 }

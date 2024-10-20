@@ -9,13 +9,13 @@ import com.wynntils.utils.type.BoundingShape;
 import java.util.List;
 import java.util.Optional;
 
-public interface MapFeature extends MapDataProvidedType {
+public interface MapFeature<A extends MapAttributes> extends MapDataProvidedType {
     // The id should be unique, and track the provenance of the feature
     String getFeatureId();
 
     String getCategoryId();
 
-    Optional<MapAttributes> getAttributes();
+    Optional<A> getAttributes();
 
     boolean isVisible(BoundingShape boundingShape);
 
