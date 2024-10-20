@@ -73,17 +73,17 @@ public class MarkerOptionsBuilder implements MarkerOptions {
     }
 
     @Override
-    public Optional<Boolean> renderLabel() {
+    public Optional<Boolean> labelVisible() {
         return Optional.ofNullable(renderLabel);
     }
 
     @Override
-    public Optional<Boolean> renderDistance() {
+    public Optional<Boolean> distanceVisible() {
         return Optional.ofNullable(renderDistance);
     }
 
     @Override
-    public Optional<Boolean> renderIcon() {
+    public Optional<Boolean> iconVisible() {
         return Optional.ofNullable(renderIcon);
     }
 }
