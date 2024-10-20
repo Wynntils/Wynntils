@@ -1,3 +1,25 @@
+## [2.3.14](https://github.com/Wynntils/Wynntils/compare/v2.3.13...v2.3.14) (2024-10-20)
+
+
+### New Features
+
+* Add the name of crafted items to the string shared when sharing encoded items [skip ci] ([#2887](https://github.com/Wynntils/Wynntils/issues/2887)) ([a8d6f27](https://github.com/Wynntils/Wynntils/commit/a8d6f279aba0ae68d246740e23766c6e342df8c2))
+
+
+### Bug Fixes
+
+* Add a toggle for reverse direction filter changes in ContentBookQueries (to fix the current weird Wynn behavior...) ([#2926](https://github.com/Wynntils/Wynntils/issues/2926)) ([67e3bb9](https://github.com/Wynntils/Wynntils/commit/67e3bb9f6c15da92820157caa56a740686398bfd))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2927](https://github.com/Wynntils/Wynntils/issues/2927)) ([2564635](https://github.com/Wynntils/Wynntils/commit/25646356b89572c0ff9ecc1b1dffd0114d73487a))
+
+
+### Code Refactoring
+
+* Incorporate non-mapdata dependent refactorings from the mapdata-ports branch [skip ci] ([#2925](https://github.com/Wynntils/Wynntils/issues/2925)) ([5873ec1](https://github.com/Wynntils/Wynntils/commit/5873ec13ee053123eab3dd3e50700b8627d019a1))
+
 ## [2.3.13](https://github.com/Wynntils/Wynntils/compare/v2.3.12...v2.3.13) (2024-10-19)
 
 
@@ -13,6 +35,11 @@
 * Arrow shield tracker not tracking [skip ci] ([#2919](https://github.com/Wynntils/Wynntils/issues/2919)) ([dffef76](https://github.com/Wynntils/Wynntils/commit/dffef76712eada9df0ab74f1238b2ae15eacfb13))
 * Fix seaskipper screen doubling destinations [skip ci] ([#2922](https://github.com/Wynntils/Wynntils/issues/2922)) ([df7c7ff](https://github.com/Wynntils/Wynntils/commit/df7c7ffcd1c9dfbeff201e3dff32743cf16db1d9))
 * Party model not updating after raids [skip ci] ([#2924](https://github.com/Wynntils/Wynntils/issues/2924)) ([37a8fc8](https://github.com/Wynntils/Wynntils/commit/37a8fc8980386d350ea9b4a5558932e016156620))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.13 [skip ci] ([60d942b](https://github.com/Wynntils/Wynntils/commit/60d942b0dce8e45aa9986f155632b451ecdd8614))
 
 ## [2.3.12](https://github.com/Wynntils/Wynntils/compare/v2.3.11...v2.3.12) (2024-10-14)
 
@@ -64,16 +91,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2904](https://github.com/Wynntils/Wynntils/issues/2904)) ([c0ce0aa](https://github.com/Wynntils/Wynntils/commit/c0ce0aaacd22a4b94815217308d975129ca8038d))
 * **release:** v2.3.10 [skip ci] ([2a39b2e](https://github.com/Wynntils/Wynntils/commit/2a39b2e818ac2e1a57181fe6cb110e9813e418b5))
-
-## [2.3.9](https://github.com/Wynntils/Wynntils/compare/v2.3.8...v2.3.9) (2024-10-03)
-
-
-### New Features
-
-* Reworked ItemCompareFeature ([#2876](https://github.com/Wynntils/Wynntils/issues/2876)) ([f40570a](https://github.com/Wynntils/Wynntils/commit/f40570a4cc31401fa9b20eee5dd783d88868ceac))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.9 [skip ci] ([bd74439](https://github.com/Wynntils/Wynntils/commit/bd74439c610ce11bca1af127b5153334bebb0aaa))
 
