@@ -110,13 +110,15 @@ public class ExtendedSeasonLeaderboardFeature extends Feature {
                 placeColor = ChatFormatting.WHITE;
             }
 
-            // 1st is bold
-            ChatFormatting placeFormat = leaderboardPos.position() == 1 ? ChatFormatting.BOLD : ChatFormatting.RESET;
+            MutableComponent placement =
+                    Component.literal(String.valueOf(leaderboardPos.position())).withStyle(placeColor);
 
-            newLabel.append(Component.literal(String.valueOf(leaderboardPos.position()))
-                            .withStyle(placeColor, placeFormat))
-                    .append(Component.literal(" - "))
-                    .withStyle(ChatFormatting.GRAY);
+            // 1st is bold
+            if (leaderboardPos.position() == 1) {
+                placement.withStyle(ChatFormatting.BOLD);
+            }
+
+            newLabel.append(placement).append(Component.literal(" - ")).withStyle(ChatFormatting.GRAY);
 
             Optional<GuildProfile> guildProfile = Models.Guild.getGuildProfile(leaderboardPos.guildName());
             String prefix = "[" + guildProfile.map(GuildProfile::prefix).orElse("???") + "]";
