@@ -61,10 +61,13 @@ public class WorldMarkersFeature extends Feature {
     private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null, "");
 
     @Persisted
-    public final Config<Float> backgroundOpacity = new Config<>(0.2f);
+    public final Config<Float> textBackgroundOpacity = new Config<>(0.2f);
 
     @Persisted
-    public final Config<Float> scale = new Config<>(1.0f);
+    public final Config<Float> textRenderScale = new Config<>(1.0f);
+
+    @Persisted
+    public final Config<Float> iconRenderScale = new Config<>(1.0f);
 
     @Persisted
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
@@ -82,7 +85,7 @@ public class WorldMarkersFeature extends Feature {
     public final Config<Integer> maxMarkerDistance = new Config<>(5000);
 
     @Persisted
-    public final Config<CustomColor> waypointBeamColor = new Config<>(CommonColors.RED);
+    public final Config<CustomColor> markerBeaconColor = new Config<>(CommonColors.RED);
 
     private final List<RenderedMapLocation> renderedMapLocations = new ArrayList<>();
     private CustomColor currentRainbowColor = CommonColors.RED;
@@ -152,7 +155,7 @@ public class WorldMarkersFeature extends Feature {
             poseStack.translate(dx, dy, dz);
 
             CustomColor color = resolvedMarkerOptions.beaconColor() == CustomColor.NONE
-                    ? waypointBeamColor.get()
+                    ? markerBeaconColor.get()
                     : resolvedMarkerOptions.beaconColor();
 
             int colorInt;
@@ -286,11 +289,11 @@ public class WorldMarkersFeature extends Feature {
                     RenderUtils.drawScalingTexturedRect(
                             event.getPoseStack(),
                             icon.getResourceLocation(),
-                            displayPositionX - scale.get() * icon.getWidth() / 2,
-                            displayPositionY - scale.get() * (icon.getHeight() + backgroundHeight / 2 + 3f),
+                            displayPositionX - iconRenderScale.get() * icon.getWidth() / 2,
+                            displayPositionY - iconRenderScale.get() * (icon.getHeight() + backgroundHeight / 2 + 3f),
                             0,
-                            scale.get() * icon.getWidth(),
-                            scale.get() * icon.getHeight(),
+                            iconRenderScale.get() * icon.getWidth(),
+                            iconRenderScale.get() * icon.getHeight(),
                             icon.getWidth(),
                             icon.getHeight());
                 }
@@ -301,12 +304,12 @@ public class WorldMarkersFeature extends Feature {
                 if (resolvedMarkerOptions.renderDistance() || resolvedMarkerOptions.renderLabel()) {
                     RenderUtils.drawRect(
                             event.getPoseStack(),
-                            CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
-                            displayPositionX - scale.get() * (backgroundWidth / 2 + 2),
-                            displayPositionY - scale.get() * (backgroundHeight / 2 + 2),
+                            CommonColors.BLACK.withAlpha(textBackgroundOpacity.get()),
+                            displayPositionX - textRenderScale.get() * (backgroundWidth / 2 + 2),
+                            displayPositionY - textRenderScale.get() * (backgroundHeight / 2 + 2),
                             0,
-                            scale.get() * (backgroundWidth + 3),
-                            scale.get() * (backgroundHeight + 2));
+                            textRenderScale.get() * (backgroundWidth + 3),
+                            textRenderScale.get() * (backgroundHeight + 2));
                 }
 
                 int textYOffset = 0;
@@ -315,17 +318,17 @@ public class WorldMarkersFeature extends Feature {
                             .renderAlignedTextInBox(
                                     event.getPoseStack(),
                                     StyledText.fromString(renderedDistanceText),
-                                    displayPositionX - scale.get() * backgroundWidth,
-                                    displayPositionX + scale.get() * backgroundWidth,
-                                    displayPositionY - scale.get() * backgroundHeight,
-                                    displayPositionY + scale.get() * backgroundHeight,
+                                    displayPositionX - textRenderScale.get() * backgroundWidth,
+                                    displayPositionX + textRenderScale.get() * backgroundWidth,
+                                    displayPositionY - textRenderScale.get() * backgroundHeight,
+                                    displayPositionY + textRenderScale.get() * backgroundHeight,
                                     0,
                                     resolvedMapAttributes.labelColor().withAlpha((float)
                                             renderedMapLocation.visibility),
                                     HorizontalAlignment.CENTER,
                                     VerticalAlignment.MIDDLE,
                                     textShadow.get(),
-                                    scale.get());
+                                    textRenderScale.get());
 
                     textYOffset += FontRenderer.getInstance().getFont().lineHeight;
                 }
@@ -335,17 +338,17 @@ public class WorldMarkersFeature extends Feature {
                             .renderAlignedTextInBox(
                                     event.getPoseStack(),
                                     StyledText.fromString(resolvedMapAttributes.label()),
-                                    displayPositionX - scale.get() * backgroundWidth,
-                                    displayPositionX + scale.get() * backgroundWidth,
-                                    displayPositionY - scale.get() * backgroundHeight + textYOffset,
-                                    displayPositionY + scale.get() * backgroundHeight + textYOffset,
+                                    displayPositionX - textRenderScale.get() * backgroundWidth,
+                                    displayPositionX + textRenderScale.get() * backgroundWidth,
+                                    displayPositionY - textRenderScale.get() * backgroundHeight + textYOffset,
+                                    displayPositionY + textRenderScale.get() * backgroundHeight + textYOffset,
                                     0,
                                     resolvedMapAttributes.labelColor().withAlpha((float)
                                             renderedMapLocation.visibility),
                                     HorizontalAlignment.CENTER,
                                     VerticalAlignment.MIDDLE,
                                     textShadow.get(),
-                                    scale.get());
+                                    textRenderScale.get());
                 }
             } else if (resolvedMarkerOptions.renderIcon()) {
                 displayPositionX = intersectPoint.x;
@@ -367,11 +370,15 @@ public class WorldMarkersFeature extends Feature {
                 RenderUtils.drawScalingTexturedRect(
                         event.getPoseStack(),
                         icon.getResourceLocation(),
-                        displayPositionX - scale.get() * icon.getWidth() / 2 + pointerOffsetX * (1 - scale.get()),
-                        displayPositionY - scale.get() * icon.getHeight() / 2 + pointerOffsetY * (1 - scale.get()),
+                        displayPositionX
+                                - textRenderScale.get() * icon.getWidth() / 2
+                                + pointerOffsetX * (1 - textRenderScale.get()),
+                        displayPositionY
+                                - textRenderScale.get() * icon.getHeight() / 2
+                                + pointerOffsetY * (1 - textRenderScale.get()),
                         0,
-                        scale.get() * icon.getWidth(),
-                        scale.get() * icon.getHeight(),
+                        textRenderScale.get() * icon.getWidth(),
+                        textRenderScale.get() * icon.getHeight(),
                         icon.getWidth(),
                         icon.getHeight());
                 RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -392,7 +399,7 @@ public class WorldMarkersFeature extends Feature {
                                 pointerDisplayPositionX,
                                 pointerDisplayPositionY,
                                 false,
-                                scale.get(),
+                                textRenderScale.get(),
                                 1,
                                 50,
                                 true);
@@ -424,7 +431,7 @@ public class WorldMarkersFeature extends Feature {
         if (isInBound(position, window)) return null;
         Vec3 centerPoint = new Vec3(window.getGuiScaledWidth() / 2f, window.getGuiScaledHeight() / 2f, 0);
 
-        float pointerScaleCorrection = (float) Texture.POINTER.height() / 2 * (1 - scale.get());
+        float pointerScaleCorrection = (float) Texture.POINTER.height() / 2 * (1 - iconRenderScale.get());
 
         // minecraft's origin point is top left corner
         // so positive Y is at the screen bottom
