@@ -6,6 +6,7 @@ package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ArmSwingEvent;
@@ -26,6 +27,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
+@StartDisabled
 @ConfigCategory(Category.COMBAT)
 public class AutoAttackFeature extends Feature {
     private static final int TICKS_PER_ATTACK = 2;
