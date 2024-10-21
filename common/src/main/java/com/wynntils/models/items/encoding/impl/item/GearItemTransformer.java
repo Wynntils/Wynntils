@@ -37,7 +37,8 @@ public class GearItemTransformer extends ItemTransformer<GearItem> {
             return ErrorOr.error("Gear item does not have name data!");
         }
 
-        GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(nameData.name());
+        GearInfo gearInfo =
+                Models.Gear.getGearInfoFromDisplayName(nameData.name().orElse(""));
         if (gearInfo == null) {
             return ErrorOr.error("Unknown gear item: " + nameData.name());
         }
@@ -78,7 +79,7 @@ public class GearItemTransformer extends ItemTransformer<GearItem> {
     public List<ItemData> encodeItem(GearItem item, EncodingSettings encodingSettings) {
         List<ItemData> dataList = new ArrayList<>();
 
-        dataList.add(NameData.from(item));
+        dataList.add(NameData.fromSafeName(item));
         dataList.add(IdentificationData.from(item, encodingSettings.extendedIdentificationEncoding()));
         dataList.add(PowderData.from(item));
         dataList.add(RerollData.from(item));
