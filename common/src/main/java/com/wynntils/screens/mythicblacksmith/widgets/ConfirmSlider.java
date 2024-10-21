@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.mythicblacksmith.widgets;
 
 import com.wynntils.utils.colors.CommonColors;
@@ -23,7 +27,8 @@ public class ConfirmSlider extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawRect(guiGraphics.pose(),
+        RenderUtils.drawRect(
+                guiGraphics.pose(),
                 this.isMouseOver(mouseX, mouseY) ? CommonColors.GRAY : CommonColors.LIGHT_GRAY,
                 getX(),
                 getY(),
