@@ -24,7 +24,6 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.players.event.GuildEvent;
-import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
 import com.wynntils.models.players.type.DiplomacyInfo;
@@ -143,7 +142,6 @@ public class GuildModel extends Model {
     public GuildModel() {
         super(List.of());
 
-        Handlers.Label.registerParser(new GuildSeasonLeaderboardHeaderLabelParser());
         Handlers.Label.registerParser(new GuildSeasonLeaderboardLabelParser());
     }
 
