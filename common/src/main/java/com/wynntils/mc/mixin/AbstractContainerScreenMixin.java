@@ -17,6 +17,8 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -134,26 +136,22 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @Inject(method = "mouseDragged(DDIDD)Z", at = @At("RETURN"))
-    private void mouseDraggedPre(
+    private void mouseDraggedPost(
             double mouseX,
             double mouseY,
             int button,
             double deltaX,
             double deltaY,
             CallbackInfoReturnable<Boolean> cir) {
-        TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
-
-        if (focusedTextInput != null) {
-            focusedTextInput.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        for (GuiEventListener listener : ((AbstractContainerScreen<?>) (Object) this).children()) {
+            listener.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
     }
 
     @Inject(method = "mouseReleased(DDI)Z", at = @At("RETURN"))
-    private void mouseReleasedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
-
-        if (focusedTextInput != null) {
-            focusedTextInput.mouseReleased(mouseX, mouseY, button);
+    private void mouseReleasedPost(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        for (GuiEventListener listener : ((AbstractContainerScreen<?>) (Object) this).children()) {
+            listener.mouseReleased(mouseX, mouseY, button);
         }
     }
 
