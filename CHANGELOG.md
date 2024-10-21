@@ -1,9 +1,21 @@
+## [2.3.17](https://github.com/Wynntils/Wynntils/compare/v2.3.16...v2.3.17) (2024-10-21)
+
+
+### Bug Fixes
+
+* Disable AutoAttackFeature by default until macro spell casting issue solved ([#2939](https://github.com/Wynntils/Wynntils/issues/2939)) ([fa5f914](https://github.com/Wynntils/Wynntils/commit/fa5f914b304facc7fa128e51031d6065fd99ebe1))
+
 ## [2.3.16](https://github.com/Wynntils/Wynntils/compare/v2.3.15...v2.3.16) (2024-10-21)
 
 
 ### Bug Fixes
 
 * Fix item sharing not working in certain cases ([#2937](https://github.com/Wynntils/Wynntils/issues/2937)) ([9948e23](https://github.com/Wynntils/Wynntils/commit/9948e232ae5baad51d9f99d05aad5582acff0786))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.16 [skip ci] ([77e1ae6](https://github.com/Wynntils/Wynntils/commit/77e1ae64c16e90689512fd3e293e0887218d7115))
 
 ## [2.3.15](https://github.com/Wynntils/Wynntils/compare/v2.3.14...v2.3.15) (2024-10-21)
 
@@ -61,21 +73,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.13 [skip ci] ([60d942b](https://github.com/Wynntils/Wynntils/commit/60d942b0dce8e45aa9986f155632b451ecdd8614))
-
-## [2.3.12](https://github.com/Wynntils/Wynntils/compare/v2.3.11...v2.3.12) (2024-10-14)
-
-
-### New Features
-
-* Quick Search TM feature ([#2908](https://github.com/Wynntils/Wynntils/issues/2908)) ([d4fb891](https://github.com/Wynntils/Wynntils/commit/d4fb8918827fcab1a7eb5b1e31e202cf127750f5))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.12 [skip ci] ([db289c4](https://github.com/Wynntils/Wynntils/commit/db289c43b0648510bfe88ae46dbcc48fc82a87cd))
-
-
-### Build System
-
-* JVM runs out of memory after multiple hot swaps [skip ci] ([#2917](https://github.com/Wynntils/Wynntils/issues/2917)) ([d27deee](https://github.com/Wynntils/Wynntils/commit/d27deee23dd0155817cc971613ae20dbe2216ec9))
 
