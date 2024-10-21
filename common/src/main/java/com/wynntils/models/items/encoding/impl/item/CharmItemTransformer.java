@@ -31,7 +31,8 @@ public class CharmItemTransformer extends ItemTransformer<CharmItem> {
             return ErrorOr.error("Charm item does not have name data!");
         }
 
-        CharmInfo charmInfo = Models.Rewards.getCharmInfoFromDisplayName(nameData.name());
+        CharmInfo charmInfo =
+                Models.Rewards.getCharmInfoFromDisplayName(nameData.name().orElse(""));
         if (charmInfo == null) {
             return ErrorOr.error("Unknown charm item: " + nameData.name());
         }
@@ -58,7 +59,7 @@ public class CharmItemTransformer extends ItemTransformer<CharmItem> {
     protected List<ItemData> encodeItem(CharmItem item, EncodingSettings encodingSettings) {
         List<ItemData> dataList = new ArrayList<>();
 
-        dataList.add(NameData.from(item));
+        dataList.add(NameData.fromSafeName(item));
         dataList.add(IdentificationData.from(item, encodingSettings.extendedIdentificationEncoding()));
         dataList.add(RerollData.from(item));
 

@@ -31,7 +31,8 @@ public class TomeItemTransformer extends ItemTransformer<TomeItem> {
             return ErrorOr.error("Tome item does not have name data!");
         }
 
-        TomeInfo tomeInfo = Models.Rewards.getTomeInfoFromDisplayName(nameData.name());
+        TomeInfo tomeInfo =
+                Models.Rewards.getTomeInfoFromDisplayName(nameData.name().orElse(""));
         if (tomeInfo == null) {
             return ErrorOr.error("Unknown tome item: " + nameData.name());
         }
@@ -58,7 +59,7 @@ public class TomeItemTransformer extends ItemTransformer<TomeItem> {
     protected List<ItemData> encodeItem(TomeItem item, EncodingSettings encodingSettings) {
         List<ItemData> dataList = new ArrayList<>();
 
-        dataList.add(NameData.from(item));
+        dataList.add(NameData.fromSafeName(item));
         dataList.add(IdentificationData.from(item, encodingSettings.extendedIdentificationEncoding()));
         dataList.add(RerollData.from(item));
 

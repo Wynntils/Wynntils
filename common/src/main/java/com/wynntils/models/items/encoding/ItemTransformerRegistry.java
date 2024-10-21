@@ -101,7 +101,7 @@ public final class ItemTransformerRegistry {
 
         // Override the name block if we have a clear-chat name
         if (itemName != null) {
-            itemData.add(NameData.from(itemName));
+            itemData.add(NameData.sanitized(itemName));
         }
 
         try {
