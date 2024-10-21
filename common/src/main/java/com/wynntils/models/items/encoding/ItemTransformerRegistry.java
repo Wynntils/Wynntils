@@ -93,13 +93,15 @@ public final class ItemTransformerRegistry {
         TypeData typeData = typeDataOpt.get();
         ItemTransformer<WynnItem> transformer = itemTransformers.get(typeData.itemType());
 
-        // Override the name block if we have a clear-chat name
+        // Don't use the name block for crafted gear and consumables
         // This is used for crafted gear and consumables, so that "bad" names can't be injected into the item
-        if (itemName != null
-                && (typeData.itemType() == ItemType.CRAFTED_GEAR
-                        || typeData.itemType() == ItemType.CRAFTED_CONSUMABLE)) {
+        if (typeData.itemType() == ItemType.CRAFTED_GEAR || typeData.itemType() == ItemType.CRAFTED_CONSUMABLE) {
             itemData.removeIf(data -> data instanceof NameData);
-            itemData.add(NameData.from(itemName));
+        }
+
+        // Override the name block if we have a clear-chat name
+        if (itemName != null) {
+            itemData.add(NameData.sanitized(itemName));
         }
 
         try {
