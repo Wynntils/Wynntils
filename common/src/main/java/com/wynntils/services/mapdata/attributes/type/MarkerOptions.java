@@ -31,17 +31,17 @@ public interface MarkerOptions {
         }
 
         @Override
-        public Optional<Boolean> labelVisible() {
+        public Optional<Boolean> hasLabel() {
             return Optional.of(false);
         }
 
         @Override
-        public Optional<Boolean> distanceVisible() {
+        public Optional<Boolean> hasDistanceLabel() {
             return Optional.of(false);
         }
 
         @Override
-        public Optional<Boolean> iconVisible() {
+        public Optional<Boolean> hasIcon() {
             return Optional.of(false);
         }
     };
@@ -65,13 +65,13 @@ public interface MarkerOptions {
     Optional<CustomColor> getBeaconColor();
 
     // Whether to render the label
-    Optional<Boolean> labelVisible();
+    Optional<Boolean> hasLabel();
 
     // Whether to render the distance (below the label)
-    Optional<Boolean> distanceVisible();
+    Optional<Boolean> hasDistanceLabel();
 
     // Whether to render the icon
-    Optional<Boolean> iconVisible();
+    Optional<Boolean> hasIcon();
 
     static MarkerOptionsBuilder builder() {
         return new MarkerOptionsBuilder();

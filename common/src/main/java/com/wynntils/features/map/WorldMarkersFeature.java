@@ -73,13 +73,13 @@ public class WorldMarkersFeature extends Feature {
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
 
     @Persisted
-    public final Config<Float> bottomBoundingDistance = new Config<>(100f);
+    public final Config<Float> screenMarginTop = new Config<>(40f);
 
     @Persisted
-    public final Config<Float> topBoundingDistance = new Config<>(40f);
+    public final Config<Float> screenMarginBottom = new Config<>(100f);
 
     @Persisted
-    public final Config<Float> horizontalBoundingDistance = new Config<>(30f);
+    public final Config<Float> screenMarginSides = new Config<>(30f);
 
     @Persisted
     public final Config<Integer> maxMarkerDistance = new Config<>(5000);
@@ -435,10 +435,10 @@ public class WorldMarkersFeature extends Feature {
 
         // minecraft's origin point is top left corner
         // so positive Y is at the screen bottom
-        float minX = (float) -(centerPoint.x - horizontalBoundingDistance.get() + pointerScaleCorrection);
-        float maxX = (float) centerPoint.x - horizontalBoundingDistance.get() + pointerScaleCorrection;
-        float minY = (float) -(centerPoint.y - topBoundingDistance.get() + pointerScaleCorrection);
-        float maxY = (float) centerPoint.y - bottomBoundingDistance.get() + pointerScaleCorrection;
+        float minX = (float) -(centerPoint.x - screenMarginSides.get() + pointerScaleCorrection);
+        float maxX = (float) centerPoint.x - screenMarginSides.get() + pointerScaleCorrection;
+        float minY = (float) -(centerPoint.y - screenMarginTop.get() + pointerScaleCorrection);
+        float maxY = (float) centerPoint.y - screenMarginBottom.get() + pointerScaleCorrection;
 
         // drag the origin point to center since indicator's screenspace position / rotation is in relation to it
         Vec3 centerRelativePosition = position.subtract(centerPoint);

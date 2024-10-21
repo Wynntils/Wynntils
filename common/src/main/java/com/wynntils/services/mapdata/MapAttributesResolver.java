@@ -76,9 +76,9 @@ public final class MapAttributesResolver {
                 getInheritedValue(MarkerOptions::getOuterRadius, attributeGetter),
                 getInheritedValue(MarkerOptions::getFade, attributeGetter),
                 getInheritedValue(MarkerOptions::getBeaconColor, attributeGetter),
-                getInheritedValue(MarkerOptions::labelVisible, attributeGetter),
-                getInheritedValue(MarkerOptions::distanceVisible, attributeGetter),
-                getInheritedValue(MarkerOptions::iconVisible, attributeGetter));
+                getInheritedValue(MarkerOptions::hasLabel, attributeGetter),
+                getInheritedValue(MarkerOptions::hasDistanceLabel, attributeGetter),
+                getInheritedValue(MarkerOptions::hasIcon, attributeGetter));
     }
 
     private ResolvedMapVisibility getResolvedMapVisibility(
