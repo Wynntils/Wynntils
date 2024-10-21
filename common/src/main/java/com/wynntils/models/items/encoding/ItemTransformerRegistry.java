@@ -97,11 +97,11 @@ public final class ItemTransformerRegistry {
         // This is used for crafted gear and consumables, so that "bad" names can't be injected into the item
         if (typeData.itemType() == ItemType.CRAFTED_GEAR || typeData.itemType() == ItemType.CRAFTED_CONSUMABLE) {
             itemData.removeIf(data -> data instanceof NameData);
-        }
 
-        // Override the name block if we have a clear-chat name
-        if (itemName != null) {
-            itemData.add(NameData.sanitized(itemName));
+            // Override the name block if we have a clear-chat name
+            if (itemName != null) {
+                itemData.add(NameData.sanitized(itemName));
+            }
         }
 
         try {
