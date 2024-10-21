@@ -13,7 +13,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.items.items.game.HorseItem;
@@ -46,13 +45,14 @@ public class HorseMountFeature extends Feature {
     private static final int SUMMON_ATTEMPTS = 8;
     private static final int SUMMON_DELAY_TICKS = 6;
 
-    private static final List<StyledText> HORSE_ERROR_MESSAGES = List.of(
-            StyledText.fromString("§4There is no room for a horse."),
-            StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby."),
-            StyledText.fromString("§4You cannot interact with your horse at the moment."),
-            StyledText.fromString("§4You cannot use your horse here!"),
-            StyledText.fromString("§4Your horse spawn was disabled (in vanish)!"),
-            StyledText.fromString("§4You can not use a horse while in war."));
+    private static final List<String> HORSE_ERROR_MESSAGES = List.of(
+            "There is no room for a horse.",
+            "Your horse is scared to come out right now, too many mobs are nearby.",
+            "You cannot interact with your horse at the moment.",
+            "You cannot use your horse here!",
+            "Your horse spawn was disabled (in vanish)!",
+            "You can not use a horse while in war.",
+            "You cannot use your vehicle here!");
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
@@ -81,11 +81,8 @@ public class HorseMountFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST) // this needs to run before ChatRedirectFeature cancels the event
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        StyledText message = e.getOriginalStyledText();
-
-        if (HORSE_ERROR_MESSAGES.contains(message)) {
-            cancelMountingHorse = true;
-        }
+        cancelMountingHorse = HORSE_ERROR_MESSAGES.stream()
+                .anyMatch(msg -> e.getOriginalStyledText().getString().contains(msg));
     }
 
     private void mountHorse() {
