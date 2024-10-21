@@ -18,7 +18,18 @@ public final class JsonMapLocationAttributes extends JsonMapAttributes implement
             TextShadow labelShadow,
             JsonMapVisibility labelVisibility,
             CustomColor iconColor,
-            JsonMapVisibility iconVisibility) {
-        super(label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility);
+            JsonMapVisibility iconVisibility,
+            JsonMarkerOptions markerOptions) {
+        super(
+                label,
+                icon,
+                priority,
+                level,
+                labelColor,
+                labelShadow,
+                labelVisibility,
+                iconColor,
+                iconVisibility,
+                markerOptions);
     }
 }

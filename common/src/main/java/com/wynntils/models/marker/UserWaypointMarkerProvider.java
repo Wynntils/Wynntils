@@ -4,9 +4,7 @@
  */
 package com.wynntils.models.marker;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.models.marker.type.LocationSupplier;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
@@ -39,12 +37,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 beaconColor,
                 textColor,
                 CommonColors.WHITE,
-                // FIXME: Feature-Model dependency
-                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
-                                .showAdditionalTextInWorld
-                                .get()
-                        ? additonalText
-                        : null));
+                additonalText));
     }
 
     public void addLocation(Location location, AbstractTexture texture, CustomColor beaconColor, String additonalText) {
@@ -55,12 +48,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 beaconColor,
                 CommonColors.WHITE,
                 CommonColors.WHITE,
-                // FIXME: Feature-Model dependency
-                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
-                                .showAdditionalTextInWorld
-                                .get()
-                        ? Models.Activity.getTrackedName()
-                        : null));
+                Models.Activity.getTrackedName()));
     }
 
     public void addLocation(Location location, AbstractTexture texture, String additionalText) {
@@ -71,12 +59,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 CustomColor.NONE,
                 CommonColors.WHITE,
                 CommonColors.WHITE,
-                // FIXME: Feature-Model dependency
-                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
-                                .showAdditionalTextInWorld
-                                .get()
-                        ? additionalText
-                        : null));
+                additionalText));
     }
 
     public void addLocation(Location location, String additonalText) {
@@ -87,12 +70,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 CustomColor.NONE,
                 CommonColors.WHITE,
                 CommonColors.WHITE,
-                // FIXME: Feature-Model dependency
-                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
-                                .showAdditionalTextInWorld
-                                .get()
-                        ? additonalText
-                        : null));
+                additonalText));
     }
 
     public void addLocation(LocationSupplier locationSupplier, String additonalText) {
@@ -103,12 +81,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 CustomColor.NONE,
                 CommonColors.WHITE,
                 CommonColors.WHITE,
-                // FIXME: Feature-Model dependency
-                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
-                                .showAdditionalTextInWorld
-                                .get()
-                        ? additonalText
-                        : null));
+                additonalText));
     }
 
     public void addLocation(MarkerInfo markerInfo) {

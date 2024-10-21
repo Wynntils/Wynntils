@@ -17,10 +17,6 @@ import java.util.stream.Stream;
 public class ServiceListProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
 
-    public ServiceListProvider() {
-        reloadData();
-    }
-
     @Override
     public void reloadData() {
         loadServices();

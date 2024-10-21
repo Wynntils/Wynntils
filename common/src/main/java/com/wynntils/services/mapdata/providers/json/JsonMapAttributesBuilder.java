@@ -22,6 +22,7 @@ public class JsonMapAttributesBuilder {
     private JsonMapVisibility labelVisibility;
     private CustomColor iconColor;
     private JsonMapVisibility iconVisibility;
+    private JsonMarkerOptions markerOptions;
 
     public JsonMapAttributesBuilder setLabel(String label) {
         this.label = label;
@@ -68,6 +69,11 @@ public class JsonMapAttributesBuilder {
         return this;
     }
 
+    public JsonMapAttributesBuilder setMarkerOptions(JsonMarkerOptions markerOptions) {
+        this.markerOptions = markerOptions;
+        return this;
+    }
+
     public JsonMapLocationAttributesBuilder asLocationAttributes() {
         return new JsonMapLocationAttributesBuilder();
     }
@@ -99,7 +105,16 @@ public class JsonMapAttributesBuilder {
             MapLocationAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
 
             return new JsonMapLocationAttributes(
-                    label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility);
+                    label,
+                    icon,
+                    priority,
+                    level,
+                    labelColor,
+                    labelShadow,
+                    labelVisibility,
+                    iconColor,
+                    iconVisibility,
+                    markerOptions);
         }
     }
 

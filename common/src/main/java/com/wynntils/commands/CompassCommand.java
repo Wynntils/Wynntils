@@ -9,11 +9,9 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
-import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.services.mapdata.MapIconTextureWrapper;
@@ -194,12 +192,7 @@ public class CompassCommand extends Command {
         Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
                 closestService.getLocation(),
                 new MapIconTextureWrapper(Services.MapData.getIconOrFallback(closestService)),
-                // FIXME: Feature-Model dependency
-                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
-                                .showAdditionalTextInWorld
-                                .get()
-                        ? Services.MapData.resolveMapAttributes(closestService).label()
-                        : null);
+                Services.MapData.resolveMapAttributes(closestService).label());
 
         MutableComponent response = Component.literal("Compass set to "
                         + Services.MapData.resolveMapAttributes(closestService).label() + " at ")

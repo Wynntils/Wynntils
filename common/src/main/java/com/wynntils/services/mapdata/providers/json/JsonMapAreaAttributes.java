@@ -19,6 +19,6 @@ public final class JsonMapAreaAttributes extends JsonMapAttributes implements Ma
             JsonMapVisibility labelVisibility,
             CustomColor iconColor,
             JsonMapVisibility iconVisibility) {
-        super(label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility);
+        super(label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility, null);
     }
 }
