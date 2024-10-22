@@ -77,8 +77,8 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         //           input sanitization issues.
         //           The name data present here is from plain-text string shared after the encoded item.
         NameData nameData = itemDataMap.get(NameData.class);
-        if (nameData != null) {
-            name = nameData.name();
+        if (nameData != null && nameData.name().isPresent()) {
+            name = nameData.name().get();
         } else {
             name = "Crafted "
                     + StringUtils.capitalizeFirst(gearTypeData.gearType().name().toLowerCase(Locale.ROOT));
@@ -144,7 +144,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
 
         // Optional blocks
         if (encodingSettings.shareItemName()) {
-            dataList.add(NameData.from(item.getName()));
+            dataList.add(NameData.sanitized(item.getName()));
         }
 
         dataList.add(new DamageData(item.getAttackSpeed(), item.getDamages()));
