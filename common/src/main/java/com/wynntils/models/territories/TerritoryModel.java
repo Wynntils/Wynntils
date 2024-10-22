@@ -110,29 +110,6 @@ public final class TerritoryModel extends Model {
         return territoryProfileMap.keySet().stream();
     }
 
-    //    public Set<TerritoryPoi> getTerritoryPois() {
-    //        return allTerritoryPois;
-    //    }
-    //
-    //    public List<TerritoryPoi> getTerritoryPoisFromAdvancement() {
-    //        return new ArrayList<>(territoryInfoMap.values());
-    //    }
-    //
-    //    public List<TerritoryPoi> getFilteredTerritoryPoisFromAdvancement(
-    //            int filterLevel, TerritoryDefenseFilterType filterType) {
-    //        return switch (filterType) {
-    //            case HIGHER -> territoryInfoMap.values().stream()
-    //                    .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() >= filterLevel)
-    //                    .collect(Collectors.toList());
-    //            case LOWER -> territoryInfoMap.values().stream()
-    //                    .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() <= filterLevel)
-    //                    .collect(Collectors.toList());
-    //            case DEFAULT -> territoryInfoMap.values().stream()
-    //                    .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() == filterLevel)
-    //                    .collect(Collectors.toList());
-    //        };
-    //    }
-    //
     public TerritoryInfo getTerritoryInfo(String name) {
         return territoryInfoMap.get(name);
     }

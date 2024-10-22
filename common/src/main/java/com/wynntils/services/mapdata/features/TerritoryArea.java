@@ -7,8 +7,8 @@ package com.wynntils.services.mapdata.features;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.type.MapAttributes;
+import com.wynntils.services.mapdata.attributes.AbstractMapAreaAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
 import com.wynntils.services.mapdata.type.MapArea;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
@@ -73,8 +73,8 @@ public class TerritoryArea implements MapArea {
     }
 
     @Override
-    public Optional<MapAttributes> getAttributes() {
-        return Optional.of(new AbstractMapAttributes() {
+    public Optional<MapAreaAttributes> getAttributes() {
+        return Optional.of(new AbstractMapAreaAttributes() {
             @Override
             public Optional<String> getLabel() {
                 return Optional.of(territoryProfile.getGuildPrefix());
