@@ -72,8 +72,8 @@ public final class MapAttributesResolver {
     private ResolvedMarkerOptions getResolvedMarkerOptions(
             Function<MapAttributes, Optional<MarkerOptions>> attributeGetter) {
         return new ResolvedMarkerOptions(
-                getInheritedValue(MarkerOptions::getInnerRadius, attributeGetter),
-                getInheritedValue(MarkerOptions::getOuterRadius, attributeGetter),
+                getInheritedValue(MarkerOptions::getMinDistance, attributeGetter),
+                getInheritedValue(MarkerOptions::getMaxDistance, attributeGetter),
                 getInheritedValue(MarkerOptions::getFade, attributeGetter),
                 getInheritedValue(MarkerOptions::getBeaconColor, attributeGetter),
                 getInheritedValue(MarkerOptions::getHasLabel, attributeGetter),

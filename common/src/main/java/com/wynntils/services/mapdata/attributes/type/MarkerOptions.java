@@ -11,12 +11,12 @@ import java.util.Optional;
 public interface MarkerOptions {
     MarkerOptions NONE = new MarkerOptions() {
         @Override
-        public Optional<Float> getInnerRadius() {
+        public Optional<Float> getMinDistance() {
             return Optional.of(0f);
         }
 
         @Override
-        public Optional<Float> getOuterRadius() {
+        public Optional<Float> getMaxDistance() {
             return Optional.of(0f);
         }
 
@@ -51,11 +51,11 @@ public interface MarkerOptions {
 
     // The inner radius for the marker visibility circle
     // If inside the inner radius, the marker starts to fade out
-    Optional<Float> getInnerRadius();
+    Optional<Float> getMinDistance();
 
     // The outer radius for the marker visibility circle
     // If outside the outer radius, the marker is invisible
-    Optional<Float> getOuterRadius();
+    Optional<Float> getMaxDistance();
 
     // The fade distance for the marker visibility circles
     Optional<Float> getFade();

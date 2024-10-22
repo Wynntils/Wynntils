@@ -194,7 +194,7 @@ public class WorldMarkersFeature extends Feature {
                 .map(mapLocation -> {
                     ResolvedMapAttributes resolvedMapAttributes = Services.MapData.resolveMapAttributes(mapLocation);
                     return Pair.of(
-                            Services.MapData.getMarkerVisibility(
+                            Services.MapData.calculateMarkerVisibility(
                                     mapLocation.getLocation(), resolvedMapAttributes.markerOptions()),
                             mapLocation);
                 })
@@ -260,14 +260,14 @@ public class WorldMarkersFeature extends Feature {
 
             String renderedDistanceText = Math.round((float) renderedMapLocation.distance) + "m";
             float backgroundWidth = Math.max(
-                    resolvedMarkerOptions.renderDistance()
+                    resolvedMarkerOptions.hasDistance()
                             ? FontRenderer.getInstance().getFont().width(renderedDistanceText)
                             : 0,
-                    resolvedMarkerOptions.renderLabel()
+                    resolvedMarkerOptions.hasLabel()
                             ? FontRenderer.getInstance().getFont().width(resolvedMapAttributes.label())
                             : 0);
             float backgroundHeight =
-                    ((resolvedMarkerOptions.renderDistance() ? 1 : 0) + (resolvedMarkerOptions.renderLabel() ? 1 : 0))
+                    ((resolvedMarkerOptions.hasDistance() ? 1 : 0) + (resolvedMarkerOptions.hasLabel() ? 1 : 0))
                             * FontRenderer.getInstance().getFont().lineHeight;
 
             float displayPositionX;
@@ -287,7 +287,7 @@ public class WorldMarkersFeature extends Feature {
                 displayPositionX = (float) renderedMapLocation.screenCoordinates.x;
                 displayPositionY = (float) renderedMapLocation.screenCoordinates.y;
 
-                if (resolvedMarkerOptions.renderIcon()) {
+                if (resolvedMarkerOptions.hasIcon()) {
                     RenderUtils.drawScalingTexturedRect(
                             event.getPoseStack(),
                             icon.getResourceLocation(),
@@ -303,7 +303,7 @@ public class WorldMarkersFeature extends Feature {
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.disableBlend();
 
-                if (resolvedMarkerOptions.renderDistance() || resolvedMarkerOptions.renderLabel()) {
+                if (resolvedMarkerOptions.hasDistance() || resolvedMarkerOptions.hasLabel()) {
                     RenderUtils.drawRect(
                             event.getPoseStack(),
                             CommonColors.BLACK.withAlpha(textBackgroundOpacity.get()),
@@ -315,7 +315,7 @@ public class WorldMarkersFeature extends Feature {
                 }
 
                 int textYOffset = 0;
-                if (resolvedMarkerOptions.renderDistance()) {
+                if (resolvedMarkerOptions.hasDistance()) {
                     FontRenderer.getInstance()
                             .renderAlignedTextInBox(
                                     event.getPoseStack(),
@@ -335,7 +335,7 @@ public class WorldMarkersFeature extends Feature {
                     textYOffset += FontRenderer.getInstance().getFont().lineHeight;
                 }
 
-                if (resolvedMarkerOptions.renderLabel()) {
+                if (resolvedMarkerOptions.hasLabel()) {
                     FontRenderer.getInstance()
                             .renderAlignedTextInBox(
                                     event.getPoseStack(),
@@ -352,7 +352,7 @@ public class WorldMarkersFeature extends Feature {
                                     textShadow.get(),
                                     textRenderScale.get());
                 }
-            } else if (resolvedMarkerOptions.renderIcon()) {
+            } else if (resolvedMarkerOptions.hasIcon()) {
                 displayPositionX = intersectPoint.x;
                 displayPositionY = intersectPoint.y;
 

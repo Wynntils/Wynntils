@@ -7,10 +7,10 @@ package com.wynntils.services.mapdata.attributes.type;
 import com.wynntils.utils.colors.CustomColor;
 
 public record ResolvedMarkerOptions(
-        float innerRadius,
-        float outerRadius,
+        float minDistance,
+        float maxDistance,
         float fade,
         CustomColor beaconColor,
-        boolean renderLabel,
-        boolean renderDistance,
-        boolean renderIcon) {}
+        boolean hasLabel,
+        boolean hasDistance,
+        boolean hasIcon) {}

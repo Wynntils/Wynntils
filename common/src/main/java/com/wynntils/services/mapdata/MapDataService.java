@@ -262,14 +262,14 @@ public class MapDataService extends Service {
         return 0;
     }
 
-    public double getMarkerVisibility(Location location, ResolvedMarkerOptions resolvedMarkerOptions) {
+    public double calculateMarkerVisibility(Location location, ResolvedMarkerOptions resolvedMarkerOptions) {
         double distanceToPlayer =
                 Math.sqrt(location.distanceToSqr(McUtils.player().position()));
 
-        double startFadeInDistance = resolvedMarkerOptions.outerRadius() + resolvedMarkerOptions.fade();
-        double stopFadeInDistance = resolvedMarkerOptions.outerRadius() - resolvedMarkerOptions.fade();
-        float startFadeOutDistance = resolvedMarkerOptions.innerRadius() + resolvedMarkerOptions.fade();
-        float stopFadeOutDistance = resolvedMarkerOptions.innerRadius() - resolvedMarkerOptions.fade();
+        double startFadeInDistance = resolvedMarkerOptions.maxDistance() + resolvedMarkerOptions.fade();
+        double stopFadeInDistance = resolvedMarkerOptions.maxDistance() - resolvedMarkerOptions.fade();
+        float startFadeOutDistance = resolvedMarkerOptions.minDistance() + resolvedMarkerOptions.fade();
+        float stopFadeOutDistance = resolvedMarkerOptions.minDistance() - resolvedMarkerOptions.fade();
 
         if (distanceToPlayer > startFadeInDistance) {
             return 0;

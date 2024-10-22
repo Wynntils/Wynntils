@@ -9,39 +9,39 @@ import com.wynntils.utils.colors.CustomColor;
 import java.util.Optional;
 
 public class JsonMarkerOptions implements MarkerOptions {
-    private final Float innerRadius;
-    private final Float outerRadius;
+    private final Float minDistance;
+    private final Float maxDistance;
     private final Float fade;
     private final CustomColor beaconColor;
-    private final Boolean renderLabel;
-    private final Boolean renderDistance;
-    private final Boolean renderIcon;
+    private final Boolean hasLabel;
+    private final Boolean hasDistance;
+    private final Boolean hasIcon;
 
     public JsonMarkerOptions(
-            Float innerRadius,
-            Float outerRadius,
+            Float minDistance,
+            Float maxDistance,
             Float fade,
             CustomColor beaconColor,
-            Boolean renderLabel,
-            Boolean renderDistance,
-            Boolean renderIcon) {
-        this.innerRadius = innerRadius;
-        this.outerRadius = outerRadius;
+            Boolean hasLabel,
+            Boolean hasDistance,
+            Boolean hasIcon) {
+        this.minDistance = minDistance;
+        this.maxDistance = maxDistance;
         this.fade = fade;
         this.beaconColor = beaconColor;
-        this.renderLabel = renderLabel;
-        this.renderDistance = renderDistance;
-        this.renderIcon = renderIcon;
+        this.hasLabel = hasLabel;
+        this.hasDistance = hasDistance;
+        this.hasIcon = hasIcon;
     }
 
     @Override
-    public Optional<Float> getInnerRadius() {
-        return Optional.ofNullable(innerRadius);
+    public Optional<Float> getMinDistance() {
+        return Optional.ofNullable(minDistance);
     }
 
     @Override
-    public Optional<Float> getOuterRadius() {
-        return Optional.ofNullable(outerRadius);
+    public Optional<Float> getMaxDistance() {
+        return Optional.ofNullable(maxDistance);
     }
 
     @Override
@@ -56,16 +56,16 @@ public class JsonMarkerOptions implements MarkerOptions {
 
     @Override
     public Optional<Boolean> getHasLabel() {
-        return Optional.ofNullable(renderLabel);
+        return Optional.ofNullable(hasLabel);
     }
 
     @Override
     public Optional<Boolean> getHasDistanceLabel() {
-        return Optional.ofNullable(renderDistance);
+        return Optional.ofNullable(hasDistance);
     }
 
     @Override
     public Optional<Boolean> getHasIcon() {
-        return Optional.ofNullable(renderIcon);
+        return Optional.ofNullable(hasIcon);
     }
 }

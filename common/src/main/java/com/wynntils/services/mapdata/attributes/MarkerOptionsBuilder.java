@@ -9,21 +9,21 @@ import com.wynntils.utils.colors.CustomColor;
 import java.util.Optional;
 
 public class MarkerOptionsBuilder implements MarkerOptions {
-    private Float innerRadius = null;
-    private Float outerRadius = null;
+    private Float minDistance = null;
+    private Float maxDistance = null;
     private Float fade = null;
     private CustomColor beaconColor = null;
-    private Boolean renderLabel = null;
-    private Boolean renderDistance = null;
-    private Boolean renderIcon = null;
+    private Boolean hasLabel = null;
+    private Boolean hasDistance = null;
+    private Boolean hasIcon = null;
 
-    public MarkerOptionsBuilder withInnerRadius(float innerRadius) {
-        this.innerRadius = innerRadius;
+    public MarkerOptionsBuilder withMinDistance(float minDistance) {
+        this.minDistance = minDistance;
         return this;
     }
 
-    public MarkerOptionsBuilder withOuterRadius(float outerRadius) {
-        this.outerRadius = outerRadius;
+    public MarkerOptionsBuilder withMaxDistance(float maxDistance) {
+        this.maxDistance = maxDistance;
         return this;
     }
 
@@ -37,29 +37,29 @@ public class MarkerOptionsBuilder implements MarkerOptions {
         return this;
     }
 
-    public MarkerOptionsBuilder withRenderLabel(boolean renderLabel) {
-        this.renderLabel = renderLabel;
+    public MarkerOptionsBuilder withHasLabel(boolean hasLabel) {
+        this.hasLabel = hasLabel;
         return this;
     }
 
-    public MarkerOptionsBuilder withRenderDistance(boolean renderDistance) {
-        this.renderDistance = renderDistance;
+    public MarkerOptionsBuilder withHasDistance(boolean hasDistance) {
+        this.hasDistance = hasDistance;
         return this;
     }
 
-    public MarkerOptionsBuilder withRenderIcon(boolean renderIcon) {
-        this.renderIcon = renderIcon;
+    public MarkerOptionsBuilder withHasIcon(boolean hasIcon) {
+        this.hasIcon = hasIcon;
         return this;
     }
 
     @Override
-    public Optional<Float> getInnerRadius() {
-        return Optional.ofNullable(innerRadius);
+    public Optional<Float> getMinDistance() {
+        return Optional.ofNullable(minDistance);
     }
 
     @Override
-    public Optional<Float> getOuterRadius() {
-        return Optional.ofNullable(outerRadius);
+    public Optional<Float> getMaxDistance() {
+        return Optional.ofNullable(maxDistance);
     }
 
     @Override
@@ -74,16 +74,16 @@ public class MarkerOptionsBuilder implements MarkerOptions {
 
     @Override
     public Optional<Boolean> getHasLabel() {
-        return Optional.ofNullable(renderLabel);
+        return Optional.ofNullable(hasLabel);
     }
 
     @Override
     public Optional<Boolean> getHasDistanceLabel() {
-        return Optional.ofNullable(renderDistance);
+        return Optional.ofNullable(hasDistance);
     }
 
     @Override
     public Optional<Boolean> getHasIcon() {
-        return Optional.ofNullable(renderIcon);
+        return Optional.ofNullable(hasIcon);
     }
 }
