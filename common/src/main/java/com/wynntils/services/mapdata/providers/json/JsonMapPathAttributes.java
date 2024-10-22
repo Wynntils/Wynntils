@@ -16,6 +16,6 @@ public final class JsonMapPathAttributes extends JsonMapAttributes implements Ma
             CustomColor labelColor,
             TextShadow labelShadow,
             JsonMapVisibility labelVisibility) {
-        super(label, null, priority, level, labelColor, labelShadow, labelVisibility, null, null);
+        super(label, null, priority, level, labelColor, labelShadow, labelVisibility, null, null, null);
     }
 }
