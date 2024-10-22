@@ -1,9 +1,23 @@
+## [2.3.18](https://github.com/Wynntils/Wynntils/compare/v2.3.17...v2.3.18) (2024-10-22)
+
+
+### Bug Fixes
+
+* Automatic horse mounting gets stuck in loop [skip ci] ([#2938](https://github.com/Wynntils/Wynntils/issues/2938)) ([6659879](https://github.com/Wynntils/Wynntils/commit/665987946962c332986ae3f3639eba36cc2056b8))
+* Correct RegEx used to find overall progress [skip ci] ([#2940](https://github.com/Wynntils/Wynntils/issues/2940)) ([240d630](https://github.com/Wynntils/Wynntils/commit/240d630cd13035ff216f8e6b68ce154cc883cfa1))
+* Fix sharing some items with non alphanumeric names ([#2943](https://github.com/Wynntils/Wynntils/issues/2943)) ([106ea13](https://github.com/Wynntils/Wynntils/commit/106ea13865513becf0dc6cb7e28a5875ab1dcf75))
+
 ## [2.3.17](https://github.com/Wynntils/Wynntils/compare/v2.3.16...v2.3.17) (2024-10-21)
 
 
 ### Bug Fixes
 
 * Disable AutoAttackFeature by default until macro spell casting issue solved ([#2939](https://github.com/Wynntils/Wynntils/issues/2939)) ([fa5f914](https://github.com/Wynntils/Wynntils/commit/fa5f914b304facc7fa128e51031d6065fd99ebe1))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.17 [skip ci] ([3a6517b](https://github.com/Wynntils/Wynntils/commit/3a6517b046a95c0efefb14298dd01eb1ce6f910f))
 
 ## [2.3.16](https://github.com/Wynntils/Wynntils/compare/v2.3.15...v2.3.16) (2024-10-21)
 
@@ -52,25 +66,4 @@
 ### Code Refactoring
 
 * Incorporate non-mapdata dependent refactorings from the mapdata-ports branch [skip ci] ([#2925](https://github.com/Wynntils/Wynntils/issues/2925)) ([5873ec1](https://github.com/Wynntils/Wynntils/commit/5873ec13ee053123eab3dd3e50700b8627d019a1))
-
-## [2.3.13](https://github.com/Wynntils/Wynntils/compare/v2.3.12...v2.3.13) (2024-10-19)
-
-
-### New Features
-
-* Add auto attacking ([#2833](https://github.com/Wynntils/Wynntils/issues/2833)) ([5968bb9](https://github.com/Wynntils/Wynntils/commit/5968bb9e6b084db6937ebe129d550e7bc236b5e1))
-* Add sacred surge bar overlay and function [skip ci] ([#2923](https://github.com/Wynntils/Wynntils/issues/2923)) ([9dd6af6](https://github.com/Wynntils/Wynntils/commit/9dd6af60c7d7f1a8420fc83dd17872c69dfe58aa))
-* Mantle shield tracking [skip ci] ([#2921](https://github.com/Wynntils/Wynntils/issues/2921)) ([e293420](https://github.com/Wynntils/Wynntils/commit/e293420290cc76fb486c6b2bdb452d5acad5b1d6))
-
-
-### Bug Fixes
-
-* Arrow shield tracker not tracking [skip ci] ([#2919](https://github.com/Wynntils/Wynntils/issues/2919)) ([dffef76](https://github.com/Wynntils/Wynntils/commit/dffef76712eada9df0ab74f1238b2ae15eacfb13))
-* Fix seaskipper screen doubling destinations [skip ci] ([#2922](https://github.com/Wynntils/Wynntils/issues/2922)) ([df7c7ff](https://github.com/Wynntils/Wynntils/commit/df7c7ffcd1c9dfbeff201e3dff32743cf16db1d9))
-* Party model not updating after raids [skip ci] ([#2924](https://github.com/Wynntils/Wynntils/issues/2924)) ([37a8fc8](https://github.com/Wynntils/Wynntils/commit/37a8fc8980386d350ea9b4a5558932e016156620))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.13 [skip ci] ([60d942b](https://github.com/Wynntils/Wynntils/commit/60d942b0dce8e45aa9986f155632b451ecdd8614))
 
