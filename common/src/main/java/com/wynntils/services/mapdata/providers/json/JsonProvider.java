@@ -122,8 +122,8 @@ public final class JsonProvider implements MapDataProvider {
      * @param url The url to load
      * @param registerCallback The callback to call with the loaded provider
      */
-    public static void loadOnlineResource(String id, String url, BiConsumer<String, MapDataProvider> registerCallback) {
-        Download dl = Managers.Net.download(URI.create(url), id);
+    public static void loadOnlineResource(String id, URI url, BiConsumer<String, MapDataProvider> registerCallback) {
+        Download dl = Managers.Net.download(url, id);
         dl.handleReader(
                 reader -> {
                     try {
