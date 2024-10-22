@@ -19,7 +19,7 @@ public class NameDataTransformer extends DataTransformer<NameData> {
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, NameData data) {
         return switch (version) {
-            case VERSION_1 -> encodeName(data.name());
+            case VERSION_1 -> encodeName(data.name().orElse(""));
         };
     }
 
@@ -52,7 +52,7 @@ public class NameDataTransformer extends DataTransformer<NameData> {
             return ErrorOr.error("Name data is not null terminated");
         }
 
-        return ErrorOr.of(new NameData(UnsignedByteUtils.decodeString(bytes)));
+        return ErrorOr.of(NameData.sanitized(UnsignedByteUtils.decodeString(bytes)));
     }
 
     @Override

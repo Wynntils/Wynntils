@@ -7,6 +7,7 @@ package com.wynntils.models.items.encoding;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.data.EndData;
+import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.StartData;
 import com.wynntils.models.items.encoding.data.TypeData;
 import com.wynntils.models.items.encoding.impl.item.CharmItemTransformer;
@@ -74,7 +75,7 @@ public final class ItemTransformerRegistry {
         }
     }
 
-    public ErrorOr<WynnItem> decodeItem(EncodedByteBuffer encodedByteBuffer) {
+    public ErrorOr<WynnItem> decodeItem(EncodedByteBuffer encodedByteBuffer, String itemName) {
         ErrorOr<List<ItemData>> errorOrItemData = dataTransformerRegistry.decodeData(encodedByteBuffer);
         if (errorOrItemData.hasError()) {
             return ErrorOr.error(errorOrItemData.getError());
@@ -91,6 +92,17 @@ public final class ItemTransformerRegistry {
 
         TypeData typeData = typeDataOpt.get();
         ItemTransformer<WynnItem> transformer = itemTransformers.get(typeData.itemType());
+
+        // Don't use the name block for crafted gear and consumables
+        // This is used for crafted gear and consumables, so that "bad" names can't be injected into the item
+        if (typeData.itemType() == ItemType.CRAFTED_GEAR || typeData.itemType() == ItemType.CRAFTED_CONSUMABLE) {
+            itemData.removeIf(data -> data instanceof NameData);
+
+            // Override the name block if we have a clear-chat name
+            if (itemName != null) {
+                itemData.add(NameData.sanitized(itemName));
+            }
+        }
 
         try {
             return decodeItem(itemData, transformer);

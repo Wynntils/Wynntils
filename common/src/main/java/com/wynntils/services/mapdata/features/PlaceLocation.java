@@ -4,13 +4,14 @@
  */
 package com.wynntils.services.mapdata.features;
 
-import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapLocation;
+import com.wynntils.services.mapdata.providers.json.JsonMapLocationAttributes;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.type.Location;
 
 public final class PlaceLocation extends JsonMapLocation {
-    private PlaceLocation(String featureId, String categoryId, JsonMapAttributes attributes, Location location) {
+    private PlaceLocation(
+            String featureId, String categoryId, JsonMapLocationAttributes attributes, Location location) {
         super(featureId, categoryId, attributes, location);
     }
 

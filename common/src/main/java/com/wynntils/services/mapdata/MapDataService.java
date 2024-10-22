@@ -10,6 +10,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapVisibility;
+import com.wynntils.services.mapdata.attributes.type.ResolvedMarkerOptions;
 import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.CategoriesProvider;
@@ -25,6 +26,8 @@ import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapFeature;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import java.io.File;
 import java.util.Deque;
 import java.util.HashMap;
@@ -258,6 +261,34 @@ public class MapDataService extends Service {
             // The visibility should be linearly interpolated between 1 and 0 for values
             // between startFadeIn and stopFadeIn.
             return 1 - (zoomLevel - startFadeOut) / (fade * 2);
+        }
+
+        return 0;
+    }
+
+    public double calculateMarkerVisibility(Location location, ResolvedMarkerOptions resolvedMarkerOptions) {
+        double distanceToPlayer =
+                Math.sqrt(location.distanceToSqr(McUtils.player().position()));
+
+        double startFadeInDistance = resolvedMarkerOptions.maxDistance() + resolvedMarkerOptions.fade();
+        double stopFadeInDistance = resolvedMarkerOptions.maxDistance() - resolvedMarkerOptions.fade();
+        float startFadeOutDistance = resolvedMarkerOptions.minDistance() + resolvedMarkerOptions.fade();
+        float stopFadeOutDistance = resolvedMarkerOptions.minDistance() - resolvedMarkerOptions.fade();
+
+        if (distanceToPlayer > startFadeInDistance) {
+            return 0;
+        }
+
+        if (distanceToPlayer > stopFadeInDistance) {
+            return 1 - (distanceToPlayer - stopFadeInDistance) / (resolvedMarkerOptions.fade() * 2);
+        }
+
+        if (distanceToPlayer > startFadeOutDistance) {
+            return 1;
+        }
+
+        if (distanceToPlayer > stopFadeOutDistance) {
+            return (distanceToPlayer - stopFadeOutDistance) / (resolvedMarkerOptions.fade() * 2);
         }
 
         return 0;

@@ -18,8 +18,8 @@ import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.features.WaypointLocation;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
-import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
+import com.wynntils.services.mapdata.providers.json.JsonMapLocationAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
@@ -651,7 +651,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         JsonMapVisibility iconVisibility =
                 new JsonMapVisibility(FixedMapVisibility.ICON_ALWAYS); // TODO: Add visibility input
 
-        JsonMapAttributes attributes = new JsonMapAttributesBuilder()
+        JsonMapLocationAttributes attributes = new JsonMapAttributesBuilder()
                 .setLabel(label)
                 .setIcon(iconId)
                 .setPriority(priority)
@@ -660,6 +660,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                 .setLabelVisibility(labelVisibility)
                 .setIconColor(iconColor)
                 .setIconVisibility(iconVisibility)
+                .asLocationAttributes()
                 .build();
 
         WaypointLocation waypoint = new WaypointLocation(location, label, subcategory, attributes);
