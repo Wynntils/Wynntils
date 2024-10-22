@@ -84,9 +84,6 @@ public class WorldMarkersFeature extends Feature {
     @Persisted
     public final Config<Integer> maxMarkerDistance = new Config<>(5000);
 
-    @Persisted
-    public final Config<CustomColor> markerBeaconColor = new Config<>(CommonColors.RED);
-
     private final List<RenderedMapLocation> renderedMapLocations = new ArrayList<>();
     private CustomColor currentRainbowColor = CommonColors.RED;
 
@@ -154,9 +151,13 @@ public class WorldMarkersFeature extends Feature {
             poseStack.pushPose();
             poseStack.translate(dx, dy, dz);
 
-            CustomColor color = resolvedMarkerOptions.beaconColor() == CustomColor.NONE
-                    ? markerBeaconColor.get()
-                    : resolvedMarkerOptions.beaconColor();
+            CustomColor color = resolvedMarkerOptions.beaconColor();
+
+            if (color == CustomColor.NONE) {
+                // If the color is set to NONE, we skip rendering the beacon beam
+                // This is not logged as render time logging is heavy
+                continue;
+            }
 
             int colorInt;
             if (color == CommonColors.RAINBOW) {
@@ -193,7 +194,8 @@ public class WorldMarkersFeature extends Feature {
                 .map(mapLocation -> {
                     ResolvedMapAttributes resolvedMapAttributes = Services.MapData.resolveMapAttributes(mapLocation);
                     return Pair.of(
-                            getMarkerVisibility(mapLocation.getLocation(), resolvedMapAttributes.markerOptions()),
+                            Services.MapData.getMarkerVisibility(
+                                    mapLocation.getLocation(), resolvedMapAttributes.markerOptions()),
                             mapLocation);
                 })
                 .filter(pair -> pair.a() >= MINIMUM_RENDER_VISIBILITY)
@@ -483,34 +485,6 @@ public class WorldMarkersFeature extends Feature {
                 && position.y() > 0
                 && position.y() < window.getGuiScaledHeight()
                 && position.z() < 1;
-    }
-
-    private double getMarkerVisibility(Location location, ResolvedMarkerOptions resolvedMarkerOptions) {
-        double distanceToPlayer =
-                Math.sqrt(location.distanceToSqr(McUtils.player().position()));
-
-        double startFadeInDistance = resolvedMarkerOptions.outerRadius() + resolvedMarkerOptions.fade();
-        double stopFadeInDistance = resolvedMarkerOptions.outerRadius() - resolvedMarkerOptions.fade();
-        float startFadeOutDistance = resolvedMarkerOptions.innerRadius() + resolvedMarkerOptions.fade();
-        float stopFadeOutDistance = resolvedMarkerOptions.innerRadius() - resolvedMarkerOptions.fade();
-
-        if (distanceToPlayer > startFadeInDistance) {
-            return 0;
-        }
-
-        if (distanceToPlayer > stopFadeInDistance) {
-            return 1 - (distanceToPlayer - stopFadeInDistance) / (resolvedMarkerOptions.fade() * 2);
-        }
-
-        if (distanceToPlayer > startFadeOutDistance) {
-            return 1;
-        }
-
-        if (distanceToPlayer > stopFadeOutDistance) {
-            return (distanceToPlayer - stopFadeOutDistance) / (resolvedMarkerOptions.fade() * 2);
-        }
-
-        return 0;
     }
 
     // limit the bounding distance to prevent divided by zero in getBoundingIntersectPoint

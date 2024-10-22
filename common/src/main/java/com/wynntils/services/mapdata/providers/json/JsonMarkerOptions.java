@@ -55,17 +55,17 @@ public class JsonMarkerOptions implements MarkerOptions {
     }
 
     @Override
-    public Optional<Boolean> hasLabel() {
+    public Optional<Boolean> getHasLabel() {
         return Optional.ofNullable(renderLabel);
     }
 
     @Override
-    public Optional<Boolean> hasDistanceLabel() {
+    public Optional<Boolean> getHasDistanceLabel() {
         return Optional.ofNullable(renderDistance);
     }
 
     @Override
-    public Optional<Boolean> hasIcon() {
+    public Optional<Boolean> getHasIcon() {
         return Optional.ofNullable(renderIcon);
     }
 }
