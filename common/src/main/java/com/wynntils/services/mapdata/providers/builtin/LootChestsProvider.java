@@ -4,8 +4,8 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
-import com.wynntils.services.mapdata.features.FoundChestLocation;
-import com.wynntils.services.mapdata.type.MapFeature;
+import com.wynntils.services.mapdata.features.builtin.FoundChestLocation;
+import com.wynntils.services.mapdata.features.type.MapFeature;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;

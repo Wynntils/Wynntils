@@ -14,7 +14,7 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.maps.widgets.SeaskipperDestinationButton;
 import com.wynntils.screens.maps.widgets.SeaskipperTravelButton;
 import com.wynntils.services.map.pois.SeaskipperDestinationPoi;
-import com.wynntils.services.mapdata.type.MapFeature;
+import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;

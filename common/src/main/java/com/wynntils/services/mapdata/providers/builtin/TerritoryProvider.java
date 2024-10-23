@@ -6,8 +6,8 @@ package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.territories.event.TerritoriesUpdatedEvent;
-import com.wynntils.services.mapdata.features.TerritoryArea;
-import com.wynntils.services.mapdata.type.MapFeature;
+import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
+import com.wynntils.services.mapdata.features.type.MapFeature;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
