@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.screens.maps.MainMapScreen;
-import com.wynntils.screens.maps.PoiCreationScreen;
+import com.wynntils.screens.maps.WaypointCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -81,6 +81,6 @@ public class MainMapFeature extends Feature {
                 McUtils.player().getBlockY(),
                 McUtils.player().getBlockZ());
 
-        McUtils.mc().setScreen(PoiCreationScreen.create(null, location));
+        McUtils.mc().setScreen(WaypointCreationScreen.create(null, location));
     }
 }
