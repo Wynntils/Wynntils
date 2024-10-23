@@ -43,6 +43,7 @@ import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
 import com.wynntils.models.items.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.models.items.annotators.gui.IngredientPouchAnnotator;
+import com.wynntils.models.items.annotators.gui.LeaderboardSeasonAnnotator;
 import com.wynntils.models.items.annotators.gui.SeaskipperDestinationAnnotator;
 import com.wynntils.models.items.annotators.gui.ServerAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
@@ -95,6 +96,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
         Handlers.Item.registerAnnotator(new IngredientPouchAnnotator());
+        Handlers.Item.registerAnnotator(new LeaderboardSeasonAnnotator());
         Handlers.Item.registerAnnotator(new SeaskipperDestinationAnnotator());
         Handlers.Item.registerAnnotator(new ServerAnnotator());
         Handlers.Item.registerAnnotator(new SkillCrystalAnnotator());
