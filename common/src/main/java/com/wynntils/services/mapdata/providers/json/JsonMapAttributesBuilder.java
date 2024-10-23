@@ -13,26 +13,16 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.lang.reflect.Field;
 
 public class JsonMapAttributesBuilder {
-    private String label;
-    private String icon;
     private int priority;
     private int level;
+    private String label;
+    private JsonMapVisibility labelVisibility;
     private CustomColor labelColor;
     private TextShadow labelShadow;
-    private JsonMapVisibility labelVisibility;
-    private CustomColor iconColor;
+    private String icon;
     private JsonMapVisibility iconVisibility;
+    private CustomColor iconColor;
     private JsonMarkerOptions markerOptions;
-
-    public JsonMapAttributesBuilder setLabel(String label) {
-        this.label = label;
-        return this;
-    }
-
-    public JsonMapAttributesBuilder setIcon(String icon) {
-        this.icon = icon;
-        return this;
-    }
 
     public JsonMapAttributesBuilder setPriority(int priority) {
         this.priority = priority;
@@ -41,6 +31,16 @@ public class JsonMapAttributesBuilder {
 
     public JsonMapAttributesBuilder setLevel(int level) {
         this.level = level;
+        return this;
+    }
+
+    public JsonMapAttributesBuilder setLabel(String label) {
+        this.label = label;
+        return this;
+    }
+
+    public JsonMapAttributesBuilder setLabelVisibility(JsonMapVisibility labelVisibility) {
+        this.labelVisibility = labelVisibility;
         return this;
     }
 
@@ -54,18 +54,18 @@ public class JsonMapAttributesBuilder {
         return this;
     }
 
-    public JsonMapAttributesBuilder setLabelVisibility(JsonMapVisibility labelVisibility) {
-        this.labelVisibility = labelVisibility;
-        return this;
-    }
-
-    public JsonMapAttributesBuilder setIconColor(CustomColor iconColor) {
-        this.iconColor = iconColor;
+    public JsonMapAttributesBuilder setIcon(String icon) {
+        this.icon = icon;
         return this;
     }
 
     public JsonMapAttributesBuilder setIconVisibility(JsonMapVisibility iconVisibility) {
         this.iconVisibility = iconVisibility;
+        return this;
+    }
+
+    public JsonMapAttributesBuilder setIconColor(CustomColor iconColor) {
+        this.iconColor = iconColor;
         return this;
     }
 
@@ -105,15 +105,15 @@ public class JsonMapAttributesBuilder {
             MapLocationAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
 
             return new JsonMapLocationAttributes(
-                    label,
-                    icon,
                     priority,
                     level,
+                    label,
+                    labelVisibility,
                     labelColor,
                     labelShadow,
-                    labelVisibility,
-                    iconColor,
+                    icon,
                     iconVisibility,
+                    iconColor,
                     markerOptions);
         }
     }
@@ -122,7 +122,7 @@ public class JsonMapAttributesBuilder {
         public JsonMapPathAttributes build() {
             MapPathAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
 
-            return new JsonMapPathAttributes(label, priority, level, labelColor, labelShadow, labelVisibility);
+            return new JsonMapPathAttributes(priority, level, label, labelVisibility, labelColor, labelShadow);
         }
     }
 
@@ -130,8 +130,7 @@ public class JsonMapAttributesBuilder {
         public JsonMapAreaAttributes build() {
             MapAreaAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
 
-            return new JsonMapAreaAttributes(
-                    label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility);
+            return new JsonMapAreaAttributes(priority, level, label, labelVisibility, labelColor, labelShadow);
         }
     }
 }

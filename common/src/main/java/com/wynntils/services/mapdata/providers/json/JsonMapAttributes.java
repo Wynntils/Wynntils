@@ -13,37 +13,37 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 
 public class JsonMapAttributes implements MapAttributes {
-    private final String label;
-    private final String icon;
     private final int priority;
     private final int level;
+    private final String label;
+    private final JsonMapVisibility labelVisibility;
     private final CustomColor labelColor;
     private final TextShadow labelShadow;
-    private final JsonMapVisibility labelVisibility;
-    private final CustomColor iconColor;
+    private final String icon;
     private final JsonMapVisibility iconVisibility;
+    private final CustomColor iconColor;
     private final JsonMarkerOptions markerOptions;
 
     public JsonMapAttributes(
-            String label,
-            String icon,
             int priority,
             int level,
+            String label,
+            JsonMapVisibility labelVisibility,
             CustomColor labelColor,
             TextShadow labelShadow,
-            JsonMapVisibility labelVisibility,
-            CustomColor iconColor,
+            String icon,
             JsonMapVisibility iconVisibility,
+            CustomColor iconColor,
             JsonMarkerOptions markerOptions) {
-        this.label = label;
-        this.icon = icon;
         this.priority = priority;
         this.level = level;
+        this.label = label;
+        this.labelVisibility = labelVisibility;
         this.labelColor = labelColor;
         this.labelShadow = labelShadow;
-        this.labelVisibility = labelVisibility;
-        this.iconColor = iconColor;
+        this.icon = icon;
         this.iconVisibility = iconVisibility;
+        this.iconColor = iconColor;
         this.markerOptions = markerOptions;
     }
 

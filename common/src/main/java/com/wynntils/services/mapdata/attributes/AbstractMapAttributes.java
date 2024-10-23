@@ -14,22 +14,17 @@ import java.util.Optional;
 
 public abstract class AbstractMapAttributes implements MapAttributes {
     @Override
-    public Optional<String> getLabel() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> getIconId() {
-        return Optional.empty();
-    }
-
-    @Override
     public Optional<Integer> getPriority() {
         return Optional.empty();
     }
 
     @Override
     public Optional<Integer> getLevel() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<String> getLabel() {
         return Optional.empty();
     }
 
@@ -45,6 +40,11 @@ public abstract class AbstractMapAttributes implements MapAttributes {
 
     @Override
     public Optional<TextShadow> getLabelShadow() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<String> getIconId() {
         return Optional.empty();
     }
 
