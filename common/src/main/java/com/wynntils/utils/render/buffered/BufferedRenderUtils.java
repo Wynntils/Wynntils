@@ -650,27 +650,60 @@ public final class BufferedRenderUtils {
     }
 
     public static void drawPolygon(
-            PoseStack poseStack, MultiBufferSource bufferSource, CustomColor color, List<Vector2f> vertices, float z) {
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            CustomColor fillColor,
+            CustomColor borderColor,
+            float borderWidth,
+            List<Vector2f> vertices,
+            float z) {
         if (vertices.size() < 3) {
             WynntilsMod.warn("Tried to draw a polygon with less than 3 vertices");
             return;
         }
 
         Matrix4f matrix = poseStack.last().pose();
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POSITION_COLOR_TRIANGLE_STRIP);
 
-        // First vertex
-        Vector2f firstVertex = vertices.get(0);
+        if (fillColor != CustomColor.NONE) {
+            VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POSITION_COLOR_TRIANGLE_STRIP);
 
-        // Add each vertex
-        for (int i = 1; i < vertices.size() - 1; i++) {
-            Vector2f v1 = vertices.get(i);
-            Vector2f v2 = vertices.get(i + 1);
+            // First vertex
+            Vector2f firstVertex = vertices.get(0);
 
-            // Triangle strip needs v0, v1, v2 in sequence, then v1, v2, v3, and so on
-            buffer.addVertex(matrix, firstVertex.x(), firstVertex.y(), z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, v1.x(), v1.y(), z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, v2.x(), v2.y(), z).setColor(color.r, color.g, color.b, color.a);
+            // Add each vertex
+            for (int i = 1; i < vertices.size() - 1; i++) {
+                Vector2f v1 = vertices.get(i);
+                Vector2f v2 = vertices.get(i + 1);
+
+                // Triangle strip needs v0, v1, v2 in sequence, then v1, v2, v3, and so on
+                buffer.addVertex(matrix, firstVertex.x(), firstVertex.y(), z)
+                        .setColor(fillColor.r, fillColor.g, fillColor.b, fillColor.a);
+                buffer.addVertex(matrix, v1.x(), v1.y(), z)
+                        .setColor(fillColor.r, fillColor.g, fillColor.b, fillColor.a);
+                buffer.addVertex(matrix, v2.x(), v2.y(), z)
+                        .setColor(fillColor.r, fillColor.g, fillColor.b, fillColor.a);
+            }
+        }
+
+        if (borderColor != CustomColor.NONE && borderWidth > 0f) {
+            for (int i = 0; i < vertices.size() - 1; i++) {
+                Vector2f v1 = vertices.get(i);
+                Vector2f v2 = vertices.get(i + 1);
+
+                drawLine(poseStack, bufferSource, borderColor, v1.x(), v1.y(), v2.x(), v2.y(), z, borderWidth);
+            }
+
+            // Render the last line
+            drawLine(
+                    poseStack,
+                    bufferSource,
+                    borderColor,
+                    vertices.get(vertices.size() - 1).x(),
+                    vertices.get(vertices.size() - 1).y(),
+                    vertices.get(0).x(),
+                    vertices.get(0).y(),
+                    z,
+                    borderWidth);
         }
     }
 }

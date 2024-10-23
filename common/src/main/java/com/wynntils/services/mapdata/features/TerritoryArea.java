@@ -81,13 +81,24 @@ public class TerritoryArea implements MapArea {
             }
 
             @Override
-            public Optional<CustomColor> getIconColor() {
+            public Optional<CustomColor> getLabelColor() {
                 return Optional.of(Models.Guild.getColor(territoryProfile.getGuild()));
             }
 
             @Override
-            public Optional<CustomColor> getLabelColor() {
+            public Optional<CustomColor> getFillColor() {
+                return Optional.of(
+                        Models.Guild.getColor(territoryProfile.getGuild()).withAlpha(80));
+            }
+
+            @Override
+            public Optional<CustomColor> getBorderColor() {
                 return Optional.of(Models.Guild.getColor(territoryProfile.getGuild()));
+            }
+
+            @Override
+            public Optional<Float> getBorderWidth() {
+                return Optional.of(1f);
             }
         });
     }

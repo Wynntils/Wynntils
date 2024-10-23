@@ -220,7 +220,13 @@ public final class MapFeatureRenderer {
                 .toList();
 
         BufferedRenderUtils.drawPolygon(
-                poseStack, bufferSource, attributes.iconColor().withAlpha(80), screenVertices, 0);
+                poseStack,
+                bufferSource,
+                attributes.fillColor(),
+                attributes.borderColor(),
+                attributes.borderWidth(),
+                screenVertices,
+                0);
 
         BoundingPolygon boundingPolygon = BoundingPolygon.fromVertices(screenVertices);
         Vector2f centroid = boundingPolygon.centroid();

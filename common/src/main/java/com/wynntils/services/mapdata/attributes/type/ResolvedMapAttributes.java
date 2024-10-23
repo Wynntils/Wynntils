@@ -8,14 +8,17 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 
 public record ResolvedMapAttributes(
-        String label,
-        String iconId,
         int priority,
         int level,
+        String label,
         ResolvedMapVisibility labelVisibility,
         CustomColor labelColor,
         TextShadow labelShadow,
+        String iconId,
         ResolvedMapVisibility iconVisibility,
         CustomColor iconColor,
         MapDecoration iconDecoration,
-        ResolvedMarkerOptions markerOptions) {}
+        ResolvedMarkerOptions markerOptions,
+        CustomColor fillColor,
+        CustomColor borderColor,
+        float borderWidth) {}
