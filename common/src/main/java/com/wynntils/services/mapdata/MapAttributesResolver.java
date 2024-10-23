@@ -35,17 +35,20 @@ public final class MapAttributesResolver {
         MapAttributesResolver resolver = new MapAttributesResolver(feature);
 
         return new ResolvedMapAttributes(
-                resolver.getAttribute(MapAttributes::getLabel),
-                resolver.getAttribute(MapAttributes::getIconId),
                 resolver.getAttribute(MapAttributes::getPriority),
                 resolver.getAttribute(MapAttributes::getLevel),
+                resolver.getAttribute(MapAttributes::getLabel),
                 resolver.getResolvedMapVisibility(MapAttributes::getLabelVisibility),
                 resolver.getAttribute(MapAttributes::getLabelColor),
                 resolver.getAttribute(MapAttributes::getLabelShadow),
+                resolver.getAttribute(MapAttributes::getIconId),
                 resolver.getResolvedMapVisibility(MapAttributes::getIconVisibility),
                 resolver.getAttribute(MapAttributes::getIconColor),
                 resolver.getAttribute(MapAttributes::getIconDecoration),
-                resolver.getResolvedMarkerOptions(MapAttributes::getMarkerOptions));
+                resolver.getResolvedMarkerOptions(MapAttributes::getMarkerOptions),
+                resolver.getAttribute(MapAttributes::getFillColor),
+                resolver.getAttribute(MapAttributes::getBorderColor),
+                resolver.getAttribute(MapAttributes::getBorderWidth));
     }
 
     private <T> T getAttribute(Function<MapAttributes, Optional<T>> attributeGetter) {

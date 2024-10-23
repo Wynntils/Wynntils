@@ -140,6 +140,21 @@ public class CustomRenderType extends RenderType {
                             .setWriteMaskState(COLOR_WRITE)
                             .createCompositeState(false)));
 
+    private static final Function<Float, RenderType> LINE_STIP_COLOR = Util.memoize((borderWidth) -> RenderType.create(
+            "wynntils_line_strip_color",
+            DefaultVertexFormat.POSITION_COLOR_NORMAL,
+            Mode.LINE_STRIP,
+            256,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RENDERTYPE_LINES_SHADER)
+                    .setLineState(new RenderStateShard.LineStateShard(OptionalDouble.of(borderWidth)))
+                    // .setLayeringState(VIEW_OFFSET_Z_LAYERING)
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    // .setOutputState(ITEM_ENTITY_TARGET)
+                    .setWriteMaskState(COLOR_DEPTH_WRITE)
+                    .setCullState(NO_CULL)
+                    .createCompositeState(false)));
+
     public static RenderType getPositionColorTextureQuad(ResourceLocation resource) {
         return POSITION_COLOR_TEXTURE_QUAD.apply(resource);
     }
@@ -150,6 +165,10 @@ public class CustomRenderType extends RenderType {
 
     public static RenderType getMapPositionTextureQuad(ResourceLocation resource) {
         return MAP_POSITION_TEXTURE_QUAD.apply(resource);
+    }
+
+    public static RenderType getLineStripColor(float borderWidth) {
+        return LINE_STIP_COLOR.apply(borderWidth);
     }
 
     public CustomRenderType(

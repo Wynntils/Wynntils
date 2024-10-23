@@ -7,6 +7,7 @@ package com.wynntils.services.mapdata.providers.json;
 import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
 import com.wynntils.services.mapdata.type.MapArea;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.BoundingPolygon;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,12 +17,16 @@ public final class JsonMapArea implements MapArea {
     private final JsonMapAreaAttributes attributes;
     private final List<Location> polygonArea;
 
+    private final transient BoundingPolygon boundingPolygon;
+
     public JsonMapArea(
             String featureId, String categoryId, JsonMapAreaAttributes attributes, List<Location> polygonArea) {
         this.featureId = featureId;
         this.categoryId = categoryId;
         this.attributes = attributes;
         this.polygonArea = polygonArea;
+
+        this.boundingPolygon = BoundingPolygon.fromLocations(polygonArea);
     }
 
     @Override
@@ -47,5 +52,10 @@ public final class JsonMapArea implements MapArea {
     @Override
     public List<Location> getPolygonArea() {
         return polygonArea;
+    }
+
+    @Override
+    public BoundingPolygon getBoundingPolygon() {
+        return boundingPolygon;
     }
 }
