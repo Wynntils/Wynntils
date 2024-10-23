@@ -134,7 +134,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
         }
     }
 
-    @SubscribeEvent
+    // Lower priority so features such as TradeMarketPriceConversionFeature won't have the messaged be cancelled
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
