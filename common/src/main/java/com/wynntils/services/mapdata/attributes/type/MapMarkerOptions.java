@@ -4,12 +4,12 @@
  */
 package com.wynntils.services.mapdata.attributes.type;
 
-import com.wynntils.services.mapdata.attributes.MarkerOptionsBuilder;
+import com.wynntils.services.mapdata.attributes.MapMarkerOptionsBuilder;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.Optional;
 
-public interface MarkerOptions {
-    MarkerOptions NONE = new MarkerOptions() {
+public interface MapMarkerOptions {
+    MapMarkerOptions NONE = new MapMarkerOptions() {
         @Override
         public Optional<Float> getMinDistance() {
             return Optional.of(0f);
@@ -73,7 +73,7 @@ public interface MarkerOptions {
     // Whether to render the icon
     Optional<Boolean> getHasIcon();
 
-    static MarkerOptionsBuilder builder() {
-        return new MarkerOptionsBuilder();
+    static MapMarkerOptionsBuilder builder() {
+        return new MapMarkerOptionsBuilder();
     }
 }

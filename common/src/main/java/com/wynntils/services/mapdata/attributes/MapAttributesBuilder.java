@@ -9,7 +9,7 @@ import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
-import com.wynntils.services.mapdata.attributes.impl.MarkerOptionsImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapMarkerOptionsImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
@@ -27,7 +27,7 @@ public class MapAttributesBuilder {
     private String icon;
     private MapVisibilityImpl iconVisibility;
     private CustomColor iconColor;
-    private MarkerOptionsImpl markerOptions;
+    private MapMarkerOptionsImpl markerOptions;
     private CustomColor fillColor;
     private CustomColor borderColor;
     private float borderWidth;
@@ -77,7 +77,7 @@ public class MapAttributesBuilder {
         return this;
     }
 
-    public MapAttributesBuilder setMarkerOptions(MarkerOptionsImpl markerOptions) {
+    public MapAttributesBuilder setMarkerOptions(MapMarkerOptionsImpl markerOptions) {
         this.markerOptions = markerOptions;
         return this;
     }

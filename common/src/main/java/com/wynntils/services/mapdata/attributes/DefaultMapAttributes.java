@@ -8,7 +8,7 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
-import com.wynntils.services.mapdata.attributes.type.MarkerOptions;
+import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
@@ -74,8 +74,8 @@ public final class DefaultMapAttributes implements MapAttributes {
     }
 
     @Override
-    public Optional<MarkerOptions> getMarkerOptions() {
-        return Optional.of(MarkerOptions.NONE);
+    public Optional<MapMarkerOptions> getMarkerOptions() {
+        return Optional.of(MapMarkerOptions.NONE);
     }
 
     @Override

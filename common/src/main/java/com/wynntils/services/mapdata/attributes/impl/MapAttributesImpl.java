@@ -7,7 +7,7 @@ package com.wynntils.services.mapdata.attributes.impl;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
-import com.wynntils.services.mapdata.attributes.type.MarkerOptions;
+import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
@@ -22,7 +22,7 @@ public class MapAttributesImpl implements MapAttributes {
     private final String icon;
     private final MapVisibilityImpl iconVisibility;
     private final CustomColor iconColor;
-    private final MarkerOptionsImpl markerOptions;
+    private final MapMarkerOptionsImpl markerOptions;
     private final CustomColor fillColor;
     private final CustomColor borderColor;
     private final float borderWidth;
@@ -37,7 +37,7 @@ public class MapAttributesImpl implements MapAttributes {
             String icon,
             MapVisibilityImpl iconVisibility,
             CustomColor iconColor,
-            MarkerOptionsImpl markerOptions,
+            MapMarkerOptionsImpl markerOptions,
             CustomColor fillColor,
             CustomColor borderColor,
             float borderWidth) {
@@ -102,7 +102,7 @@ public class MapAttributesImpl implements MapAttributes {
     }
 
     @Override
-    public Optional<MarkerOptions> getMarkerOptions() {
+    public Optional<MapMarkerOptions> getMarkerOptions() {
         return Optional.ofNullable(markerOptions);
     }
 

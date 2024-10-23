@@ -64,7 +64,7 @@ public interface MapAttributes {
 
     // The options of the marker in the world
     // This is only supported for MapLocations
-    Optional<MarkerOptions> getMarkerOptions();
+    Optional<MapMarkerOptions> getMarkerOptions();
 
     // endregion
 

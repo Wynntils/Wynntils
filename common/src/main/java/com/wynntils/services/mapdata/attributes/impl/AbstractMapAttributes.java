@@ -7,7 +7,7 @@ package com.wynntils.services.mapdata.attributes.impl;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
-import com.wynntils.services.mapdata.attributes.type.MarkerOptions;
+import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
@@ -64,7 +64,7 @@ public abstract class AbstractMapAttributes implements MapAttributes {
     }
 
     @Override
-    public Optional<MarkerOptions> getMarkerOptions() {
+    public Optional<MapMarkerOptions> getMarkerOptions() {
         return Optional.empty();
     }
 

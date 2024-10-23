@@ -2,36 +2,54 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.mapdata.attributes.impl;
+package com.wynntils.services.mapdata.attributes;
 
-import com.wynntils.services.mapdata.attributes.type.MarkerOptions;
+import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.Optional;
 
-public class MarkerOptionsImpl implements MarkerOptions {
-    private final Float minDistance;
-    private final Float maxDistance;
-    private final Float fade;
-    private final CustomColor beaconColor;
-    private final Boolean hasLabel;
-    private final Boolean hasDistance;
-    private final Boolean hasIcon;
+public class MapMarkerOptionsBuilder implements MapMarkerOptions {
+    private Float minDistance = null;
+    private Float maxDistance = null;
+    private Float fade = null;
+    private CustomColor beaconColor = null;
+    private Boolean hasLabel = null;
+    private Boolean hasDistance = null;
+    private Boolean hasIcon = null;
 
-    public MarkerOptionsImpl(
-            Float minDistance,
-            Float maxDistance,
-            Float fade,
-            CustomColor beaconColor,
-            Boolean hasLabel,
-            Boolean hasDistance,
-            Boolean hasIcon) {
+    public MapMarkerOptionsBuilder withMinDistance(float minDistance) {
         this.minDistance = minDistance;
+        return this;
+    }
+
+    public MapMarkerOptionsBuilder withMaxDistance(float maxDistance) {
         this.maxDistance = maxDistance;
+        return this;
+    }
+
+    public MapMarkerOptionsBuilder withFade(float fade) {
         this.fade = fade;
+        return this;
+    }
+
+    public MapMarkerOptionsBuilder withBeaconColor(CustomColor beaconColor) {
         this.beaconColor = beaconColor;
+        return this;
+    }
+
+    public MapMarkerOptionsBuilder withHasLabel(boolean hasLabel) {
         this.hasLabel = hasLabel;
+        return this;
+    }
+
+    public MapMarkerOptionsBuilder withHasDistance(boolean hasDistance) {
         this.hasDistance = hasDistance;
+        return this;
+    }
+
+    public MapMarkerOptionsBuilder withHasIcon(boolean hasIcon) {
         this.hasIcon = hasIcon;
+        return this;
     }
 
     @Override

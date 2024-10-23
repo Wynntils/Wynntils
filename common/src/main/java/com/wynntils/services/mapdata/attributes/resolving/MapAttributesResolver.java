@@ -8,7 +8,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
-import com.wynntils.services.mapdata.attributes.type.MarkerOptions;
+import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import java.util.Optional;
@@ -70,15 +70,15 @@ public final class MapAttributesResolver {
     }
 
     private ResolvedMarkerOptions getResolvedMarkerOptions(
-            Function<MapAttributes, Optional<MarkerOptions>> attributeGetter) {
+            Function<MapAttributes, Optional<MapMarkerOptions>> attributeGetter) {
         return new ResolvedMarkerOptions(
-                getInheritedValue(MarkerOptions::getMinDistance, attributeGetter),
-                getInheritedValue(MarkerOptions::getMaxDistance, attributeGetter),
-                getInheritedValue(MarkerOptions::getFade, attributeGetter),
-                getInheritedValue(MarkerOptions::getBeaconColor, attributeGetter),
-                getInheritedValue(MarkerOptions::getHasLabel, attributeGetter),
-                getInheritedValue(MarkerOptions::getHasDistanceLabel, attributeGetter),
-                getInheritedValue(MarkerOptions::getHasIcon, attributeGetter));
+                getInheritedValue(MapMarkerOptions::getMinDistance, attributeGetter),
+                getInheritedValue(MapMarkerOptions::getMaxDistance, attributeGetter),
+                getInheritedValue(MapMarkerOptions::getFade, attributeGetter),
+                getInheritedValue(MapMarkerOptions::getBeaconColor, attributeGetter),
+                getInheritedValue(MapMarkerOptions::getHasLabel, attributeGetter),
+                getInheritedValue(MapMarkerOptions::getHasDistanceLabel, attributeGetter),
+                getInheritedValue(MapMarkerOptions::getHasIcon, attributeGetter));
     }
 
     private ResolvedMapVisibility getResolvedMapVisibility(

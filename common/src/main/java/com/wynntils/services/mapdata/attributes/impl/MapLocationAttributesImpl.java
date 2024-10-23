@@ -19,7 +19,7 @@ public final class MapLocationAttributesImpl extends MapAttributesImpl implement
             String icon,
             MapVisibilityImpl iconVisibility,
             CustomColor iconColor,
-            MarkerOptionsImpl markerOptions) {
+            MapMarkerOptionsImpl markerOptions) {
         super(
                 priority,
                 level,
