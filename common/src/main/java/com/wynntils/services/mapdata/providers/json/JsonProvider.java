@@ -13,11 +13,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.MalformedJsonException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
+import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
+import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
 import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
@@ -208,12 +212,67 @@ public final class JsonProvider implements MapDataProvider {
             String id = JsonUtils.getNullableJsonString(json, "id");
             String category = JsonUtils.getNullableJsonString(json, "category");
             JsonElement locationJson = json.get("location");
-            Location location = GSON.fromJson(locationJson, Location.class);
-            JsonElement attributesJson = json.get("attributes");
-            JsonMapAttributes attributes =
-                    attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAttributes.class);
+            JsonElement pathJson = json.get("path");
+            JsonElement areaJson = json.get("area");
 
-            return new JsonMapLocation(id, category, attributes, location);
+            if (locationJson != null) {
+                if (pathJson != null || areaJson != null) {
+                    throw new JsonParseException("Feature can only have one of location, path or area");
+                }
+
+                Location location = GSON.fromJson(locationJson, Location.class);
+                JsonElement attributesJson = json.get("attributes");
+                JsonMapLocationAttributes attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapLocationAttributes.class);
+
+                MapLocationAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
+                    if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
+                        WynntilsMod.warn("Unsupported attribute set for location: " + invalidAttribute);
+                    }
+                });
+
+                return new JsonMapLocation(id, category, attributes, location);
+            }
+
+            if (pathJson != null) {
+                if (areaJson != null) {
+                    throw new JsonParseException("Feature can only have one of location, path or area");
+                }
+
+                Type type = new TypeToken<List<Location>>() {}.getType();
+                List<Location> path = GSON.fromJson(pathJson, type);
+                JsonElement attributesJson = json.get("attributes");
+
+                JsonMapPathAttributes attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapPathAttributes.class);
+
+                MapPathAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
+                    if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
+                        WynntilsMod.warn("Unsupported attribute set for path: " + invalidAttribute);
+                    }
+                });
+
+                return new JsonMapPath(id, category, attributes, path);
+            }
+
+            if (areaJson != null) {
+                Type type = new TypeToken<List<Location>>() {}.getType();
+                List<Location> path = GSON.fromJson(pathJson, type);
+                List<Location> polygonArea = GSON.fromJson(pathJson, type);
+                JsonElement attributesJson = json.get("attributes");
+                JsonMapAreaAttributes attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAreaAttributes.class);
+
+                MapAreaAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
+                    if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
+                        WynntilsMod.warn("Unsupported attribute set for area: " + invalidAttribute);
+                    }
+                });
+
+                return new JsonMapArea(id, category, attributes, polygonArea);
+            }
+
+            throw new JsonParseException("Feature neither has location, path nor area");
         }
     }
 

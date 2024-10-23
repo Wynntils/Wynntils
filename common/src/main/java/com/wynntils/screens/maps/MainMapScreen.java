@@ -20,6 +20,7 @@ import com.wynntils.services.map.pois.IconPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
+import com.wynntils.services.mapdata.features.TerritoryArea;
 import com.wynntils.services.mapdata.features.WaypointLocation;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
@@ -302,11 +303,14 @@ public final class MainMapScreen extends AbstractMapScreen {
         // Get all MapData features as Pois
         Stream<MapFeature> mapFeatures = Services.MapData.getFeatures();
 
+        if (!KeyboardUtils.isControlDown()) {
+            mapFeatures = mapFeatures.filter(feature -> !(feature instanceof TerritoryArea));
+        }
+
         // FIXME: Add back the pois that are still not converted to MapData
         //        - Provided custom pois
         //        - Marker waypoints
         //        - Remote players
-        //        - Territory pois
 
         return mapFeatures;
     }

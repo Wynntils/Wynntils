@@ -19,8 +19,8 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.features.WaypointLocation;
-import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
+import com.wynntils.services.mapdata.providers.json.JsonMapLocationAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
@@ -1033,7 +1033,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 .flatMap(waypointCategory -> waypointCategory.getAttributes().flatMap(MapAttributes::getPriority))
                 .orElse(1000);
 
-        JsonMapAttributes attributes = new JsonMapAttributesBuilder()
+        JsonMapLocationAttributes attributes = new JsonMapAttributesBuilder()
                 .setLabel(label)
                 .setIcon(iconId)
                 .setPriority(defaultPriority)
@@ -1042,6 +1042,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 .setLabelVisibility(labelVisibility)
                 .setIconColor(iconColorCache)
                 .setIconVisibility(iconVisibility)
+                .asLocationAttributes()
                 .build();
 
         waypoint = new WaypointLocation(location, label, category, attributes);

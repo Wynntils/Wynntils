@@ -8,6 +8,7 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
+import com.wynntils.services.mapdata.attributes.type.MarkerOptions;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
@@ -23,16 +24,6 @@ public final class DefaultMapAttributes implements MapAttributes {
     private DefaultMapAttributes() {}
 
     @Override
-    public Optional<String> getLabel() {
-        return Optional.of("");
-    }
-
-    @Override
-    public Optional<String> getIconId() {
-        return Optional.of(MapIcon.NO_ICON_ID);
-    }
-
-    @Override
     public Optional<Integer> getPriority() {
         return Optional.of(500);
     }
@@ -40,6 +31,11 @@ public final class DefaultMapAttributes implements MapAttributes {
     @Override
     public Optional<Integer> getLevel() {
         return Optional.of(0);
+    }
+
+    @Override
+    public Optional<String> getLabel() {
+        return Optional.of("");
     }
 
     @Override
@@ -58,6 +54,11 @@ public final class DefaultMapAttributes implements MapAttributes {
     }
 
     @Override
+    public Optional<String> getIconId() {
+        return Optional.of(MapIcon.NO_ICON_ID);
+    }
+
+    @Override
     public Optional<MapVisibility> getIconVisibility() {
         return Optional.of(FixedMapVisibility.ICON_ALWAYS);
     }
@@ -70,5 +71,25 @@ public final class DefaultMapAttributes implements MapAttributes {
     @Override
     public Optional<MapDecoration> getIconDecoration() {
         return Optional.of(MapDecoration.NONE);
+    }
+
+    @Override
+    public Optional<MarkerOptions> getMarkerOptions() {
+        return Optional.of(MarkerOptions.NONE);
+    }
+
+    @Override
+    public Optional<CustomColor> getFillColor() {
+        return Optional.of(CommonColors.WHITE);
+    }
+
+    @Override
+    public Optional<CustomColor> getBorderColor() {
+        return Optional.of(CommonColors.WHITE);
+    }
+
+    @Override
+    public Optional<Float> getBorderWidth() {
+        return Optional.of(1.0f);
     }
 }

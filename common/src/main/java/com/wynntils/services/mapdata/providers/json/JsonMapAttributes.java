@@ -7,40 +7,53 @@ package com.wynntils.services.mapdata.providers.json;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
+import com.wynntils.services.mapdata.attributes.type.MarkerOptions;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 
 public class JsonMapAttributes implements MapAttributes {
-    private final String label;
-    private final String icon;
     private final int priority;
     private final int level;
+    private final String label;
+    private final JsonMapVisibility labelVisibility;
     private final CustomColor labelColor;
     private final TextShadow labelShadow;
-    private final JsonMapVisibility labelVisibility;
-    private final CustomColor iconColor;
+    private final String icon;
     private final JsonMapVisibility iconVisibility;
+    private final CustomColor iconColor;
+    private final JsonMarkerOptions markerOptions;
+    private final CustomColor fillColor;
+    private final CustomColor borderColor;
+    private final float borderWidth;
 
     public JsonMapAttributes(
-            String label,
-            String icon,
             int priority,
             int level,
+            String label,
+            JsonMapVisibility labelVisibility,
             CustomColor labelColor,
             TextShadow labelShadow,
-            JsonMapVisibility labelVisibility,
+            String icon,
+            JsonMapVisibility iconVisibility,
             CustomColor iconColor,
-            JsonMapVisibility iconVisibility) {
-        this.label = label;
-        this.icon = icon;
+            JsonMarkerOptions markerOptions,
+            CustomColor fillColor,
+            CustomColor borderColor,
+            float borderWidth) {
         this.priority = priority;
         this.level = level;
+        this.label = label;
+        this.labelVisibility = labelVisibility;
         this.labelColor = labelColor;
         this.labelShadow = labelShadow;
-        this.labelVisibility = labelVisibility;
-        this.iconColor = iconColor;
+        this.icon = icon;
         this.iconVisibility = iconVisibility;
+        this.iconColor = iconColor;
+        this.markerOptions = markerOptions;
+        this.fillColor = fillColor;
+        this.borderColor = borderColor;
+        this.borderWidth = borderWidth;
     }
 
     @Override
@@ -86,6 +99,26 @@ public class JsonMapAttributes implements MapAttributes {
     @Override
     public Optional<CustomColor> getIconColor() {
         return Optional.ofNullable(iconColor);
+    }
+
+    @Override
+    public Optional<MarkerOptions> getMarkerOptions() {
+        return Optional.ofNullable(markerOptions);
+    }
+
+    @Override
+    public Optional<CustomColor> getFillColor() {
+        return Optional.ofNullable(fillColor);
+    }
+
+    @Override
+    public Optional<CustomColor> getBorderColor() {
+        return Optional.ofNullable(borderColor);
+    }
+
+    @Override
+    public Optional<Float> getBorderWidth() {
+        return Optional.of(borderWidth);
     }
 
     @Override

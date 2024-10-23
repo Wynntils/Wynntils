@@ -16,11 +16,7 @@ import java.util.Optional;
  * i.e. the value is inherited.
  */
 public interface MapAttributes {
-    // If this is the empty string (""), then no label will be displayed
-    Optional<String> getLabel();
-
-    // If this is MapFeatureIcon.NO_ICON_ID ("none"), then no icon will be displayed
-    Optional<String> getIconId();
+    // region Feature (common) Attributes
 
     // 1-1000, 1000 is the highest priority (drawn on top of everything else)
     Optional<Integer> getPriority();
@@ -30,15 +26,58 @@ public interface MapAttributes {
     // 1 means suitable for all levels
     Optional<Integer> getLevel();
 
+    // endregion
+
+    // region Label Attributes
+
+    // If this is the empty string (""), then no label will be displayed
+    Optional<String> getLabel();
+
+    // The visibility of the label on the map
     Optional<MapVisibility> getLabelVisibility();
 
+    // The color of the label on the map, and in-world
     Optional<CustomColor> getLabelColor();
 
+    // The shadow of the label on the map, and in-world
     Optional<TextShadow> getLabelShadow();
 
+    // endregion
+
+    // region Icon Attributes
+
+    // If this is MapFeatureIcon.NO_ICON_ID ("none"), then no icon will be displayed
+    Optional<String> getIconId();
+
+    // The visibility of the icon on the map
     Optional<MapVisibility> getIconVisibility();
 
+    // The color of the icon on the map, and in-world
     Optional<CustomColor> getIconColor();
 
+    // The decoration of the icon on the map, and in-world
     Optional<MapDecoration> getIconDecoration();
+
+    // endregion
+
+    // region Marker Attributes
+
+    // The options of the marker in the world
+    // This is only supported for MapLocations
+    Optional<MarkerOptions> getMarkerOptions();
+
+    // endregion
+
+    // region Area & Border Attributes
+
+    // The color of the area on the map
+    Optional<CustomColor> getFillColor();
+
+    // The color of the border on the map
+    Optional<CustomColor> getBorderColor();
+
+    // The width of the border on the map
+    Optional<Float> getBorderWidth();
+
+    // endregion
 }

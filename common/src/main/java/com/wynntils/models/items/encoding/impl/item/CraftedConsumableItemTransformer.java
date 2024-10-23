@@ -60,9 +60,16 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
         level = requirementsData.requirements().level();
 
         // Optional blocks
-        // Unfortunately, we cannot use the NameData from crafted items, since it can be
-        // set to unsuitable values by the users.
-        name = "Crafted " + StringUtils.capitalizeFirst(consumableType.name().toLowerCase(Locale.ROOT));
+        // Warning: The name data from Crafted items is deliberately removed from the item data map to prevent
+        //           input sanitization issues.
+        //           The name data present here is from plain-text string shared after the encoded item.
+        NameData nameData = itemDataMap.get(NameData.class);
+        if (nameData != null && nameData.name().isPresent()) {
+            name = nameData.name().get();
+        } else {
+            name = "Crafted "
+                    + StringUtils.capitalizeFirst(consumableType.name().toLowerCase(Locale.ROOT));
+        }
 
         EffectsData effectsData = itemDataMap.get(EffectsData.class);
         if (effectsData != null) {
@@ -94,13 +101,7 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
                 new GearRequirements(item.getLevel(), Optional.empty(), List.of(), Optional.empty())));
 
         if (encodingSettings.shareItemName()) {
-            // Unfortunately, we cannot use the name of crafted items, since it can be
-            // set to unsuitable values by the users.
-            String name = "Crafted "
-                    + StringUtils.capitalizeFirst(
-                            item.getConsumableType().name().toLowerCase(Locale.ROOT));
-
-            dataList.add(new NameData(name));
+            dataList.add(NameData.sanitized(item.getName()));
         }
 
         dataList.add(new EffectsData(item.getNamedEffects()));

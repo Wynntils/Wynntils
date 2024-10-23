@@ -80,11 +80,10 @@ import com.wynntils.features.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.inventory.LootchestTextFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
-import com.wynntils.features.map.BeaconBeamFeature;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
-import com.wynntils.features.map.WorldWaypointDistanceFeature;
+import com.wynntils.features.map.WorldMarkersFeature;
 import com.wynntils.features.overlays.AnnihilationSunOverlayFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackerOverlayFeature;
 import com.wynntils.features.overlays.BombBellOverlayFeature;
@@ -174,6 +173,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.Options;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -283,11 +284,10 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region map
-        registerFeature(new BeaconBeamFeature());
         registerFeature(new GuildMapFeature());
         registerFeature(new MainMapFeature());
         registerFeature(new MinimapFeature());
-        registerFeature(new WorldWaypointDistanceFeature());
+        registerFeature(new WorldMarkersFeature());
         // endregion
 
         // region overlays
@@ -406,7 +406,17 @@ public final class FeatureManager extends Manager {
         // This is needed because we are late to register the keybinds,
         // but we cannot move it earlier to the init process because of I18n
         synchronized (McUtils.options()) {
-            McUtils.options().load();
+            Options options = McUtils.options();
+            OptionInstance<Integer> guiScale = options.guiScale();
+
+            // Re-loading the options while the game is running might cause the GUI scale to change,
+            // as it is now clamped by the window size. We need to capture the initial value, then
+            // restore it after the reload.
+            int initialGuiScale = guiScale.get();
+
+            options.load();
+
+            guiScale.value = initialGuiScale;
         }
 
         commands.init();

@@ -44,7 +44,7 @@ public class WaypointsProvider extends BuiltInProvider {
         icons.forEach(WaypointsProvider::registerIcon);
     }
 
-    public static void registerFeature(WaypointLocation waypoint) {
+    private static void registerFeature(WaypointLocation waypoint) {
         PROVIDED_FEATURES.add(waypoint);
     }
 
