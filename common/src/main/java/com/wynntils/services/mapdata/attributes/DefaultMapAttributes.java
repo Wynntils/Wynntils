@@ -8,9 +8,9 @@ import com.wynntils.services.mapdata.attributes.impl.MapMarkerOptionsImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
-import com.wynntils.services.mapdata.type.MapIcon;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
+import com.wynntils.services.mapdata.attributes.type.MapVisibility;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
@@ -25,7 +25,8 @@ public final class DefaultMapAttributes implements MapAttributes {
     public static final MapVisibility ICON_NEVER = new MapVisibilityImpl(100f, 0f, 6f);
     public static final MapVisibility LABEL_ALWAYS = new MapVisibilityImpl(0f, 100f, 3f);
     public static final MapVisibility LABEL_NEVER = new MapVisibilityImpl(100f, 0f, 3f);
-    public static final MapMarkerOptions NONE = new MapMarkerOptionsImpl(0f, 0f, 0f, CustomColor.NONE, false, false, false);
+    public static final MapMarkerOptions NONE =
+            new MapMarkerOptionsImpl(0f, 0f, 0f, CustomColor.NONE, false, false, false);
 
     public static final DefaultMapAttributes INSTANCE = new DefaultMapAttributes();
 

@@ -4,10 +4,10 @@
  */
 package com.wynntils.services.mapdata.providers.type;
 
-import com.wynntils.services.mapdata.type.MapIcon;
+import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
-import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.type.MapIcon;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 

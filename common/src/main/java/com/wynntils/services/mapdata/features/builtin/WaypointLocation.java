@@ -4,8 +4,8 @@
  */
 package com.wynntils.services.mapdata.features.builtin;
 
-import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
+import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Locale;
 

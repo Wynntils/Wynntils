@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.mapdata.attributes.type;
 
-import com.wynntils.services.mapdata.attributes.MapMarkerOptionsBuilder;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.Optional;
 
