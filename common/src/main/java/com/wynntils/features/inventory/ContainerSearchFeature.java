@@ -30,8 +30,11 @@ import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
 import com.wynntils.models.containers.containers.HousingJukeboxContainer;
 import com.wynntils.models.containers.containers.HousingListContainer;
 import com.wynntils.models.containers.containers.JukeboxContainer;
-import com.wynntils.models.containers.containers.PetMenuContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
+import com.wynntils.models.containers.containers.cosmetics.HelmetCosmeticsMenuContainer;
+import com.wynntils.models.containers.containers.cosmetics.PetMenuContainer;
+import com.wynntils.models.containers.containers.cosmetics.PlayerEffectsMenuContainer;
+import com.wynntils.models.containers.containers.cosmetics.WeaponCosmeticsMenuContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
@@ -92,7 +95,16 @@ public class ContainerSearchFeature extends Feature {
     public final Config<Boolean> filterInScrapMenu = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> filterInHelmetCosmeticsMenu = new Config<>(true);
+
+    @Persisted
     public final Config<Boolean> filterInPetMenu = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> filterInPlayerEffectsMenu = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> filterInWeaponCosmeticsMenu = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> filterInContentBook = new Config<>(true);
@@ -125,6 +137,7 @@ public class ContainerSearchFeature extends Feature {
                     Map.entry(GuildBadgesContainer.class, filterInGuildBadges::get),
                     Map.entry(GuildMemberListContainer.class, filterInGuildMemberList::get),
                     Map.entry(GuildTerritoriesContainer.class, filterInGuildTerritories::get),
+                    Map.entry(HelmetCosmeticsMenuContainer.class, filterInHelmetCosmeticsMenu::get),
                     Map.entry(HousingJukeboxContainer.class, filterInHousingJukebox::get),
                     Map.entry(HousingListContainer.class, filterInHousingList::get),
                     Map.entry(IslandBlockBankContainer.class, filterInBlockBank::get),
@@ -132,7 +145,9 @@ public class ContainerSearchFeature extends Feature {
                     Map.entry(MiscBucketContainer.class, filterInMiscBucket::get),
                     Map.entry(PersonalBlockBankContainer.class, filterInBlockBank::get),
                     Map.entry(PetMenuContainer.class, filterInPetMenu::get),
-                    Map.entry(ScrapMenuContainer.class, filterInScrapMenu::get));
+                    Map.entry(PlayerEffectsMenuContainer.class, filterInPlayerEffectsMenu::get),
+                    Map.entry(ScrapMenuContainer.class, filterInScrapMenu::get),
+                    Map.entry(WeaponCosmeticsMenuContainer.class, filterInWeaponCosmeticsMenu::get));
 
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
     // for Wynn to send us the entire updated inventory. During this, the inventory will be in a weird state where

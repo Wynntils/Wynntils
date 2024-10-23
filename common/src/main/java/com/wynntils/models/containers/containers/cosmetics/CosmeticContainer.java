@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.containers.containers;
+package com.wynntils.models.containers.containers.cosmetics;
 
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.type.ContainerBounds;
@@ -11,13 +11,12 @@ import com.wynntils.services.itemfilter.type.ItemProviderType;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class PetMenuContainer extends Container implements SearchableContainerProperty {
-    private static final Pattern TITLE_PATTERN = Pattern.compile("Pet Menu");
-    private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>");
-    private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§f§lPage \\d+§a <§2<§a<§2<§a<");
+public abstract class CosmeticContainer extends Container implements SearchableContainerProperty {
+    private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Next Page");
+    private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Previous Page");
 
-    public PetMenuContainer() {
-        super(TITLE_PATTERN);
+    protected CosmeticContainer(Pattern titlePattern) {
+        super(titlePattern);
     }
 
     @Override

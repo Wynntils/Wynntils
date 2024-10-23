@@ -25,13 +25,16 @@ import com.wynntils.models.containers.containers.InventoryContainer;
 import com.wynntils.models.containers.containers.JukeboxContainer;
 import com.wynntils.models.containers.containers.LeaderboardRewardsContainer;
 import com.wynntils.models.containers.containers.LobbyContainer;
-import com.wynntils.models.containers.containers.PetMenuContainer;
 import com.wynntils.models.containers.containers.RatingRewardsContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
 import com.wynntils.models.containers.containers.TradeMarketContainer;
 import com.wynntils.models.containers.containers.TradeMarketFiltersContainer;
 import com.wynntils.models.containers.containers.TradeMarketSellContainer;
+import com.wynntils.models.containers.containers.cosmetics.HelmetCosmeticsMenuContainer;
+import com.wynntils.models.containers.containers.cosmetics.PetMenuContainer;
+import com.wynntils.models.containers.containers.cosmetics.PlayerEffectsMenuContainer;
+import com.wynntils.models.containers.containers.cosmetics.WeaponCosmeticsMenuContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
@@ -114,6 +117,7 @@ public final class ContainerModel extends Model {
         registerContainer(new GuildManagementContainer());
         registerContainer(new GuildMemberListContainer());
         registerContainer(new GuildTerritoriesContainer());
+        registerContainer(new HelmetCosmeticsMenuContainer());
         registerContainer(new HousingJukeboxContainer());
         registerContainer(new HousingListContainer());
         registerContainer(new IngredientPouchContainer());
@@ -125,6 +129,7 @@ public final class ContainerModel extends Model {
         registerContainer(new LootChestContainer());
         registerContainer(new MiscBucketContainer());
         registerContainer(new ObjectiveRewardContainer());
+        registerContainer(new PlayerEffectsMenuContainer());
         registerContainer(new PersonalBlockBankContainer());
         registerContainer(new PetMenuContainer());
         registerContainer(new RatingRewardsContainer());
@@ -133,6 +138,7 @@ public final class ContainerModel extends Model {
         registerContainer(new TradeMarketFiltersContainer());
         registerContainer(new TradeMarketContainer());
         registerContainer(new TradeMarketSellContainer());
+        registerContainer(new WeaponCosmeticsMenuContainer());
 
         for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
             registerContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
