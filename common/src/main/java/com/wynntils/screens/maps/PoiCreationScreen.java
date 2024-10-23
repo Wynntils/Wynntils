@@ -15,7 +15,7 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.IconButton;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
+import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
@@ -645,11 +645,11 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                 colorInput.getTextBoxInput()); // TODO: Color input should be separated for label and icon
         TextShadow labelShadow = TextShadow.NORMAL; // TODO: Add shadow input
         MapVisibilityImpl labelVisibility =
-                new MapVisibilityImpl(FixedMapVisibility.LABEL_ALWAYS); // TODO: Add visibility input
+                new MapVisibilityImpl(DefaultMapAttributes.LABEL_ALWAYS); // TODO: Add visibility input
         CustomColor iconColor = CustomColor.fromHexString(
                 colorInput.getTextBoxInput()); // TODO: Color input should be separated for label and icon
         MapVisibilityImpl iconVisibility =
-                new MapVisibilityImpl(FixedMapVisibility.ICON_ALWAYS); // TODO: Add visibility input
+                new MapVisibilityImpl(DefaultMapAttributes.ICON_ALWAYS); // TODO: Add visibility input
 
         MapLocationAttributesImpl attributes = new MapAttributesBuilder()
                 .setLabel(label)

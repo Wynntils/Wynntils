@@ -14,7 +14,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.services.map.pois.CustomPoi;
-import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
+import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
@@ -102,8 +102,8 @@ public class WaypointsService extends Service {
                 .setIconVisibility(new MapVisibilityImpl(
                         switch (customPoi.getVisibility()) {
                             case DEFAULT -> MapVisibility.builder().withMin(30f);
-                            case ALWAYS -> FixedMapVisibility.ICON_ALWAYS;
-                            case HIDDEN -> FixedMapVisibility.ICON_NEVER;
+                            case ALWAYS -> DefaultMapAttributes.ICON_ALWAYS;
+                            case HIDDEN -> DefaultMapAttributes.ICON_NEVER;
                         }))
                 .asLocationAttributes()
                 .build();

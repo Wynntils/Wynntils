@@ -4,6 +4,8 @@
  */
 package com.wynntils.services.mapdata.attributes;
 
+import com.wynntils.services.mapdata.attributes.impl.MapMarkerOptionsImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.type.MapIcon;
@@ -19,7 +21,13 @@ import java.util.Optional;
  * are defined. These are guaranteed to be non-empty.
  */
 public final class DefaultMapAttributes implements MapAttributes {
-    public static DefaultMapAttributes INSTANCE = new DefaultMapAttributes();
+    public static final MapVisibility ICON_ALWAYS = new MapVisibilityImpl(0f, 100f, 6f);
+    public static final MapVisibility ICON_NEVER = new MapVisibilityImpl(100f, 0f, 6f);
+    public static final MapVisibility LABEL_ALWAYS = new MapVisibilityImpl(0f, 100f, 3f);
+    public static final MapVisibility LABEL_NEVER = new MapVisibilityImpl(100f, 0f, 3f);
+    public static final MapMarkerOptions NONE = new MapMarkerOptionsImpl(0f, 0f, 0f, CustomColor.NONE, false, false, false);
+
+    public static final DefaultMapAttributes INSTANCE = new DefaultMapAttributes();
 
     private DefaultMapAttributes() {}
 
@@ -40,7 +48,7 @@ public final class DefaultMapAttributes implements MapAttributes {
 
     @Override
     public Optional<MapVisibility> getLabelVisibility() {
-        return Optional.of(FixedMapVisibility.LABEL_ALWAYS);
+        return Optional.of(LABEL_ALWAYS);
     }
 
     @Override
@@ -60,7 +68,7 @@ public final class DefaultMapAttributes implements MapAttributes {
 
     @Override
     public Optional<MapVisibility> getIconVisibility() {
-        return Optional.of(FixedMapVisibility.ICON_ALWAYS);
+        return Optional.of(ICON_ALWAYS);
     }
 
     @Override
@@ -75,7 +83,7 @@ public final class DefaultMapAttributes implements MapAttributes {
 
     @Override
     public Optional<MapMarkerOptions> getMarkerOptions() {
-        return Optional.of(MapMarkerOptions.NONE);
+        return Optional.of(NONE);
     }
 
     @Override

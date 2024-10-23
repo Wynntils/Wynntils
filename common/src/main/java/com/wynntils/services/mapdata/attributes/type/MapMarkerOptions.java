@@ -9,43 +9,6 @@ import com.wynntils.utils.colors.CustomColor;
 import java.util.Optional;
 
 public interface MapMarkerOptions {
-    MapMarkerOptions NONE = new MapMarkerOptions() {
-        @Override
-        public Optional<Float> getMinDistance() {
-            return Optional.of(0f);
-        }
-
-        @Override
-        public Optional<Float> getMaxDistance() {
-            return Optional.of(0f);
-        }
-
-        @Override
-        public Optional<Float> getFade() {
-            return Optional.of(0f);
-        }
-
-        @Override
-        public Optional<CustomColor> getBeaconColor() {
-            return Optional.of(CustomColor.NONE);
-        }
-
-        @Override
-        public Optional<Boolean> getHasLabel() {
-            return Optional.of(false);
-        }
-
-        @Override
-        public Optional<Boolean> getHasDistanceLabel() {
-            return Optional.of(false);
-        }
-
-        @Override
-        public Optional<Boolean> getHasIcon() {
-            return Optional.of(false);
-        }
-    };
-
     // The marker starts to fade in when the player is within the outer radius (- fade),
     // and starts to fade out when approaching the inner radius (- fade)
 
@@ -72,8 +35,4 @@ public interface MapMarkerOptions {
 
     // Whether to render the icon
     Optional<Boolean> getHasIcon();
-
-    static MapMarkerOptionsBuilder builder() {
-        return new MapMarkerOptionsBuilder();
-    }
 }
