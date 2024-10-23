@@ -24,16 +24,6 @@ public final class DefaultMapAttributes implements MapAttributes {
     private DefaultMapAttributes() {}
 
     @Override
-    public Optional<String> getLabel() {
-        return Optional.of("");
-    }
-
-    @Override
-    public Optional<String> getIconId() {
-        return Optional.of(MapIcon.NO_ICON_ID);
-    }
-
-    @Override
     public Optional<Integer> getPriority() {
         return Optional.of(500);
     }
@@ -41,6 +31,11 @@ public final class DefaultMapAttributes implements MapAttributes {
     @Override
     public Optional<Integer> getLevel() {
         return Optional.of(0);
+    }
+
+    @Override
+    public Optional<String> getLabel() {
+        return Optional.of("");
     }
 
     @Override
@@ -56,6 +51,11 @@ public final class DefaultMapAttributes implements MapAttributes {
     @Override
     public Optional<TextShadow> getLabelShadow() {
         return Optional.of(TextShadow.OUTLINE);
+    }
+
+    @Override
+    public Optional<String> getIconId() {
+        return Optional.of(MapIcon.NO_ICON_ID);
     }
 
     @Override
@@ -76,5 +76,20 @@ public final class DefaultMapAttributes implements MapAttributes {
     @Override
     public Optional<MarkerOptions> getMarkerOptions() {
         return Optional.of(MarkerOptions.NONE);
+    }
+
+    @Override
+    public Optional<CustomColor> getFillColor() {
+        return Optional.of(CommonColors.WHITE);
+    }
+
+    @Override
+    public Optional<CustomColor> getBorderColor() {
+        return Optional.of(CommonColors.WHITE);
+    }
+
+    @Override
+    public Optional<Float> getBorderWidth() {
+        return Optional.of(1.0f);
     }
 }

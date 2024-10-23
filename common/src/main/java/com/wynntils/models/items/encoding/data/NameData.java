@@ -13,7 +13,7 @@ public record NameData(Optional<String> name) implements ItemData {
     public static final NameData EMPTY = new NameData(Optional.empty());
 
     private static final int MAX_NAME_LENGTH = 48;
-    private static final Pattern SANITIZE_PATTERN = Pattern.compile("[^a-zA-Z0-9'\\s]");
+    private static final Pattern SANITIZE_PATTERN = Pattern.compile("[^a-zA-Z0-9'\\-.,!?\\s]");
 
     /**
      * Creates a new {@link NameData} object with the given name.
