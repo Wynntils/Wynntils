@@ -132,6 +132,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         mapHeight = renderHeight - renderedBorderYOffset * 2f;
         centerX = renderX + renderedBorderXOffset + mapWidth / 2f;
         centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
+
+        mapBoundingBox =
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
     }
 
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {

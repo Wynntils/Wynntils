@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.models.territories.TerritoryInfo;
@@ -49,7 +50,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
     private BasicTexturedButton territoryDefenseFilterButton;
     private BasicTexturedButton hybridModeButton;
 
-    private GuildMapScreen() {}
+    private GuildMapScreen() {
+        super();
+        centerMapAroundPlayer();
+    }
 
     public static Screen create() {
         return new GuildMapScreen();
@@ -218,10 +222,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     @Override
     protected Stream<MapFeature> getRenderedMapFeatures() {
-        // FIXME: Add back territory map areas (with hybrid/advancement mode)
+        // FIXME: Add back hybrid/advancement mode
         // FIXME: Add territory connection map paths
         // FIXME: Add user markers
-        return Stream.empty();
+        return Services.MapData.getFeaturesForCategory("wynntils:territory");
     }
 
     @Override
