@@ -174,6 +174,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.Options;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -406,7 +408,17 @@ public final class FeatureManager extends Manager {
         // This is needed because we are late to register the keybinds,
         // but we cannot move it earlier to the init process because of I18n
         synchronized (McUtils.options()) {
-            McUtils.options().load();
+            Options options = McUtils.options();
+            OptionInstance<Integer> guiScale = options.guiScale();
+
+            // Re-loading the options while the game is running might cause the GUI scale to change,
+            // as it is now clamped by the window size. We need to capture the initial value, then
+            // restore it after the reload.
+            int initialGuiScale = guiScale.get();
+
+            options.load();
+
+            guiScale.value = initialGuiScale;
         }
 
         commands.init();
