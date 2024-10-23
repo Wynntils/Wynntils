@@ -10,13 +10,13 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 import java.util.Optional;
 
-public final class JsonMapPath implements MapPath {
+public final class MapPathImpl implements MapPath {
     private final String featureId;
     private final String categoryId;
-    private final JsonMapPathAttributes attributes;
+    private final MapPathAttributesImpl attributes;
     private final List<Location> path;
 
-    public JsonMapPath(String featureId, String categoryId, JsonMapPathAttributes attributes, List<Location> path) {
+    public MapPathImpl(String featureId, String categoryId, MapPathAttributesImpl attributes, List<Location> path) {
         this.featureId = featureId;
         this.categoryId = categoryId;
         this.attributes = attributes;

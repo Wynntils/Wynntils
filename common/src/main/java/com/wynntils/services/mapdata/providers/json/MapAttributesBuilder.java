@@ -12,67 +12,67 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 import java.lang.reflect.Field;
 
-public class JsonMapAttributesBuilder {
+public class MapAttributesBuilder {
     private int priority;
     private int level;
     private String label;
-    private JsonMapVisibility labelVisibility;
+    private MapVisibilityImpl labelVisibility;
     private CustomColor labelColor;
     private TextShadow labelShadow;
     private String icon;
-    private JsonMapVisibility iconVisibility;
+    private MapVisibilityImpl iconVisibility;
     private CustomColor iconColor;
-    private JsonMarkerOptions markerOptions;
+    private MarkerOptionsImpl markerOptions;
     private CustomColor fillColor;
     private CustomColor borderColor;
     private float borderWidth;
 
-    public JsonMapAttributesBuilder setPriority(int priority) {
+    public MapAttributesBuilder setPriority(int priority) {
         this.priority = priority;
         return this;
     }
 
-    public JsonMapAttributesBuilder setLevel(int level) {
+    public MapAttributesBuilder setLevel(int level) {
         this.level = level;
         return this;
     }
 
-    public JsonMapAttributesBuilder setLabel(String label) {
+    public MapAttributesBuilder setLabel(String label) {
         this.label = label;
         return this;
     }
 
-    public JsonMapAttributesBuilder setLabelVisibility(JsonMapVisibility labelVisibility) {
+    public MapAttributesBuilder setLabelVisibility(MapVisibilityImpl labelVisibility) {
         this.labelVisibility = labelVisibility;
         return this;
     }
 
-    public JsonMapAttributesBuilder setLabelColor(CustomColor labelColor) {
+    public MapAttributesBuilder setLabelColor(CustomColor labelColor) {
         this.labelColor = labelColor;
         return this;
     }
 
-    public JsonMapAttributesBuilder setLabelShadow(TextShadow labelShadow) {
+    public MapAttributesBuilder setLabelShadow(TextShadow labelShadow) {
         this.labelShadow = labelShadow;
         return this;
     }
 
-    public JsonMapAttributesBuilder setIcon(String icon) {
+    public MapAttributesBuilder setIcon(String icon) {
         this.icon = icon;
         return this;
     }
 
-    public JsonMapAttributesBuilder setIconVisibility(JsonMapVisibility iconVisibility) {
+    public MapAttributesBuilder setIconVisibility(MapVisibilityImpl iconVisibility) {
         this.iconVisibility = iconVisibility;
         return this;
     }
 
-    public JsonMapAttributesBuilder setIconColor(CustomColor iconColor) {
+    public MapAttributesBuilder setIconColor(CustomColor iconColor) {
         this.iconColor = iconColor;
         return this;
     }
 
-    public JsonMapAttributesBuilder setMarkerOptions(JsonMarkerOptions markerOptions) {
+    public MapAttributesBuilder setMarkerOptions(MarkerOptionsImpl markerOptions) {
         this.markerOptions = markerOptions;
         return this;
     }
@@ -89,16 +89,16 @@ public class JsonMapAttributesBuilder {
         this.borderWidth = borderWidth;
     }
 
-    public JsonMapLocationAttributesBuilder asLocationAttributes() {
-        return new JsonMapLocationAttributesBuilder();
+    public MapLocationAttributesBuilder asLocationAttributes() {
+        return new MapLocationAttributesBuilder();
     }
 
-    public JsonMapPathAttributesBuilder asPathAttributes() {
-        return new JsonMapPathAttributesBuilder();
+    public MapPathAttributesBuilder asPathAttributes() {
+        return new MapPathAttributesBuilder();
     }
 
-    public JsonMapAreaAttributesBuilder asAreaAttributes() {
-        return new JsonMapAreaAttributesBuilder();
+    public MapAreaAttributesBuilder asAreaAttributes() {
+        return new MapAreaAttributesBuilder();
     }
 
     protected void checkInvalidAttribute(String fieldName) {
@@ -106,7 +106,7 @@ public class JsonMapAttributesBuilder {
 
         try {
             // Use reflection to get our field given by the name
-            Field field = JsonMapAttributesBuilder.class.getDeclaredField(fieldName);
+            Field field = MapAttributesBuilder.class.getDeclaredField(fieldName);
             if (field.get(this) != null) {
                 throw new IllegalStateException("Unsupported attribute set: " + fieldName);
             }
@@ -115,11 +115,11 @@ public class JsonMapAttributesBuilder {
         }
     }
 
-    public final class JsonMapLocationAttributesBuilder extends JsonMapAttributesBuilder {
-        public JsonMapLocationAttributes build() {
+    public final class MapLocationAttributesBuilder extends MapAttributesBuilder {
+        public MapLocationAttributesImpl build() {
             MapLocationAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
 
-            return new JsonMapLocationAttributes(
+            return new MapLocationAttributesImpl(
                     priority,
                     level,
                     label,
@@ -133,19 +133,19 @@ public class JsonMapAttributesBuilder {
         }
     }
 
-    public final class JsonMapPathAttributesBuilder extends JsonMapAttributesBuilder {
-        public JsonMapPathAttributes build() {
+    public final class MapPathAttributesBuilder extends MapAttributesBuilder {
+        public MapPathAttributesImpl build() {
             MapPathAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
 
-            return new JsonMapPathAttributes(priority, level, label, labelVisibility, labelColor, labelShadow);
+            return new MapPathAttributesImpl(priority, level, label, labelVisibility, labelColor, labelShadow);
         }
     }
 
-    public final class JsonMapAreaAttributesBuilder extends JsonMapAttributesBuilder {
-        public JsonMapAreaAttributes build() {
+    public final class MapAreaAttributesBuilder extends MapAttributesBuilder {
+        public MapAreaAttributesImpl build() {
             MapAreaAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
 
-            return new JsonMapAreaAttributes(
+            return new MapAreaAttributesImpl(
                     priority,
                     level,
                     label,

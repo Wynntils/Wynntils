@@ -8,7 +8,7 @@ import com.wynntils.services.mapdata.attributes.type.MarkerOptions;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.Optional;
 
-public class JsonMarkerOptions implements MarkerOptions {
+public class MarkerOptionsImpl implements MarkerOptions {
     private final Float minDistance;
     private final Float maxDistance;
     private final Float fade;
@@ -17,7 +17,7 @@ public class JsonMarkerOptions implements MarkerOptions {
     private final Boolean hasDistance;
     private final Boolean hasIcon;
 
-    public JsonMarkerOptions(
+    public MarkerOptionsImpl(
             Float minDistance,
             Float maxDistance,
             Float fade,

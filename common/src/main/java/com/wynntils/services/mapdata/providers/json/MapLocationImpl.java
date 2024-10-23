@@ -10,14 +10,14 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 import java.util.Optional;
 
-public class JsonMapLocation implements MapLocation {
+public class MapLocationImpl implements MapLocation {
     private final String featureId;
     private final String categoryId;
-    private final JsonMapLocationAttributes attributes;
+    private final MapLocationAttributesImpl attributes;
     private final Location location;
 
-    public JsonMapLocation(
-            String featureId, String categoryId, JsonMapLocationAttributes attributes, Location location) {
+    public MapLocationImpl(
+            String featureId, String categoryId, MapLocationAttributesImpl attributes, Location location) {
         this.featureId = featureId;
         this.categoryId = categoryId;
         this.attributes = attributes;

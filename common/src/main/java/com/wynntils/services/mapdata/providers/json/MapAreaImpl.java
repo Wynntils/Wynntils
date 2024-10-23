@@ -11,16 +11,16 @@ import com.wynntils.utils.type.BoundingPolygon;
 import java.util.List;
 import java.util.Optional;
 
-public final class JsonMapArea implements MapArea {
+public final class MapAreaImpl implements MapArea {
     private final String featureId;
     private final String categoryId;
-    private final JsonMapAreaAttributes attributes;
+    private final MapAreaAttributesImpl attributes;
     private final List<Location> polygonArea;
 
     private final transient BoundingPolygon boundingPolygon;
 
-    public JsonMapArea(
-            String featureId, String categoryId, JsonMapAreaAttributes attributes, List<Location> polygonArea) {
+    public MapAreaImpl(
+            String featureId, String categoryId, MapAreaAttributesImpl attributes, List<Location> polygonArea) {
         this.featureId = featureId;
         this.categoryId = categoryId;
         this.attributes = attributes;

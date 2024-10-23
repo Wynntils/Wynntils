@@ -8,12 +8,12 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.type.MapCategory;
 import java.util.Optional;
 
-public class JsonCategory implements MapCategory {
+public class MapCategoryImpl implements MapCategory {
     private final String id;
     private final String name;
-    private final JsonMapAttributes attributes;
+    private final MapAttributesImpl attributes;
 
-    public JsonCategory(String id, String name, JsonMapAttributes attributes) {
+    public MapCategoryImpl(String id, String name, MapAttributesImpl attributes) {
         this.id = id;
         this.name = name;
         this.attributes = attributes;

@@ -11,7 +11,7 @@ import java.io.IOException;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 
-public class JsonIcon implements MapIcon {
+public class MapIconImpl implements MapIcon {
     private final String iconId;
     private final NativeImage nativeImage;
     private final int width;
@@ -19,7 +19,7 @@ public class JsonIcon implements MapIcon {
     private boolean registered;
     private ResourceLocation resource;
 
-    public JsonIcon(String iconId, byte[] texture) throws IOException {
+    public MapIconImpl(String iconId, byte[] texture) throws IOException {
         this.iconId = iconId;
         this.nativeImage = NativeImage.read(texture);
         this.width = nativeImage.getWidth();

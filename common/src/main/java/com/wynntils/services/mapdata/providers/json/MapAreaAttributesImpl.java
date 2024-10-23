@@ -8,12 +8,12 @@ import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 
-public final class JsonMapAreaAttributes extends JsonMapAttributes implements MapAreaAttributes {
-    public JsonMapAreaAttributes(
+public final class MapAreaAttributesImpl extends MapAttributesImpl implements MapAreaAttributes {
+    public MapAreaAttributesImpl(
             int priority,
             int level,
             String label,
-            JsonMapVisibility labelVisibility,
+            MapVisibilityImpl labelVisibility,
             CustomColor labelColor,
             TextShadow labelShadow,
             CustomColor fillColor,

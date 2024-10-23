@@ -8,18 +8,18 @@ import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 
-public final class JsonMapLocationAttributes extends JsonMapAttributes implements MapLocationAttributes {
-    public JsonMapLocationAttributes(
+public final class MapLocationAttributesImpl extends MapAttributesImpl implements MapLocationAttributes {
+    public MapLocationAttributesImpl(
             int priority,
             int level,
             String label,
-            JsonMapVisibility labelVisibility,
+            MapVisibilityImpl labelVisibility,
             CustomColor labelColor,
             TextShadow labelShadow,
             String icon,
-            JsonMapVisibility iconVisibility,
+            MapVisibilityImpl iconVisibility,
             CustomColor iconColor,
-            JsonMarkerOptions markerOptions) {
+            MarkerOptionsImpl markerOptions) {
         super(
                 priority,
                 level,

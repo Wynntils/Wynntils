@@ -18,9 +18,9 @@ import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.features.WaypointLocation;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
-import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
-import com.wynntils.services.mapdata.providers.json.JsonMapLocationAttributes;
-import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
+import com.wynntils.services.mapdata.providers.json.MapAttributesBuilder;
+import com.wynntils.services.mapdata.providers.json.MapLocationAttributesImpl;
+import com.wynntils.services.mapdata.providers.json.MapVisibilityImpl;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -95,11 +95,11 @@ public class WaypointsService extends Service {
         String label = customPoi.getName();
         String subcategory = ""; // Subcategories did not use to exist
 
-        JsonMapLocationAttributes attributes = new JsonMapAttributesBuilder()
+        MapLocationAttributesImpl attributes = new MapAttributesBuilder()
                 .setLabel(label)
                 .setIcon(MapIconsProvider.getIconIdFromTexture(customPoi.getIcon()))
                 .setIconColor(customPoi.getColor())
-                .setIconVisibility(new JsonMapVisibility(
+                .setIconVisibility(new MapVisibilityImpl(
                         switch (customPoi.getVisibility()) {
                             case DEFAULT -> MapVisibility.builder().withMin(30f);
                             case ALWAYS -> FixedMapVisibility.ICON_ALWAYS;

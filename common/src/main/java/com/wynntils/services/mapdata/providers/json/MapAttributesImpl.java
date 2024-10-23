@@ -12,32 +12,32 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 
-public class JsonMapAttributes implements MapAttributes {
+public class MapAttributesImpl implements MapAttributes {
     private final int priority;
     private final int level;
     private final String label;
-    private final JsonMapVisibility labelVisibility;
+    private final MapVisibilityImpl labelVisibility;
     private final CustomColor labelColor;
     private final TextShadow labelShadow;
     private final String icon;
-    private final JsonMapVisibility iconVisibility;
+    private final MapVisibilityImpl iconVisibility;
     private final CustomColor iconColor;
-    private final JsonMarkerOptions markerOptions;
+    private final MarkerOptionsImpl markerOptions;
     private final CustomColor fillColor;
     private final CustomColor borderColor;
     private final float borderWidth;
 
-    public JsonMapAttributes(
+    public MapAttributesImpl(
             int priority,
             int level,
             String label,
-            JsonMapVisibility labelVisibility,
+            MapVisibilityImpl labelVisibility,
             CustomColor labelColor,
             TextShadow labelShadow,
             String icon,
-            JsonMapVisibility iconVisibility,
+            MapVisibilityImpl iconVisibility,
             CustomColor iconColor,
-            JsonMarkerOptions markerOptions,
+            MarkerOptionsImpl markerOptions,
             CustomColor fillColor,
             CustomColor borderColor,
             float borderWidth) {

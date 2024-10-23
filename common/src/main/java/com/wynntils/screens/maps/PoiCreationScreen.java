@@ -18,9 +18,9 @@ import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.features.WaypointLocation;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
-import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
-import com.wynntils.services.mapdata.providers.json.JsonMapLocationAttributes;
-import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
+import com.wynntils.services.mapdata.providers.json.MapAttributesBuilder;
+import com.wynntils.services.mapdata.providers.json.MapLocationAttributesImpl;
+import com.wynntils.services.mapdata.providers.json.MapVisibilityImpl;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -644,14 +644,14 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         CustomColor labelColor = CustomColor.fromHexString(
                 colorInput.getTextBoxInput()); // TODO: Color input should be separated for label and icon
         TextShadow labelShadow = TextShadow.NORMAL; // TODO: Add shadow input
-        JsonMapVisibility labelVisibility =
-                new JsonMapVisibility(FixedMapVisibility.LABEL_ALWAYS); // TODO: Add visibility input
+        MapVisibilityImpl labelVisibility =
+                new MapVisibilityImpl(FixedMapVisibility.LABEL_ALWAYS); // TODO: Add visibility input
         CustomColor iconColor = CustomColor.fromHexString(
                 colorInput.getTextBoxInput()); // TODO: Color input should be separated for label and icon
-        JsonMapVisibility iconVisibility =
-                new JsonMapVisibility(FixedMapVisibility.ICON_ALWAYS); // TODO: Add visibility input
+        MapVisibilityImpl iconVisibility =
+                new MapVisibilityImpl(FixedMapVisibility.ICON_ALWAYS); // TODO: Add visibility input
 
-        JsonMapLocationAttributes attributes = new JsonMapAttributesBuilder()
+        MapLocationAttributesImpl attributes = new MapAttributesBuilder()
                 .setLabel(label)
                 .setIcon(iconId)
                 .setPriority(priority)

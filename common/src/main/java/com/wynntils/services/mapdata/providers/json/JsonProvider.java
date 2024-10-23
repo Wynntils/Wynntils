@@ -179,10 +179,10 @@ public final class JsonProvider implements MapDataProvider {
             String id = json.get("id").getAsString();
             String name = JsonUtils.getNullableJsonString(json, "name");
             JsonElement attributesJson = json.get("attributes");
-            JsonMapAttributes attributes =
-                    attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAttributes.class);
+            MapAttributesImpl attributes =
+                    attributesJson == null ? null : GSON.fromJson(attributesJson, MapAttributesImpl.class);
 
-            return new JsonCategory(id, name, attributes);
+            return new MapCategoryImpl(id, name, attributes);
         }
     }
 
@@ -205,8 +205,8 @@ public final class JsonProvider implements MapDataProvider {
 
                 Location location = GSON.fromJson(locationJson, Location.class);
                 JsonElement attributesJson = json.get("attributes");
-                JsonMapLocationAttributes attributes =
-                        attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapLocationAttributes.class);
+                MapLocationAttributesImpl attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, MapLocationAttributesImpl.class);
 
                 MapLocationAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
                     if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
@@ -214,7 +214,7 @@ public final class JsonProvider implements MapDataProvider {
                     }
                 });
 
-                return new JsonMapLocation(id, category, attributes, location);
+                return new MapLocationImpl(id, category, attributes, location);
             }
 
             if (pathJson != null) {
@@ -226,8 +226,8 @@ public final class JsonProvider implements MapDataProvider {
                 List<Location> path = GSON.fromJson(pathJson, type);
                 JsonElement attributesJson = json.get("attributes");
 
-                JsonMapPathAttributes attributes =
-                        attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapPathAttributes.class);
+                MapPathAttributesImpl attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, MapPathAttributesImpl.class);
 
                 MapPathAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
                     if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
@@ -235,7 +235,7 @@ public final class JsonProvider implements MapDataProvider {
                     }
                 });
 
-                return new JsonMapPath(id, category, attributes, path);
+                return new MapPathImpl(id, category, attributes, path);
             }
 
             if (areaJson != null) {
@@ -243,8 +243,8 @@ public final class JsonProvider implements MapDataProvider {
                 List<Location> path = GSON.fromJson(pathJson, type);
                 List<Location> polygonArea = GSON.fromJson(pathJson, type);
                 JsonElement attributesJson = json.get("attributes");
-                JsonMapAreaAttributes attributes =
-                        attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAreaAttributes.class);
+                MapAreaAttributesImpl attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, MapAreaAttributesImpl.class);
 
                 MapAreaAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
                     if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
@@ -252,7 +252,7 @@ public final class JsonProvider implements MapDataProvider {
                     }
                 });
 
-                return new JsonMapArea(id, category, attributes, polygonArea);
+                return new MapAreaImpl(id, category, attributes, polygonArea);
             }
 
             throw new JsonParseException("Feature neither has location, path nor area");
@@ -270,7 +270,7 @@ public final class JsonProvider implements MapDataProvider {
             byte[] texture = Base64.getDecoder().decode(base64Texture);
 
             try {
-                return new JsonIcon(id, texture);
+                return new MapIconImpl(id, texture);
             } catch (IOException e) {
                 WynntilsMod.warn("Bad icon texture for " + id, e);
                 return null;
