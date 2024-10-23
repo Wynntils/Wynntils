@@ -291,6 +291,8 @@
   "feature.wynntils.containerSearch.filterInBookshelf.name": "Search Bar in Bookshelf",
   "feature.wynntils.containerSearch.filterInContentBook.description": "Should there be a search widget in the content book?",
   "feature.wynntils.containerSearch.filterInContentBook.name": "Search Bar in Content Book",
+  "feature.wynntils.containerSearch.filterInGuildBadges.description": "Should there be a search widget in the guild badges menu?",
+  "feature.wynntils.containerSearch.filterInGuildBadges.name": "Search Bar in Guild Badges menu",
   "feature.wynntils.containerSearch.filterInGuildBank.description": "Should there be a search widget in the guild bank?",
   "feature.wynntils.containerSearch.filterInGuildBank.name": "Search Bar in Guild Bank",
   "feature.wynntils.containerSearch.filterInGuildMemberList.description": "Should there be a search widget in the guild member list?",

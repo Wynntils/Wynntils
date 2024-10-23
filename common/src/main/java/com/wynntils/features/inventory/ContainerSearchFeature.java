@@ -23,6 +23,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.containers.ContentBookContainer;
+import com.wynntils.models.containers.containers.GuildBadgesContainer;
 import com.wynntils.models.containers.containers.GuildBankContainer;
 import com.wynntils.models.containers.containers.GuildMemberListContainer;
 import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
@@ -100,6 +101,9 @@ public class ContainerSearchFeature extends Feature {
     public final Config<Boolean> filterInGuildTerritories = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> filterInGuildBadges = new Config<>(true);
+
+    @Persisted
     public final Config<Boolean> filterInHousingJukebox = new Config<>(true);
 
     @Persisted
@@ -118,6 +122,7 @@ public class ContainerSearchFeature extends Feature {
                     Map.entry(CharacterBankContainer.class, filterInBank::get),
                     Map.entry(ContentBookContainer.class, filterInContentBook::get),
                     Map.entry(GuildBankContainer.class, filterInGuildBank::get),
+                    Map.entry(GuildBadgesContainer.class, filterInGuildBadges::get),
                     Map.entry(GuildMemberListContainer.class, filterInGuildMemberList::get),
                     Map.entry(GuildTerritoriesContainer.class, filterInGuildTerritories::get),
                     Map.entry(HousingJukeboxContainer.class, filterInHousingJukebox::get),
