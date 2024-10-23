@@ -10,15 +10,28 @@ import com.wynntils.utils.render.type.TextShadow;
 
 public final class JsonMapAreaAttributes extends JsonMapAttributes implements MapAreaAttributes {
     public JsonMapAreaAttributes(
-            String label,
-            String icon,
             int priority,
             int level,
+            String label,
+            JsonMapVisibility labelVisibility,
             CustomColor labelColor,
             TextShadow labelShadow,
-            JsonMapVisibility labelVisibility,
-            CustomColor iconColor,
-            JsonMapVisibility iconVisibility) {
-        super(label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility, null);
+            CustomColor fillColor,
+            CustomColor borderColor,
+            float borderWidth) {
+        super(
+                priority,
+                level,
+                label,
+                labelVisibility,
+                labelColor,
+                labelShadow,
+                null,
+                null,
+                null,
+                null,
+                fillColor,
+                borderColor,
+                borderWidth);
     }
 }

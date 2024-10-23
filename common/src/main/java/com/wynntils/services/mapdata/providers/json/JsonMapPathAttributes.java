@@ -10,12 +10,12 @@ import com.wynntils.utils.render.type.TextShadow;
 
 public final class JsonMapPathAttributes extends JsonMapAttributes implements MapPathAttributes {
     public JsonMapPathAttributes(
-            String label,
             int priority,
             int level,
+            String label,
+            JsonMapVisibility labelVisibility,
             CustomColor labelColor,
-            TextShadow labelShadow,
-            JsonMapVisibility labelVisibility) {
-        super(label, null, priority, level, labelColor, labelShadow, labelVisibility, null, null, null);
+            TextShadow labelShadow) {
+        super(priority, level, label, labelVisibility, labelColor, labelShadow, null, null, null, null, null, null, 0f);
     }
 }
