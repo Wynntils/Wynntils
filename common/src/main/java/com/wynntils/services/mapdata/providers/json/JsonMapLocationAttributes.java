@@ -30,6 +30,9 @@ public final class JsonMapLocationAttributes extends JsonMapAttributes implement
                 icon,
                 iconVisibility,
                 iconColor,
-                markerOptions);
+                markerOptions,
+                null,
+                null,
+                0f);
     }
 }

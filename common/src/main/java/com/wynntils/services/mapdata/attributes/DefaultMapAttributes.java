@@ -77,4 +77,19 @@ public final class DefaultMapAttributes implements MapAttributes {
     public Optional<MarkerOptions> getMarkerOptions() {
         return Optional.of(MarkerOptions.NONE);
     }
+
+    @Override
+    public Optional<CustomColor> getFillColor() {
+        return Optional.of(CommonColors.WHITE);
+    }
+
+    @Override
+    public Optional<CustomColor> getBorderColor() {
+        return Optional.of(CommonColors.WHITE);
+    }
+
+    @Override
+    public Optional<Float> getBorderWidth() {
+        return Optional.of(1.0f);
+    }
 }

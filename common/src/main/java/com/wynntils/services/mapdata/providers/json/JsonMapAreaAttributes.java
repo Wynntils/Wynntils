@@ -15,7 +15,23 @@ public final class JsonMapAreaAttributes extends JsonMapAttributes implements Ma
             String label,
             JsonMapVisibility labelVisibility,
             CustomColor labelColor,
-            TextShadow labelShadow) {
-        super(priority, level, label, labelVisibility, labelColor, labelShadow, null, null, null, null);
+            TextShadow labelShadow,
+            CustomColor fillColor,
+            CustomColor borderColor,
+            float borderWidth) {
+        super(
+                priority,
+                level,
+                label,
+                labelVisibility,
+                labelColor,
+                labelShadow,
+                null,
+                null,
+                null,
+                null,
+                fillColor,
+                borderColor,
+                borderWidth);
     }
 }

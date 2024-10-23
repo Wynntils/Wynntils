@@ -10,7 +10,8 @@ import java.util.Optional;
 
 public interface MapPathAttributes extends MapAttributes {
     static List<String> getUnsupportedAttributes() {
-        return List.of("iconId", "iconVisibility", "iconColor", "iconDecoration");
+        return List.of(
+                "iconId", "iconVisibility", "iconColor", "iconDecoration", "fillColor", "borderWidth", "borderColor");
     }
 
     default Optional<String> getIconId() {
@@ -26,6 +27,18 @@ public interface MapPathAttributes extends MapAttributes {
     }
 
     default Optional<MapDecoration> getIconDecoration() {
+        return Optional.empty();
+    }
+
+    default Optional<CustomColor> getFillColor() {
+        return Optional.empty();
+    }
+
+    default Optional<CustomColor> getBorderColor() {
+        return Optional.empty();
+    }
+
+    default Optional<Float> getBorderWidth() {
         return Optional.empty();
     }
 }

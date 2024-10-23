@@ -23,6 +23,9 @@ public class JsonMapAttributes implements MapAttributes {
     private final JsonMapVisibility iconVisibility;
     private final CustomColor iconColor;
     private final JsonMarkerOptions markerOptions;
+    private final CustomColor fillColor;
+    private final CustomColor borderColor;
+    private final float borderWidth;
 
     public JsonMapAttributes(
             int priority,
@@ -34,7 +37,10 @@ public class JsonMapAttributes implements MapAttributes {
             String icon,
             JsonMapVisibility iconVisibility,
             CustomColor iconColor,
-            JsonMarkerOptions markerOptions) {
+            JsonMarkerOptions markerOptions,
+            CustomColor fillColor,
+            CustomColor borderColor,
+            float borderWidth) {
         this.priority = priority;
         this.level = level;
         this.label = label;
@@ -45,6 +51,9 @@ public class JsonMapAttributes implements MapAttributes {
         this.iconVisibility = iconVisibility;
         this.iconColor = iconColor;
         this.markerOptions = markerOptions;
+        this.fillColor = fillColor;
+        this.borderColor = borderColor;
+        this.borderWidth = borderWidth;
     }
 
     @Override
@@ -95,6 +104,21 @@ public class JsonMapAttributes implements MapAttributes {
     @Override
     public Optional<MarkerOptions> getMarkerOptions() {
         return Optional.ofNullable(markerOptions);
+    }
+
+    @Override
+    public Optional<CustomColor> getFillColor() {
+        return Optional.ofNullable(fillColor);
+    }
+
+    @Override
+    public Optional<CustomColor> getBorderColor() {
+        return Optional.ofNullable(borderColor);
+    }
+
+    @Override
+    public Optional<Float> getBorderWidth() {
+        return Optional.of(borderWidth);
     }
 
     @Override

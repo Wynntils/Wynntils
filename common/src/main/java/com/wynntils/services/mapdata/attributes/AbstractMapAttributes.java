@@ -67,4 +67,19 @@ public abstract class AbstractMapAttributes implements MapAttributes {
     public Optional<MarkerOptions> getMarkerOptions() {
         return Optional.empty();
     }
+
+    @Override
+    public Optional<CustomColor> getFillColor() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<CustomColor> getBorderColor() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Float> getBorderWidth() {
+        return Optional.empty();
+    }
 }

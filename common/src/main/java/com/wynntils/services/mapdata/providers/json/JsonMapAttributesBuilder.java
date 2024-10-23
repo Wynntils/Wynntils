@@ -23,6 +23,9 @@ public class JsonMapAttributesBuilder {
     private JsonMapVisibility iconVisibility;
     private CustomColor iconColor;
     private JsonMarkerOptions markerOptions;
+    private CustomColor fillColor;
+    private CustomColor borderColor;
+    private float borderWidth;
 
     public JsonMapAttributesBuilder setPriority(int priority) {
         this.priority = priority;
@@ -72,6 +75,18 @@ public class JsonMapAttributesBuilder {
     public JsonMapAttributesBuilder setMarkerOptions(JsonMarkerOptions markerOptions) {
         this.markerOptions = markerOptions;
         return this;
+    }
+
+    public void setFillColor(CustomColor fillColor) {
+        this.fillColor = fillColor;
+    }
+
+    public void setBorderColor(CustomColor borderColor) {
+        this.borderColor = borderColor;
+    }
+
+    public void setBorderWidth(float borderWidth) {
+        this.borderWidth = borderWidth;
     }
 
     public JsonMapLocationAttributesBuilder asLocationAttributes() {
@@ -130,7 +145,16 @@ public class JsonMapAttributesBuilder {
         public JsonMapAreaAttributes build() {
             MapAreaAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
 
-            return new JsonMapAreaAttributes(priority, level, label, labelVisibility, labelColor, labelShadow);
+            return new JsonMapAreaAttributes(
+                    priority,
+                    level,
+                    label,
+                    labelVisibility,
+                    labelColor,
+                    labelShadow,
+                    fillColor,
+                    borderColor,
+                    borderWidth);
         }
     }
 }

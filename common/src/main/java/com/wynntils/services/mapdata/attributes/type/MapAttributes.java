@@ -67,4 +67,17 @@ public interface MapAttributes {
     Optional<MarkerOptions> getMarkerOptions();
 
     // endregion
+
+    // region Area & Border Attributes
+
+    // The color of the area on the map
+    Optional<CustomColor> getFillColor();
+
+    // The color of the border on the map
+    Optional<CustomColor> getBorderColor();
+
+    // The width of the border on the map
+    Optional<Float> getBorderWidth();
+
+    // endregion
 }
