@@ -5,11 +5,14 @@
 package com.wynntils.models.marker;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.models.marker.type.LocationSupplier;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
 import com.wynntils.models.marker.type.StaticLocationSupplier;
 import com.wynntils.services.map.pois.WaypointPoi;
+import com.wynntils.services.mapdata.MapIconTextureWrapper;
+import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
@@ -23,6 +26,13 @@ import java.util.stream.Stream;
 
 public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
     private final Set<Pair<MarkerInfo, WaypointPoi>> markerInfoSet = new CopyOnWriteArraySet<>();
+
+    public void addLocation(MapLocation location) {
+        addLocation(
+                location.getLocation(),
+                new MapIconTextureWrapper(Services.MapData.getIconOrFallback(location)),
+                Services.MapData.resolveMapAttributes(location).label());
+    }
 
     public void addLocation(
             Location location,
@@ -38,17 +48,6 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 textColor,
                 CommonColors.WHITE,
                 additonalText));
-    }
-
-    public void addLocation(Location location, AbstractTexture texture, CustomColor beaconColor, String additonalText) {
-        addLocation(new MarkerInfo(
-                "Waypoint",
-                new StaticLocationSupplier(location),
-                texture,
-                beaconColor,
-                CommonColors.WHITE,
-                CommonColors.WHITE,
-                Models.Activity.getTrackedName()));
     }
 
     public void addLocation(Location location, AbstractTexture texture, String additionalText) {
