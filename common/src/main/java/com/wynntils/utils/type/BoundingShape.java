@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils.type;
 
-public interface BoundingShape {
+public sealed interface BoundingShape permits BoundingBox, BoundingCircle, BoundingPolygon {
     boolean contains(float x, float z);
 
     boolean intersects(BoundingBox boundingBox);
