@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.mapdata.features.impl;
+package com.wynntils.services.mapdata.impl;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import com.wynntils.services.mapdata.features.type.MapIcon;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import java.io.IOException;
 import net.minecraft.client.renderer.texture.DynamicTexture;

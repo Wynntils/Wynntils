@@ -9,7 +9,7 @@ import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MarkerOptions;
-import com.wynntils.services.mapdata.features.type.MapCategory;
+import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import java.util.Optional;
 import java.util.function.Function;

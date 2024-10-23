@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.mapdata.features.impl;
+package com.wynntils.services.mapdata.impl;
 
 import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
-import com.wynntils.services.mapdata.features.type.MapCategory;
+import com.wynntils.services.mapdata.type.MapCategory;
 import java.util.Optional;
 
 public class MapCategoryImpl implements MapCategory {

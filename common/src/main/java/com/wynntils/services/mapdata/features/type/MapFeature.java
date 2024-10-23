@@ -5,6 +5,7 @@
 package com.wynntils.services.mapdata.features.type;
 
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
+import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.utils.type.BoundingShape;
 import java.util.List;
 import java.util.Optional;

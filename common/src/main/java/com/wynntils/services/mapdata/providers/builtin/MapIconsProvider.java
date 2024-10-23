@@ -4,7 +4,7 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
-import com.wynntils.services.mapdata.features.type.MapIcon;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.stream.Stream;

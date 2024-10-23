@@ -9,7 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
-import com.wynntils.services.mapdata.features.type.MapIcon;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.features.type.MapArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;

@@ -4,7 +4,7 @@
  */
 package com.wynntils.services.mapdata;
 
-import com.wynntils.services.mapdata.features.type.MapIcon;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.render.type.AbstractTexture;
 import net.minecraft.resources.ResourceLocation;
 
