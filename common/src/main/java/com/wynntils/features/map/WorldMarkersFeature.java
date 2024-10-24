@@ -18,7 +18,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMarkerOptions;
 import com.wynntils.services.mapdata.features.type.MapLocation;
@@ -31,6 +30,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -57,8 +57,6 @@ public class WorldMarkersFeature extends Feature {
 
     private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
             MultiBufferSource.immediate(new ByteBufferBuilder(256));
-
-    private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null, "");
 
     @Persisted
     public final Config<Float> textBackgroundOpacity = new Config<>(0.2f);
@@ -393,18 +391,14 @@ public class WorldMarkersFeature extends Feature {
                 poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
                 poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
-                DUMMY_WAYPOINT
-                        .getPointerPoi()
-                        .renderAt(
-                                poseStack,
-                                BUFFER_SOURCE,
-                                pointerDisplayPositionX,
-                                pointerDisplayPositionY,
-                                false,
-                                textRenderScale.get(),
-                                1,
-                                50,
-                                true);
+                Texture pointerTexture = Texture.POINTER;
+                BufferedRenderUtils.drawTexturedRect(
+                        poseStack,
+                        BUFFER_SOURCE,
+                        pointerTexture,
+                        pointerDisplayPositionX - pointerTexture.width() / 2f,
+                        pointerDisplayPositionY - pointerTexture.height() / 2f);
+
                 BUFFER_SOURCE.endBatch();
                 poseStack.popPose();
             }
