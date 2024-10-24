@@ -151,7 +151,7 @@ import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.FixCrosshairPositionFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
-import com.wynntils.features.utilities.MythicBlacksmithWarnFeature;
+import com.wynntils.features.utilities.MythicSellWarningFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
@@ -376,7 +376,7 @@ public final class FeatureManager extends Manager {
 
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
-        registerFeature(new MythicBlacksmithWarnFeature());
+        registerFeature(new MythicSellWarningFeature());
         registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
