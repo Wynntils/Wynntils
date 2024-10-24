@@ -19,7 +19,6 @@ import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.IconPoi;
 import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
@@ -373,7 +372,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 return true;
             }
 
-            if (hovered != null && !(hovered instanceof TerritoryPoi)) {
+            if (hovered != null && !(hoveredFeature instanceof TerritoryArea)) {
                 McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
                 // If shift is not held down, clear all waypoints to only have the new one

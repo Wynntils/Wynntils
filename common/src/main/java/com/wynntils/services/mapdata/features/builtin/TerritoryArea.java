@@ -107,4 +107,16 @@ public class TerritoryArea implements MapArea {
     public List<String> getTags() {
         return List.of();
     }
+
+    public TerritoryProfile getTerritoryProfile() {
+        return territoryProfile;
+    }
+
+    public Optional<TerritoryInfo> getTerritoryInfo() {
+        return Optional.ofNullable(territoryInfo);
+    }
+
+    public boolean isTerritoryProfileOutdated() {
+        return territoryInfo != null && !territoryInfo.getGuildName().equals(territoryProfile.getGuild());
+    }
 }
