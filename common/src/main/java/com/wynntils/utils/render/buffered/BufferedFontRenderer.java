@@ -337,7 +337,7 @@ public final class BufferedFontRenderer {
                 poseStack, bufferSource, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
-    private void renderText(
+    public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             StyledText text,

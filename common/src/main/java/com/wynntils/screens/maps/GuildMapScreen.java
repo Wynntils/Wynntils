@@ -6,9 +6,11 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.models.territories.TerritoryInfo;
@@ -16,30 +18,26 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
-import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.services.map.type.TerritoryDefenseFilterType;
+import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
+import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.BoundingBox;
 import com.wynntils.utils.type.CappedValue;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -54,7 +52,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
     private BasicTexturedButton territoryDefenseFilterButton;
     private BasicTexturedButton hybridModeButton;
 
-    private GuildMapScreen() {}
+    private GuildMapScreen() {
+        super();
+        centerMapAroundPlayer();
+    }
 
     public static Screen create() {
         return new GuildMapScreen();
@@ -70,7 +71,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 7 + 20 * 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 8),
                 10,
                 16,
@@ -95,7 +96,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
                         (int) (this.renderHeight
                                 - this.renderedBorderYOffset
-                                - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                                - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                                 - 8),
                         16,
                         16,
@@ -110,7 +111,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 8),
                 16,
                 16,
@@ -150,7 +151,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 7),
                 14,
                 14,
@@ -196,7 +197,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
 
-        renderPois(poseStack, mouseX, mouseY);
+        renderMapFeatures(poseStack, mouseX, mouseY);
 
         renderCursor(
                 poseStack,
@@ -222,63 +223,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    protected void renderPois(
-            List<Poi> pois,
-            PoseStack poseStack,
-            BoundingBox textureBoundingBox,
-            float poiScale,
-            int mouseX,
-            int mouseY) {
-        hovered = null;
-
-        List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
-
-        // Render trading routes
-        // We render them in both directions because optimizing it is not cheap either
-        for (Poi poi : filteredPois) {
-            if (!(poi instanceof TerritoryPoi territoryPoi)) continue;
-
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
-
-            for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
-                Optional<Poi> routePoi = filteredPois.stream()
-                        .filter(filteredPoi -> filteredPoi.getName().equals(tradingRoute))
-                        .findFirst();
-
-                // Only render connection if the other poi is also in the filtered pois
-                if (routePoi.isPresent() && filteredPois.contains(routePoi.get())) {
-                    float x = MapRenderer.getRenderX(routePoi.get(), mapCenterX, centerX, zoomRenderScale);
-                    float z = MapRenderer.getRenderZ(routePoi.get(), mapCenterZ, centerZ, zoomRenderScale);
-
-                    RenderUtils.drawLine(poseStack, CommonColors.DARK_GRAY, poiRenderX, poiRenderZ, x, z, 0, 1);
-                }
-            }
-        }
-
-        MultiBufferSource.BufferSource bufferSource =
-                McUtils.mc().renderBuffers().bufferSource();
-
-        // Reverse and Render
-        for (int i = filteredPois.size() - 1; i >= 0; i--) {
-            Poi poi = filteredPois.get(i);
-
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
-
-            poi.renderAt(
-                    poseStack,
-                    bufferSource,
-                    poiRenderX,
-                    poiRenderZ,
-                    hovered == poi,
-                    poiScale,
-                    zoomRenderScale,
-                    zoomLevel,
-                    true);
-        }
-
-        bufferSource.endBatch();
+    protected Stream<MapFeature> getRenderedMapFeatures() {
+        // FIXME: Add back hybrid/advancement mode
+        // FIXME: Add territory connection map paths
+        // FIXME: Add user markers
+        return Services.MapData.getFeaturesForCategory("wynntils:territory");
     }
 
     @Override
@@ -293,8 +242,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
         // Manage on shift right click
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
-                && hovered instanceof TerritoryPoi territoryPoi) {
-            Handlers.Command.queueCommand("gu territory " + territoryPoi.getName());
+                && hoveredFeature instanceof TerritoryArea territoryArea) {
+            Handlers.Command.queueCommand(
+                    "gu territory " + territoryArea.getTerritoryProfile().getName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
                 Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
@@ -310,66 +260,35 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     private void renderHoveredTerritoryInfo(PoseStack poseStack) {
-        if (!(hovered instanceof TerritoryPoi territoryPoi)) return;
+        if (!(hoveredFeature instanceof TerritoryArea territoryArea)) return;
 
         poseStack.pushPose();
         poseStack.translate(width - SCREEN_SIDE_OFFSET - 250, SCREEN_SIDE_OFFSET + 40, 101);
 
-        if (territoryPoi.isFakeTerritoryInfo()) {
-            renderTerritoryTooltipWithFakeInfo(poseStack, territoryPoi);
+        if (territoryArea.isTerritoryProfileOutdated()) {
+            renderTerritoryTooltipWithFakeInfo(poseStack, territoryArea);
         } else {
-            renderTerritoryTooltip(poseStack, territoryPoi);
+            renderTerritoryTooltip(poseStack, territoryArea);
         }
 
         poseStack.popPose();
-    }
-
-    private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        List<TerritoryPoi> advancementPois = territoryDefenseFilterEnabled
-                ? Models.Territory.getFilteredTerritoryPoisFromAdvancement(
-                        territoryDefenseFilterLevel.getLevel(), territoryDefenseFilterType)
-                : Models.Territory.getTerritoryPoisFromAdvancement();
-
-        List<Poi> renderedPois = new ArrayList<>();
-
-        if (hybridMode) {
-            // We base hybrid mode on the advancement pois, it should be more consistent
-
-            for (TerritoryPoi poi : advancementPois) {
-                TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(poi.getName());
-
-                // If the API and advamcement pois don't match, we use the API pois without advancement info
-                if (territoryProfile != null
-                        && territoryProfile
-                                .getGuild()
-                                .equals(poi.getTerritoryInfo().getGuildName())) {
-                    renderedPois.add(poi);
-                } else {
-                    renderedPois.add(new TerritoryPoi(territoryProfile, poi.getTerritoryInfo()));
-                }
-            }
-        } else {
-            renderedPois.addAll(advancementPois);
-        }
-
-        Models.Marker.USER_WAYPOINTS_PROVIDER.getPois().forEach(renderedPois::add);
-
-        renderPois(
-                renderedPois,
-                poseStack,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
-                1,
-                mouseX,
-                mouseY);
     }
 
     public boolean isResourceMode() {
         return resourceMode;
     }
 
-    private static void renderTerritoryTooltip(PoseStack poseStack, TerritoryPoi territoryPoi) {
-        final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
-        final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
+    private static void renderTerritoryTooltip(PoseStack poseStack, TerritoryArea territoryArea) {
+        Optional<TerritoryInfo> territoryInfoOpt = territoryArea.getTerritoryInfo();
+
+        if (territoryInfoOpt.isEmpty()) {
+            WynntilsMod.warn("TerritoryInfo is empty for %s, when it should not be."
+                    .formatted(territoryArea.getTerritoryProfile().getName()));
+            return;
+        }
+
+        final TerritoryInfo territoryInfo = territoryInfoOpt.get();
+        final TerritoryProfile territoryProfile = territoryArea.getTerritoryProfile();
 
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
@@ -513,7 +432,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString(territoryPoi.getName()),
+                        StyledText.fromString(territoryProfile.getName()),
                         7,
                         textureWidth,
                         Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight,
@@ -525,9 +444,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         TextShadow.OUTLINE);
     }
 
-    private static void renderTerritoryTooltipWithFakeInfo(PoseStack poseStack, TerritoryPoi territoryPoi) {
-        final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
-        final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
+    private static void renderTerritoryTooltipWithFakeInfo(PoseStack poseStack, TerritoryArea territoryArea) {
+        final TerritoryProfile territoryProfile = territoryArea.getTerritoryProfile();
 
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
@@ -575,7 +493,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString(territoryPoi.getName()),
+                        StyledText.fromString(territoryProfile.getName()),
                         7,
                         textureWidth,
                         Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight,
