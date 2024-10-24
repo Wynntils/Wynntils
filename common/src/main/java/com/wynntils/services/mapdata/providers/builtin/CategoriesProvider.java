@@ -6,15 +6,15 @@ package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.services.hades.type.PlayerRelation;
-import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
+import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
+import com.wynntils.services.mapdata.attributes.impl.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
-import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
-import com.wynntils.services.mapdata.features.CombatLocation;
-import com.wynntils.services.mapdata.features.PlaceLocation;
-import com.wynntils.services.mapdata.features.ServiceLocation;
+import com.wynntils.services.mapdata.features.builtin.CombatLocation;
+import com.wynntils.services.mapdata.features.builtin.PlaceLocation;
+import com.wynntils.services.mapdata.features.builtin.ServiceLocation;
 import com.wynntils.services.mapdata.type.MapCategory;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -110,7 +110,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapVisibility> getLabelVisibility() {
-                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
+                    return Optional.of(DefaultMapAttributes.LABEL_NEVER);
                 }
             });
         }
@@ -174,13 +174,13 @@ public class CategoriesProvider extends BuiltInProvider {
                                 case 3 -> TIER_3_VISIBILITY;
                                 case 4 -> TIER_4_VISIBILITY;
                                     // This should never happen
-                                default -> FixedMapVisibility.ICON_ALWAYS;
+                                default -> DefaultMapAttributes.ICON_ALWAYS;
                             });
                 }
 
                 @Override
                 public Optional<MapVisibility> getLabelVisibility() {
-                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
+                    return Optional.of(DefaultMapAttributes.LABEL_NEVER);
                 }
             });
         }
@@ -242,7 +242,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapVisibility> getLabelVisibility() {
-                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
+                    return Optional.of(DefaultMapAttributes.LABEL_NEVER);
                 }
             });
         }
@@ -304,7 +304,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapVisibility> getLabelVisibility() {
-                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
+                    return Optional.of(DefaultMapAttributes.LABEL_NEVER);
                 }
             });
         }
@@ -396,7 +396,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapVisibility> getIconVisibility() {
-                    return Optional.of(FixedMapVisibility.ICON_ALWAYS);
+                    return Optional.of(DefaultMapAttributes.ICON_ALWAYS);
                 }
             });
         }

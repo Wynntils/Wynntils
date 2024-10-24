@@ -15,13 +15,13 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.IconButton;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
-import com.wynntils.services.mapdata.features.WaypointLocation;
+import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
+import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
+import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
+import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
+import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
-import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
-import com.wynntils.services.mapdata.providers.json.JsonMapLocationAttributes;
-import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
-import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -644,14 +644,14 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         CustomColor labelColor = CustomColor.fromHexString(
                 colorInput.getTextBoxInput()); // TODO: Color input should be separated for label and icon
         TextShadow labelShadow = TextShadow.NORMAL; // TODO: Add shadow input
-        JsonMapVisibility labelVisibility =
-                new JsonMapVisibility(FixedMapVisibility.LABEL_ALWAYS); // TODO: Add visibility input
+        MapVisibilityImpl labelVisibility =
+                new MapVisibilityImpl(DefaultMapAttributes.LABEL_ALWAYS); // TODO: Add visibility input
         CustomColor iconColor = CustomColor.fromHexString(
                 colorInput.getTextBoxInput()); // TODO: Color input should be separated for label and icon
-        JsonMapVisibility iconVisibility =
-                new JsonMapVisibility(FixedMapVisibility.ICON_ALWAYS); // TODO: Add visibility input
+        MapVisibilityImpl iconVisibility =
+                new MapVisibilityImpl(DefaultMapAttributes.ICON_ALWAYS); // TODO: Add visibility input
 
-        JsonMapLocationAttributes attributes = new JsonMapAttributesBuilder()
+        MapLocationAttributesImpl attributes = new MapAttributesBuilder()
                 .setLabel(label)
                 .setIcon(iconId)
                 .setPriority(priority)

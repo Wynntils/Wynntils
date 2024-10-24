@@ -20,7 +20,7 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.services.map.type.TerritoryDefenseFilterType;
-import com.wynntils.services.mapdata.type.MapFeature;
+import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;

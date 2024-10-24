@@ -30,7 +30,7 @@ import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.services.map.pois.CustomPoi;
-import com.wynntils.services.mapdata.features.FoundChestLocation;
+import com.wynntils.services.mapdata.features.builtin.FoundChestLocation;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.RangedValue;

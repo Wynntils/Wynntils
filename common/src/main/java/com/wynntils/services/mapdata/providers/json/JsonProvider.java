@@ -16,14 +16,23 @@ import com.google.gson.stream.MalformedJsonException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
+import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
-import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
-import com.wynntils.services.mapdata.providers.MapDataProvider;
+import com.wynntils.services.mapdata.features.impl.MapAreaImpl;
+import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
+import com.wynntils.services.mapdata.features.impl.MapPathImpl;
+import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.impl.MapCategoryImpl;
+import com.wynntils.services.mapdata.impl.MapIconImpl;
+import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
-import com.wynntils.services.mapdata.type.MapFeature;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -179,10 +188,10 @@ public final class JsonProvider implements MapDataProvider {
             String id = json.get("id").getAsString();
             String name = JsonUtils.getNullableJsonString(json, "name");
             JsonElement attributesJson = json.get("attributes");
-            JsonMapAttributes attributes =
-                    attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAttributes.class);
+            MapAttributesImpl attributes =
+                    attributesJson == null ? null : GSON.fromJson(attributesJson, MapAttributesImpl.class);
 
-            return new JsonCategory(id, name, attributes);
+            return new MapCategoryImpl(id, name, attributes);
         }
     }
 
@@ -205,8 +214,8 @@ public final class JsonProvider implements MapDataProvider {
 
                 Location location = GSON.fromJson(locationJson, Location.class);
                 JsonElement attributesJson = json.get("attributes");
-                JsonMapLocationAttributes attributes =
-                        attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapLocationAttributes.class);
+                MapLocationAttributesImpl attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, MapLocationAttributesImpl.class);
 
                 MapLocationAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
                     if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
@@ -214,7 +223,7 @@ public final class JsonProvider implements MapDataProvider {
                     }
                 });
 
-                return new JsonMapLocation(id, category, attributes, location);
+                return new MapLocationImpl(id, category, attributes, location);
             }
 
             if (pathJson != null) {
@@ -226,8 +235,8 @@ public final class JsonProvider implements MapDataProvider {
                 List<Location> path = GSON.fromJson(pathJson, type);
                 JsonElement attributesJson = json.get("attributes");
 
-                JsonMapPathAttributes attributes =
-                        attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapPathAttributes.class);
+                MapPathAttributesImpl attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, MapPathAttributesImpl.class);
 
                 MapPathAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
                     if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
@@ -235,7 +244,7 @@ public final class JsonProvider implements MapDataProvider {
                     }
                 });
 
-                return new JsonMapPath(id, category, attributes, path);
+                return new MapPathImpl(id, category, attributes, path);
             }
 
             if (areaJson != null) {
@@ -243,8 +252,8 @@ public final class JsonProvider implements MapDataProvider {
                 List<Location> path = GSON.fromJson(pathJson, type);
                 List<Location> polygonArea = GSON.fromJson(pathJson, type);
                 JsonElement attributesJson = json.get("attributes");
-                JsonMapAreaAttributes attributes =
-                        attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAreaAttributes.class);
+                MapAreaAttributesImpl attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, MapAreaAttributesImpl.class);
 
                 MapAreaAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
                     if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
@@ -252,7 +261,7 @@ public final class JsonProvider implements MapDataProvider {
                     }
                 });
 
-                return new JsonMapArea(id, category, attributes, polygonArea);
+                return new MapAreaImpl(id, category, attributes, polygonArea);
             }
 
             throw new JsonParseException("Feature neither has location, path nor area");
@@ -270,7 +279,7 @@ public final class JsonProvider implements MapDataProvider {
             byte[] texture = Base64.getDecoder().decode(base64Texture);
 
             try {
-                return new JsonIcon(id, texture);
+                return new MapIconImpl(id, texture);
             } catch (IOException e) {
                 WynntilsMod.warn("Bad icon texture for " + id, e);
                 return null;
