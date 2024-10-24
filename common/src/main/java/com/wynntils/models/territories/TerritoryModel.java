@@ -22,7 +22,6 @@ import com.wynntils.models.territories.event.TerritoriesUpdatedEvent;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
-import com.wynntils.services.map.pois.TerritoryPoi;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
@@ -58,9 +57,6 @@ public final class TerritoryModel extends Model {
 
     // This is the profiles as downloaded from Athena
     private Map<String, TerritoryProfile> territoryProfileMap = new HashMap<>();
-
-    // This is just a cache of TerritoryPois created for all territoryProfileMap values
-    private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
     private ScheduledFuture<?> scheduledFuture;
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
@@ -236,9 +232,6 @@ public final class TerritoryModel extends Model {
                     }
 
                     territoryProfileMap = tempMap;
-                    allTerritoryPois = territoryProfileMap.values().stream()
-                            .map(TerritoryPoi::new)
-                            .collect(Collectors.toSet());
 
                     lastGuildUpdate = System.currentTimeMillis();
 
