@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.utilities;
 
-import com.ibm.icu.impl.CalendarAstronomer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -29,6 +28,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -38,8 +38,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-
-import java.util.Optional;
 
 @ConfigCategory(Category.UTILITIES)
 public class MythicSellWarningFeature extends Feature {
@@ -99,19 +97,24 @@ public class MythicSellWarningFeature extends Feature {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)
                 || !cs.getTitle().getString().equals(BLACKSMITH_TITLE)) return;
 
+        boolean widgetRequired = false;
         for (int i = 11; i <= 24; i++) {
             Optional<GearTierItemProperty> optGearTier =
                     Models.Item.asWynnItemProperty(cs.getMenu().getItems().get(i), GearTierItemProperty.class);
 
-            if (optGearTier.isPresent() && optGearTier.get().getGearTier() == GearTier.UNIQUE) {
-                hintTextWidget = new HintTextWidget(cs.width / 2, cs.topPos - 6, cs.width - 2*cs.leftPos, 11);
-                cs.addRenderableOnly(hintTextWidget);
-                return;
+            if (optGearTier.isPresent() && optGearTier.get().getGearTier() == GearTier.MYTHIC) {
+                widgetRequired = true;
+                break;
             }
         }
 
-        cs.removeWidget(hintTextWidget);
-        hintTextWidget = null;
+        if (widgetRequired && hintTextWidget == null) {
+            hintTextWidget = new HintTextWidget(cs.width / 2, cs.topPos - 6, cs.width - 2 * cs.leftPos, 11);
+            cs.addRenderableOnly(hintTextWidget);
+        } else if (!widgetRequired && hintTextWidget != null) {
+            cs.removeWidget(hintTextWidget);
+            hintTextWidget = null;
+        }
     }
 
     @SubscribeEvent
@@ -136,7 +139,6 @@ public class MythicSellWarningFeature extends Feature {
     }
 
     private final class HintTextWidget extends AbstractWidget {
-
         public HintTextWidget(int x, int y, int width, int height) {
             super(x, y, width, height, Component.literal(""));
         }
@@ -152,8 +154,7 @@ public class MythicSellWarningFeature extends Feature {
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL
-                    );
+                            TextShadow.NORMAL);
         }
 
         @Override
