@@ -11,12 +11,12 @@ import com.wynntils.services.itemfilter.type.ItemProviderType;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class PetMenuContainer extends Container implements SearchableContainerProperty {
-    private static final Pattern TITLE_PATTERN = Pattern.compile("Pet Menu");
-    private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>");
-    private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§f§lPage \\d+§a <§2<§a<§2<§a<");
+public class GuildBadgesContainer extends Container implements SearchableContainerProperty {
+    private static final Pattern TITLE_PATTERN = Pattern.compile(".+: Badges");
+    private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§a§lNext Page");
+    private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§a§lPrevious Page");
 
-    public PetMenuContainer() {
+    public GuildBadgesContainer() {
         super(TITLE_PATTERN);
     }
 
@@ -32,17 +32,17 @@ public class PetMenuContainer extends Container implements SearchableContainerPr
 
     @Override
     public int getNextItemSlot() {
-        return 8;
+        return 27;
     }
 
     @Override
     public int getPreviousItemSlot() {
-        return 0;
+        return 9;
     }
 
     @Override
     public ContainerBounds getBounds() {
-        return new ContainerBounds(1, 0, 5, 8);
+        return new ContainerBounds(0, 2, 4, 8);
     }
 
     @Override

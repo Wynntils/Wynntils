@@ -24,6 +24,7 @@ import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
+import com.wynntils.models.items.annotators.gui.LeaderboardSeasonAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import com.wynntils.models.npc.label.NpcLabelParser;
@@ -507,6 +508,13 @@ public class TestRegex {
         p.shouldMatch("§710s Healed: §f12% §3[§e⏺§b⏺§e⏺§b⏺⏺⏺§3]");
         p.shouldMatch("§710s Healed: §f0% §4[§c⏺⏺⏺§e⏺⏺⏺§4]");
         p.shouldMatch("§710s Healed: §f0% §8[]");
+    }
+
+    @Test
+    public void LeaderboardSeasonAnnotator_SEASON_PATTERN() {
+        PatternTester p = new PatternTester(LeaderboardSeasonAnnotator.class, "SEASON_PATTERN");
+        p.shouldMatch("§d§lSeason 0");
+        p.shouldMatch("§d§lSeason 20");
     }
 
     @Test
