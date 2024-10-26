@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
@@ -68,6 +69,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private Button nextIconButton;
     private Button saveButton;
     private Button tabButton;
+    private ColorPickerWidget iconColorPicker;
+    private ColorPickerWidget labelColorPicker;
     private OptionButton labelShadowButton;
     private OptionButton labelVisiblityButton;
     private OptionButton iconVisiblityButton;
@@ -253,6 +256,10 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         } else if (labelColorInput.getTextBoxInput().isEmpty()) {
             labelColorInput.setTextBoxInput("#FFFFFF");
         }
+
+        labelColorPicker =
+                new ColorPickerWidget((int) (dividedWidth * 29), (int) (dividedHeight * 14), 20, 20, labelColorInput);
+        this.addRenderableWidget(labelColorPicker);
         // endregion
 
         // region Icon
@@ -356,6 +363,10 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         } else if (iconColorInput.getTextBoxInput().isEmpty()) {
             iconColorInput.setTextBoxInput("#FFFFFF");
         }
+
+        iconColorPicker =
+                new ColorPickerWidget((int) (dividedWidth * 29), (int) (dividedHeight * 25), 20, 20, iconColorInput);
+        this.addRenderableWidget(iconColorPicker);
         // endregion
 
         // region Location
@@ -694,8 +705,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
-
-            RenderUtils.drawRect(poseStack, labelColorCache, dividedWidth * 29, dividedHeight * 14, 0, 20, 20);
             // endregion
 
             // region Icon
@@ -710,8 +719,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.MIDDLE,
                                 TextShadow.NORMAL);
-
-                RenderUtils.drawRect(poseStack, iconColorCache, dividedWidth * 29, dividedHeight * 25, 0, 20, 20);
 
                 renderIcons(guiGraphics, mouseX, mouseY, partialTick);
             }
@@ -1197,11 +1204,13 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         labelInput.visible = !visibilityTab;
         labelShadowButton.visible = !visibilityTab;
         labelColorInput.visible = !visibilityTab;
+        labelColorPicker.visible = !visibilityTab;
         iconCheckbox.visible = !visibilityTab;
         previousIconButton.visible = !visibilityTab && useIcon;
         nextIconButton.visible = !visibilityTab && useIcon;
         addCustomIconButton.visible = !visibilityTab && useIcon;
         iconColorInput.visible = !visibilityTab;
+        iconColorPicker.visible = !visibilityTab;
         xInput.visible = !visibilityTab;
         yInput.visible = !visibilityTab;
         zInput.visible = !visibilityTab;
