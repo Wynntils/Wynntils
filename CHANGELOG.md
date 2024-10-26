@@ -1,9 +1,29 @@
+## [2.3.20](https://github.com/Wynntils/Wynntils/compare/v2.3.19...v2.3.20) (2024-10-26)
+
+
+### New Features
+
+* Add a few scrollable and searchable containers [skip ci] ([#2948](https://github.com/Wynntils/Wynntils/issues/2948)) ([52e08b5](https://github.com/Wynntils/Wynntils/commit/52e08b51082165b9cd635eec6e469389e84bb1fd))
+* Annotate season leaderboard items [skip ci] ([#2949](https://github.com/Wynntils/Wynntils/issues/2949)) ([a637b00](https://github.com/Wynntils/Wynntils/commit/a637b002131b074c6645e5bbac261a35da64472b))
+
+
+### Bug Fixes
+
+* Fix incompatibility with Legendary Tooltips (and Iceberg/Prism) ([#2956](https://github.com/Wynntils/Wynntils/issues/2956)) ([9dc7957](https://github.com/Wynntils/Wynntils/commit/9dc795735362d4cf67c34362062c70299145a273))
+* Fix trade market conversion when quick search hide prompt option is enabled [skip ci] ([#2945](https://github.com/Wynntils/Wynntils/issues/2945)) ([f88d2ca](https://github.com/Wynntils/Wynntils/commit/f88d2cab0e87b778ffa868423360beb4229f4c4b))
+* Update shaman masks & parsing [skip ci] ([#2955](https://github.com/Wynntils/Wynntils/issues/2955)) ([0ae175d](https://github.com/Wynntils/Wynntils/commit/0ae175d0329b67d823e34d2e4e846416ac712d72))
+
 ## [2.3.19](https://github.com/Wynntils/Wynntils/compare/v2.3.18...v2.3.19) (2024-10-23)
 
 
 ### Bug Fixes
 
 * Restore GUI scale after reloading options ([#2941](https://github.com/Wynntils/Wynntils/issues/2941)) ([cef89f0](https://github.com/Wynntils/Wynntils/commit/cef89f02877451c992a579756ca0250283846b20))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.19 [skip ci] ([b45310a](https://github.com/Wynntils/Wynntils/commit/b45310a4a4a0e1a6e801b3696e46740adb07a546))
 
 ## [2.3.18](https://github.com/Wynntils/Wynntils/compare/v2.3.17...v2.3.18) (2024-10-22)
 
@@ -42,17 +62,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.16 [skip ci] ([77e1ae6](https://github.com/Wynntils/Wynntils/commit/77e1ae64c16e90689512fd3e293e0887218d7115))
-
-## [2.3.15](https://github.com/Wynntils/Wynntils/compare/v2.3.14...v2.3.15) (2024-10-21)
-
-
-### Bug Fixes
-
-* Always remove encoded crafted item names and don't use plain-text name data if an illegal character is detected for chat encoded items ([#2934](https://github.com/Wynntils/Wynntils/issues/2934)) ([710ae1c](https://github.com/Wynntils/Wynntils/commit/710ae1c1b6edc58376c6cf4dcf5b96d7ea6b4f70))
-* Fix extended season leaderboard [skip ci] ([#2933](https://github.com/Wynntils/Wynntils/issues/2933)) ([2e207ac](https://github.com/Wynntils/Wynntils/commit/2e207ac4726de85738b16226b126c7183a1a1df0))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.15 [skip ci] ([6fc8da0](https://github.com/Wynntils/Wynntils/commit/6fc8da0291f626ff2eb454f02670a950aa2527f6))
 
