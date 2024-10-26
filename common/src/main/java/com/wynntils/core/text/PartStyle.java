@@ -191,7 +191,8 @@ public final class PartStyle {
 
     public Style getStyle() {
         // Optimization: Use raw Style constructor, instead of the builder.
-        TextColor textColor = color == CustomColor.NONE ? null : TextColor.fromRgb(color.asInt());
+        // Mask the color int to be 0xRRGGBB instead of 0xAARRGGBB (as TextColor doesn't expect alpha).
+        TextColor textColor = color == CustomColor.NONE ? null : TextColor.fromRgb(color.asInt() & 0x00FFFFFF);
         return new Style(
                 textColor, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent, null, font);
     }
