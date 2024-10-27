@@ -18,7 +18,7 @@ import net.minecraft.world.entity.Entity;
 
 public class GuildSeasonLeaderboardLabelParser implements LabelParser {
     private static final Pattern GUILD_SEASON_LEADERBOARD_LABEL = Pattern.compile(
-            "§d§lSeason (?<season>\\d+) Leaderboard\n§7Season (?:ends in §b§l(?<remaining>\\d+) (?<timeunit>(day|hour)s?)|ended at §b§l(?<month>\\d{2})/(?<day>\\d{2})/(?<year>\\d{4}))\n\n(?<guilds>.*?)\n§(?<firstpage>7|a)§l«§e ⬟ §(?<lastpage>7|a)§l»\n§eClick for Options",
+            "§d§lSeason (?<season>\\d+) Leaderboard\n§7Season (?:ends in §b§l(?<remaining>\\d+) (?<timeunit>(day|hour|minute|second)s?)|ended at §b§l(?<month>\\d{2})/(?<day>\\d{2})/(?<year>\\d{4}))\n\n(?<guilds>.*?)\n§(?<firstpage>7|a)§l«§e ⬟ §(?<lastpage>7|a)§l»\n§eClick for Options",
             Pattern.DOTALL);
     private static final Pattern GUILD_LEADERBOARD_POSITION =
             Pattern.compile("^§.(?:§l)?(?<place>\\d+)(?:§7)? - §b(?<guild>.+)§d \\((\\d{1,3}(?:,\\d{3})*) SR\\)$");
