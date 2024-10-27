@@ -291,7 +291,9 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         renderCoordinates(poseStack, mouseX, mouseY);
 
-        renderZoomWidget(poseStack, mouseX, mouseY);
+        if (KeyboardUtils.isShiftDown()) {
+            renderZoomWidget(poseStack);
+        }
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 

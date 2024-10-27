@@ -4,13 +4,11 @@
  */
 package com.wynntils.services.mapdata.providers.json;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
-import java.lang.reflect.Field;
 
 public class JsonMapAttributesBuilder {
     private int priority;
@@ -102,17 +100,17 @@ public class JsonMapAttributesBuilder {
     }
 
     protected void checkInvalidAttribute(String fieldName) {
-        if (!WynntilsMod.isDevelopmentBuild()) return;
-
-        try {
-            // Use reflection to get our field given by the name
-            Field field = JsonMapAttributesBuilder.class.getDeclaredField(fieldName);
-            if (field.get(this) != null) {
-                throw new IllegalStateException("Unsupported attribute set: " + fieldName);
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            // Silently ignore invalid field checks
-        }
+        //        if (!WynntilsMod.isDevelopmentBuild()) return;
+        //
+        //        try {
+        //            // Use reflection to get our field given by the name
+        //            Field field = JsonMapAttributesBuilder.class.getDeclaredField(fieldName);
+        //            if (field.get(this) != null) {
+        //                throw new IllegalStateException("Unsupported attribute set: " + fieldName);
+        //            }
+        //        } catch (NoSuchFieldException | IllegalAccessException e) {
+        //            // Silently ignore invalid field checks
+        //        }
     }
 
     public final class JsonMapLocationAttributesBuilder extends JsonMapAttributesBuilder {

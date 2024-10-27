@@ -330,9 +330,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderZoomWidget(PoseStack poseStack, int mouseX, int mouseY) {
-        if (!KeyboardUtils.isShiftDown()) return;
-
+    protected void renderZoomWidget(PoseStack poseStack) {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
