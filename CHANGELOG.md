@@ -1,3 +1,15 @@
+## [2.3.21](https://github.com/Wynntils/Wynntils/compare/v2.3.20...v2.3.21) (2024-10-27)
+
+
+### New Features
+
+* Support max mana stat ([#2959](https://github.com/Wynntils/Wynntils/issues/2959)) ([37fd235](https://github.com/Wynntils/Wynntils/commit/37fd2352bc69fc6c47ba7f823869e891c5ac6356))
+
+
+### Bug Fixes
+
+* Fix extended season leaderboard when less than 1 day left in season [skip ci] ([#2958](https://github.com/Wynntils/Wynntils/issues/2958)) ([db49ec8](https://github.com/Wynntils/Wynntils/commit/db49ec88ea579ef709edf9b2da7669f7c1ef2fdc))
+
 ## [2.3.20](https://github.com/Wynntils/Wynntils/compare/v2.3.19...v2.3.20) (2024-10-26)
 
 
@@ -12,6 +24,11 @@
 * Fix incompatibility with Legendary Tooltips (and Iceberg/Prism) ([#2956](https://github.com/Wynntils/Wynntils/issues/2956)) ([9dc7957](https://github.com/Wynntils/Wynntils/commit/9dc795735362d4cf67c34362062c70299145a273))
 * Fix trade market conversion when quick search hide prompt option is enabled [skip ci] ([#2945](https://github.com/Wynntils/Wynntils/issues/2945)) ([f88d2ca](https://github.com/Wynntils/Wynntils/commit/f88d2cab0e87b778ffa868423360beb4229f4c4b))
 * Update shaman masks & parsing [skip ci] ([#2955](https://github.com/Wynntils/Wynntils/issues/2955)) ([0ae175d](https://github.com/Wynntils/Wynntils/commit/0ae175d0329b67d823e34d2e4e846416ac712d72))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.20 [skip ci] ([b40c87d](https://github.com/Wynntils/Wynntils/commit/b40c87dcb3051b1be77d266e780654c83956535c))
 
 ## [2.3.19](https://github.com/Wynntils/Wynntils/compare/v2.3.18...v2.3.19) (2024-10-23)
 
@@ -50,16 +67,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.17 [skip ci] ([3a6517b](https://github.com/Wynntils/Wynntils/commit/3a6517b046a95c0efefb14298dd01eb1ce6f910f))
-
-## [2.3.16](https://github.com/Wynntils/Wynntils/compare/v2.3.15...v2.3.16) (2024-10-21)
-
-
-### Bug Fixes
-
-* Fix item sharing not working in certain cases ([#2937](https://github.com/Wynntils/Wynntils/issues/2937)) ([9948e23](https://github.com/Wynntils/Wynntils/commit/9948e232ae5baad51d9f99d05aad5582acff0786))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.16 [skip ci] ([77e1ae6](https://github.com/Wynntils/Wynntils/commit/77e1ae64c16e90689512fd3e293e0887218d7115))
 
