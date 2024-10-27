@@ -74,12 +74,8 @@ public class ExtendedSeasonLeaderboardFeature extends Feature {
 
             newLabel.append(Component.literal("\nSeason ends in ").withStyle(ChatFormatting.GRAY));
 
-            if (seasonEnd == 1) {
-                newLabel.append(Component.literal("1 day\n\n").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD));
-            } else {
-                newLabel.append(
-                        Component.literal(seasonEnd + " days\n\n").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD));
-            }
+            newLabel.append(Component.literal(seasonEnd + " " + guildSeasonLeaderboardLabelInfo.getTimeUnit() + " \n\n")
+                    .withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD));
         } else {
             int endMonth = guildSeasonLeaderboardLabelInfo.getEndingDate().getFirst();
             int endDay = guildSeasonLeaderboardLabelInfo.getEndingDate().get(1);

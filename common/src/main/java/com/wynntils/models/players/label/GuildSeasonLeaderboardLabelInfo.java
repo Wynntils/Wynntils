@@ -15,6 +15,7 @@ import net.minecraft.world.entity.Entity;
 public class GuildSeasonLeaderboardLabelInfo extends LabelInfo {
     private final int season;
     private final boolean currentSeason;
+    private final String timeUnit;
     private final List<Integer> endingDate;
     private final List<GuildLeaderboardInfo> guildLeaderboardInfo;
     private final boolean firstPage;
@@ -26,6 +27,7 @@ public class GuildSeasonLeaderboardLabelInfo extends LabelInfo {
             Entity entity,
             int season,
             boolean currentSeason,
+            String timeUnit,
             List<Integer> endingDate,
             List<GuildLeaderboardInfo> guildLeaderboardInfo,
             boolean firstPage,
@@ -33,6 +35,7 @@ public class GuildSeasonLeaderboardLabelInfo extends LabelInfo {
         super(label, location, entity);
         this.season = season;
         this.currentSeason = currentSeason;
+        this.timeUnit = timeUnit;
         this.endingDate = endingDate;
         this.guildLeaderboardInfo = guildLeaderboardInfo;
         this.firstPage = firstPage;
@@ -45,6 +48,10 @@ public class GuildSeasonLeaderboardLabelInfo extends LabelInfo {
 
     public boolean isCurrentSeason() {
         return currentSeason;
+    }
+
+    public String getTimeUnit() {
+        return timeUnit;
     }
 
     public List<Integer> getEndingDate() {
@@ -68,7 +75,8 @@ public class GuildSeasonLeaderboardLabelInfo extends LabelInfo {
         return "GuildSeasonLeaderboardLabelInfo{" + "label="
                 + label + ", season="
                 + season + ", currentSeason="
-                + currentSeason + ", endingDate="
+                + currentSeason + ", timeUnit='"
+                + timeUnit + '\'' + ", endingDate="
                 + endingDate + ", guildLeaderboardInfo="
                 + guildLeaderboardInfo + ", firstPage="
                 + firstPage + ", lastPage="
