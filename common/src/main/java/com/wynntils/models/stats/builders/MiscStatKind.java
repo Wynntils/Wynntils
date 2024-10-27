@@ -17,6 +17,7 @@ public enum MiscStatKind {
     LIFE_STEAL("Life Steal", StatUnit.PER_3_S, "lifeSteal"),
     MANA_REGEN("Mana Regen", StatUnit.PER_5_S, "manaRegen"),
     MANA_STEAL("Mana Steal", StatUnit.PER_3_S, "manaSteal"),
+    MAX_MANA("Max Mana", StatUnit.RAW, "maxMana"),
 
     // Movement
     WALK_SPEED("Walk Speed", StatUnit.PERCENT, "walkSpeed", "SPEED"),
