@@ -1,3 +1,15 @@
+## [2.3.22](https://github.com/Wynntils/Wynntils/compare/v2.3.21...v2.3.22) (2024-10-28)
+
+
+### Bug Fixes
+
+* Fix damage tracking after new patch ([#2960](https://github.com/Wynntils/Wynntils/issues/2960)) ([6c81850](https://github.com/Wynntils/Wynntils/commit/6c818502fde4386ef1bda571d9fe640460aa3be9))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2957](https://github.com/Wynntils/Wynntils/issues/2957)) ([843d277](https://github.com/Wynntils/Wynntils/commit/843d27774a3bc22846e2f201846917e5e936e48c))
+
 ## [2.3.21](https://github.com/Wynntils/Wynntils/compare/v2.3.20...v2.3.21) (2024-10-27)
 
 
@@ -9,6 +21,11 @@
 ### Bug Fixes
 
 * Fix extended season leaderboard when less than 1 day left in season [skip ci] ([#2958](https://github.com/Wynntils/Wynntils/issues/2958)) ([db49ec8](https://github.com/Wynntils/Wynntils/commit/db49ec88ea579ef709edf9b2da7669f7c1ef2fdc))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.21 [skip ci] ([c110b3c](https://github.com/Wynntils/Wynntils/commit/c110b3c048091dc276e13814f3e9ff751be0ed8b))
 
 ## [2.3.20](https://github.com/Wynntils/Wynntils/compare/v2.3.19...v2.3.20) (2024-10-26)
 
@@ -55,16 +72,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.18 [skip ci] ([3ffeae4](https://github.com/Wynntils/Wynntils/commit/3ffeae41bc0a5e315ceb65bff13ef24dbde2587b))
-
-## [2.3.17](https://github.com/Wynntils/Wynntils/compare/v2.3.16...v2.3.17) (2024-10-21)
-
-
-### Bug Fixes
-
-* Disable AutoAttackFeature by default until macro spell casting issue solved ([#2939](https://github.com/Wynntils/Wynntils/issues/2939)) ([fa5f914](https://github.com/Wynntils/Wynntils/commit/fa5f914b304facc7fa128e51031d6065fd99ebe1))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.17 [skip ci] ([3a6517b](https://github.com/Wynntils/Wynntils/commit/3a6517b046a95c0efefb14298dd01eb1ce6f910f))
 
