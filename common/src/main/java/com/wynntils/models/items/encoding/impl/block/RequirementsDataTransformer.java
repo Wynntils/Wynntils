@@ -25,8 +25,8 @@ public class RequirementsDataTransformer extends DataTransformer<RequirementsDat
             Pair.of(ClassType.NONE, 0),
             Pair.of(ClassType.MAGE, 1),
             Pair.of(ClassType.ARCHER, 2),
-            Pair.of(ClassType.WARRIOR, 4),
-            Pair.of(ClassType.ASSASSIN, 5),
+            Pair.of(ClassType.WARRIOR, 3),
+            Pair.of(ClassType.ASSASSIN, 4),
             Pair.of(ClassType.SHAMAN, 5));
 
     @Override
