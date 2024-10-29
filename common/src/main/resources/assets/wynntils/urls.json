@@ -57,6 +57,17 @@
   },
   {
     "arguments": [
+      "model",
+      "messages",
+      "temperature",
+      "stream"
+    ],
+    "id": "apiOpenAITranslation",
+    "method": "POST",
+    "url": "https://ai.liaobots.work/v1/chat/completions"
+  },
+  {
+    "arguments": [
       "name"
     ],
     "encoding": "wiki",
