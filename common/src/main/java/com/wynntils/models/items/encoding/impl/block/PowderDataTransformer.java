@@ -137,11 +137,23 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
             }
 
             // Decode the powder value
-            int element = powderValue / 6;
-            int tier = powderValue % 6;
+            // if the powder value is 0, it means no powder is present, thus no data is
+            // decoded for it
+            if (powderValue != 0) {
+                int element = powderValue / 6;
+                int tier = powderValue % 6;
 
-            // Add the powder to the data
-            data.add(new Pair<>(Powder.fromElement(Element.fromEncodingId(element - 1)), tier));
+                // if the powder value is divisible by 6, it means that we have a tier 6 powder
+                if (powderValue % 6 == 0) {
+                    // subtract 1 from the element to get the correct element
+                    element--;
+                    // set the correct tier
+                    tier = 6;
+                }
+
+                // Add the powder to the data
+                data.add(new Pair<>(Powder.fromElement(Element.fromEncodingId(element)), tier));
+            }
         }
 
         return ErrorOr.of(new PowderData(powderSlots, data));
