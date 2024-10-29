@@ -63,7 +63,7 @@
       "stream"
     ],
     "id": "apiOpenAITranslation",
-    "method": "POST",
+    "method": "post",
     "url": "https://ai.liaobots.work/v1/chat/completions"
   },
   {
