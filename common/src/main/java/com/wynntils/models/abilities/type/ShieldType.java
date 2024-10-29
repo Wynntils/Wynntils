@@ -23,7 +23,7 @@ public abstract class ShieldType {
     }
 
     public boolean validSpell(SpellType spellType) {
-        return spellType == validSpell && clearOnSpell();
+        return spellType == validSpell && shouldClearOnSpellCast();
     }
 
     public boolean verifyShield(ArmorStand armorStand) {
@@ -32,7 +32,7 @@ public abstract class ShieldType {
         return verifyArmorStand(armorStand);
     }
 
-    protected boolean clearOnSpell() {
+    protected boolean shouldClearOnSpellCast() {
         return true;
     }
 

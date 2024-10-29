@@ -24,7 +24,7 @@ public class MantleShield extends ShieldType {
     }
 
     @Override
-    protected boolean clearOnSpell() {
+    protected boolean shouldClearOnSpellCast() {
         return Models.StatusEffect.getStatusEffects().stream()
                 .noneMatch(statusEffect -> SHIELD_COOLDOWN_NAME.equals(statusEffect.getName()));
     }
