@@ -23,13 +23,17 @@ public abstract class ShieldType {
     }
 
     public boolean validSpell(SpellType spellType) {
-        return spellType == validSpell;
+        return spellType == validSpell && clearOnSpell();
     }
 
     public boolean verifyShield(ArmorStand armorStand) {
         if (!validClass()) return false;
 
         return verifyArmorStand(armorStand);
+    }
+
+    protected boolean clearOnSpell() {
+        return true;
     }
 
     protected abstract boolean verifyArmorStand(ArmorStand armorStand);
