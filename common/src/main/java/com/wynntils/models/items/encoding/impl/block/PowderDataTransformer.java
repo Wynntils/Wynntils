@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.encoding.impl.block;
 
+import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.items.encoding.data.PowderData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
@@ -58,7 +59,7 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
         // 5 `0` bits are used to represent that no powder is present at the slot.
         for (int i = 0; i < data.powders().size(); i++) {
             Pair<Powder, Integer> powder = data.powders().get(i);
-            int element = powder.key().ordinal();
+            int element = powder.key().getElement().getEncodingId();
             int tier = powder.value();
             int powderDataIndex = i * 5;
 
@@ -140,7 +141,7 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
             int tier = powderValue % 6;
 
             // Add the powder to the data
-            data.add(new Pair<>(Powder.values()[element - 1], tier));
+            data.add(new Pair<>(Powder.fromElement(Element.fromEncodingId(element - 1)), tier));
         }
 
         return ErrorOr.of(new PowderData(powderSlots, data));

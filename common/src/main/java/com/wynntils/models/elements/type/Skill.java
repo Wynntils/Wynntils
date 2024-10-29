@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.elements.type;
@@ -37,6 +37,15 @@ public enum Skill {
         String str = apiId.toLowerCase(Locale.ROOT);
         for (Skill skill : values()) {
             if (skill.getApiName().equals(str)) {
+                return skill;
+            }
+        }
+        return null;
+    }
+
+    public static Skill fromElement(Element element) {
+        for (Skill skill : values()) {
+            if (skill.getAssociatedElement() == element) {
                 return skill;
             }
         }
