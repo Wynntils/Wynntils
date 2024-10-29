@@ -8,8 +8,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
-import com.wynntils.models.statuseffects.type.StatusEffect;
-import java.util.Optional;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
@@ -27,11 +25,8 @@ public class MantleShield extends ShieldType {
 
     @Override
     protected boolean clearOnSpell() {
-        Optional<StatusEffect> shieldCooldown = Models.StatusEffect.getStatusEffects().stream()
-                .filter(statusEffect -> SHIELD_COOLDOWN_NAME.equals(statusEffect.getName()))
-                .findFirst();
-
-        return shieldCooldown.isEmpty();
+        return Models.StatusEffect.getStatusEffects().stream()
+                .noneMatch(statusEffect -> SHIELD_COOLDOWN_NAME.equals(statusEffect.getName()));
     }
 
     @Override
