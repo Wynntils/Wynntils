@@ -54,8 +54,8 @@ public class DefenseDataTransformer extends DataTransformer<DefenseData> {
 
         // A defense stat is encoded the following way:
         for (Pair<Element, Integer> defence : data.defences()) {
-            // The first byte is the id of the skill (`ETFWA`).
-            bytes.add(UnsignedByte.of((byte) defence.a().ordinal()));
+            // The first byte is the id of the skill (`ETWFA`).
+            bytes.add(UnsignedByte.of((byte) defence.a().getEncodingId()));
 
             // The next bytes are the defense bytes, which are assembled into an integer.
             unsignedBytes = UnsignedByteUtils.encodeVariableSizedInteger(defence.b());
@@ -75,8 +75,8 @@ public class DefenseDataTransformer extends DataTransformer<DefenseData> {
 
         for (int i = 0; i < defencesCount; i++) {
             // A defense stat is encoded the following way:
-            // The first byte is the id of the skill (`ETFWA`).
-            Element element = Element.values()[byteReader.read().value()];
+            // The first byte is the id of the skill (`ETWFA`).
+            Element element = Element.fromEncodingId(byteReader.read().value());
 
             // The next bytes are the defense bytes, which are assembled into an integer.
             int defence = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
