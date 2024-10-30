@@ -50,12 +50,27 @@ public class TranslationFeature extends Feature {
     public final Config<TranslationService.TranslationServices> translationService =
             new Config<>(TranslationService.TranslationServices.GOOGLEAPI);
 
+    @Persisted
+    public final Config<String> modelName = new Config<>("gpt-4o-mini");
+
+    @Persisted
+    public final Config<String> apiKey = new Config<>("api_key");
+
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {
         if (languageName.get().isEmpty()) return;
 
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
+
+        if (translationService.get() == TranslationService.TranslationServices.OPENAIAPI) {
+            if (apiKey.get() == null || apiKey.get().trim().isEmpty()) {
+                return;
+            }
+            if (modelName.get() == null || modelName.get().trim().isEmpty()) {
+                return;
+            }
+        }
 
         StyledText originalText = e.getStyledText();
         String codedString = wrapCoding(originalText);
@@ -83,6 +98,15 @@ public class TranslationFeature extends Feature {
     public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
         if (!translateNpc.get()) return;
         if (languageName.get().isEmpty()) return;
+
+        if (translationService.get() == TranslationService.TranslationServices.OPENAIAPI) {
+            if (apiKey.get() == null || apiKey.get().trim().isEmpty()) {
+                return;
+            }
+            if (modelName.get() == null || modelName.get().trim().isEmpty()) {
+                return;
+            }
+        }
 
         event.addProcessingStep(future -> future.thenCompose(styledTexts -> {
             if (styledTexts.isEmpty()) return CompletableFuture.completedFuture(styledTexts);

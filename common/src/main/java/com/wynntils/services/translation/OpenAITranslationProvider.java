@@ -10,6 +10,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.features.utilities.TranslationFeature;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -25,27 +26,30 @@ public class OpenAITranslationProvider extends CachingTranslationProvider {
     // Initialize the logger using WynntilsMod's logger
     private static final Logger LOGGER = WynntilsMod.getLogger();
 
-    // Constant model name
-    private static final String MODEL_NAME = "gpt-4o-mini";
-
     // Template for the system message with a placeholder for the target language
     private static final String SYSTEM_MESSAGE_TEMPLATE =
-            "You are a language model assigned to provide translations for a fantasy MMORPG Minecraft game called Wynncraft. "
-                    + "Please translate all provided game dialogues, quest descriptions, item names, chat bar prompts (including events and area discoveries), "
-                    + "and any lore-related content into %s. Use a style suitable for a medieval fantasy MMORPG world inspired by games like RuneScape.\n\n"
-                    + "Ensure that the translations maintain the game's lore, context, and specific terminology, including but not limited to:\n"
-                    + "- Names of provinces, realms, locations, cities, and towns (e.g., Ragni, Detlas, Almuj, Nemract, Troms, Ternaves, Nesaak, Selchar, Rymek, Maltic, Elkurn, Bremminglar, Katoa Ranch, Lusuco, Sarnfic, Nivla Forest, Dernel, Maro Peaks, Llevigar, Cinfras, Olux, Thesead, Eltom, Rodoroc, Ahmsord, Thanos, Kandon-Beda, Bucie)\n"
-                    + "- Names of NPCs and entities (e.g., Eluzterp, Royal Adviser Carlos, KEEL-tron, Worthington)\n"
-                    + "- Names of regions and mobs\n"
-                    + "- Class names and roles (e.g., Archer, Assassin, Mage, Warrior, Shaman)\n"
-                    + "- Specific events, historical periods, and timeline references (e.g., Before Portal [BP], After Portal [AP], Corruption War, Decay)\n"
-                    + "- Item names, artifacts, and magical elements\n"
-                    + "- Any in-game terminology and proper nouns\n\n"
-                    + "Please **do not translate** specific names and proper nouns, especially the names of locations and NPCs listed above, unless they have established translations within the game's context.\n\n"
-                    + "Only output the translated content, keeping the structure, line breaks, and order of the original text. Do not add any extra words, explanations, or formatting.";
+            """
+                    You are a language model assigned to provide translations for a fantasy MMORPG Minecraft game called Wynncraft. \
+                    Please translate all provided game dialogues, quest descriptions, item names, chat bar prompts (including events and area discoveries), \
+                    and any lore-related content into %s. Use a style suitable for a medieval fantasy MMORPG world inspired by games like RuneScape.
+
+                    Ensure that the translations maintain the game's lore, context, and specific terminology, including but not limited to:
+                    - Names of provinces, realms, locations, cities, and towns (e.g., Ragni, Detlas, Almuj, Nemract, Troms, Ternaves, Nesaak, Selchar, Rymek, Maltic, Elkurn, Bremminglar, Katoa Ranch, Lusuco, Sarnfic, Nivla Forest, Dernel, Maro Peaks, Llevigar, Cinfras, Olux, Thesead, Eltom, Rodoroc, Ahmsord, Thanos, Kandon-Beda, Bucie)
+                    - Names of NPCs and entities (e.g., Eluzterp, Royal Adviser Carlos, KEEL-tron, Worthington)
+                    - Names of regions and mobs
+                    - Class names and roles (e.g., Archer, Assassin, Mage, Warrior, Shaman)
+                    - Specific events, historical periods, and timeline references (e.g., Before Portal [BP], After Portal [AP], Corruption War, Decay)
+                    - Item names, artifacts, and magical elements
+                    - Any in-game terminology and proper nouns
+
+                    Please **do not translate** specific names and proper nouns, especially the names of locations and NPCs listed above, unless they have established translations within the game's context.
+
+                    Only output the translated content, keeping the structure, line breaks, and order of the original text. Do not add any extra words, explanations, or formatting.""";
 
     // Immutable base headers excluding the Authorization header
     private static final Map<String, String> BASE_HEADERS = Map.of("Content-Type", "application/json");
+
+    private final TranslationFeature translationFeature = Managers.Feature.getFeatureInstance(TranslationFeature.class);
 
     @Override
     protected void translateNew(List<String> messageList, String toLanguage, Consumer<List<String>> handleTranslation) {
@@ -71,7 +75,7 @@ public class OpenAITranslationProvider extends CachingTranslationProvider {
 
         // Create the request body as a JsonObject
         JsonObject requestBody = new JsonObject();
-        requestBody.addProperty("model", MODEL_NAME);
+        requestBody.addProperty("model", translationFeature.modelName.get());
 
         // Build the messages array
         JsonArray messages = new JsonArray();
@@ -93,7 +97,7 @@ public class OpenAITranslationProvider extends CachingTranslationProvider {
 
         // Prepare headers by copying the base headers and adding the Authorization header
         Map<String, String> headers = new java.util.HashMap<>(BASE_HEADERS);
-        headers.put("Authorization", "Bearer " + "API_KEY"); // Consider externalizing the API key
+        headers.put("Authorization", "Bearer " + translationFeature.apiKey.get());
 
         // Log the request body for debugging
         LOGGER.debug("Request Body JSON: {}", requestBody);
