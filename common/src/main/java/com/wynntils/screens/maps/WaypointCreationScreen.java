@@ -332,7 +332,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 })
                 .pos((int) (dividedWidth * 26), (int) (dividedHeight * 36))
                 .size(20, 20)
-                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiCreation.centerPlayer")))
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.waypointCreation.centerPlayer")))
                 .build());
 
         this.addRenderableWidget(new Button.Builder(Component.literal("🌍"), (button) -> {
@@ -342,7 +342,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 })
                 .pos((int) (dividedWidth * 29), (int) (dividedHeight * 36))
                 .size(20, 20)
-                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiCreation.centerWorld")))
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.waypointCreation.centerWorld")))
                 .build());
         // endregion
 
@@ -371,12 +371,12 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         // region Screen Interactions
         this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.poiCreation.cancel"), (button) -> this.onClose())
+                        Component.translatable("screens.wynntils.waypointCreation.cancel"), (button) -> this.onClose())
                 .pos((int) (dividedWidth * 6), (int) (dividedHeight * 54))
                 .size((int) (dividedWidth * 8), 20)
                 .build());
 
-        saveButton = new Button.Builder(Component.translatable("screens.wynntils.poiCreation.save"), (button) -> {
+        saveButton = new Button.Builder(Component.translatable("screens.wynntils.waypointCreation.save"), (button) -> {
                     savePoi();
                     this.onClose();
                 })
@@ -450,7 +450,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.waypointName") + ":"),
+                        StyledText.fromString(I18n.get("screens.wynntils.waypointCreation.waypointName") + ":"),
                         (int) (dividedWidth * 4),
                         (int) (dividedHeight * 12.5f),
                         CommonColors.WHITE,
@@ -494,7 +494,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.color") + ":"),
+                        StyledText.fromString(I18n.get("screens.wynntils.waypointCreation.color") + ":"),
                         dividedWidth * 19f,
                         (int) (dividedHeight * 12.5f),
                         CommonColors.WHITE,
@@ -505,7 +505,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.visibility") + ":"),
+                        StyledText.fromString(I18n.get("screens.wynntils.waypointCreation.visibility") + ":"),
                         dividedWidth * 10.0f,
                         dividedHeight * 45.5f,
                         CommonColors.WHITE,
