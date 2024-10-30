@@ -22,10 +22,11 @@ public class MapAttributesImpl implements MapAttributes {
     private final String icon;
     private final MapVisibilityImpl iconVisibility;
     private final CustomColor iconColor;
+    private final Boolean hasMarker;
     private final MapMarkerOptionsImpl markerOptions;
     private final CustomColor fillColor;
     private final CustomColor borderColor;
-    private final float borderWidth;
+    private final Float borderWidth;
 
     public MapAttributesImpl(
             int priority,
@@ -37,10 +38,11 @@ public class MapAttributesImpl implements MapAttributes {
             String icon,
             MapVisibilityImpl iconVisibility,
             CustomColor iconColor,
+            Boolean hasMarker,
             MapMarkerOptionsImpl markerOptions,
             CustomColor fillColor,
             CustomColor borderColor,
-            float borderWidth) {
+            Float borderWidth) {
         this.priority = priority;
         this.level = level;
         this.label = label;
@@ -50,6 +52,7 @@ public class MapAttributesImpl implements MapAttributes {
         this.icon = icon;
         this.iconVisibility = iconVisibility;
         this.iconColor = iconColor;
+        this.hasMarker = hasMarker;
         this.markerOptions = markerOptions;
         this.fillColor = fillColor;
         this.borderColor = borderColor;
@@ -102,6 +105,11 @@ public class MapAttributesImpl implements MapAttributes {
     }
 
     @Override
+    public Optional<Boolean> getHasMarker() {
+        return Optional.ofNullable(hasMarker);
+    }
+
+    @Override
     public Optional<MapMarkerOptions> getMarkerOptions() {
         return Optional.ofNullable(markerOptions);
     }
@@ -118,7 +126,7 @@ public class MapAttributesImpl implements MapAttributes {
 
     @Override
     public Optional<Float> getBorderWidth() {
-        return Optional.of(borderWidth);
+        return Optional.ofNullable(borderWidth);
     }
 
     @Override

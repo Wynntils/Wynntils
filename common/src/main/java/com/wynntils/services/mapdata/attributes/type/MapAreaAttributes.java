@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface MapAreaAttributes extends MapAttributes {
     static List<String> getUnsupportedAttributes() {
-        return List.of("iconId", "iconVisibility", "iconColor", "iconDecoration", "markerOptions");
+        return List.of("iconId", "iconVisibility", "iconColor", "iconDecoration", "hasMarker", "markerOptions");
     }
 }

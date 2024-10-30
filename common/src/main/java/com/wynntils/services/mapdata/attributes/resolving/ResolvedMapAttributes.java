@@ -19,6 +19,7 @@ public record ResolvedMapAttributes(
         ResolvedMapVisibility iconVisibility,
         CustomColor iconColor,
         MapDecoration iconDecoration,
+        boolean hasMarker,
         ResolvedMarkerOptions markerOptions,
         CustomColor fillColor,
         CustomColor borderColor,

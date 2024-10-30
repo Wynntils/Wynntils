@@ -60,10 +60,13 @@ public interface MapAttributes {
 
     // endregion
 
-    // region Marker Attributes
+    // region MapLocation Marker Attributes
+
+    // Whether the marker is enabled on the map
+    // (the marker may still not be visible, depending on the marker options)
+    Optional<Boolean> getHasMarker();
 
     // The options of the marker in the world
-    // This is only supported for MapLocations
     Optional<MapMarkerOptions> getMarkerOptions();
 
     // endregion

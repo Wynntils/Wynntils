@@ -64,6 +64,11 @@ public abstract class AbstractMapAttributes implements MapAttributes {
     }
 
     @Override
+    public Optional<Boolean> getHasMarker() {
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<MapMarkerOptions> getMarkerOptions() {
         return Optional.empty();
     }

@@ -19,6 +19,7 @@ public final class MapLocationAttributesImpl extends MapAttributesImpl implement
             String icon,
             MapVisibilityImpl iconVisibility,
             CustomColor iconColor,
+            Boolean hasMarker,
             MapMarkerOptionsImpl markerOptions) {
         super(
                 priority,
@@ -30,9 +31,10 @@ public final class MapLocationAttributesImpl extends MapAttributesImpl implement
                 icon,
                 iconVisibility,
                 iconColor,
+                hasMarker,
                 markerOptions,
                 null,
                 null,
-                0f);
+                null);
     }
 }
