@@ -189,13 +189,21 @@ public class WorldMarkersFeature extends Feature {
         List<Pair<Double, MapLocation>> mapLocations = Services.MapData.getFeatures()
                 .filter(mapFeature -> mapFeature instanceof MapLocation)
                 .map(mapFeature -> (MapLocation) mapFeature)
-                .map(mapLocation -> {
-                    ResolvedMapAttributes resolvedMapAttributes = Services.MapData.resolveMapAttributes(mapLocation);
-                    return Pair.of(
-                            Services.MapData.calculateMarkerVisibility(
-                                    mapLocation.getLocation(), resolvedMapAttributes.markerOptions()),
-                            mapLocation);
+                .map(mapFeature -> {
+                    ResolvedMapAttributes resolvedMapAttributes = Services.MapData.resolveMapAttributes(mapFeature);
+                    return Pair.of(mapFeature, resolvedMapAttributes);
                 })
+                // If the marker is disabled, skip rendering
+                .filter(pair -> pair.b().hasMarker())
+                // If the marker has no icon, distance, or label, skip rendering
+                // This avoids rendering "empty" beacons around the world
+                .filter(pair -> pair.b().markerOptions().hasIcon()
+                        || pair.b().markerOptions().hasDistance()
+                        || pair.b().markerOptions().hasLabel())
+                .map(pair -> Pair.of(
+                        Services.MapData.calculateMarkerVisibility(
+                                pair.a().getLocation(), pair.b().markerOptions()),
+                        pair.a()))
                 .filter(pair -> pair.a() >= MINIMUM_RENDER_VISIBILITY)
                 .toList();
 

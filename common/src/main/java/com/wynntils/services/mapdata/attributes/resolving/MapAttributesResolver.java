@@ -42,6 +42,7 @@ public final class MapAttributesResolver {
                 resolver.getResolvedMapVisibility(MapAttributes::getIconVisibility),
                 resolver.getAttribute(MapAttributes::getIconColor),
                 resolver.getAttribute(MapAttributes::getIconDecoration),
+                resolver.getAttribute(MapAttributes::getHasMarker),
                 resolver.getResolvedMarkerOptions(MapAttributes::getMarkerOptions),
                 resolver.getAttribute(MapAttributes::getFillColor),
                 resolver.getAttribute(MapAttributes::getBorderColor),

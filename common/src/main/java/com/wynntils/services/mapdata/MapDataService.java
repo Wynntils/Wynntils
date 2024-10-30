@@ -80,7 +80,7 @@ public class MapDataService extends Service {
         return getFeatures().filter(f -> f.getCategoryId().startsWith(categoryId));
     }
 
-    // region Lookup features and resolve attributes
+    // region Lookup features and attribute resolution
 
     public ResolvedMapAttributes resolveMapAttributes(MapFeature feature) {
         return resolvedAttributesCache.computeIfAbsent(feature, k -> MapAttributesResolver.resolve(feature));

@@ -18,7 +18,7 @@ public final class MapAreaAttributesImpl extends MapAttributesImpl implements Ma
             TextShadow labelShadow,
             CustomColor fillColor,
             CustomColor borderColor,
-            float borderWidth) {
+            Float borderWidth) {
         super(
                 priority,
                 level,
@@ -29,6 +29,7 @@ public final class MapAreaAttributesImpl extends MapAttributesImpl implements Ma
                 null,
                 null,
                 null,
+                false,
                 null,
                 fillColor,
                 borderColor,

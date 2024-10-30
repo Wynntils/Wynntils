@@ -33,6 +33,11 @@ public abstract class AbstractMapPathAttributes extends AbstractMapAttributes im
     }
 
     @Override
+    public Optional<Boolean> getHasMarker() {
+        return Optional.empty();
+    }
+
+    @Override
     public final Optional<MapMarkerOptions> getMarkerOptions() {
         return Optional.empty();
     }

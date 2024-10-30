@@ -13,6 +13,7 @@ public interface MapPathAttributes extends MapAttributes {
                 "iconVisibility",
                 "iconColor",
                 "iconDecoration",
+                "hasMarker",
                 "markerOptions",
                 "fillColor",
                 "borderWidth",

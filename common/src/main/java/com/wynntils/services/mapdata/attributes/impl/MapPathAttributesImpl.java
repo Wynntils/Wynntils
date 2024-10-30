@@ -16,6 +16,20 @@ public final class MapPathAttributesImpl extends MapAttributesImpl implements Ma
             MapVisibilityImpl labelVisibility,
             CustomColor labelColor,
             TextShadow labelShadow) {
-        super(priority, level, label, labelVisibility, labelColor, labelShadow, null, null, null, null, null, null, 0f);
+        super(
+                priority,
+                level,
+                label,
+                labelVisibility,
+                labelColor,
+                labelShadow,
+                null,
+                null,
+                null,
+                false,
+                null,
+                null,
+                null,
+                0f);
     }
 }
