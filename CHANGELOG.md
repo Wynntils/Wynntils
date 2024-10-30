@@ -1,3 +1,13 @@
+## [2.3.23](https://github.com/Wynntils/Wynntils/compare/v2.3.22...v2.3.23) (2024-10-30)
+
+
+### Bug Fixes
+
+* Don't clear mantle shield when on cooldown [skip ci] ([#2962](https://github.com/Wynntils/Wynntils/issues/2962)) ([2efba4d](https://github.com/Wynntils/Wynntils/commit/2efba4da747daea764bbc0be17d573ec06a9c171))
+* Duplicate capped focus function [skip ci] ([#2961](https://github.com/Wynntils/Wynntils/issues/2961)) ([6beae72](https://github.com/Wynntils/Wynntils/commit/6beae72aaed0821cc6f7ce05e5432e1d23badb21))
+* Fix some inconsistencies in powder encoding ([#2966](https://github.com/Wynntils/Wynntils/issues/2966)) ([cf2428a](https://github.com/Wynntils/Wynntils/commit/cf2428a52d10e1cef579114e3945492b440ddcd7))
+* Use encoding ids in all chat-encoding related classes, fix documentation revolving ids [skip ci] ([#2963](https://github.com/Wynntils/Wynntils/issues/2963)) ([d0980ab](https://github.com/Wynntils/Wynntils/commit/d0980ab7608dcd41f82bb0fa339d6a54fe40ea93))
+
 ## [2.3.22](https://github.com/Wynntils/Wynntils/compare/v2.3.21...v2.3.22) (2024-10-28)
 
 
@@ -9,6 +19,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2957](https://github.com/Wynntils/Wynntils/issues/2957)) ([843d277](https://github.com/Wynntils/Wynntils/commit/843d27774a3bc22846e2f201846917e5e936e48c))
+* **release:** v2.3.22 [skip ci] ([96e3d34](https://github.com/Wynntils/Wynntils/commit/96e3d346ba508a392f969fa5573cf5c73ee11632))
 
 ## [2.3.21](https://github.com/Wynntils/Wynntils/compare/v2.3.20...v2.3.21) (2024-10-27)
 
@@ -58,18 +69,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.19 [skip ci] ([b45310a](https://github.com/Wynntils/Wynntils/commit/b45310a4a4a0e1a6e801b3696e46740adb07a546))
-
-## [2.3.18](https://github.com/Wynntils/Wynntils/compare/v2.3.17...v2.3.18) (2024-10-22)
-
-
-### Bug Fixes
-
-* Automatic horse mounting gets stuck in loop [skip ci] ([#2938](https://github.com/Wynntils/Wynntils/issues/2938)) ([6659879](https://github.com/Wynntils/Wynntils/commit/665987946962c332986ae3f3639eba36cc2056b8))
-* Correct RegEx used to find overall progress [skip ci] ([#2940](https://github.com/Wynntils/Wynntils/issues/2940)) ([240d630](https://github.com/Wynntils/Wynntils/commit/240d630cd13035ff216f8e6b68ce154cc883cfa1))
-* Fix sharing some items with non alphanumeric names ([#2943](https://github.com/Wynntils/Wynntils/issues/2943)) ([106ea13](https://github.com/Wynntils/Wynntils/commit/106ea13865513becf0dc6cb7e28a5875ab1dcf75))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.18 [skip ci] ([3ffeae4](https://github.com/Wynntils/Wynntils/commit/3ffeae41bc0a5e315ceb65bff13ef24dbde2587b))
 
