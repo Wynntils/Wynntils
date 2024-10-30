@@ -11,6 +11,7 @@ import com.wynntils.services.mapdata.attributes.resolving.MapAttributesResolver;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapVisibility;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMarkerOptions;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.CategoriesProvider;
@@ -23,6 +24,7 @@ import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.TerritoryProvider;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
+import com.wynntils.services.mapdata.providers.type.MapDataOverrideProvider;
 import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
@@ -30,9 +32,8 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.io.File;
-import java.util.Deque;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -55,9 +56,10 @@ public class MapDataService extends Service {
     // FIXME: i18n
     private static final String NAMELESS_CATEGORY = "Category '%s'";
 
-    // Used for referencing the map data service before it is fully initialized in Services
-    private final Deque<String> providerOrder = new LinkedList<>();
-    private final Map<String, MapDataProvider> allProviders = new HashMap<>();
+    private final LinkedHashMap<String, MapDataProvider> allProviders = new LinkedHashMap<>();
+    private final LinkedHashMap<String, MapDataOverrideProvider> overrideProviders = new LinkedHashMap();
+
+    // Cache for resolved attributes and icons
     private final Map<MapFeature, ResolvedMapAttributes> resolvedAttributesCache = new HashMap<>();
     private final Map<String, Optional<MapIcon>> iconCache = new HashMap<>();
 
@@ -125,6 +127,16 @@ public class MapDataService extends Service {
                         .get());
     }
 
+    public Optional<MapAttributes> getOverrideAttributesForFeature(MapFeature feature) {
+        return overrideProviders.values().stream()
+                .filter(attr -> attr.getOverridenFeatureIds()
+                                .anyMatch(attrFeatureId -> attrFeatureId.equals(feature.getFeatureId()))
+                        || attr.getOverridenCategoryIds()
+                                .anyMatch(attrCategoryId -> attrCategoryId.equals(feature.getCategoryId())))
+                .map(MapDataOverrideProvider::getOverrideAttributes)
+                .findFirst();
+    }
+
     // endregion
 
     // region Providers
@@ -150,13 +162,19 @@ public class MapDataService extends Service {
         registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
     }
 
-    public void prioritizeProvider(String providerId) {
-        // This functionality should be replaced with a general reordering of
-        // providers from a GUI
-        if (providerOrder.remove(providerId)) {
-            // If it existed, put it back first
-            providerOrder.addFirst(providerId);
-        }
+    public void registerOverrideProvider(String overrideProviderId, MapDataOverrideProvider provider) {
+        overrideProviders.putFirst(overrideProviderId, provider);
+        provider.onChange(this::onProviderChange);
+
+        // Invalidate caches
+        invalidateAllCaches();
+    }
+
+    public void unregisterOverrideProvider(String overrideProviderId) {
+        overrideProviders.remove(overrideProviderId);
+
+        // Invalidate caches
+        invalidateAllCaches();
     }
 
     private void createBuiltInProviders() {
@@ -184,12 +202,8 @@ public class MapDataService extends Service {
             WynntilsMod.warn("Provider missing for '" + providerId + "'");
             return;
         }
-        if (!allProviders.containsKey(providerId)) {
-            // It is not previously known, so add it first
-            providerOrder.addFirst(providerId);
-        }
         // Add or update the provider
-        allProviders.put(providerId, provider);
+        allProviders.putFirst(providerId, provider);
         provider.onChange(this::onProviderChange);
 
         // Invalidate caches
@@ -213,12 +227,14 @@ public class MapDataService extends Service {
     }
 
     private Stream<MapDataProvider> getProviders() {
-        return providerOrder.stream().map(allProviders::get);
+        return allProviders.values().stream();
     }
 
     // endregion
 
-    /** This method requires a MapVisibility with all values non-empty to work correctly. */
+    /**
+     * This method requires a MapVisibility with all values non-empty to work correctly.
+     */
     public float calculateVisibility(ResolvedMapVisibility mapVisibility, float zoomLevel) {
         float min = mapVisibility.min();
         float max = mapVisibility.max();
