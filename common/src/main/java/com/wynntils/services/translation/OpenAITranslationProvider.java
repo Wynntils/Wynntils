@@ -27,10 +27,10 @@ public class OpenAITranslationProvider extends CachingTranslationProvider {
             return;
         }
 
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("model", "gpt-3.5-turbo"); // 模型名称
-        requestBody.put("temperature", "0.7");
-        requestBody.put("stream", "false");
+        String message = String.join("{NL}", messageList);
+
+        JsonObject requestBody = new JsonObject();
+        requestBody.addProperty("model", "gpt-4o-mini");
 
         JsonArray messages = new JsonArray();
 
@@ -38,36 +38,61 @@ public class OpenAITranslationProvider extends CachingTranslationProvider {
         systemMessage.addProperty("role", "system");
         systemMessage.addProperty(
                 "content",
-                "You are a language model designed to provide translations for the MMORPG game Wynncraft. Translate dialogue, quest descriptions, and item names in a way that fits a medieval fantasy RPG setting. Maintain a tone that is immersive and consistent with the game's lore and atmosphere.");
+                "You are a language model assigned to provide translations for a fantasy MMORPG Minecraft game called Wynncraft. Please translate all provided game dialogues, quest descriptions, item names, chat bar prompts (including events and area discoveries), and any lore-related content into " + toLanguage + ". Use a style suitable for a medieval fantasy MMORPG world inspired by games like RuneScape. Ensure that the translations maintain the game's lore, context, and specific terminology, including but not limited to:\n" +
+                        "- Names of provinces, realms, and locations (e.g., Fruma, Wynn, Corkus, Gavel, Time Valley, Realm of Light, Silent Expanse)\n" +
+                        "- Names of characters, NPCs, and entities (e.g., Bak'al, Bob, Lari, Dullahan, Theorick Twain)\n" +
+                        "- Class names and roles (e.g., Archer, Assassin, Mage, Warrior, Shaman)\n" +
+                        "- Specific events, historical periods, and timeline references (e.g., Before Portal [BP], After Portal [AP], Corruption War, Decay)\n" +
+                        "- Item names, artifacts, and magical elements\n" +
+                        "- Any in-game terminology and proper nouns\n\n" +
+                        "Only output the translated content, keeping the structure, line breaks, and order of the original text. Do not add any extra words, explanations, or formatting. Avoid translating specific names and proper nouns unless they have established translations within the game's context."
+        );
         messages.add(systemMessage);
 
         JsonObject userMessage = new JsonObject();
         userMessage.addProperty("role", "user");
-        userMessage.addProperty("content", String.join("\n", messageList));
+        userMessage.addProperty("content", message);
         messages.add(userMessage);
 
-        requestBody.put("messages", messages.toString());
+        requestBody.add("messages", messages);
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + "API_KEY");
         headers.put("Content-Type", "application/json");
 
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_OPENAI_TRANSLATION, requestBody, headers);
+        ApiResponse apiResponse = Managers.Net.callApiWithJsonBody(UrlId.API_OPENAI_TRANSLATION, requestBody, headers);
+
         apiResponse.handleJsonObject(
                 json -> {
-                    String translatedMessage = json.getAsJsonArray("choices")
-                            .get(0)
-                            .getAsJsonObject()
-                            .get("message")
-                            .getAsJsonObject()
-                            .get("content")
-                            .getAsString();
+                    System.out.println("API Response JSON: " + json.toString());
 
-                    List<String> result =
-                            Arrays.stream(translatedMessage.split("\\n")).toList();
-                    saveTranslation(toLanguage, messageList, result);
-                    handleTranslation.accept(result);
+                    JsonArray choicesArray = json.getAsJsonArray("choices");
+                    if (choicesArray != null && !choicesArray.isEmpty()) {
+                        JsonObject firstChoice = choicesArray.get(0).getAsJsonObject();
+                        JsonObject messageObject = firstChoice.getAsJsonObject("message");
+
+                        if (messageObject != null && messageObject.has("content")) {
+                            String translatedMessage =
+                                    messageObject.get("content").getAsString();
+                            System.out.println("Translated Message: " + translatedMessage);
+
+                            List<String> result = Arrays.stream(translatedMessage.split("\\{NL\\}"))
+                                    .toList();
+
+                            saveTranslation(toLanguage, messageList, result);
+                            handleTranslation.accept(result);
+                        } else {
+                            System.out.println("Message object or content missing in API response.");
+                            handleTranslation.accept(List.copyOf(messageList));
+                        }
+                    } else {
+                        System.out.println("Choices array missing or empty in API response.");
+                        handleTranslation.accept(List.copyOf(messageList));
+                    }
                 },
-                onError -> handleTranslation.accept(List.copyOf(messageList)));
+                onError -> {
+                    System.out.println("API call error, returning original message list.");
+                    handleTranslation.accept(List.copyOf(messageList));
+                });
     }
 }
