@@ -103,7 +103,7 @@ public class OpenAITranslationProvider extends CachingTranslationProvider {
         LOGGER.debug("Request Body JSON: {}", requestBody);
 
         // Use the updated callApi method from NetManager
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_OPENAI_TRANSLATION, requestBody, headers);
+        ApiResponse apiResponse = this.callApi(requestBody, headers);
 
         // Handle the API response with guard clauses
         apiResponse.handleJsonObject(
@@ -142,5 +142,15 @@ public class OpenAITranslationProvider extends CachingTranslationProvider {
                     LOGGER.error("API call error, returning original message list.", onError);
                     handleTranslation.accept(List.copyOf(messageList));
                 });
+    }
+
+    /**
+     * if u want set endpoint of OpenAI u can ovrride the method
+     * @param requestBody
+     * @param headers
+     * @return ApiResponse
+     */
+    protected ApiResponse callApi(JsonObject requestBody, Map<String, String> headers) {
+        return Managers.Net.callApi(UrlId.API_OPENAI_TRANSLATION, requestBody, headers);
     }
 }

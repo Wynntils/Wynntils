@@ -63,7 +63,8 @@ public class TranslationFeature extends Feature {
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
 
-        if (translationService.get() == TranslationService.TranslationServices.OPENAIAPI) {
+        if (translationService.get() == TranslationService.TranslationServices.OPENAIAPI
+                || translationService.get() == TranslationService.TranslationServices.LIAOBOTAPI) {
             if (apiKey.get() == null || apiKey.get().trim().isEmpty()) {
                 return;
             }
@@ -99,7 +100,8 @@ public class TranslationFeature extends Feature {
         if (!translateNpc.get()) return;
         if (languageName.get().isEmpty()) return;
 
-        if (translationService.get() == TranslationService.TranslationServices.OPENAIAPI) {
+        if (translationService.get() == TranslationService.TranslationServices.OPENAIAPI
+                || translationService.get() == TranslationService.TranslationServices.LIAOBOTAPI) {
             if (apiKey.get() == null || apiKey.get().trim().isEmpty()) {
                 return;
             }
