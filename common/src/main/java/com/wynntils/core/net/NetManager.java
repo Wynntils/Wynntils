@@ -45,9 +45,9 @@ public final class NetManager extends Manager {
         return createApiResponse(urlId, urlInfo, arguments, headers);
     }
 
-    public ApiResponse callApiWithJsonBody(UrlId urlId, JsonObject jsonBody, Map<String, String> headers) {
+    public ApiResponse callApi(UrlId urlId, JsonObject jsonBody, Map<String, String> headers) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
-        return createApiResponseWithJsonBody(urlId, urlInfo, jsonBody, headers);
+        return createApiResponse(urlId, urlInfo, jsonBody, headers);
     }
 
     public ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
@@ -168,7 +168,7 @@ public final class NetManager extends Manager {
         }
     }
 
-    private ApiResponse createApiResponseWithJsonBody(
+    private ApiResponse createApiResponse(
             UrlId urlId, UrlManager.UrlInfo urlInfo, JsonObject jsonBody, Map<String, String> headers) {
         URI uri = URI.create(urlInfo.url());
         HttpRequest request = createPostRequest(uri, headers, jsonBody);
