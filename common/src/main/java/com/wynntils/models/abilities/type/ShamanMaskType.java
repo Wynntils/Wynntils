@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.type;
@@ -11,9 +11,9 @@ import net.minecraft.ChatFormatting;
 
 public enum ShamanMaskType {
     NONE("None", ChatFormatting.GRAY, null),
-    LUNATIC("L", ChatFormatting.RED, StyledText.fromString("§cL")),
-    FANATIC("F", ChatFormatting.GOLD, StyledText.fromString("§6F")),
-    COWARD("C", ChatFormatting.AQUA, StyledText.fromString("§bC")),
+    LUNATIC("L", ChatFormatting.RED, StyledText.fromString("§c\uE024")),
+    FANATIC("F", ChatFormatting.GOLD, StyledText.fromString("§6\uE023")),
+    HERETIC("H", ChatFormatting.AQUA, StyledText.fromString("§b\uE022")),
     AWAKENED("A", ChatFormatting.DARK_PURPLE, StyledText.fromString("Awakened"));
 
     private final String alias;

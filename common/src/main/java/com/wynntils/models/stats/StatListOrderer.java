@@ -67,6 +67,7 @@ public final class StatListOrderer {
             "MISC_LIFE_STEAL",
             "MISC_MANA_REGEN",
             "MISC_MANA_STEAL",
+            "MISC_MAX_MANA",
             "", // delimiter
             "DAMAGE_ANY_ALL_RAW",
             "DAMAGE_ANY_ALL_PERCENT",
@@ -154,6 +155,7 @@ public final class StatListOrderer {
             MiscStatKind.HEALTH,
             MiscStatKind.STEALING,
             MiscStatKind.HEALTH_REGEN_RAW,
+            MiscStatKind.MAX_MANA,
             MiscStatKind.HEALING_EFFICIENCY,
             MiscStatKind.SLOW_ENEMY,
             MiscStatKind.WEAKEN_ENEMY);
