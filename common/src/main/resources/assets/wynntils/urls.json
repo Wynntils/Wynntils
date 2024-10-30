@@ -62,7 +62,7 @@
     ],
     "id": "apiOpenAITranslation",
     "method": "post",
-    "url": "https://ai.liaobots.work/v1/chat/completions"
+    "url": "https://api.openai.com/v1/chat/completions"
   },
   {
     "arguments": [
