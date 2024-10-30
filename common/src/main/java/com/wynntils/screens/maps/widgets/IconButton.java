@@ -5,7 +5,7 @@
 package com.wynntils.screens.maps.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.screens.maps.PoiCreationScreen;
+import com.wynntils.screens.maps.WaypointCreationScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -64,8 +64,8 @@ public class IconButton extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (McUtils.mc().screen instanceof PoiCreationScreen poiCreationScreen) {
-            poiCreationScreen.setSelectedIcon(mapIcon);
+        if (McUtils.mc().screen instanceof WaypointCreationScreen waypointCreationScreen) {
+            waypointCreationScreen.setSelectedIcon(mapIcon);
         }
 
         return true;

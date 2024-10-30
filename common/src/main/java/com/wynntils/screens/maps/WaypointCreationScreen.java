@@ -44,7 +44,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public final class PoiCreationScreen extends AbstractMapScreen {
+public final class WaypointCreationScreen extends AbstractMapScreen {
     // Constants
     private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d{1,8}");
     private static final float GRID_DIVISIONS = 64.0f;
@@ -81,28 +81,28 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private Texture selectedIcon;
     private CustomPoi.Visibility selectedVisiblity = CustomPoi.Visibility.DEFAULT;
 
-    private PoiCreationScreen(MainMapScreen oldMapScreen) {
+    private WaypointCreationScreen(MainMapScreen oldMapScreen) {
         super();
         this.returnScreen = oldMapScreen;
 
         this.firstSetup = true;
     }
 
-    private PoiCreationScreen(MainMapScreen oldMapScreen, Location setupLocation) {
+    private WaypointCreationScreen(MainMapScreen oldMapScreen, Location setupLocation) {
         this(oldMapScreen);
 
         this.setupLocation = setupLocation;
         this.firstSetup = true;
     }
 
-    private PoiCreationScreen(MainMapScreen oldMapScreen, CustomPoi poi) {
+    private WaypointCreationScreen(MainMapScreen oldMapScreen, CustomPoi poi) {
         this(oldMapScreen);
 
         this.oldPoi = poi;
         this.firstSetup = true;
     }
 
-    private PoiCreationScreen(PoiManagementScreen managementScreen, CustomPoi poi) {
+    private WaypointCreationScreen(PoiManagementScreen managementScreen, CustomPoi poi) {
         super();
         this.returnScreen = managementScreen;
 
@@ -111,19 +111,19 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     public static Screen create(MainMapScreen oldMapScreen) {
-        return new PoiCreationScreen(oldMapScreen);
+        return new WaypointCreationScreen(oldMapScreen);
     }
 
     public static Screen create(MainMapScreen oldMapScreen, Location setupLocation) {
-        return new PoiCreationScreen(oldMapScreen, setupLocation);
+        return new WaypointCreationScreen(oldMapScreen, setupLocation);
     }
 
     public static Screen create(MainMapScreen oldMapScreen, CustomPoi poi) {
-        return new PoiCreationScreen(oldMapScreen, poi);
+        return new WaypointCreationScreen(oldMapScreen, poi);
     }
 
     public static Screen create(PoiManagementScreen managementScreen, CustomPoi poi) {
-        return new PoiCreationScreen(managementScreen, poi);
+        return new WaypointCreationScreen(managementScreen, poi);
     }
 
     @Override
