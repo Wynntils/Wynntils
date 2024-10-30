@@ -29,7 +29,7 @@ public final class MapAreaAttributesImpl extends MapAttributesImpl implements Ma
                 null,
                 null,
                 null,
-                false,
+                null,
                 null,
                 fillColor,
                 borderColor,

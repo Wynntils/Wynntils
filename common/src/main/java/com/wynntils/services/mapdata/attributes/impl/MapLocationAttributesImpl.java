@@ -35,6 +35,6 @@ public final class MapLocationAttributesImpl extends MapAttributesImpl implement
                 markerOptions,
                 null,
                 null,
-                0f);
+                null);
     }
 }
