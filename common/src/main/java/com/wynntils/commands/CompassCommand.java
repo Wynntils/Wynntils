@@ -189,10 +189,7 @@ public class CompassCommand extends Command {
         MapLocation closestService = closestServiceOptional.get();
 
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                closestService.getLocation(),
-                new MapIconTextureWrapper(Services.MapData.getIconOrFallback(closestService)),
-                Services.MapData.resolveMapAttributes(closestService).label());
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(closestService);
 
         MutableComponent response = Component.literal("Compass set to "
                         + Services.MapData.resolveMapAttributes(closestService).label() + " at ")
