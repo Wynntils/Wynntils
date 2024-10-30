@@ -63,7 +63,8 @@ public class PoiManagerWidget extends AbstractWidget {
 
         editButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.edit"),
-                        (button) -> McUtils.mc().setScreen(WaypointCreationScreen.create(managementScreen, poi)))
+                        // FIXME: null should be a WaypointLocation object (fix when porting PoiManagementScreen)
+                        (button) -> McUtils.mc().setScreen(WaypointCreationScreen.create(managementScreen, null)))
                 .pos(x + width - 20 - (manageButtonsWidth * 2), y)
                 .size(manageButtonsWidth, 20)
                 .build();

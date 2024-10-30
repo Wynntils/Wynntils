@@ -6,10 +6,10 @@ package com.wynntils.screens.maps.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.maps.WaypointCreationScreen;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -21,18 +21,18 @@ public class IconButton extends AbstractWidget {
     private final float iconRenderY;
     private final float iconWidth;
     private final float iconHeight;
-    private final Texture mapIcon;
+    private final MapIcon mapIcon;
 
-    public IconButton(int x, int y, int width, Texture mapIcon, boolean selected) {
+    public IconButton(int x, int y, int width, MapIcon mapIcon, boolean selected) {
         super(x, y, width, 20, Component.literal("Icon Button"));
 
         this.mapIcon = mapIcon;
         this.selected = selected;
 
         // Scale the icon to fill 80% of the button
-        float scaleFactor = 0.8f * Math.min(width, height) / Math.max(mapIcon.width(), mapIcon.height());
-        iconWidth = mapIcon.width() * scaleFactor;
-        iconHeight = mapIcon.height() * scaleFactor;
+        float scaleFactor = 0.8f * Math.min(width, height) / Math.max(mapIcon.getWidth(), mapIcon.getHeight());
+        iconWidth = mapIcon.getWidth() * scaleFactor;
+        iconHeight = mapIcon.getHeight() * scaleFactor;
 
         // Calculate x/y position of the icon to keep it centered
         iconRenderX = (x + width / 2f) - iconWidth / 2f;
@@ -48,14 +48,14 @@ public class IconButton extends AbstractWidget {
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                mapIcon.resource(),
+                mapIcon.getResourceLocation(),
                 iconRenderX,
                 iconRenderY,
                 1,
                 iconWidth,
                 iconHeight,
-                mapIcon.width(),
-                mapIcon.height());
+                mapIcon.getWidth(),
+                mapIcon.getHeight());
 
         if (selected) {
             RenderUtils.drawRect(poseStack, CommonColors.LIGHT_BLUE.withAlpha(35), getX(), getY(), 1, width, height);
