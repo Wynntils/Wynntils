@@ -58,9 +58,7 @@
   {
     "arguments": [
       "model",
-      "messages",
-      "temperature",
-      "stream"
+      "messages"
     ],
     "id": "apiOpenAITranslation",
     "method": "post",
