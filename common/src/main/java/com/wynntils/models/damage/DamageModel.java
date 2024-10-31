@@ -9,6 +9,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
+import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
 import com.wynntils.models.damage.label.DamageLabelInfo;
 import com.wynntils.models.damage.label.DamageLabelParser;
 import com.wynntils.models.damage.type.DamageDealtEvent;
@@ -18,6 +19,8 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -38,6 +41,7 @@ public final class DamageModel extends Model {
     private final DamageBar damageBar = new DamageBar();
 
     private final TimedSet<Long> areaDamageSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
+    private final Map<Integer, Map<DamageType, Long>> liveDamageInfo = new HashMap<>();
 
     private String focusedMobName = "";
     private String focusedMobElementals = "";
@@ -62,13 +66,43 @@ public final class DamageModel extends Model {
     public void onLabelIdentified(LabelIdentifiedEvent event) {
         if (!(event.getLabelInfo() instanceof DamageLabelInfo damageLabelInfo)) return;
 
-        Map<DamageType, Long> damages = damageLabelInfo.getDamages();
-        WynntilsMod.postEvent(new DamageDealtEvent(damages));
+        int id = damageLabelInfo.getEntity().getId();
+        Map<DamageType, Long> damages;
+
+        if (liveDamageInfo.containsKey(id)) {
+            Map<DamageType, Long> oldDamages = liveDamageInfo.get(id);
+            Map<DamageType, Long> newDamages = damageLabelInfo.getDamages();
+            liveDamageInfo.put(id, new EnumMap<>(newDamages));
+
+            for (Map.Entry<DamageType, Long> entry : newDamages.entrySet()) {
+                DamageType type = entry.getKey();
+                long newValue = entry.getValue();
+
+                if (oldDamages.containsKey(type)) {
+                    long oldValue = oldDamages.get(type);
+                    newDamages.put(type, newValue - oldValue);
+                }
+            }
+
+            damages = newDamages;
+        } else {
+            damages = damageLabelInfo.getDamages();
+            liveDamageInfo.put(id, damages);
+        }
 
         long damageSum = damages.values().stream().mapToLong(d -> d).sum();
         areaDamageSet.put(damageSum);
 
+        WynntilsMod.postEvent(new DamageDealtEvent(damages));
+
         lastDamageDealtTimestamp = System.currentTimeMillis();
+    }
+
+    @SubscribeEvent
+    public void onLabelsRemoved(LabelsRemovedEvent event) {
+        event.getRemovedLabels()
+                .forEach(
+                        labelInfo -> liveDamageInfo.remove(labelInfo.getEntity().getId()));
     }
 
     @SubscribeEvent
@@ -80,6 +114,7 @@ public final class DamageModel extends Model {
         focusedMobHealthPercent = CappedValue.EMPTY;
         focusedMobExpiryTime = -1L;
         lastDamageDealtTimestamp = 0L;
+        liveDamageInfo.clear();
     }
 
     public String getFocusedMobName() {

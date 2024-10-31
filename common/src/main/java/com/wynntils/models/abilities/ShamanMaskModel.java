@@ -35,6 +35,8 @@ public final class ShamanMaskModel extends Model {
 
     @SubscribeEvent
     public void onTitle(TitleSetTextEvent event) {
+        if (currentMaskType == ShamanMaskType.AWAKENED) return;
+
         StyledText title = StyledText.fromComponent(event.getComponent());
 
         if (title.matches(AWAKENED_PATTERN)) {
@@ -55,6 +57,9 @@ public final class ShamanMaskModel extends Model {
 
         if (title.contains("Mask of the ") || title.contains("➤")) {
             parseMask(title);
+
+            if (currentMaskType == null) return;
+
             ShamanMaskTitlePacketEvent maskEvent = new ShamanMaskTitlePacketEvent();
             WynntilsMod.postEvent(maskEvent);
 

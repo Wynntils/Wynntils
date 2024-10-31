@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.type;
@@ -12,7 +12,7 @@ import net.minecraft.ChatFormatting;
 
 public enum DamageType {
     ALL("", "❤", ChatFormatting.DARK_RED),
-    NEUTRAL("Neutral", "✣", ChatFormatting.GOLD),
+    NEUTRAL("Neutral", "✣", ChatFormatting.GOLD, 5),
     FIRE(Element.FIRE),
     WATER(Element.WATER),
     AIR(Element.AIR),
@@ -26,6 +26,7 @@ public enum DamageType {
     private final String apiName;
     private final String symbol;
     private final ChatFormatting colorCode;
+    private final int encodingId;
 
     DamageType(String name) {
         this.element = null;
@@ -34,6 +35,7 @@ public enum DamageType {
         this.apiName = name;
         this.symbol = "";
         this.colorCode = null;
+        this.encodingId = -1;
     }
 
     DamageType(String name, String symbol, ChatFormatting colorCode) {
@@ -44,6 +46,18 @@ public enum DamageType {
 
         this.symbol = symbol;
         this.colorCode = colorCode;
+        this.encodingId = -1;
+    }
+
+    DamageType(String name, String symbol, ChatFormatting colorCode, int encodingId) {
+        this.element = null;
+        // displayName needs padding if non-empty
+        this.displayName = name.isEmpty() ? "" : name + " ";
+        this.apiName = name;
+
+        this.symbol = symbol;
+        this.colorCode = colorCode;
+        this.encodingId = encodingId;
     }
 
     DamageType(Element element) {
@@ -53,6 +67,9 @@ public enum DamageType {
         this.apiName = element.getDisplayName();
         this.symbol = element.getSymbol();
         this.colorCode = element.getColorCode();
+
+        // Encoding id is the element id
+        this.encodingId = element.getEncodingId();
     }
 
     public static List<DamageType> statValues() {
@@ -70,6 +87,15 @@ public enum DamageType {
     public static DamageType fromSymbol(String symbol) {
         for (DamageType type : values()) {
             if (type.symbol.equals(symbol)) return type;
+        }
+        return null;
+    }
+
+    public static DamageType fromEncodingId(int id) {
+        for (DamageType type : values()) {
+            if (type.encodingId == id) {
+                return type;
+            }
         }
         return null;
     }
@@ -92,5 +118,10 @@ public enum DamageType {
 
     public ChatFormatting getColorCode() {
         return colorCode;
+    }
+
+    public int getEncodingId() {
+        assert encodingId != -1 : "Encoding id not set for " + this;
+        return encodingId;
     }
 }
