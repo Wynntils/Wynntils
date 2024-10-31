@@ -91,7 +91,9 @@ public final class TranslationService extends Service {
     }
 
     public enum TranslationServices {
-        GOOGLEAPI(GoogleApiTranslationProvider.class);
+        GOOGLEAPI(GoogleApiTranslationProvider.class),
+        OPENAIAPI(OpenAITranslationProvider.class),
+        LIAOBOTAPI(LiaoBotTranslationProvider.class);
 
         // This is a demo service, not used in production.
         // Users accidentally enabling this service could cause confusion and frustration.

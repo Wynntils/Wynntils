@@ -45,6 +45,11 @@ public final class NetManager extends Manager {
         return createApiResponse(urlId, urlInfo, arguments, headers);
     }
 
+    public ApiResponse callApi(UrlId urlId, JsonObject jsonBody, Map<String, String> headers) {
+        UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
+        return createApiResponse(urlId, urlInfo, jsonBody, headers);
+    }
+
     public ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
         return callApi(urlId, arguments, Map.of());
     }
@@ -161,6 +166,13 @@ public final class NetManager extends Manager {
             HttpRequest request = createPostRequest(uri, headers, jsonArgs);
             return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
         }
+    }
+
+    private ApiResponse createApiResponse(
+            UrlId urlId, UrlManager.UrlInfo urlInfo, JsonObject jsonBody, Map<String, String> headers) {
+        URI uri = URI.create(urlInfo.url());
+        HttpRequest request = createPostRequest(uri, headers, jsonBody);
+        return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
     }
 
     private boolean checkLocalHash(File localFile, String expectedHash) {

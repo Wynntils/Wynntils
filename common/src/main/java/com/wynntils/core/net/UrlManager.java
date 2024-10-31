@@ -97,7 +97,9 @@ import java.util.function.Function;
  * </p>
  */
 public final class UrlManager extends Manager {
-    private final Property<URI> urlListOverride = createProperty(URI.class, "override.link");
+    private final Property<URI> urlListOverride = createProperty(
+            URI.class,
+            "override.link");
     private final Property<Boolean> ignoreCache = createProperty(Boolean.class, "ignore.cache", false);
     private final Property<Boolean> debugLogs = createProperty(Boolean.class, "log.debug", false);
     private final Property<UrlMapperType> urlMapperForceType = createProperty(UrlMapperType.class, "force.type");

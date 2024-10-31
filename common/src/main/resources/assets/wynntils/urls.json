@@ -57,6 +57,24 @@
   },
   {
     "arguments": [
+      "model",
+      "messages"
+    ],
+    "id": "apiOpenAITranslation",
+    "method": "post",
+    "url": "https://api.openai.com/v1/chat/completions"
+  },
+  {
+    "arguments": [
+      "model",
+      "messages"
+    ],
+    "id": "apiLiaoBotTranslation",
+    "method": "post",
+    "url": "https://ai.liaobots.work/v1/chat/completions"
+  },
+  {
+    "arguments": [
       "name"
     ],
     "encoding": "wiki",
