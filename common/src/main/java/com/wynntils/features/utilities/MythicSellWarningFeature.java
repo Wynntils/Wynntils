@@ -73,7 +73,7 @@ public class MythicSellWarningFeature extends Feature {
     private static final int TM_CONFIRM_BUTTON_SLOT = 34;
 
     private HintTextWidget ctrlHintTextWidget;
-    private final List<HintTextWidget> hintTextWidgets = new ArrayList<>();
+    private final List<HintTextWidget> tmHintTextWidgets = new ArrayList<>();
     private int emphasizeAnimationFrame = 0; // 0-indexed 4 frames of animation
     private int emphasizeAnimationDelay = 0;
     private int emphasizeDirection = 1; // 1 for forward, -1 for reverse
@@ -165,6 +165,7 @@ public class MythicSellWarningFeature extends Feature {
                 ctrlHintTextWidget = null;
             }
         } else if (cs.getTitle().getString().equals(TM_SELL_TITLE)) {
+            resetTradeMarketWarning();
             Optional<GearTierItemProperty> optGearTier = Models.Item.asWynnItemProperty(
                     cs.getMenu().getItems().get(TM_ITEM_SLOT), GearTierItemProperty.class);
             if (optGearTier.isEmpty() || optGearTier.get().getGearTier() != GearTier.MYTHIC) return;
@@ -172,14 +173,9 @@ public class MythicSellWarningFeature extends Feature {
             int salePrice = getSalePrice();
             int lowestPrice = getLowestPrice();
 
-            if (salePrice == -1 || lowestPrice == -1) {
-                drawTradeMarketWarning = false;
-                return;
-            }
+            if (salePrice == -1 || lowestPrice == -1) return;
 
             if (salePrice < lowestPrice * tradeMarketPriceThreshold.get()) {
-                drawTradeMarketWarning = true;
-
                 ctrlHintTextWidget = new HintTextWidget(
                         cs.width - cs.leftPos + 2,
                         cs.height / 2 - 46,
@@ -190,8 +186,7 @@ public class MythicSellWarningFeature extends Feature {
                         CommonColors.WHITE);
                 cs.addRenderableOnly(ctrlHintTextWidget);
 
-                hintTextWidgets.clear();
-                hintTextWidgets.add(new HintTextWidget(
+                tmHintTextWidgets.add(new HintTextWidget(
                         cs.width - cs.leftPos + 2,
                         cs.height / 2 - 34,
                         200,
@@ -204,7 +199,7 @@ public class MythicSellWarningFeature extends Feature {
                                 tradeMarketPriceThreshold.get() * 100),
                         HorizontalAlignment.LEFT,
                         CommonColors.LIGHT_GRAY));
-                hintTextWidgets.add(new HintTextWidget(
+                tmHintTextWidgets.add(new HintTextWidget(
                         cs.width - cs.leftPos + 2,
                         cs.height / 2 - 22,
                         200,
@@ -216,7 +211,7 @@ public class MythicSellWarningFeature extends Feature {
                                         + ChatFormatting.RESET),
                         HorizontalAlignment.LEFT,
                         CommonColors.LIGHT_GRAY));
-                hintTextWidgets.add(new HintTextWidget(
+                tmHintTextWidgets.add(new HintTextWidget(
                         cs.width - cs.leftPos + 2,
                         cs.height / 2 - 4,
                         200,
@@ -225,13 +220,9 @@ public class MythicSellWarningFeature extends Feature {
                         HorizontalAlignment.LEFT,
                         CommonColors.GRAY));
 
-                hintTextWidgets.forEach(cs::addRenderableOnly);
+                tmHintTextWidgets.forEach(cs::addRenderableOnly);
             } else {
-                drawTradeMarketWarning = false;
-                cs.removeWidget(ctrlHintTextWidget);
-                ctrlHintTextWidget = null;
-                hintTextWidgets.forEach(cs::removeWidget);
-                hintTextWidgets.clear();
+                resetTradeMarketWarning();
             }
         }
     }
@@ -264,9 +255,7 @@ public class MythicSellWarningFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post e) {
-        drawTradeMarketWarning = false;
-        ctrlHintTextWidget = null;
-        hintTextWidgets.clear();
+        resetTradeMarketWarning();
     }
 
     private int getSalePrice() {
@@ -301,6 +290,16 @@ public class MythicSellWarningFeature extends Feature {
         }
 
         return -1;
+    }
+
+    private void resetTradeMarketWarning() {
+        if (McUtils.mc().screen instanceof ContainerScreen cs) {
+            cs.removeWidget(ctrlHintTextWidget);
+            tmHintTextWidgets.forEach(cs::removeWidget);
+        }
+        drawTradeMarketWarning = false;
+        ctrlHintTextWidget = null;
+        tmHintTextWidgets.clear();
     }
 
     private static final class HintTextWidget extends AbstractWidget {
