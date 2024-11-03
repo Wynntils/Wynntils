@@ -38,7 +38,7 @@ public class HeldItemCooldownOverlay extends Overlay {
         Player player = McUtils.player();
         float cooldownPercent = player.getCooldowns()
                 .getCooldownPercent(
-                        player.getItemInHand(InteractionHand.MAIN_HAND).getItem(),
+                        player.getItemInHand(InteractionHand.MAIN_HAND),
                         deltaTracker.getGameTimeDeltaPartialTick(true));
         if (cooldownPercent <= 0f) return;
         renderOverlay(poseStack, bufferSource, cooldownPercent);
