@@ -296,7 +296,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         draggingScroll = false;
 
-        Slot dragSelectionEndSlot = super.findSlot(mouseX, mouseY);
+        Slot dragSelectionEndSlot = getHoveredSlot(mouseX, mouseY);
 
         if (dragSelectionStartIndex != -1) {
             int dragSelectionEndIndex =
