@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.CubicSpline;
-import net.minecraft.util.FastColor;
 import net.minecraft.util.ToFloatFunction;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
@@ -149,10 +149,9 @@ public final class LootrunCompiler {
                         colorIterator = COLORS.iterator();
                     }
                     nextColor = colorIterator.next();
-                    differenceRed = (float) (FastColor.ARGB32.red(nextColor) - FastColor.ARGB32.red(currentColor));
-                    differenceGreen =
-                            (float) (FastColor.ARGB32.green(nextColor) - FastColor.ARGB32.green(currentColor));
-                    differenceBlue = (float) (FastColor.ARGB32.blue(nextColor) - FastColor.ARGB32.blue(currentColor));
+                    differenceRed = (float) (ARGB.red(nextColor) - ARGB.red(currentColor));
+                    differenceGreen = (float) (ARGB.green(nextColor) - ARGB.green(currentColor));
+                    differenceBlue = (float) (ARGB.blue(nextColor) - ARGB.blue(currentColor));
                     usedColor = currentColor;
                 } else {
                     usedColor = currentColor;

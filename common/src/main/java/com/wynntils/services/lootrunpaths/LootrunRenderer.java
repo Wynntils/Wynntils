@@ -26,12 +26,12 @@ import java.util.Set;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -139,16 +139,16 @@ public final class LootrunRenderer {
         VertexConsumer consumer = BUFFER_SOURCE.getBuffer(RenderType.lines());
         Set<BlockPos> chests = lootrun.chests().get(chunkLong);
 
-        float red = ((float) FastColor.ARGB32.red(color)) / 255;
-        float green = ((float) FastColor.ARGB32.green(color)) / 255;
-        float blue = ((float) FastColor.ARGB32.blue(color)) / 255;
+        float red = ((float) ARGB.red(color)) / 255;
+        float green = ((float) ARGB.green(color)) / 255;
+        float blue = ((float) ARGB.blue(color)) / 255;
 
         for (BlockPos chest : chests) {
             // Wynncraft requested that chest highlights are not rendered on these blocks
             BlockState block = McUtils.mc().level.getBlockState(chest);
             if (block.is(Blocks.BARRIER) || block.is(Blocks.AIR)) continue;
 
-            LevelRenderer.renderLineBox(poseStack, consumer, new AABB(chest), red, green, blue, 1f);
+            ShapeRenderer.renderLineBox(poseStack, consumer, new AABB(chest), red, green, blue, 1f);
         }
 
         BUFFER_SOURCE.endBatch();
