@@ -1,6 +1,7 @@
 {
   "client": [
     "AbstractContainerScreenMixin",
+    "AbstractRecipeBookScreenMixin",
     "BossHealthOverlayMixin",
     "CapeLayerMixin",
     "accessors.ChatComponentAccessor",
@@ -24,7 +25,6 @@
     "GuiMessageMixin",
     "GuiMixin",
     "HumanoidArmorLayerMixin",
-    "InventoryScreenMixin",
     "ItemRendererMixin",
     "ItemStackMixin",
     "KeyMappingMixin",
