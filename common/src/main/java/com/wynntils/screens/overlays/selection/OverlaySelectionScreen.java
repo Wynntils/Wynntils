@@ -227,7 +227,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             poseStack.popPose();
 
             // We don't have a delta tracker here, so we'll just use a zero delta tracker
-            selectedOverlay.renderPreview(poseStack, guiGraphics.bufferSource(), DeltaTracker.ZERO, McUtils.window());
+            selectedOverlay.renderPreview(poseStack, guiGraphics.bufferSource, DeltaTracker.ZERO, McUtils.window());
 
             RenderUtils.drawRectBorders(
                     poseStack,
