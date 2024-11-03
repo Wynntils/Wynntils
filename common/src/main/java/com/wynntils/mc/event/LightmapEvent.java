@@ -5,19 +5,6 @@
 package com.wynntils.mc.event;
 
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
-public class LightmapEvent extends Event {
-    private int rgb;
-
-    public LightmapEvent(int rgb) {
-        this.rgb = rgb;
-    }
-
-    public int getRgb() {
-        return rgb;
-    }
-
-    public void setRgb(int rgb) {
-        this.rgb = rgb;
-    }
-}
+public class LightmapEvent extends Event implements ICancellableEvent {}
