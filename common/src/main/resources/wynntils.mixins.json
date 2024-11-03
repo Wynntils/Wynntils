@@ -20,6 +20,7 @@
     "EntityLookupMixin",
     "EntityMixin",
     "EntityRendererMixin",
+    "EntityRenderStateMixin",
     "GuiGraphicsMixin",
     "GuiMessageLineMixin",
     "GuiMessageMixin",
