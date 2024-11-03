@@ -109,11 +109,11 @@ public abstract class GuiGraphicsMixin {
 
     @ModifyVariable(
             method =
-                    "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+                    "renderItemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
             at = @At("HEAD"),
             ordinal = 0,
             argsOnly = true)
-    private String renderItemDecorations(
+    private String renderItemCount(
             String text,
             Font font,
             ItemStack itemStack,
@@ -138,7 +138,7 @@ public abstract class GuiGraphicsMixin {
 
     @WrapOperation(
             method =
-                    "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+                    "renderItemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
             at =
                     @At(
                             value = "INVOKE",
