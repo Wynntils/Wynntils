@@ -1,16 +1,13 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
 
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
-import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,17 +24,6 @@ public abstract class LocalPlayerMixin {
         if (event.isCanceled()) {
             cir.setReturnValue(false);
             cir.cancel();
-        }
-    }
-
-    @Inject(method = "sendSystemMessage(Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"), cancellable = true)
-    private void onSendMessage(Component component, CallbackInfo ci) {
-        if ((Object) this != McUtils.player()) return;
-
-        ClientsideMessageEvent event = new ClientsideMessageEvent(component);
-        MixinHelper.post(event);
-        if (event.isCanceled()) {
-            ci.cancel();
         }
     }
 
