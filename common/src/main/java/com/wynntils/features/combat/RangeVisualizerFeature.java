@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -33,6 +34,7 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Position;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -53,7 +55,9 @@ public class RangeVisualizerFeature extends Feature {
 
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
-        AbstractClientPlayer player = e.getPlayer();
+        Entity entity = ((EntityRenderStateExtension) e.getPlayerRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
+
         detectedPlayers.add(player);
 
         List<Pair<CustomColor, Float>> circles = circlesToRender.get(player);
