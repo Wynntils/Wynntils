@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.screens;
@@ -9,6 +9,7 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.mc.McUtils;
+import net.minecraft.CrashReport;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -76,12 +77,8 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    public void wrapCurrentScreenError(Runnable action, String errorDesc, String screenName) {
-        try {
-            action.run();
-        } catch (Throwable t) {
-            failure(errorDesc, t);
-        }
+    public void wrapCurrentScreenError(CrashReport crashReport) {
+        failure(crashReport.getDetails(), crashReport.getException());
     }
 
     @Override
