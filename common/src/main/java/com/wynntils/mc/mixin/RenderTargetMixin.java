@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.fabric.mixins;
+package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
  * See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
  */
 @Mixin(RenderTarget.class)
-public class FabricRenderTargetMixin {
+public class RenderTargetMixin {
     @Shadow
     protected int depthBufferId;
 
@@ -54,7 +54,7 @@ public class FabricRenderTargetMixin {
                                             value = "FIELD",
                                             target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;useDepth:Z",
                                             ordinal = 1)))
-    private void init2(int width, int height, boolean clearError, CallbackInfo ci) {
+    private void init2(int width, int height, CallbackInfo ci) {
         GlStateManager._glFramebufferTexture2D(
                 GL30.GL_FRAMEBUFFER, GL30.GL_STENCIL_ATTACHMENT, GL11.GL_TEXTURE_2D, this.depthBufferId, 0);
     }

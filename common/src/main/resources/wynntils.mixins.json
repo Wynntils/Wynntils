@@ -43,6 +43,7 @@
     "PlayerRendererMixin",
     "PlayerTabOverlayMixin",
     "ProgressScreenMixin",
+    "RenderTargetMixin",
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",
     "ScreenMixin",
