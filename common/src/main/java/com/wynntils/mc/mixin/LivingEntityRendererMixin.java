@@ -18,10 +18,10 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntityRenderer.class)
@@ -31,39 +31,39 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntityRenderStat
 
     @WrapOperation(
             method =
-                    "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+                    "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getRenderType(Lnet/minecraft/world/entity/LivingEntity;ZZZ)Lnet/minecraft/client/renderer/RenderType;"))
+                                    "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getRenderType(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;ZZZ)Lnet/minecraft/client/renderer/RenderType;"))
     private RenderType onTranslucentCheck(
-            LivingEntityRenderer<?, ?> instance,
-            LivingEntity livingEntity,
+            LivingEntityRenderer<?, ?, ?> instance,
+            LivingEntityRenderState livingEntityRenderState,
             boolean bodyVisible,
             boolean translucent,
             boolean glowing,
             Operation<RenderType> original) {
         RenderTranslucentCheckEvent.Body event =
-                new RenderTranslucentCheckEvent.Body(translucent, livingEntity, translucent ? 0.15f : 1f);
+                new RenderTranslucentCheckEvent.Body(translucent, livingEntityRenderState, translucent ? 0.15f : 1f);
         MixinHelper.post(event);
 
         // Save translucence value for later use
         wynntilsTranslucence = event.getTranslucence();
 
-        return original.call(instance, livingEntity, bodyVisible, event.isTranslucent(), glowing);
+        return original.call(instance, livingEntityRenderState, bodyVisible, translucent, glowing);
     }
 
     @WrapOperation(
             method =
-                    "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+                    "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"))
     private void onOpacityUse(
-            EntityModel<? extends LivingEntity> instance,
+            EntityModel<? super LivingEntityRenderState> instance,
             PoseStack poseStack,
             VertexConsumer consumer,
             int packedLight,

@@ -15,7 +15,6 @@ import com.wynntils.mc.event.RenderTranslucentCheckEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.PLAYERS)
@@ -28,7 +27,8 @@ public class PlayerGhostTransparencyFeature extends Feature {
 
     @SubscribeEvent
     public void onTranslucentCheck(RenderTranslucentCheckEvent.Body e) {
-        if (!(e.getEntity() instanceof Player player)) return;
+        Entity entity = ((EntityRenderStateExtension) e.getEntityRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
 
         if (Models.Player.isPlayerGhost(player)) {
             e.setTranslucence(playerGhostTranslucenceLevel.get());
@@ -37,7 +37,8 @@ public class PlayerGhostTransparencyFeature extends Feature {
 
     @SubscribeEvent
     public void onTranslucentCheckForCape(RenderTranslucentCheckEvent.Cape e) {
-        if (!(e.getEntity() instanceof Player player)) return;
+        Entity entity = ((EntityRenderStateExtension) e.getEntityRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
 
         if (Models.Player.isPlayerGhost(player)) {
             e.setTranslucence(playerGhostTranslucenceLevel.get());
