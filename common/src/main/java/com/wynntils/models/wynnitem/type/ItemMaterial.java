@@ -92,6 +92,6 @@ public record ItemMaterial(ItemStack itemStack) {
     }
 
     private static Item getItem(String itemId) {
-        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemId));
+        return BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(itemId));
     }
 }
