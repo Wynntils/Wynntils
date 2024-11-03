@@ -12,6 +12,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.event.RenderTranslucentCheckEvent;
+import com.wynntils.mc.extension.EntityRenderStateExtension;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -44,8 +47,10 @@ public class PlayerGhostTransparencyFeature extends Feature {
     @SubscribeEvent
     public void onPlayerArmorRender(PlayerRenderLayerEvent.Armor event) {
         if (!transparentPlayerGhostArmor.get()) return;
+        Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
 
-        if (Models.Player.isPlayerGhost(event.getPlayer())) {
+        if (Models.Player.isPlayerGhost(player)) {
             event.setCanceled(true);
         }
     }

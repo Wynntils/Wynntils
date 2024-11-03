@@ -23,9 +23,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -33,20 +34,22 @@ import net.minecraft.world.entity.player.PlayerModelPart;
 
 public class CosmeticsService extends Service {
     private static final BiFunction<
-                    RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>,
-                    EntityModelSet,
+                    LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                    EntityRendererProvider.Context,
                     WynntilsLayer>
-            CAPE_LAYER = (playerRenderer, playerModel) -> new WynntilsCapeLayer(playerRenderer);
+            CAPE_LAYER = (playerRenderer, renderProviderContext) ->
+                    new WynntilsCapeLayer(playerRenderer, renderProviderContext);
     private static final BiFunction<
-                    RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>,
-                    EntityModelSet,
+                    LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                    EntityRendererProvider.Context,
                     WynntilsLayer>
-            ELYTRA_LAYER = (playerRenderer, playerModel) -> new WynntilsElytraLayer(playerRenderer, playerModel);
+            ELYTRA_LAYER = (playerRenderer, renderProviderContext) ->
+                    new WynntilsElytraLayer(playerRenderer, renderProviderContext);
 
     private static final List<
                     BiFunction<
-                            RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>,
-                            EntityModelSet,
+                            LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                            EntityRendererProvider.Context,
                             WynntilsLayer>>
             REGISTERED_LAYERS = List.of(CAPE_LAYER, ELYTRA_LAYER);
 
@@ -60,8 +63,8 @@ public class CosmeticsService extends Service {
     // We don't want to reference Models in the mixin this is called, due to it's unpredictable class loading.
     public static List<
                     BiFunction<
-                            RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>,
-                            EntityModelSet,
+                            LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                            EntityRendererProvider.Context,
                             WynntilsLayer>>
             getRegisteredLayers() {
         return REGISTERED_LAYERS;

@@ -14,6 +14,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.resources.PlayerSkin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,22 +26,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CapeLayerMixin {
     @Inject(
             method =
-                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V",
+                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/PlayerRenderState;FF)V",
             at = @At("HEAD"),
             cancellable = true)
     private void render(
-            PoseStack matrixStack,
+            PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            AbstractClientPlayer livingEntity,
-            float limbSwing,
-            float limbSwingAmount,
-            float partialTicks,
-            float ageInTicks,
-            float netHeadYaw,
-            float headPitch,
+            PlayerRenderState playerRenderState,
+            float f,
+            float g,
             CallbackInfo ci) {
-        PlayerRenderLayerEvent.Cape event = new PlayerRenderLayerEvent.Cape(livingEntity);
+        PlayerRenderLayerEvent.Cape event = new PlayerRenderLayerEvent.Cape(playerRenderState);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
