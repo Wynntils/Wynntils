@@ -103,8 +103,8 @@ public final class CharacterStatsModel extends Model {
                 .isAir()) {
             endY--;
 
-            // stop checking beyond the minimum build height as there will never be any blocks below it
-            if (endY < McUtils.mc().level.getMinBuildHeight()) return -1;
+            // stop checking beyond the minimum y as there will never be any blocks below it
+            if (endY < McUtils.mc().level.getMinY()) return -1;
         }
 
         // add the floor height to the result to account for half-blocks
