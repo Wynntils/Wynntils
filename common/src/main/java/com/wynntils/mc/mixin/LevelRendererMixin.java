@@ -6,10 +6,10 @@ package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.resource.GraphicsResourceAllocator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.RenderLevelEvent;
-import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.Camera;
@@ -17,7 +17,6 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 import org.joml.Matrix4f;
@@ -37,13 +36,13 @@ public abstract class LevelRendererMixin {
     @Inject(
             at = @At("TAIL"),
             method =
-                    "renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V")
+                    "renderLevel(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V")
     private void renderLevelPost(
+            GraphicsResourceAllocator graphicsResourceAllocator,
             DeltaTracker deltaTracker,
             boolean renderBlockOutline,
             Camera camera,
             GameRenderer gameRenderer,
-            LightTexture lightTexture,
             Matrix4f viewMatrix,
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
@@ -55,13 +54,13 @@ public abstract class LevelRendererMixin {
     @Inject(
             at = @At("HEAD"),
             method =
-                    "renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V")
+                    "renderLevel(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V")
     private void renderLevelPre(
+            GraphicsResourceAllocator graphicsResourceAllocator,
             DeltaTracker deltaTracker,
             boolean renderBlockOutline,
             Camera camera,
             GameRenderer gameRenderer,
-            LightTexture lightTexture,
             Matrix4f viewMatrix,
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
@@ -71,7 +70,7 @@ public abstract class LevelRendererMixin {
 
     @ModifyExpressionValue(
             method =
-                    "renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V",
+                    "renderEntities(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/Camera;Lnet/minecraft/client/DeltaTracker;Ljava/util/List;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getTeamColor()I"))
     private int modifyOutlineColor(int original, @Local Entity entity) {
         EntityExtension entityExt = (EntityExtension) entity;
@@ -81,29 +80,6 @@ public abstract class LevelRendererMixin {
         }
 
         return original;
-    }
-
-    @Inject(
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
-                            ordinal = 2),
-            method =
-                    "renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V")
-    private void renderTilePost(
-            DeltaTracker deltaTracker,
-            boolean renderBlockOutline,
-            Camera camera,
-            GameRenderer gameRenderer,
-            LightTexture lightTexture,
-            Matrix4f viewMatrix,
-            Matrix4f projectionMatrix,
-            CallbackInfo ci,
-            @Local PoseStack poseStack) {
-        MixinHelper.post(new RenderTileLevelLastEvent(
-                this.minecraft.levelRenderer, poseStack, deltaTracker, projectionMatrix, camera));
     }
 
     @Inject(
