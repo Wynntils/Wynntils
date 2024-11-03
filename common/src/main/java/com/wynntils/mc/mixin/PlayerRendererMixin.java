@@ -41,19 +41,18 @@ public abstract class PlayerRendererMixin
 
     @Inject(
             method =
-                    "renderNameTag(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IF)V",
+                    "renderNameTag(Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At("HEAD"),
             cancellable = true)
     private void onNameTagRenderPre(
-            AbstractClientPlayer entity,
+            PlayerRenderState renderState,
             Component displayName,
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            float partialTicks,
             CallbackInfo ci) {
         PlayerNametagRenderEvent event = new PlayerNametagRenderEvent(
-                entity, displayName, poseStack, buffer, packedLight, this.entityRenderDispatcher, this.getFont());
+                renderState, displayName, poseStack, buffer, packedLight, this.entityRenderDispatcher, this.getFont());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
