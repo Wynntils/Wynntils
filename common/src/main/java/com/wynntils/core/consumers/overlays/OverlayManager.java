@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.util.profiling.Profiler;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -213,16 +214,16 @@ public final class OverlayManager extends Manager {
 
     @SubscribeEvent
     public void onRenderPre(RenderEvent.Pre event) {
-        McUtils.mc().getProfiler().push("preRenOverlay");
+        Profiler.get().push("preRenOverlay");
         renderOverlays(event, RenderState.PRE);
-        McUtils.mc().getProfiler().pop();
+        Profiler.get().pop();
     }
 
     @SubscribeEvent
     public void onRenderPost(RenderEvent.Post event) {
-        McUtils.mc().getProfiler().push("postRenOverlay");
+        Profiler.get().push("postRenOverlay");
         renderOverlays(event, RenderState.POST);
-        McUtils.mc().getProfiler().pop();
+        Profiler.get().pop();
     }
 
     private void renderOverlays(RenderEvent event, RenderState renderState) {
