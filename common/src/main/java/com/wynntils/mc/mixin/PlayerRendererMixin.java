@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,8 +25,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerRenderer.class)
 public abstract class PlayerRendererMixin
-        extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
-    protected PlayerRendererMixin(Context context, PlayerModel<AbstractClientPlayer> entityModel, float f) {
+        extends LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel> {
+    protected PlayerRendererMixin(Context context, PlayerModel entityModel, float f) {
         super(context, entityModel, f);
     }
 
@@ -36,7 +37,7 @@ public abstract class PlayerRendererMixin
         // Note: This is needed because constructor is called in a static context, where class loading is unpredictable.
         //       This makes it so events can't be used here, since this might happen before initalizing features.
         CosmeticsService.getRegisteredLayers()
-                .forEach(layerProvider -> this.addLayer(layerProvider.apply(this, context.getModelSet())));
+                .forEach(layerProvider -> this.addLayer(layerProvider.apply(this, context)));
     }
 
     @Inject(
