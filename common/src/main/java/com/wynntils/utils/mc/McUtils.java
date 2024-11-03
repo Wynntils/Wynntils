@@ -95,12 +95,7 @@ public final class McUtils {
     }
 
     public static void sendMessageToClient(Component component) {
-        if (player() == null) {
-            WynntilsMod.error(
-                    "Tried to send message to client: \"" + component.getString() + "\", but player was null.");
-            return;
-        }
-        player().sendSystemMessage(component);
+        mc().gui.getChat().addMessage(component);
     }
 
     public static void removeMessageFromChat(Component component) {
