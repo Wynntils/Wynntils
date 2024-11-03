@@ -119,7 +119,7 @@ public final class ContainerQueryHandler extends Handler {
         // Silence the menu click sound when we are processing query
         if (currentStep == null) return;
         if (e.getSource() != SoundSource.BLOCKS) return;
-        if (!e.getSound().getLocation().toLanguageKey().equals(MENU_CLICK_SOUND)) return;
+        if (!e.getSound().location().toLanguageKey().equals(MENU_CLICK_SOUND)) return;
 
         e.setCanceled(true);
         return;
