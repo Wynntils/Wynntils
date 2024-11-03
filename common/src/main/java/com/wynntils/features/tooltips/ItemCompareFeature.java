@@ -23,6 +23,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TooltipRenderEvent;
 import com.wynntils.models.inventory.type.InventoryAccessory;
+import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
@@ -386,7 +387,7 @@ public class ItemCompareFeature extends Feature {
         for (int i : InventoryAccessory.getSlots()) {
             if (slot == i) return;
         }
-        for (int i : Inventory.ALL_ARMOR_SLOTS) {
+        for (int i : InventoryArmor.getSlots()) {
             if (slot == i + Inventory.INVENTORY_SIZE) return;
         }
 

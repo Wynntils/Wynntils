@@ -31,4 +31,14 @@ public enum InventoryArmor {
             return null;
         }
     }
+
+    public static int[] getSlots() {
+        int[] slots = new int[values().length];
+
+        for (int i = 0; i < values().length; i++) {
+            slots[i] = values()[i].getSlot();
+        }
+
+        return slots;
+    }
 }
