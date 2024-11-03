@@ -222,9 +222,12 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
             at = @At("HEAD"))
     private void handleMovePlayerPost(ClientboundPlayerPositionPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (!packet.getRelativeArguments().isEmpty()) return;
+        if (!packet.relatives().isEmpty()) return;
 
-        MixinHelper.post(new PlayerTeleportEvent(new Vec3(packet.getX(), packet.getY(), packet.getZ())));
+        MixinHelper.post(new PlayerTeleportEvent(new Vec3(
+                packet.change().position().x(),
+                packet.change().position().y(),
+                packet.change().position().z())));
     }
 
     @Inject(
@@ -588,10 +591,13 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void handleTeleportEntity(ClientboundTeleportEntityPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        Entity entity = McUtils.mc().level.getEntity(packet.getId());
+        Entity entity = McUtils.mc().level.getEntity(packet.id());
         if (entity == null) return;
 
-        Vec3 position = new Vec3(packet.getX(), packet.getY(), packet.getZ());
+        Vec3 position = new Vec3(
+                packet.change().position().x(),
+                packet.change().position().y(),
+                packet.change().position().z());
         MixinHelper.post(new TeleportEntityEvent(entity, position));
     }
 
