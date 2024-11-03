@@ -80,7 +80,7 @@ public final class McUtils {
         // so use the fully qualified method with the correct order
         mc().getSoundManager()
                 .play(new SimpleSoundInstance(
-                        sound.getLocation(),
+                        sound.location(),
                         SoundSource.AMBIENT,
                         volume,
                         pitch,
