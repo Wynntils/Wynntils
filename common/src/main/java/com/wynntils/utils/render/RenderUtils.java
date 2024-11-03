@@ -37,7 +37,7 @@ import org.lwjgl.opengl.GL11;
 
 public final class RenderUtils {
     // used to render player nametags as semi-transparent
-    private static final int NAMETAG_COLOR = 0x20FFFFFF;
+    private static final int NAMETAG_COLOR = 0x80FFFFFF;
 
     // number of possible segments for arc drawing
     private static final float MAX_CIRCLE_STEPS = 16f;
