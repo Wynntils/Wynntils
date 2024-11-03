@@ -37,6 +37,6 @@ public class DownloadProgressFeature extends Feature {
     }
 
     private void displayToast(Component title, Component message) {
-        McUtils.mc().getToasts().addToast(new SystemToast(new SystemToast.SystemToastId(10000L), title, message));
+        McUtils.mc().getToastManager().addToast(new SystemToast(new SystemToast.SystemToastId(10000L), title, message));
     }
 }
