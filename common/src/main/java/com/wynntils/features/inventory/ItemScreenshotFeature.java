@@ -125,7 +125,7 @@ public class ItemScreenshotFeature extends Feature {
         GuiGraphics guiGraphics = new GuiGraphics(McUtils.mc(), bufferSource);
         RenderTarget fb = new MainTarget(width * 2, height * 2);
         fb.setClearColor(1f, 1f, 1f, 0f);
-        fb.createBuffers(width * 2, height * 2, false);
+        fb.createBuffers(width * 2, height * 2);
         fb.bindWrite(false);
         guiGraphics.pose().pushPose();
         guiGraphics.pose().scale(scalew, scaleh, 1);
