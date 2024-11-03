@@ -610,7 +610,7 @@ public final class BufferedRenderUtils {
 
         // Enable writing to stencil
         RenderSystem.stencilMask(0xff);
-        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT);
         RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
         RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 
