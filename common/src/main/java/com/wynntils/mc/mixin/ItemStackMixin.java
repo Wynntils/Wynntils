@@ -36,7 +36,7 @@ public abstract class ItemStackMixin implements ItemStackExtension {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/world/item/ItemStack;has(Lnet/minecraft/core/component/DataComponentType;)Z",
-                            ordinal = 3))
+                            ordinal = 2))
     private boolean redirectGetHideFlags(boolean original) {
         ItemStack itemStack = (ItemStack) (Object) this;
         ItemTooltipFlagsEvent.HideAdditionalTooltip event =
