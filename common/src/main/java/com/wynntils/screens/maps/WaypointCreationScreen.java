@@ -906,6 +906,10 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         if (useIcon) {
             availableIcons.addAll(Services.MapData.getIcons().toList());
+
+            if (selectedIcon != null) {
+                iconId = selectedIcon.getIconId();
+            }
         } else {
             if (getFocusedTextInput() == iconColorInput) {
                 this.setFocusedTextInput(null);
