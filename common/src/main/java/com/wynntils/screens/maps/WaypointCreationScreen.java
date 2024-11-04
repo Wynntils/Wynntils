@@ -911,6 +911,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 this.setFocusedTextInput(null);
             }
 
+            iconId = MapIcon.NO_ICON_ID;
             availableIcons.clear();
         }
 
