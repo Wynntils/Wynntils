@@ -99,7 +99,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private MapVisibilityImpl iconVisibility;
     private MapVisibilityImpl labelVisibility;
     private MapIcon selectedIcon;
-    private ResolvedMapAttributes waypointAttributes;
     private String category = "";
     private String iconId = MapIcon.NO_ICON_ID;
     private String label = "";
@@ -547,6 +546,18 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.waypointCreation.title")),
+                        dividedWidth * 15,
+                        dividedHeight * 6,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
+                        TextShadow.NORMAL,
+                        2f);
+
         // region Label
         FontRenderer.getInstance()
                 .renderText(
@@ -813,8 +824,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 .build();
 
         waypoint = new WaypointLocation(location, label, category, attributes);
-
-        waypointAttributes = Services.MapData.resolveMapAttributes(waypoint);
 
         boolean validWaypoint = !labelInput.getTextBoxInput().isBlank()
                 && CustomColor.fromHexString(iconColorInput.getTextBoxInput()) != CustomColor.NONE
