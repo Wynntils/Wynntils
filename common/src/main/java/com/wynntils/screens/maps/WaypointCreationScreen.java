@@ -293,6 +293,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 .build();
         this.addRenderableWidget(previousIconButton);
 
+        previousIconButton.visible = useIcon;
+
         nextIconButton = new Button.Builder(Component.literal(">"), (button) -> {
                     if (iconScrollOffset + 1 >= availableIcons.size()) {
                         iconScrollOffset = 0;
@@ -306,6 +308,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 .size(20, 20)
                 .build();
         this.addRenderableWidget(nextIconButton);
+
+        nextIconButton.visible = useIcon;
 
         // Keep this buttons width the same as the area for the displayed icons
         int iconButtonWidth = (int) (dividedWidth * 20) - (int) ((dividedWidth * 8) + 20);
@@ -343,6 +347,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 iconColorInput);
         this.addRenderableWidget(iconColorInput);
 
+        iconColorInput.visible = useIcon;
+
         if (firstSetup && oldAttributes != null) {
             iconColorInput.setTextBoxInput(oldAttributes.iconColor().toHexString());
         } else if (iconColorInput.getTextBoxInput().isEmpty()) {
@@ -352,6 +358,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         iconColorPicker =
                 new ColorPickerWidget((int) (dividedWidth * 29), (int) (dividedHeight * 25), 20, 20, iconColorInput);
         this.addRenderableWidget(iconColorPicker);
+
+        iconColorPicker.visible = useIcon;
         // endregion
 
         // region Location
