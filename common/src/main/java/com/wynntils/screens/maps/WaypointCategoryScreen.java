@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -140,6 +141,8 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+
         RenderUtils.drawRect(
                 poseStack,
                 CommonColors.BLACK.withAlpha(100),
@@ -149,7 +152,9 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                 dividedWidth * 31,
                 dividedHeight * 26);
 
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        for (Renderable renderable : this.renderables) {
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
 
         for (CategoryWidget categoryWidget : categoryWidgets) {
             categoryWidget.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -173,32 +178,50 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
         }
 
         FontRenderer.getInstance()
-                .renderScrollingText(
+                .renderText(
                         poseStack,
-                        StyledText.fromString(
-                                I18n.get("screens.wynntils.waypointCategory.currentCategory") + ": " + currentCategory),
+                        StyledText.fromString(I18n.get("screens.wynntils.waypointCategory.currentCategory") + ":"),
                         dividedWidth * 34,
                         dividedHeight * 21,
-                        dividedWidth * 30,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL,
-                        1);
+                        TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(
-                                I18n.get("screens.wynntils.waypointCategory.categoryPath") + ": " + categoryPath),
-                        dividedWidth * 34,
-                        dividedHeight * 25,
-                        dividedWidth * 30,
+                        StyledText.fromString(currentCategory),
+                        dividedWidth * 49,
+                        dividedHeight * 21,
+                        dividedWidth * 14,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL,
-                        1);
+                        TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.waypointCategory.categoryPath") + ":"),
+                        dividedWidth * 34,
+                        dividedHeight * 25,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderScrollingText(
+                        poseStack,
+                        StyledText.fromString(categoryPath),
+                        dividedWidth * 49,
+                        dividedHeight * 25,
+                        dividedWidth * 14,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -209,8 +232,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL,
-                        1);
+                        TextShadow.NORMAL);
     }
 
     @Override
