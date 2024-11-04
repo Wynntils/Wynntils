@@ -72,7 +72,7 @@ public class CustomIconWidget extends AbstractWidget {
                         StyledText.fromString(customIcon.getIconId().substring("wynntils:icon:personal:".length())),
                         getX() + 15 + iconWidth,
                         getY() + getHeight() / 2f,
-                        getWidth() - 15 - iconWidth,
+                        getWidth() - 40 - iconWidth,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
