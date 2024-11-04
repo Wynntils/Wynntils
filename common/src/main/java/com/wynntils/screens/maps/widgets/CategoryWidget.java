@@ -40,18 +40,43 @@ public class CategoryWidget extends AbstractWidget {
                 width,
                 height);
 
-        FontRenderer.getInstance()
-                .renderScrollingText(
-                        guiGraphics.pose(),
-                        StyledText.fromString(rootCategory ? "⏎ " + category : category),
-                        getX() + 10,
-                        getY() + getHeight() / 2f,
-                        getWidth(),
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL,
-                        1);
+        if (rootCategory) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics.pose(),
+                            StyledText.fromString("⏎"),
+                            getX() + 10,
+                            getY() + getHeight() / 2f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+            FontRenderer.getInstance()
+                    .renderScrollingText(
+                            guiGraphics.pose(),
+                            StyledText.fromString(category),
+                            getX() + 20,
+                            getY() + getHeight() / 2f,
+                            getWidth() - 30,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+        } else {
+            FontRenderer.getInstance()
+                    .renderScrollingText(
+                            guiGraphics.pose(),
+                            StyledText.fromString(category),
+                            getX() + 10,
+                            getY() + getHeight() / 2f,
+                            getWidth() - 20,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL,
+                            1);
+        }
     }
 
     @Override
