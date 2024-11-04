@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
@@ -145,15 +146,53 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
         visibilitySliders.add(fadeSlider);
         this.addRenderableWidget(fadeSlider);
 
-        minVisibilitySlider.setVisibility(min);
-        maxVisibilitySlider.setVisibility(max);
-        fadeSlider.setVisibility(fade);
+        updateSliders(min, max, fade);
+
+        // region presets
+        this.addRenderableWidget(
+                new Button.Builder(Component.translatable("screens.wynntils.waypointVisibility.always"), (button) -> {
+                            float alwaysMin = editinglabel
+                                    ? DefaultMapAttributes.LABEL_ALWAYS.getMin().get()
+                                    : DefaultMapAttributes.ICON_ALWAYS.getMin().get();
+                            float alwaysMax = editinglabel
+                                    ? DefaultMapAttributes.LABEL_ALWAYS.getMax().get()
+                                    : DefaultMapAttributes.ICON_ALWAYS.getMax().get();
+                            float alwaysFade = editinglabel
+                                    ? DefaultMapAttributes.LABEL_ALWAYS
+                                            .getFade()
+                                            .get()
+                                    : DefaultMapAttributes.ICON_ALWAYS.getFade().get();
+
+                            updateSliders(alwaysMin, alwaysMax, alwaysFade);
+                        })
+                        .pos((int) (dividedWidth * 4), (int) (dividedHeight * 23))
+                        .size((int) (dividedWidth * 9), 20)
+                        .build());
+
+        this.addRenderableWidget(
+                new Button.Builder(Component.translatable("screens.wynntils.waypointVisibility.never"), (button) -> {
+                            float neverMin = editinglabel
+                                    ? DefaultMapAttributes.LABEL_NEVER.getMin().get()
+                                    : DefaultMapAttributes.ICON_NEVER.getMin().get();
+                            float neverMax = editinglabel
+                                    ? DefaultMapAttributes.LABEL_NEVER.getMax().get()
+                                    : DefaultMapAttributes.ICON_NEVER.getMax().get();
+                            float neverFade = editinglabel
+                                    ? DefaultMapAttributes.LABEL_NEVER.getFade().get()
+                                    : DefaultMapAttributes.ICON_NEVER.getFade().get();
+
+                            updateSliders(neverMin, neverMax, neverFade);
+                        })
+                        .pos((int) (dividedWidth * 18), (int) (dividedHeight * 23))
+                        .size((int) (dividedWidth * 9), 20)
+                        .build());
+        // endregion
 
         this.addRenderableWidget(
                 new Button.Builder(Component.translatable("screens.wynntils.waypointVisibility.close"), (button) -> {
                             this.onClose();
                         })
-                        .pos((int) (dividedWidth * 11), (int) (dividedHeight * 44))
+                        .pos((int) (dividedWidth * 11), (int) (dividedHeight * 48))
                         .size((int) (dividedWidth * 9), 20)
                         .build());
 
@@ -236,8 +275,8 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
                                 Component.translatable("screens.wynntils.waypointVisibility.description1")),
                         dividedWidth * 2.0f,
                         dividedWidth * 29.0f,
-                        dividedHeight * 24f,
                         dividedHeight * 28f,
+                        dividedHeight * 32f,
                         dividedWidth * 27f,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -251,8 +290,8 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
                                 Component.translatable("screens.wynntils.waypointVisibility.description2")),
                         dividedWidth * 2.0f,
                         dividedWidth * 29.0f,
-                        dividedHeight * 30f,
                         dividedHeight * 34f,
+                        dividedHeight * 38f,
                         dividedWidth * 27f,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -266,8 +305,8 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
                                 Component.translatable("screens.wynntils.waypointVisibility.description3")),
                         dividedWidth * 2.0f,
                         dividedWidth * 29.0f,
-                        dividedHeight * 36f,
                         dividedHeight * 40f,
+                        dividedHeight * 44f,
                         dividedWidth * 27f,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -295,6 +334,12 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
         previousScreen.updateVisibility(visibility, editinglabel);
 
         waypointPreview = previousScreen.getWaypoint();
+    }
+
+    private void updateSliders(float min, float max, float fade) {
+        minVisibilitySlider.setVisibility(min);
+        maxVisibilitySlider.setVisibility(max);
+        fadeSlider.setVisibility(fade);
     }
 
     private final class VisibilitySlider extends AbstractSliderButton {
@@ -325,6 +370,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
             this.value = Mth.clamp((double) visibility / 100, min, 1.0);
 
             updateMessage();
+            updateVisibility();
         }
     }
 }
