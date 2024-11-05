@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities;
@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 public class DialogueHistoryQueries {
     private static final int DIALOGUE_HISTORY_SLOT = 58;
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§8Page (\\d+) of (\\d+)");
-    private static final StyledText DIALOGUE_HISTORY = StyledText.fromString("§2Dialogue History");
+    private static final StyledText DIALOGUE_HISTORY = StyledText.fromString("Dialogue History");
 
     private List<List<StyledText>> newDialogueHistory;
 
@@ -37,6 +37,7 @@ public class DialogueHistoryQueries {
                 .onError(msg -> {
                     WynntilsMod.warn("Problem getting dialogue history: " + msg);
                     McUtils.sendErrorToClient("Dumping Dialogue History failed");
+                    newDialogueHistory = null;
                 })
 
                 // Open content book
