@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.mapdata.attributes;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapMarkerOptionsImpl;
@@ -14,6 +15,7 @@ import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.lang.reflect.Field;
 
 public class MapAttributesBuilder {
     private int priority;
@@ -112,17 +114,17 @@ public class MapAttributesBuilder {
 
     protected void checkInvalidAttribute(String fieldName) {
         // FIXME: WaypointLocation is giving Unsupported attribute set: borderWidth when using WaypointCreationScreen
-        //        if (!WynntilsMod.isDevelopmentBuild()) return;
-        //
-        //        try {
-        //            // Use reflection to get our field given by the name
-        //            Field field = MapAttributesBuilder.class.getDeclaredField(fieldName);
-        //            if (field.get(this) != null) {
-        //                throw new IllegalStateException("Unsupported attribute set: " + fieldName);
-        //            }
-        //        } catch (NoSuchFieldException | IllegalAccessException e) {
-        //            // Silently ignore invalid field checks
-        //        }
+        if (!WynntilsMod.isDevelopmentBuild()) return;
+
+        try {
+            // Use reflection to get our field given by the name
+            Field field = MapAttributesBuilder.class.getDeclaredField(fieldName);
+            if (field.get(this) != null) {
+                throw new IllegalStateException("Unsupported attribute set: " + fieldName);
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // Silently ignore invalid field checks
+        }
     }
 
     public final class MapLocationAttributesBuilder extends MapAttributesBuilder {
