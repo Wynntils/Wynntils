@@ -29,7 +29,6 @@ import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
