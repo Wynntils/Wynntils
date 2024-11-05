@@ -33,13 +33,13 @@ public final class BombModel extends Model {
     private static final Pattern BOMB_BELL_PATTERN =
             Pattern.compile("^\\[Bomb Bell\\] (?<user>.+) has thrown an? (?<bomb>.+) Bomb on (?<server>.+)$");
 
-    // §buser's §3bomb has expired. You can buy Profession XP bombs at our website, §bwynncraft.com/store
-    private static final Pattern BOMB_EXPIRED_PATTERN = Pattern.compile(
-            "§b(?<user>.+)'s? §3bomb has expired. You can buy (?<bomb>.+) bombs at our website, §bwynncraft.com/store");
+    // §3You can buy Profession Speed Bombs at §b§nour store
+    private static final Pattern BOMB_EXPIRED_PATTERN =
+            Pattern.compile("§3You can buy (?<bomb>.+) Bombs at §b§nour store");
 
     // Test in BombModel_BOMB_THROWN_PATTERN
     private static final Pattern BOMB_THROWN_PATTERN = Pattern.compile(
-            "^§b(?<user>.+) has thrown a §b(?<bomb>.+)§3! The entire server gets §b.+ §3for §b\\d{1,2} minutes§3!$");
+            "^§b(§o)?(?<user>.+?)§3 has thrown a §b(?<bomb>.+?) Bomb§3! .*?§3 for §b\\d{1,2} minutes§3!$");
 
     private static final Map<BombType, BombInfo> CURRENT_SERVER_BOMBS = new EnumMap<>(BombType.class);
 
@@ -70,7 +70,6 @@ public final class BombModel extends Model {
 
         Matcher expiredMatcher = message.getMatcher(BOMB_EXPIRED_PATTERN);
         if (expiredMatcher.matches()) {
-            String user = expiredMatcher.group("user");
             String bomb = expiredMatcher.group("bomb");
 
             // Better to do a bit of processing and clean up the set than leaking memory

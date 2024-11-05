@@ -142,9 +142,13 @@ public class TestRegex {
     public void BombModel_BOMB_THROWN_PATTERN() {
         PatternTester p = new PatternTester(BombModel.class, "BOMB_THROWN_PATTERN");
         p.shouldMatch(
-                "§bExampleUser1§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp §3for §b20 minutes§3!");
+                "§bExampleUser§3 has thrown a §bProfession Speed Bomb§3! §bResource respawn time/Crafting Resource requirements are halved§3, and the entire server gets §bdouble Crafting/Gathering Speed§3 for §b10 minutes§3!");
         p.shouldMatch(
-                "§bExampleUser1§3 has thrown a §bProfession Speed Bomb§3! The entire server gets §bdouble Crafting/Gathering Speed, and Resource respawn time/Crafting Resource requirements are halved §3for §b10 minutes§3!");
+                "§b§oExampleNickname§3 has thrown a §bProfession Speed Bomb§3! §bResource respawn time/Crafting Resource requirements are halved§3, and the entire server gets §bdouble Crafting/Gathering Speed§3 for §b10 minutes§3!");
+        p.shouldMatch(
+                "§bExampleUser§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp§3 for §b20 minutes§3!");
+        p.shouldMatch(
+                "§b§oExampleNickname§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp§3 for §b20 minutes§3!");
     }
 
     @Test
