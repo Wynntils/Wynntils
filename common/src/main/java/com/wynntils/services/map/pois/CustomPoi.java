@@ -81,9 +81,9 @@ public class CustomPoi extends StaticIconPoi {
     }
 
     public enum Visibility {
-        DEFAULT("screens.wynntils.poiCreation.visibility.default"),
-        ALWAYS("screens.wynntils.poiCreation.visibility.alwaysVisible"),
-        HIDDEN("screens.wynntils.poiCreation.visibility.hidden");
+        DEFAULT("screens.wynntils.waypointCreation.visibility.default"),
+        ALWAYS("screens.wynntils.waypointCreation.visibility.alwaysVisible"),
+        HIDDEN("screens.wynntils.waypointCreation.visibility.hidden");
 
         private final String translationKey;
 
