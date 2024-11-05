@@ -29,6 +29,7 @@ import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
@@ -359,7 +360,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     protected List<Pair<Element, Integer>> parseDefences(JsonObject json) {
         List<Pair<Element, Integer>> list = new ArrayList<>();
         for (Element element : Models.Element.getGearElementOrder()) {
-            String defenceApiName = element.name().toLowerCase(Locale.ROOT) + "Defence";
+            String defenceApiName = "base" + element.getDisplayName() + "Defence";
 
             int minPoints = JsonUtils.getNullableJsonInt(json, defenceApiName);
             if (minPoints == 0) continue;
