@@ -103,24 +103,9 @@ public class BankModel extends Model {
         if (storageContainerType == null) return;
 
         ItemStack previousPageItem = event.getItems().get(personalStorageContainer.getPreviousItemSlot());
-        Matcher previousPageMatcher = StyledText.fromComponent(previousPageItem.getHoverName())
-                .getMatcher(personalStorageContainer.getPreviousItemPattern());
-
-        if (previousPageMatcher.matches()) {
-            currentPage = Integer.parseInt(previousPageMatcher.group(1)) + 1;
-        }
-
         ItemStack nextPageItem = event.getItems().get(personalStorageContainer.getNextItemSlot());
-        Matcher nextPageMatcher = StyledText.fromComponent(nextPageItem.getHoverName())
-                .getMatcher(personalStorageContainer.getNextItemPattern());
 
-        if (nextPageMatcher.matches()) {
-            currentPage = Integer.parseInt(nextPageMatcher.group(1)) - 1;
-        }
-
-        if (isItemIndicatingLastBankPage(nextPageItem)) {
-            updateFinalPage();
-        }
+        updateState(previousPageItem, nextPageItem);
 
         updatedPage = true;
     }
@@ -133,27 +118,11 @@ public class BankModel extends Model {
         if (!updatedPage) return;
 
         if (event.getSlot() == personalStorageContainer.getPreviousItemSlot()) {
-            Matcher previousPageMatcher = StyledText.fromComponent(
-                            event.getItemStack().getHoverName())
-                    .getMatcher(personalStorageContainer.getPreviousItemPattern());
-
-            if (previousPageMatcher.matches()) {
-                currentPage = Integer.parseInt(previousPageMatcher.group(1)) + 1;
-            }
+            updateState(event.getItemStack(), ItemStack.EMPTY);
         }
 
         if (event.getSlot() == personalStorageContainer.getNextItemSlot()) {
-            Matcher nextPageMatcher = StyledText.fromComponent(
-                            event.getItemStack().getHoverName())
-                    .getMatcher(personalStorageContainer.getNextItemPattern());
-
-            if (nextPageMatcher.matches()) {
-                currentPage = Integer.parseInt(nextPageMatcher.group(1)) - 1;
-            }
-
-            if (isItemIndicatingLastBankPage(event.getItemStack())) {
-                updateFinalPage();
-            }
+            updateState(ItemStack.EMPTY, event.getItemStack());
         }
     }
 
@@ -255,6 +224,26 @@ public class BankModel extends Model {
 
     public void toggleEditingName(boolean editingName) {
         this.editingName = editingName;
+    }
+
+    private void updateState(ItemStack previousPageItem, ItemStack nextPageItem) {
+        Matcher previousPageMatcher = StyledText.fromComponent(previousPageItem.getHoverName())
+                .getMatcher(personalStorageContainer.getPreviousItemPattern());
+
+        if (previousPageMatcher.matches()) {
+            currentPage = Integer.parseInt(previousPageMatcher.group(1)) + 1;
+        }
+
+        Matcher nextPageMatcher = StyledText.fromComponent(nextPageItem.getHoverName())
+                .getMatcher(personalStorageContainer.getNextItemPattern());
+
+        if (nextPageMatcher.matches()) {
+            currentPage = Integer.parseInt(nextPageMatcher.group(1)) - 1;
+        }
+
+        if (isItemIndicatingLastBankPage(nextPageItem)) {
+            updateFinalPage();
+        }
     }
 
     private boolean isItemIndicatingLastBankPage(ItemStack item) {
