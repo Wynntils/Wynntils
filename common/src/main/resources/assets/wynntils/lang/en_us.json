@@ -618,6 +618,8 @@
   "feature.wynntils.heldItemCooldownOverlay.description": "Displays the cooldown of your held item (e.g. weapon swing cooldown) as an overlay.",
   "feature.wynntils.heldItemCooldownOverlay.name": "Held Item Cooldown Overlay",
   "feature.wynntils.heldItemCooldownOverlay.overlay.heldItemCooldown.name": "Held Item Cooldown",
+  "feature.wynntils.hideDamageLabels.description": "Hides the damage labels that popup when damaging enemies",
+  "feature.wynntils.hideDamageLabels.name": "Hide Damage Labels",
   "feature.wynntils.hightlightDuplicateCosmetics.description": "Highlight cosmetics in the scrap menu that you have selected.",
   "feature.wynntils.hightlightDuplicateCosmetics.highlightCondition.description": "When should duplicate cosmetics be highlighted?",
   "feature.wynntils.hightlightDuplicateCosmetics.highlightCondition.name": "Highlight Condition",
