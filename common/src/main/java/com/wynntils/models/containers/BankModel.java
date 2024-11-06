@@ -10,6 +10,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
@@ -62,6 +63,7 @@ public class BankModel extends Model {
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
 
     private boolean editingName;
+    private boolean updatedPage;
     private int currentPage = 1;
     private PersonalStorageContainer personalStorageContainer = null;
     private PersonalStorageType storageContainerType = null;
@@ -82,6 +84,7 @@ public class BankModel extends Model {
         storageContainerType = personalStorageContainer.getPersonalStorageType();
 
         editingName = false;
+        updatedPage = false;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -89,30 +92,37 @@ public class BankModel extends Model {
         storageContainerType = null;
         currentPage = 1;
         editingName = false;
+        updatedPage = false;
     }
 
+    // Swapping between account/character bank or personal/island storage does not
+    // send the set slot packets for the slots we need to check so we have to use
+    // the set content packet
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
         if (storageContainerType == null) return;
 
         ItemStack previousPageItem = event.getItems().get(personalStorageContainer.getPreviousItemSlot());
-        Matcher previousPageMatcher = StyledText.fromComponent(previousPageItem.getHoverName())
-                .getMatcher(personalStorageContainer.getPreviousItemPattern());
-
-        if (previousPageMatcher.matches()) {
-            currentPage = Integer.parseInt(previousPageMatcher.group(1)) + 1;
-        }
-
         ItemStack nextPageItem = event.getItems().get(personalStorageContainer.getNextItemSlot());
-        Matcher nextPageMatcher = StyledText.fromComponent(nextPageItem.getHoverName())
-                .getMatcher(personalStorageContainer.getNextItemPattern());
 
-        if (nextPageMatcher.matches()) {
-            currentPage = Integer.parseInt(nextPageMatcher.group(1)) - 1;
+        updateState(previousPageItem, nextPageItem);
+
+        updatedPage = true;
+    }
+
+    // Right clicking the next/previous buttons or using quick jumps with a full inventory
+    // does not send the set content packet, so we have to check the set slot packets
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
+        if (storageContainerType == null) return;
+        if (!updatedPage) return;
+
+        if (event.getSlot() == personalStorageContainer.getPreviousItemSlot()) {
+            updateState(event.getItemStack(), ItemStack.EMPTY);
         }
 
-        if (isItemIndicatingLastBankPage(nextPageItem)) {
-            updateFinalPage();
+        if (event.getSlot() == personalStorageContainer.getNextItemSlot()) {
+            updateState(ItemStack.EMPTY, event.getItemStack());
         }
     }
 
@@ -214,6 +224,26 @@ public class BankModel extends Model {
 
     public void toggleEditingName(boolean editingName) {
         this.editingName = editingName;
+    }
+
+    private void updateState(ItemStack previousPageItem, ItemStack nextPageItem) {
+        Matcher previousPageMatcher = StyledText.fromComponent(previousPageItem.getHoverName())
+                .getMatcher(personalStorageContainer.getPreviousItemPattern());
+
+        if (previousPageMatcher.matches()) {
+            currentPage = Integer.parseInt(previousPageMatcher.group(1)) + 1;
+        }
+
+        Matcher nextPageMatcher = StyledText.fromComponent(nextPageItem.getHoverName())
+                .getMatcher(personalStorageContainer.getNextItemPattern());
+
+        if (nextPageMatcher.matches()) {
+            currentPage = Integer.parseInt(nextPageMatcher.group(1)) - 1;
+        }
+
+        if (isItemIndicatingLastBankPage(nextPageItem)) {
+            updateFinalPage();
+        }
     }
 
     private boolean isItemIndicatingLastBankPage(ItemStack item) {
