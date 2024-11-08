@@ -451,7 +451,6 @@ public class AddCommandExpansionFeature extends Feature {
                 literal("toggle")
                         .then(literal("100"))
                         .then(literal("attacksound"))
-                        .then(literal("autojoin"))
                         .then(literal("autotracking"))
                         .then(literal("beacon"))
                         .then(literal("blood"))
