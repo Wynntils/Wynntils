@@ -20,7 +20,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
-    private static final ResourceLocation ACTION_BAR_FONT = ResourceLocation.withDefaultNamespace("hud/gameplay/default/bottom_middle");
+    private static final ResourceLocation ACTION_BAR_FONT =
+            ResourceLocation.withDefaultNamespace("hud/gameplay/default/bottom_middle");
     private static final ResourceLocation COORDINATES_FONT =
             ResourceLocation.withDefaultNamespace("hud/gameplay/default/top_right");
 
