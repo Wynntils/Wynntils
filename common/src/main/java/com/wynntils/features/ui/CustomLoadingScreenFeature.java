@@ -15,7 +15,7 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.screens.characterselector.LoadingScreen;
+import com.wynntils.screens.loading.LoadingScreen;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.ProgressScreen;
