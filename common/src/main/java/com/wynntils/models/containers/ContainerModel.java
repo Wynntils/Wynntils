@@ -11,6 +11,7 @@ import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
 import com.wynntils.models.containers.containers.AspectsContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
 import com.wynntils.models.containers.containers.CraftingStationContainer;
 import com.wynntils.models.containers.containers.GuildBadgesContainer;
@@ -108,6 +109,7 @@ public final class ContainerModel extends Model {
         registerContainer(new ChallengeRewardContainer());
         registerContainer(new CharacterBankContainer());
         registerContainer(new CharacterInfoContainer());
+        registerContainer(new CharacterSelectionContainer());
         registerContainer(new ContentBookContainer());
         registerContainer(new DailyRewardContainer());
         registerContainer(new EventContainer());
