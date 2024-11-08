@@ -125,7 +125,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
                 loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.joiningWorld"));
             }
-            case WORLD, HUB, NOT_CONNECTED -> {
+            case WORLD, HUB, NOT_CONNECTED, CHARACTER_SELECTION -> {
                 if (loadingScreen == null) return;
 
                 loadingScreen = null;
