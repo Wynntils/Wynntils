@@ -15,14 +15,13 @@ import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.models.marker.type.DynamicLocationSupplier;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
-import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.IconPoi;
-import com.wynntils.services.map.pois.PlayerMainMapPoi;
 import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
+import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
+import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -30,10 +29,8 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.type.BoundingBox;
 import com.wynntils.utils.wynn.LocationUtils;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -74,7 +71,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 7 + 20 * 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 8),
                 10,
                 16,
@@ -119,7 +116,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 3,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 8),
                 12,
                 16,
@@ -136,7 +133,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 7),
                 16,
                 14,
@@ -163,7 +160,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 8),
                 12,
                 16,
@@ -201,7 +198,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 7),
                 14,
                 14,
@@ -215,14 +212,11 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY))));
 
         if (firstInit) {
-            BoundingBox textureBoundingBox =
-                    BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
-
             // When in an unmapped area, center to the middle of the map if the feature is enabled
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                             .centerWhenUnmapped
                             .get()
-                    && Services.Map.getMapsForBoundingBox(textureBoundingBox).isEmpty()) {
+                    && Services.Map.getMapsForBoundingBox(mapBoundingBox).isEmpty()) {
                 centerMapOnWorld();
             }
 
@@ -253,7 +247,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
 
-        renderPois(poseStack, mouseX, mouseY);
+        renderMapFeatures(poseStack, mouseX, mouseY);
 
         if (Managers.Feature.getFeatureInstance(MappingProgressFeature.class).isEnabled()) {
             renderChunkBorders(poseStack);
@@ -303,45 +297,21 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        Stream<? extends Poi> pois = Services.Poi.getServicePois();
+    @Override
+    protected Stream<MapFeature> getRenderedMapFeatures() {
+        // Get all MapData features as Pois
+        Stream<MapFeature> mapFeatures = Services.MapData.getFeatures();
 
-        pois = Stream.concat(pois, Services.Poi.getCombatPois());
-        pois = Stream.concat(pois, Services.Poi.getLabelPois());
-        pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
-        pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
-        pois = Stream.concat(pois, Models.Marker.getAllPois());
-        pois = Stream.concat(
-                pois,
-                getPlayerPois(
-                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                .renderRemotePartyPlayers
-                                .get(),
-                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                .renderRemoteFriendPlayers
-                                .get()));
-
-        if (showTerrs) {
-            pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
+        if (!KeyboardUtils.isControlDown()) {
+            mapFeatures = mapFeatures.filter(feature -> !(feature instanceof TerritoryArea));
         }
 
-        renderPois(
-                pois.collect(Collectors.toList()),
-                poseStack,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .poiScale
-                        .get(),
-                mouseX,
-                mouseY);
-    }
+        // FIXME: Add back the pois that are still not converted to MapData
+        //        - Provided custom pois
+        //        - Marker waypoints
+        //        - Remote players
 
-    private Stream<PlayerMainMapPoi> getPlayerPois(
-            boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers) {
-        return Services.Hades.getHadesUsers()
-                .filter(hadesUser -> (hadesUser.getRelation() == PlayerRelation.PARTY && renderRemotePartyPlayers)
-                        || (hadesUser.getRelation() == PlayerRelation.FRIEND && renderRemoteFriendPlayers))
-                .map(PlayerMainMapPoi::new);
+        return mapFeatures;
     }
 
     @Override
@@ -402,7 +372,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 return true;
             }
 
-            if (hovered != null && !(hovered instanceof TerritoryPoi)) {
+            if (hovered != null && !(hoveredFeature instanceof TerritoryArea)) {
                 McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
                 // If shift is not held down, clear all waypoints to only have the new one
@@ -484,9 +454,5 @@ public final class MainMapScreen extends AbstractMapScreen {
         } else {
             LocationUtils.shareLocation(target);
         }
-    }
-
-    public void setHovered(Poi hovered) {
-        this.hovered = hovered;
     }
 }

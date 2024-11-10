@@ -8,7 +8,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
-import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.widgets.ColorPickerWidget;
@@ -16,6 +15,13 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.IconButton;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.Poi;
+import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
+import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
+import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
+import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
+import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -32,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -420,7 +427,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                     bufferSource,
                     MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
                     MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
-                    hovered == poi,
+                    hoveredFeature == poi,
                     1,
                     zoomRenderScale,
                     zoomLevel,
@@ -607,6 +614,11 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         McUtils.mc().setScreen(returnScreen);
     }
 
+    @Override
+    protected Stream<MapFeature> getRenderedMapFeatures() {
+        return Stream.empty();
+    }
+
     private void updateSaveStatus() {
         if (saveButton == null) return;
 
@@ -619,27 +631,46 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     private void savePoi() {
-        CustomPoi poi = new CustomPoi(
-                new PoiLocation(
-                        Integer.parseInt(xInput.getTextBoxInput()),
-                        yInput.getTextBoxInput().isEmpty() ? 0 : Integer.parseInt(yInput.getTextBoxInput()),
-                        Integer.parseInt(zInput.getTextBoxInput())),
-                nameInput.getTextBoxInput(),
-                CustomColor.fromHexString(colorInput.getTextBoxInput()),
-                selectedIcon,
-                selectedVisiblity);
+        Location location = new Location(
+                Integer.parseInt(xInput.getTextBoxInput()),
+                yInput.getTextBoxInput().isEmpty() ? 0 : Integer.parseInt(yInput.getTextBoxInput()),
+                Integer.parseInt(zInput.getTextBoxInput()));
+        String subcategory = ""; // TODO: Add subcategory input
 
-        HiddenConfig<List<CustomPoi>> customPoiConfig =
-                Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-        List<CustomPoi> customPois = customPoiConfig.get();
+        String label = nameInput.getTextBoxInput();
+        String iconId = MapIconsProvider.getIconIdFromTexture(
+                selectedIcon); // TODO: Get icon list from MapIconsProvider, not PoiService
+        int priority = 0; // TODO: Add priority input
+        CustomColor labelColor = CustomColor.fromHexString(
+                colorInput.getTextBoxInput()); // TODO: Color input should be separated for label and icon
+        TextShadow labelShadow = TextShadow.NORMAL; // TODO: Add shadow input
+        MapVisibilityImpl labelVisibility =
+                new MapVisibilityImpl(DefaultMapAttributes.LABEL_ALWAYS); // TODO: Add visibility input
+        CustomColor iconColor = CustomColor.fromHexString(
+                colorInput.getTextBoxInput()); // TODO: Color input should be separated for label and icon
+        MapVisibilityImpl iconVisibility =
+                new MapVisibilityImpl(DefaultMapAttributes.ICON_ALWAYS); // TODO: Add visibility input
+
+        MapLocationAttributesImpl attributes = new MapAttributesBuilder()
+                .setLabel(label)
+                .setIcon(iconId)
+                .setPriority(priority)
+                .setLabelColor(labelColor)
+                .setLabelShadow(labelShadow)
+                .setLabelVisibility(labelVisibility)
+                .setIconColor(iconColor)
+                .setIconVisibility(iconVisibility)
+                .asLocationAttributes()
+                .build();
+
+        WaypointLocation waypoint = new WaypointLocation(location, label, subcategory, attributes);
+
         if (oldPoi != null) {
-            customPois.set(customPois.indexOf(oldPoi), poi);
-        } else {
-            customPois.add(poi);
+            // FIXME: Remove the old waypoint (TODO: Port oldPoi to WaypointLocation)
+            // Services.UserWaypoint.removeUserWaypoint(oldPoi);
         }
 
-        customPoiConfig.touched();
-        Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
+        Services.Waypoints.addWaypoint(waypoint);
     }
 
     private void populateIcons() {

@@ -4,11 +4,12 @@
  */
 package com.wynntils.utils.render;
 
+import com.wynntils.utils.render.type.AbstractTexture;
 import net.minecraft.resources.ResourceLocation;
 
 // If a texture is currently in a specific category but you want to use
 // it elsewhere, please move it to a more appropriate location
-public enum Texture {
+public enum Texture implements AbstractTexture {
     // region Character Selection
     CHANGE_WORLD_BUTTON("character_selection/change_world_button.png", 26, 52),
     CHARACTER_BUTTON("character_selection/character_button.png", 104, 64),
