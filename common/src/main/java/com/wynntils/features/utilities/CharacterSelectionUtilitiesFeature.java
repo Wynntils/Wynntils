@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.KeyInputEvent;
+import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -25,6 +26,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class CharacterSelectionUtilitiesFeature extends Feature {
     @Persisted
     public final Config<Boolean> blockThirdPerson = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> hideCrosshair = new Config<>(true);
 
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent e) {
@@ -59,5 +63,14 @@ public class CharacterSelectionUtilitiesFeature extends Feature {
         if (e.getNewState() != WorldState.CHARACTER_SELECTION) return;
 
         McUtils.options().setCameraType(CameraType.FIRST_PERSON);
+    }
+
+    @SubscribeEvent
+    public void onRenderCrosshair(RenderEvent.Pre event) {
+        if (!hideCrosshair.get()) return;
+        if (event.getType() != RenderEvent.ElementType.CROSSHAIR) return;
+        if (Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
+
+        event.setCanceled(true);
     }
 }

@@ -165,6 +165,8 @@
   "feature.wynntils.characterSelectionUtilities.blockThirdPerson.description": "Prevent going into third person in the character selection screen",
   "feature.wynntils.characterSelectionUtilities.blockThirdPerson.name": "Block Third Person",
   "feature.wynntils.characterSelectionUtilities.description": "Adds various QoL features to the character selection screen.",
+  "feature.wynntils.characterSelectionUtilities.hideCrosshair.description": "Should your crosshair be hidden in the character selection screen?",
+  "feature.wynntils.characterSelectionUtilities.hideCrosshair.name": "Hide Crosshair",
   "feature.wynntils.characterSelectionUtilities.name": "Character Selection Utilities",
   "feature.wynntils.chatCoordinates.description": "Adds the ability to click on coordinates in chat to set your compass to that location.",
   "feature.wynntils.chatCoordinates.name": "Chat Coordinates",
