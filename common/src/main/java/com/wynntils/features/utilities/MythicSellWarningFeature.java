@@ -141,10 +141,12 @@ public class MythicSellWarningFeature extends Feature {
         if (cs.getTitle().getString().equals(BLACKSMITH_TITLE)) {
             boolean widgetRequired = false;
             for (int i = 11; i <= 24; i++) {
-                Optional<GearTierItemProperty> optGearTier =
-                        Models.Item.asWynnItemProperty(cs.getMenu().getItems().get(i), GearTierItemProperty.class);
+                Optional<WynnItem> optItem =
+                        Models.Item.getWynnItem(cs.getMenu().getItems().get(i));
+                if (optItem.isEmpty() || !(optItem.get() instanceof GearTierItemProperty gtip)) continue;
 
-                if (optGearTier.isPresent() && optGearTier.get().getGearTier() == GearTier.MYTHIC) {
+                if (gtip.getGearTier() == GearTier.MYTHIC
+                        && !(optItem.get() instanceof TomeItem && !tomesWarning.get())) {
                     widgetRequired = true;
                     break;
                 }
@@ -176,6 +178,7 @@ public class MythicSellWarningFeature extends Feature {
             if (salePrice == -1 || lowestPrice == -1) return;
 
             if (salePrice < lowestPrice * tradeMarketPriceThreshold.get()) {
+                drawTradeMarketWarning = true;
                 ctrlHintTextWidget = new HintTextWidget(
                         cs.width - cs.leftPos + 2,
                         cs.height / 2 - 46,
