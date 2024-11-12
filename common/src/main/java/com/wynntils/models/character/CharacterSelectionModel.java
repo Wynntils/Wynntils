@@ -39,7 +39,7 @@ public class CharacterSelectionModel extends Model {
                     selectionScreenItems.get(currentSlot).getHoverName());
 
             if (itemName.equals(CREATE_CHARACTER_NAME)) break;
-            
+
             validCharacterSlots.add(currentSlot);
         }
     }
