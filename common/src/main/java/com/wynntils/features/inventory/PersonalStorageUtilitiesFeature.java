@@ -10,7 +10,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -70,7 +70,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
+    public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
         if (Models.Bank.getStorageContainerType() == null) return;
         // onScreenInit is not called when changing pages so we have to update current and last page here
         currentPage = Models.Bank.getCurrentPage();

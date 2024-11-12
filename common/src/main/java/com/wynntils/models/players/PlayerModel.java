@@ -11,6 +11,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
@@ -120,6 +121,8 @@ public final class PlayerModel extends Model {
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerJoinedWorldEvent event) {
+        if (!Models.WorldState.onWorld()) return;
+
         Player player = event.getPlayer();
         if (player == null || player.getUUID() == null) return;
         StyledText name = StyledText.fromString(player.getGameProfile().getName());
