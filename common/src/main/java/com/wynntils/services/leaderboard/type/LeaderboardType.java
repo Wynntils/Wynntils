@@ -32,13 +32,13 @@ public enum LeaderboardType {
     CONTENT_GLOBAL("globalPlayerContent"),
     CONTENT_SOLO("playerContent"),
     // Raids
-    NOG_SCORE("nogSrPlayers"),
+    NOG_SCORE("grootslangSrPlayers"),
     NOG_COMPLETION("nogCompletion"),
-    NOL_SCORE("nolSrPlayers"),
+    NOL_SCORE("orphionSrPlayers"),
     NOL_COMPLETION("nolCompletion"),
-    TCC_SCORE("tccSrPlayers"),
+    TCC_SCORE("colossusSrPlayers"),
     TCC_COMPLETION("tccCompletion"),
-    TNA_SCORE("tnaSrPlayers"),
+    TNA_SCORE("namelessSrPlayers"),
     TNA_COMPLETION("tnaCompletion"),
     // Solo Gamemodes
     IRONMAN("ironmanContent"),
