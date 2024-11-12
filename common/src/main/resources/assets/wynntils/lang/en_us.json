@@ -139,6 +139,8 @@
   "feature.wynntils.bombBellRelay.description": "Adds the ability to relay bomb bell messages to your party or guild with a keybind.",
   "feature.wynntils.bombBellRelay.name": "Bomb Bell Relay",
   "feature.wynntils.bombBellRelay.noKnownBombs": "No known bomb bells to relay.",
+  "feature.wynntils.bombBellRelay.showTime.description": "Include remaining time in the sent message?",
+  "feature.wynntils.bombBellRelay.showTime.name": "Show Time",
   "feature.wynntils.bombBellTracking.name": "Bomb Bell Tracking",
   "feature.wynntils.bulkBuy.animationDuration.description": "How long should the info widget animation take, in milliseconds?",
   "feature.wynntils.bulkBuy.animationDuration.name": "Animation Duration",
