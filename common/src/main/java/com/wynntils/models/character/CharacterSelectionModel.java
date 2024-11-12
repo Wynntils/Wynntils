@@ -38,11 +38,9 @@ public class CharacterSelectionModel extends Model {
             StyledText itemName = StyledText.fromComponent(
                     selectionScreenItems.get(currentSlot).getHoverName());
 
-            if (!itemName.equals(CREATE_CHARACTER_NAME)) {
-                validCharacterSlots.add(currentSlot);
-            } else {
-                break;
-            }
+            if (itemName.equals(CREATE_CHARACTER_NAME)) break;
+            
+            validCharacterSlots.add(currentSlot);
         }
     }
 
