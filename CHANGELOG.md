@@ -1,3 +1,20 @@
+## [2.4.0](https://github.com/Wynntils/Wynntils/compare/v2.3.24...v2.4.0) (2024-11-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* Add support for Wynncraft 2.1.1 (#2980)
+
+### New Features
+
+* Add show time option to bomb bell relay [skip ci] ([#2981](https://github.com/Wynntils/Wynntils/issues/2981)) ([67abc31](https://github.com/Wynntils/Wynntils/commit/67abc31a3de1a2198d5b377972d998d42cc7df39))
+* Add support for Wynncraft 2.1.1 ([#2980](https://github.com/Wynntils/Wynntils/issues/2980)) ([243feeb](https://github.com/Wynntils/Wynntils/commit/243feeb1747d525c352cb2c74a2b3e20718b41e3))
+
+
+### Bug Fixes
+
+* Don't lookup player info when not on world [skip ci] ([#2982](https://github.com/Wynntils/Wynntils/issues/2982)) ([d9264d4](https://github.com/Wynntils/Wynntils/commit/d9264d45a2e3c25d8d91805c00f06a95eba257c8))
+
 ## [2.3.24](https://github.com/Wynntils/Wynntils/compare/v2.3.23...v2.3.24) (2024-11-06)
 
 
@@ -14,6 +31,11 @@
 * Fix ExtendedSeasonLeaderboardFeature when over a month left in season [skip ci] ([#2972](https://github.com/Wynntils/Wynntils/issues/2972)) ([ca577ab](https://github.com/Wynntils/Wynntils/commit/ca577abca6029e26f2df4dd5ec40991c03053060))
 * Improve max blood pool tracking [skip ci] ([#2970](https://github.com/Wynntils/Wynntils/issues/2970)) ([7b0e2c1](https://github.com/Wynntils/Wynntils/commit/7b0e2c1ff676d1a04051c5a7e50c634ec2c05fb6))
 * Update bomb thrown/expired chat messages [skip ci] ([#2978](https://github.com/Wynntils/Wynntils/issues/2978)) ([f445c7d](https://github.com/Wynntils/Wynntils/commit/f445c7d0abb571a62aeeca1ab332f74d6ae96de8))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.24 [skip ci] ([056fbf0](https://github.com/Wynntils/Wynntils/commit/056fbf0e8d774624b5e0dffac95c40015c4b8930))
 
 ## [2.3.23](https://github.com/Wynntils/Wynntils/compare/v2.3.22...v2.3.23) (2024-10-30)
 
@@ -59,24 +81,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.21 [skip ci] ([c110b3c](https://github.com/Wynntils/Wynntils/commit/c110b3c048091dc276e13814f3e9ff751be0ed8b))
-
-## [2.3.20](https://github.com/Wynntils/Wynntils/compare/v2.3.19...v2.3.20) (2024-10-26)
-
-
-### New Features
-
-* Add a few scrollable and searchable containers [skip ci] ([#2948](https://github.com/Wynntils/Wynntils/issues/2948)) ([52e08b5](https://github.com/Wynntils/Wynntils/commit/52e08b51082165b9cd635eec6e469389e84bb1fd))
-* Annotate season leaderboard items [skip ci] ([#2949](https://github.com/Wynntils/Wynntils/issues/2949)) ([a637b00](https://github.com/Wynntils/Wynntils/commit/a637b002131b074c6645e5bbac261a35da64472b))
-
-
-### Bug Fixes
-
-* Fix incompatibility with Legendary Tooltips (and Iceberg/Prism) ([#2956](https://github.com/Wynntils/Wynntils/issues/2956)) ([9dc7957](https://github.com/Wynntils/Wynntils/commit/9dc795735362d4cf67c34362062c70299145a273))
-* Fix trade market conversion when quick search hide prompt option is enabled [skip ci] ([#2945](https://github.com/Wynntils/Wynntils/issues/2945)) ([f88d2ca](https://github.com/Wynntils/Wynntils/commit/f88d2cab0e87b778ffa868423360beb4229f4c4b))
-* Update shaman masks & parsing [skip ci] ([#2955](https://github.com/Wynntils/Wynntils/issues/2955)) ([0ae175d](https://github.com/Wynntils/Wynntils/commit/0ae175d0329b67d823e34d2e4e846416ac712d72))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.20 [skip ci] ([b40c87d](https://github.com/Wynntils/Wynntils/commit/b40c87dcb3051b1be77d266e780654c83956535c))
 
