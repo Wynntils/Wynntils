@@ -9,7 +9,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
@@ -24,7 +23,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -37,7 +35,6 @@ public final class WorldStateModel extends Model {
     private static final Position CHARACTER_SELECTION_POSITION = new Vec3(-1337.5, 16.2, -1120.5);
     private static final String WYNNCRAFT_BETA_NAME = "beta";
     private static final String UNKNOWN_WORLD = "WC??";
-    private static final StyledText CHARACTER_SELECTION_TITLE = StyledText.fromString("§8§lSelect a Character");
 
     private StyledText currentTabListFooter = StyledText.EMPTY;
     private String currentWorldName = "";
@@ -144,14 +141,6 @@ public final class WorldStateModel extends Model {
     }
 
     @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre e) {
-        if (e.getMenuType() == MenuType.GENERIC_9x3
-                && StyledText.fromComponent(e.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
-            setState(WorldState.CHARACTER_SELECTION);
-        }
-    }
-
-    @SubscribeEvent
     public void onTabListFooter(PlayerInfoFooterChangedEvent e) {
         StyledText footer = e.getFooter();
         if (footer.equals(currentTabListFooter)) return;
@@ -194,6 +183,10 @@ public final class WorldStateModel extends Model {
             return true;
         }
         return false;
+    }
+
+    public void onCharacterSelection() {
+        setState(WorldState.CHARACTER_SELECTION);
     }
 
     /**
