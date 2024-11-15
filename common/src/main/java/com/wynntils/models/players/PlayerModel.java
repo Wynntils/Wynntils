@@ -116,6 +116,11 @@ public final class PlayerModel extends Model {
         }
         if (event.getNewState() == WorldState.WORLD) {
             clearGhostCache();
+
+            // Lookup self info here as PlayerJoinedWorldEvent will only be posted for self when off world
+            Player player = McUtils.player();
+            if (player == null || player.getUUID() == null) return;
+            loadUser(player.getUUID(), player.getScoreboardName());
         }
     }
 
