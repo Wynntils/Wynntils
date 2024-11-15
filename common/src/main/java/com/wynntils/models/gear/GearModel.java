@@ -110,7 +110,13 @@ public final class GearModel extends Model {
         WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
         return GearInstance.create(
-                gearInfo, result.identifications(), result.powders(), 0, Optional.empty(), false, Optional.empty());
+                gearInfo,
+                result.identifications(),
+                result.powders(),
+                result.rerolls(),
+                Optional.empty(),
+                false,
+                Optional.empty());
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
