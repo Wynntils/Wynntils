@@ -14,7 +14,6 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
-import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.damage.label.DamageLabelParser;
@@ -186,29 +185,6 @@ public class TestRegex {
         p.shouldMatch("§7Rank: §bVet");
         // VIP
         p.shouldMatch("§7Rank: §aVet");
-    }
-
-    @Test
-    public void CharacterSelectionModel_CLASS_ITEM_CLASS_PATTERN() {
-        PatternTester p = new PatternTester(CharacterSelectionModel.class, "CLASS_ITEM_CLASS_PATTERN");
-        // Hunter
-        p.shouldMatch("§e- §7Class: §fHunter");
-        // Mage
-        p.shouldMatch("§e- §7Class: §fMage");
-        // Craftsman Dark Wizard
-        p.shouldMatch("§e- §7Class: §3\uE026§r §fDark Wizard");
-        // Hardcore Assassin
-        p.shouldMatch("§e- §7Class: §c\uE027§r §fAssassin");
-        // Hunted Ninja
-        p.shouldMatch("§e- §7Class: §5\uE028§r §fNinja");
-        // Ultimate Ironman Shaman
-        p.shouldMatch("§e- §7Class: §b\uE083§r §fShaman");
-        // Ultimate HIC Warrior
-        p.shouldMatch("§e- §7Class: §c\uE027§b\uE083§3\uE026§5\uE028§r §fWarrior");
-        // HIC Skyseer
-        p.shouldMatch("§e- §7Class: §c\uE027§6\uE029§3\uE026§5\uE028§r §fSkyseer");
-        // Ironman Archer
-        p.shouldMatch("§e- §7Class: §6\uE029§r §fArcher");
     }
 
     @Test
