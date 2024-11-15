@@ -155,7 +155,7 @@ public final class StatListOrderer {
             MiscStatKind.HEALTH,
             MiscStatKind.STEALING,
             MiscStatKind.HEALTH_REGEN_RAW,
-            MiscStatKind.MAX_MANA,
+            MiscStatKind.MAX_MANA_RAW,
             MiscStatKind.HEALING_EFFICIENCY,
             MiscStatKind.SLOW_ENEMY,
             MiscStatKind.WEAKEN_ENEMY);
