@@ -70,9 +70,9 @@ public final class LoadingScreen extends WynntilsScreen {
 
         int textureWidth = Texture.BACKGROUND_SPLASH.width();
         int textureHeight = Texture.BACKGROUND_SPLASH.height();
-        float aspectRatio = (float) textureHeight / textureWidth;
-        float screenAspectRatio = (float) this.height / this.width;
-        float scaleFactor = (float) this.height / ((screenAspectRatio > aspectRatio) ? textureHeight : textureWidth);
+        float widthScaleFactor = (float) this.width / textureWidth;
+        float heightScaleFactor = (float) this.height / textureHeight;
+        float scaleFactor = Math.max(widthScaleFactor, heightScaleFactor);
 
         float scaledWidth = textureWidth * scaleFactor;
         float scaledHeight = textureHeight * scaleFactor;
@@ -84,8 +84,8 @@ public final class LoadingScreen extends WynntilsScreen {
                 (this.width - scaledWidth) / 2f,
                 (this.height - scaledHeight) / 2f,
                 0,
-                textureWidth * scaleFactor,
-                textureHeight * scaleFactor,
+                scaledWidth,
+                scaledHeight,
                 textureWidth,
                 textureHeight);
 
