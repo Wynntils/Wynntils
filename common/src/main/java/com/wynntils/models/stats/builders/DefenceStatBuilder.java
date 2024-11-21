@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.builders;
@@ -26,7 +26,7 @@ public final class DefenceStatBuilder extends StatBuilder<DefenceStatType> {
         }
 
         callback.accept(new DefenceStatType(
-                "DEFENCE_ELEMENTAL", "Elemental Defence", "elementalDefence", "ELEMENTALDEFENSE", StatUnit.PERCENT));
+                "DEFENCE_ELEMENTAL", "Elemental Defence", "elementalDefence", "ELEMENTAL_DEFENSE", StatUnit.PERCENT));
 
         // Special case for the "defenceToMobs" tome stat
         callback.accept(new DefenceStatType(
