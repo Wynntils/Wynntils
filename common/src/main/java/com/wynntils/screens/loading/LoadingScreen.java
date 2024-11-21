@@ -68,20 +68,26 @@ public final class LoadingScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
-        float aspectRatio = (float) Texture.BACKGROUND_SPLASH.height() / Texture.BACKGROUND_SPLASH.width();
-        float textureHeight = this.width * aspectRatio;
+        int textureWidth = Texture.BACKGROUND_SPLASH.width();
+        int textureHeight = Texture.BACKGROUND_SPLASH.height();
+        float aspectRatio = (float) textureHeight / textureWidth;
+        float screenAspectRatio = (float) this.height / this.width;
+        float scaleFactor = (float) this.height / ((screenAspectRatio > aspectRatio) ? textureHeight : textureWidth);
+
+        float scaledWidth = textureWidth * scaleFactor;
+        float scaledHeight = textureHeight * scaleFactor;
 
         // Draw background
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.BACKGROUND_SPLASH.resource(),
+                (this.width - scaledWidth) / 2f,
+                (this.height - scaledHeight) / 2f,
                 0,
-                (this.height - textureHeight) / 2f,
-                0,
-                this.width,
-                textureHeight,
-                Texture.BACKGROUND_SPLASH.width(),
-                Texture.BACKGROUND_SPLASH.height());
+                textureWidth * scaleFactor,
+                textureHeight * scaleFactor,
+                textureWidth,
+                textureHeight);
 
         poseStack.pushPose();
 

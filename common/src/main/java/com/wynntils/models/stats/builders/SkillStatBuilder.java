@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.builders;
@@ -16,6 +16,12 @@ public final class SkillStatBuilder extends StatBuilder<SkillStatType> {
     public void buildStats(Consumer<SkillStatType> callback) {
         for (Skill skill : Skill.values()) {
             String internalName = (skill.getApiName() + "Points").toUpperCase(Locale.ROOT);
+
+            // Still uses the American spelling internally
+            if (skill == Skill.DEFENCE) {
+                internalName = "DEFENSEPOINTS";
+            }
+
             String apiName = "raw" + StringUtils.capitalized(skill.getApiName());
 
             SkillStatType statType = new SkillStatType(

@@ -51,6 +51,9 @@ public class ChatRedirectFeature extends Feature {
     public final Config<RedirectAction> horse = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
+    public final Config<RedirectAction> housingMaster = new Config<>(RedirectAction.REDIRECT);
+
+    @Persisted
     public final Config<RedirectAction> housingTeleport = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
@@ -108,6 +111,7 @@ public class ChatRedirectFeature extends Feature {
         register(new HorseDespawnedRedirector());
         register(new HorseScaredRedirector());
         register(new HorseSpawnFailRedirector());
+        register(new HousingMasterRedirector());
         register(new HousingTeleportArrivalCooldownRedirector());
         register(new HousingTeleportArrivalRedirector());
         register(new HousingTeleportDepartureCooldownRedirector());
@@ -486,6 +490,27 @@ public class ChatRedirectFeature extends Feature {
             return StyledText.fromComponent(
                     Component.translatable("feature.wynntils.chatRedirect.housingTeleport.notificationJoined")
                             .withStyle(ChatFormatting.GRAY));
+        }
+    }
+
+    private class HousingMasterRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("§7The blocks have been added to your building inventory");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return housingMaster.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromComponent(Component.translatable("feature.wynntils.chatRedirect.housingMaster.added")
+                    .withStyle(ChatFormatting.GRAY));
         }
     }
 
