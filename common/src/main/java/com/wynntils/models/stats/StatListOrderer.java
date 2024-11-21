@@ -67,7 +67,7 @@ public final class StatListOrderer {
             "MISC_LIFE_STEAL",
             "MISC_MANA_REGEN",
             "MISC_MANA_STEAL",
-            "MISC_MAX_MANA",
+            "MISC_MAX_MANA_RAW",
             "", // delimiter
             "DAMAGE_ANY_ALL_RAW",
             "DAMAGE_ANY_ALL_PERCENT",
