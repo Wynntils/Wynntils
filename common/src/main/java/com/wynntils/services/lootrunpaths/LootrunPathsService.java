@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -188,6 +189,11 @@ public final class LootrunPathsService extends Service {
             McUtils.sendMessageToClient(Component.translatable(
                             "service.wynntils.lootrunPaths.lootrunStart", start.getX(), start.getY(), start.getZ())
                     .withStyle(ChatFormatting.GREEN));
+
+            if (McUtils.mc().options.graphicsMode().get() == GraphicsStatus.FABULOUS) {
+                McUtils.sendMessageToClient(Component.translatable("service.wynntils.lootrunPaths.fabulousWarning")
+                        .withStyle(ChatFormatting.RED));
+            }
         } else {
             McUtils.sendErrorToClient(I18n.get("service.wynntils.lootrunPaths.lootrunCouldNotBeLoaded", fileName));
         }
