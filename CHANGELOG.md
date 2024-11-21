@@ -1,3 +1,16 @@
+## [2.4.2](https://github.com/Wynntils/Wynntils/compare/v2.4.1...v2.4.2) (2024-11-21)
+
+
+### Bug Fixes
+
+* Add raw max mana to legacy stat ordering ([#2995](https://github.com/Wynntils/Wynntils/issues/2995)) ([8ae3821](https://github.com/Wynntils/Wynntils/commit/8ae3821c909e79958007544d787eea36b7cea60d))
+* Scale loading screen background properly this time [skip ci] ([#2997](https://github.com/Wynntils/Wynntils/issues/2997)) ([839d7b6](https://github.com/Wynntils/Wynntils/commit/839d7b6ae505170483ef4f2c8db80a4e0f81c0e2))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2983](https://github.com/Wynntils/Wynntils/issues/2983)) ([a7efba1](https://github.com/Wynntils/Wynntils/commit/a7efba190e35d6abe8d99909858a1d841c2316af))
+
 ## [2.4.1](https://github.com/Wynntils/Wynntils/compare/v2.4.0...v2.4.1) (2024-11-21)
 
 
@@ -19,6 +32,7 @@
 ### Miscellaneous Chores
 
 * Disable custom lootrun beacons until tracking issues fixed [skip ci] ([#2992](https://github.com/Wynntils/Wynntils/issues/2992)) ([b8775c0](https://github.com/Wynntils/Wynntils/commit/b8775c0f8d9c9efbf560009e355929a974284690))
+* **release:** v2.4.1 [skip ci] ([c8ea1bf](https://github.com/Wynntils/Wynntils/commit/c8ea1bfb033496e8f496902663d4c6b649782251))
 
 ## [2.4.0](https://github.com/Wynntils/Wynntils/compare/v2.3.24...v2.4.0) (2024-11-12)
 
@@ -78,17 +92,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.23 [skip ci] ([8fe6b09](https://github.com/Wynntils/Wynntils/commit/8fe6b0919fc8ccf3b89333c236c1dfe63b1a45dc))
-
-## [2.3.22](https://github.com/Wynntils/Wynntils/compare/v2.3.21...v2.3.22) (2024-10-28)
-
-
-### Bug Fixes
-
-* Fix damage tracking after new patch ([#2960](https://github.com/Wynntils/Wynntils/issues/2960)) ([6c81850](https://github.com/Wynntils/Wynntils/commit/6c818502fde4386ef1bda571d9fe640460aa3be9))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2957](https://github.com/Wynntils/Wynntils/issues/2957)) ([843d277](https://github.com/Wynntils/Wynntils/commit/843d27774a3bc22846e2f201846917e5e936e48c))
-* **release:** v2.3.22 [skip ci] ([96e3d34](https://github.com/Wynntils/Wynntils/commit/96e3d346ba508a392f969fa5573cf5c73ee11632))
 
