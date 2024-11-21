@@ -1,3 +1,25 @@
+## [2.4.1](https://github.com/Wynntils/Wynntils/compare/v2.4.0...v2.4.1) (2024-11-21)
+
+
+### New Features
+
+* Redirect housing master added blocks message [skip ci] ([#2990](https://github.com/Wynntils/Wynntils/issues/2990)) ([be10f9f](https://github.com/Wynntils/Wynntils/commit/be10f9f731af76d7acaea6278b085a95cfd3e408))
+
+
+### Bug Fixes
+
+* Add some missing stats and rerolls to gear viewing ([#2989](https://github.com/Wynntils/Wynntils/issues/2989)) ([50d5ae4](https://github.com/Wynntils/Wynntils/commit/50d5ae48246a052e8db8531848dc2ecea630767e))
+* Fix disconnected event being sent on server transfer [skip ci] ([#2985](https://github.com/Wynntils/Wynntils/issues/2985)) ([d57ee44](https://github.com/Wynntils/Wynntils/commit/d57ee4472503771d6db154b9c6bf04bb1c017671))
+* fix wrong preposition in settings export tooltip [skip ci] ([#2988](https://github.com/Wynntils/Wynntils/issues/2988)) ([7b9d4e1](https://github.com/Wynntils/Wynntils/commit/7b9d4e117821ef53a9c8b551680da483b7dd976e))
+* Lookup your own info on world join [skip ci] ([#2986](https://github.com/Wynntils/Wynntils/issues/2986)) ([66367b8](https://github.com/Wynntils/Wynntils/commit/66367b8823ccbbfe2e8d92cc700cc27f6cab4bc5))
+* Scale loading screen background correctly [skip ci] ([#2991](https://github.com/Wynntils/Wynntils/issues/2991)) ([6c22ca1](https://github.com/Wynntils/Wynntils/commit/6c22ca1e2abc612a6b4e4022c8b5e4b8e671f123))
+* Update key for raid completion leaderboards [skip ci] ([#2984](https://github.com/Wynntils/Wynntils/issues/2984)) ([ee5a6b3](https://github.com/Wynntils/Wynntils/commit/ee5a6b39e2789f76db45fbb7170c8c7d416525f1))
+
+
+### Miscellaneous Chores
+
+* Disable custom lootrun beacons until tracking issues fixed [skip ci] ([#2992](https://github.com/Wynntils/Wynntils/issues/2992)) ([b8775c0](https://github.com/Wynntils/Wynntils/commit/b8775c0f8d9c9efbf560009e355929a974284690))
+
 ## [2.4.0](https://github.com/Wynntils/Wynntils/compare/v2.3.24...v2.4.0) (2024-11-12)
 
 
@@ -14,6 +36,11 @@
 ### Bug Fixes
 
 * Don't lookup player info when not on world [skip ci] ([#2982](https://github.com/Wynntils/Wynntils/issues/2982)) ([d9264d4](https://github.com/Wynntils/Wynntils/commit/d9264d45a2e3c25d8d91805c00f06a95eba257c8))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.4.0 [skip ci] ([6c160b7](https://github.com/Wynntils/Wynntils/commit/6c160b73e1ab0d907cebf0ddc54ce5394b294902))
 
 ## [2.3.24](https://github.com/Wynntils/Wynntils/compare/v2.3.23...v2.3.24) (2024-11-06)
 
@@ -64,21 +91,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2957](https://github.com/Wynntils/Wynntils/issues/2957)) ([843d277](https://github.com/Wynntils/Wynntils/commit/843d27774a3bc22846e2f201846917e5e936e48c))
 * **release:** v2.3.22 [skip ci] ([96e3d34](https://github.com/Wynntils/Wynntils/commit/96e3d346ba508a392f969fa5573cf5c73ee11632))
-
-## [2.3.21](https://github.com/Wynntils/Wynntils/compare/v2.3.20...v2.3.21) (2024-10-27)
-
-
-### New Features
-
-* Support max mana stat ([#2959](https://github.com/Wynntils/Wynntils/issues/2959)) ([37fd235](https://github.com/Wynntils/Wynntils/commit/37fd2352bc69fc6c47ba7f823869e891c5ac6356))
-
-
-### Bug Fixes
-
-* Fix extended season leaderboard when less than 1 day left in season [skip ci] ([#2958](https://github.com/Wynntils/Wynntils/issues/2958)) ([db49ec8](https://github.com/Wynntils/Wynntils/commit/db49ec88ea579ef709edf9b2da7669f7c1ef2fdc))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.21 [skip ci] ([c110b3c](https://github.com/Wynntils/Wynntils/commit/c110b3c048091dc276e13814f3e9ff751be0ed8b))
 
