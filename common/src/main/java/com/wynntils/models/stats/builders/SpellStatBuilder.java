@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.builders;
@@ -11,7 +11,6 @@ import com.wynntils.models.stats.type.StatUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Consumer;
 
 public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
@@ -48,7 +47,7 @@ public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
 
     private SpellStatType buildSpellStat(SpellType spellType, StatUnit unit) {
         String apiUnit = unit == StatUnit.RAW ? "raw" : "";
-        String loreUnit = apiUnit.toUpperCase(Locale.ROOT);
+        String loreUnit = unit == StatUnit.RAW ? "RAW" : "PCT";
         int spellNumber = spellType.getSpellNumber();
         String spellNumberString =
                 switch (spellNumber) {
@@ -63,7 +62,7 @@ public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
                 "SPELL_" + spellType.name() + "_COST_" + unit.name(),
                 getStatNameForSpell(spellType.getName()),
                 apiUnit + spellNumberString + "SpellCost",
-                "SPELL_COST_" + loreUnit + (loreUnit.isEmpty() ? "" : "_") + spellNumber,
+                "SPELL_COST_" + loreUnit + "_" + spellNumber,
                 unit,
                 spellType);
     }
