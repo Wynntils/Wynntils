@@ -76,9 +76,9 @@ public class MythicSellWarningFeature extends Feature {
         if (!(e.getScreen() instanceof ContainerScreen cs)) return;
 
         Container currentContainer = Models.Container.getCurrentContainer();
-        if (currentContainer instanceof BlacksmithContainer) {
+        if (currentContainer instanceof BlacksmithContainer blacksmithContainer) {
             int itemIndex = cs.getMenu().getItems().indexOf(e.getSlot().getItem());
-            if (itemIndex > 24 || itemIndex < 11) return; // Not in the sell slots
+            if (!blacksmithContainer.getBounds().slots().contains(itemIndex)) return;
 
             Optional<WynnItem> item = Models.Item.getWynnItem(e.getSlot().getItem());
             if (item.isEmpty() || !(item.get() instanceof GearTierItemProperty gtip)) return;
@@ -132,9 +132,9 @@ public class MythicSellWarningFeature extends Feature {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
 
         Container currentContainer = Models.Container.getCurrentContainer();
-        if (currentContainer instanceof BlacksmithContainer) {
+        if (currentContainer instanceof BlacksmithContainer blacksmithContainer) {
             boolean widgetRequired = false;
-            for (int i = 11; i <= 24; i++) {
+            for (int i : blacksmithContainer.getBounds().getSlots()) {
                 Optional<WynnItem> optItem =
                         Models.Item.getWynnItem(cs.getMenu().getItems().get(i));
                 if (optItem.isEmpty() || !(optItem.get() instanceof GearTierItemProperty gtip)) continue;

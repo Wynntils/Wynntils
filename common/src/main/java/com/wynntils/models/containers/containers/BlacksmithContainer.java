@@ -5,6 +5,7 @@
 package com.wynntils.models.containers.containers;
 
 import com.wynntils.models.containers.Container;
+import com.wynntils.models.containers.type.ContainerBounds;
 import java.util.regex.Pattern;
 
 public class BlacksmithContainer extends Container {
@@ -12,5 +13,9 @@ public class BlacksmithContainer extends Container {
 
     public BlacksmithContainer() {
         super(TITLE_PATTERN);
+    }
+
+    public ContainerBounds getBounds() {
+        return new ContainerBounds(1, 2, 2, 6);
     }
 }
