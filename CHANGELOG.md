@@ -1,3 +1,22 @@
+## [2.4.3](https://github.com/Wynntils/Wynntils/compare/v2.4.2...v2.4.3) (2024-11-26)
+
+
+### New Features
+
+* Allow set compass / open map/wiki for world discoveries [skip ci] ([#2999](https://github.com/Wynntils/Wynntils/issues/2999)) ([7ebfc0e](https://github.com/Wynntils/Wynntils/commit/7ebfc0e2aeffc964f9535ec37ba3e689d9db14c6))
+
+
+### Bug Fixes
+
+* Fix jpeg noise on bank_panel.png [skip ci] ([#3001](https://github.com/Wynntils/Wynntils/issues/3001)) ([228e6f2](https://github.com/Wynntils/Wynntils/commit/228e6f22bdedf3e7622a893bf42632400546c35c))
+* Fix lootruns with notes not being able to be saved ([#3002](https://github.com/Wynntils/Wynntils/issues/3002)) ([f4c1a1f](https://github.com/Wynntils/Wynntils/commit/f4c1a1f199ff66270d2a80896d6c349557de60cb))
+* Fix single shaman mask parsing and reset mask on death [skip ci] ([#2998](https://github.com/Wynntils/Wynntils/issues/2998)) ([b063ed8](https://github.com/Wynntils/Wynntils/commit/b063ed852dbc65a30645edcfae846886fa4a4acb))
+
+
+### Miscellaneous Chores
+
+* Warn users when loading lootruns on fabulous graphics [skip ci] ([#2994](https://github.com/Wynntils/Wynntils/issues/2994)) ([16d2b39](https://github.com/Wynntils/Wynntils/commit/16d2b39555c4aa01f60d06a35e974f93b49b6778))
+
 ## [2.4.2](https://github.com/Wynntils/Wynntils/compare/v2.4.1...v2.4.2) (2024-11-21)
 
 
@@ -10,6 +29,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2983](https://github.com/Wynntils/Wynntils/issues/2983)) ([a7efba1](https://github.com/Wynntils/Wynntils/commit/a7efba190e35d6abe8d99909858a1d841c2316af))
+* **release:** v2.4.2 [skip ci] ([c469b1c](https://github.com/Wynntils/Wynntils/commit/c469b1c7000e134f520e7a310d1e0b8ed46a2f77))
 
 ## [2.4.1](https://github.com/Wynntils/Wynntils/compare/v2.4.0...v2.4.1) (2024-11-21)
 
@@ -77,19 +97,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.24 [skip ci] ([056fbf0](https://github.com/Wynntils/Wynntils/commit/056fbf0e8d774624b5e0dffac95c40015c4b8930))
-
-## [2.3.23](https://github.com/Wynntils/Wynntils/compare/v2.3.22...v2.3.23) (2024-10-30)
-
-
-### Bug Fixes
-
-* Don't clear mantle shield when on cooldown [skip ci] ([#2962](https://github.com/Wynntils/Wynntils/issues/2962)) ([2efba4d](https://github.com/Wynntils/Wynntils/commit/2efba4da747daea764bbc0be17d573ec06a9c171))
-* Duplicate capped focus function [skip ci] ([#2961](https://github.com/Wynntils/Wynntils/issues/2961)) ([6beae72](https://github.com/Wynntils/Wynntils/commit/6beae72aaed0821cc6f7ce05e5432e1d23badb21))
-* Fix some inconsistencies in powder encoding ([#2966](https://github.com/Wynntils/Wynntils/issues/2966)) ([cf2428a](https://github.com/Wynntils/Wynntils/commit/cf2428a52d10e1cef579114e3945492b440ddcd7))
-* Use encoding ids in all chat-encoding related classes, fix documentation revolving ids [skip ci] ([#2963](https://github.com/Wynntils/Wynntils/issues/2963)) ([d0980ab](https://github.com/Wynntils/Wynntils/commit/d0980ab7608dcd41f82bb0fa339d6a54fe40ea93))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.23 [skip ci] ([8fe6b09](https://github.com/Wynntils/Wynntils/commit/8fe6b0919fc8ccf3b89333c236c1dfe63b1a45dc))
 
