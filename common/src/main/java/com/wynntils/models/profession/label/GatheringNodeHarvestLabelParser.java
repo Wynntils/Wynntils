@@ -21,7 +21,7 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
 
     // §a+1§2 Dernic Wood§6 [§e✫§8✫✫§6]
     private static final Pattern HARVEST_PATTERN =
-            Pattern.compile("§a\\+\\d+§2 (?<type>.+) (?<material>.+)§6 \\[(?<tier>§e✫(?:§8)?✫(?:§8)?✫)§6\\]");
+            Pattern.compile("§a\\+\\d+§2 (?<type>.+) (?<material>.+)§6 \\[§e✫((?:§8)?✫(?:§8)?)✫§6\\]");
 
     @Override
     public GatheringNodeHarvestLabelInfo getInfo(StyledText label, Location location, Entity entity) {
@@ -42,15 +42,9 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
                 if (materialMatcher.matches()) {
                     String type = materialMatcher.group("type");
                     String material = materialMatcher.group("material");
-                    String tierGroup = materialMatcher.group("tier");
-                    int tier =
-                            switch (tierGroup) {
-                                case "§e✫✫§8✫" -> 2;
-                                case "§e✫✫✫" -> 3;
-                                default -> 1;
-                            };
+                    String tierGroup = materialMatcher.group(3);
 
-                    gatheredMaterial = Optional.ofNullable(MaterialProfile.lookup(type, material, tier));
+                    gatheredMaterial = Optional.ofNullable(MaterialProfile.lookup(type, material, tierGroup));
                 }
             }
 
