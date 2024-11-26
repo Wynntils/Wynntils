@@ -40,8 +40,8 @@ public final class DiscoveryModel extends Model {
     }
 
     public void openDiscoveryOnMap(DiscoveryInfo discoveryInfo) {
-        if (discoveryInfo.type() == DiscoveryType.SECRET) {
-            locateSecretDiscovery(discoveryInfo.name(), DiscoveryOpenAction.MAP);
+        if (discoveryInfo.type() != DiscoveryType.TERRITORY) {
+            locateDiscovery(discoveryInfo.name(), DiscoveryOpenAction.MAP);
             return;
         }
 
@@ -55,8 +55,8 @@ public final class DiscoveryModel extends Model {
     }
 
     public void setDiscoveryCompass(DiscoveryInfo discoveryInfo) {
-        if (discoveryInfo.type() == DiscoveryType.SECRET) {
-            locateSecretDiscovery(discoveryInfo.name(), DiscoveryOpenAction.COMPASS);
+        if (discoveryInfo.type() != DiscoveryType.TERRITORY) {
+            locateDiscovery(discoveryInfo.name(), DiscoveryOpenAction.COMPASS);
             return;
         }
 
@@ -70,7 +70,7 @@ public final class DiscoveryModel extends Model {
         }
     }
 
-    public void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
+    public void openDiscoveryWiki(DiscoveryInfo discoveryInfo) {
         Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.name()));
     }
 
@@ -208,7 +208,7 @@ public final class DiscoveryModel extends Model {
         return storage.getTooltip(type);
     }
 
-    private void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
+    private void locateDiscovery(String name, DiscoveryOpenAction action) {
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
         apiResponse.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
