@@ -23,7 +23,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ShamanMaskModel extends Model {
     private static final Pattern AWAKENED_PATTERN = Pattern.compile("^§[0-9a-f]§lAwakened$");
-    private static final Pattern MASK_PATTERN = Pattern.compile("§cMask of the (Coward|Lunatic|Fanatic)");
+    private static final Pattern MASK_PATTERN = Pattern.compile("§(?:b|6|c)Mask of the (Heretic|Lunatic|Fanatic)");
     private static final StyledText AWAKENED_STATUS_EFFECT = StyledText.fromString("§7Awakened");
 
     private ShamanMaskType currentMaskType = ShamanMaskType.NONE;
