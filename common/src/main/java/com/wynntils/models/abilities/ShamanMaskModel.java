@@ -12,6 +12,7 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.abilities.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.models.abilities.type.ShamanMaskType;
+import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -23,7 +24,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ShamanMaskModel extends Model {
     private static final Pattern AWAKENED_PATTERN = Pattern.compile("^§[0-9a-f]§lAwakened$");
-    private static final Pattern MASK_PATTERN = Pattern.compile("§cMask of the (Coward|Lunatic|Fanatic)");
+    private static final Pattern MASK_PATTERN = Pattern.compile("§(?:b|6|c)Mask of the (Heretic|Lunatic|Fanatic)");
     private static final StyledText AWAKENED_STATUS_EFFECT = StyledText.fromString("§7Awakened");
 
     private ShamanMaskType currentMaskType = ShamanMaskType.NONE;
@@ -83,7 +84,16 @@ public final class ShamanMaskModel extends Model {
     }
 
     @SubscribeEvent
+    public void onCharacterDeath(CharacterDeathEvent event) {
+        resetMask();
+    }
+
+    @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
+        resetMask();
+    }
+
+    private void resetMask() {
         currentMaskType = ShamanMaskType.NONE;
     }
 
