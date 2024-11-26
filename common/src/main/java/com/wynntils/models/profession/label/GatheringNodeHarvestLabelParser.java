@@ -50,7 +50,7 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
                                 default -> 1;
                             };
 
-                    gatheredMaterial = Optional.of(MaterialProfile.lookup(type, material, tier));
+                    gatheredMaterial = Optional.ofNullable(MaterialProfile.lookup(type, material, tier));
                 }
             }
 
