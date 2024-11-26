@@ -12,6 +12,7 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.abilities.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.models.abilities.type.ShamanMaskType;
+import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -83,7 +84,16 @@ public final class ShamanMaskModel extends Model {
     }
 
     @SubscribeEvent
+    public void onCharacterDeath(CharacterDeathEvent event) {
+        resetMask();
+    }
+
+    @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
+        resetMask();
+    }
+
+    private void resetMask() {
         currentMaskType = ShamanMaskType.NONE;
     }
 
