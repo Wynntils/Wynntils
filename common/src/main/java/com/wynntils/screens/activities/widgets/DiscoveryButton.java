@@ -92,8 +92,8 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
             Models.Discovery.setDiscoveryCompass(discoveryInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             Models.Discovery.openDiscoveryOnMap(discoveryInfo);
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && discoveryInfo.type() == DiscoveryType.SECRET) {
-            Models.Discovery.openSecretDiscoveryWiki(discoveryInfo);
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && discoveryInfo.type() != DiscoveryType.TERRITORY) {
+            Models.Discovery.openDiscoveryWiki(discoveryInfo);
         }
 
         return true;
@@ -124,7 +124,7 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
             }
         }
 
-        if (discoveryInfo.type() == DiscoveryType.SECRET
+        if (discoveryInfo.type() != DiscoveryType.TERRITORY
                 || Models.Territory.getTerritoryProfile(discoveryInfo.name()) != null) {
             lines.add(Component.empty());
             lines.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.leftClickToSetCompass")
@@ -135,7 +135,7 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
                     .withStyle(ChatFormatting.YELLOW));
         }
 
-        if (discoveryInfo.type() == DiscoveryType.SECRET) {
+        if (discoveryInfo.type() != DiscoveryType.TERRITORY) {
             lines.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.rightClickToOpenWiki")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.GOLD));
