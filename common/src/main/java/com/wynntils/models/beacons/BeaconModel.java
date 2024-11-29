@@ -6,6 +6,7 @@ package com.wynntils.models.beacons;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
@@ -36,7 +37,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class BeaconModel extends Model {
-    public static final int COLOR_CUSTOM_MODEL_DATA = 79;
     private static final ResourceLocation MARKER_FONT = ResourceLocation.withDefaultNamespace("marker");
     private static final List<BeaconKind> beaconRegistry = new ArrayList<>();
     private static final List<BeaconMarkerKind> beaconMarkerRegistry = new ArrayList<>();
@@ -149,7 +149,8 @@ public class BeaconModel extends Model {
             int customColor = potionContents.customColor().orElse(CommonColors.WHITE.asInt());
 
             // Log the color if it's likely to be a new beacon kind
-            if (customModel == COLOR_CUSTOM_MODEL_DATA) {
+            if (customModel == Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA
+                    || customModel == Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA) {
                 WynntilsMod.warn("Unknown beacon kind: " + customModel + " " + customColor);
             }
         }

@@ -15,17 +15,17 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.CustomModelData;
 
 public enum LootrunBeaconKind implements BeaconKind {
-    GREEN(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x00FF80), CommonColors.GREEN),
-    YELLOW(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFFFF33), CommonColors.YELLOW),
-    BLUE(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x5C5CE6), CommonColors.BLUE),
-    PURPLE(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF00FF), CommonColors.PURPLE),
-    GRAY(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xBFBFBF), CommonColors.LIGHT_GRAY),
-    ORANGE(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF9500), CommonColors.ORANGE),
-    RED(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF0000), CommonColors.RED),
-    DARK_GRAY(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x808080), CommonColors.GRAY),
-    WHITE(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CommonColors.WHITE, CommonColors.WHITE),
-    AQUA(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x55FFFF), CommonColors.AQUA),
-    RAINBOW(80, CommonColors.WHITE, CommonColors.RAINBOW);
+    GREEN(Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x00FF80), CommonColors.GREEN),
+    YELLOW(Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFFFF33), CommonColors.YELLOW),
+    BLUE(Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x5C5CE6), CommonColors.BLUE),
+    PURPLE(Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF00FF), CommonColors.PURPLE),
+    GRAY(Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xBFBFBF), CommonColors.LIGHT_GRAY),
+    ORANGE(Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF9500), CommonColors.ORANGE),
+    RED(Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF0000), CommonColors.RED),
+    DARK_GRAY(Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x808080), CommonColors.GRAY),
+    WHITE(Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA, CommonColors.WHITE, CommonColors.WHITE),
+    AQUA(Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x55FFFF), CommonColors.AQUA),
+    RAINBOW(84, CommonColors.WHITE, CommonColors.RAINBOW);
 
     // These values are used to identify the beacon kind
     private final int customModelData;
