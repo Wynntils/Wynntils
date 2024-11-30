@@ -1,8 +1,8 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.players.profile;
+package com.wynntils.models.guild.profile;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

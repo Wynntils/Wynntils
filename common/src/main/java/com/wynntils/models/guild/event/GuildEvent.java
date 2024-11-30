@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.players.event;
+package com.wynntils.models.guild.event;
 
 import net.neoforged.bus.api.Event;
 
