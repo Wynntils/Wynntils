@@ -1,3 +1,22 @@
+## [2.4.4](https://github.com/Wynntils/Wynntils/compare/v2.4.3...v2.4.4) (2024-11-30)
+
+
+### New Features
+
+* Add scrolling to guild log containers [skip ci] ([#3004](https://github.com/Wynntils/Wynntils/issues/3004)) ([5bb580b](https://github.com/Wynntils/Wynntils/commit/5bb580b5ea30bc04b6efabf6ef13cd2de747ece6))
+* Support main attack range stat [skip ci] ([#3006](https://github.com/Wynntils/Wynntils/issues/3006)) ([816e31e](https://github.com/Wynntils/Wynntils/commit/816e31e708b434931bbc6b058ce8d7c8e27f5168))
+
+
+### Bug Fixes
+
+* Update lootrun beacon tracking after patch (Does not fix tracking 5+ beacons) ([#3005](https://github.com/Wynntils/Wynntils/issues/3005)) ([87a43c7](https://github.com/Wynntils/Wynntils/commit/87a43c70d5ae9d5f338831b5e69ea96bb1bc340e))
+* Update profession progress on failed gathers [skip ci] ([#3000](https://github.com/Wynntils/Wynntils/issues/3000)) ([1e7f9ea](https://github.com/Wynntils/Wynntils/commit/1e7f9ea7e35dde860f948abca690f33a48879ede))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3007](https://github.com/Wynntils/Wynntils/issues/3007)) ([02b49a6](https://github.com/Wynntils/Wynntils/commit/02b49a67003b8a977d2cd19576bbfeef8cbffc0c))
+
 ## [2.4.3](https://github.com/Wynntils/Wynntils/compare/v2.4.2...v2.4.3) (2024-11-26)
 
 
@@ -15,6 +34,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v2.4.3 [skip ci] ([2736847](https://github.com/Wynntils/Wynntils/commit/2736847751fb768e69f954cdbb01162e31e23507))
 * Warn users when loading lootruns on fabulous graphics [skip ci] ([#2994](https://github.com/Wynntils/Wynntils/issues/2994)) ([16d2b39](https://github.com/Wynntils/Wynntils/commit/16d2b39555c4aa01f60d06a35e974f93b49b6778))
 
 ## [2.4.2](https://github.com/Wynntils/Wynntils/compare/v2.4.1...v2.4.2) (2024-11-21)
@@ -75,26 +95,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.4.0 [skip ci] ([6c160b7](https://github.com/Wynntils/Wynntils/commit/6c160b73e1ab0d907cebf0ddc54ce5394b294902))
-
-## [2.3.24](https://github.com/Wynntils/Wynntils/compare/v2.3.23...v2.3.24) (2024-11-06)
-
-
-### New Features
-
-* Add hide damage labels feature ([#2979](https://github.com/Wynntils/Wynntils/issues/2979)) ([515a38c](https://github.com/Wynntils/Wynntils/commit/515a38c22c832ee8af56f3fb52c72310cabd7708))
-
-
-### Bug Fixes
-
-* Fix bank current page and quick jump issues [skip ci] ([#2976](https://github.com/Wynntils/Wynntils/issues/2976)) ([d1b7347](https://github.com/Wynntils/Wynntils/commit/d1b7347a40283a4fe2ec68fb471eded85537fd8b))
-* Fix base elemental defences not being set on gear items [skip ci] ([#2975](https://github.com/Wynntils/Wynntils/issues/2975)) ([a30e8e1](https://github.com/Wynntils/Wynntils/commit/a30e8e1e0c05b31c9e1340f2eb075b6933af00ed))
-* Fix dialogue history parsing [skip ci] ([#2977](https://github.com/Wynntils/Wynntils/issues/2977)) ([314c002](https://github.com/Wynntils/Wynntils/commit/314c0024eccfb2ee7b1b0ed1ac198829a37caeb2))
-* Fix ExtendedSeasonLeaderboardFeature when over a month left in season [skip ci] ([#2972](https://github.com/Wynntils/Wynntils/issues/2972)) ([ca577ab](https://github.com/Wynntils/Wynntils/commit/ca577abca6029e26f2df4dd5ec40991c03053060))
-* Improve max blood pool tracking [skip ci] ([#2970](https://github.com/Wynntils/Wynntils/issues/2970)) ([7b0e2c1](https://github.com/Wynntils/Wynntils/commit/7b0e2c1ff676d1a04051c5a7e50c634ec2c05fb6))
-* Update bomb thrown/expired chat messages [skip ci] ([#2978](https://github.com/Wynntils/Wynntils/issues/2978)) ([f445c7d](https://github.com/Wynntils/Wynntils/commit/f445c7d0abb571a62aeeca1ab332f74d6ae96de8))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.24 [skip ci] ([056fbf0](https://github.com/Wynntils/Wynntils/commit/056fbf0e8d774624b5e0dffac95c40015c4b8930))
 
