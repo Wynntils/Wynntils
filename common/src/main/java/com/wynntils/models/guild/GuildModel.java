@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.players;
+package com.wynntils.models.guild;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -23,12 +23,12 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.containers.ContainerModel;
-import com.wynntils.models.players.event.GuildEvent;
-import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
-import com.wynntils.models.players.profile.GuildProfile;
-import com.wynntils.models.players.type.DiplomacyInfo;
-import com.wynntils.models.players.type.GuildInfo;
-import com.wynntils.models.players.type.GuildRank;
+import com.wynntils.models.guild.event.GuildEvent;
+import com.wynntils.models.guild.label.GuildSeasonLeaderboardLabelParser;
+import com.wynntils.models.guild.profile.GuildProfile;
+import com.wynntils.models.guild.type.DiplomacyInfo;
+import com.wynntils.models.guild.type.GuildInfo;
+import com.wynntils.models.guild.type.GuildRank;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;

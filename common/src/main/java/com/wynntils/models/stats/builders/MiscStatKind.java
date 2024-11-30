@@ -27,6 +27,7 @@ public enum MiscStatKind {
 
     // Damage
     ATTACK_SPEED("Attack Speed", StatUnit.TIER, "rawAttackSpeed", "ATTACKSPEED"),
+    MAIN_ATTACK_RANGE("Main Attack Range", StatUnit.PERCENT, "mainAttackRange", "MAIN_ATTACK_RANGE"),
     REFLECTION("Reflection", StatUnit.PERCENT, "reflection"),
     THORNS("Thorns", StatUnit.PERCENT, "thorns"),
     EXPLODING("Exploding", StatUnit.PERCENT, "exploding"),

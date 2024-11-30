@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.players.label;
+package com.wynntils.models.guild.label;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelInfo;
-import com.wynntils.models.players.type.GuildLeaderboardInfo;
+import com.wynntils.models.guild.type.GuildLeaderboardInfo;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Collections;
 import java.util.List;
