@@ -115,7 +115,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "88152ad87e306e120b88a4a97e27d722",
+    "md5": "9fc420229ffee317c575818e705fa9f6",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
   },
   {
@@ -125,7 +125,7 @@
   },
   {
     "id": "dataStaticIdentificationKeys",
-    "md5": "deee78d01245fb488c20590bc9d060b7",
+    "md5": "ad0a618a7f0db5b1d8fb605590c693d0",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/id_keys.json"
   },
   {
