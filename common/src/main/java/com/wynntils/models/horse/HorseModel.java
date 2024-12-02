@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.horse;
@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
@@ -28,6 +29,17 @@ public class HorseModel extends Model {
         if (horseSlot == -1) return Optional.empty();
 
         return Models.Item.asWynnItem(McUtils.inventory().getItem(horseSlot), HorseItem.class);
+    }
+
+    public CappedValue calculateNextLevelMinutes(HorseItem horseItem) {
+        // This is based off of a formula from https://wynncraft.wiki.gg/wiki/Horses#Levels
+        double levelProgress = 3.0 * horseItem.getLevel().current() + 2;
+        double xpProgress = 100.0 - horseItem.getXp().current();
+
+        double result = levelProgress / 6.0 * (xpProgress / 100.0) * 100.0;
+        double resultMax = levelProgress / 6.0 * 100.0;
+
+        return new CappedValue((int) Math.ceil(result), (int) Math.ceil(resultMax));
     }
 
     public int findHorseSlotNum() {

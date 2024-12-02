@@ -33,7 +33,6 @@ public class HorseFunctions {
         }
     }
 
-    // Approximate time (in minutes) until next horse level
     public static class CappedHorseLevelTimeFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
@@ -41,14 +40,7 @@ public class HorseFunctions {
             if (horse.isEmpty()) return CappedValue.EMPTY;
             if (horse.get().getLevel().current() == horse.get().getLevel().max()) return CappedValue.EMPTY;
 
-            // This is based off of a formula from https://wynncraft.fandom.com/wiki/Horses#Levels
-            double levelProgress = 3.0 * horse.get().getLevel().current() + 2;
-            double xpProgress = 100.0 - horse.get().getXp().current();
-
-            double result = levelProgress / 6.0 * (xpProgress / 100.0) * 100.0;
-            double resultMax = levelProgress / 6.0 * 100.0;
-
-            return new CappedValue((int) Math.ceil(result), (int) Math.ceil(resultMax));
+            return Models.Horse.calculateNextLevelMinutes(horse.get());
         }
     }
 
@@ -128,7 +120,6 @@ public class HorseFunctions {
         }
     }
 
-    // Approximate time (in minutes) until next horse level
     public static class HorseLevelTimeFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
@@ -136,13 +127,7 @@ public class HorseFunctions {
             if (horse.isEmpty()) return -1.0;
             if (horse.get().getLevel().current() == horse.get().getLevel().max()) return -1.0;
 
-            // This is based off of a formula from https://wynncraft.wiki.gg/wiki/Horses#Levels
-            double levelProgress = 3.0 * horse.get().getLevel().current() + 2;
-            double xpProgress = 100.0 - horse.get().getXp().current();
-
-            double result = levelProgress / 6.0 * (xpProgress / 100.0) * 100.0;
-
-            return Math.ceil(result) / 100.0;
+            return Models.Horse.calculateNextLevelMinutes(horse.get()).current() / 100.0;
         }
 
         @Override
