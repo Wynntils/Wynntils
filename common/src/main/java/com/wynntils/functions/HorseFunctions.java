@@ -40,7 +40,7 @@ public class HorseFunctions {
             if (horse.isEmpty()) return CappedValue.EMPTY;
             if (horse.get().getLevel().current() == horse.get().getLevel().max()) return CappedValue.EMPTY;
 
-            return Models.Horse.calculateNextLevelMinutes(horse.get());
+            return Models.Horse.calculateNextLevelMinutes().get();
         }
     }
 
@@ -127,7 +127,7 @@ public class HorseFunctions {
             if (horse.isEmpty()) return -1.0;
             if (horse.get().getLevel().current() == horse.get().getLevel().max()) return -1.0;
 
-            return Models.Horse.calculateNextLevelMinutes(horse.get()).current() / 100.0;
+            return Models.Horse.calculateNextLevelMinutes().get().current() / 100.0;
         }
 
         @Override
