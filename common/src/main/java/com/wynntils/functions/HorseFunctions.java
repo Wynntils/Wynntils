@@ -136,7 +136,7 @@ public class HorseFunctions {
             if (horse.isEmpty()) return -1.0;
             if (horse.get().getLevel().current() == horse.get().getLevel().max()) return -1.0;
 
-            // This is based off of a formula from https://wynncraft.fandom.com/wiki/Horses#Levels
+            // This is based off of a formula from https://wynncraft.wiki.gg/wiki/Horses#Levels
             double levelProgress = 3.0 * horse.get().getLevel().current() + 2;
             double xpProgress = 100.0 - horse.get().getXp().current();
 
