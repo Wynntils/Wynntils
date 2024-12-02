@@ -38,9 +38,10 @@ public class HorseFunctions {
         public CappedValue getValue(FunctionArguments arguments) {
             Optional<HorseItem> horse = Models.Horse.getHorse();
             if (horse.isEmpty()) return CappedValue.EMPTY;
-            if (horse.get().getLevel().current() == horse.get().getLevel().max()) return CappedValue.EMPTY;
 
-            return Models.Horse.calculateNextLevelMinutes().get();
+            Optional<CappedValue> result = Models.Horse.calculateNextLevelMinutes();
+
+            return result.isPresent() ? result.get() : CappedValue.EMPTY;
         }
     }
 

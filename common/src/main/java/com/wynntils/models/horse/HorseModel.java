@@ -32,7 +32,13 @@ public class HorseModel extends Model {
     }
 
     public Optional<CappedValue> calculateNextLevelMinutes() {
+        if (getHorse().isEmpty()) return Optional.empty();
+
         HorseItem horseItem = getHorse().get();
+
+        if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY)
+            return Optional.empty();
+        if (horseItem.getLevel().current() == horseItem.getLevel().max()) return Optional.empty();
 
         // This is based off of a formula from https://wynncraft.wiki.gg/wiki/Horses#Levels
         double levelProgress = 3.0 * horseItem.getLevel().current() + 2;
