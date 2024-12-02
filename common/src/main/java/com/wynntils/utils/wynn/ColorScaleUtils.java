@@ -22,7 +22,7 @@ public final class ColorScaleUtils {
             0f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),
             40f,
-            TextColor.fromRgb(0xEE8D24),
+            TextColor.fromLegacyFormat(ChatFormatting.Gold), //Orange
             70f,
             TextColor.fromLegacyFormat(ChatFormatting.YELLOW),
             90f,
@@ -34,7 +34,7 @@ public final class ColorScaleUtils {
             20f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),
             50f,
-            TextColor.fromRgb(0x#EE8D24),
+            TextColor.fromLegacyFormat(ChatFormatting.Gold), //Orange
             80f,
             TextColor.fromLegacyFormat(ChatFormatting.YELLOW),
             95f,
