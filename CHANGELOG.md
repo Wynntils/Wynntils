@@ -1,3 +1,10 @@
+## [2.4.5](https://github.com/Wynntils/Wynntils/compare/v2.4.4...v2.4.5) (2024-12-03)
+
+
+### Bug Fixes
+
+* Fix quick casts and horse mounting using wrong player rotation ([#3010](https://github.com/Wynntils/Wynntils/issues/3010)) ([1fcb9f5](https://github.com/Wynntils/Wynntils/commit/1fcb9f50713fd278e960c88dab6a8835a7326ab9))
+
 ## [2.4.4](https://github.com/Wynntils/Wynntils/compare/v2.4.3...v2.4.4) (2024-11-30)
 
 
@@ -16,6 +23,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#3007](https://github.com/Wynntils/Wynntils/issues/3007)) ([02b49a6](https://github.com/Wynntils/Wynntils/commit/02b49a67003b8a977d2cd19576bbfeef8cbffc0c))
+* **release:** v2.4.4 [skip ci] ([9276ced](https://github.com/Wynntils/Wynntils/commit/9276ced2a264d09841f4b53fe6bb99b8ea6a75fa))
 
 ## [2.4.3](https://github.com/Wynntils/Wynntils/compare/v2.4.2...v2.4.3) (2024-11-26)
 
@@ -73,26 +81,4 @@
 
 * Disable custom lootrun beacons until tracking issues fixed [skip ci] ([#2992](https://github.com/Wynntils/Wynntils/issues/2992)) ([b8775c0](https://github.com/Wynntils/Wynntils/commit/b8775c0f8d9c9efbf560009e355929a974284690))
 * **release:** v2.4.1 [skip ci] ([c8ea1bf](https://github.com/Wynntils/Wynntils/commit/c8ea1bfb033496e8f496902663d4c6b649782251))
-
-## [2.4.0](https://github.com/Wynntils/Wynntils/compare/v2.3.24...v2.4.0) (2024-11-12)
-
-
-### ⚠ BREAKING CHANGES
-
-* Add support for Wynncraft 2.1.1 (#2980)
-
-### New Features
-
-* Add show time option to bomb bell relay [skip ci] ([#2981](https://github.com/Wynntils/Wynntils/issues/2981)) ([67abc31](https://github.com/Wynntils/Wynntils/commit/67abc31a3de1a2198d5b377972d998d42cc7df39))
-* Add support for Wynncraft 2.1.1 ([#2980](https://github.com/Wynntils/Wynntils/issues/2980)) ([243feeb](https://github.com/Wynntils/Wynntils/commit/243feeb1747d525c352cb2c74a2b3e20718b41e3))
-
-
-### Bug Fixes
-
-* Don't lookup player info when not on world [skip ci] ([#2982](https://github.com/Wynntils/Wynntils/issues/2982)) ([d9264d4](https://github.com/Wynntils/Wynntils/commit/d9264d45a2e3c25d8d91805c00f06a95eba257c8))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.4.0 [skip ci] ([6c160b7](https://github.com/Wynntils/Wynntils/commit/6c160b73e1ab0d907cebf0ddc54ce5394b294902))
 
