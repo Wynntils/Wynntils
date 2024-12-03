@@ -14,8 +14,8 @@ public enum SpellDirection {
     RIGHT(() -> McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(
             InteractionHand.MAIN_HAND,
             id,
-            McUtils.player().getXRot(),
-            McUtils.player().getYRot()))),
+            McUtils.player().getYRot(),
+            McUtils.player().getXRot()))),
     LEFT(() -> McUtils.sendPacket(new ServerboundSwingPacket(InteractionHand.MAIN_HAND)));
 
     private final Runnable sendPacketRunnable;
