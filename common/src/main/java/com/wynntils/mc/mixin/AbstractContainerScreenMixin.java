@@ -50,11 +50,11 @@ public abstract class AbstractContainerScreenMixin {
     @WrapOperation(
             method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
             at =
-            @At(
-                    value = "INVOKE",
-                    target =
-                            "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
-                    ordinal = 0))
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
+                            ordinal = 0))
     private int renderContainerLabel(
             GuiGraphics instance,
             Font font,
@@ -76,11 +76,11 @@ public abstract class AbstractContainerScreenMixin {
     @WrapOperation(
             method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
             at =
-            @At(
-                    value = "INVOKE",
-                    target =
-                            "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
-                    ordinal = 1))
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
+                            ordinal = 1))
     private int renderInventoryLabel(
             GuiGraphics instance,
             Font font,
