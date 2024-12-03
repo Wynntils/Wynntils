@@ -13,9 +13,10 @@ import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -49,11 +50,11 @@ public abstract class AbstractContainerScreenMixin {
     @WrapOperation(
             method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
             at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
-                            ordinal = 0))
+            @At(
+                    value = "INVOKE",
+                    target =
+                            "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
+                    ordinal = 0))
     private int renderContainerLabel(
             GuiGraphics instance,
             Font font,
@@ -75,11 +76,11 @@ public abstract class AbstractContainerScreenMixin {
     @WrapOperation(
             method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
             at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
-                            ordinal = 1))
+            @At(
+                    value = "INVOKE",
+                    target =
+                            "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
+                    ordinal = 1))
     private int renderInventoryLabel(
             GuiGraphics instance,
             Font font,
@@ -133,22 +134,26 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @Inject(method = "mouseDragged(DDIDD)Z", at = @At("RETURN"))
-    private void mouseDraggedPost(
+    private void mouseDraggedPre(
             double mouseX,
             double mouseY,
             int button,
             double deltaX,
             double deltaY,
             CallbackInfoReturnable<Boolean> cir) {
-        for (GuiEventListener listener : ((AbstractContainerScreen<?>) (Object) this).children()) {
-            listener.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
+
+        if (focusedTextInput != null) {
+            focusedTextInput.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
     }
 
     @Inject(method = "mouseReleased(DDI)Z", at = @At("RETURN"))
-    private void mouseReleasedPost(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        for (GuiEventListener listener : ((AbstractContainerScreen<?>) (Object) this).children()) {
-            listener.mouseReleased(mouseX, mouseY, button);
+    private void mouseReleasedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
+
+        if (focusedTextInput != null) {
+            focusedTextInput.mouseReleased(mouseX, mouseY, button);
         }
     }
 
