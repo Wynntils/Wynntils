@@ -41,7 +41,7 @@ public class HorseModel extends Model {
         if (horseItem.getLevel().current() == horseItem.getLevel().max()) return Optional.empty();
 
         // This is based off of a formula from https://wynncraft.wiki.gg/wiki/Horses#Levels
-        double levelProgress = (horseItem.getLevel().current() + (2f / 3f)) / 2;
+        double levelProgress = (horseItem.getLevel().current() + (2f / 3f)) / 2f;
         double xpProgress = 100.0 - horseItem.getXp().current();
 
         double result = levelProgress * (xpProgress / 100.0) * 100.0;
