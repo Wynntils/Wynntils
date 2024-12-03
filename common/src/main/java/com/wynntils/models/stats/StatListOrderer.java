@@ -125,6 +125,7 @@ public final class StatListOrderer {
             "MISC_KNOCKBACK",
             "MISC_SLOW_ENEMY",
             "MISC_WEAKEN_ENEMY",
+            "MISC_MAIN_ATTACK_RANGE",
             "", // delimiter
             // Charm specific stats
             "DEFENCE_TO_MOBS",
@@ -158,7 +159,8 @@ public final class StatListOrderer {
             MiscStatKind.MAX_MANA_RAW,
             MiscStatKind.HEALING_EFFICIENCY,
             MiscStatKind.SLOW_ENEMY,
-            MiscStatKind.WEAKEN_ENEMY);
+            MiscStatKind.WEAKEN_ENEMY,
+            MiscStatKind.MAIN_ATTACK_RANGE);
     private static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_2 =
             List.of(MiscStatKind.SPRINT, MiscStatKind.SPRINT_REGEN);
     private static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_3 = List.of(

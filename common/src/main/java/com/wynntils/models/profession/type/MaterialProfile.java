@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.profession.type;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.type.Pair;
 import java.util.Collection;
 import java.util.List;
@@ -81,7 +82,7 @@ public final class MaterialProfile {
         this.tier = tier;
     }
 
-    public static MaterialProfile lookup(String sourceMaterialName, String resourceTypeName, int tier) {
+    public static MaterialProfile lookup(String sourceMaterialName, String resourceTypeName, String tier) {
         SourceMaterial sourceMaterial = SOURCE_MATERIALS.values().stream()
                 .flatMap(Collection::stream)
                 .filter(material -> material.name().equals(sourceMaterialName))
@@ -92,7 +93,7 @@ public final class MaterialProfile {
         ResourceType resourceType = ResourceType.fromString(resourceTypeName);
         if (resourceType == null) return null;
 
-        return new MaterialProfile(resourceType, sourceMaterial, tier);
+        return new MaterialProfile(resourceType, sourceMaterial, parseTier(tier));
     }
 
     public static Optional<Pair<MaterialType, SourceMaterial>> findByMaterialName(
@@ -166,6 +167,18 @@ public final class MaterialProfile {
         public MaterialType getMaterialType() {
             return materialType;
         }
+    }
+
+    private static int parseTier(String tierIndicator) {
+        return switch (tierIndicator) {
+            case "§8✫" -> 1;
+            case "✫§8" -> 2;
+            case "✫" -> 3;
+            default -> {
+                WynntilsMod.warn("Cannot parse tier from: " + tierIndicator);
+                yield 1;
+            }
+        };
     }
 
     @Override

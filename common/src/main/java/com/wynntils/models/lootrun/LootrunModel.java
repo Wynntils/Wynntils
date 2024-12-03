@@ -132,6 +132,8 @@ public class LootrunModel extends Model {
     private static final int LOOTRUN_MASTER_REWARDS_RADIUS = 20;
     private static final String LOOTRUN_MASTER_NAME = "Lootrun Master";
 
+    public static final int BEACON_COLOR_CUSTOM_MODEL_DATA = 83;
+
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
     private static final LootrunBeaconMarkerProvider LOOTRUN_BEACON_COMPASS_PROVIDER =

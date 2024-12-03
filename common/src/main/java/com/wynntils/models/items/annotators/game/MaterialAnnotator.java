@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.items.annotators.game;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
@@ -25,18 +24,8 @@ public final class MaterialAnnotator implements GameItemAnnotator {
         String materialSource = matcher.group(1);
         String resourceType = matcher.group(2);
         String tierIndicator = matcher.group(3);
-        int tier =
-                switch (tierIndicator) {
-                    case "§8✫" -> 1;
-                    case "✫§8" -> 2;
-                    case "✫" -> 3;
-                    default -> {
-                        WynntilsMod.warn("Cannot parse tier from material: " + name);
-                        yield 1;
-                    }
-                };
 
-        MaterialProfile materialProfile = MaterialProfile.lookup(materialSource, resourceType, tier);
+        MaterialProfile materialProfile = MaterialProfile.lookup(materialSource, resourceType, tierIndicator);
         if (materialProfile == null) return null;
 
         return new MaterialItem(materialProfile);
