@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
@@ -76,7 +76,7 @@ public enum GearType {
 
     private final ClassType classReq;
     private final Item defaultItem;
-    private final List<Integer> models;
+    private final List<Float> models;
     private final List<Item> otherItems;
     private final int encodingId;
 
@@ -91,7 +91,9 @@ public enum GearType {
         this.defaultItem = defaultItem;
         this.models = firstModel == 0 && lastModel == 0
                 ? List.of()
-                : IntStream.rangeClosed(firstModel, lastModel).boxed().toList();
+                : IntStream.rangeClosed(firstModel, lastModel)
+                        .mapToObj(i -> (float) i)
+                        .toList();
         this.otherItems = otherItems;
         this.encodingId = encodingId;
     }
@@ -123,10 +125,13 @@ public enum GearType {
                 return gearType;
             }
 
-            if (gearType.defaultItem.equals(item)
-                    && customModelData != null
-                    && gearType.models.contains(customModelData.value())) {
-                return gearType;
+            if (customModelData != null) {
+                List<Float> customModelDataValue = customModelData.floats();
+                for (Float modelValue : customModelDataValue) {
+                    if (gearType.defaultItem.equals(item) && gearType.models.contains(modelValue)) {
+                        return gearType;
+                    }
+                }
             }
         }
 
@@ -164,7 +169,7 @@ public enum GearType {
         return defaultItem;
     }
 
-    public int getDefaultModel() {
+    public float getDefaultModel() {
         return models.getFirst();
     }
 
