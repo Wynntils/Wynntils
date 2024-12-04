@@ -126,9 +126,10 @@ public class HorseFunctions {
         public Double getValue(FunctionArguments arguments) {
             Optional<HorseItem> horse = Models.Horse.getHorse();
             if (horse.isEmpty()) return -1.0;
-            if (horse.get().getLevel().current() == horse.get().getLevel().max()) return -1.0;
 
-            return Models.Horse.calculateNextLevelMinutes().get().current() / 100.0;
+            Optional<CappedValue> result = Models.Horse.calculateNextLevelMinutes();
+
+            return result.isPresent() ? result.get().current() / 100.0 : -1.0;
         }
 
         @Override
