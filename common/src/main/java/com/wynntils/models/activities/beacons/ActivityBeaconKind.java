@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.models.beacons.type.BeaconKind;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -26,10 +27,10 @@ public enum ActivityBeaconKind implements BeaconKind {
     BOSS_ALTAR(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xF2D349)),
     LOOTRUN_CAMP(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x3399CC));
 
-    private final int customModelData;
+    private final float customModelData;
     private final CustomColor customColor;
 
-    ActivityBeaconKind(int customModelData, CustomColor customColor) {
+    ActivityBeaconKind(float customModelData, CustomColor customColor) {
         this.customModelData = customModelData;
         this.customColor = customColor;
     }
@@ -44,9 +45,13 @@ public enum ActivityBeaconKind implements BeaconKind {
         CustomModelData potionCustomModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
         if (potionCustomModelData == null) return false;
 
-        int customModel = potionCustomModelData.value();
+        Optional<Float> customModel = potionCustomModelData.floats().stream()
+                .filter(value -> value.equals(customModelData))
+                .findFirst();
+        if (customModel.isEmpty()) return false;
+
         int potionCustomColor = potionContents.customColor().orElse(CommonColors.WHITE.asInt());
 
-        return this.customModelData == customModel && this.customColor.equals(CustomColor.fromInt(potionCustomColor));
+        return this.customColor.equals(CustomColor.fromInt(potionCustomColor));
     }
 }
