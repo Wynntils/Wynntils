@@ -33,7 +33,8 @@ public class CommanderBar extends TrackedBar {
             activated = match.group(1).equals("a");
             duration = Integer.parseInt(match.group(2));
         } catch (NumberFormatException e) {
-            WynntilsMod.error(String.format("Failed to parse active state and duration for commander bar (%s, %ss)"));
+            WynntilsMod.error(String.format(
+                    "Failed to parse active state and duration for commander bar (%b, %ds)", activated, duration));
         }
     }
 }
