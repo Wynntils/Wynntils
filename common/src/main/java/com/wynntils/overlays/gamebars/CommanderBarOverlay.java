@@ -24,7 +24,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class CommanderBarOverlay extends BaseBarOverlay {
-    @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.commanderBar.activatedColor")
+    @Persisted
     public final Config<CustomColor> activatedColor = new Config<>(CommonColors.GREEN);
 
     public CommanderBarOverlay() {
