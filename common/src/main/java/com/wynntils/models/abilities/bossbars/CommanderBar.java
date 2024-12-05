@@ -30,7 +30,7 @@ public class CommanderBar extends TrackedBar {
     @Override
     public void onUpdateName(Matcher match) {
         try {
-            activated = match.group(1) == "c" ? true : false;
+            activated = match.group(1).equals("a");
             duration = Integer.parseInt(match.group(2));
         } catch (NumberFormatException e) {
             WynntilsMod.error(String.format("Failed to parse active state and duration for commander bar (%s, %ss)"));

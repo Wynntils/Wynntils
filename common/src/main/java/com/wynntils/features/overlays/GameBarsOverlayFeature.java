@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.gamebars.AwakenedProgressBarOverlay;
 import com.wynntils.overlays.gamebars.BloodPoolBarOverlay;
+import com.wynntils.overlays.gamebars.CommanderBarOverlay;
 import com.wynntils.overlays.gamebars.CorruptedBarOverlay;
 import com.wynntils.overlays.gamebars.FocusBarOverlay;
 import com.wynntils.overlays.gamebars.FocusedMobHealthBarOverlay;
@@ -52,4 +53,7 @@ public class GameBarsOverlayFeature extends Feature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final FocusedMobHealthBarOverlay focusedMobHealthBarOverlay = new FocusedMobHealthBarOverlay();
+
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
+    private final CommanderBarOverlay commanderBarOverlay = new CommanderBarOverlay();
 }
