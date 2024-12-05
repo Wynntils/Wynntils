@@ -224,4 +224,18 @@ public class CharacterFunctions {
                     : CappedValue.EMPTY;
         }
     }
+
+    public static class CommanderDurationFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ability.commanderBar.isActive() ? Models.Ability.commanderBar.getDuration() : 0;
+        }
+    }
+
+    public static class CommanderActivatedFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Ability.commanderBar.isActive() ? Models.Ability.commanderBar.isActivated() : false;
+        }
+    }
 }
