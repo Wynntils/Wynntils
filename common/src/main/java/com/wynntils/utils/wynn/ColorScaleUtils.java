@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -20,14 +20,13 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
 public final class ColorScaleUtils {
-
     private static final ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
 
     private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
             0f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),
             40f,
-            TextColor.fromLegacyFormat(ChatFormatting.GOLD), //Orange
+            TextColor.fromLegacyFormat(ChatFormatting.GOLD), // Orange
             70f,
             TextColor.fromLegacyFormat(ChatFormatting.YELLOW),
             90f,
@@ -94,12 +93,12 @@ public final class ColorScaleUtils {
 
         NavigableMap<Float, TextColor> map = new TreeMap<>();
 
-        map.put(useLegacyColor ? 30f : 20f , TextColor.fromLegacyFormat(ChatFormatting.RED));
+        map.put(useLegacyColor ? 30f : 20f, TextColor.fromLegacyFormat(ChatFormatting.RED));
         map.put(80f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
         map.put(aquaThreshold, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
         map.put(Float.MAX_VALUE, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
 
-        if(!useLegacyColor) {
+        if (!useLegacyColor) {
             map.put(50f, TextColor.fromLegacyFormat(ChatFormatting.GOLD));
         }
 
