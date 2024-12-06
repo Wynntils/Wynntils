@@ -1073,7 +1073,6 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "Sollte die Auswahl pro Behälter oder global gespeichert werden?",
   "feature.wynntils.professionHighlight.selectionMode.name": "Auswahlmodus",
   "feature.wynntils.questBook.name": "Questbuch-Analyse",
-  "feature.wynntils.quickCast.anotherInProgress": "Bitte warten Sie, bis der vorherige Schnellzauber abgeschlossen ist.",
   "feature.wynntils.quickCast.description": "Fügt die Möglichkeit hinzu, Zauber mit einer Tastenkombination zu wirken.",
   "feature.wynntils.quickCast.name": "Schnellzauber",
   "feature.wynntils.quickCast.notAWeapon": "Du kannst nur mit einer Waffe schnell zaubern!",

@@ -1078,7 +1078,6 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "Ska valet sparas per behållare eller globalt?",
   "feature.wynntils.professionHighlight.selectionMode.name": "Valläge",
   "feature.wynntils.questBook.name": "Uppdragsbokanalys",
-  "feature.wynntils.quickCast.anotherInProgress": "Vänligen vänta tills den tidigare snabbkastningen är klar.",
   "feature.wynntils.quickCast.description": "Lägger till möjligheten att kasta trollformler med en tangentbindning.",
   "feature.wynntils.quickCast.name": "Snabbtrollformel",
   "feature.wynntils.quickCast.notAWeapon": "Du kan endast snabbkasta med ett vapen!",

@@ -1084,7 +1084,6 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "Следует ли сохранять выбор по контейнеру или глобально?",
   "feature.wynntils.professionHighlight.selectionMode.name": "Режим Выбора",
   "feature.wynntils.questBook.name": "Анализ Книги Квестов",
-  "feature.wynntils.quickCast.anotherInProgress": "Пожалуйста, дождитесь завершения предыдущего быстрого заклинания.",
   "feature.wynntils.quickCast.description": "Добавляет возможность использовать заклинания с помощью горячей клавиши.",
   "feature.wynntils.quickCast.name": "Быстрое Заклинание",
   "feature.wynntils.quickCast.notAWeapon": "Вы можете быстро кастовать только с оружием!",

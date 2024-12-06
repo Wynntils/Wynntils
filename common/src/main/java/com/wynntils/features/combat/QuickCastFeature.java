@@ -108,10 +108,7 @@ public class QuickCastFeature extends Feature {
     }
 
     private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
-        if (!SPELL_PACKET_QUEUE.isEmpty()) {
-            sendCancelReason(Component.translatable("feature.wynntils.quickCast.anotherInProgress"));
-            return;
-        }
+        if (!SPELL_PACKET_QUEUE.isEmpty()) return;
 
         boolean isArcher = Models.Character.getClassType() == ClassType.ARCHER;
 
