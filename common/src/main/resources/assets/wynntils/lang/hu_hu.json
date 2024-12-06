@@ -1070,6 +1070,7 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "A kiválasztást tárolónként vagy globálisan kell menteni?",
   "feature.wynntils.professionHighlight.selectionMode.name": "Kiválasztási Mód",
   "feature.wynntils.questBook.name": "Küldetéskönyv Elemzés",
+  "feature.wynntils.quickCast.anotherInProgress": "Kérjük, várjon, amíg az előző gyorsvarázslat befejeződik.",
   "feature.wynntils.quickCast.description": "Lehetővé teszi a varázslatok billentyűparancsokkal történő elvarázsolását.",
   "feature.wynntils.quickCast.name": "Gyors Varázslat",
   "feature.wynntils.quickCast.notAWeapon": "Csak fegyverrel lehet gyorsan varázsolni!",

@@ -1070,6 +1070,7 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "Moet de selectie per container of globaal worden opgeslagen?",
   "feature.wynntils.professionHighlight.selectionMode.name": "Selectiemodus",
   "feature.wynntils.questBook.name": "Questboek Analyse",
+  "feature.wynntils.quickCast.anotherInProgress": "Wacht alstublieft tot de vorige snel-cast is voltooid.",
   "feature.wynntils.quickCast.description": "Voegt de mogelijkheid toe om spreuken te casten met een sneltoets.",
   "feature.wynntils.quickCast.name": "Snelle Spreuk",
   "feature.wynntils.quickCast.notAWeapon": "Je kunt alleen snel spreuken uitspreken met een wapen!",

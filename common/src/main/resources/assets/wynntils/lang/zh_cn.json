@@ -1070,6 +1070,7 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "选择应按容器保存还是全局保存？",
   "feature.wynntils.professionHighlight.selectionMode.name": "选择模式",
   "feature.wynntils.questBook.name": "任务书分析",
+  "feature.wynntils.quickCast.anotherInProgress": "请等待上一个快速施法完成。",
   "feature.wynntils.quickCast.description": "增加通过快捷键施放法术的功能。",
   "feature.wynntils.quickCast.name": "快速施法",
   "feature.wynntils.quickCast.notAWeapon": "你只能用武器快速施法！",

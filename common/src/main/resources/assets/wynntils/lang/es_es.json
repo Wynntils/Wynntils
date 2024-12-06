@@ -1070,6 +1070,7 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "¿Debería guardarse la selección por contenedor o globalmente?",
   "feature.wynntils.professionHighlight.selectionMode.name": "Modo de Selección",
   "feature.wynntils.questBook.name": "Análisis del Libro de Misiones",
+  "feature.wynntils.quickCast.anotherInProgress": "Por favor, espera a que termine el lanzamiento rápido anterior.",
   "feature.wynntils.quickCast.description": "Añade la capacidad de lanzar hechizos con una tecla de acceso rápido.",
   "feature.wynntils.quickCast.name": "Lanzamiento Rápido de Hechizos",
   "feature.wynntils.quickCast.notAWeapon": "¡Solo puedes lanzar rápidamente con un arma!",

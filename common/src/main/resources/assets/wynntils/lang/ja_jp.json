@@ -1070,6 +1070,7 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "選択はコンテナごとに保存するべきですか、それともグローバルに保存するべきですか？",
   "feature.wynntils.professionHighlight.selectionMode.name": "選択モード",
   "feature.wynntils.questBook.name": "クエストブック分析",
+  "feature.wynntils.quickCast.anotherInProgress": "前のクイックキャストが終了するのを待ってください。",
   "feature.wynntils.quickCast.description": "キーを押して呪文を唱える機能を追加します。",
   "feature.wynntils.quickCast.name": "クイックスペルキャスト",
   "feature.wynntils.quickCast.notAWeapon": "武器でのみクイックキャストが可能です！",

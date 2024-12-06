@@ -1070,6 +1070,7 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "선택을 컨테이너별로 저장해야 합니까, 아니면 전역적으로 저장해야 합니까?",
   "feature.wynntils.professionHighlight.selectionMode.name": "선택 모드",
   "feature.wynntils.questBook.name": "퀘스트 북 분석",
+  "feature.wynntils.quickCast.anotherInProgress": "이전 빠른 시전이 완료될 때까지 기다려주세요.",
   "feature.wynntils.quickCast.description": "단축키로 주문을 시전할 수 있는 기능을 추가합니다.",
   "feature.wynntils.quickCast.name": "빠른 주문 시전",
   "feature.wynntils.quickCast.notAWeapon": "무기로만 빠른 시전이 가능합니다!",

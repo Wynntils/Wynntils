@@ -1187,6 +1187,7 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "Should the selection be saved per container or globally?",
   "feature.wynntils.professionHighlight.selectionMode.name": "Selection Mode",
   "feature.wynntils.questBook.name": "Quest Book Analysis",
+  "feature.wynntils.quickCast.anotherInProgress": "Please wait for the previous quick-cast to finish.",
   "feature.wynntils.quickCast.blockAttacks.description": "Should left and right clicks be blocked whilst a quick cast is in progress?",
   "feature.wynntils.quickCast.blockAttacks.name": "Block Attacks during Quick Cast",
   "feature.wynntils.quickCast.checkValidWeapon.description": "Should your held item be checked that it is a compatible weapon?",

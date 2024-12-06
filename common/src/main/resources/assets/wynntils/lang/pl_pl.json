@@ -1070,6 +1070,7 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "Czy wybór powinien być zapisywany dla każdego pojemnika czy globalnie?",
   "feature.wynntils.professionHighlight.selectionMode.name": "Tryb Wybierania",
   "feature.wynntils.questBook.name": "Analiza Księgi Zadań",
+  "feature.wynntils.quickCast.anotherInProgress": "Proszę czekać, aż poprzednie szybkie rzucanie się zakończy.",
   "feature.wynntils.quickCast.description": "Dodaje możliwość rzucania zaklęć za pomocą skrótu klawiszowego.",
   "feature.wynntils.quickCast.name": "Szybkie Rzucanie Zaklęć",
   "feature.wynntils.quickCast.notAWeapon": "Możesz szybko rzucać zaklęcia tylko z bronią!",

@@ -1070,6 +1070,7 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "La selezione deve essere salvata per contenitore o globalmente?",
   "feature.wynntils.professionHighlight.selectionMode.name": "Modalità di Selezione",
   "feature.wynntils.questBook.name": "Analisi del Libro delle Missioni",
+  "feature.wynntils.quickCast.anotherInProgress": "Attendere il completamento del lancio rapido precedente.",
   "feature.wynntils.quickCast.description": "Aggiunge la possibilità di lanciare incantesimi con un tasto di scelta rapida.",
   "feature.wynntils.quickCast.name": "Lancio Rapido di Incantesimi",
   "feature.wynntils.quickCast.notAWeapon": "Puoi lanciare rapidamente solo con un'arma!",
