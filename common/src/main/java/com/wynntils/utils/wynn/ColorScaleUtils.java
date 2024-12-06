@@ -21,6 +21,8 @@ public final class ColorScaleUtils {
     private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
             0f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),
+            40f,
+            TextColor.fromLegacyFormat(ChatFormatting.GOLD), //Orange
             70f,
             TextColor.fromLegacyFormat(ChatFormatting.YELLOW),
             90f,
@@ -29,11 +31,13 @@ public final class ColorScaleUtils {
             TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
 
     private static final NavigableMap<Float, TextColor> FLAT_MAP = new TreeMap<>(Map.of(
-            30f,
+            20f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),
+            50f,
+            TextColor.fromLegacyFormat(ChatFormatting.GOLD), //Orange
             80f,
             TextColor.fromLegacyFormat(ChatFormatting.YELLOW),
-            96f,
+            95f,
             TextColor.fromLegacyFormat(ChatFormatting.GREEN),
             Float.MAX_VALUE,
             TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
