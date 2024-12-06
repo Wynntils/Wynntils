@@ -42,13 +42,15 @@ public class QuickCastFeature extends Feature {
     private final KeyBind castFirstSpell = new KeyBind("Cast 1st Spell", GLFW.GLFW_KEY_Z, false, this::castFirstSpell);
 
     @RegisterKeyBind
-    private final KeyBind castSecondSpell = new KeyBind("Cast 2nd Spell", GLFW.GLFW_KEY_X, false, this::castSecondSpell);
+    private final KeyBind castSecondSpell =
+            new KeyBind("Cast 2nd Spell", GLFW.GLFW_KEY_X, false, this::castSecondSpell);
 
     @RegisterKeyBind
     private final KeyBind castThirdSpell = new KeyBind("Cast 3rd Spell", GLFW.GLFW_KEY_C, false, this::castThirdSpell);
 
     @RegisterKeyBind
-    private final KeyBind castFourthSpell = new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, false, this::castFourthSpell);
+    private final KeyBind castFourthSpell =
+            new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, false, this::castFourthSpell);
 
     @Persisted
     private final Config<Integer> leftClickTickDelay = new Config<>(3);
