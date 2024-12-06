@@ -1,9 +1,23 @@
+## [2.4.6](https://github.com/Wynntils/Wynntils/compare/v2.4.5...v2.4.6) (2024-12-06)
+
+
+### New Features
+
+* Add support for Commander Bar [skip ci] ([#3011](https://github.com/Wynntils/Wynntils/issues/3011)) ([9b83f5a](https://github.com/Wynntils/Wynntils/commit/9b83f5ac3bcf9db45fcc072649a70f4a05d9d9ac))
+* change item stat color lerping [skip ci] ([#3009](https://github.com/Wynntils/Wynntils/issues/3009)) ([1b6a51d](https://github.com/Wynntils/Wynntils/commit/1b6a51da2c928b85a40d42df75f28d8f1a19f007))
+* Rework quick casting ([#3012](https://github.com/Wynntils/Wynntils/issues/3012)) ([f6d7a1d](https://github.com/Wynntils/Wynntils/commit/f6d7a1df761fc232acddfc3656e71e3096542cab))
+
 ## [2.4.5](https://github.com/Wynntils/Wynntils/compare/v2.4.4...v2.4.5) (2024-12-03)
 
 
 ### Bug Fixes
 
 * Fix quick casts and horse mounting using wrong player rotation ([#3010](https://github.com/Wynntils/Wynntils/issues/3010)) ([1fcb9f5](https://github.com/Wynntils/Wynntils/commit/1fcb9f50713fd278e960c88dab6a8835a7326ab9))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.4.5 [skip ci] ([8e9224f](https://github.com/Wynntils/Wynntils/commit/8e9224f91a04f637c74b0e641f7af8678aa67309))
 
 ## [2.4.4](https://github.com/Wynntils/Wynntils/compare/v2.4.3...v2.4.4) (2024-11-30)
 
@@ -58,27 +72,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2983](https://github.com/Wynntils/Wynntils/issues/2983)) ([a7efba1](https://github.com/Wynntils/Wynntils/commit/a7efba190e35d6abe8d99909858a1d841c2316af))
 * **release:** v2.4.2 [skip ci] ([c469b1c](https://github.com/Wynntils/Wynntils/commit/c469b1c7000e134f520e7a310d1e0b8ed46a2f77))
-
-## [2.4.1](https://github.com/Wynntils/Wynntils/compare/v2.4.0...v2.4.1) (2024-11-21)
-
-
-### New Features
-
-* Redirect housing master added blocks message [skip ci] ([#2990](https://github.com/Wynntils/Wynntils/issues/2990)) ([be10f9f](https://github.com/Wynntils/Wynntils/commit/be10f9f731af76d7acaea6278b085a95cfd3e408))
-
-
-### Bug Fixes
-
-* Add some missing stats and rerolls to gear viewing ([#2989](https://github.com/Wynntils/Wynntils/issues/2989)) ([50d5ae4](https://github.com/Wynntils/Wynntils/commit/50d5ae48246a052e8db8531848dc2ecea630767e))
-* Fix disconnected event being sent on server transfer [skip ci] ([#2985](https://github.com/Wynntils/Wynntils/issues/2985)) ([d57ee44](https://github.com/Wynntils/Wynntils/commit/d57ee4472503771d6db154b9c6bf04bb1c017671))
-* fix wrong preposition in settings export tooltip [skip ci] ([#2988](https://github.com/Wynntils/Wynntils/issues/2988)) ([7b9d4e1](https://github.com/Wynntils/Wynntils/commit/7b9d4e117821ef53a9c8b551680da483b7dd976e))
-* Lookup your own info on world join [skip ci] ([#2986](https://github.com/Wynntils/Wynntils/issues/2986)) ([66367b8](https://github.com/Wynntils/Wynntils/commit/66367b8823ccbbfe2e8d92cc700cc27f6cab4bc5))
-* Scale loading screen background correctly [skip ci] ([#2991](https://github.com/Wynntils/Wynntils/issues/2991)) ([6c22ca1](https://github.com/Wynntils/Wynntils/commit/6c22ca1e2abc612a6b4e4022c8b5e4b8e671f123))
-* Update key for raid completion leaderboards [skip ci] ([#2984](https://github.com/Wynntils/Wynntils/issues/2984)) ([ee5a6b3](https://github.com/Wynntils/Wynntils/commit/ee5a6b39e2789f76db45fbb7170c8c7d416525f1))
-
-
-### Miscellaneous Chores
-
-* Disable custom lootrun beacons until tracking issues fixed [skip ci] ([#2992](https://github.com/Wynntils/Wynntils/issues/2992)) ([b8775c0](https://github.com/Wynntils/Wynntils/commit/b8775c0f8d9c9efbf560009e355929a974284690))
-* **release:** v2.4.1 [skip ci] ([c8ea1bf](https://github.com/Wynntils/Wynntils/commit/c8ea1bfb033496e8f496902663d4c6b649782251))
 
