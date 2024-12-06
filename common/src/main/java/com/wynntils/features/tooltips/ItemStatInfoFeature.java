@@ -48,6 +48,12 @@ public class ItemStatInfoFeature extends Feature {
     public final Config<Boolean> colorLerp = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> legacyColors = new Config<>(false);
+
+    @Persisted
+    public final Config<Boolean> legacyScale = new Config<>(false);
+
+    @Persisted
     public final Config<Integer> decimalPlaces = new Config<>(1);
 
     @Persisted
@@ -79,6 +85,11 @@ public class ItemStatInfoFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> showMaxValues = new Config<>(true);
+
+    @Override
+    protected void onConfigUpdate(Config<?> config) {
+        ColorScaleUtils.recreateFlatMap();
+    }
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {

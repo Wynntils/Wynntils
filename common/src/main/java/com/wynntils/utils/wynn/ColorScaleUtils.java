@@ -4,6 +4,8 @@
  */
 package com.wynntils.utils.wynn;
 
+import com.wynntils.core.components.Managers;
+import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.utils.MathUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,6 +20,9 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
 public final class ColorScaleUtils {
+
+    private static final ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
+
     private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
             0f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),
@@ -30,17 +35,11 @@ public final class ColorScaleUtils {
             100f,
             TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
 
-    private static final NavigableMap<Float, TextColor> FLAT_MAP = new TreeMap<>(Map.of(
-            20f,
-            TextColor.fromLegacyFormat(ChatFormatting.RED),
-            50f,
-            TextColor.fromLegacyFormat(ChatFormatting.GOLD), //Orange
-            80f,
-            TextColor.fromLegacyFormat(ChatFormatting.YELLOW),
-            95f,
-            TextColor.fromLegacyFormat(ChatFormatting.GREEN),
-            Float.MAX_VALUE,
-            TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
+    private static NavigableMap<Float, TextColor> flatMap = createFlatMap();
+
+    public static void recreateFlatMap() {
+        flatMap = createFlatMap();
+    }
 
     /**
      * Create the colored percentage component for an item ID
@@ -86,6 +85,24 @@ public final class ColorScaleUtils {
     }
 
     private static TextColor getFlatPercentageColor(float percentage) {
-        return FLAT_MAP.higherEntry(percentage).getValue();
+        return flatMap.higherEntry(percentage).getValue();
+    }
+
+    private static NavigableMap<Float, TextColor> createFlatMap() {
+        boolean useLegacyColor = isif.legacyColors.get();
+        float aquaThreshold = isif.legacyScale.get() ? 96f : 95f;
+
+        NavigableMap<Float, TextColor> map = new TreeMap<>();
+
+        map.put(useLegacyColor ? 30f : 20f , TextColor.fromLegacyFormat(ChatFormatting.RED));
+        map.put(80f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+        map.put(aquaThreshold, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+        map.put(Float.MAX_VALUE, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
+
+        if(!useLegacyColor) {
+            map.put(50f, TextColor.fromLegacyFormat(ChatFormatting.GOLD));
+        }
+
+        return map;
     }
 }
