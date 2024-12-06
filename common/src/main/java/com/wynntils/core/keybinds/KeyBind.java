@@ -18,6 +18,8 @@ public class KeyBind {
 
     private final KeyMapping keyMapping;
 
+    private boolean isPressed = false;
+
     /**
      * @param name             Name of the keybind
      * @param keyCode          The keyCode of the default keybind. Use {@link org.lwjgl.glfw.GLFW} for easy
@@ -91,6 +93,14 @@ public class KeyBind {
 
     public boolean onlyFirstPress() {
         return firstPress;
+    }
+
+    public boolean isPressed() {
+        return isPressed;
+    }
+
+    public void setIsPressed(boolean isPressed) {
+        this.isPressed = isPressed;
     }
 
     public KeyMapping getKeyMapping() {
