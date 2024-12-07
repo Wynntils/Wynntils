@@ -34,7 +34,14 @@ public class MessageFilterFeature extends Feature {
                             "^§cSelect a character! Each character is saved individually across all servers, you can come back at any time with /class and select another character!$"),
                     null),
             Pair.of(Pattern.compile("^ +§6§lWelcome to Wynncraft!$"), null),
-            Pair.of(Pattern.compile("^ +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com$"), null));
+            Pair.of(Pattern.compile("^ +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com$"), null)
+    );
+
+    private static final List<Pair<Pattern, Pattern>> BLACKFRIDAY = List.of(
+            Pair.of(Pattern.compile("^ +(§.)*(Black Friday Sale!) *$"), null),
+            Pair.of(Pattern.compile("^ +(§.)*(Up to )(§.)*\\d*\\% off (§.)*at (§.)*wynncraft\\.com/store *$"), null),
+            Pair.of(Pattern.compile("^ +(§.)*(The sale ends in )(§.)*\\d* days\\. *$"), null)
+    );
 
     private static final List<Pair<Pattern, Pattern>> SYSTEM_INFO =
             List.of(Pair.of(Pattern.compile("^(§r)?§.\\[Info\\] .*$"), Pattern.compile("^(§8)?\\[Info\\] .*$")));
