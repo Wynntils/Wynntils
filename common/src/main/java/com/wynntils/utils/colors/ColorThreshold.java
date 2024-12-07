@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.utils.colors;
 
 public enum ColorThreshold {
@@ -6,10 +10,11 @@ public enum ColorThreshold {
 
     private final float threshold;
 
-
     ColorThreshold(float threshold) {
         this.threshold = threshold;
     }
 
-    public float getThreshold() { return threshold; }
+    public float getThreshold() {
+        return threshold;
+    }
 }
