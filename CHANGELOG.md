@@ -1,3 +1,11 @@
+## [2.4.7](https://github.com/Wynntils/Wynntils/compare/v2.4.6...v2.4.7) (2024-12-07)
+
+
+### Bug Fixes
+
+* Fix quick casts blocking casts on world change [skip ci] ([#3015](https://github.com/Wynntils/Wynntils/issues/3015)) ([3062eff](https://github.com/Wynntils/Wynntils/commit/3062eff655b0ac7c376d2e42e8fc7d161a906414))
+* More quick casting fixes ([#3016](https://github.com/Wynntils/Wynntils/issues/3016)) ([0d8b5b9](https://github.com/Wynntils/Wynntils/commit/0d8b5b9916e722951757708798039f78ee97b438))
+
 ## [2.4.6](https://github.com/Wynntils/Wynntils/compare/v2.4.5...v2.4.6) (2024-12-06)
 
 
@@ -6,6 +14,11 @@
 * Add support for Commander Bar [skip ci] ([#3011](https://github.com/Wynntils/Wynntils/issues/3011)) ([9b83f5a](https://github.com/Wynntils/Wynntils/commit/9b83f5ac3bcf9db45fcc072649a70f4a05d9d9ac))
 * change item stat color lerping [skip ci] ([#3009](https://github.com/Wynntils/Wynntils/issues/3009)) ([1b6a51d](https://github.com/Wynntils/Wynntils/commit/1b6a51da2c928b85a40d42df75f28d8f1a19f007))
 * Rework quick casting ([#3012](https://github.com/Wynntils/Wynntils/issues/3012)) ([f6d7a1d](https://github.com/Wynntils/Wynntils/commit/f6d7a1df761fc232acddfc3656e71e3096542cab))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.4.6 [skip ci] ([73c996b](https://github.com/Wynntils/Wynntils/commit/73c996bdbaa3134ff7f94dd64eff883d09b0abbd))
 
 ## [2.4.5](https://github.com/Wynntils/Wynntils/compare/v2.4.4...v2.4.5) (2024-12-03)
 
@@ -58,18 +71,4 @@
 
 * **release:** v2.4.3 [skip ci] ([2736847](https://github.com/Wynntils/Wynntils/commit/2736847751fb768e69f954cdbb01162e31e23507))
 * Warn users when loading lootruns on fabulous graphics [skip ci] ([#2994](https://github.com/Wynntils/Wynntils/issues/2994)) ([16d2b39](https://github.com/Wynntils/Wynntils/commit/16d2b39555c4aa01f60d06a35e974f93b49b6778))
-
-## [2.4.2](https://github.com/Wynntils/Wynntils/compare/v2.4.1...v2.4.2) (2024-11-21)
-
-
-### Bug Fixes
-
-* Add raw max mana to legacy stat ordering ([#2995](https://github.com/Wynntils/Wynntils/issues/2995)) ([8ae3821](https://github.com/Wynntils/Wynntils/commit/8ae3821c909e79958007544d787eea36b7cea60d))
-* Scale loading screen background properly this time [skip ci] ([#2997](https://github.com/Wynntils/Wynntils/issues/2997)) ([839d7b6](https://github.com/Wynntils/Wynntils/commit/839d7b6ae505170483ef4f2c8db80a4e0f81c0e2))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2983](https://github.com/Wynntils/Wynntils/issues/2983)) ([a7efba1](https://github.com/Wynntils/Wynntils/commit/a7efba190e35d6abe8d99909858a1d841c2316af))
-* **release:** v2.4.2 [skip ci] ([c469b1c](https://github.com/Wynntils/Wynntils/commit/c469b1c7000e134f520e7a310d1e0b8ed46a2f77))
 
