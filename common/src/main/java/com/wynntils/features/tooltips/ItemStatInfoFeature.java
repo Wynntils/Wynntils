@@ -29,11 +29,11 @@ import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.Set;
-import java.util.NavigableMap;
 import java.util.TreeMap;
-import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -91,7 +91,6 @@ public class ItemStatInfoFeature extends Feature {
     @Persisted
     public final Config<Boolean> showMaxValues = new Config<>(true);
 
-
     private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
             0f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),
@@ -106,13 +105,10 @@ public class ItemStatInfoFeature extends Feature {
 
     private NavigableMap<Float, TextColor> flatMap = createFlatMap();
 
-
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        if(legacyColors.valueChanged() || legacyThreshold.valueChanged())
-            flatMap = createFlatMap();
+        if (legacyColors.valueChanged() || legacyThreshold.valueChanged()) flatMap = createFlatMap();
     }
-
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
@@ -151,7 +147,6 @@ public class ItemStatInfoFeature extends Feature {
         }
     }
 
-
     public NavigableMap<Float, TextColor> getColorMap() {
         return colorLerp.get() ? LERP_MAP : flatMap;
     }
@@ -176,7 +171,6 @@ public class ItemStatInfoFeature extends Feature {
 
         return map;
     }
-
 
     public class IdentificationDecorator implements TooltipIdentificationDecorator {
         @Override
@@ -249,8 +243,8 @@ public class ItemStatInfoFeature extends Feature {
         private MutableComponent getPercentSuffix(
                 TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
             float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
-            MutableComponent percentageTextComponent =
-                    ColorScaleUtils.getPercentageTextComponent(getColorMap(), percentage, colorLerp.get(), decimalPlaces.get());
+            MutableComponent percentageTextComponent = ColorScaleUtils.getPercentageTextComponent(
+                    getColorMap(), percentage, colorLerp.get(), decimalPlaces.get());
 
             return percentageTextComponent;
         }

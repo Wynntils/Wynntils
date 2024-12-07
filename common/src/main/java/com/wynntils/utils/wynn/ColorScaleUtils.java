@@ -26,9 +26,13 @@ public final class ColorScaleUtils {
      *
      * @return the styled percentage text component
      */
-    public static MutableComponent getPercentageTextComponent(NavigableMap<Float, TextColor> colorMap, float percentage, boolean colorLerp, int decimalPlaces) {
+    public static MutableComponent getPercentageTextComponent(
+            NavigableMap<Float, TextColor> colorMap, float percentage, boolean colorLerp, int decimalPlaces) {
         Style color = Style.EMPTY
-                .withColor(colorLerp ? getPercentageColor(colorMap, percentage) : getFlatPercentageColor(colorMap, percentage))
+                .withColor(
+                        colorLerp
+                                ? getPercentageColor(colorMap, percentage)
+                                : getFlatPercentageColor(colorMap, percentage))
                 .withItalic(false);
         String percentString = new BigDecimal(percentage)
                 .setScale(decimalPlaces, RoundingMode.DOWN)
