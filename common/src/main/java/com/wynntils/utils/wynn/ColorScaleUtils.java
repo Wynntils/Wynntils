@@ -89,7 +89,7 @@ public final class ColorScaleUtils {
 
     private static NavigableMap<Float, TextColor> createFlatMap() {
         boolean useLegacyColor = isif.legacyColors.get();
-        float aquaThreshold = isif.legacyScale.get() ? 96f : 95f;
+        float aquaThreshold = isif.legacyThreshold.get().getThreshold();
 
         NavigableMap<Float, TextColor> map = new TreeMap<>();
 

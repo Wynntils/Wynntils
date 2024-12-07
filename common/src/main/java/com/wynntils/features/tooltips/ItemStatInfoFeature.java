@@ -20,6 +20,7 @@ import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.utils.colors.ColorThreshold;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
@@ -51,7 +52,7 @@ public class ItemStatInfoFeature extends Feature {
     public final Config<Boolean> legacyColors = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> legacyScale = new Config<>(false);
+    public final Config<ColorThreshold> legacyThreshold = new Config<>(ColorThreshold.NINETY_FIVE);
 
     @Persisted
     public final Config<Integer> decimalPlaces = new Config<>(1);
