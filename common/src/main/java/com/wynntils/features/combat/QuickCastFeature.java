@@ -91,6 +91,8 @@ public class QuickCastFeature extends Feature {
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
         SPELL_PACKET_QUEUE.clear();
+        lastSpellTick = 0;
+        packetCountdown = 0;
     }
 
     private void castFirstSpell() {
@@ -164,6 +166,7 @@ public class QuickCastFeature extends Feature {
         lastSpellTick = McUtils.player().tickCount;
 
         if (SPELL_PACKET_QUEUE.isEmpty()) {
+            lastSpellTick = 0;
             packetCountdown = Math.max(packetCountdown, spellCooldown.get());
         }
     }
@@ -171,6 +174,8 @@ public class QuickCastFeature extends Feature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
         SPELL_PACKET_QUEUE.clear();
+        lastSpellTick = 0;
+        packetCountdown = 0;
     }
 
     private static void sendCancelReason(MutableComponent reason) {
