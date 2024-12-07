@@ -165,6 +165,7 @@ public class QuickCastFeature extends Feature {
         lastSpellTick = McUtils.player().tickCount;
 
         if (SPELL_PACKET_QUEUE.isEmpty()) {
+            lastSpellTick = 0;
             packetCountdown = Math.max(packetCountdown, spellCooldown.get());
         }
     }
