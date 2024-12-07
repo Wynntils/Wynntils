@@ -68,10 +68,6 @@ public class GearItem extends GameItem
         return gearInstance.setInstance();
     }
 
-    public boolean isUnidentified() {
-        return gearInstance == null;
-    }
-
     @Override
     public GearTier getGearTier() {
         return gearInfo.tier();
