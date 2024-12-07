@@ -39,7 +39,7 @@ public class HorseFunctions {
             Optional<HorseItem> horse = Models.Horse.getHorse();
             if (horse.isEmpty()) return CappedValue.EMPTY;
 
-            Optional<CappedValue> result = Models.Horse.calculateNextLevelMinutes();
+            Optional<CappedValue> result = Models.Horse.calculateNextLevelSeconds();
 
             return result.isPresent() ? result.get() : CappedValue.EMPTY;
         }
@@ -127,9 +127,9 @@ public class HorseFunctions {
             Optional<HorseItem> horse = Models.Horse.getHorse();
             if (horse.isEmpty()) return -1.0;
 
-            Optional<CappedValue> result = Models.Horse.calculateNextLevelMinutes();
+            Optional<CappedValue> result = Models.Horse.calculateNextLevelSeconds();
 
-            return result.isPresent() ? result.get().current() / 100.0 : -1.0;
+            return result.isPresent() ? result.get().current() / 60.0 : -1.0;
         }
 
         @Override
