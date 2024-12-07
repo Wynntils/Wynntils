@@ -26,9 +26,14 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ColorScaleUtils;
-
-import java.util.*;
-
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
+import java.util.NavigableMap;
+import java.util.TreeMap;
+import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

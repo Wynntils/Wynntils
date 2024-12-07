@@ -4,16 +4,12 @@
  */
 package com.wynntils.utils.wynn;
 
-import com.wynntils.core.components.Managers;
-import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.utils.MathUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Objects;
-import java.util.TreeMap;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
