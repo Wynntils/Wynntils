@@ -734,8 +734,6 @@
   "feature.wynntils.itemStatInfo.identificationsOrdering.name": "Identificatie Ordening",
   "feature.wynntils.itemStatInfo.legacyColors.description": "Moet de gekleurde procentuele weergave voor het item-ID de legacy-kleuren gebruiken?",
   "feature.wynntils.itemStatInfo.legacyColors.name": "Legacy-kleuren",
-  "feature.wynntils.itemStatInfo.legacyScale.description": "Moet de perfecte kleur beginnen bij 95 of 96?",
-  "feature.wynntils.itemStatInfo.legacyScale.name": "Legacy-kleurenschaal",
   "feature.wynntils.itemStatInfo.legacyThreshold.description": "Moet de perfecte kleur beginnen bij 95 of 96?",
   "feature.wynntils.itemStatInfo.legacyThreshold.name": "Oude drempel",
   "feature.wynntils.itemStatInfo.name": "Item Statistieken Info",

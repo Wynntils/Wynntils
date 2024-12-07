@@ -734,8 +734,6 @@
   "feature.wynntils.itemStatInfo.identificationsOrdering.name": "識別排序",
   "feature.wynntils.itemStatInfo.legacyColors.description": "物品ID的彩色百分比是否應該使用舊版顏色？",
   "feature.wynntils.itemStatInfo.legacyColors.name": "舊版顏色",
-  "feature.wynntils.itemStatInfo.legacyScale.description": "完美的顏色是否應該從95或96開始出現？",
-  "feature.wynntils.itemStatInfo.legacyScale.name": "舊版縮放",
   "feature.wynntils.itemStatInfo.legacyThreshold.description": "完美的顏色是否應該從95或96開始出現？",
   "feature.wynntils.itemStatInfo.legacyThreshold.name": "舊版閾值",
   "feature.wynntils.itemStatInfo.name": "物品統計信息",

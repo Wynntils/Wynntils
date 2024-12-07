@@ -740,8 +740,6 @@
   "feature.wynntils.itemStatInfo.identificationsOrdering.name": "Identifieringsordning",
   "feature.wynntils.itemStatInfo.legacyColors.description": "Ska den färgade procenten för objektets ID använda de gamla färgerna?",
   "feature.wynntils.itemStatInfo.legacyColors.name": "Gamla färger",
-  "feature.wynntils.itemStatInfo.legacyScale.description": "Ska den perfekta färgen börja visas från 95 eller 96?",
-  "feature.wynntils.itemStatInfo.legacyScale.name": "Gammal skala",
   "feature.wynntils.itemStatInfo.legacyThreshold.description": "Ska den perfekta färgen börja visas från 95 eller 96?",
   "feature.wynntils.itemStatInfo.legacyThreshold.name": "Gammal tröskel",
   "feature.wynntils.itemStatInfo.name": "Föremålsstatistikinfo",

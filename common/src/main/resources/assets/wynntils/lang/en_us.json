@@ -838,8 +838,6 @@
   "feature.wynntils.itemStatInfo.identificationsOrdering.name": "Identification Ordering",
   "feature.wynntils.itemStatInfo.legacyColors.description": "Should the colored percentage for item ID use the legacy colors?",
   "feature.wynntils.itemStatInfo.legacyColors.name": "Legacy colors",
-  "feature.wynntils.itemStatInfo.legacyScale.description": "Should the perfect color start appearing at 95 or 96?",
-  "feature.wynntils.itemStatInfo.legacyScale.name": "Legacy scaling",
   "feature.wynntils.itemStatInfo.legacyThreshold.description": "Should the perfect color start appearing at 95 or 96?",
   "feature.wynntils.itemStatInfo.legacyThreshold.name": "Legacy threshold",
   "feature.wynntils.itemStatInfo.name": "Item Statistics Info",

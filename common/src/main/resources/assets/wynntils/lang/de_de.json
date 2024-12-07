@@ -737,8 +737,6 @@
   "feature.wynntils.itemStatInfo.identificationsOrdering.name": "Identifikationsreihenfolge",
   "feature.wynntils.itemStatInfo.legacyColors.description": "Soll die farbige Prozentanzeige für die Gegenstand-ID die Legacy Farben verwenden?",
   "feature.wynntils.itemStatInfo.legacyColors.name": "Legacy Farben",
-  "feature.wynntils.itemStatInfo.legacyScale.description": "Soll die perfekte Farbe bei 95 oder 96 erscheinen?",
-  "feature.wynntils.itemStatInfo.legacyScale.name": "Legacy Skalierung",
   "feature.wynntils.itemStatInfo.legacyThreshold.description": "Soll die perfekte Farbe ab 95 oder 96 erscheinen?",
   "feature.wynntils.itemStatInfo.legacyThreshold.name": "Alte Schwelle",
   "feature.wynntils.itemStatInfo.name": "Gegenstandsstatistik-Info",

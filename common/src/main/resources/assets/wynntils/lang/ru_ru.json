@@ -748,8 +748,6 @@
   "feature.wynntils.itemStatInfo.identificationsOrdering.name": "Упорядочивание Идентификаций",
   "feature.wynntils.itemStatInfo.legacyColors.description": "Должен ли цветной процент для ID предмета использовать старые цвета?",
   "feature.wynntils.itemStatInfo.legacyColors.name": "Старые цвета",
-  "feature.wynntils.itemStatInfo.legacyScale.description": "Должен ли идеальный цвет начинать появляться с 95 или 96?",
-  "feature.wynntils.itemStatInfo.legacyScale.name": "Старое масштабирование",
   "feature.wynntils.itemStatInfo.legacyThreshold.description": "Должен ли идеальный цвет начинать появляться с 95 или 96?",
   "feature.wynntils.itemStatInfo.legacyThreshold.name": "Старый порог",
   "feature.wynntils.itemStatInfo.name": "Информация о Статистике Предметов",

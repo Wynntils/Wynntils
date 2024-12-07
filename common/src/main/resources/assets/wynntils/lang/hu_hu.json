@@ -734,8 +734,6 @@
   "feature.wynntils.itemStatInfo.identificationsOrdering.name": "Azonosítók Rendezése",
   "feature.wynntils.itemStatInfo.legacyColors.description": "Használja-e a színezett százalék az objektumazonosítóhoz a régi színeket?",
   "feature.wynntils.itemStatInfo.legacyColors.name": "Régi színek",
-  "feature.wynntils.itemStatInfo.legacyScale.description": "A tökéletes színnek 95-ön vagy 96-on kell megjelenni?",
-  "feature.wynntils.itemStatInfo.legacyScale.name": "Régi skálázás",
   "feature.wynntils.itemStatInfo.legacyThreshold.description": "A tökéletes szín 95-ös vagy 96-os értéktől jelenjen meg?",
   "feature.wynntils.itemStatInfo.legacyThreshold.name": "Régi küszöb",
   "feature.wynntils.itemStatInfo.name": "Tárgy Statisztikai Információ",

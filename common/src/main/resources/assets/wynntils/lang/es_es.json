@@ -734,8 +734,6 @@
   "feature.wynntils.itemStatInfo.identificationsOrdering.name": "Ordenación de Identificaciones",
   "feature.wynntils.itemStatInfo.legacyColors.description": "¿Debería el porcentaje coloreado para el ID del objeto usar los colores antiguos?",
   "feature.wynntils.itemStatInfo.legacyColors.name": "Colores antiguos",
-  "feature.wynntils.itemStatInfo.legacyScale.description": "¿Debería el color perfecto comenzar a aparecer en 95 o 96?",
-  "feature.wynntils.itemStatInfo.legacyScale.name": "Escalado antiguos",
   "feature.wynntils.itemStatInfo.legacyThreshold.description": "¿Debe el color perfecto comenzar a aparecer desde el 95 o 96?",
   "feature.wynntils.itemStatInfo.legacyThreshold.name": "Umbral antiguo",
   "feature.wynntils.itemStatInfo.name": "Información de Estadísticas de Objetos",
