@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -30,6 +30,18 @@ public class HorseFunctions {
             if (horse.isEmpty()) return CappedValue.EMPTY;
 
             return horse.get().getXp();
+        }
+    }
+
+    public static class CappedHorseLevelTimeFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return CappedValue.EMPTY;
+
+            Optional<CappedValue> result = Models.Horse.calculateNextLevelSeconds();
+
+            return result.isPresent() ? result.get() : CappedValue.EMPTY;
         }
     }
 
@@ -106,6 +118,23 @@ public class HorseFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("h_name");
+        }
+    }
+
+    public static class HorseLevelTimeFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return -1.0;
+
+            Optional<CappedValue> result = Models.Horse.calculateNextLevelSeconds();
+
+            return result.isPresent() ? result.get().current() / 60.0 : -1.0;
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("h_lvl_time");
         }
     }
 }

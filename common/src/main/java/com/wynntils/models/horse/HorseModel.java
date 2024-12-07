@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.horse;
@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
@@ -28,6 +29,25 @@ public class HorseModel extends Model {
         if (horseSlot == -1) return Optional.empty();
 
         return Models.Item.asWynnItem(McUtils.inventory().getItem(horseSlot), HorseItem.class);
+    }
+
+    public Optional<CappedValue> calculateNextLevelSeconds() {
+        if (getHorse().isEmpty()) return Optional.empty();
+
+        HorseItem horseItem = getHorse().get();
+
+        if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY)
+            return Optional.empty();
+        if (horseItem.getLevel().current() == horseItem.getLevel().max()) return Optional.empty();
+
+        // This is based off of a formula from https://wynncraft.wiki.gg/wiki/Horses#Levels
+        double levelProgress = (horseItem.getLevel().current() + (2.0 / 3.0)) / 2.0;
+        double xpProgress = 100.0 - horseItem.getXp().current();
+
+        double result = levelProgress * (xpProgress / 100.0) * 60.0;
+        double resultMax = levelProgress * 60.0;
+
+        return Optional.of(new CappedValue((int) Math.ceil(result), (int) Math.ceil(resultMax)));
     }
 
     public int findHorseSlotNum() {
