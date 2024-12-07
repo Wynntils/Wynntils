@@ -26,14 +26,13 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ColorScaleUtils;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -87,10 +86,28 @@ public class ItemStatInfoFeature extends Feature {
     @Persisted
     public final Config<Boolean> showMaxValues = new Config<>(true);
 
+
+    private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
+            0f,
+            TextColor.fromLegacyFormat(ChatFormatting.RED),
+            40f,
+            TextColor.fromLegacyFormat(ChatFormatting.GOLD),
+            70f,
+            TextColor.fromLegacyFormat(ChatFormatting.YELLOW),
+            90f,
+            TextColor.fromLegacyFormat(ChatFormatting.GREEN),
+            100f,
+            TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
+
+    private NavigableMap<Float, TextColor> flatMap = createFlatMap();
+
+
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        ColorScaleUtils.recreateFlatMap();
+        if(legacyColors.valueChanged() || legacyThreshold.valueChanged())
+            flatMap = createFlatMap();
     }
+
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
@@ -128,6 +145,33 @@ public class ItemStatInfoFeature extends Feature {
             }
         }
     }
+
+
+    public NavigableMap<Float, TextColor> getColorMap() {
+        return colorLerp.get() ? LERP_MAP : flatMap;
+    }
+
+    private NavigableMap<Float, TextColor> createFlatMap() {
+        boolean useLegacyColors = legacyColors.get();
+
+        float redThreshold = useLegacyColors ? 30f : 20f;
+        float aquaThreshold = legacyThreshold.get().getThreshold();
+
+        NavigableMap<Float, TextColor> map = new TreeMap<>();
+
+        map.put(redThreshold, TextColor.fromLegacyFormat(ChatFormatting.RED));
+
+        if (!useLegacyColors) {
+            map.put(50f, TextColor.fromLegacyFormat(ChatFormatting.GOLD));
+        }
+
+        map.put(80f, TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+        map.put(aquaThreshold, TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+        map.put(Float.MAX_VALUE, TextColor.fromLegacyFormat(ChatFormatting.AQUA));
+
+        return map;
+    }
+
 
     public class IdentificationDecorator implements TooltipIdentificationDecorator {
         @Override
@@ -201,7 +245,7 @@ public class ItemStatInfoFeature extends Feature {
                 TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
             float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
             MutableComponent percentageTextComponent =
-                    ColorScaleUtils.getPercentageTextComponent(percentage, colorLerp.get(), decimalPlaces.get());
+                    ColorScaleUtils.getPercentageTextComponent(getColorMap(), percentage, colorLerp.get(), decimalPlaces.get());
 
             return percentageTextComponent;
         }

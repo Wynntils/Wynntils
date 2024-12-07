@@ -127,7 +127,7 @@ public final class TooltipUtils {
         } else {
             name = tooltips.getFirst().copy();
             name.append(ColorScaleUtils.getPercentageTextComponent(
-                    itemInfo.getOverallPercentage(), isif.colorLerp.get(), isif.decimalPlaces.get()));
+                    isif.getColorMap(), itemInfo.getOverallPercentage(), isif.colorLerp.get(), isif.decimalPlaces.get()));
         }
         tooltips.removeFirst();
         tooltips.addFirst(name);
