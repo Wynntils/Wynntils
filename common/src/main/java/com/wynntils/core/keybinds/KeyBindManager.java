@@ -143,9 +143,11 @@ public final class KeyBindManager extends Manager {
     private void triggerKeybinds() {
         checkAllKeyBinds(keyBind -> {
             if (keyBind.onlyFirstPress()) {
-                while (keyBind.getKeyMapping().consumeClick()) {
+                if (keyBind.getKeyMapping().isDown() && !keyBind.isPressed()) {
                     keyBind.onPress();
                 }
+
+                keyBind.setIsPressed(keyBind.getKeyMapping().isDown());
             } else if (keyBind.getKeyMapping().isDown()) {
                 keyBind.onPress();
             }
