@@ -56,24 +56,37 @@ public enum GuildResourceValues {
     }
 
     public GuildResourceValues getFilterNext(boolean limited) {
+        // ordinal has 1 subtracted as we are using normalValues which has NONE removed
         if (limited) {
             // If is HIGH, go back to LOW since limited
-            return ordinal() == 3 ? values()[1] : values()[(ordinal() + 1) % values().length];
+            return (ordinal() - 1) == 3
+                    ? normalValues()[1]
+                    : normalValues()[((ordinal() - 1) + 1) % normalValues().length];
         } else {
-            return values()[(ordinal() + 1) % values().length];
+            return normalValues()[((ordinal() - 1) + 1) % normalValues().length];
         }
     }
 
     public GuildResourceValues getFilterPrevious(boolean limited) {
+        // ordinal has 1 subtracted as we are using normalValues which has NONE removed
         if (limited) {
             // If is LOW, go back to HIGH since limited
-            return ordinal() == 1 ? values()[3] : values()[(ordinal() + values().length - 1) % values().length];
+            return (ordinal() - 1) == 1
+                    ? normalValues()[3]
+                    : normalValues()[((ordinal() - 1) + normalValues().length - 1) % normalValues().length];
         } else {
-            return values()[(ordinal() + values().length - 1) % values().length];
+            return normalValues()[((ordinal() - 1) + normalValues().length - 1) % normalValues().length];
         }
     }
 
     public int getLevel() {
         return level;
+    }
+
+    // This should be used instead of values() in almost all places as the NONE value is only used for parsing
+    // the rare occasion when a territory has a None treasury, but in most scenarios where values is used we are
+    // only interested in these values
+    public static GuildResourceValues[] normalValues() {
+        return new GuildResourceValues[] {VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH};
     }
 }

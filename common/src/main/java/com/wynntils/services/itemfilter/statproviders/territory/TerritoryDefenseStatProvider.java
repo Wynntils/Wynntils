@@ -21,7 +21,7 @@ public class TerritoryDefenseStatProvider extends TerritoryStatProvider<String> 
 
     @Override
     public List<String> getValidInputs() {
-        return Arrays.stream(GuildResourceValues.values())
+        return Arrays.stream(GuildResourceValues.normalValues())
                 .map(GuildResourceValues::getAsString)
                 .map(s -> s.replace(" ", ""))
                 .toList();
