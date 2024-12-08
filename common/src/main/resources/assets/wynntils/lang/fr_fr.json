@@ -1070,7 +1070,6 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "La sélection doit-elle être enregistrée par conteneur ou globalement ?",
   "feature.wynntils.professionHighlight.selectionMode.name": "Mode de Sélection",
   "feature.wynntils.questBook.name": "Analyse du Livre de Quêtes",
-  "feature.wynntils.quickCast.anotherInProgress": "Veuillez attendre la fin du lancement rapide précédent.",
   "feature.wynntils.quickCast.description": "Ajoute la possibilité de lancer des sorts avec un raccourci clavier.",
   "feature.wynntils.quickCast.name": "Lancement Rapide de Sorts",
   "feature.wynntils.quickCast.notAWeapon": "Vous ne pouvez lancer rapidement qu'avec une arme !",

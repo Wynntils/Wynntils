@@ -1070,7 +1070,6 @@
   "feature.wynntils.professionHighlight.selectionMode.description": "A seleção deve ser salva por contêiner ou globalmente?",
   "feature.wynntils.professionHighlight.selectionMode.name": "Modo de Seleção",
   "feature.wynntils.questBook.name": "Análise do Livro de Missões",
-  "feature.wynntils.quickCast.anotherInProgress": "Por favor, aguarde a conclusão do lançamento rápido anterior.",
   "feature.wynntils.quickCast.description": "Adiciona a capacidade de lançar feitiços com uma tecla de atalho.",
   "feature.wynntils.quickCast.name": "Lançamento Rápido de Feitiços",
   "feature.wynntils.quickCast.notAWeapon": "Só podes lançar rapidamente com uma arma!",
