@@ -15,6 +15,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -37,7 +38,10 @@ public final class TooltipUtils {
 
     public static int getTooltipHeight(List<ClientTooltipComponent> lines) {
         return (lines.size() == 1 ? -2 : 0)
-                + lines.stream().mapToInt(ClientTooltipComponent::getHeight).sum();
+                + lines.stream()
+                        .mapToInt(clientTooltip -> clientTooltip.getHeight(
+                                FontRenderer.getInstance().getFont()))
+                        .sum();
     }
 
     public static List<ClientTooltipComponent> getClientTooltipComponent(List<Component> components) {

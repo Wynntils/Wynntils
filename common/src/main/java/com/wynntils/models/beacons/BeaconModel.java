@@ -24,6 +24,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
@@ -142,17 +143,18 @@ public class BeaconModel extends Model {
             CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
             if (customModelData == null) return null;
 
-            int customModel = customModelData.value();
+            Optional<Float> customModelValue = customModelData.floats().stream()
+                    .filter(value -> value == Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA
+                            || value == Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA)
+                    .findFirst();
+            if (customModelValue.isEmpty()) return null;
 
             // Extract custom color from potion
             // If there is no custom color, assume it's white
             int customColor = potionContents.customColor().orElse(CommonColors.WHITE.asInt());
 
             // Log the color if it's likely to be a new beacon kind
-            if (customModel == Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA
-                    || customModel == Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA) {
-                WynntilsMod.warn("Unknown beacon kind: " + customModel + " " + customColor);
-            }
+            WynntilsMod.warn("Unknown beacon kind: " + customModelValue + " " + customColor);
         }
 
         return null;

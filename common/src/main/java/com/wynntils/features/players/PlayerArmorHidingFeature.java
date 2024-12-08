@@ -11,6 +11,9 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
+import com.wynntils.mc.extension.EntityRenderStateExtension;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -43,10 +46,13 @@ public class PlayerArmorHidingFeature extends Feature {
                     return;
                 }
 
+                Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+                if (!(entity instanceof AbstractClientPlayer player)) return;
+
                 // Only cancel if the helmet item isn't cosmetic.
                 // Pre-2.1 cosmetics helmet skins use a diamond pickaxe texture
                 // Cosmetics released after 2.1 use an iron horse armor texture
-                ItemStack headItem = event.getPlayer().getItemBySlot(event.getSlot());
+                ItemStack headItem = player.getItemBySlot(event.getSlot());
                 if (headItem.getItem() != Items.DIAMOND_PICKAXE && headItem.getItem() != Items.IRON_HORSE_ARMOR) {
                     event.setCanceled(true);
                 }

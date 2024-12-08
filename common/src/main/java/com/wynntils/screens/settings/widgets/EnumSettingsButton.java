@@ -35,7 +35,7 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!clicked(mouseX, mouseY)) return false;
+        if (!isMouseOver(mouseX, mouseY)) return false;
 
         int addToIndex;
 

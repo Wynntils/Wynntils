@@ -83,7 +83,7 @@ public final class ActivityModel extends Model {
     private static final Pattern TRACKING_PATTERN = Pattern.compile("^.*§(?:#.{8}|.)§lCLICK TO (UN)?TRACK$");
     private static final Pattern OVERALL_PROGRESS_PATTERN = Pattern.compile("^\\S*§7(\\d+) of (\\d+) completed$");
 
-    public static final int BEACON_COLOR_CUSTOM_MODEL_DATA = 79;
+    public static final float BEACON_COLOR_CUSTOM_MODEL_DATA = 79.0f;
 
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
