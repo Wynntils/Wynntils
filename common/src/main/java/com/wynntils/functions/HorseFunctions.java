@@ -33,15 +33,20 @@ public class HorseFunctions {
         }
     }
 
-    public static class CappedHorseLevelTimeFunction extends Function<CappedValue> {
+    public static class CappedHorseTotalLevelTimeFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
             Optional<HorseItem> horse = Models.Horse.getHorse();
             if (horse.isEmpty()) return CappedValue.EMPTY;
 
-            Optional<CappedValue> result = Models.Horse.calculateNextLevelSeconds();
+            Optional<CappedValue> result = Models.Horse.calculateNextLevelCumulativeSeconds();
 
             return result.isPresent() ? result.get() : CappedValue.EMPTY;
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("h_tot_lvl_time");
         }
     }
 
@@ -127,9 +132,9 @@ public class HorseFunctions {
             Optional<HorseItem> horse = Models.Horse.getHorse();
             if (horse.isEmpty()) return -1.0;
 
-            Optional<CappedValue> result = Models.Horse.calculateNextLevelSeconds();
+            Optional<Integer> result = Models.Horse.calculateNextLevelSeconds();
 
-            return result.isPresent() ? result.get().current() / 60.0 : -1.0;
+            return result.isPresent() ? Math.ceil(result.get() / 60.0 * 100.0) / 100.0 : -1.0;
         }
 
         @Override

@@ -31,7 +31,7 @@ public class HorseModel extends Model {
         return Models.Item.asWynnItem(McUtils.inventory().getItem(horseSlot), HorseItem.class);
     }
 
-    public Optional<CappedValue> calculateNextLevelSeconds() {
+    public Optional<Integer> calculateNextLevelSeconds() {
         if (getHorse().isEmpty()) return Optional.empty();
 
         HorseItem horseItem = getHorse().get();
@@ -45,7 +45,34 @@ public class HorseModel extends Model {
         double xpProgress = 100.0 - horseItem.getXp().current();
 
         double result = levelProgress * (xpProgress / 100.0) * 60.0;
-        double resultMax = levelProgress * 60.0;
+
+        return Optional.of((int) Math.ceil(result));
+    }
+
+    public Optional<CappedValue> calculateNextLevelCumulativeSeconds() {
+        if (getHorse().isEmpty()) return Optional.empty();
+
+        HorseItem horseItem = getHorse().get();
+
+        if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY)
+            return Optional.empty();
+
+        double result = 0;
+        double resultMax = 0;
+
+        for (int levelNumber = 1; levelNumber != horseItem.getLevel().max(); levelNumber++) {
+            // This is based off of a formula from https://wynncraft.wiki.gg/wiki/Horses#Levels
+            double levelProgress = (levelNumber + (2.0 / 3.0)) / 2.0;
+            double xpProgress = 100.0 - horseItem.getXp().current();
+
+            resultMax += levelProgress * 60.0;
+
+            if (levelNumber == horseItem.getLevel().current() - 1) {
+                result = resultMax + (levelProgress * (xpProgress / 100.0) * 60.0);
+            }
+        }
+
+        if (horseItem.getLevel().current() == horseItem.getLevel().max()) result = resultMax;
 
         return Optional.of(new CappedValue((int) Math.ceil(result), (int) Math.ceil(resultMax)));
     }
