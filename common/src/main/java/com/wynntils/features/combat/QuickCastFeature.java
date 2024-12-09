@@ -18,7 +18,9 @@ import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -124,17 +126,30 @@ public class QuickCastFeature extends Feature {
                 return;
             }
 
+            // First check if the character is an archer or not in case CharacterModel failed to parse correctly
             Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(heldItem, GearItem.class);
 
             if (gearItemOpt.isEmpty()) {
-                sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
-                return;
-            } else if (!gearItemOpt.get().meetsActualRequirements()) {
+                Optional<CraftedGearItem> craftedGearItemOpt = Models.Item.asWynnItem(heldItem, CraftedGearItem.class);
+
+                if (craftedGearItemOpt.isEmpty()) {
+                    sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
+                    return;
+                }
+
+                isArcher = craftedGearItemOpt.get().getRequiredClass() == ClassType.ARCHER;
+            } else {
+                isArcher = gearItemOpt.get().getRequiredClass() == ClassType.ARCHER;
+            }
+
+            // Now check for met requirements
+            Optional<RequirementItemProperty> reqItemPropOpt =
+                    Models.Item.asWynnItemProperty(heldItem, RequirementItemProperty.class);
+
+            if (reqItemPropOpt.isPresent() && !reqItemPropOpt.get().meetsActualRequirements()) {
                 sendCancelReason(Component.translatable("feature.wynntils.quickCast.notMetRequirements"));
                 return;
             }
-
-            isArcher = gearItemOpt.get().getRequiredClass() == ClassType.ARCHER;
         }
 
         boolean isSpellInverted = isArcher;
