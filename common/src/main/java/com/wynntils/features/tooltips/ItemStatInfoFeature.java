@@ -265,5 +265,4 @@ public class ItemStatInfoFeature extends Feature {
             return threshold;
         }
     }
-
 }
