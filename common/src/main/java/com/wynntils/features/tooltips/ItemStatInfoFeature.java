@@ -20,7 +20,6 @@ import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
-import com.wynntils.utils.colors.ColorThreshold;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
@@ -107,7 +106,9 @@ public class ItemStatInfoFeature extends Feature {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        if (legacyColors.valueChanged() || legacyThreshold.valueChanged()) flatMap = createFlatMap();
+        if (config == legacyColors || config == legacyThreshold) {
+            flatMap = createFlatMap();
+        }
     }
 
     @SubscribeEvent
@@ -249,4 +250,20 @@ public class ItemStatInfoFeature extends Feature {
             return percentageTextComponent;
         }
     }
+
+    public enum ColorThreshold {
+        NINETY_FIVE(95f),
+        NINETY_SIX(96f);
+
+        private final float threshold;
+
+        ColorThreshold(float threshold) {
+            this.threshold = threshold;
+        }
+
+        public float getThreshold() {
+            return threshold;
+        }
+    }
+
 }
