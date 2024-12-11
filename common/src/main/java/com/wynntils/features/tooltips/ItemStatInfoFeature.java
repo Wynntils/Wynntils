@@ -55,7 +55,7 @@ public class ItemStatInfoFeature extends Feature {
     public final Config<Boolean> legacyColors = new Config<>(false);
 
     @Persisted
-    public final Config<ColorThreshold> legacyThreshold = new Config<>(ColorThreshold.NINETY_FIVE);
+    public final Config<ColorThreshold> perfectColorThreshold = new Config<>(ColorThreshold.NINETY_FIVE);
 
     @Persisted
     public final Config<Integer> decimalPlaces = new Config<>(1);
@@ -106,7 +106,7 @@ public class ItemStatInfoFeature extends Feature {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        if (config == legacyColors || config == legacyThreshold) {
+        if (config == legacyColors || config == perfectColorThreshold) {
             flatMap = createFlatMap();
         }
     }
@@ -156,7 +156,7 @@ public class ItemStatInfoFeature extends Feature {
         boolean useLegacyColors = legacyColors.get();
 
         float redThreshold = useLegacyColors ? 30f : 20f;
-        float aquaThreshold = legacyThreshold.get().getThreshold();
+        float aquaThreshold = perfectColorThreshold.get().getThreshold();
 
         NavigableMap<Float, TextColor> map = new TreeMap<>();
 
@@ -265,5 +265,4 @@ public class ItemStatInfoFeature extends Feature {
             return threshold;
         }
     }
-
 }
