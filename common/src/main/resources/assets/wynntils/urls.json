@@ -262,17 +262,17 @@
   },
   {
     "arguments": [
-      "username"
-    ],
-    "id": "linkWynncraftPlayerStats",
-    "url": "https://wynncraft.com/stats/player/%{username}"
-  },
-  {
-    "arguments": [
       "itemname"
     ],
     "id": "linkWynncraftItemLookup",
     "url": "https://wynncraft.com/item/%{itemname}"
+  },
+  {
+    "arguments": [
+      "username"
+    ],
+    "id": "linkWynncraftPlayerStats",
+    "url": "https://wynncraft.com/stats/player/%{username}"
   },
   {
     "id": "linkWynntilsDiscordInvite",
