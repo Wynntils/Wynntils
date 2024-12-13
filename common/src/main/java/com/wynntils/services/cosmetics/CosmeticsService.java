@@ -86,15 +86,6 @@ public class CosmeticsService extends Service {
         return (elytra ? cosmetics.hasElytra() : cosmetics.hasCape());
     }
 
-    // TODO: implement ear rendering
-    public boolean shouldRenderEars(AbstractClientPlayer player) {
-        if (player.isInvisible()) return false;
-
-        if (Models.Player.getUser(player.getUUID()) == null) return false;
-
-        return Models.Player.getUser(player.getUUID()).cosmetics().hasEars();
-    }
-
     public ResourceLocation getCapeTexture(Player player) {
         ResourceLocation[] textures = getUserCosmeticTexture(player.getUUID());
         if (textures == null) return null;
