@@ -18,8 +18,7 @@ import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.items.items.game.CraftedGearItem;
-import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.ClassableItemProperty;
 import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -127,19 +126,14 @@ public class QuickCastFeature extends Feature {
             }
 
             // First check if the character is an archer or not in case CharacterModel failed to parse correctly
-            Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(heldItem, GearItem.class);
+            Optional<ClassableItemProperty> classItemPropOpt =
+                    Models.Item.asWynnItemProperty(heldItem, ClassableItemProperty.class);
 
-            if (gearItemOpt.isEmpty()) {
-                Optional<CraftedGearItem> craftedGearItemOpt = Models.Item.asWynnItem(heldItem, CraftedGearItem.class);
-
-                if (craftedGearItemOpt.isEmpty()) {
-                    sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
-                    return;
-                }
-
-                isArcher = craftedGearItemOpt.get().getRequiredClass() == ClassType.ARCHER;
+            if (classItemPropOpt.isEmpty()) {
+                sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
+                return;
             } else {
-                isArcher = gearItemOpt.get().getRequiredClass() == ClassType.ARCHER;
+                isArcher = classItemPropOpt.get().getRequiredClass() == ClassType.ARCHER;
             }
 
             // Now check for met requirements
