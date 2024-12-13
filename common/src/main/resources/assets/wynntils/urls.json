@@ -1,6 +1,6 @@
 [
   {
-    "version": 12
+    "version": 13
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -271,8 +271,8 @@
     "arguments": [
       "itemname"
     ],
-    "id": "linkWynndataItemLookup",
-    "url": "https://data.wynntils.com/i/%{itemname}"
+    "id": "linkWynncraftItemLookup",
+    "url": "https://wynncraft.com/item/%{itemname}"
   },
   {
     "id": "linkWynntilsDiscordInvite",
