@@ -14,19 +14,18 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ArmSwingEvent;
-import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Queue;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -39,18 +38,16 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.COMBAT)
 public class QuickCastFeature extends Feature {
     @RegisterKeyBind
-    private final KeyBind castFirstSpell = new KeyBind("Cast 1st Spell", GLFW.GLFW_KEY_Z, false, this::castFirstSpell);
+    private final KeyBind castFirstSpell = new KeyBind("Cast 1st Spell", GLFW.GLFW_KEY_Z, true, this::castFirstSpell);
 
     @RegisterKeyBind
-    private final KeyBind castSecondSpell =
-            new KeyBind("Cast 2nd Spell", GLFW.GLFW_KEY_X, false, this::castSecondSpell);
+    private final KeyBind castSecondSpell = new KeyBind("Cast 2nd Spell", GLFW.GLFW_KEY_X, true, this::castSecondSpell);
 
     @RegisterKeyBind
-    private final KeyBind castThirdSpell = new KeyBind("Cast 3rd Spell", GLFW.GLFW_KEY_C, false, this::castThirdSpell);
+    private final KeyBind castThirdSpell = new KeyBind("Cast 3rd Spell", GLFW.GLFW_KEY_C, true, this::castThirdSpell);
 
     @RegisterKeyBind
-    private final KeyBind castFourthSpell =
-            new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, false, this::castFourthSpell);
+    private final KeyBind castFourthSpell = new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, true, this::castFourthSpell);
 
     @Persisted
     private final Config<Integer> leftClickTickDelay = new Config<>(3);
@@ -62,12 +59,15 @@ public class QuickCastFeature extends Feature {
     private final Config<Boolean> blockAttacks = new Config<>(true);
 
     @Persisted
+    private final Config<Boolean> safeCasting = new Config<>(true);
+
+    @Persisted
     private final Config<Boolean> checkValidWeapon = new Config<>(true);
 
     @Persisted
     private final Config<Integer> spellCooldown = new Config<>(0);
 
-    private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
+    private SpellDirection[] spellInProgress = SpellDirection.NO_SPELL;
 
     private int lastSpellTick = 0;
     private int packetCountdown = 0;
@@ -78,21 +78,28 @@ public class QuickCastFeature extends Feature {
         if (event.getActionContext() != ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
 
-        event.setCanceled(!SPELL_PACKET_QUEUE.isEmpty());
+        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
     }
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (!blockAttacks.get()) return;
 
-        event.setCanceled(!SPELL_PACKET_QUEUE.isEmpty());
+        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
     }
 
     @SubscribeEvent
-    public void onHeldItemChange(ChangeCarriedItemEvent event) {
-        SPELL_PACKET_QUEUE.clear();
-        lastSpellTick = 0;
-        packetCountdown = 0;
+    public void onSpellSequenceUpdate(SpellEvent.Partial e) {
+        updateSpell(e.getSpellDirectionArray());
+    }
+
+    private void updateSpell(SpellDirection[] spell) {
+        if (Arrays.equals(spellInProgress, spell)) return;
+        if (spell.length == 3) {
+            spellInProgress = SpellDirection.NO_SPELL;
+        } else {
+            spellInProgress = spell;
+        }
     }
 
     private void castFirstSpell() {
@@ -112,7 +119,7 @@ public class QuickCastFeature extends Feature {
     }
 
     private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
-        if (!SPELL_PACKET_QUEUE.isEmpty()) return;
+        if (!Models.Spell.isSpellQueueEmpty()) return;
 
         boolean isArcher = Models.Character.getClassType() == ClassType.ARCHER;
 
@@ -142,7 +149,17 @@ public class QuickCastFeature extends Feature {
                 .map(x -> (x == SpellUnit.PRIMARY) != isSpellInverted ? SpellDirection.RIGHT : SpellDirection.LEFT)
                 .toList();
 
-        SPELL_PACKET_QUEUE.addAll(spell);
+        if (safeCasting.get()) {
+            for (int i = 0; i < spellInProgress.length; ++i) {
+                if (spellInProgress[i] != spell.get(i)) {
+                    sendCancelReason(Component.translatable("feature.wynntils.quickCast.incompatibleInProgress"));
+                    return;
+                }
+            }
+        }
+
+        List<SpellDirection> remainder = spell.subList(spellInProgress.length, spell.size());
+        Models.Spell.addSpellToQueue(remainder);
     }
 
     @SubscribeEvent
@@ -155,17 +172,20 @@ public class QuickCastFeature extends Feature {
 
         if (packetCountdown > 0) return;
 
-        if (SPELL_PACKET_QUEUE.isEmpty()) return;
+        if (Models.Spell.isSpellQueueEmpty()) return;
+
+        SpellDirection nextDirection = Models.Spell.checkNextSpellDirection();
+
+        if (nextDirection == null) return;
 
         int comparisonTime =
-                SPELL_PACKET_QUEUE.peek() == SpellDirection.LEFT ? leftClickTickDelay.get() : rightClickTickDelay.get();
+                nextDirection == SpellDirection.LEFT ? leftClickTickDelay.get() : rightClickTickDelay.get();
         if (McUtils.player().tickCount - lastSpellTick < comparisonTime) return;
 
-        SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
-        spellDirection.getSendPacketRunnable().run();
+        Models.Spell.sendNextSpell();
         lastSpellTick = McUtils.player().tickCount;
 
-        if (SPELL_PACKET_QUEUE.isEmpty()) {
+        if (Models.Spell.isSpellQueueEmpty()) {
             lastSpellTick = 0;
             packetCountdown = Math.max(packetCountdown, spellCooldown.get());
         }
@@ -173,9 +193,9 @@ public class QuickCastFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
-        SPELL_PACKET_QUEUE.clear();
         lastSpellTick = 0;
         packetCountdown = 0;
+        spellInProgress = SpellDirection.NO_SPELL;
     }
 
     private static void sendCancelReason(MutableComponent reason) {
