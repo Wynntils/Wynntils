@@ -23,10 +23,8 @@ import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Queue;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -67,8 +65,6 @@ public class QuickCastFeature extends Feature {
     @Persisted
     private final Config<Integer> spellCooldown = new Config<>(0);
 
-    private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
-
     private int lastSpellTick = 0;
     private int packetCountdown = 0;
 
@@ -78,19 +74,18 @@ public class QuickCastFeature extends Feature {
         if (event.getActionContext() != ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
 
-        event.setCanceled(!SPELL_PACKET_QUEUE.isEmpty());
+        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
     }
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (!blockAttacks.get()) return;
 
-        event.setCanceled(!SPELL_PACKET_QUEUE.isEmpty());
+        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
     }
 
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
-        SPELL_PACKET_QUEUE.clear();
         lastSpellTick = 0;
         packetCountdown = 0;
     }
@@ -112,7 +107,7 @@ public class QuickCastFeature extends Feature {
     }
 
     private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
-        if (!SPELL_PACKET_QUEUE.isEmpty()) return;
+        if (!Models.Spell.isSpellQueueEmpty()) return;
 
         boolean isArcher = Models.Character.getClassType() == ClassType.ARCHER;
 
@@ -142,7 +137,7 @@ public class QuickCastFeature extends Feature {
                 .map(x -> (x == SpellUnit.PRIMARY) != isSpellInverted ? SpellDirection.RIGHT : SpellDirection.LEFT)
                 .toList();
 
-        SPELL_PACKET_QUEUE.addAll(spell);
+        Models.Spell.addSpellToQueue(spell);
     }
 
     @SubscribeEvent
@@ -155,17 +150,20 @@ public class QuickCastFeature extends Feature {
 
         if (packetCountdown > 0) return;
 
-        if (SPELL_PACKET_QUEUE.isEmpty()) return;
+        if (Models.Spell.isSpellQueueEmpty()) return;
+
+        SpellDirection nextDirection = Models.Spell.checkNextSpellDirection();
+
+        if (nextDirection == null) return;
 
         int comparisonTime =
-                SPELL_PACKET_QUEUE.peek() == SpellDirection.LEFT ? leftClickTickDelay.get() : rightClickTickDelay.get();
+                nextDirection == SpellDirection.LEFT ? leftClickTickDelay.get() : rightClickTickDelay.get();
         if (McUtils.player().tickCount - lastSpellTick < comparisonTime) return;
 
-        SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
-        spellDirection.getSendPacketRunnable().run();
+        Models.Spell.sendNextSpell();
         lastSpellTick = McUtils.player().tickCount;
 
-        if (SPELL_PACKET_QUEUE.isEmpty()) {
+        if (Models.Spell.isSpellQueueEmpty()) {
             lastSpellTick = 0;
             packetCountdown = Math.max(packetCountdown, spellCooldown.get());
         }
@@ -173,7 +171,6 @@ public class QuickCastFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
-        SPELL_PACKET_QUEUE.clear();
         lastSpellTick = 0;
         packetCountdown = 0;
     }
