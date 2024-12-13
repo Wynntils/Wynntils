@@ -275,6 +275,13 @@
     "url": "https://wynncraft.com/stats/player/%{username}"
   },
   {
+    "arguments": [
+      "itemname"
+    ],
+    "id": "linkWynndataItemLookup",
+    "url": "https://data.wynntils.com/i/%{itemname}"
+  },
+  {
     "id": "linkWynntilsDiscordInvite",
     "url": "https://discord.gg/SZuNem8"
   },
