@@ -6,8 +6,10 @@ package com.wynntils.services.cosmetics;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
+import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.CosmeticInfo;
 import com.wynntils.services.cosmetics.type.WynntilsCapeLayer;
@@ -69,9 +71,16 @@ public class CosmeticsService extends Service {
 
     public boolean shouldRenderCape(Player player, boolean elytra) {
         if (player.isInvisible() || !player.isModelPartShown(PlayerModelPart.CAPE)) return false;
-
-        if (Models.Player.getUser(player.getUUID()) == null || getUserCosmeticTexture(player.getUUID()) == null)
+        if (Models.Player.getUser(player.getUUID()) == null || getUserCosmeticTexture(player.getUUID()) == null) {
             return false;
+        }
+
+        if (McUtils.player().is(player)
+                && !Managers.Feature.getFeatureInstance(WynntilsCosmeticsFeature.class)
+                        .renderOwnCape
+                        .get()) {
+            return false;
+        }
 
         CosmeticInfo cosmetics = Models.Player.getUser(player.getUUID()).cosmetics();
         return (elytra ? cosmetics.hasElytra() : cosmetics.hasCape());
