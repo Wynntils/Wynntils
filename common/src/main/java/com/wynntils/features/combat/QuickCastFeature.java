@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ArmSwingEvent;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
@@ -90,6 +91,14 @@ public class QuickCastFeature extends Feature {
         if (!blockAttacks.get()) return;
 
         event.setCanceled(!SPELL_PACKET_QUEUE.isEmpty());
+    }
+
+    @SubscribeEvent
+    public void onHeldItemChange(ChangeCarriedItemEvent event) {
+        SPELL_PACKET_QUEUE.clear();
+        lastSpellTick = 0;
+        packetCountdown = 0; 
+        spellInProgress = SpellDirection.NO_SPELL;
     }
 
     @SubscribeEvent
