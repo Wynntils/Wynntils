@@ -1,6 +1,6 @@
 [
   {
-    "version": 12
+    "version": 13
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -259,6 +259,13 @@
     "encoding": "wiki",
     "id": "linkWikiLookup",
     "url": "https://wynncraft.wiki.gg/wiki/%{title}"
+  },
+  {
+    "arguments": [
+      "itemname"
+    ],
+    "id": "linkWynncraftItemLookup",
+    "url": "https://wynncraft.com/item/%{itemname}"
   },
   {
     "arguments": [
