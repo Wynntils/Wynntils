@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.damage;
+package com.wynntils.models.combat;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
@@ -10,10 +10,10 @@ import com.wynntils.core.components.Model;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
-import com.wynntils.models.damage.label.DamageLabelInfo;
-import com.wynntils.models.damage.label.DamageLabelParser;
-import com.wynntils.models.damage.type.DamageDealtEvent;
-import com.wynntils.models.damage.type.FocusedDamageEvent;
+import com.wynntils.models.combat.label.DamageLabelInfo;
+import com.wynntils.models.combat.label.DamageLabelParser;
+import com.wynntils.models.combat.type.DamageDealtEvent;
+import com.wynntils.models.combat.type.FocusedDamageEvent;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.StringUtils;
@@ -28,8 +28,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public final class DamageModel extends Model {
-    // Test in DamageModel_DAMAGE_BAR_PATTERN
+public final class CombatModel extends Model {
+    // Test in CombatModel_DAMAGE_BAR_PATTERN
     private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile(
             "^\\s*§[0-9a-f](.*) - §c(\\d+(?:\\.\\d+)?[kKmM]?)§4❤(?:§r - ( ?(§.(.+))(Dam|Weak|Def))+)?\\s*$");
 
@@ -51,7 +51,7 @@ public final class DamageModel extends Model {
 
     private long lastDamageDealtTimestamp;
 
-    public DamageModel() {
+    public CombatModel() {
         super(List.of());
 
         Handlers.BossBar.registerBar(damageBar);

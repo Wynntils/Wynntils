@@ -14,9 +14,9 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.combat.CombatModel;
+import com.wynntils.models.combat.label.DamageLabelParser;
 import com.wynntils.models.containers.ContainerModel;
-import com.wynntils.models.damage.DamageModel;
-import com.wynntils.models.damage.label.DamageLabelParser;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.guild.GuildModel;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
@@ -221,6 +221,17 @@ public class TestRegex {
     }
 
     @Test
+    public void CombatModel_DAMAGE_BAR_PATTERN() {
+        PatternTester p = new PatternTester(CombatModel.class, "DAMAGE_BAR_PATTERN");
+        p.shouldMatch("§aTravelling Merchant§r - §c5985§4❤");
+        p.shouldMatch("§aGrook§r - §c23§4❤");
+        p.shouldMatch("§cZombie§r - §c43§4❤");
+        p.shouldMatch("§cFeligember Frog§r - §c1553§4❤§r - §7§e✦Weak §c✹Dam §c✹Def");
+        p.shouldMatch("§cLongleg Gripper§r - §c40500§4❤§r - §2✤Dam §e✦§c✹Def");
+        p.shouldMatch("§cBlinder§r - §c6566§4❤");
+    }
+
+    @Test
     public void ContainerModel_ABILITY_TREE_PATTERN() {
         PatternTester p = new PatternTester(ContainerModel.class, "ABILITY_TREE_PATTERN");
         p.shouldMatch("\uDAFF\uDFEA\uE000");
@@ -238,17 +249,6 @@ public class TestRegex {
         p.shouldMatch("§f-32 ❋ ");
         p.shouldMatch("§c-28 ✹ ");
         p.shouldMatch("§c-116 ✹ §2-17 ✤ ");
-    }
-
-    @Test
-    public void DamageModel_DAMAGE_BAR_PATTERN() {
-        PatternTester p = new PatternTester(DamageModel.class, "DAMAGE_BAR_PATTERN");
-        p.shouldMatch("§aTravelling Merchant§r - §c5985§4❤");
-        p.shouldMatch("§aGrook§r - §c23§4❤");
-        p.shouldMatch("§cZombie§r - §c43§4❤");
-        p.shouldMatch("§cFeligember Frog§r - §c1553§4❤§r - §7§e✦Weak §c✹Dam §c✹Def");
-        p.shouldMatch("§cLongleg Gripper§r - §c40500§4❤§r - §2✤Dam §e✦§c✹Def");
-        p.shouldMatch("§cBlinder§r - §c6566§4❤");
     }
 
     @Test

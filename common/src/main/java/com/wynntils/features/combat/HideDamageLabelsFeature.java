@@ -10,7 +10,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.mc.extension.EntityExtension;
-import com.wynntils.models.damage.label.DamageLabelInfo;
+import com.wynntils.models.combat.label.DamageLabelInfo;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @StartDisabled
