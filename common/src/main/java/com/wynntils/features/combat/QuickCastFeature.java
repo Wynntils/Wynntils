@@ -98,6 +98,11 @@ public class QuickCastFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onSpellExpired(SpellEvent.Expired e) {
+        updateSpell(e.getSpellDirectionArray());
+    }
+
+    @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
         resetState();
     }
