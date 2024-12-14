@@ -1071,6 +1071,7 @@
   "feature.wynntils.professionHighlight.selectionMode.name": "Selectiemodus",
   "feature.wynntils.questBook.name": "Questboek Analyse",
   "feature.wynntils.quickCast.description": "Voegt de mogelijkheid toe om spreuken te casten met een sneltoets.",
+  "feature.wynntils.quickCast.incompatibleInProgress": "Wacht alstublieft tot de incompatibele spreuk is voltooid.",
   "feature.wynntils.quickCast.name": "Snelle Spreuk",
   "feature.wynntils.quickCast.notAWeapon": "Je kunt alleen snel spreuken uitspreken met een wapen!",
   "feature.wynntils.quickCast.rightClickTickDelay.description": "Hoeveel vertragingstikken moeten er zijn voordat een nieuwe rechtermuisklik wordt verzonden? Als dit te laag is ingesteld, worden uw klikken genegeerd.",

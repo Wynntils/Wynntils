@@ -1071,6 +1071,7 @@
   "feature.wynntils.professionHighlight.selectionMode.name": "Modo de Selección",
   "feature.wynntils.questBook.name": "Análisis del Libro de Misiones",
   "feature.wynntils.quickCast.description": "Añade la capacidad de lanzar hechizos con una tecla de acceso rápido.",
+  "feature.wynntils.quickCast.incompatibleInProgress": "Por favor, espera a que termine el lanzamiento de hechizo incompatible.",
   "feature.wynntils.quickCast.name": "Lanzamiento Rápido de Hechizos",
   "feature.wynntils.quickCast.notAWeapon": "¡Solo puedes lanzar rápidamente con un arma!",
   "feature.wynntils.quickCast.rightClickTickDelay.description": "¿Cuántos ticks de retraso debe haber antes de enviar un nuevo clic derecho? Configurarlo demasiado bajo hará que tus clics sean ignorados.",

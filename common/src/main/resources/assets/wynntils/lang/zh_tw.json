@@ -1071,6 +1071,7 @@
   "feature.wynntils.professionHighlight.selectionMode.name": "選擇模式",
   "feature.wynntils.questBook.name": "任務書分析",
   "feature.wynntils.quickCast.description": "增加通過快捷鍵施放法術的功能。",
+  "feature.wynntils.quickCast.incompatibleInProgress": "請等待不相容的法術施放完成。",
   "feature.wynntils.quickCast.name": "快速施法",
   "feature.wynntils.quickCast.notAWeapon": "你只能用武器快速施法！",
   "feature.wynntils.quickCast.rightClickTickDelay.description": "在發送新的右鍵單擊之前應該有多少個刻延遲？設置得太低會導致您的點擊被忽略。",

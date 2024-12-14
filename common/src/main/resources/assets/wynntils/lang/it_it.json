@@ -1071,6 +1071,7 @@
   "feature.wynntils.professionHighlight.selectionMode.name": "Modalità di Selezione",
   "feature.wynntils.questBook.name": "Analisi del Libro delle Missioni",
   "feature.wynntils.quickCast.description": "Aggiunge la possibilità di lanciare incantesimi con un tasto di scelta rapida.",
+  "feature.wynntils.quickCast.incompatibleInProgress": "Attendi che il lancio dell'incantesimo incompatibile finisca.",
   "feature.wynntils.quickCast.name": "Lancio Rapido di Incantesimi",
   "feature.wynntils.quickCast.notAWeapon": "Puoi lanciare rapidamente solo con un'arma!",
   "feature.wynntils.quickCast.rightClickTickDelay.description": "Quanti tick di ritardo ci devono essere prima che venga inviato un nuovo clic destro? Impostarlo troppo basso farà ignorare i tuoi clic.",

@@ -1071,6 +1071,7 @@
   "feature.wynntils.professionHighlight.selectionMode.name": "選択モード",
   "feature.wynntils.questBook.name": "クエストブック分析",
   "feature.wynntils.quickCast.description": "キーを押して呪文を唱える機能を追加します。",
+  "feature.wynntils.quickCast.incompatibleInProgress": "互換性のない呪文のキャストが終了するのをお待ちください。",
   "feature.wynntils.quickCast.name": "クイックスペルキャスト",
   "feature.wynntils.quickCast.notAWeapon": "武器でのみクイックキャストが可能です！",
   "feature.wynntils.quickCast.rightClickTickDelay.description": "新しい右クリックが送信される前に何ティックの遅延が必要ですか？これを低く設定しすぎると、クリックが無視されます。",

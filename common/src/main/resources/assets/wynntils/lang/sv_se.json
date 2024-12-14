@@ -1079,6 +1079,7 @@
   "feature.wynntils.professionHighlight.selectionMode.name": "Valläge",
   "feature.wynntils.questBook.name": "Uppdragsbokanalys",
   "feature.wynntils.quickCast.description": "Lägger till möjligheten att kasta trollformler med en tangentbindning.",
+  "feature.wynntils.quickCast.incompatibleInProgress": "Vänligen vänta tills den inkompatibla trollformeln är klar.",
   "feature.wynntils.quickCast.name": "Snabbtrollformel",
   "feature.wynntils.quickCast.notAWeapon": "Du kan endast snabbkasta med ett vapen!",
   "feature.wynntils.quickCast.rightClickTickDelay.description": "Hur många ticks fördröjning ska det vara innan en ny högerklickning skickas? Om detta ställs in för lågt kommer dina klick att ignoreras.",

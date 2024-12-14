@@ -1071,6 +1071,7 @@
   "feature.wynntils.professionHighlight.selectionMode.name": "Modo de Seleção",
   "feature.wynntils.questBook.name": "Análise do Livro de Missões",
   "feature.wynntils.quickCast.description": "Adiciona a capacidade de lançar feitiços com uma tecla de atalho.",
+  "feature.wynntils.quickCast.incompatibleInProgress": "Por favor, aguarde até que o lançamento de feitiço incompatível termine.",
   "feature.wynntils.quickCast.name": "Lançamento Rápido de Feitiços",
   "feature.wynntils.quickCast.notAWeapon": "Só podes lançar rapidamente com uma arma!",
   "feature.wynntils.quickCast.rightClickTickDelay.description": "Quantos ticks de atraso devem haver antes de enviar um novo clique direito? Configurar isto muito baixo fará com que os teus cliques sejam ignorados.",
