@@ -78,6 +78,8 @@ public class QuickCastFeature extends Feature {
 
     @SubscribeEvent
     public void onSwing(ArmSwingEvent event) {
+        lastSpellTick = McUtils.player().tickCount;
+
         if (!blockAttacks.get()) return;
         if (event.getActionContext() != ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
@@ -87,6 +89,8 @@ public class QuickCastFeature extends Feature {
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
+        lastSpellTick = McUtils.player().tickCount;
+
         if (!blockAttacks.get()) return;
 
         event.setCanceled(!Models.Spell.isSpellQueueEmpty());
@@ -131,6 +135,10 @@ public class QuickCastFeature extends Feature {
     private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
         if (!Models.Spell.isSpellQueueEmpty()) return;
         if (safeCasting.get() == SafeCastType.BLOCK_ALL && spellInProgress.length != 0) {
+            sendCancelReason(Component.translatable("feature.wynntils.quickCast.spellInProgress"));
+            return;
+        }
+        if (safeCasting.get() == SafeCastType.FINISH_COMPATIBLE && spellInProgress.length != 0 && lastSpellTick == 0) {
             sendCancelReason(Component.translatable("feature.wynntils.quickCast.spellInProgress"));
             return;
         }
