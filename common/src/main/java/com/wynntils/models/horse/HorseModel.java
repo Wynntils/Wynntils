@@ -42,9 +42,10 @@ public class HorseModel extends Model {
     }
 
     public Optional<Integer> calculateNextLevelSeconds() {
-        if (getHorse().isEmpty()) return Optional.empty();
+        Optional<HorseItem> optionalHorse = getHorse();
+        if (optionalHorse.isEmpty()) return Optional.empty();
 
-        HorseItem horseItem = getHorse().get();
+        HorseItem horseItem = optionalHorse.get();
 
         if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY) return Optional.empty();
         if (horseItem.getLevel().current() == horseItem.getLevel().max()) return Optional.empty();
@@ -59,9 +60,10 @@ public class HorseModel extends Model {
     }
 
     public Optional<CappedValue> calculateNextLevelCumulativeSeconds() {
-        if (getHorse().isEmpty()) return Optional.empty();
+        Optional<HorseItem> optionalHorse = getHorse();
+        if (optionalHorse.isEmpty()) return Optional.empty();
 
-        HorseItem horseItem = getHorse().get();
+        HorseItem horseItem = optionalHorse.get();
 
         if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY) return Optional.empty();
         if (maxLevelTimes.get(horseItem.getLevel().max()) == null) return Optional.empty();
