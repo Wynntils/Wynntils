@@ -25,7 +25,7 @@ public class HorseModel extends Model {
         super(List.of());
     }
 
-    public static Map<Integer, Integer> maxLevelTimes = Map.of(
+    private static Map<Integer, Integer> MAX_LEVEL_TIMES = Map.of(
             10, 1530,
             15, 3430,
             20, 6080,
@@ -66,11 +66,11 @@ public class HorseModel extends Model {
         HorseItem horseItem = optionalHorse.get();
 
         if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY) return Optional.empty();
-        if (maxLevelTimes.get(horseItem.getLevel().max()) == null) return Optional.empty();
+        if (MAX_LEVEL_TIMES.get(horseItem.getLevel().max()) == null) return Optional.empty();
 
         double result = 0;
 
-        double resultMax = maxLevelTimes.get(horseItem.getLevel().max());
+        double resultMax = MAX_LEVEL_TIMES.get(horseItem.getLevel().max());
 
         for (int levelNumber = 1; levelNumber != horseItem.getLevel().current() + 1; levelNumber++) {
             // This is based off of a formula from https://wynncraft.wiki.gg/wiki/Horses#Levels
