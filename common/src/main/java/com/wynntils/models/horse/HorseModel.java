@@ -25,6 +25,7 @@ public class HorseModel extends Model {
         super(List.of());
     }
 
+    // Sourced from https://desmos.com/calculator/rrckinnsjo
     private static Map<Integer, Integer> MAX_LEVEL_TIMES = Map.of(
             10, 1530,
             15, 3430,
