@@ -282,9 +282,18 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildAttackTimerModel_CAPTURED_PATTERN() {
+        PatternTester p = new PatternTester(GuildAttackTimerModel.class, "CAPTURED_PATTERN");
+        p.shouldMatch("§c\uE001 [YCY] captured the territory Paper Trail.");
+        p.shouldMatch("§c\uE001 [ANO] captured the territory Collapsed Bridge.");
+        p.shouldMatch("§c\uE006\uE002 [Tsd] captured the territory Paper Trail.");
+    }
+
+    @Test
     public void GuildAttackTimerModel_WAR_MESSAGE_PATTERN() {
         PatternTester p = new PatternTester(GuildAttackTimerModel.class, "WAR_MESSAGE_PATTERN");
         p.shouldMatch("§c\uE006\uE002 The war for Detlas will start in 1 minute.");
+        p.shouldMatch("§c\uE001 The war for Detlas will start in 1 minute.");
         p.shouldMatch("§c\uE006\uE002 The war for Detlas will start in 2 minutes.");
         p.shouldMatch("§c\uE006\uE002 The war for Detlas will start in 1 minute and 30 seconds.");
         p.shouldMatch("§c\uE006\uE002 The war for Detlas Close Suburbs will start in 30 seconds.");
