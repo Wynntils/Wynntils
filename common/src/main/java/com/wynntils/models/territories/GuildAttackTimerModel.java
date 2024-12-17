@@ -54,8 +54,8 @@ public final class GuildAttackTimerModel extends Model {
     private static final Pattern WAR_MESSAGE_PATTERN = Pattern.compile(
             "§c(?:\uE006\uE002|\uE001) The war for (?<territory>.+) will start in ((?<minutes>\\d+) minute(?:s)?)?(?: and )?((?<seconds>\\d+) second(?:s)?)?\\.");
     // Test in GuildAttackTimerModel_CAPTURED_PATTERN
-    private static final Pattern CAPTURED_PATTERN =
-            Pattern.compile("§c(?:\uE006\uE002|\uE001) \\[(?<guild>.+)\\] (?:has )?captured the territory (?<territory>.+)\\.");
+    private static final Pattern CAPTURED_PATTERN = Pattern.compile(
+            "§c(?:\uE006\uE002|\uE001) \\[(?<guild>.+)\\] (?:has )?captured the territory (?<territory>.+)\\.");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
 
     private static final GuildAttackMarkerProvider GUILD_ATTACK_MARKER_PROVIDER = new GuildAttackMarkerProvider();
