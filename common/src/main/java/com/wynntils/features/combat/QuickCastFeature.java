@@ -18,7 +18,8 @@ import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.ClassableItemProperty;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -153,17 +154,25 @@ public class QuickCastFeature extends Feature {
                 return;
             }
 
-            Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(heldItem, GearItem.class);
+            // First check if the character is an archer or not in case CharacterModel failed to parse correctly
+            Optional<ClassableItemProperty> classItemPropOpt =
+                    Models.Item.asWynnItemProperty(heldItem, ClassableItemProperty.class);
 
-            if (gearItemOpt.isEmpty()) {
+            if (classItemPropOpt.isEmpty()) {
                 sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
                 return;
-            } else if (!gearItemOpt.get().meetsActualRequirements()) {
+            } else {
+                isArcher = classItemPropOpt.get().getRequiredClass() == ClassType.ARCHER;
+            }
+
+            // Now check for met requirements
+            Optional<RequirementItemProperty> reqItemPropOpt =
+                    Models.Item.asWynnItemProperty(heldItem, RequirementItemProperty.class);
+
+            if (reqItemPropOpt.isPresent() && !reqItemPropOpt.get().meetsActualRequirements()) {
                 sendCancelReason(Component.translatable("feature.wynntils.quickCast.notMetRequirements"));
                 return;
             }
-
-            isArcher = gearItemOpt.get().getRequiredClass() == ClassType.ARCHER;
         }
 
         boolean isSpellInverted = isArcher;

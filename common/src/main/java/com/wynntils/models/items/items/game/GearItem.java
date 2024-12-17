@@ -12,6 +12,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
+import com.wynntils.models.items.properties.ClassableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
@@ -38,6 +39,7 @@ public class GearItem extends GameItem
                 RerollableItemProperty,
                 ShinyItemProperty,
                 IdentifiableItemProperty<GearInfo, GearInstance>,
+                ClassableItemProperty,
                 SetItemProperty,
                 RequirementItemProperty {
     private final GearInfo gearInfo;
