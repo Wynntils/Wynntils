@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -10,43 +10,29 @@ import java.math.RoundingMode;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Objects;
-import java.util.TreeMap;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
 public final class ColorScaleUtils {
-    private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
-            0f,
-            TextColor.fromLegacyFormat(ChatFormatting.RED),
-            70f,
-            TextColor.fromLegacyFormat(ChatFormatting.YELLOW),
-            90f,
-            TextColor.fromLegacyFormat(ChatFormatting.GREEN),
-            100f,
-            TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
-
-    private static final NavigableMap<Float, TextColor> FLAT_MAP = new TreeMap<>(Map.of(
-            30f,
-            TextColor.fromLegacyFormat(ChatFormatting.RED),
-            80f,
-            TextColor.fromLegacyFormat(ChatFormatting.YELLOW),
-            96f,
-            TextColor.fromLegacyFormat(ChatFormatting.GREEN),
-            Float.MAX_VALUE,
-            TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
-
     /**
      * Create the colored percentage component for an item ID
      *
+     * @param colorMap the colorMap that should be followed
      * @param percentage the percent roll of the ID
+     * @param colorLerp should the colors lerp
+     * @param decimalPlaces how many decimal places should be shown
+     *
      * @return the styled percentage text component
      */
-    public static MutableComponent getPercentageTextComponent(float percentage, boolean colorLerp, int decimalPlaces) {
+    public static MutableComponent getPercentageTextComponent(
+            NavigableMap<Float, TextColor> colorMap, float percentage, boolean colorLerp, int decimalPlaces) {
         Style color = Style.EMPTY
-                .withColor(colorLerp ? getPercentageColor(percentage) : getFlatPercentageColor(percentage))
+                .withColor(
+                        colorLerp
+                                ? getPercentageColor(colorMap, percentage)
+                                : getFlatPercentageColor(colorMap, percentage))
                 .withItalic(false);
         String percentString = new BigDecimal(percentage)
                 .setScale(decimalPlaces, RoundingMode.DOWN)
@@ -54,9 +40,9 @@ public final class ColorScaleUtils {
         return Component.literal(" [" + percentString + "%]").withStyle(color);
     }
 
-    private static TextColor getPercentageColor(float percentage) {
-        Map.Entry<Float, TextColor> lowerEntry = LERP_MAP.floorEntry(percentage);
-        Map.Entry<Float, TextColor> higherEntry = LERP_MAP.ceilingEntry(percentage);
+    private static TextColor getPercentageColor(NavigableMap<Float, TextColor> colorMap, float percentage) {
+        Map.Entry<Float, TextColor> lowerEntry = colorMap.floorEntry(percentage);
+        Map.Entry<Float, TextColor> higherEntry = colorMap.ceilingEntry(percentage);
 
         // Boundary conditions
         if (lowerEntry == null) {
@@ -81,7 +67,7 @@ public final class ColorScaleUtils {
         return TextColor.fromRgb((r << 16) | (g << 8) | b);
     }
 
-    private static TextColor getFlatPercentageColor(float percentage) {
-        return FLAT_MAP.higherEntry(percentage).getValue();
+    private static TextColor getFlatPercentageColor(NavigableMap<Float, TextColor> colorMap, float percentage) {
+        return colorMap.higherEntry(percentage).getValue();
     }
 }

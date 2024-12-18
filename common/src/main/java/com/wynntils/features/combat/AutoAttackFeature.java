@@ -82,6 +82,7 @@ public class AutoAttackFeature extends Feature {
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
+        if (!Models.Spell.isSpellQueueEmpty()) return;
 
         LocalPlayer player = McUtils.player();
         int currentSelectedSlot = McUtils.inventory().selected;

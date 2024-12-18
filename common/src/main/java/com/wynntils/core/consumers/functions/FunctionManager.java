@@ -442,6 +442,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.CappedOphanimFunction());
         registerFunction(new CharacterFunctions.CappedSacredSurgeFunction());
         registerFunction(new CharacterFunctions.ClassFunction());
+        registerFunction(new CharacterFunctions.CommanderActivatedFunction());
+        registerFunction(new CharacterFunctions.CommanderDurationFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
