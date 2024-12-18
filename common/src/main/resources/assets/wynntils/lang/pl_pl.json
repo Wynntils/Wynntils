@@ -1075,6 +1075,7 @@
   "feature.wynntils.professionHighlight.selectionMode.name": "Tryb Wybierania",
   "feature.wynntils.questBook.name": "Analiza Księgi Zadań",
   "feature.wynntils.quickCast.description": "Dodaje możliwość rzucania zaklęć za pomocą skrótu klawiszowego.",
+  "feature.wynntils.quickCast.incompatibleInProgress": "Proszę poczekać, aż niekompatybilne rzucanie zaklęcia się zakończy.",
   "feature.wynntils.quickCast.name": "Szybkie Rzucanie Zaklęć",
   "feature.wynntils.quickCast.notAWeapon": "Możesz szybko rzucać zaklęcia tylko z bronią!",
   "feature.wynntils.quickCast.rightClickTickDelay.description": "Ile opóźnienia w tickach powinno być przed wysłaniem nowego kliknięcia prawym przyciskiem? Ustawienie tego zbyt nisko spowoduje ignorowanie kliknięć.",
