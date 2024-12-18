@@ -152,7 +152,7 @@ import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.CharacterSelectionUtilitiesFeature;
 import com.wynntils.features.utilities.FixCrosshairPositionFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
-import com.wynntils.features.utilities.MythicSellWarningFeature;
+import com.wynntils.features.utilities.ValuablesProtectionFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
@@ -380,7 +380,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CharacterSelectionUtilitiesFeature());
         registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GammabrightFeature());
-        registerFeature(new MythicSellWarningFeature());
+        registerFeature(new ValuablesProtectionFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new SkillPointLoadoutsFeature());

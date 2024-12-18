@@ -50,12 +50,27 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
-public class MythicSellWarningFeature extends Feature {
-    @Persisted
-    public final Config<Boolean> tomesWarning = new Config<>(false);
-
+public class ValuablesProtectionFeature extends Feature {
     @Persisted
     public final Config<Float> tradeMarketPriceThreshold = new Config<>(0.9f);
+
+    @Persisted
+    public final Config<ProtectableNPCs> mythicWarningNPCs = new Config<>(ProtectableNPCs.BLACKSMITH_AND_TRADE_MARKET);
+
+    @Persisted
+    public final Config<ProtectableNPCs> craftedWarningNPCs = new Config<>(ProtectableNPCs.BLACKSMITH);
+
+    @Persisted
+    public final Config<Integer> craftedLevelThreshold = new Config<>(100);
+
+    @Persisted
+    public final Config<ProtectableNPCs> highRollWarningNPCs = new Config<>(ProtectableNPCs.ALL);
+
+    @Persisted
+    public final Config<Float> highRollThreshold = new Config<>(80.0f);
+
+    @Persisted
+    public final Config<Boolean> tomesWarning = new Config<>(false);
 
     private static final ResourceLocation CIRCLE_TEXTURE =
             ResourceLocation.withDefaultNamespace("textures/wynn/gui/tutorial.png");
@@ -304,5 +319,15 @@ public class MythicSellWarningFeature extends Feature {
         public void setTextColor(CustomColor textColor) {
             this.textColor = textColor;
         }
+    }
+
+    private enum ProtectableNPCs {
+        BLACKSMITH,
+        TRADE_MARKET,
+        IDENTIFIER,
+        BLACKSMITH_AND_TRADE_MARKET,
+        BLACKSMITH_AND_IDENTIFIER,
+        TRADE_MARKET_AND_IDENTIFIER,
+        ALL
     }
 }
