@@ -48,7 +48,9 @@ public class HorseModel extends Model {
 
         HorseItem horseItem = optionalHorse.get();
 
-        if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY) return Optional.empty();
+        if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY) {
+            return Optional.empty();
+        }
         if (horseItem.getLevel().current() == horseItem.getLevel().max()) return Optional.empty();
 
         // This is based off of a formula from https://wynncraft.wiki.gg/wiki/Horses#Levels
@@ -66,7 +68,9 @@ public class HorseModel extends Model {
 
         HorseItem horseItem = optionalHorse.get();
 
-        if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY) return Optional.empty();
+        if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY) {
+            return Optional.empty();
+        }
         if (MAX_LEVEL_TIMES.get(horseItem.getLevel().max()) == null) return Optional.empty();
 
         double result = 0;
