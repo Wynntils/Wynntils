@@ -20,6 +20,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.BlacksmithContainer;
+import com.wynntils.models.containers.containers.ItemIdentifierContainer;
 import com.wynntils.models.containers.containers.TradeMarketSellContainer;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
@@ -91,54 +92,63 @@ public class ValuablesProtectionFeature extends Feature {
         if (!(e.getScreen() instanceof ContainerScreen cs)) return;
 
         Container currentContainer = Models.Container.getCurrentContainer();
-        if (currentContainer instanceof BlacksmithContainer blacksmithContainer) {
-            int itemIndex = cs.getMenu().getItems().indexOf(e.getSlot().getItem());
-            if (!blacksmithContainer.getBounds().slots().contains(itemIndex)) return;
+        if (currentContainer == null) return;
+        switch (currentContainer) {
+            case BlacksmithContainer blacksmithContainer -> {
+                int itemIndex = cs.getMenu().getItems().indexOf(e.getSlot().getItem());
+                if (!blacksmithContainer.getBounds().slots().contains(itemIndex)) return;
 
-            Optional<WynnItem> item = Models.Item.getWynnItem(e.getSlot().getItem());
-            if (item.isEmpty() || !(item.get() instanceof GearTierItemProperty gtip)) return;
+                Optional<WynnItem> item = Models.Item.getWynnItem(e.getSlot().getItem());
+                if (item.isEmpty() || !(item.get() instanceof GearTierItemProperty gtip)) return;
 
-            if (gtip.getGearTier() != GearTier.MYTHIC) return;
+                if (gtip.getGearTier() != GearTier.MYTHIC) return;
 
-            if (item.get() instanceof TomeItem && !tomesWarning.get()) return;
+                if (item.get() instanceof TomeItem && !tomesWarning.get()) return;
 
-            RenderSystem.enableDepthTest();
-            RenderUtils.drawTexturedRectWithColor(
-                    e.getPoseStack(),
-                    CIRCLE_TEXTURE,
-                    CommonColors.RED,
-                    e.getSlot().x - 16,
-                    e.getSlot().y - 16,
-                    200,
-                    48,
-                    48,
-                    0,
-                    emphasizeAnimationFrame * 48,
-                    48,
-                    48,
-                    48,
-                    192);
-            RenderSystem.disableDepthTest();
-        } else if (currentContainer instanceof TradeMarketSellContainer
-                && drawTradeMarketWarning
-                && e.getSlot().index == TradeMarketModel.TM_SELL_PRICE_SLOT) {
-            RenderSystem.enableDepthTest();
-            RenderUtils.drawTexturedRectWithColor(
-                    e.getPoseStack(),
-                    CIRCLE_TEXTURE,
-                    CommonColors.RED,
-                    e.getSlot().x - 16,
-                    e.getSlot().y - 16,
-                    200,
-                    48,
-                    48,
-                    0,
-                    emphasizeAnimationFrame * 48,
-                    48,
-                    48,
-                    48,
-                    192);
-            RenderSystem.disableDepthTest();
+                RenderSystem.enableDepthTest();
+                RenderUtils.drawTexturedRectWithColor(
+                        e.getPoseStack(),
+                        CIRCLE_TEXTURE,
+                        CommonColors.RED,
+                        e.getSlot().x - 16,
+                        e.getSlot().y - 16,
+                        200,
+                        48,
+                        48,
+                        0,
+                        emphasizeAnimationFrame * 48,
+                        48,
+                        48,
+                        48,
+                        192);
+                RenderSystem.disableDepthTest();
+            }
+            case TradeMarketSellContainer tradeMarketSellContainer -> {
+                if (!drawTradeMarketWarning || e.getSlot().index != TradeMarketModel.TM_SELL_PRICE_SLOT) return;
+                RenderSystem.enableDepthTest();
+                RenderUtils.drawTexturedRectWithColor(
+                        e.getPoseStack(),
+                        CIRCLE_TEXTURE,
+                        CommonColors.RED,
+                        e.getSlot().x - 16,
+                        e.getSlot().y - 16,
+                        200,
+                        48,
+                        48,
+                        0,
+                        emphasizeAnimationFrame * 48,
+                        48,
+                        48,
+                        48,
+                        192);
+                RenderSystem.disableDepthTest();
+            }
+            case ItemIdentifierContainer itemIdentifierContainer -> {
+                System.out.println("Item Identifier Container");
+            }
+            default -> {
+                return;
+            }
         }
     }
 
