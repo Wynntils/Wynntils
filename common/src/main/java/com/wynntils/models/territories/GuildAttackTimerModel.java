@@ -52,9 +52,10 @@ public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§b.+§b (.+) defense is (.+)");
     // Test in GuildAttackTimerModel_WAR_MESSAGE_PATTERN
     private static final Pattern WAR_MESSAGE_PATTERN = Pattern.compile(
-            "§c\uE006\uE002 The war for (?<territory>.+) will start in ((?<minutes>\\d+) minute(?:s)?)?(?: and )?((?<seconds>\\d+) second(?:s)?)?\\.");
-    private static final Pattern CAPTURED_PATTERN =
-            Pattern.compile("§3\\[WAR\\]§c \\[(?<guild>.+)\\] (?:has )?captured the territory (?<territory>.+)\\.");
+            "§c(?:\uE006\uE002|\uE001) The war for (?<territory>.+) will start in ((?<minutes>\\d+) minute(?:s)?)?(?: and )?((?<seconds>\\d+) second(?:s)?)?\\.");
+    // Test in GuildAttackTimerModel_CAPTURED_PATTERN
+    private static final Pattern CAPTURED_PATTERN = Pattern.compile(
+            "§c(?:\uE006\uE002|\uE001) \\[(?<guild>.+)\\] (?:has )?captured the territory (?<territory>.+)\\.");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
 
     private static final GuildAttackMarkerProvider GUILD_ATTACK_MARKER_PROVIDER = new GuildAttackMarkerProvider();
@@ -75,10 +76,8 @@ public final class GuildAttackTimerModel extends Model {
     public void onMessage(ChatMessageReceivedEvent event) {
         // TODO: Once RecipientType supports Wynncraft 2.1 messages, we can check for RecipientType.GUILD
 
-        String cleanMessage = StyledTextUtils.joinAllLines(event.getStyledText().stripAlignment())
-                .getString()
-                .replaceAll("\uE001 ", "");
-        Matcher matcher = WAR_MESSAGE_PATTERN.matcher(cleanMessage);
+        StyledText cleanMessaage = StyledTextUtils.unwrap(event.getOriginalStyledText());
+        Matcher matcher = cleanMessaage.getMatcher(WAR_MESSAGE_PATTERN);
         if (matcher.matches()) {
             long timerEnd = System.currentTimeMillis();
 
@@ -103,7 +102,7 @@ public final class GuildAttackTimerModel extends Model {
             return;
         }
 
-        matcher = event.getOriginalStyledText().getMatcher(CAPTURED_PATTERN);
+        matcher = cleanMessaage.getMatcher(CAPTURED_PATTERN);
         if (matcher.matches()) {
             // Remove the attack timer for the territory, if it exists
             // (the captured message appears for both owned and attacked territories)
@@ -115,7 +114,7 @@ public final class GuildAttackTimerModel extends Model {
             return;
         }
 
-        matcher = StyledTextUtils.unwrap(event.getOriginalStyledText()).getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
+        matcher = cleanMessaage.getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
         if (matcher.matches()) {
             String territory = matcher.group(1);
             territoryDefenses.put(territory, GuildResourceValues.fromString(matcher.group(2)));
