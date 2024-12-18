@@ -123,7 +123,7 @@ public class SpellModel extends Model {
         }
 
         if ((lastSpell.length != 0 && lastSpell.length != 3)
-                && McUtils.player().tickCount - lastSpellTick > SPELL_EXPIRE_TICKS) {
+                && McUtils.player().tickCount - lastSpellTick >= SPELL_EXPIRE_TICKS) {
             lastSpell = SpellDirection.NO_SPELL;
             lastSpellTick = 0;
             WynntilsMod.postEvent(new SpellEvent.Expired());
@@ -146,6 +146,8 @@ public class SpellModel extends Model {
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
         SPELL_PACKET_QUEUE.clear();
+        lastSpell = SpellDirection.NO_SPELL;
+        lastSpellTick = 0;
     }
 
     public void addSpellToQueue(List<SpellDirection> spell) {
