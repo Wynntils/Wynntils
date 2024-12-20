@@ -2759,6 +2759,8 @@
   "service.wynntils.itemFilter.stat.countedItem.name": "Item Count",
   "service.wynntils.itemFilter.stat.durability.description": "Durability of the item",
   "service.wynntils.itemFilter.stat.durability.name": "Durability",
+  "service.wynntils.itemFilter.stat.duration.description": "Duration an items effects will last for.",
+  "service.wynntils.itemFilter.stat.duration.name": "Duration",
   "service.wynntils.itemFilter.stat.emeraldValue.description": "Emerald value of the item",
   "service.wynntils.itemFilter.stat.emeraldValue.name": "Emerald Value",
   "service.wynntils.itemFilter.stat.favorite.description": "Is the item marked as a favorite",

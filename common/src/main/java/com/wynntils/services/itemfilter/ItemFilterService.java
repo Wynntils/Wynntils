@@ -23,6 +23,7 @@ import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.ActualStatProvider;
 import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
 import com.wynntils.services.itemfilter.statproviders.DurabilityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.DurationStatProvider;
 import com.wynntils.services.itemfilter.statproviders.EmeraldValueStatProvider;
 import com.wynntils.services.itemfilter.statproviders.FavoriteStatProvider;
 import com.wynntils.services.itemfilter.statproviders.GearRestrictionStatProvider;
@@ -512,6 +513,7 @@ public class ItemFilterService extends Service {
             registerStatProvider(new ProfessionStatProvider(type));
         }
         registerStatProvider(new QualityTierStatProvider());
+        registerStatProvider(new DurationStatProvider());
 
         // Dynamic Item Stats
         registerStatProvider(new OverallStatProvider());
