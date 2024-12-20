@@ -10,6 +10,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.ingredients.type.IngredientPosition;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
@@ -29,6 +30,7 @@ import com.wynntils.services.itemfilter.statproviders.FavoriteStatProvider;
 import com.wynntils.services.itemfilter.statproviders.GearRestrictionStatProvider;
 import com.wynntils.services.itemfilter.statproviders.GearTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.HealthStatProvider;
+import com.wynntils.services.itemfilter.statproviders.IngredientEffectivenessStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ItemTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
 import com.wynntils.services.itemfilter.statproviders.MajorIdStatProvider;
@@ -514,6 +516,9 @@ public class ItemFilterService extends Service {
         }
         registerStatProvider(new QualityTierStatProvider());
         registerStatProvider(new DurationStatProvider());
+        for (IngredientPosition type : IngredientPosition.values()) {
+            registerStatProvider(new IngredientEffectivenessStatProvider(type));
+        }
 
         // Dynamic Item Stats
         registerStatProvider(new OverallStatProvider());
