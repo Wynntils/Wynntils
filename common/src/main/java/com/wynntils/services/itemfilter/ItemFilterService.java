@@ -22,8 +22,11 @@ import com.wynntils.services.itemfilter.filters.PercentageStatFilter;
 import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.ActualStatProvider;
+import com.wynntils.services.itemfilter.statproviders.ChargesModifierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
+import com.wynntils.services.itemfilter.statproviders.DurabilityModifierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.DurabilityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.DurationModifierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.DurationStatProvider;
 import com.wynntils.services.itemfilter.statproviders.EmeraldValueStatProvider;
 import com.wynntils.services.itemfilter.statproviders.FavoriteStatProvider;
@@ -519,6 +522,9 @@ public class ItemFilterService extends Service {
         for (IngredientPosition type : IngredientPosition.values()) {
             registerStatProvider(new IngredientEffectivenessStatProvider(type));
         }
+        registerStatProvider(new ChargesModifierStatProvider());
+        registerStatProvider(new DurabilityModifierStatProvider());
+        registerStatProvider(new DurationModifierStatProvider());
 
         // Dynamic Item Stats
         registerStatProvider(new OverallStatProvider());
