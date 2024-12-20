@@ -26,13 +26,14 @@ public class TerritoryDefenseQuickFilterWidget extends TerritoryQuickFilterWidge
     protected void forwardClick() {
         // Cycle between null and the guild resource values
         if (guildResourceValues == null) {
-            guildResourceValues = GuildResourceValues.values()[0];
+            guildResourceValues = GuildResourceValues.normalValues()[0];
         } else {
-            int index = guildResourceValues.ordinal() + 1;
-            if (index >= GuildResourceValues.values().length) {
+            // ordinal has 1 subtracted as we are using normalValues which has NONE removed
+            int index = (guildResourceValues.ordinal() - 1) + 1;
+            if (index >= GuildResourceValues.normalValues().length) {
                 guildResourceValues = null;
             } else {
-                guildResourceValues = GuildResourceValues.values()[index];
+                guildResourceValues = GuildResourceValues.normalValues()[index];
             }
         }
     }
@@ -41,13 +42,14 @@ public class TerritoryDefenseQuickFilterWidget extends TerritoryQuickFilterWidge
     protected void backwardClick() {
         // Cycle between null and the guild resource values
         if (guildResourceValues == null) {
-            guildResourceValues = GuildResourceValues.values()[GuildResourceValues.values().length - 1];
+            guildResourceValues = GuildResourceValues.normalValues()[GuildResourceValues.normalValues().length - 1];
         } else {
-            int index = guildResourceValues.ordinal() - 1;
+            // ordinal has 1 subtracted as we are using normalValues which has NONE removed
+            int index = (guildResourceValues.ordinal() - 1) - 1;
             if (index < 0) {
                 guildResourceValues = null;
             } else {
-                guildResourceValues = GuildResourceValues.values()[index];
+                guildResourceValues = GuildResourceValues.normalValues()[index];
             }
         }
     }

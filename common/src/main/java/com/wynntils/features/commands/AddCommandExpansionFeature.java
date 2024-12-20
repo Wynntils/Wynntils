@@ -125,6 +125,12 @@ public class AddCommandExpansionFeature extends Feature {
 
         addAlias(root, classNode, "classes", AliasCommandLevel.ALL);
 
+        // "characters" aliases
+        CommandNode<CommandSourceStack> charactersNode = literal("characters").build();
+        addNode(root, charactersNode);
+
+        addAlias(root, charactersNode, "char", AliasCommandLevel.ALL);
+
         // "crate" aliases
         CommandNode<CommandSourceStack> crateNode = literal("crate").build();
         addNode(root, crateNode);

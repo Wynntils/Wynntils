@@ -88,6 +88,8 @@ public class ProfessionModel extends Model {
                         professionDryStreak.store(professionDryStreak.get() + 1);
                     }
                 }
+
+                return;
             }
 
             harvestIds.put(gatheringInfo.getEntity().getId());

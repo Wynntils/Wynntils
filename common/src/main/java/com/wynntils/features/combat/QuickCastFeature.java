@@ -18,15 +18,17 @@ import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.ClassableItemProperty;
+import com.wynntils.models.items.properties.RequirementItemProperty;
+import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Queue;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -65,34 +67,54 @@ public class QuickCastFeature extends Feature {
     private final Config<Boolean> checkValidWeapon = new Config<>(true);
 
     @Persisted
-    private final Config<Integer> spellCooldown = new Config<>(0);
+    private final Config<SafeCastType> safeCasting = new Config<>(SafeCastType.NONE);
 
-    private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
+    @Persisted
+    private final Config<Integer> spellCooldown = new Config<>(0);
 
     private int lastSpellTick = 0;
     private int packetCountdown = 0;
 
+    private SpellDirection[] spellInProgress = SpellDirection.NO_SPELL;
+
     @SubscribeEvent
     public void onSwing(ArmSwingEvent event) {
+        lastSpellTick = McUtils.player().tickCount;
+
         if (!blockAttacks.get()) return;
         if (event.getActionContext() != ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
 
-        event.setCanceled(!SPELL_PACKET_QUEUE.isEmpty());
+        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
     }
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
+        lastSpellTick = McUtils.player().tickCount;
+
         if (!blockAttacks.get()) return;
 
-        event.setCanceled(!SPELL_PACKET_QUEUE.isEmpty());
+        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
+    }
+
+    @SubscribeEvent
+    public void onSpellSequenceUpdate(SpellEvent.Partial e) {
+        updateSpell(e.getSpellDirectionArray());
+    }
+
+    @SubscribeEvent
+    public void onSpellExpired(SpellEvent.Expired e) {
+        updateSpell(e.getSpellDirectionArray());
     }
 
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
-        SPELL_PACKET_QUEUE.clear();
-        lastSpellTick = 0;
-        packetCountdown = 0;
+        resetState();
+    }
+
+    @SubscribeEvent
+    public void onWorldChange(WorldStateEvent e) {
+        resetState();
     }
 
     private void castFirstSpell() {
@@ -112,7 +134,15 @@ public class QuickCastFeature extends Feature {
     }
 
     private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
-        if (!SPELL_PACKET_QUEUE.isEmpty()) return;
+        if (!Models.Spell.isSpellQueueEmpty()) return;
+        if (safeCasting.get() == SafeCastType.BLOCK_ALL && spellInProgress.length != 0) {
+            sendCancelReason(Component.translatable("feature.wynntils.quickCast.spellInProgress"));
+            return;
+        }
+        if (safeCasting.get() == SafeCastType.FINISH_COMPATIBLE && spellInProgress.length != 0 && lastSpellTick == 0) {
+            sendCancelReason(Component.translatable("feature.wynntils.quickCast.spellInProgress"));
+            return;
+        }
 
         boolean isArcher = Models.Character.getClassType() == ClassType.ARCHER;
 
@@ -124,25 +154,46 @@ public class QuickCastFeature extends Feature {
                 return;
             }
 
-            Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(heldItem, GearItem.class);
+            // First check if the character is an archer or not in case CharacterModel failed to parse correctly
+            Optional<ClassableItemProperty> classItemPropOpt =
+                    Models.Item.asWynnItemProperty(heldItem, ClassableItemProperty.class);
 
-            if (gearItemOpt.isEmpty()) {
+            if (classItemPropOpt.isEmpty()) {
                 sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
                 return;
-            } else if (!gearItemOpt.get().meetsActualRequirements()) {
+            } else {
+                isArcher = classItemPropOpt.get().getRequiredClass() == ClassType.ARCHER;
+            }
+
+            // Now check for met requirements
+            Optional<RequirementItemProperty> reqItemPropOpt =
+                    Models.Item.asWynnItemProperty(heldItem, RequirementItemProperty.class);
+
+            if (reqItemPropOpt.isPresent() && !reqItemPropOpt.get().meetsActualRequirements()) {
                 sendCancelReason(Component.translatable("feature.wynntils.quickCast.notMetRequirements"));
                 return;
             }
-
-            isArcher = gearItemOpt.get().getRequiredClass() == ClassType.ARCHER;
         }
 
         boolean isSpellInverted = isArcher;
-        List<SpellDirection> spell = Stream.of(a, b, c)
+        List<SpellDirection> unconfirmedSpell = Stream.of(a, b, c)
                 .map(x -> (x == SpellUnit.PRIMARY) != isSpellInverted ? SpellDirection.RIGHT : SpellDirection.LEFT)
                 .toList();
 
-        SPELL_PACKET_QUEUE.addAll(spell);
+        List<SpellDirection> confirmedSpell = new ArrayList<>(unconfirmedSpell);
+
+        if (safeCasting.get() == SafeCastType.FINISH_COMPATIBLE && spellInProgress.length != 0) {
+            for (int i = 0; i < spellInProgress.length; i++) {
+                if (spellInProgress[i] == unconfirmedSpell.get(i)) {
+                    confirmedSpell.removeFirst();
+                } else {
+                    sendCancelReason(Component.translatable("feature.wynntils.quickCast.incompatibleInProgress"));
+                    return;
+                }
+            }
+        }
+
+        Models.Spell.addSpellToQueue(confirmedSpell);
     }
 
     @SubscribeEvent
@@ -155,25 +206,37 @@ public class QuickCastFeature extends Feature {
 
         if (packetCountdown > 0) return;
 
-        if (SPELL_PACKET_QUEUE.isEmpty()) return;
+        if (Models.Spell.isSpellQueueEmpty()) return;
+
+        SpellDirection nextDirection = Models.Spell.checkNextSpellDirection();
+
+        if (nextDirection == null) return;
 
         int comparisonTime =
-                SPELL_PACKET_QUEUE.peek() == SpellDirection.LEFT ? leftClickTickDelay.get() : rightClickTickDelay.get();
+                nextDirection == SpellDirection.LEFT ? leftClickTickDelay.get() : rightClickTickDelay.get();
         if (McUtils.player().tickCount - lastSpellTick < comparisonTime) return;
 
-        SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
-        spellDirection.getSendPacketRunnable().run();
+        Models.Spell.sendNextSpell();
         lastSpellTick = McUtils.player().tickCount;
 
-        if (SPELL_PACKET_QUEUE.isEmpty()) {
+        if (Models.Spell.isSpellQueueEmpty()) {
             lastSpellTick = 0;
             packetCountdown = Math.max(packetCountdown, spellCooldown.get());
         }
     }
 
-    @SubscribeEvent
-    public void onWorldChange(WorldStateEvent e) {
-        SPELL_PACKET_QUEUE.clear();
+    private void updateSpell(SpellDirection[] spell) {
+        if (Arrays.equals(spellInProgress, spell)) return;
+
+        if (spell.length == 3) {
+            spellInProgress = SpellDirection.NO_SPELL;
+        } else {
+            spellInProgress = spell;
+        }
+    }
+
+    private void resetState() {
+        spellInProgress = SpellDirection.NO_SPELL;
         lastSpellTick = 0;
         packetCountdown = 0;
     }
@@ -185,5 +248,11 @@ public class QuickCastFeature extends Feature {
     public enum SpellUnit {
         PRIMARY,
         SECONDARY
+    }
+
+    public enum SafeCastType {
+        NONE,
+        BLOCK_ALL,
+        FINISH_COMPATIBLE
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.items.game;
 
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearAttackSpeed;
@@ -12,6 +13,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
+import com.wynntils.models.items.properties.ClassableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
@@ -35,6 +37,7 @@ public class UnknownGearItem extends GameItem
                 PowderedItemProperty,
                 RerollableItemProperty,
                 ShinyItemProperty,
+                ClassableItemProperty,
                 SetItemProperty,
                 RequirementItemProperty {
     private final String name;
@@ -130,6 +133,11 @@ public class UnknownGearItem extends GameItem
 
     public List<StatActualValue> getIdentifications() {
         return identifications;
+    }
+
+    @Override
+    public ClassType getRequiredClass() {
+        return requirements.classType().orElse(null);
     }
 
     @Override
