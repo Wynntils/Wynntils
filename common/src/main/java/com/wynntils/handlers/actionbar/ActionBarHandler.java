@@ -115,7 +115,8 @@ public final class ActionBarHandler extends Handler {
 
             // Likely we aren't on the character selection screen yet
             if (characterSelectionNavigationText.isEmpty()) {
-                WynntilsMod.warn("Failed to find character selection navigation text in packet: " + packetText.getString());
+                WynntilsMod.warn(
+                        "Failed to find character selection navigation text in packet: " + packetText.getString());
                 return;
             }
 
