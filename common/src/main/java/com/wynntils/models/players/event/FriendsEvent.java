@@ -75,9 +75,9 @@ public abstract class FriendsEvent extends Event {
      */
     public static class Joined extends FriendsEvent {
         private final String playerName;
-        private final int server;
+        private final String server;
 
-        public Joined(String playerName, Integer server) {
+        public Joined(String playerName, String server) {
             this.playerName = playerName;
             this.server = server;
         }
@@ -86,7 +86,7 @@ public abstract class FriendsEvent extends Event {
             return playerName;
         }
 
-        public int getServer() {
+        public String getServer() {
             return server;
         }
     }

@@ -74,7 +74,7 @@ public final class PartyModel extends Model {
             Pattern.compile(PARTY_PREFIX_REGEX + "You have been removed from the party\\.");
     // This message is currently not used in the model.
     private static final Pattern PARTY_PLAYER_NOT_ON_SAME_WORLD =
-            Pattern.compile(PARTY_PREFIX_REGEX + "That player is not playing on your world \\(WC\\d+\\)!");
+            Pattern.compile(PARTY_PREFIX_REGEX + "That player is not playing on your world \\([A-Z+]\\d+\\)!");
 
     private static final Pattern PARTY_JOIN_OTHER =
             Pattern.compile(PARTY_PREFIX_REGEX + "(\\w{1,16}) has joined your party, say hello!");

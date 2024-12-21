@@ -61,12 +61,12 @@ public final class FriendsModel extends Model {
     private static final Pattern ONLINE_FRIENDS_HEADER = Pattern.compile(FRIEND_PREFIX_REGEX + "Online Friends:");
     // Test in FriendsModel_ONLINE_FRIEND
     private static final Pattern ONLINE_FRIEND =
-            Pattern.compile(FRIEND_PREFIX_REGEX + "§2 - §a(\\w{1,16})§2 \\[Server: §aWC(\\d{1,3})§2]");
+            Pattern.compile(FRIEND_PREFIX_REGEX + "§2 - §a(\\w{1,16})§2 \\[Server: §a([A-Z]+\\d{1,3})§2]");
 
     // Test in FriendsModel_JOIN_PATTERN
     private static final Pattern JOIN_PATTERN = Pattern.compile(
             FRIEND_PREFIX_REGEX
-                    + "(?<username>\\w{1,16})§2 has logged into server §aWC(?<server>\\d{1,3})§2 as §aan? (?<class>[A-Z][a-z]+)");
+                    + "(?<username>\\w{1,16})§2 has logged into server §a(?<server>[A-Z]+\\d{1,3})§2 as §aan? (?<class>[A-Z][a-z]+)");
     // Test in FriendsModel_LEAVE_PATTERN
     private static final Pattern LEAVE_PATTERN =
             Pattern.compile(FRIEND_PREFIX_REGEX + "(?<username>\\w{1,16}) left the game\\.");
@@ -81,7 +81,7 @@ public final class FriendsModel extends Model {
     private long lastOnlineRequest = 0;
 
     private Set<String> friends;
-    private Map<String, Integer> onlineFriends = new HashMap<>(); // <username, server>
+    private Map<String, String> onlineFriends = new HashMap<>(); // <username, server>
 
     public FriendsModel() {
         super(List.of());
@@ -115,7 +115,7 @@ public final class FriendsModel extends Model {
         Matcher joinMatcher = styledText.getMatcher(JOIN_PATTERN);
         if (joinMatcher.matches()) {
             String username = joinMatcher.group("username");
-            int server = Integer.parseInt(joinMatcher.group("server"));
+            String server = joinMatcher.group("server");
 
             onlineFriends.put(username, server);
             WynntilsMod.postEvent(new FriendsEvent.Joined(username, server));
@@ -162,10 +162,10 @@ public final class FriendsModel extends Model {
             Matcher onlineFriendMatcher = styledText.getMatcher(ONLINE_FRIEND);
             if (onlineFriendMatcher.matches()) {
                 String username = onlineFriendMatcher.group(1);
-                int server = Integer.parseInt(onlineFriendMatcher.group(2));
+                String server = onlineFriendMatcher.group(2);
 
                 onlineFriends.put(username, server);
-                WynntilsMod.info("Friend " + username + " is online on WC" + server);
+                WynntilsMod.info("Friend " + username + " is online on " + server);
                 event.setCanceled(true);
                 return;
             } else {
@@ -273,7 +273,7 @@ public final class FriendsModel extends Model {
         return Collections.unmodifiableSet(friends);
     }
 
-    public Map<String, Integer> getOnlineFriends() {
+    public Map<String, String> getOnlineFriends() {
         return Collections.unmodifiableMap(onlineFriends);
     }
 

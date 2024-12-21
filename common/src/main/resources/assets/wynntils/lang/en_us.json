@@ -1517,6 +1517,8 @@
   "feature.wynntils.wynncraftButton.loadResourcePack.description": "Should the Wynncraft resource pack be loaded?",
   "feature.wynntils.wynncraftButton.loadResourcePack.name": "Load Resource Pack",
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button",
+  "feature.wynntils.wynncraftButton.serverRegionOverride.description": "Which server region should the button and auto-connect join? Wc will connect to your default region",
+  "feature.wynntils.wynncraftButton.serverRegionOverride.name": "Server Region Override",
   "feature.wynntils.wynncraftButton.serverType.description": "Which server should the button and auto-connect join?",
   "feature.wynntils.wynncraftButton.serverType.name": "Server Type",
   "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Class Selection",
