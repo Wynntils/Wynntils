@@ -19,6 +19,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -31,6 +32,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -53,6 +55,9 @@ public class WynncraftButtonFeature extends Feature {
 
     @Persisted
     public final Config<ServerType> serverType = new Config<>(ServerType.GAME);
+
+    @Persisted
+    public final Config<ServerRegion> serverRegionOverride = new Config<>(ServerRegion.WC);
 
     @Persisted
     public final Config<Boolean> autoConnect = new Config<>(false);
@@ -106,8 +111,11 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private ServerData getWynncraftServer() {
-        ServerData wynncraftServer = new ServerData(
-                "Wynncraft", serverType.get().serverAddressPrefix + WYNNCRAFT_DOMAIN, ServerData.Type.OTHER);
+        String ip = (serverRegionOverride.get() == ServerRegion.WC
+                        ? serverType.get().serverAddressPrefix
+                        : serverRegionOverride.get().name().toLowerCase(Locale.ROOT))
+                + WYNNCRAFT_DOMAIN;
+        ServerData wynncraftServer = new ServerData("Wynncraft", ip, ServerData.Type.OTHER);
         wynncraftServer.setResourcePackStatus(
                 loadResourcePack.get() ? ServerData.ServerPackStatus.ENABLED : ServerData.ServerPackStatus.DISABLED);
 
