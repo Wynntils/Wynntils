@@ -6,7 +6,6 @@ package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ArmSwingEvent;
@@ -21,13 +20,13 @@ import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
+import java.util.Arrays;
 import java.util.Optional;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.COMBAT)
 public class AutoAttackFeature extends Feature {
     private static final int TICKS_PER_ATTACK = 2;
@@ -36,6 +35,8 @@ public class AutoAttackFeature extends Feature {
     private WeaponStatus weaponStatus = WeaponStatus.UNKNOWN;
     private int lastSelectedSlot;
     private int preventWrongCast = Integer.MIN_VALUE;
+
+    private SpellDirection[] spellInProgress = SpellDirection.NO_SPELL;
 
     @SubscribeEvent
     public void onChangeCarriedItemEvent(ChangeCarriedItemEvent event) {
@@ -54,6 +55,7 @@ public class AutoAttackFeature extends Feature {
         if (event.getActionContext() != ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
         if (Models.Character.getClassType() != ClassType.ARCHER) return;
+
         lastSelectedSlot = McUtils.inventory().selected;
         preventWrongCast = McUtils.player().tickCount + SPELL_TIMEOUT_TICKS;
     }
@@ -61,13 +63,19 @@ public class AutoAttackFeature extends Feature {
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (Models.Character.getClassType() == ClassType.ARCHER) return;
+
         lastSelectedSlot = McUtils.inventory().selected;
         preventWrongCast = McUtils.player().tickCount + SPELL_TIMEOUT_TICKS;
     }
 
     @SubscribeEvent
-    public void onSpellCastCompleted(SpellEvent.Completed event) {
-        preventWrongCast = Integer.MIN_VALUE;
+    public void onSpellSequenceUpdate(SpellEvent.Partial e) {
+        updateSpell(e.getSpellDirectionArray());
+    }
+
+    @SubscribeEvent
+    public void onSpellExpired(SpellEvent.Expired e) {
+        updateSpell(e.getSpellDirectionArray());
     }
 
     private boolean isHoldingUsableWeapon() {
@@ -83,6 +91,7 @@ public class AutoAttackFeature extends Feature {
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
         if (!Models.Spell.isSpellQueueEmpty()) return;
+        if (spellInProgress.length != 0) return;
 
         LocalPlayer player = McUtils.player();
         int currentSelectedSlot = McUtils.inventory().selected;
@@ -108,6 +117,16 @@ public class AutoAttackFeature extends Feature {
             if (!McUtils.options().keyAttack.isDown()) return;
             // SpellDirection.LEFT doesn't do the swing animation
             player.swing(InteractionHand.MAIN_HAND);
+        }
+    }
+
+    private void updateSpell(SpellDirection[] spell) {
+        if (Arrays.equals(spellInProgress, spell)) return;
+
+        if (spell.length == 3) {
+            spellInProgress = SpellDirection.NO_SPELL;
+        } else {
+            spellInProgress = spell;
         }
     }
 
