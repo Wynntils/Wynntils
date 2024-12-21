@@ -9,6 +9,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -123,10 +124,16 @@ public enum GearType {
                 return gearType;
             }
 
-            if (gearType.defaultItem.equals(item)
-                    && customModelData != null
-                    && gearType.models.contains(customModelData.value())) {
-                return gearType;
+            if (customModelData != null) {
+                Optional<Float> customModelDataValue =
+                        customModelData.floats().stream().findFirst();
+
+                if (gearType.defaultItem.equals(item)
+                        && customModelData != null
+                        && (customModelDataValue.isPresent())
+                        && gearType.models.contains(customModelDataValue.get())) {
+                    return gearType;
+                }
             }
         }
 

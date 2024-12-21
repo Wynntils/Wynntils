@@ -224,7 +224,7 @@ public class WynncraftButtonFeature extends Feature {
             // If someone converts this to get the actual ServerData used by the gui, check
             // ServerData#pinged here and
             // set it later
-            if (allowStale && McUtils.mc().getTextureManager().getTexture(destination, null) != null) {
+            if (allowStale && McUtils.mc().getTextureManager().getTexture(destination) != null) {
                 serverIconLocation = destination;
                 onDone();
                 return;

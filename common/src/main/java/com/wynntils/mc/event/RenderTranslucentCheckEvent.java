@@ -4,22 +4,23 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.neoforged.bus.api.Event;
 
 public abstract class RenderTranslucentCheckEvent extends Event {
     private boolean translucent;
-    private final LivingEntity entity;
+    private final LivingEntityRenderState entityRenderState;
     private float translucence;
 
-    public RenderTranslucentCheckEvent(boolean translucent, LivingEntity entity, float translucence) {
+    public RenderTranslucentCheckEvent(
+            boolean translucent, LivingEntityRenderState entityRenderState, float translucence) {
         this.translucent = translucent;
-        this.entity = entity;
+        this.entityRenderState = entityRenderState;
         this.translucence = translucence;
     }
 
-    public LivingEntity getEntity() {
-        return entity;
+    public LivingEntityRenderState getEntityRenderState() {
+        return entityRenderState;
     }
 
     public float getTranslucence() {
@@ -40,8 +41,8 @@ public abstract class RenderTranslucentCheckEvent extends Event {
      * entity should be rendered translucent or not
      */
     public static class Body extends RenderTranslucentCheckEvent {
-        public Body(boolean translucent, LivingEntity entity, float translucence) {
-            super(translucent, entity, translucence);
+        public Body(boolean translucent, LivingEntityRenderState entityRenderState, float translucence) {
+            super(translucent, entityRenderState, translucence);
         }
     }
 
@@ -50,8 +51,8 @@ public abstract class RenderTranslucentCheckEvent extends Event {
      * entity cape should be rendered translucent or not
      */
     public static class Cape extends RenderTranslucentCheckEvent {
-        public Cape(boolean translucent, LivingEntity entity, float translucence) {
-            super(translucent, entity, translucence);
+        public Cape(boolean translucent, LivingEntityRenderState entityRenderState, float translucence) {
+            super(translucent, entityRenderState, translucence);
         }
     }
 }

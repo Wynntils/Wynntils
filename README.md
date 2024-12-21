@@ -14,7 +14,7 @@ Wynntils
 
 Wynntils is a Wynncraft mod that seeks to enhance the user's gameplay with a variety of customizable options and additions.
 
-Wynntils is based on Minecraft 1.21 using Architectury, and supports **Fabric** and **NeoForge**. This repository contains a rewrite (originally codenamed Artemis) of the original Wynntils mod, now known as [Wynntils Legacy](https://github.com/Wynntils/Wynntils-Legacy) .
+Wynntils is based on Minecraft 1.21.4 using Architectury, and supports **Fabric** and **NeoForge**. This repository contains a rewrite (originally codenamed Artemis) of the original Wynntils mod, now known as [Wynntils Legacy](https://github.com/Wynntils/Wynntils-Legacy) .
 
 Downloading a release
 ========

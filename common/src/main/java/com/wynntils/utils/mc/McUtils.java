@@ -6,6 +6,7 @@ package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.extension.ChatComponentExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -80,7 +81,7 @@ public final class McUtils {
         // so use the fully qualified method with the correct order
         mc().getSoundManager()
                 .play(new SimpleSoundInstance(
-                        sound.getLocation(),
+                        sound.location(),
                         SoundSource.AMBIENT,
                         volume,
                         pitch,
@@ -95,12 +96,12 @@ public final class McUtils {
     }
 
     public static void sendMessageToClient(Component component) {
-        if (player() == null) {
-            WynntilsMod.error(
-                    "Tried to send message to client: \"" + component.getString() + "\", but player was null.");
-            return;
+        ClientsideMessageEvent event = new ClientsideMessageEvent(component);
+        WynntilsMod.postEvent(event);
+
+        if (!event.isCanceled()) {
+            mc().gui.getChat().addMessage(component);
         }
-        player().sendSystemMessage(component);
     }
 
     public static void removeMessageFromChat(Component component) {
