@@ -1,3 +1,20 @@
+## [2.4.9](https://github.com/Wynntils/Wynntils/compare/v2.4.8...v2.4.9) (2024-12-22)
+
+
+### New Features
+
+* Add consumable duration, ingredient effectiveness and charges/durability/duration modifier item filters [skip ci] ([#3039](https://github.com/Wynntils/Wynntils/issues/3039)) ([83625bc](https://github.com/Wynntils/Wynntils/commit/83625bc66638c0d14c2090284c8d97b6c350d52a))
+
+
+### Bug Fixes
+
+* Fix end of lootrun stats not being parsed ([#3041](https://github.com/Wynntils/Wynntils/issues/3041)) ([f4ce4b8](https://github.com/Wynntils/Wynntils/commit/f4ce4b8ef7643d3324d3496a0baa75b02e0d25cd))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3036](https://github.com/Wynntils/Wynntils/issues/3036)) ([5764e9d](https://github.com/Wynntils/Wynntils/commit/5764e9db65c31a5c734a2958044f847eb8f705c8))
+
 ## [2.4.8](https://github.com/Wynntils/Wynntils/compare/v2.4.7...v2.4.8) (2024-12-20)
 
 
@@ -27,6 +44,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#3034](https://github.com/Wynntils/Wynntils/issues/3034)) ([70a4326](https://github.com/Wynntils/Wynntils/commit/70a4326f17174e45517f2529d1b656f4fc434fbf))
+* **release:** v2.4.8 [skip ci] ([a68e820](https://github.com/Wynntils/Wynntils/commit/a68e820be872191391005fb935f571fd89bd7132))
 
 ## [2.4.7](https://github.com/Wynntils/Wynntils/compare/v2.4.6...v2.4.7) (2024-12-07)
 
@@ -66,24 +84,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.4.5 [skip ci] ([8e9224f](https://github.com/Wynntils/Wynntils/commit/8e9224f91a04f637c74b0e641f7af8678aa67309))
-
-## [2.4.4](https://github.com/Wynntils/Wynntils/compare/v2.4.3...v2.4.4) (2024-11-30)
-
-
-### New Features
-
-* Add scrolling to guild log containers [skip ci] ([#3004](https://github.com/Wynntils/Wynntils/issues/3004)) ([5bb580b](https://github.com/Wynntils/Wynntils/commit/5bb580b5ea30bc04b6efabf6ef13cd2de747ece6))
-* Support main attack range stat [skip ci] ([#3006](https://github.com/Wynntils/Wynntils/issues/3006)) ([816e31e](https://github.com/Wynntils/Wynntils/commit/816e31e708b434931bbc6b058ce8d7c8e27f5168))
-
-
-### Bug Fixes
-
-* Update lootrun beacon tracking after patch (Does not fix tracking 5+ beacons) ([#3005](https://github.com/Wynntils/Wynntils/issues/3005)) ([87a43c7](https://github.com/Wynntils/Wynntils/commit/87a43c70d5ae9d5f338831b5e69ea96bb1bc340e))
-* Update profession progress on failed gathers [skip ci] ([#3000](https://github.com/Wynntils/Wynntils/issues/3000)) ([1e7f9ea](https://github.com/Wynntils/Wynntils/commit/1e7f9ea7e35dde860f948abca690f33a48879ede))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3007](https://github.com/Wynntils/Wynntils/issues/3007)) ([02b49a6](https://github.com/Wynntils/Wynntils/commit/02b49a67003b8a977d2cd19576bbfeef8cbffc0c))
-* **release:** v2.4.4 [skip ci] ([9276ced](https://github.com/Wynntils/Wynntils/commit/9276ced2a264d09841f4b53fe6bb99b8ea6a75fa))
 
