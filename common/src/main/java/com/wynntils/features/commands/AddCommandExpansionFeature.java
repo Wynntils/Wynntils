@@ -345,7 +345,7 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(
                 root,
                 literal("switch")
-                        .then(argument("world", IntegerArgumentType.integer()))
+                        .then(argument("world", StringArgumentType.string()))
                         .build());
 
         addNode(
