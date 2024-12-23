@@ -5,12 +5,21 @@
 package com.wynntils.models.containers.containers;
 
 import com.wynntils.models.containers.Container;
+import com.wynntils.models.containers.type.BoundedContainerProperty;
+import com.wynntils.models.containers.type.ContainerBounds;
+
 import java.util.regex.Pattern;
 
-public class TradeMarketSellContainer extends Container {
+public class TradeMarketSellContainer extends Container implements BoundedContainerProperty {
     private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFE8\uE014.+");
 
     public TradeMarketSellContainer() {
         super(TITLE_PATTERN);
+    }
+
+    @Override
+    public ContainerBounds getBounds() {
+        // singular slot where the item to be sold is (slot 22)
+        return new ContainerBounds(2, 4, 2, 4);
     }
 }

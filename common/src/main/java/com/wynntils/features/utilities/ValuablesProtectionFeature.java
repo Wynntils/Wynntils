@@ -22,10 +22,14 @@ import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.BlacksmithContainer;
 import com.wynntils.models.containers.containers.ItemIdentifierContainer;
 import com.wynntils.models.containers.containers.TradeMarketSellContainer;
+import com.wynntils.models.containers.type.BoundedContainerProperty;
+import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -76,80 +80,42 @@ public class ValuablesProtectionFeature extends Feature {
     private static final ResourceLocation CIRCLE_TEXTURE =
             ResourceLocation.withDefaultNamespace("textures/wynn/gui/tutorial.png");
 
-    private static final int BLACKSMITH_CONFIRM_BUTTON_SLOT = 17;
+    private static final int BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT = 17;
     private static final int TM_CONFIRM_BUTTON_SLOT = 34;
     private static final int TM_ITEM_SLOT = 22;
+
+    private Class<? extends BoundedContainerProperty> currentContainerType;
+    private List<Integer> slotsToWarn = new ArrayList<>();
 
     private HintTextWidget ctrlHintTextWidget;
     private final List<HintTextWidget> tmHintTextWidgets = new ArrayList<>();
     private int emphasizeAnimationFrame = 0; // 0-indexed 4 frames of animation
     private int emphasizeAnimationDelay = 0;
     private int emphasizeDirection = 1; // 1 for forward, -1 for reverse
-    private boolean drawTradeMarketWarning = false;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderSlot(SlotRenderEvent.Pre e) {
-        if (!(e.getScreen() instanceof ContainerScreen cs)) return;
-
         Container currentContainer = Models.Container.getCurrentContainer();
-        if (currentContainer == null) return;
-        switch (currentContainer) {
-            case BlacksmithContainer blacksmithContainer -> {
-                int itemIndex = cs.getMenu().getItems().indexOf(e.getSlot().getItem());
-                if (!blacksmithContainer.getBounds().slots().contains(itemIndex)) return;
+        if (currentContainerType != null && !currentContainerType.isInstance(currentContainer)) return;
+        if (!slotsToWarn.contains(e.getSlot().index)) return;
 
-                Optional<WynnItem> item = Models.Item.getWynnItem(e.getSlot().getItem());
-                if (item.isEmpty() || !(item.get() instanceof GearTierItemProperty gtip)) return;
-
-                if (gtip.getGearTier() != GearTier.MYTHIC) return;
-
-                if (item.get() instanceof TomeItem && !tomesWarning.get()) return;
-
-                RenderSystem.enableDepthTest();
-                RenderUtils.drawTexturedRectWithColor(
-                        e.getPoseStack(),
-                        CIRCLE_TEXTURE,
-                        CommonColors.RED,
-                        e.getSlot().x - 16,
-                        e.getSlot().y - 16,
-                        200,
-                        48,
-                        48,
-                        0,
-                        emphasizeAnimationFrame * 48,
-                        48,
-                        48,
-                        48,
-                        192);
-                RenderSystem.disableDepthTest();
-            }
-            case TradeMarketSellContainer tradeMarketSellContainer -> {
-                if (!drawTradeMarketWarning || e.getSlot().index != TradeMarketModel.TM_SELL_PRICE_SLOT) return;
-                RenderSystem.enableDepthTest();
-                RenderUtils.drawTexturedRectWithColor(
-                        e.getPoseStack(),
-                        CIRCLE_TEXTURE,
-                        CommonColors.RED,
-                        e.getSlot().x - 16,
-                        e.getSlot().y - 16,
-                        200,
-                        48,
-                        48,
-                        0,
-                        emphasizeAnimationFrame * 48,
-                        48,
-                        48,
-                        48,
-                        192);
-                RenderSystem.disableDepthTest();
-            }
-            case ItemIdentifierContainer itemIdentifierContainer -> {
-                System.out.println("Item Identifier Container");
-            }
-            default -> {
-                return;
-            }
-        }
+        RenderSystem.enableDepthTest();
+        RenderUtils.drawTexturedRectWithColor(
+                e.getPoseStack(),
+                CIRCLE_TEXTURE,
+                CommonColors.RED,
+                e.getSlot().x - 16,
+                e.getSlot().y - 16,
+                200,
+                48,
+                48,
+                0,
+                emphasizeAnimationFrame * 48,
+                48,
+                48,
+                48,
+                192);
+        RenderSystem.disableDepthTest();
     }
 
     @SubscribeEvent
@@ -157,34 +123,48 @@ public class ValuablesProtectionFeature extends Feature {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
 
         Container currentContainer = Models.Container.getCurrentContainer();
-        if (currentContainer instanceof BlacksmithContainer blacksmithContainer) {
-            boolean widgetRequired = false;
-            for (int i : blacksmithContainer.getBounds().getSlots()) {
-                Optional<WynnItem> optItem =
-                        Models.Item.getWynnItem(cs.getMenu().getItems().get(i));
-                if (optItem.isEmpty() || !(optItem.get() instanceof GearTierItemProperty gtip)) continue;
+        if (currentContainer == null) return;
+        for (Class<? extends BoundedContainerProperty> container : ProtectableNPCs.ALL.getContainers()) {
+            if (currentContainer.getClass().equals(container)) {
+                currentContainerType = container;
 
-                if (gtip.getGearTier() == GearTier.MYTHIC
-                        && !(optItem.get() instanceof TomeItem && !tomesWarning.get())) {
-                    widgetRequired = true;
-                    break;
+                slotsToWarn = new ArrayList<>();
+                for (int i : ((BoundedContainerProperty) currentContainer).getBounds().getSlots()) {
+                    Optional<WynnItem> itemOpt =
+                            Models.Item.getWynnItem(cs.getMenu().getItems().get(i));
+                    if (itemOpt.isEmpty()) continue;
+                    WynnItem item = itemOpt.get();
+
+                    // check tomes since we can return early
+                    if (item instanceof TomeItem && !tomesWarning.get()) continue;
+
+                    // set a single flag for all the checks, first do high roll
+                    boolean shouldWarn = highRollWarningNPCs.get().getContainers().contains(BlacksmithContainer.class) &&
+                            item instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty &&
+                            identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get();
+
+                    if (item instanceof GearTierItemProperty gtip) {
+                        if (mythicWarningNPCs.get().getContainers().contains(BlacksmithContainer.class) &&
+                                gtip.getGearTier() == GearTier.MYTHIC) {
+                            shouldWarn = true;
+                        }
+                        if (craftedWarningNPCs.get().getContainers().contains(BlacksmithContainer.class) &&
+                                gtip.getGearTier() == GearTier.CRAFTED &&
+                                item instanceof LeveledItemProperty lip &&
+                                lip.getLevel() >= craftedLevelThreshold.get()) {
+                            shouldWarn = true;
+                        }
+                    }
+
+                    if (shouldWarn) {
+                        slotsToWarn.add(i);
+                    }
                 }
+                break;
             }
+        }
+        if (currentContainer instanceof BlacksmithContainer blacksmithContainer) {
 
-            if (widgetRequired && ctrlHintTextWidget == null) {
-                ctrlHintTextWidget = new HintTextWidget(
-                        cs.width / 2,
-                        cs.topPos - 6,
-                        cs.width - 2 * cs.leftPos,
-                        11,
-                        I18n.get("feature.wynntils.mythicSellWarning.ctrlClick"),
-                        HorizontalAlignment.CENTER,
-                        CommonColors.WHITE);
-                cs.addRenderableOnly(ctrlHintTextWidget);
-            } else if (!widgetRequired && ctrlHintTextWidget != null) {
-                cs.removeWidget(ctrlHintTextWidget);
-                ctrlHintTextWidget = null;
-            }
         } else if (currentContainer instanceof TradeMarketSellContainer) {
             resetTradeMarketWarning();
             Optional<GearTierItemProperty> optGearTier = Models.Item.asWynnItemProperty(
@@ -197,13 +177,12 @@ public class ValuablesProtectionFeature extends Feature {
             if (salePrice == -1 || lowestPrice == -1) return;
 
             if (salePrice < lowestPrice * tradeMarketPriceThreshold.get()) {
-                drawTradeMarketWarning = true;
                 ctrlHintTextWidget = new HintTextWidget(
                         cs.width - cs.leftPos + 2,
                         cs.height / 2 - 46,
                         200,
                         11,
-                        I18n.get("feature.wynntils.mythicSellWarning.ctrlClick"),
+                        I18n.get("feature.wynntils.valuablesProtection.ctrlClick"),
                         HorizontalAlignment.LEFT,
                         CommonColors.WHITE);
                 cs.addRenderableOnly(ctrlHintTextWidget);
@@ -214,7 +193,7 @@ public class ValuablesProtectionFeature extends Feature {
                         200,
                         11,
                         I18n.get(
-                                "feature.wynntils.mythicSellWarning.tmWarning1",
+                                "feature.wynntils.valuablesProtection.tmWarning1",
                                 salePrice + " " + ChatFormatting.DARK_GRAY + "("
                                         + Models.Emerald.getFormattedString(salePrice, false) + ")"
                                         + ChatFormatting.RESET,
@@ -227,7 +206,7 @@ public class ValuablesProtectionFeature extends Feature {
                         200,
                         11,
                         I18n.get(
-                                "feature.wynntils.mythicSellWarning.tmWarning2",
+                                "feature.wynntils.valuablesProtection.tmWarning2",
                                 lowestPrice + " " + ChatFormatting.DARK_GRAY + "("
                                         + Models.Emerald.getFormattedString(lowestPrice, false) + ")"
                                         + ChatFormatting.RESET),
@@ -238,7 +217,7 @@ public class ValuablesProtectionFeature extends Feature {
                         cs.height / 2 - 4,
                         200,
                         11,
-                        I18n.get("feature.wynntils.mythicSellWarning.tmWarning3"),
+                        I18n.get("feature.wynntils.valuablesProtection.tmWarning3"),
                         HorizontalAlignment.LEFT,
                         CommonColors.GRAY));
 
@@ -252,7 +231,7 @@ public class ValuablesProtectionFeature extends Feature {
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
         if (ctrlHintTextWidget == null || KeyboardUtils.isControlDown()) return;
-        if (e.getSlotNum() != BLACKSMITH_CONFIRM_BUTTON_SLOT && e.getSlotNum() != TM_CONFIRM_BUTTON_SLOT) return;
+        if (e.getSlotNum() != BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT && e.getSlotNum() != TM_CONFIRM_BUTTON_SLOT) return;
 
         e.setCanceled(true);
         for (int i = 0; i < 12; i += 6) {
@@ -285,7 +264,6 @@ public class ValuablesProtectionFeature extends Feature {
             cs.removeWidget(ctrlHintTextWidget);
             tmHintTextWidgets.forEach(cs::removeWidget);
         }
-        drawTradeMarketWarning = false;
         ctrlHintTextWidget = null;
         tmHintTextWidgets.clear();
     }
@@ -332,12 +310,22 @@ public class ValuablesProtectionFeature extends Feature {
     }
 
     private enum ProtectableNPCs {
-        BLACKSMITH,
-        TRADE_MARKET,
-        IDENTIFIER,
-        BLACKSMITH_AND_TRADE_MARKET,
-        BLACKSMITH_AND_IDENTIFIER,
-        TRADE_MARKET_AND_IDENTIFIER,
-        ALL
+        BLACKSMITH(List.of(BlacksmithContainer.class)),
+        TRADE_MARKET(List.of(TradeMarketSellContainer.class)),
+        IDENTIFIER(List.of(ItemIdentifierContainer.class)),
+        BLACKSMITH_AND_TRADE_MARKET(List.of(BlacksmithContainer.class, TradeMarketSellContainer.class)),
+        BLACKSMITH_AND_IDENTIFIER(List.of(BlacksmithContainer.class, ItemIdentifierContainer.class)),
+        TRADE_MARKET_AND_IDENTIFIER(List.of(TradeMarketSellContainer.class, ItemIdentifierContainer.class)),
+        ALL(List.of(BlacksmithContainer.class, TradeMarketSellContainer.class, ItemIdentifierContainer.class));
+
+        private final List<Class<? extends BoundedContainerProperty>> containers;
+
+        ProtectableNPCs(List<Class<? extends BoundedContainerProperty>> containers) {
+            this.containers = containers;
+        }
+
+        public List<Class<? extends BoundedContainerProperty>> getContainers() {
+            return containers;
+        }
     }
 }
