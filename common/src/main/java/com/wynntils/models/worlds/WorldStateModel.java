@@ -15,6 +15,7 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.PosUtils;
 import java.util.List;
@@ -39,6 +40,7 @@ public final class WorldStateModel extends Model {
     private StyledText currentTabListFooter = StyledText.EMPTY;
     private String currentWorldName = "";
     private String currentHousingName = "";
+    private ServerRegion currentRegion = ServerRegion.WC;
     private long serverJoinTimestamp = 0;
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
@@ -85,6 +87,12 @@ public final class WorldStateModel extends Model {
         if (newState == WorldState.WORLD) {
             serverJoinTimestamp = System.currentTimeMillis();
         }
+
+        if (currentWorldName.length() >= 2) {
+            String region = currentWorldName.substring(0, 2);
+            currentRegion = ServerRegion.fromString(region);
+        }
+
         WynntilsMod.postEvent(new WorldStateEvent(newState, oldState, newWorldName, isFirstJoinWorld));
     }
 
@@ -190,10 +198,14 @@ public final class WorldStateModel extends Model {
     }
 
     /**
-     * @return Full name of the current world, such as "WC32"
+     * @return Full name of the current world, such as "NA32"
      */
     public String getCurrentWorldName() {
         return currentWorldName;
+    }
+
+    public ServerRegion getCurrentServerRegion() {
+        return currentRegion;
     }
 
     public String getCurrentHousingName() {

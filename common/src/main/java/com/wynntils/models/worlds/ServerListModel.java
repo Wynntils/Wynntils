@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.worlds;
 
+import com.google.common.collect.Streams;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
@@ -13,7 +14,9 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.profile.ServerProfile;
+import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.models.worlds.type.WorldState;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +31,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class ServerListModel extends Model {
     private static final int SERVER_UPDATE_MS = 15000;
 
-    private static final List<String> SERVER_TYPES = List.of("WC", "lobby", "GM", "DEV", "WAR", "HB", "YT");
+    private static final List<String> SERVER_TYPES = List.of("lobby", "GM", "DEV", "WAR", "HB", "YT");
 
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
 
@@ -41,7 +44,8 @@ public final class ServerListModel extends Model {
     }
 
     public List<String> getWynnServerTypes() {
-        return SERVER_TYPES;
+        return Streams.concat(Arrays.stream(ServerRegion.values()).map(Enum::name), SERVER_TYPES.stream())
+                .toList();
     }
 
     public Set<String> getServers() {
