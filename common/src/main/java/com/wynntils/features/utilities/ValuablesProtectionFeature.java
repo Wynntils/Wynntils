@@ -57,34 +57,36 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class ValuablesProtectionFeature extends Feature {
     @Persisted
-    public final Config<Float> tradeMarketPriceThreshold = new Config<>(0.9f);
+    private final Config<Float> tradeMarketPriceThreshold = new Config<>(0.9f);
 
     @Persisted
-    public final Config<ProtectableNPCs> mythicWarningNPCs = new Config<>(ProtectableNPCs.BLACKSMITH_AND_TRADE_MARKET);
+    private final Config<ProtectableNPCs> mythicWarningNPCs = new Config<>(ProtectableNPCs.BLACKSMITH_AND_TRADE_MARKET);
 
     @Persisted
-    public final Config<ProtectableNPCs> craftedWarningNPCs = new Config<>(ProtectableNPCs.BLACKSMITH);
+    private final Config<ProtectableNPCs> craftedWarningNPCs = new Config<>(ProtectableNPCs.BLACKSMITH);
 
     @Persisted
-    public final Config<Integer> craftedLevelThreshold = new Config<>(100);
+    private final Config<Integer> craftedLevelThreshold = new Config<>(100);
 
     @Persisted
-    public final Config<ProtectableNPCs> highRollWarningNPCs = new Config<>(ProtectableNPCs.ALL);
+    private final Config<ProtectableNPCs> highRollWarningNPCs = new Config<>(ProtectableNPCs.ALL);
 
     @Persisted
-    public final Config<Float> highRollThreshold = new Config<>(80.0f);
+    private final Config<Float> highRollThreshold = new Config<>(80.0f);
 
     @Persisted
-    public final Config<Boolean> tomesWarning = new Config<>(false);
+    private final Config<Boolean> tomesWarning = new Config<>(false);
 
     private static final ResourceLocation CIRCLE_TEXTURE =
             ResourceLocation.withDefaultNamespace("textures/wynn/gui/tutorial.png");
 
     private static final int BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT = 17;
-    private static final int TM_CONFIRM_BUTTON_SLOT = 34;
     private static final int TM_ITEM_SLOT = 22;
+    private static final int TM_PRICE_SLOT = 28;
+    private static final int TM_CONFIRM_BUTTON_SLOT = 34;
 
     private Class<? extends BoundedContainerProperty> currentContainerType;
+    /** Represents the slots to draw red circles on where necessary.*/
     private List<Integer> slotsToWarn = new ArrayList<>();
 
     private HintTextWidget ctrlHintTextWidget;
@@ -124,57 +126,82 @@ public class ValuablesProtectionFeature extends Feature {
 
         Container currentContainer = Models.Container.getCurrentContainer();
         if (currentContainer == null) return;
-        for (Class<? extends BoundedContainerProperty> container : ProtectableNPCs.ALL.getContainers()) {
-            if (currentContainer.getClass().equals(container)) {
-                currentContainerType = container;
+        for (Class<? extends BoundedContainerProperty> container : ProtectableNPCs.BLACKSMITH_AND_IDENTIFIER.getContainers()) {
+            if (!currentContainer.getClass().equals(container)) continue;
+            currentContainerType = container;
 
-                slotsToWarn = new ArrayList<>();
-                for (int i : ((BoundedContainerProperty) currentContainer).getBounds().getSlots()) {
-                    Optional<WynnItem> itemOpt =
-                            Models.Item.getWynnItem(cs.getMenu().getItems().get(i));
-                    if (itemOpt.isEmpty()) continue;
-                    WynnItem item = itemOpt.get();
+            slotsToWarn = new ArrayList<>();
+            for (int i : ((BoundedContainerProperty) currentContainer).getBounds().getSlots()) {
+                Optional<WynnItem> itemOpt =
+                        Models.Item.getWynnItem(cs.getMenu().getItems().get(i));
+                if (itemOpt.isEmpty()) continue;
+                WynnItem item = itemOpt.get();
 
-                    // check tomes since we can return early
-                    if (item instanceof TomeItem && !tomesWarning.get()) continue;
+                // check tomes since we can return early
+                if (item instanceof TomeItem && !tomesWarning.get()) continue;
 
-                    // set a single flag for all the checks, first do high roll
-                    boolean shouldWarn = highRollWarningNPCs.get().getContainers().contains(BlacksmithContainer.class) &&
-                            item instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty &&
-                            identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get();
+                // set a single flag for all the checks, first do high roll
+                boolean shouldWarn = highRollWarningNPCs.get().getContainers().contains(container) &&
+                        item instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty &&
+                        identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get();
 
-                    if (item instanceof GearTierItemProperty gtip) {
-                        if (mythicWarningNPCs.get().getContainers().contains(BlacksmithContainer.class) &&
-                                gtip.getGearTier() == GearTier.MYTHIC) {
-                            shouldWarn = true;
-                        }
-                        if (craftedWarningNPCs.get().getContainers().contains(BlacksmithContainer.class) &&
-                                gtip.getGearTier() == GearTier.CRAFTED &&
-                                item instanceof LeveledItemProperty lip &&
-                                lip.getLevel() >= craftedLevelThreshold.get()) {
-                            shouldWarn = true;
-                        }
+                if (item instanceof GearTierItemProperty gtip) {
+                    if (mythicWarningNPCs.get().getContainers().contains(container) &&
+                            gtip.getGearTier() == GearTier.MYTHIC) {
+                        shouldWarn = true;
                     }
-
-                    if (shouldWarn) {
-                        slotsToWarn.add(i);
+                    if (craftedWarningNPCs.get().getContainers().contains(container) &&
+                            gtip.getGearTier() == GearTier.CRAFTED &&
+                            item instanceof LeveledItemProperty lip &&
+                            lip.getLevel() >= craftedLevelThreshold.get()) {
+                        shouldWarn = true;
                     }
                 }
-                break;
-            }
-        }
-        if (currentContainer instanceof BlacksmithContainer blacksmithContainer) {
 
-        } else if (currentContainer instanceof TradeMarketSellContainer) {
+                if (shouldWarn) {
+                    slotsToWarn.add(i);
+                }
+            }
+            break;
+        }
+
+        if (!slotsToWarn.isEmpty()) {
+            ctrlHintTextWidget = new HintTextWidget(
+                    cs.width / 2,
+                    cs.topPos - 6,
+                    cs.width - 2 * cs.leftPos,
+                    11,
+                    I18n.get("feature.wynntils.valuablesProtection.ctrlClick"),
+                    HorizontalAlignment.CENTER,
+                    CommonColors.WHITE);
+            cs.addRenderableOnly(ctrlHintTextWidget);
+        }
+
+        if (currentContainer instanceof TradeMarketSellContainer) {
             resetTradeMarketWarning();
-            Optional<GearTierItemProperty> optGearTier = Models.Item.asWynnItemProperty(
-                    cs.getMenu().getItems().get(TM_ITEM_SLOT), GearTierItemProperty.class);
-            if (optGearTier.isEmpty() || optGearTier.get().getGearTier() != GearTier.MYTHIC) return;
+            Optional<WynnItem> optItem = Models.Item.getWynnItem(cs.getMenu().getItems().get(TM_ITEM_SLOT));
+            if (optItem.isEmpty()) return;
+            WynnItem item = optItem.get();
+
+            // set a single flag for all the checks, first do high roll
+            boolean warnableItem = highRollWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class) &&
+                    item instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty &&
+                    identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get();
+
+            if (item instanceof GearTierItemProperty gtip) {
+                if (mythicWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class) &&
+                        gtip.getGearTier() == GearTier.MYTHIC) {
+                    warnableItem = true;
+                }
+            }
+
+            if (!warnableItem) return;
 
             int salePrice = Models.TradeMarket.getSalePrice();
             int lowestPrice = Models.TradeMarket.getLowestPrice();
 
             if (salePrice == -1 || lowestPrice == -1) return;
+            slotsToWarn.add(TM_PRICE_SLOT);
 
             if (salePrice < lowestPrice * tradeMarketPriceThreshold.get()) {
                 ctrlHintTextWidget = new HintTextWidget(
@@ -230,7 +257,7 @@ public class ValuablesProtectionFeature extends Feature {
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (ctrlHintTextWidget == null || KeyboardUtils.isControlDown()) return;
+        if (slotsToWarn.isEmpty() || KeyboardUtils.isControlDown()) return;
         if (e.getSlotNum() != BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT && e.getSlotNum() != TM_CONFIRM_BUTTON_SLOT) return;
 
         e.setCanceled(true);
@@ -257,6 +284,7 @@ public class ValuablesProtectionFeature extends Feature {
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post e) {
         resetTradeMarketWarning();
+        slotsToWarn = new ArrayList<>();
     }
 
     private void resetTradeMarketWarning() {
@@ -266,6 +294,7 @@ public class ValuablesProtectionFeature extends Feature {
         }
         ctrlHintTextWidget = null;
         tmHintTextWidgets.clear();
+        slotsToWarn = new ArrayList<>();
     }
 
     private static final class HintTextWidget extends AbstractWidget {
