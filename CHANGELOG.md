@@ -1,3 +1,15 @@
+## [2.4.10](https://github.com/Wynntils/Wynntils/compare/v2.4.9...v2.4.10) (2024-12-23)
+
+
+### New Features
+
+* Add some basic support for regional servers [skip ci] ([#3038](https://github.com/Wynntils/Wynntils/issues/3038)) ([7983587](https://github.com/Wynntils/Wynntils/commit/79835876ad4b5deaffe0c4c6eecd84bbaf5205a9))
+
+
+### Bug Fixes
+
+* User-edited chat items with invalid powders causes crash ([#3030](https://github.com/Wynntils/Wynntils/issues/3030)) ([74c62ad](https://github.com/Wynntils/Wynntils/commit/74c62ad6d9f47b5b70183a62d56e9f1e02c993be))
+
 ## [2.4.9](https://github.com/Wynntils/Wynntils/compare/v2.4.8...v2.4.9) (2024-12-22)
 
 
@@ -14,6 +26,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#3036](https://github.com/Wynntils/Wynntils/issues/3036)) ([5764e9d](https://github.com/Wynntils/Wynntils/commit/5764e9db65c31a5c734a2958044f847eb8f705c8))
+* **release:** v2.4.9 [skip ci] ([624b053](https://github.com/Wynntils/Wynntils/commit/624b053654ac8ec1e8cf20e326cf5bdbe1565234))
 
 ## [2.4.8](https://github.com/Wynntils/Wynntils/compare/v2.4.7...v2.4.8) (2024-12-20)
 
@@ -72,16 +85,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.4.6 [skip ci] ([73c996b](https://github.com/Wynntils/Wynntils/commit/73c996bdbaa3134ff7f94dd64eff883d09b0abbd))
-
-## [2.4.5](https://github.com/Wynntils/Wynntils/compare/v2.4.4...v2.4.5) (2024-12-03)
-
-
-### Bug Fixes
-
-* Fix quick casts and horse mounting using wrong player rotation ([#3010](https://github.com/Wynntils/Wynntils/issues/3010)) ([1fcb9f5](https://github.com/Wynntils/Wynntils/commit/1fcb9f50713fd278e960c88dab6a8835a7326ab9))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.4.5 [skip ci] ([8e9224f](https://github.com/Wynntils/Wynntils/commit/8e9224f91a04f637c74b0e641f7af8678aa67309))
 
