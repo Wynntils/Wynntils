@@ -44,7 +44,7 @@ public final class PlayerModel extends Model {
             .registerTypeHierarchyAdapter(WynnPlayerInfo.class, new WynnPlayerInfo.WynnPlayerInfoDeserializer())
             .create();
     private static final String ATHENA_USER_NOT_FOUND = "User not found";
-    private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_WC(\\d+)$");
+    private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_([A-Z]+)(\\d+)$");
 
     // If there is a failure with the API, give it time to recover
     private static final int ERROR_TIMEOUT_MINUTE = 5;
@@ -153,7 +153,7 @@ public final class PlayerModel extends Model {
             return;
         }
 
-        int world = Integer.parseInt(matcher.group(1));
+        int world = Integer.parseInt(matcher.group(2));
         ghosts.put(uuid, world);
     }
 
