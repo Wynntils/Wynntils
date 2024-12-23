@@ -25,8 +25,8 @@ public final class ActionBarHandler extends Handler {
             ResourceLocation.withDefaultNamespace("hud/gameplay/default/bottom_middle");
     private static final ResourceLocation COORDINATES_FONT =
             ResourceLocation.withDefaultNamespace("hud/gameplay/default/top_right");
-    private static final ResourceLocation CHARACTER_SELECTION_LOGO_FONT =
-            ResourceLocation.withDefaultNamespace("hud/selector/default/top_left");
+    private static final ResourceLocation CHARACTER_SELECTION_NAVIGATION_FONT =
+            ResourceLocation.withDefaultNamespace("hud/selector/default/bottom_middle");
 
     private static final FallBackSegmentMatcher FALLBACK_SEGMENT_MATCHER = new FallBackSegmentMatcher();
 
@@ -104,8 +104,9 @@ public final class ActionBarHandler extends Handler {
         } else if (Models.WorldState.getCurrentState() == WorldState.INTERIM) {
             StyledText packetText = StyledText.fromComponent(event.getMessage());
 
-            StyledText characterSelectionLogoText = packetText.iterate((part, changes) -> {
-                if (!CHARACTER_SELECTION_LOGO_FONT.equals(part.getPartStyle().getFont())) {
+            StyledText characterSelectionNavigationText = packetText.iterate((part, changes) -> {
+                if (!CHARACTER_SELECTION_NAVIGATION_FONT.equals(
+                        part.getPartStyle().getFont())) {
                     changes.remove(part);
                 }
 
@@ -113,8 +114,9 @@ public final class ActionBarHandler extends Handler {
             });
 
             // Likely we aren't on the character selection screen yet
-            if (characterSelectionLogoText.isEmpty()) {
-                WynntilsMod.warn("Failed to find character selection logo text in packet: " + packetText.getString());
+            if (characterSelectionNavigationText.isEmpty()) {
+                WynntilsMod.warn(
+                        "Failed to find character selection navigation text in packet: " + packetText.getString());
                 return;
             }
 

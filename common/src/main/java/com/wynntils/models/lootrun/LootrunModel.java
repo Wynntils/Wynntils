@@ -90,20 +90,19 @@ public class LootrunModel extends Model {
     //         ÀÀ§f2§7 Reward Rerolls§r                  §7Mobs Killed: §f236
     //    ÀÀÀ§f260§7 Lootrun Experience§r       ÀÀ§7Challenges Completed: §f13
 
-    private static final Pattern LOOTRUN_COMPLETED_PATTERN = Pattern.compile("[À\\s]*§6§lLootrun Completed!");
+    private static final Pattern LOOTRUN_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC61§6§lLootrun Completed!");
 
     // Rewards
-    private static final Pattern REWARD_PULLS_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Pulls§r");
-    private static final Pattern REWARD_REROLLS_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Rerolls§r");
-    private static final Pattern REWARD_SACRIFICES_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Sacrifices§r");
-    private static final Pattern LOOTRUN_EXPERIENCE_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Lootrun Experience§r");
+    private static final Pattern REWARD_PULLS_PATTERN = Pattern.compile("§.(\\d+)§7 Reward Pulls§r");
+    private static final Pattern REWARD_REROLLS_PATTERN = Pattern.compile("§.(\\d+)§7 Reward Rerolls§r");
+    private static final Pattern REWARD_SACRIFICES_PATTERN = Pattern.compile("§.(\\d+)§7 Reward Sacrifices§r");
+    private static final Pattern LOOTRUN_EXPERIENCE_PATTERN = Pattern.compile("§.(\\d+)§7 Lootrun Experience§r");
 
     // Statistics
-    private static final Pattern TIME_ELAPSED_PATTERN = Pattern.compile("[À\\s]*§7Time Elapsed: §.(\\d+):(\\d+)");
-    private static final Pattern MOBS_KILLED_PATTERN = Pattern.compile("[À\\s]*§7Mobs Killed: §.(\\d+)");
-    private static final Pattern CHESTS_OPENED_PATTERN = Pattern.compile("[À\\s]*§7Chests Open: §.(\\d+)");
-    private static final Pattern CHALLENGES_COMPLETED_PATTERN =
-            Pattern.compile("[À\\s]*§7Challenges Completed: §.(\\d+)");
+    private static final Pattern TIME_ELAPSED_PATTERN = Pattern.compile("§7Time Elapsed: §.(\\d+):(\\d+)");
+    private static final Pattern MOBS_KILLED_PATTERN = Pattern.compile("§7Mobs Killed: §.(\\d+)");
+    private static final Pattern CHESTS_OPENED_PATTERN = Pattern.compile("§7Chests Open: §.(\\d+)");
+    private static final Pattern CHALLENGES_COMPLETED_PATTERN = Pattern.compile("§7Challenges Completed: §.(\\d+)");
 
     //                             À§c§lLootrun Failed!
     //                         ÀÀ§7Better luck next time!
@@ -112,8 +111,8 @@ public class LootrunModel extends Model {
     //                           ÀÀ§7Time Elapsed: §f13:45
     //                        ÀÀÀ§7Challenges Completed: §f7
 
-    private static final Pattern LOOTRUN_FAILED_PATTERN = Pattern.compile("[À\\s]*§c§lLootrun Failed!");
-    private static final Pattern CHALLENGE_FAILED_PATTERN = Pattern.compile("[À\\s]*§c§lChallenge Failed!");
+    private static final Pattern LOOTRUN_FAILED_PATTERN = Pattern.compile("\uDB00\uDC6D§c§lLootrun Failed!");
+    private static final Pattern CHALLENGE_FAILED_PATTERN = Pattern.compile("\uDB00\uDC6A§c§lChallenge Failed!");
 
     private static final Pattern MISSION_COMPLETED_PATTERN = Pattern.compile("[À\\s]*§b§lMission Completed");
 

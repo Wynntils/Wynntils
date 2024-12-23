@@ -8,12 +8,14 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.ConsumableType;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.CraftedItemProperty;
+import com.wynntils.models.items.properties.DurationItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.UsesItemProperty;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.wynnitem.type.ConsumableEffect;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import com.wynntils.utils.type.CappedValue;
@@ -21,10 +23,15 @@ import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 
 public class CraftedConsumableItem extends GameItem
-        implements UsesItemProperty, GearTierItemProperty, LeveledItemProperty, CraftedItemProperty {
+        implements UsesItemProperty,
+                GearTierItemProperty,
+                LeveledItemProperty,
+                CraftedItemProperty,
+                DurationItemProperty {
     private final String name;
     private final ConsumableType consumableType;
     private final int level;
+    private final int duration;
     private final List<StatActualValue> identifications;
     private final List<NamedItemEffect> namedEffects;
     private final List<ItemEffect> effects;
@@ -45,6 +52,12 @@ public class CraftedConsumableItem extends GameItem
         this.namedEffects = namedEffects;
         this.effects = effects;
         this.uses = uses;
+
+        this.duration = namedEffects.stream()
+                .filter(namedItemEffect -> namedItemEffect.type() == ConsumableEffect.DURATION)
+                .findFirst()
+                .map(NamedItemEffect::value)
+                .orElse(0);
     }
 
     public String getName() {
@@ -58,6 +71,11 @@ public class CraftedConsumableItem extends GameItem
     @Override
     public int getLevel() {
         return level;
+    }
+
+    @Override
+    public int getDuration() {
+        return duration;
     }
 
     @Override
@@ -112,7 +130,8 @@ public class CraftedConsumableItem extends GameItem
         return "CraftedConsumableItem{" + "name='"
                 + name + '\'' + ", consumableType="
                 + consumableType + ", level="
-                + level + ", identifications="
+                + level + ", duration="
+                + duration + ", identifications="
                 + identifications + ", namedEffects="
                 + namedEffects + ", effects="
                 + effects + ", uses="

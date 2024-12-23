@@ -44,6 +44,7 @@ public final class StatListOrderer {
             "DAMAGE_MAIN_ATTACK_AIR_PERCENT",
             "DAMAGE_MAIN_ATTACK_RAINBOW_RAW",
             "DAMAGE_MAIN_ATTACK_RAINBOW_PERCENT",
+            "CRITICAL_DAMAGE_BONUS",
             "DAMAGE_SPELL_ALL_RAW",
             "DAMAGE_SPELL_ALL_PERCENT",
             "DAMAGE_SPELL_NEUTRAL_RAW",
