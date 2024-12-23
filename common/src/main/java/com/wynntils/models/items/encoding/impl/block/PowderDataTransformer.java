@@ -160,9 +160,10 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
 
             // Add the powder to the data
             Powder powder = Powder.fromElement(Element.fromEncodingId(element));
-            if (powder != null) { // Sometimes null when users mess with custom encoding
-                data.add(new Pair<>(powder, tier));
+            if (powder == null) { // Sometimes null when users mess with custom encoding
+                return ErrorOr.error("Invalid powder element encoding: " + element);
             }
+            data.add(new Pair<>(powder, tier));
         }
 
         return ErrorOr.of(new PowderData(powderSlots, data));
