@@ -23,14 +23,12 @@ import com.wynntils.models.containers.containers.BlacksmithContainer;
 import com.wynntils.models.containers.containers.ItemIdentifierContainer;
 import com.wynntils.models.containers.containers.TradeMarketSellContainer;
 import com.wynntils.models.containers.type.BoundedContainerProperty;
-import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
-import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -57,16 +55,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class ValuablesProtectionFeature extends Feature {
     @Persisted
-    private final Config<Float> tradeMarketPriceThreshold = new Config<>(0.9f);
+    private final Config<Float> tradeMarketPriceThreshold = new Config<>(90.0f);
 
     @Persisted
     private final Config<ProtectableNPCs> mythicWarningNPCs = new Config<>(ProtectableNPCs.BLACKSMITH_AND_TRADE_MARKET);
 
     @Persisted
-    private final Config<ProtectableNPCs> craftedWarningNPCs = new Config<>(ProtectableNPCs.BLACKSMITH);
-
-    @Persisted
-    private final Config<Integer> craftedLevelThreshold = new Config<>(100);
+    private final Config<Integer> craftedBlacksmithLevel = new Config<>(0);
 
     @Persisted
     private final Config<ProtectableNPCs> highRollWarningNPCs = new Config<>(ProtectableNPCs.ALL);
@@ -126,11 +121,17 @@ public class ValuablesProtectionFeature extends Feature {
 
         Container currentContainer = Models.Container.getCurrentContainer();
         if (currentContainer == null) return;
+
+        resetAll();
+        doBlacksmithIdentifierChecks(currentContainer, cs);
+        doTradeMarketChecks(currentContainer, cs);
+    }
+
+    private void doBlacksmithIdentifierChecks(Container currentContainer, ContainerScreen cs) {
         for (Class<? extends BoundedContainerProperty> container : ProtectableNPCs.BLACKSMITH_AND_IDENTIFIER.getContainers()) {
             if (!currentContainer.getClass().equals(container)) continue;
             currentContainerType = container;
 
-            slotsToWarn = new ArrayList<>();
             for (int i : ((BoundedContainerProperty) currentContainer).getBounds().getSlots()) {
                 Optional<WynnItem> itemOpt =
                         Models.Item.getWynnItem(cs.getMenu().getItems().get(i));
@@ -150,10 +151,10 @@ public class ValuablesProtectionFeature extends Feature {
                             gtip.getGearTier() == GearTier.MYTHIC) {
                         shouldWarn = true;
                     }
-                    if (craftedWarningNPCs.get().getContainers().contains(container) &&
+                    if (craftedBlacksmithLevel.get() > 0 &&
                             gtip.getGearTier() == GearTier.CRAFTED &&
                             item instanceof LeveledItemProperty lip &&
-                            lip.getLevel() >= craftedLevelThreshold.get()) {
+                            lip.getLevel() >= craftedBlacksmithLevel.get()) {
                         shouldWarn = true;
                     }
                 }
@@ -171,14 +172,16 @@ public class ValuablesProtectionFeature extends Feature {
                     cs.topPos - 6,
                     cs.width - 2 * cs.leftPos,
                     11,
-                    I18n.get("feature.wynntils.valuablesProtection.ctrlClick"),
+                    I18n.get("feature.wynntils.valuablesProtection.ctrlClick",
+                            I18n.get("feature.wynntils.valuablesProtection." + (currentContainerType == ItemIdentifierContainer.class ? "identifying" : "selling"))),
                     HorizontalAlignment.CENTER,
                     CommonColors.WHITE);
             cs.addRenderableOnly(ctrlHintTextWidget);
         }
+    }
 
+    private void doTradeMarketChecks(Container currentContainer, ContainerScreen cs) {
         if (currentContainer instanceof TradeMarketSellContainer) {
-            resetTradeMarketWarning();
             Optional<WynnItem> optItem = Models.Item.getWynnItem(cs.getMenu().getItems().get(TM_ITEM_SLOT));
             if (optItem.isEmpty()) return;
             WynnItem item = optItem.get();
@@ -203,13 +206,13 @@ public class ValuablesProtectionFeature extends Feature {
             if (salePrice == -1 || lowestPrice == -1) return;
             slotsToWarn.add(TM_PRICE_SLOT);
 
-            if (salePrice < lowestPrice * tradeMarketPriceThreshold.get()) {
+            if (salePrice < lowestPrice * (tradeMarketPriceThreshold.get() / 100d)) {
                 ctrlHintTextWidget = new HintTextWidget(
                         cs.width - cs.leftPos + 2,
                         cs.height / 2 - 46,
                         200,
                         11,
-                        I18n.get("feature.wynntils.valuablesProtection.ctrlClick"),
+                        I18n.get("feature.wynntils.valuablesProtection.ctrlClick", I18n.get("feature.wynntils.valuablesProtection.selling")),
                         HorizontalAlignment.LEFT,
                         CommonColors.WHITE);
                 cs.addRenderableOnly(ctrlHintTextWidget);
@@ -224,7 +227,7 @@ public class ValuablesProtectionFeature extends Feature {
                                 salePrice + " " + ChatFormatting.DARK_GRAY + "("
                                         + Models.Emerald.getFormattedString(salePrice, false) + ")"
                                         + ChatFormatting.RESET,
-                                tradeMarketPriceThreshold.get() * 100),
+                                tradeMarketPriceThreshold.get()),
                         HorizontalAlignment.LEFT,
                         CommonColors.LIGHT_GRAY));
                 tmHintTextWidgets.add(new HintTextWidget(
@@ -250,7 +253,7 @@ public class ValuablesProtectionFeature extends Feature {
 
                 tmHintTextWidgets.forEach(cs::addRenderableOnly);
             } else {
-                resetTradeMarketWarning();
+                resetAll();
             }
         }
     }
@@ -283,11 +286,10 @@ public class ValuablesProtectionFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post e) {
-        resetTradeMarketWarning();
-        slotsToWarn = new ArrayList<>();
+        resetAll();
     }
 
-    private void resetTradeMarketWarning() {
+    private void resetAll() {
         if (McUtils.mc().screen instanceof ContainerScreen cs) {
             cs.removeWidget(ctrlHintTextWidget);
             tmHintTextWidgets.forEach(cs::removeWidget);
@@ -295,6 +297,7 @@ public class ValuablesProtectionFeature extends Feature {
         ctrlHintTextWidget = null;
         tmHintTextWidgets.clear();
         slotsToWarn = new ArrayList<>();
+        currentContainerType = null;
     }
 
     private static final class HintTextWidget extends AbstractWidget {
