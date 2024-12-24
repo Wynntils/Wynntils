@@ -265,8 +265,16 @@ public class ValuablesProtectionFeature extends Feature {
 
         e.setCanceled(true);
         for (int i = 0; i < 12; i += 6) {
-            Managers.TickScheduler.scheduleLater(() -> ctrlHintTextWidget.setTextColor(CommonColors.RED), i);
-            Managers.TickScheduler.scheduleLater(() -> ctrlHintTextWidget.setTextColor(CommonColors.WHITE), i + 3);
+            Managers.TickScheduler.scheduleLater(() -> {
+                if (ctrlHintTextWidget != null) {
+                    ctrlHintTextWidget.setTextColor(CommonColors.RED);
+                }
+            }, i);
+            Managers.TickScheduler.scheduleLater(() -> {
+                if (ctrlHintTextWidget != null) {
+                    ctrlHintTextWidget.setTextColor(CommonColors.WHITE);
+                }
+            }, i + 3);
         }
     }
 
