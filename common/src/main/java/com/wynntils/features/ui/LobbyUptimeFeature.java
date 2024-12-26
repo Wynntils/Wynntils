@@ -34,7 +34,7 @@ public class LobbyUptimeFeature extends Feature {
     private List<Component> getTooltipAddon(ServerItem serverItem) {
         List<Component> addon = new ArrayList<>();
 
-        String serverId = "WC" + serverItem.getServerId();
+        String serverId = serverItem.getRegion().name() + serverItem.getServerId();
         ServerProfile serverProfile = Models.ServerList.getServer(serverId);
         String uptimeString = serverProfile == null ? "Unknown" : serverProfile.getUptime();
 

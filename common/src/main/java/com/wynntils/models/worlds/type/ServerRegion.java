@@ -11,5 +11,15 @@ public enum ServerRegion {
     AF,
     EU,
     AS,
-    AU
+    AU;
+
+    public static ServerRegion fromString(String text) {
+        for (ServerRegion type : values()) {
+            if (type.name().equals(text)) {
+                return type;
+            }
+        }
+
+        return WC;
+    }
 }
