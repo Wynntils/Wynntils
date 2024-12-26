@@ -20,13 +20,11 @@ import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.items.properties.ClassableItemProperty;
 import com.wynntils.models.items.properties.RequirementItemProperty;
-import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -75,8 +73,6 @@ public class QuickCastFeature extends Feature {
     private int lastSpellTick = 0;
     private int packetCountdown = 0;
 
-    private SpellDirection[] spellInProgress = SpellDirection.NO_SPELL;
-
     @SubscribeEvent
     public void onSwing(ArmSwingEvent event) {
         lastSpellTick = McUtils.player().tickCount;
@@ -95,16 +91,6 @@ public class QuickCastFeature extends Feature {
         if (!blockAttacks.get()) return;
 
         event.setCanceled(!Models.Spell.isSpellQueueEmpty());
-    }
-
-    @SubscribeEvent
-    public void onSpellSequenceUpdate(SpellEvent.Partial e) {
-        updateSpell(e.getSpellDirectionArray());
-    }
-
-    @SubscribeEvent
-    public void onSpellExpired(SpellEvent.Expired e) {
-        updateSpell(e.getSpellDirectionArray());
     }
 
     @SubscribeEvent
@@ -135,6 +121,14 @@ public class QuickCastFeature extends Feature {
 
     private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
         if (!Models.Spell.isSpellQueueEmpty()) return;
+
+        SpellDirection[] spellInProgress = Models.Spell.getLastSpell();
+        // SpellModel keeps the last spell for other uses but here we just want to know the inputs so if a full spell
+        // is the last spell then we just reset it to empty
+        if (spellInProgress.length == 3) {
+            spellInProgress = SpellDirection.NO_SPELL;
+        }
+
         if (safeCasting.get() == SafeCastType.BLOCK_ALL && spellInProgress.length != 0) {
             sendCancelReason(Component.translatable("feature.wynntils.quickCast.spellInProgress"));
             return;
@@ -225,18 +219,7 @@ public class QuickCastFeature extends Feature {
         }
     }
 
-    private void updateSpell(SpellDirection[] spell) {
-        if (Arrays.equals(spellInProgress, spell)) return;
-
-        if (spell.length == 3) {
-            spellInProgress = SpellDirection.NO_SPELL;
-        } else {
-            spellInProgress = spell;
-        }
-    }
-
     private void resetState() {
-        spellInProgress = SpellDirection.NO_SPELL;
         lastSpellTick = 0;
         packetCountdown = 0;
     }

@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.combat;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -24,7 +25,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -176,8 +176,7 @@ public class HorseMountFeature extends Feature {
                         return;
                     }
                     McUtils.sendPacket(new ServerboundSetCarriedItemPacket(horseInventorySlot));
-                    McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(
-                            InteractionHand.MAIN_HAND, id, player.getYRot(), player.getXRot()));
+                    Handlers.MouseInput.sendRightClickInput();
 
                     trySummonAndMountHorse(horseInventorySlot, attempts - 1);
                 },

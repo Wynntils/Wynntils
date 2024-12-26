@@ -179,6 +179,10 @@ public class SpellModel extends Model {
         return lastSpellName;
     }
 
+    public SpellDirection[] getLastSpell() {
+        return lastSpell.clone();
+    }
+
     public int getRepeatedBurstSpellCount() {
         return repeatedBurstSpellCount;
     }

@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.combat;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
@@ -16,11 +17,9 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.items.properties.RequirementItemProperty;
-import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
-import java.util.Arrays;
 import java.util.Optional;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
@@ -35,8 +34,6 @@ public class AutoAttackFeature extends Feature {
     private WeaponStatus weaponStatus = WeaponStatus.UNKNOWN;
     private int lastSelectedSlot;
     private int preventWrongCast = Integer.MIN_VALUE;
-
-    private SpellDirection[] spellInProgress = SpellDirection.NO_SPELL;
 
     @SubscribeEvent
     public void onChangeCarriedItemEvent(ChangeCarriedItemEvent event) {
@@ -68,16 +65,6 @@ public class AutoAttackFeature extends Feature {
         preventWrongCast = McUtils.player().tickCount + SPELL_TIMEOUT_TICKS;
     }
 
-    @SubscribeEvent
-    public void onSpellSequenceUpdate(SpellEvent.Partial e) {
-        updateSpell(e.getSpellDirectionArray());
-    }
-
-    @SubscribeEvent
-    public void onSpellExpired(SpellEvent.Expired e) {
-        updateSpell(e.getSpellDirectionArray());
-    }
-
     private boolean isHoldingUsableWeapon() {
         ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
         if (!ItemUtils.isWeapon(heldItem)) return false;
@@ -91,6 +78,14 @@ public class AutoAttackFeature extends Feature {
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
         if (!Models.Spell.isSpellQueueEmpty()) return;
+
+        SpellDirection[] spellInProgress = Models.Spell.getLastSpell();
+        // SpellModel keeps the last spell for other uses but here we just want to know the inputs so if a full spell
+        // is the last spell then we just reset it to empty
+        if (spellInProgress.length == 3) {
+            spellInProgress = SpellDirection.NO_SPELL;
+        }
+
         if (spellInProgress.length != 0) return;
 
         LocalPlayer player = McUtils.player();
@@ -110,24 +105,9 @@ public class AutoAttackFeature extends Feature {
 
         if (weaponStatus != WeaponStatus.USABLE) return;
 
-        if (Models.Character.getClassType() == ClassType.ARCHER) {
-            if (!McUtils.options().keyUse.isDown()) return;
-            SpellDirection.RIGHT.getSendPacketRunnable().run();
-        } else {
-            if (!McUtils.options().keyAttack.isDown()) return;
-            // SpellDirection.LEFT doesn't do the swing animation
-            player.swing(InteractionHand.MAIN_HAND);
-        }
-    }
+        if (!McUtils.options().keyAttack.isDown()) return;
 
-    private void updateSpell(SpellDirection[] spell) {
-        if (Arrays.equals(spellInProgress, spell)) return;
-
-        if (spell.length == 3) {
-            spellInProgress = SpellDirection.NO_SPELL;
-        } else {
-            spellInProgress = spell;
-        }
+        Handlers.MouseInput.sendAttackInput(Models.Character.getClassType() == ClassType.ARCHER);
     }
 
     private enum WeaponStatus {

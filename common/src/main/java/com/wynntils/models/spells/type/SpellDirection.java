@@ -4,19 +4,12 @@
  */
 package com.wynntils.models.spells.type;
 
-import com.wynntils.utils.mc.McUtils;
+import com.wynntils.core.components.Handlers;
 import java.util.Arrays;
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
-import net.minecraft.world.InteractionHand;
 
 public enum SpellDirection {
-    RIGHT(() -> McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(
-            InteractionHand.MAIN_HAND,
-            id,
-            McUtils.player().getYRot(),
-            McUtils.player().getXRot()))),
-    LEFT(() -> McUtils.sendPacket(new ServerboundSwingPacket(InteractionHand.MAIN_HAND)));
+    RIGHT(Handlers.MouseInput::sendRightClickInput),
+    LEFT(Handlers.MouseInput::sendLeftClickInput);
 
     private final Runnable sendPacketRunnable;
 
