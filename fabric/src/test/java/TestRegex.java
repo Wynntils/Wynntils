@@ -16,6 +16,7 @@ import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.combat.CombatModel;
 import com.wynntils.models.combat.label.DamageLabelParser;
+import com.wynntils.models.combat.label.KillLabelParser;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.guild.GuildModel;
@@ -249,6 +250,23 @@ public class TestRegex {
         p.shouldMatch("§f-32 ❋ ");
         p.shouldMatch("§c-28 ✹ ");
         p.shouldMatch("§c-116 ✹ §2-17 ✤ ");
+    }
+
+    @Test
+    public void KillLabelParser_KILL_LABEL_PATTERN() {
+        PatternTester p = new PatternTester(KillLabelParser.class, "KILL_LABEL_PATTERN");
+        // No guild xp
+        p.shouldMatch("§7[§f+483 Combat XP§7]\n[ShadowCat117]");
+        // Dxp no guild xp
+        p.shouldMatch("§dx2 §7[§f+§d6§f Combat XP§7]\n[ShadowCat117]");
+        // Guild xp
+        p.shouldMatch("§7[§f+0 Combat XP§7]\n[§f+11 Guild XP§7]\n[ShadowCat117]");
+        // Dxp guild xp
+        p.shouldMatch("§dx2 §7[§f+§d0§f Combat XP§7]\n§dx2 §7[§f+§d2132§f Guild XP§7]\n[ShadowCat117]");
+        // Guild xp with blessing
+        p.shouldMatch("§7[§f+0 Combat XP§7]\n§bx1.1 §7[§f+§b1058§f Guild XP§7]\n[ShadowCat117]");
+        // Dxp guild xp with blessing
+        p.shouldMatch("§dx2 §7[§f+§d0§f Combat XP§7]\n§dx2 §bx1.1 §7[§f+§b1661§f Guild XP§7]\n[ShadowCat117]");
     }
 
     @Test

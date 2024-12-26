@@ -54,6 +54,25 @@ public class CombatFunctions {
         }
     }
 
+    public static class KillsPerMinuteFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Combat.getKillsPerMinute(
+                    arguments.getArgument("includeShared").getBooleanValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("includeShared", Boolean.class, true)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("kpm");
+        }
+    }
+
     public static class LastSpellNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {

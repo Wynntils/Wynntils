@@ -12,8 +12,11 @@ import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
 import com.wynntils.models.combat.label.DamageLabelInfo;
 import com.wynntils.models.combat.label.DamageLabelParser;
+import com.wynntils.models.combat.label.KillLabelInfo;
+import com.wynntils.models.combat.label.KillLabelParser;
 import com.wynntils.models.combat.type.DamageDealtEvent;
 import com.wynntils.models.combat.type.FocusedDamageEvent;
+import com.wynntils.models.combat.type.KillCreditType;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.StringUtils;
@@ -43,6 +46,8 @@ public final class CombatModel extends Model {
     private final TimedSet<Long> areaDamageSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
     private final Map<Integer, Map<DamageType, Long>> liveDamageInfo = new HashMap<>();
 
+    private final TimedSet<KillCreditType> killSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
+
     private String focusedMobName = "";
     private String focusedMobElementals = "";
     private long focusedMobHealth;
@@ -56,6 +61,7 @@ public final class CombatModel extends Model {
 
         Handlers.BossBar.registerBar(damageBar);
         Handlers.Label.registerParser(new DamageLabelParser());
+        Handlers.Label.registerParser(new KillLabelParser());
     }
 
     public long getLastDamageDealtTimestamp() {
@@ -64,38 +70,40 @@ public final class CombatModel extends Model {
 
     @SubscribeEvent
     public void onLabelIdentified(LabelIdentifiedEvent event) {
-        if (!(event.getLabelInfo() instanceof DamageLabelInfo damageLabelInfo)) return;
+        if (event.getLabelInfo() instanceof DamageLabelInfo damageLabelInfo) {
+            int id = damageLabelInfo.getEntity().getId();
+            Map<DamageType, Long> damages;
 
-        int id = damageLabelInfo.getEntity().getId();
-        Map<DamageType, Long> damages;
+            if (liveDamageInfo.containsKey(id)) {
+                Map<DamageType, Long> oldDamages = liveDamageInfo.get(id);
+                Map<DamageType, Long> newDamages = damageLabelInfo.getDamages();
+                liveDamageInfo.put(id, new EnumMap<>(newDamages));
 
-        if (liveDamageInfo.containsKey(id)) {
-            Map<DamageType, Long> oldDamages = liveDamageInfo.get(id);
-            Map<DamageType, Long> newDamages = damageLabelInfo.getDamages();
-            liveDamageInfo.put(id, new EnumMap<>(newDamages));
+                for (Map.Entry<DamageType, Long> entry : newDamages.entrySet()) {
+                    DamageType type = entry.getKey();
+                    long newValue = entry.getValue();
 
-            for (Map.Entry<DamageType, Long> entry : newDamages.entrySet()) {
-                DamageType type = entry.getKey();
-                long newValue = entry.getValue();
-
-                if (oldDamages.containsKey(type)) {
-                    long oldValue = oldDamages.get(type);
-                    newDamages.put(type, newValue - oldValue);
+                    if (oldDamages.containsKey(type)) {
+                        long oldValue = oldDamages.get(type);
+                        newDamages.put(type, newValue - oldValue);
+                    }
                 }
+
+                damages = newDamages;
+            } else {
+                damages = damageLabelInfo.getDamages();
+                liveDamageInfo.put(id, damages);
             }
 
-            damages = newDamages;
-        } else {
-            damages = damageLabelInfo.getDamages();
-            liveDamageInfo.put(id, damages);
+            long damageSum = damages.values().stream().mapToLong(d -> d).sum();
+            areaDamageSet.put(damageSum);
+
+            WynntilsMod.postEvent(new DamageDealtEvent(damages));
+
+            lastDamageDealtTimestamp = System.currentTimeMillis();
+        } else if (event.getLabelInfo() instanceof KillLabelInfo killLabelInfo) {
+            killSet.put(killLabelInfo.getKillCredit());
         }
-
-        long damageSum = damages.values().stream().mapToLong(d -> d).sum();
-        areaDamageSet.put(damageSum);
-
-        WynntilsMod.postEvent(new DamageDealtEvent(damages));
-
-        lastDamageDealtTimestamp = System.currentTimeMillis();
     }
 
     @SubscribeEvent
@@ -152,6 +160,14 @@ public final class CombatModel extends Model {
                         .mapToLong(TimedSet.TimedEntry::getEntry)
                         .sum()
                 / (double) seconds;
+    }
+
+    public int getKillsPerMinute(boolean includeShared) {
+        return killSet.getEntries().stream()
+                .filter(creditType -> includeShared || creditType.getEntry() == KillCreditType.SELF)
+                .filter(timedEntry -> (System.currentTimeMillis() - timedEntry.getCreation()) <= 60000L)
+                .toList()
+                .size();
     }
 
     private void checkFocusedMobValidity() {
