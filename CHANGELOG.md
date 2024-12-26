@@ -1,3 +1,11 @@
+## [2.4.11](https://github.com/Wynntils/Wynntils/compare/v2.4.10...v2.4.11) (2024-12-26)
+
+
+### Bug Fixes
+
+* More fixes for regional servers ([#3042](https://github.com/Wynntils/Wynntils/issues/3042)) ([7692b1b](https://github.com/Wynntils/Wynntils/commit/7692b1b18ef1892e862c6e01690804da19fa32fc))
+* Update combat XP requirement values [skip ci] ([#3043](https://github.com/Wynntils/Wynntils/issues/3043)) ([8e591ec](https://github.com/Wynntils/Wynntils/commit/8e591ecd06a1c102653c64c8ec07f47c682943fb))
+
 ## [2.4.10](https://github.com/Wynntils/Wynntils/compare/v2.4.9...v2.4.10) (2024-12-23)
 
 
@@ -9,6 +17,11 @@
 ### Bug Fixes
 
 * User-edited chat items with invalid powders causes crash ([#3030](https://github.com/Wynntils/Wynntils/issues/3030)) ([74c62ad](https://github.com/Wynntils/Wynntils/commit/74c62ad6d9f47b5b70183a62d56e9f1e02c993be))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.4.10 [skip ci] ([504ae64](https://github.com/Wynntils/Wynntils/commit/504ae640d9560e89a471a0660b82aadbee74d34d))
 
 ## [2.4.9](https://github.com/Wynntils/Wynntils/compare/v2.4.8...v2.4.9) (2024-12-22)
 
@@ -71,18 +84,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.4.7 [skip ci] ([dd168f5](https://github.com/Wynntils/Wynntils/commit/dd168f59d9dfde1b81a767921e101492ce7d9197))
-
-## [2.4.6](https://github.com/Wynntils/Wynntils/compare/v2.4.5...v2.4.6) (2024-12-06)
-
-
-### New Features
-
-* Add support for Commander Bar [skip ci] ([#3011](https://github.com/Wynntils/Wynntils/issues/3011)) ([9b83f5a](https://github.com/Wynntils/Wynntils/commit/9b83f5ac3bcf9db45fcc072649a70f4a05d9d9ac))
-* change item stat color lerping [skip ci] ([#3009](https://github.com/Wynntils/Wynntils/issues/3009)) ([1b6a51d](https://github.com/Wynntils/Wynntils/commit/1b6a51da2c928b85a40d42df75f28d8f1a19f007))
-* Rework quick casting ([#3012](https://github.com/Wynntils/Wynntils/issues/3012)) ([f6d7a1d](https://github.com/Wynntils/Wynntils/commit/f6d7a1df761fc232acddfc3656e71e3096542cab))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.4.6 [skip ci] ([73c996b](https://github.com/Wynntils/Wynntils/commit/73c996bdbaa3134ff7f94dd64eff883d09b0abbd))
 
