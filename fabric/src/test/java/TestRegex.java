@@ -931,8 +931,17 @@ public class TestRegex {
     public void NpcLabelParser_NPC_LABEL_PATTERN() {
         PatternTester p = new PatternTester(NpcLabelParser.class, "NPC_LABEL_PATTERN");
 
-        p.shouldMatch("§dLootrun Master\n§7Start a Lootrun");
+        p.shouldMatch("§f\uE000\n§dArmour Merchant\n§7NPC");
+        p.shouldMatch("§f\uE002\n§dBlacksmith\n§7Sell and repair items");
+        p.shouldMatch("§f\uE001\n§dEmerald Merchant\n§7NPC");
         p.shouldMatch("§f\uE003\n§dItem Identifier\n§7NPC");
+        p.shouldMatch("§f\uE000\n§dLiquid Merchant\n§7NPC");
+        p.shouldMatch("§f\uE000\n§dPotion Merchant\n§7NPC");
+        p.shouldMatch("§f\uE004\n§dPowder Master\n§7NPC");
+        p.shouldMatch("§f\uE000\n§dScroll Merchant\n§7NPC");
+        p.shouldMatch("§f\uE000\n§dTool Merchant\n§7NPC");
+        p.shouldMatch("§f\uE000\n§dWeapon Merchant\n§7NPC");
+        p.shouldMatch("§f\uE008\n§cTrade Market§f\n§7Buy & sell items\non the market");
     }
 
     @Test
