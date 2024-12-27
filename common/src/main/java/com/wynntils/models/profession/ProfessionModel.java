@@ -13,10 +13,10 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.models.profession.event.ProfessionXpGainEvent;
+import com.wynntils.models.profession.label.CraftingStationLabelParser;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelInfo;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.profession.label.GatheringNodeLabelParser;
-import com.wynntils.models.profession.label.GatheringStationLabelParser;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -62,7 +62,7 @@ public class ProfessionModel extends Model {
         super(List.of());
 
         Handlers.Label.registerParser(new GatheringNodeLabelParser());
-        Handlers.Label.registerParser(new GatheringStationLabelParser());
+        Handlers.Label.registerParser(new CraftingStationLabelParser());
         Handlers.Label.registerParser(new GatheringNodeHarvestLabelParser());
 
         for (ProfessionType pt : ProfessionType.values()) {
