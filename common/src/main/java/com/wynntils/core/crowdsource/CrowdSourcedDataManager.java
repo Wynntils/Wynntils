@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class CrowdSourcedDataManager extends Manager {
     public static final CrowdSourcedDataGameVersion CURRENT_GAME_VERSION =
-            CrowdSourcedDataGameVersion.VERSION_210_BETA_2;
+            CrowdSourcedDataGameVersion.VERSION_211_RELEASE;
 
     @Persisted
     private final Storage<CrowdSourcedData> collectedData = new Storage<>(new CrowdSourcedData());
