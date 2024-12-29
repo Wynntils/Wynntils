@@ -47,7 +47,7 @@ public class PreventTradesDuelsFeature extends Feature {
         if (!player.isShiftKeyDown() || !(target instanceof Player p) || !Models.Player.isLocalPlayer(p)) return;
 
         int timeSinceLastFight =
-                (int) ((System.currentTimeMillis() - Models.Damage.getLastDamageDealtTimestamp()) / 1000);
+                (int) ((System.currentTimeMillis() - Models.Combat.getLastDamageDealtTimestamp()) / 1000);
 
         if (ItemUtils.isWeapon(itemStack) && onlyWhileFighting.get() && timeSinceLastFight < fightingTimeCutoff.get()) {
             // stops interact packet from going out

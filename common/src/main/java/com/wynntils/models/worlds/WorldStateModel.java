@@ -18,6 +18,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.PosUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -32,7 +33,8 @@ public final class WorldStateModel extends Model {
     private static final Pattern WORLD_NAME = Pattern.compile("^§f {2}§lGlobal \\[(.*)\\]$");
     private static final Pattern HOUSING_NAME = Pattern.compile("^§f  §l([^§\"\\\\]{1,35})$");
     private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com \n$");
-    private static final Pattern STREAMER_MESSAGE = Pattern.compile("§2Streamer mode (disabled|was enabled)\\.");
+    private static final Pattern STREAMER_MESSAGE =
+            Pattern.compile("§a(?:\uE008\uE002|\uE001) Streamer mode (disabled|was enabled)\\..*", Pattern.DOTALL);
     private static final Position CHARACTER_SELECTION_POSITION = new Vec3(-1337.5, 16.2, -1120.5);
     private static final String WYNNCRAFT_BETA_NAME = "beta";
     private static final String UNKNOWN_WORLD = "WC??";
@@ -128,7 +130,9 @@ public final class WorldStateModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        Matcher matcher = e.getStyledText().getMatcher(STREAMER_MESSAGE);
+        StyledText styledText =
+                StyledTextUtils.unwrap(e.getOriginalStyledText()).stripAlignment();
+        Matcher matcher = styledText.getMatcher(STREAMER_MESSAGE);
 
         if (matcher.matches()) {
             inStream = matcher.group(1).equals("was enabled");
