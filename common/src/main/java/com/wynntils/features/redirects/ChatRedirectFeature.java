@@ -95,6 +95,9 @@ public class ChatRedirectFeature extends Feature {
     @Persisted
     public final Config<RedirectAction> merchant = new Config<>(RedirectAction.REDIRECT);
 
+    @Persisted
+    public final Config<RedirectAction> itemDropped = new Config<>(RedirectAction.REDIRECT);
+
     private final List<Redirector> redirectors = new ArrayList<>();
 
     public ChatRedirectFeature() {
@@ -117,6 +120,7 @@ public class ChatRedirectFeature extends Feature {
         register(new HousingTeleportDepartureCooldownRedirector());
         register(new HousingTeleportDepartureRedirector());
         register(new IngredientPouchSellRedirector());
+        register(new ItemDroppedRedirector());
         register(new LoginRedirector());
         register(new MageTeleportationFailRedirector());
         register(new ManaDeficitRedirector());
@@ -1036,6 +1040,28 @@ public class ChatRedirectFeature extends Feature {
         @Override
         public RedirectAction getAction() {
             return merchant.get();
+        }
+    }
+
+    private final class ItemDroppedRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§7There wasn't enough room in your inventory\\, so items were dropped\\.$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.itemDropped.notification")
+                            .withStyle(ChatFormatting.GRAY));
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return itemDropped.get();
         }
     }
 }
