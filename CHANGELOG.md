@@ -1,3 +1,17 @@
+## [2.4.12](https://github.com/Wynntils/Wynntils/compare/v2.4.11...v2.4.12) (2024-12-29)
+
+
+### New Features
+
+* Add kills per minute function [skip ci] ([#3045](https://github.com/Wynntils/Wynntils/issues/3045)) ([6e6955f](https://github.com/Wynntils/Wynntils/commit/6e6955f9f32b9d35891a3e418335cc297673ae5e))
+* Redirect dropped item messages [skip ci] ([#3048](https://github.com/Wynntils/Wynntils/issues/3048)) ([e74dc03](https://github.com/Wynntils/Wynntils/commit/e74dc0313d9a4fd38a33a47dc4f231d97ee1607f))
+
+
+### Bug Fixes
+
+* Fix streamer mode detection [skip ci] ([#3044](https://github.com/Wynntils/Wynntils/issues/3044)) ([b2c5ef9](https://github.com/Wynntils/Wynntils/commit/b2c5ef9234a64329500c2c36535b933da88db887))
+* Use correct JSON deserialization for PoiService ([#3049](https://github.com/Wynntils/Wynntils/issues/3049)) ([4928db9](https://github.com/Wynntils/Wynntils/commit/4928db9c0407d0de74683df27de39dbbc1eaba30))
+
 ## [2.4.11](https://github.com/Wynntils/Wynntils/compare/v2.4.10...v2.4.11) (2024-12-26)
 
 
@@ -5,6 +19,11 @@
 
 * More fixes for regional servers ([#3042](https://github.com/Wynntils/Wynntils/issues/3042)) ([7692b1b](https://github.com/Wynntils/Wynntils/commit/7692b1b18ef1892e862c6e01690804da19fa32fc))
 * Update combat XP requirement values [skip ci] ([#3043](https://github.com/Wynntils/Wynntils/issues/3043)) ([8e591ec](https://github.com/Wynntils/Wynntils/commit/8e591ecd06a1c102653c64c8ec07f47c682943fb))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.4.11 [skip ci] ([e84dbb7](https://github.com/Wynntils/Wynntils/commit/e84dbb7f285f6a429b0b533496f677b8a467d392))
 
 ## [2.4.10](https://github.com/Wynntils/Wynntils/compare/v2.4.9...v2.4.10) (2024-12-23)
 
@@ -71,17 +90,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#3034](https://github.com/Wynntils/Wynntils/issues/3034)) ([70a4326](https://github.com/Wynntils/Wynntils/commit/70a4326f17174e45517f2529d1b656f4fc434fbf))
 * **release:** v2.4.8 [skip ci] ([a68e820](https://github.com/Wynntils/Wynntils/commit/a68e820be872191391005fb935f571fd89bd7132))
-
-## [2.4.7](https://github.com/Wynntils/Wynntils/compare/v2.4.6...v2.4.7) (2024-12-07)
-
-
-### Bug Fixes
-
-* Fix quick casts blocking casts on world change [skip ci] ([#3015](https://github.com/Wynntils/Wynntils/issues/3015)) ([3062eff](https://github.com/Wynntils/Wynntils/commit/3062eff655b0ac7c376d2e42e8fc7d161a906414))
-* More quick casting fixes ([#3016](https://github.com/Wynntils/Wynntils/issues/3016)) ([0d8b5b9](https://github.com/Wynntils/Wynntils/commit/0d8b5b9916e722951757708798039f78ee97b438))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.4.7 [skip ci] ([dd168f5](https://github.com/Wynntils/Wynntils/commit/dd168f59d9dfde1b81a767921e101492ce7d9197))
 
