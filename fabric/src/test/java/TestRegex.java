@@ -14,9 +14,10 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.combat.CombatModel;
+import com.wynntils.models.combat.label.DamageLabelParser;
+import com.wynntils.models.combat.label.KillLabelParser;
 import com.wynntils.models.containers.ContainerModel;
-import com.wynntils.models.damage.DamageModel;
-import com.wynntils.models.damage.label.DamageLabelParser;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.guild.GuildModel;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
@@ -221,6 +222,17 @@ public class TestRegex {
     }
 
     @Test
+    public void CombatModel_DAMAGE_BAR_PATTERN() {
+        PatternTester p = new PatternTester(CombatModel.class, "DAMAGE_BAR_PATTERN");
+        p.shouldMatch("§aTravelling Merchant§r - §c5985§4❤");
+        p.shouldMatch("§aGrook§r - §c23§4❤");
+        p.shouldMatch("§cZombie§r - §c43§4❤");
+        p.shouldMatch("§cFeligember Frog§r - §c1553§4❤§r - §7§e✦Weak §c✹Dam §c✹Def");
+        p.shouldMatch("§cLongleg Gripper§r - §c40500§4❤§r - §2✤Dam §e✦§c✹Def");
+        p.shouldMatch("§cBlinder§r - §c6566§4❤");
+    }
+
+    @Test
     public void ContainerModel_ABILITY_TREE_PATTERN() {
         PatternTester p = new PatternTester(ContainerModel.class, "ABILITY_TREE_PATTERN");
         p.shouldMatch("\uDAFF\uDFEA\uE000");
@@ -241,14 +253,20 @@ public class TestRegex {
     }
 
     @Test
-    public void DamageModel_DAMAGE_BAR_PATTERN() {
-        PatternTester p = new PatternTester(DamageModel.class, "DAMAGE_BAR_PATTERN");
-        p.shouldMatch("§aTravelling Merchant§r - §c5985§4❤");
-        p.shouldMatch("§aGrook§r - §c23§4❤");
-        p.shouldMatch("§cZombie§r - §c43§4❤");
-        p.shouldMatch("§cFeligember Frog§r - §c1553§4❤§r - §7§e✦Weak §c✹Dam §c✹Def");
-        p.shouldMatch("§cLongleg Gripper§r - §c40500§4❤§r - §2✤Dam §e✦§c✹Def");
-        p.shouldMatch("§cBlinder§r - §c6566§4❤");
+    public void KillLabelParser_KILL_LABEL_PATTERN() {
+        PatternTester p = new PatternTester(KillLabelParser.class, "KILL_LABEL_PATTERN");
+        // No guild xp
+        p.shouldMatch("§7[§f+483 Combat XP§7]\n[ShadowCat117]");
+        // Dxp no guild xp
+        p.shouldMatch("§dx2 §7[§f+§d6§f Combat XP§7]\n[ShadowCat117]");
+        // Guild xp
+        p.shouldMatch("§7[§f+0 Combat XP§7]\n[§f+11 Guild XP§7]\n[ShadowCat117]");
+        // Dxp guild xp
+        p.shouldMatch("§dx2 §7[§f+§d0§f Combat XP§7]\n§dx2 §7[§f+§d2132§f Guild XP§7]\n[ShadowCat117]");
+        // Guild xp with blessing
+        p.shouldMatch("§7[§f+0 Combat XP§7]\n§bx1.1 §7[§f+§b1058§f Guild XP§7]\n[ShadowCat117]");
+        // Dxp guild xp with blessing
+        p.shouldMatch("§dx2 §7[§f+§d0§f Combat XP§7]\n§dx2 §bx1.1 §7[§f+§b1661§f Guild XP§7]\n[ShadowCat117]");
     }
 
     @Test

@@ -71,12 +71,11 @@ public class ServersCommand extends Command {
             server = Models.WorldState.getCurrentWorldName();
         }
 
-        if (server.startsWith("wc")) server = server.toUpperCase(Locale.ROOT);
-
         try {
             int serverNum = Integer.parseInt(server);
-            server = "WC" + serverNum;
+            server = Models.WorldState.getCurrentServerRegion().name() + serverNum;
         } catch (Exception ignored) {
+            server = server.toUpperCase(Locale.ROOT);
         }
 
         ServerProfile serverProfile = Models.ServerList.getServer(server);

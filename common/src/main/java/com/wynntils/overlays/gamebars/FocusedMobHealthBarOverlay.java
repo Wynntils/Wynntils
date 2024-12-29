@@ -11,8 +11,8 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
-import com.wynntils.models.damage.DamageModel;
-import com.wynntils.models.damage.type.FocusedDamageEvent;
+import com.wynntils.models.combat.CombatModel;
+import com.wynntils.models.combat.type.FocusedDamageEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -42,7 +42,7 @@ public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
 
     @Override
     public BossBarProgress progress() {
-        CappedValue health = Models.Damage.getFocusedMobHealthPercent();
+        CappedValue health = Models.Combat.getFocusedMobHealthPercent();
         return new BossBarProgress(health, (float) health.getProgress());
     }
 
@@ -55,24 +55,24 @@ public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
     protected String text() {
         String healthString = Managers.Feature.getFeatureInstance(AbbreviateMobHealthFeature.class)
                         .isEnabled()
-                ? StringUtils.integerToShortString(Models.Damage.getFocusedMobHealth())
-                : Long.toString(Models.Damage.getFocusedMobHealth());
-        String elementals = Models.Damage.getFocusedMobElementals();
+                ? StringUtils.integerToShortString(Models.Combat.getFocusedMobHealth())
+                : Long.toString(Models.Combat.getFocusedMobHealth());
+        String elementals = Models.Combat.getFocusedMobElementals();
         if (elementals.isBlank()) {
-            return String.format(FMT_STR_WITHOUT_ELEMS, Models.Damage.getFocusedMobName(), healthString);
+            return String.format(FMT_STR_WITHOUT_ELEMS, Models.Combat.getFocusedMobName(), healthString);
         } else {
-            return String.format(FMT_STR_WITH_ELEMS, Models.Damage.getFocusedMobName(), healthString, elementals);
+            return String.format(FMT_STR_WITH_ELEMS, Models.Combat.getFocusedMobName(), healthString, elementals);
         }
     }
 
     @Override
     public boolean isActive() {
-        return Models.Damage.getFocusedMobHealth() > 0
-                && System.currentTimeMillis() - Models.Damage.getLastDamageDealtTimestamp() < 5000;
+        return Models.Combat.getFocusedMobHealth() > 0
+                && System.currentTimeMillis() - Models.Combat.getLastDamageDealtTimestamp() < 5000;
     }
 
     @Override
     protected Class<? extends TrackedBar> getTrackedBarClass() {
-        return DamageModel.DamageBar.class;
+        return CombatModel.DamageBar.class;
     }
 }
