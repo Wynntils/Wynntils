@@ -200,7 +200,6 @@ public class PoiService extends Service {
 
                 for (JsonElement jsonElement : elements) {
                     CustomPoi poi = JsonManager.GSON.fromJson(jsonElement, CustomPoi.class);
-                    WynntilsMod.info(JsonManager.GSON.toJson(poi));
                     pois.add(poi);
                 }
 
