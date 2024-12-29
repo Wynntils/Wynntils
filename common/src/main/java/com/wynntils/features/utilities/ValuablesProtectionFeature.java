@@ -350,6 +350,7 @@ public class ValuablesProtectionFeature extends Feature {
     }
 
     private enum ProtectableNPCs {
+        NONE(List.of()),
         BLACKSMITH(List.of(BlacksmithContainer.class)),
         TRADE_MARKET(List.of(TradeMarketSellContainer.class)),
         IDENTIFIER(List.of(ItemIdentifierContainer.class)),
