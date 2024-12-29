@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.damage.type;
+package com.wynntils.models.combat.type;
 
 import com.wynntils.models.stats.type.DamageType;
 import java.util.Map;
