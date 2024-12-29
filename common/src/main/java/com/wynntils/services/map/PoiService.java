@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
+import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
@@ -198,7 +199,8 @@ public class PoiService extends Service {
                 List<CustomPoi> pois = new ArrayList<>();
 
                 for (JsonElement jsonElement : elements) {
-                    CustomPoi poi = GSON.fromJson(jsonElement, CustomPoi.class);
+                    CustomPoi poi = JsonManager.GSON.fromJson(jsonElement, CustomPoi.class);
+                    WynntilsMod.info(JsonManager.GSON.toJson(poi));
                     pois.add(poi);
                 }
 
