@@ -164,7 +164,7 @@ public class GearItem extends GameItem
 
     @Override
     public boolean meetsActualRequirements() {
-        return gearInstance.meetsRequirements();
+        return gearInstance != null && gearInstance.meetsRequirements();
     }
 
     @Override
