@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.combat;
 
-import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -18,6 +17,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.MouseUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -176,7 +176,7 @@ public class HorseMountFeature extends Feature {
                         return;
                     }
                     McUtils.sendPacket(new ServerboundSetCarriedItemPacket(horseInventorySlot));
-                    Handlers.MouseInput.sendRightClickInput();
+                    MouseUtils.sendRightClickInput();
 
                     trySummonAndMountHorse(horseInventorySlot, attempts - 1);
                 },

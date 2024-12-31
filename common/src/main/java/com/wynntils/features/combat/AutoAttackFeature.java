@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.combat;
 
-import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
@@ -19,6 +18,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.MouseUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.util.Optional;
 import net.minecraft.client.player.LocalPlayer;
@@ -107,7 +107,7 @@ public class AutoAttackFeature extends Feature {
 
         if (!McUtils.options().keyAttack.isDown()) return;
 
-        Handlers.MouseInput.sendAttackInput(Models.Character.getClassType() == ClassType.ARCHER);
+        MouseUtils.sendAttackInput(Models.Character.getClassType() == ClassType.ARCHER);
     }
 
     private enum WeaponStatus {

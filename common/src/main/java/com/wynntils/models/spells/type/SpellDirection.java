@@ -4,12 +4,12 @@
  */
 package com.wynntils.models.spells.type;
 
-import com.wynntils.core.components.Handlers;
+import com.wynntils.utils.mc.MouseUtils;
 import java.util.Arrays;
 
 public enum SpellDirection {
-    RIGHT(Handlers.MouseInput::sendRightClickInput),
-    LEFT(Handlers.MouseInput::sendLeftClickInput);
+    RIGHT(MouseUtils::sendRightClickInput),
+    LEFT(MouseUtils::sendLeftClickInput);
 
     private final Runnable sendPacketRunnable;
 
