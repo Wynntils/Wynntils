@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -7,38 +7,41 @@ package com.wynntils.mc.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.GroundItemEntityTransformEvent;
+import com.wynntils.mc.extension.ItemStackRenderStateExtension;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ItemRenderer.class)
-public abstract class ItemRendererMixin {
+@Mixin(ItemStackRenderState.LayerRenderState.class)
+public abstract class ItemStackLayerRenderStateMixin {
+    @Shadow
+    @Final
+    private ItemStackRenderState field_55345;
+
     @Inject(
             method =
-                    "render(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V",
+                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V",
             at =
                     @At(
                             target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V",
                             shift = At.Shift.BEFORE,
                             value = "INVOKE"))
     private void onRenderItem(
-            ItemStack itemStack,
-            ItemDisplayContext itemDisplayContext,
-            boolean leftHand,
             PoseStack poseStack,
-            MultiBufferSource buffer,
-            int combinedLight,
-            int combinedOverlay,
-            BakedModel model,
+            MultiBufferSource multiBufferSource,
+            int packedLight,
+            int packedOverlay,
             CallbackInfo ci) {
-        if (itemDisplayContext != ItemDisplayContext.GROUND) return;
+        if (field_55345.displayContext != ItemDisplayContext.GROUND) return;
 
-        MixinHelper.post(new GroundItemEntityTransformEvent(poseStack, itemStack));
+        if (field_55345 instanceof ItemStackRenderStateExtension extension) {
+            MixinHelper.post(new GroundItemEntityTransformEvent(poseStack, extension.getItemStack()));
+        }
     }
 }

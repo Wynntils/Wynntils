@@ -64,7 +64,7 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
         if (!this.active || !this.visible) return false;
 
         if (this.isValidClickButton(button)) {
-            boolean clicked = this.clicked(mouseX, mouseY);
+            boolean clicked = this.isMouseOver(mouseX, mouseY);
             if (clicked) {
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
 

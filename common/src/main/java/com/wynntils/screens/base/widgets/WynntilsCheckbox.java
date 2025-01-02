@@ -5,12 +5,12 @@
 package com.wynntils.screens.base.widgets;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -24,12 +24,13 @@ import net.minecraft.resources.ResourceLocation;
 
 public class WynntilsCheckbox extends AbstractButton {
     public static final ResourceLocation CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE =
-            ResourceLocation.withDefaultNamespace("widget/checkbox_selected_highlighted");
+            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected_highlighted.png");
     public static final ResourceLocation CHECKBOX_SELECTED_SPRITE =
-            ResourceLocation.withDefaultNamespace("widget/checkbox_selected");
+            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected.png");
     public static final ResourceLocation CHECKBOX_HIGHLIGHTED_SPRITE =
-            ResourceLocation.withDefaultNamespace("widget/checkbox_highlighted");
-    public static final ResourceLocation CHECKBOX_SPRITE = ResourceLocation.withDefaultNamespace("widget/checkbox");
+            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_highlighted.png");
+    public static final ResourceLocation CHECKBOX_SPRITE =
+            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox.png");
 
     public boolean selected;
     private final int maxTextWidth;
@@ -95,9 +96,6 @@ public class WynntilsCheckbox extends AbstractButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderSystem.enableDepthTest();
-        guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
-        RenderSystem.enableBlend();
         ResourceLocation resourceLocation;
         if (this.selected) {
             resourceLocation = this.isFocused() ? CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE : CHECKBOX_SELECTED_SPRITE;
@@ -105,8 +103,9 @@ public class WynntilsCheckbox extends AbstractButton {
             resourceLocation = this.isFocused() ? CHECKBOX_HIGHLIGHTED_SPRITE : CHECKBOX_SPRITE;
         }
 
-        guiGraphics.blitSprite(resourceLocation, this.getX(), this.getY(), this.width, this.height);
-        guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderUtils.drawScalingTexturedRect(
+                guiGraphics.pose(), resourceLocation, this.getX(), this.getY(), 0, this.width, this.height, 20, 20);
+
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics.pose(),

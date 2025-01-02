@@ -7,4 +7,4 @@ package com.wynntils.mc.event;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public class RecipeBookOpenEvent extends Event implements ICancellableEvent {}
+public class RecipeBookButtonCreateEvent extends Event implements ICancellableEvent {}
