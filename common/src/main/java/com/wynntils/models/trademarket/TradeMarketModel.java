@@ -46,7 +46,7 @@ public class TradeMarketModel extends Model {
     private static final Pattern PRICE_STR = Pattern.compile("§6Price:");
 
     public static final int TM_SELL_PRICE_SLOT = 28;
-    private static final Pattern TM_SELL_PRICE_PATTERN = Pattern.compile("§a- §7Total:§f (\\d{1,3}(?:,\\d{3})*)");
+    private static final Pattern TM_SELL_PRICE_PATTERN = Pattern.compile("- §7Per Unit:§f (\\d{1,3}(?:,\\d{3})*)");
     private static final int TM_PRICE_CHECK_SLOT = 51;
     private static final Pattern TM_PRICE_CHECK_PATTERN =
             Pattern.compile("§7Cheapest Sell Offer: §f(\\d{1,3}(?:,\\d{3})*)");
@@ -126,7 +126,7 @@ public class TradeMarketModel extends Model {
         return new TradeMarketPriceInfo(price, silverbullPrice, amount);
     }
 
-    public int getSalePrice() {
+    public int getUnitPrice() {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return -1;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return -1;
 

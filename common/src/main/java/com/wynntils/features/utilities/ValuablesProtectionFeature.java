@@ -61,9 +61,6 @@ public class ValuablesProtectionFeature extends Feature {
     private final Config<ProtectableNPCs> mythicWarningNPCs = new Config<>(ProtectableNPCs.BLACKSMITH_AND_TRADE_MARKET);
 
     @Persisted
-    private final Config<Integer> craftedBlacksmithLevel = new Config<>(0);
-
-    @Persisted
     private final Config<ProtectableNPCs> highRollWarningNPCs = new Config<>(ProtectableNPCs.ALL);
 
     @Persisted
@@ -71,6 +68,9 @@ public class ValuablesProtectionFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> tomesWarning = new Config<>(false);
+
+    @Persisted
+    private final Config<Integer> craftedBlacksmithLevel = new Config<>(0);
 
     private static final ResourceLocation CIRCLE_TEXTURE =
             ResourceLocation.withDefaultNamespace("textures/wynn/gui/tutorial.png");
@@ -200,7 +200,7 @@ public class ValuablesProtectionFeature extends Feature {
 
             if (!warnableItem) return;
 
-            int salePrice = Models.TradeMarket.getSalePrice();
+            int salePrice = Models.TradeMarket.getUnitPrice();
             int lowestPrice = Models.TradeMarket.getLowestPrice();
 
             if (salePrice == -1 || lowestPrice == -1) return;
