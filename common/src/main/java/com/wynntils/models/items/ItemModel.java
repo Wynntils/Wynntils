@@ -67,6 +67,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new CharmAnnotator());
         Handlers.Item.registerAnnotator(new IngredientAnnotator());
         Handlers.Item.registerAnnotator(new MaterialAnnotator());
+        Handlers.Item.registerAnnotator(new OuterVoidItemAnnotator());
         Handlers.Item.registerAnnotator(new UnknownGearAnnotator());
 
         // Then alphabetically
@@ -82,7 +83,6 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new HorseAnnotator());
         Handlers.Item.registerAnnotator(new InsulatorAnnotator());
         Handlers.Item.registerAnnotator(new MultiHealthPotionAnnotator());
-        Handlers.Item.registerAnnotator(new OuterVoidItemAnnotator());
         Handlers.Item.registerAnnotator(new PotionAnnotator());
         Handlers.Item.registerAnnotator(new PowderAnnotator());
         Handlers.Item.registerAnnotator(new RuneAnnotator());
