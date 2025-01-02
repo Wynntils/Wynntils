@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers.type;
@@ -12,7 +12,6 @@ import java.util.List;
  * and have a defined bounds where the content can appear.
  */
 public interface SearchableContainerProperty extends ScrollableContainerProperty, BoundedContainerProperty {
-
     /**
      * Returns the supported provider types for this container.
      * If basic search should be used, return an empty list.

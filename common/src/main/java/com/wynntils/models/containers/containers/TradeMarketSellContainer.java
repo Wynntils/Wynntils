@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers.containers;
@@ -7,7 +7,6 @@ package com.wynntils.models.containers.containers;
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.type.BoundedContainerProperty;
 import com.wynntils.models.containers.type.ContainerBounds;
-
 import java.util.regex.Pattern;
 
 public class TradeMarketSellContainer extends Container implements BoundedContainerProperty {

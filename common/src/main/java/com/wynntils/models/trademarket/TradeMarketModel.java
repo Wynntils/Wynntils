@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.trademarket;
@@ -126,6 +126,9 @@ public class TradeMarketModel extends Model {
         return new TradeMarketPriceInfo(price, silverbullPrice, amount);
     }
 
+    /**
+     * @return The unit price of the item currently being sold in the sell screen.
+     */
     public int getUnitPrice() {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return -1;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return -1;
@@ -143,6 +146,9 @@ public class TradeMarketModel extends Model {
         return -1;
     }
 
+    /**
+     * @return The TM's lowest price for the current item from the price check slot.
+     */
     public int getLowestPrice() {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return -1;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return -1;

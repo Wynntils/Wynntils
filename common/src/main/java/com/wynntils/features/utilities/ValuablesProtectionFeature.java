@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -128,11 +129,13 @@ public class ValuablesProtectionFeature extends Feature {
     }
 
     private void doBlacksmithIdentifierChecks(Container currentContainer, ContainerScreen cs) {
-        for (Class<? extends BoundedContainerProperty> container : ProtectableNPCs.BLACKSMITH_AND_IDENTIFIER.getContainers()) {
+        for (Class<? extends BoundedContainerProperty> container :
+                ProtectableNPCs.BLACKSMITH_AND_IDENTIFIER.getContainers()) {
             if (!currentContainer.getClass().equals(container)) continue;
             currentContainerType = container;
 
-            for (int i : ((BoundedContainerProperty) currentContainer).getBounds().getSlots()) {
+            for (int i :
+                    ((BoundedContainerProperty) currentContainer).getBounds().getSlots()) {
                 Optional<WynnItem> itemOpt =
                         Models.Item.getWynnItem(cs.getMenu().getItems().get(i));
                 if (itemOpt.isEmpty()) continue;
@@ -142,19 +145,19 @@ public class ValuablesProtectionFeature extends Feature {
                 if (item instanceof TomeItem && !tomesWarning.get()) continue;
 
                 // set a single flag for all the checks, first do high roll
-                boolean shouldWarn = highRollWarningNPCs.get().getContainers().contains(container) &&
-                        item instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty &&
-                        identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get();
+                boolean shouldWarn = highRollWarningNPCs.get().getContainers().contains(container)
+                        && item instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty
+                        && identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get();
 
                 if (item instanceof GearTierItemProperty gtip) {
-                    if (mythicWarningNPCs.get().getContainers().contains(container) &&
-                            gtip.getGearTier() == GearTier.MYTHIC) {
+                    if (mythicWarningNPCs.get().getContainers().contains(container)
+                            && gtip.getGearTier() == GearTier.MYTHIC) {
                         shouldWarn = true;
                     }
-                    if (craftedBlacksmithLevel.get() > 0 &&
-                            gtip.getGearTier() == GearTier.CRAFTED &&
-                            item instanceof LeveledItemProperty lip &&
-                            lip.getLevel() >= craftedBlacksmithLevel.get()) {
+                    if (craftedBlacksmithLevel.get() > 0
+                            && gtip.getGearTier() == GearTier.CRAFTED
+                            && item instanceof LeveledItemProperty lip
+                            && lip.getLevel() >= craftedBlacksmithLevel.get()) {
                         shouldWarn = true;
                     }
                 }
@@ -170,10 +173,14 @@ public class ValuablesProtectionFeature extends Feature {
             ctrlHintTextWidget = new HintTextWidget(
                     cs.width / 2,
                     cs.topPos - 6,
-                    cs.width - 2 * cs.leftPos,
+                    cs.width,
                     11,
-                    I18n.get("feature.wynntils.valuablesProtection.ctrlClick",
-                            I18n.get("feature.wynntils.valuablesProtection." + (currentContainerType == ItemIdentifierContainer.class ? "identifying" : "selling"))),
+                    I18n.get(
+                            "feature.wynntils.valuablesProtection.ctrlClick",
+                            I18n.get("feature.wynntils.valuablesProtection."
+                                    + (currentContainerType == ItemIdentifierContainer.class
+                                            ? "identifying"
+                                            : "selling"))),
                     HorizontalAlignment.CENTER,
                     CommonColors.WHITE);
             cs.addRenderableOnly(ctrlHintTextWidget);
@@ -182,18 +189,19 @@ public class ValuablesProtectionFeature extends Feature {
 
     private void doTradeMarketChecks(Container currentContainer, ContainerScreen cs) {
         if (currentContainer instanceof TradeMarketSellContainer) {
-            Optional<WynnItem> optItem = Models.Item.getWynnItem(cs.getMenu().getItems().get(TM_ITEM_SLOT));
+            Optional<WynnItem> optItem =
+                    Models.Item.getWynnItem(cs.getMenu().getItems().get(TM_ITEM_SLOT));
             if (optItem.isEmpty()) return;
             WynnItem item = optItem.get();
 
             // set a single flag for all the checks, first do high roll
-            boolean warnableItem = highRollWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class) &&
-                    item instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty &&
-                    identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get();
+            boolean warnableItem = highRollWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class)
+                    && item instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty
+                    && identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get();
 
             if (item instanceof GearTierItemProperty gtip) {
-                if (mythicWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class) &&
-                        gtip.getGearTier() == GearTier.MYTHIC) {
+                if (mythicWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class)
+                        && gtip.getGearTier() == GearTier.MYTHIC) {
                     warnableItem = true;
                 }
             }
@@ -209,10 +217,12 @@ public class ValuablesProtectionFeature extends Feature {
             if (salePrice < lowestPrice * (tradeMarketPriceThreshold.get() / 100d)) {
                 ctrlHintTextWidget = new HintTextWidget(
                         cs.width - cs.leftPos + 2,
-                        cs.height / 2 - 46,
-                        200,
+                        cs.height / 2 - 54,
+                        cs.leftPos,
                         11,
-                        I18n.get("feature.wynntils.valuablesProtection.ctrlClick", I18n.get("feature.wynntils.valuablesProtection.selling")),
+                        I18n.get(
+                                "feature.wynntils.valuablesProtection.ctrlClick",
+                                I18n.get("feature.wynntils.valuablesProtection.selling")),
                         HorizontalAlignment.LEFT,
                         CommonColors.WHITE);
                 cs.addRenderableOnly(ctrlHintTextWidget);
@@ -220,23 +230,14 @@ public class ValuablesProtectionFeature extends Feature {
                 tmHintTextWidgets.add(new HintTextWidget(
                         cs.width - cs.leftPos + 2,
                         cs.height / 2 - 34,
-                        200,
+                        cs.leftPos,
                         11,
                         I18n.get(
-                                "feature.wynntils.valuablesProtection.tmWarning1",
+                                "feature.wynntils.valuablesProtection.tmWarning",
                                 salePrice + " " + ChatFormatting.DARK_GRAY + "("
                                         + Models.Emerald.getFormattedString(salePrice, false) + ")"
                                         + ChatFormatting.RESET,
-                                tradeMarketPriceThreshold.get()),
-                        HorizontalAlignment.LEFT,
-                        CommonColors.LIGHT_GRAY));
-                tmHintTextWidgets.add(new HintTextWidget(
-                        cs.width - cs.leftPos + 2,
-                        cs.height / 2 - 22,
-                        200,
-                        11,
-                        I18n.get(
-                                "feature.wynntils.valuablesProtection.tmWarning2",
+                                tradeMarketPriceThreshold.get(),
                                 lowestPrice + " " + ChatFormatting.DARK_GRAY + "("
                                         + Models.Emerald.getFormattedString(lowestPrice, false) + ")"
                                         + ChatFormatting.RESET),
@@ -244,10 +245,10 @@ public class ValuablesProtectionFeature extends Feature {
                         CommonColors.LIGHT_GRAY));
                 tmHintTextWidgets.add(new HintTextWidget(
                         cs.width - cs.leftPos + 2,
-                        cs.height / 2 - 4,
-                        200,
+                        cs.height / 2 + 2,
+                        cs.leftPos,
                         11,
-                        I18n.get("feature.wynntils.valuablesProtection.tmWarning3"),
+                        I18n.get("feature.wynntils.valuablesProtection.settingsHint"),
                         HorizontalAlignment.LEFT,
                         CommonColors.GRAY));
 
@@ -261,20 +262,25 @@ public class ValuablesProtectionFeature extends Feature {
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
         if (slotsToWarn.isEmpty() || KeyboardUtils.isControlDown()) return;
-        if (e.getSlotNum() != BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT && e.getSlotNum() != TM_CONFIRM_BUTTON_SLOT) return;
+        if (e.getSlotNum() != BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT && e.getSlotNum() != TM_CONFIRM_BUTTON_SLOT)
+            return;
 
         e.setCanceled(true);
         for (int i = 0; i < 12; i += 6) {
-            Managers.TickScheduler.scheduleLater(() -> {
-                if (ctrlHintTextWidget != null) {
-                    ctrlHintTextWidget.setTextColor(CommonColors.RED);
-                }
-            }, i);
-            Managers.TickScheduler.scheduleLater(() -> {
-                if (ctrlHintTextWidget != null) {
-                    ctrlHintTextWidget.setTextColor(CommonColors.WHITE);
-                }
-            }, i + 3);
+            Managers.TickScheduler.scheduleLater(
+                    () -> {
+                        if (ctrlHintTextWidget != null) {
+                            ctrlHintTextWidget.setTextColor(CommonColors.RED);
+                        }
+                    },
+                    i);
+            Managers.TickScheduler.scheduleLater(
+                    () -> {
+                        if (ctrlHintTextWidget != null) {
+                            ctrlHintTextWidget.setTextColor(CommonColors.WHITE);
+                        }
+                    },
+                    i + 3);
         }
     }
 
@@ -335,10 +341,12 @@ public class ValuablesProtectionFeature extends Feature {
                             StyledText.fromString(text),
                             getX(),
                             getY(),
+                            getWidth(),
                             textColor,
                             horizontalAlignment,
                             VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
+                            TextShadow.NORMAL,
+                            Font.DisplayMode.NORMAL);
         }
 
         @Override
