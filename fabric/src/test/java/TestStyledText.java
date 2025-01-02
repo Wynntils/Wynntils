@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 import com.wynntils.core.text.PartStyle;
@@ -890,5 +890,29 @@ public class TestStyledText {
                 component.getStyle().getHoverEvent(),
                 styledText.getComponent().toFlatList().getFirst().getStyle().getHoverEvent(),
                 "StyledText.fromComponent() did not inherit the correct hover event.");
+    }
+
+    @Test
+    public void styledText_mapShouldProduceCorrectResult() {
+        final Component component = Component.literal("a")
+                .withStyle(ChatFormatting.BOLD)
+                .append(Component.literal("bb"))
+                .append(Component.literal("ccc"))
+                .append(Component.literal("dddd"));
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText mappedText = styledText.map(part -> new StyledTextPart(
+                "." + part.getString(null, PartStyle.StyleType.NONE),
+                part.getPartStyle().withColor(ChatFormatting.AQUA).getStyle(),
+                part.getParent(),
+                null));
+
+        final String result = "§b§l.a.bb.ccc.dddd";
+
+        Assertions.assertEquals(
+                result,
+                mappedText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.map() returned an unexpected value.");
     }
 }
