@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -8,10 +8,12 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.UnidentifiedItemProperty;
 import com.wynntils.utils.type.RangedValue;
 import java.util.Objects;
 
-public class GearBoxItem extends GameItem implements GearTierItemProperty, LeveledItemProperty {
+public class GearBoxItem extends GameItem
+        implements GearTierItemProperty, LeveledItemProperty, UnidentifiedItemProperty {
     private final GearType gearType;
     private final GearTier gearTier;
     private final RangedValue levelRange;
@@ -33,6 +35,11 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty, Level
 
     public RangedValue getLevelRange() {
         return levelRange;
+    }
+
+    @Override
+    public boolean isUnidentified() {
+        return true;
     }
 
     @Override
