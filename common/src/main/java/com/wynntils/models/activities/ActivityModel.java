@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities;
@@ -21,7 +21,7 @@ import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
 import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.models.activities.event.DialogueHistoryReloadedEvent;
-import com.wynntils.models.activities.markers.ActivityMarkerProvider;
+import com.wynntils.models.activities.mapdata.ActivityProvider;
 import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityDistance;
@@ -31,12 +31,12 @@ import com.wynntils.models.activities.type.ActivityRequirements;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
-import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
@@ -88,18 +88,17 @@ public final class ActivityModel extends Model {
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
-    public static final ActivityMarkerProvider ACTIVITY_MARKER_PROVIDER = new ActivityMarkerProvider();
+    public static final ActivityProvider ACTIVITY_PROVIDER = new ActivityProvider();
 
     private TrackedActivity trackedActivity;
     private List<List<StyledText>> dialogueHistory = List.of();
     private CappedValue overallProgress = CappedValue.EMPTY;
     private boolean overallProgressOutdated = true;
 
-    public ActivityModel(MarkerModel markerModel) {
-        super(List.of(markerModel));
+    public ActivityModel(BeaconModel beacon) {
+        super(List.of(beacon));
 
         Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
-        Models.Marker.registerMarkerProvider(ACTIVITY_MARKER_PROVIDER);
 
         for (ActivityBeaconKind beaconKind : ActivityBeaconKind.values()) {
             Models.Beacon.registerBeacon(beaconKind);
@@ -114,7 +113,7 @@ public final class ActivityModel extends Model {
     public void onSetSpawn(SetSpawnEvent e) {
         Location spawn = new Location(e.getSpawnPos());
         if (spawn.equals(WORLD_SPAWN) || spawn.equals(HUB_SPAWN)) {
-            ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null);
+            ACTIVITY_PROVIDER.setSpawnLocation(null);
             return;
         }
 
@@ -123,11 +122,11 @@ public final class ActivityModel extends Model {
             // Wynncraft "resets" tracking by setting the compass to your current
             // location. In theory, this can fail if you happen to be standing on
             // the spot that is the target of the activity you start tracking...
-            ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null);
+            ACTIVITY_PROVIDER.setSpawnLocation(null);
             return;
         }
 
-        ACTIVITY_MARKER_PROVIDER.setSpawnLocation(spawn);
+        ACTIVITY_PROVIDER.setSpawnLocation(spawn);
     }
 
     @SubscribeEvent
@@ -374,7 +373,7 @@ public final class ActivityModel extends Model {
     void updateTracker(String name, String type, StyledText nextTask) {
         ActivityType trackedType = ActivityType.from(type);
         trackedActivity = new TrackedActivity(name, trackedType, nextTask);
-        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(getTrackedLocation(), trackedType.getColor());
+        ACTIVITY_PROVIDER.setTrackedActivityLocation(getTrackedLocation(), trackedType.getColor());
 
         WynntilsMod.postEvent(new ActivityTrackerUpdatedEvent(
                 trackedActivity.trackedType(), trackedActivity.trackedName(), trackedActivity.trackedTask()));
@@ -382,7 +381,7 @@ public final class ActivityModel extends Model {
 
     void resetTracker() {
         trackedActivity = null;
-        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(null, null);
+        ACTIVITY_PROVIDER.setTrackedActivityLocation(null, null);
     }
 
     public void scanContentBook(

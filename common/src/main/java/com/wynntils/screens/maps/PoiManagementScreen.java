@@ -7,7 +7,6 @@ package com.wynntils.screens.maps;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
@@ -771,13 +770,15 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     }
 
     private void toggleMarkers(boolean addMarkers) {
-        if (addMarkers) {
-            selectedPois.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                    poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor(), poi.getName()));
-        } else {
-            selectedPois.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
-                    poi.getLocation().asLocation()));
-        }
+        // FIXME: Services.UserMarker
+        //        if (addMarkers) {
+        //            selectedPois.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+        //                    poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor(),
+        // poi.getName()));
+        //        } else {
+        //            selectedPois.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
+        //                    poi.getLocation().asLocation()));
+        //        }
     }
 
     private void toggleSelectAll(boolean select) {

@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.mapdata.attributes;
 
+import com.wynntils.services.mapdata.attributes.impl.MapMarkerOptionsImpl;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.Optional;
@@ -85,5 +86,9 @@ public class MapMarkerOptionsBuilder implements MapMarkerOptions {
     @Override
     public Optional<Boolean> getHasIcon() {
         return Optional.ofNullable(hasIcon);
+    }
+
+    public MapMarkerOptionsImpl build() {
+        return new MapMarkerOptionsImpl(minDistance, maxDistance, fade, beaconColor, hasLabel, hasDistance, hasIcon);
     }
 }
