@@ -12,9 +12,9 @@ import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
+import com.wynntils.utils.MapDataUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -75,10 +75,7 @@ public class ActivityProvider extends BuiltInProvider {
 
         public ActivityLocation(String name, ActivityType activityType, Location location) {
             super(
-                    "activity-"
-                            + (name.isBlank()
-                                    ? location.hashCode()
-                                    : name.replaceAll(" +", "-").toLowerCase(Locale.ROOT)),
+                    MapDataUtils.sanitizeFeatureId("activity-" + (name.isBlank() ? location.hashCode() : name)),
                     "wynntils:activity:" + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, activityType.name()),
                     null,
                     location);

@@ -17,12 +17,12 @@ import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
+import com.wynntils.utils.MapDataUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.Pair;
 import java.util.Comparator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -60,12 +60,7 @@ public class GuildAttackLocationProvider extends BuiltInProvider {
 
         public TerritoryAttackLocation(TerritoryProfile territoryProfile, TerritoryAttackTimer attackTimer) {
             super(
-                    "territory-attack-"
-                            + territoryProfile
-                                    .getName()
-                                    .replace(" ", "-")
-                                    .replaceAll("[^a-zA-Z\\-]", "")
-                                    .toLowerCase(Locale.ROOT),
+                    MapDataUtils.sanitizeFeatureId("territory-attack-" + territoryProfile.getName()),
                     "wynntils:territory:attack",
                     null,
                     territoryProfile.getCenterLocation().asLocation());
