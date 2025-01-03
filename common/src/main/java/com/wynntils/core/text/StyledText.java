@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.text;
@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -699,6 +700,10 @@ public final class StyledText implements Iterable<StyledTextPart> {
         }
 
         return fromParts(newParts);
+    }
+
+    public StyledText map(Function<StyledTextPart, StyledTextPart> function) {
+        return fromParts(parts.stream().map(function).collect(Collectors.toList()));
     }
 
     public StyledText withoutFormatting() {
