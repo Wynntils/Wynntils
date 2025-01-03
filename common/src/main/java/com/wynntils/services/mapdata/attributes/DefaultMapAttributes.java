@@ -21,12 +21,12 @@ import java.util.Optional;
  * are defined. These are guaranteed to be non-empty.
  */
 public final class DefaultMapAttributes implements MapAttributes {
-    public static final MapVisibility ICON_ALWAYS = new MapVisibilityImpl(0f, 100f, 6f);
-    public static final MapVisibility ICON_NEVER = new MapVisibilityImpl(100f, 0f, 6f);
-    public static final MapVisibility LABEL_ALWAYS = new MapVisibilityImpl(0f, 100f, 3f);
-    public static final MapVisibility LABEL_NEVER = new MapVisibilityImpl(100f, 0f, 3f);
+    public static final MapVisibilityImpl ICON_ALWAYS = new MapVisibilityImpl(0f, 100f, 6f);
+    public static final MapVisibilityImpl ICON_NEVER = new MapVisibilityImpl(100f, 0f, 6f);
+    public static final MapVisibilityImpl LABEL_ALWAYS = new MapVisibilityImpl(0f, 100f, 3f);
+    public static final MapVisibilityImpl LABEL_NEVER = new MapVisibilityImpl(100f, 0f, 3f);
 
-    public static final MapMarkerOptions DEFAULT_MARKER_OPTIONS =
+    public static final MapMarkerOptionsImpl DEFAULT_MARKER_OPTIONS =
             new MapMarkerOptionsImpl(0f, 15000f, 3f, CommonColors.RED, true, true, true);
 
     public static final DefaultMapAttributes INSTANCE = new DefaultMapAttributes();

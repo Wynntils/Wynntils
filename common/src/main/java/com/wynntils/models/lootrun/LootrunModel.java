@@ -10,7 +10,6 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
@@ -45,7 +44,6 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.MissionType;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
-import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.npc.label.NpcLabelInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -136,7 +134,7 @@ public class LootrunModel extends Model {
 
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
-    private static final LootrunLocationProvider LOOTRUN_LOCATION_PROVIDER = new LootrunLocationProvider();
+    public static final LootrunLocationProvider LOOTRUN_LOCATION_PROVIDER = new LootrunLocationProvider();
 
     @Persisted
     public final Storage<Integer> dryPulls = new Storage<>(0);
@@ -182,12 +180,11 @@ public class LootrunModel extends Model {
     @Persisted
     private final Storage<Map<String, List<MissionType>>> missionStorage = new Storage<>(new TreeMap<>());
 
-    public LootrunModel(MarkerModel markerModel) {
-        super(List.of(markerModel));
+    public LootrunModel() {
+        super(List.of());
 
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
         Handlers.Particle.registerParticleVerifier(ParticleType.LOOTRUN_TASK, new LootrunTaskParticleVerifier());
-        Services.MapData.registerBuiltInProvider(LOOTRUN_LOCATION_PROVIDER);
 
         for (LootrunBeaconKind beaconKind : LootrunBeaconKind.values()) {
             Models.Beacon.registerBeacon(beaconKind);

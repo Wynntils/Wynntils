@@ -9,7 +9,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -251,13 +250,13 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected void setCompassToMouseCoords(double mouseX, double mouseY, boolean removeAll) {
         if (removeAll) {
-            Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
+            Services.UserMarker.removeAllUserMarkedFeatures();
         }
 
         double gameX = (mouseX - centerX) / zoomRenderScale + mapCenterX;
         double gameZ = (mouseY - centerZ) / zoomRenderScale + mapCenterZ;
         Location compassLocation = Location.containing(gameX, 0, gameZ);
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(compassLocation, null);
+        Services.UserMarker.addMarkerAtLocation(compassLocation);
 
         McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
     }

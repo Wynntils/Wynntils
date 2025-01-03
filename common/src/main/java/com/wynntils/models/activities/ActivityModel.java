@@ -9,7 +9,6 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
@@ -32,12 +31,12 @@ import com.wynntils.models.activities.type.ActivityRequirements;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
-import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
@@ -96,11 +95,10 @@ public final class ActivityModel extends Model {
     private CappedValue overallProgress = CappedValue.EMPTY;
     private boolean overallProgressOutdated = true;
 
-    public ActivityModel(MarkerModel markerModel) {
-        super(List.of(markerModel));
+    public ActivityModel(BeaconModel beacon) {
+        super(List.of(beacon));
 
         Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
-        Services.MapData.registerBuiltInProvider(ACTIVITY_PROVIDER);
 
         for (ActivityBeaconKind beaconKind : ActivityBeaconKind.values()) {
             Models.Beacon.registerBeacon(beaconKind);

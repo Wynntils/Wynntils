@@ -8,13 +8,11 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.territories.event.GuildWarQueuedEvent;
 import com.wynntils.models.territories.mapdata.GuildAttackLocationProvider;
 import com.wynntils.models.territories.profile.TerritoryProfile;
@@ -59,18 +57,17 @@ public final class GuildAttackTimerModel extends Model {
             "§c(?:\uE006\uE002|\uE001) \\[(?<guild>.+)\\] (?:has )?captured the territory (?<territory>.+)\\.");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
 
-    private static final GuildAttackLocationProvider GUILD_ATTACK_LOCATION_PROVIDER = new GuildAttackLocationProvider();
+    public static final GuildAttackLocationProvider GUILD_ATTACK_LOCATION_PROVIDER = new GuildAttackLocationProvider();
 
     private final Map<String, GuildResourceValues> territoryDefenses = new HashMap<>();
     private final Map<String, TerritoryAttackTimer> chatAttackTimers = new HashMap<>();
     private final Map<String, TerritoryAttackTimer> scoreboardAttackTimers = new HashMap<>();
     private final TimedSet<String> capturedTerritories = new TimedSet<>(10, TimeUnit.SECONDS, true);
 
-    public GuildAttackTimerModel(MarkerModel marker) {
-        super(List.of(marker));
+    public GuildAttackTimerModel() {
+        super(List.of());
 
         Handlers.Scoreboard.addPart(GUILD_ATTACK_SCOREBOARD_PART);
-        Services.MapData.registerBuiltInProvider(GUILD_ATTACK_LOCATION_PROVIDER);
     }
 
     @SubscribeEvent
