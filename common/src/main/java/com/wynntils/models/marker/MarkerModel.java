@@ -12,14 +12,12 @@ import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.mapdata.attributes.impl.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.features.type.MapFeature;
-import com.wynntils.services.mapdata.providers.type.MapDataOverrideProvider;
-import com.wynntils.services.mapdata.type.MapDataProvidedType;
+import com.wynntils.services.mapdata.providers.type.AbstractMapDataOverrideProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class MarkerModel extends Model {
@@ -62,9 +60,7 @@ public class MarkerModel extends Model {
         return markerProviders.stream().filter(MarkerProvider::isEnabled).flatMap(MarkerProvider::getPois);
     }
 
-    private final class UserMarkerOverrideProvider implements MapDataOverrideProvider {
-        private final Set<Consumer<MapDataProvidedType>> callbacks = new CopyOnWriteArraySet<>();
-
+    private final class UserMarkerOverrideProvider extends AbstractMapDataOverrideProvider {
         @Override
         public MapAttributes getOverrideAttributes() {
             return new AbstractMapAttributes() {
@@ -83,15 +79,6 @@ public class MarkerModel extends Model {
         @Override
         public Stream<String> getOverridenCategoryIds() {
             return Stream.empty();
-        }
-
-        @Override
-        public void onChange(Consumer<MapDataProvidedType> callback) {
-            callbacks.add(callback);
-        }
-
-        public void notifyCallbacks(MapDataProvidedType type) {
-            callbacks.forEach(c -> c.accept(type));
         }
     }
 }

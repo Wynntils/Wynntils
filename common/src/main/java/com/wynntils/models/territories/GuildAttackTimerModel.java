@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories;
@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
@@ -15,7 +16,7 @@ import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.territories.event.GuildWarQueuedEvent;
-import com.wynntils.models.territories.markers.GuildAttackMarkerProvider;
+import com.wynntils.models.territories.mapdata.GuildAttackLocationProvider;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.utils.mc.McUtils;
@@ -58,7 +59,7 @@ public final class GuildAttackTimerModel extends Model {
             "§c(?:\uE006\uE002|\uE001) \\[(?<guild>.+)\\] (?:has )?captured the territory (?<territory>.+)\\.");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
 
-    private static final GuildAttackMarkerProvider GUILD_ATTACK_MARKER_PROVIDER = new GuildAttackMarkerProvider();
+    private static final GuildAttackLocationProvider GUILD_ATTACK_LOCATION_PROVIDER = new GuildAttackLocationProvider();
 
     private final Map<String, GuildResourceValues> territoryDefenses = new HashMap<>();
     private final Map<String, TerritoryAttackTimer> chatAttackTimers = new HashMap<>();
@@ -69,7 +70,7 @@ public final class GuildAttackTimerModel extends Model {
         super(List.of(marker));
 
         Handlers.Scoreboard.addPart(GUILD_ATTACK_SCOREBOARD_PART);
-        Models.Marker.registerMarkerProvider(GUILD_ATTACK_MARKER_PROVIDER);
+        Services.MapData.registerBuiltInProvider(GUILD_ATTACK_LOCATION_PROVIDER);
     }
 
     @SubscribeEvent
