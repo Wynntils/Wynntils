@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata;
@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.services.mapdata.attributes.resolving.MapAttributesResolver;
+import com.wynntils.services.mapdata.attributes.resolving.OverrideMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapVisibility;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMarkerOptions;
@@ -128,13 +129,13 @@ public class MapDataService extends Service {
     }
 
     public Optional<MapAttributes> getOverrideAttributesForFeature(MapFeature feature) {
-        return overrideProviders.values().stream()
-                .filter(attr -> attr.getOverridenFeatureIds()
-                                .anyMatch(attrFeatureId -> attrFeatureId.equals(feature.getFeatureId()))
-                        || attr.getOverridenCategoryIds()
-                                .anyMatch(attrCategoryId -> attrCategoryId.equals(feature.getCategoryId())))
+        return OverrideMapAttributes.from(Stream.concat(
+                        overrideProviders.values().stream().filter(attr -> attr.getOverridenFeatureIds()
+                                .anyMatch(attrFeatureId -> attrFeatureId.equals(feature.getFeatureId()))),
+                        overrideProviders.values().stream().filter(attr -> attr.getOverridenCategoryIds()
+                                .anyMatch(attrCategoryId -> attrCategoryId.equals(feature.getCategoryId()))))
                 .map(MapDataOverrideProvider::getOverrideAttributes)
-                .findFirst();
+                .toList());
     }
 
     // endregion
