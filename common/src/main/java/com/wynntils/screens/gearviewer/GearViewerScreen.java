@@ -6,22 +6,25 @@ package com.wynntils.screens.gearviewer;
 
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.WynntilsContainerScreen;
-import com.wynntils.screens.gearviewer.widgets.ViewPlayerStatsButton;
+import com.wynntils.screens.gearviewer.widgets.AddFriendButton;
+import com.wynntils.screens.gearviewer.widgets.InvitePartyButton;
+import com.wynntils.screens.gearviewer.widgets.PlayerInteractionButton;
+import com.wynntils.screens.gearviewer.widgets.SimplePlayerInteractionButton;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ItemUtils;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -37,6 +40,11 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team.Visibility;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMenu> {
     private static final String TEAM_NAME = "GearViewerTeam";
 
@@ -44,7 +52,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
     private final Scoreboard scoreboard;
     private final PlayerTeam gearViewerTeam;
     private final PlayerTeam oldTeam;
-    private ViewPlayerStatsButton viewPlayerStatsButton;
+    private List<PlayerInteractionButton> interactionButtons = new ArrayList<>();
 
     private GearViewerScreen(Player player, GearViewerMenu menu) {
         super(menu, player.getInventory(), Component.empty());
@@ -104,12 +112,52 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         this.leftPos = (this.width - Texture.GEAR_VIEWER_BACKGROUND.width()) / 2;
         this.topPos = (this.height - Texture.GEAR_VIEWER_BACKGROUND.height()) / 2;
 
-        viewPlayerStatsButton = new ViewPlayerStatsButton(
-                leftPos - 20,
-                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 4),
-                18,
-                20,
-                StyledText.fromComponent(player.getName()).getStringWithoutFormatting());
+        String playerName = StyledText.fromComponent(player.getName()).getStringWithoutFormatting();
+
+        // left
+        // view player stats button
+        interactionButtons.add(new SimplePlayerInteractionButton(
+                leftPos - 21,
+                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5 - 2),
+                Component.translatable("screens.wynntils.gearViewer.viewStats"), Component.literal("↵"),
+                () -> Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_PLAYER_STATS, Map.of("username", playerName))));
+
+        // add friend button
+        interactionButtons.add(new AddFriendButton(
+                leftPos - 21,
+                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 18,
+                playerName));
+
+        // invite party button
+        interactionButtons.add(new InvitePartyButton(
+                leftPos - 21,
+                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 38,
+                playerName));
+
+        // right
+        // duel button
+        interactionButtons.add(new SimplePlayerInteractionButton(
+                leftPos + Texture.GEAR_VIEWER_BACKGROUND.width() + 1,
+                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) - 2,
+                Component.translatable("screens.wynntils.gearViewer.duel"),
+                Component.literal("D"),
+                () -> Handlers.Command.queueCommand("duel " + playerName)));
+
+        // trade button
+        interactionButtons.add(new SimplePlayerInteractionButton(
+                leftPos + Texture.GEAR_VIEWER_BACKGROUND.width() + 1,
+                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 18,
+                Component.translatable("screens.wynntils.gearViewer.trade"),
+                Component.literal("T"),
+                () -> Handlers.Command.queueCommand("trade " + playerName)));
+
+        // ignore button
+        interactionButtons.add(new SimplePlayerInteractionButton(
+                leftPos + Texture.GEAR_VIEWER_BACKGROUND.width() + 1,
+                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 38,
+                Component.translatable("screens.wynntils.gearViewer.ignore"),
+                Component.literal("I"),
+                () -> Handlers.Command.queueCommand("ignore " + playerName)));
     }
 
     @Override
@@ -120,7 +168,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
-        viewPlayerStatsButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        interactionButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     private void renderPlayerModel(GuiGraphics guiGraphics, int mouseX, int mouseY) {
@@ -157,7 +205,12 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return viewPlayerStatsButton.mouseClicked(mouseX, mouseY, button);
+        for (PlayerInteractionButton interactionButton : interactionButtons) {
+            if (interactionButton.mouseClicked(mouseX, mouseY, button)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
