@@ -132,6 +132,8 @@
   "feature.wynntils.bombBellOverlay.overlay.bombBell.showProfessionXpBombs.name": "Show Profession XP Bombs",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.textShadow.name": "Text Shadow",
+  "feature.wynntils.bombBellRelay.clickableMessage.description": "Should the message be clickable to try to switch to the bomb server?",
+  "feature.wynntils.bombBellRelay.clickableMessage.name": "Clickable Bomb Bell Message",
   "feature.wynntils.bombBellRelay.description": "Adds the ability to relay bomb bell messages to your party or guild with a keybind.",
   "feature.wynntils.bombBellRelay.name": "Bomb Bell Relay",
   "feature.wynntils.bombBellRelay.noKnownBombs": "No known bomb bells to relay.",
