@@ -9,16 +9,15 @@ import com.wynntils.models.containers.type.BoundedContainerProperty;
 import com.wynntils.models.containers.type.ContainerBounds;
 import java.util.regex.Pattern;
 
-public class TradeMarketSellContainer extends Container implements BoundedContainerProperty {
-    private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFE8\uE014.+");
+public class ItemIdentifierContainer extends Container implements BoundedContainerProperty {
+    private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFF8\uE018");
 
-    public TradeMarketSellContainer() {
+    public ItemIdentifierContainer() {
         super(TITLE_PATTERN);
     }
 
     @Override
     public ContainerBounds getBounds() {
-        // singular slot where the item to be sold is (slot 22)
-        return new ContainerBounds(2, 4, 2, 4);
+        return new ContainerBounds(1, 2, 2, 6);
     }
 }
