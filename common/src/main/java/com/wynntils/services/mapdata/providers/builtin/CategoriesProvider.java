@@ -4,11 +4,15 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
+import com.google.common.base.CaseFormat;
+import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
+import com.wynntils.services.mapdata.attributes.MapMarkerOptionsBuilder;
 import com.wynntils.services.mapdata.attributes.impl.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.features.builtin.CombatLocation;
 import com.wynntils.services.mapdata.features.builtin.PlaceLocation;
@@ -43,6 +47,10 @@ public class CategoriesProvider extends BuiltInProvider {
         }
         for (PlayerRelation relation : PlayerRelation.values()) {
             PROVIDED_CATEGORIES.add(new RemotePlayerCategory(relation));
+        }
+        PROVIDED_CATEGORIES.add(new ActivityCategory());
+        for (ActivityType activityType : ActivityType.values()) {
+            PROVIDED_CATEGORIES.add(new ActivityTypeCategory(activityType));
         }
         PROVIDED_CATEGORIES.add(new WaypointCategory());
         PROVIDED_CATEGORIES.add(new WynntilsCategory());
@@ -425,6 +433,88 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public Optional<CustomColor> getLabelColor() {
                     return Optional.of(relation.getRelationColor());
+                }
+            });
+        }
+    }
+
+    private static final class ActivityCategory implements MapCategory {
+        @Override
+        public String getCategoryId() {
+            return "wynntils:activity";
+        }
+
+        @Override
+        public Optional<String> getName() {
+            return Optional.of("Activity Locations");
+        }
+
+        @Override
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
+                @Override
+                public Optional<Boolean> getHasMarker() {
+                    return Optional.of(true);
+                }
+
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(new MapMarkerOptionsBuilder().withHasDistance(true));
+                }
+
+                @Override
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(DefaultMapAttributes.ICON_ALWAYS);
+                }
+
+                @Override
+                public Optional<MapVisibility> getLabelVisibility() {
+                    return Optional.of(DefaultMapAttributes.LABEL_ALWAYS);
+                }
+
+                @Override
+                public Optional<Integer> getPriority() {
+                    return Optional.of(900);
+                }
+            });
+        }
+    }
+
+    private static final class ActivityTypeCategory implements MapCategory {
+        private final ActivityType activityType;
+
+        private ActivityTypeCategory(ActivityType activityType) {
+            this.activityType = activityType;
+        }
+
+        @Override
+        public String getCategoryId() {
+            return "wynntils:activity:" + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, activityType.name());
+        }
+
+        @Override
+        public Optional<String> getName() {
+            return Optional.of(activityType.getDisplayName() + " Activities");
+        }
+
+        @Override
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(
+                            new MapMarkerOptionsBuilder().withHasIcon(true).withBeaconColor(activityType.getColor()));
+                }
+
+                @Override
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(activityType.getColor());
+                }
+
+                @Override
+                public Optional<String> getIconId() {
+                    return Optional.of("wynntils:icon:content:"
+                            + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, activityType.name()));
                 }
             });
         }

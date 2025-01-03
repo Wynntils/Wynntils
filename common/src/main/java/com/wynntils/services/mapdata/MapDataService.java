@@ -178,6 +178,11 @@ public class MapDataService extends Service {
         invalidateAllCaches();
     }
 
+    public void registerBuiltInProvider(BuiltInProvider provider) {
+        registerProvider("built-in:" + provider.getProviderId(), provider);
+        WynntilsMod.registerEventListener(provider);
+    }
+
     private void createBuiltInProviders() {
         // Metadata
         registerBuiltInProvider(CATEGORIES_PROVIDER);
@@ -191,11 +196,6 @@ public class MapDataService extends Service {
         registerBuiltInProvider(TERRITORY_PROVIDER);
         registerBuiltInProvider(WAYPOINTS_PROVIDER);
         registerBuiltInProvider(LOOT_CHESTS_PROVIDER);
-    }
-
-    private void registerBuiltInProvider(BuiltInProvider provider) {
-        registerProvider("built-in:" + provider.getProviderId(), provider);
-        WynntilsMod.registerEventListener(provider);
     }
 
     private void registerProvider(String providerId, MapDataProvider provider) {
