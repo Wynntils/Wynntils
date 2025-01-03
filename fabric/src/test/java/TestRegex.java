@@ -751,13 +751,13 @@ public class TestRegex {
     @Test
     public void TradeMarketPriceMatchFeature_HIGHEST_BUY_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "HIGHEST_BUY_PATTERN");
-        p.shouldMatch("§7Highest Buy Offer: §a100000²§8 (24¼² 26²½ 32²)");
+        p.shouldMatch("§7Highest Buy Offer: §f806 §8(12²½ 38²)");
     }
 
     @Test
     public void TradeMarketPriceMatchFeature_LOWEST_SELL_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "LOWEST_SELL_PATTERN");
-        p.shouldMatch("§7Lowest Sell Offer: §a1050000²§8 (4stx 0.35¼²)");
+        p.shouldMatch("§7Cheapest Sell Offer: §f806 §8(12²½ 38²)");
     }
 
     @Test
