@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -651,6 +651,8 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         MapVisibilityImpl iconVisibility =
                 new MapVisibilityImpl(DefaultMapAttributes.ICON_ALWAYS); // TODO: Add visibility input
 
+        // FIXME: It is vital to only save "non-default" values to the waypoint, otherwise the default values will be
+        //        written into the config file, which is not desired.
         MapLocationAttributesImpl attributes = new MapAttributesBuilder()
                 .setLabel(label)
                 .setIcon(iconId)

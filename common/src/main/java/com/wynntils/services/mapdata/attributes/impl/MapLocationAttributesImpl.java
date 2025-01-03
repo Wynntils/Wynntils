@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.attributes.impl;
@@ -19,6 +19,7 @@ public final class MapLocationAttributesImpl extends MapAttributesImpl implement
             String icon,
             MapVisibilityImpl iconVisibility,
             CustomColor iconColor,
+            Boolean hasMarker,
             MapMarkerOptionsImpl markerOptions) {
         super(
                 priority,
@@ -30,9 +31,10 @@ public final class MapLocationAttributesImpl extends MapAttributesImpl implement
                 icon,
                 iconVisibility,
                 iconColor,
+                hasMarker,
                 markerOptions,
                 null,
                 null,
-                0f);
+                null);
     }
 }

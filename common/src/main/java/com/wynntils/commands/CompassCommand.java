@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -14,7 +14,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.services.mapdata.MapIconTextureWrapper;
 import com.wynntils.services.mapdata.features.builtin.ServiceLocation;
 import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.utils.StringUtils;
@@ -189,10 +188,7 @@ public class CompassCommand extends Command {
         MapLocation closestService = closestServiceOptional.get();
 
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                closestService.getLocation(),
-                new MapIconTextureWrapper(Services.MapData.getIconOrFallback(closestService)),
-                Services.MapData.resolveMapAttributes(closestService).label());
+        Models.Marker.addUserMarkedFeature(closestService);
 
         MutableComponent response = Component.literal("Compass set to "
                         + Services.MapData.resolveMapAttributes(closestService).label() + " at ")

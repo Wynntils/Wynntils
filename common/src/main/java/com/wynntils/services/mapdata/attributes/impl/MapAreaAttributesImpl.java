@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.attributes.impl;
@@ -18,7 +18,7 @@ public final class MapAreaAttributesImpl extends MapAttributesImpl implements Ma
             TextShadow labelShadow,
             CustomColor fillColor,
             CustomColor borderColor,
-            float borderWidth) {
+            Float borderWidth) {
         super(
                 priority,
                 level,
@@ -26,6 +26,7 @@ public final class MapAreaAttributesImpl extends MapAttributesImpl implements Ma
                 labelVisibility,
                 labelColor,
                 labelShadow,
+                null,
                 null,
                 null,
                 null,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.attributes.impl;
@@ -29,6 +29,11 @@ public abstract class AbstractMapAreaAttributes extends AbstractMapAttributes im
 
     @Override
     public final Optional<MapDecoration> getIconDecoration() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Boolean> getHasMarker() {
         return Optional.empty();
     }
 

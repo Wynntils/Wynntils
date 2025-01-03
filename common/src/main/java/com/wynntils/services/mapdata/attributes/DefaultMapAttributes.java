@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.attributes;
@@ -25,8 +25,9 @@ public final class DefaultMapAttributes implements MapAttributes {
     public static final MapVisibility ICON_NEVER = new MapVisibilityImpl(100f, 0f, 6f);
     public static final MapVisibility LABEL_ALWAYS = new MapVisibilityImpl(0f, 100f, 3f);
     public static final MapVisibility LABEL_NEVER = new MapVisibilityImpl(100f, 0f, 3f);
-    public static final MapMarkerOptions NONE =
-            new MapMarkerOptionsImpl(0f, 0f, 0f, CustomColor.NONE, false, false, false);
+
+    public static final MapMarkerOptions DEFAULT_MARKER_OPTIONS =
+            new MapMarkerOptionsImpl(0f, 15000f, 3f, CommonColors.RED, true, true, true);
 
     public static final DefaultMapAttributes INSTANCE = new DefaultMapAttributes();
 
@@ -83,8 +84,13 @@ public final class DefaultMapAttributes implements MapAttributes {
     }
 
     @Override
+    public Optional<Boolean> getHasMarker() {
+        return Optional.of(false);
+    }
+
+    @Override
     public Optional<MapMarkerOptions> getMarkerOptions() {
-        return Optional.of(NONE);
+        return Optional.of(DEFAULT_MARKER_OPTIONS);
     }
 
     @Override

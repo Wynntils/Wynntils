@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.attributes;
@@ -27,10 +27,11 @@ public class MapAttributesBuilder {
     private String icon;
     private MapVisibilityImpl iconVisibility;
     private CustomColor iconColor;
+    private Boolean hasMarker;
     private MapMarkerOptionsImpl markerOptions;
     private CustomColor fillColor;
     private CustomColor borderColor;
-    private float borderWidth;
+    private Float borderWidth;
 
     public MapAttributesBuilder setPriority(int priority) {
         this.priority = priority;
@@ -77,6 +78,11 @@ public class MapAttributesBuilder {
         return this;
     }
 
+    public MapAttributesBuilder setHasMarker(Boolean hasMarker) {
+        this.hasMarker = hasMarker;
+        return this;
+    }
+
     public MapAttributesBuilder setMarkerOptions(MapMarkerOptionsImpl markerOptions) {
         this.markerOptions = markerOptions;
         return this;
@@ -90,7 +96,7 @@ public class MapAttributesBuilder {
         this.borderColor = borderColor;
     }
 
-    public void setBorderWidth(float borderWidth) {
+    public void setBorderWidth(Float borderWidth) {
         this.borderWidth = borderWidth;
     }
 
@@ -134,6 +140,7 @@ public class MapAttributesBuilder {
                     icon,
                     iconVisibility,
                     iconColor,
+                    hasMarker,
                     markerOptions);
         }
     }

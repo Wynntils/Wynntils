@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.attributes.resolving;
@@ -42,6 +42,7 @@ public final class MapAttributesResolver {
                 resolver.getResolvedMapVisibility(MapAttributes::getIconVisibility),
                 resolver.getAttribute(MapAttributes::getIconColor),
                 resolver.getAttribute(MapAttributes::getIconDecoration),
+                resolver.getAttribute(MapAttributes::getHasMarker),
                 resolver.getResolvedMarkerOptions(MapAttributes::getMarkerOptions),
                 resolver.getAttribute(MapAttributes::getFillColor),
                 resolver.getAttribute(MapAttributes::getBorderColor),
@@ -49,6 +50,16 @@ public final class MapAttributesResolver {
     }
 
     private <T> T getAttribute(Function<MapAttributes, Optional<T>> attributeGetter) {
+        // Check if there is a override provider for this feature or category
+        // and if it has the attribute we're looking for, use it
+        Optional<MapAttributes> overrideAttributes = Services.MapData.getOverrideAttributesForFeature(feature);
+        if (overrideAttributes.isPresent()) {
+            Optional<T> attribute = attributeGetter.apply(overrideAttributes.get());
+            if (attribute.isPresent()) {
+                return attribute.get();
+            }
+        }
+
         // Check if the feature has overridden this attribute
         Optional<T> featureAttribute = getFromFeature(attributeGetter);
         if (featureAttribute.isPresent()) {
@@ -91,6 +102,20 @@ public final class MapAttributesResolver {
 
     private <F, T> T getInheritedValue(
             Function<F, Optional<T>> valueGetter, Function<MapAttributes, Optional<F>> attributeGetter) {
+        // Check if there is a override provider for this feature or category
+        // and if it has the attribute we're looking for, use it
+        Optional<MapAttributes> overrideAttributes = Services.MapData.getOverrideAttributesForFeature(feature);
+        if (overrideAttributes.isPresent()) {
+            Optional<F> attribute = attributeGetter.apply(overrideAttributes.get());
+            if (attribute.isPresent()) {
+                // We got the attribute, but do we got the value?
+                Optional<T> value = valueGetter.apply(attribute.get());
+                if (value.isPresent()) {
+                    return value.get();
+                }
+            }
+        }
+
         // Check if the feature has overridden this attribute
         Optional<F> featureValue = getFromFeature(attributeGetter);
         if (featureValue.isPresent()) {

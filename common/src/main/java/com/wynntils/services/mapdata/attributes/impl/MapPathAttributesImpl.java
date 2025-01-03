@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.attributes.impl;
@@ -16,6 +16,20 @@ public final class MapPathAttributesImpl extends MapAttributesImpl implements Ma
             MapVisibilityImpl labelVisibility,
             CustomColor labelColor,
             TextShadow labelShadow) {
-        super(priority, level, label, labelVisibility, labelColor, labelShadow, null, null, null, null, null, null, 0f);
+        super(
+                priority,
+                level,
+                label,
+                labelVisibility,
+                labelColor,
+                labelShadow,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
     }
 }
