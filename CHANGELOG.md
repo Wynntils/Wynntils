@@ -1,3 +1,18 @@
+## [2.4.13](https://github.com/Wynntils/Wynntils/compare/v2.4.12...v2.4.13) (2025-01-03)
+
+
+### New Features
+
+* Annotate Outer Void items [skip ci] ([#3052](https://github.com/Wynntils/Wynntils/issues/3052)) ([1ed0b4d](https://github.com/Wynntils/Wynntils/commit/1ed0b4da9c3e63193526f183cbce8030337bcf6c))
+* Make bomb bell messages clickable ([#3055](https://github.com/Wynntils/Wynntils/issues/3055)) ([3fef9b6](https://github.com/Wynntils/Wynntils/commit/3fef9b6dcb705e6016f6979da781374dae6be4cd))
+
+
+### Bug Fixes
+
+* Fix auto attack sending an input when casting spells quickly [skip ci] ([#3040](https://github.com/Wynntils/Wynntils/issues/3040)) ([a85040c](https://github.com/Wynntils/Wynntils/commit/a85040cf52accf10e462f7729e3f71d2d1025156))
+* Fix quick cast keybinds crashing if no gear instance [skip ci] ([#3051](https://github.com/Wynntils/Wynntils/issues/3051)) ([38c5e0c](https://github.com/Wynntils/Wynntils/commit/38c5e0c2f1045043b96bf5c3a87a1f23e0e4fa03))
+* trade market price match buttons [skip ci] ([#3050](https://github.com/Wynntils/Wynntils/issues/3050)) ([d8ca1ca](https://github.com/Wynntils/Wynntils/commit/d8ca1caef085e62a927db515c17f876d29c5cad1))
+
 ## [2.4.12](https://github.com/Wynntils/Wynntils/compare/v2.4.11...v2.4.12) (2024-12-29)
 
 
@@ -11,6 +26,11 @@
 
 * Fix streamer mode detection [skip ci] ([#3044](https://github.com/Wynntils/Wynntils/issues/3044)) ([b2c5ef9](https://github.com/Wynntils/Wynntils/commit/b2c5ef9234a64329500c2c36535b933da88db887))
 * Use correct JSON deserialization for PoiService ([#3049](https://github.com/Wynntils/Wynntils/issues/3049)) ([4928db9](https://github.com/Wynntils/Wynntils/commit/4928db9c0407d0de74683df27de39dbbc1eaba30))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.4.12 [skip ci] ([57c0fdd](https://github.com/Wynntils/Wynntils/commit/57c0fdd12cf676a9c708f6c4ce78b355783f3813))
 
 ## [2.4.11](https://github.com/Wynntils/Wynntils/compare/v2.4.10...v2.4.11) (2024-12-26)
 
@@ -59,35 +79,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#3036](https://github.com/Wynntils/Wynntils/issues/3036)) ([5764e9d](https://github.com/Wynntils/Wynntils/commit/5764e9db65c31a5c734a2958044f847eb8f705c8))
 * **release:** v2.4.9 [skip ci] ([624b053](https://github.com/Wynntils/Wynntils/commit/624b053654ac8ec1e8cf20e326cf5bdbe1565234))
-
-## [2.4.8](https://github.com/Wynntils/Wynntils/compare/v2.4.7...v2.4.8) (2024-12-20)
-
-
-### New Features
-
-* Add /characters and /char to command expansion [skip ci] ([#3020](https://github.com/Wynntils/Wynntils/issues/3020)) ([2af49b8](https://github.com/Wynntils/Wynntils/commit/2af49b8519f69ec1008fd72e5d3314f9c801b82b))
-* add legacy options for the item stat colors + threshold [skip ci] ([#3014](https://github.com/Wynntils/Wynntils/issues/3014)) ([a70904b](https://github.com/Wynntils/Wynntils/commit/a70904b2d4c38b24cc78e0536ed118ddc619ef8a))
-* Open item guide links on official item guide instead of data.wynntils.com [skip ci] ([#3023](https://github.com/Wynntils/Wynntils/issues/3023)) ([e997b37](https://github.com/Wynntils/Wynntils/commit/e997b3780605e67d9062b5792a63c81cfc902f89))
-* Ported horse levelling time function from legacy [skip ci] ([#3008](https://github.com/Wynntils/Wynntils/issues/3008)) ([0eb5fe7](https://github.com/Wynntils/Wynntils/commit/0eb5fe74636a412c519cabfcf004175a0a029a26))
-* Reimplement safe casting to quick casts [skip ci] ([#3026](https://github.com/Wynntils/Wynntils/issues/3026)) ([c22ad0b](https://github.com/Wynntils/Wynntils/commit/c22ad0b085fd0b5467d64c459dbd8249cc3fab25))
-* Support critical damage bonus stat [skip ci] ([#3033](https://github.com/Wynntils/Wynntils/issues/3033)) ([7d79b66](https://github.com/Wynntils/Wynntils/commit/7d79b66bbe4b4e63580173df7173d7cfc6b60de9))
-
-
-### Bug Fixes
-
-* Don't count gathered xp again after refining [skip ci] ([#3032](https://github.com/Wynntils/Wynntils/issues/3032)) ([0b68221](https://github.com/Wynntils/Wynntils/commit/0b68221d60956ea54931408a2c409ba4960de639))
-* Don't render own cape if option disabled [skip ci] ([#3022](https://github.com/Wynntils/Wynntils/issues/3022)) ([76604d8](https://github.com/Wynntils/Wynntils/commit/76604d8bdcd11b80ab5c65efa4d57b936bc90c38))
-* Fix attack timer captured pattern [skip ci] ([#3029](https://github.com/Wynntils/Wynntils/issues/3029)) ([eecbae3](https://github.com/Wynntils/Wynntils/commit/eecbae3f3cfd4e1c0a57d55562cf2a498f657885))
-* Fix auto attack interrupting queued spells [skip ci] ([#3021](https://github.com/Wynntils/Wynntils/issues/3021)) ([09963ca](https://github.com/Wynntils/Wynntils/commit/09963ca19e9fb26cbb21ed3e1c3edd3d2df5ccc0))
-* Fix character selection state not being detected if user has no characters ([#3035](https://github.com/Wynntils/Wynntils/issues/3035)) ([590880d](https://github.com/Wynntils/Wynntils/commit/590880d228af5f1ca95890cf1fd32694e5265542))
-* Fix quick cast not working with crafted weapons [skip ci] ([#3019](https://github.com/Wynntils/Wynntils/issues/3019)) ([c84858d](https://github.com/Wynntils/Wynntils/commit/c84858daddd27b23edb27837fd54d5919096bf5f))
-* Ignore None guild resource value in filters [skip ci] ([#3018](https://github.com/Wynntils/Wynntils/issues/3018)) ([5020863](https://github.com/Wynntils/Wynntils/commit/5020863776ad802c947b14072ace009a227f295a))
-* Make first press keybinds only trigger once [skip ci] ([#3013](https://github.com/Wynntils/Wynntils/issues/3013)) ([7ada5d8](https://github.com/Wynntils/Wynntils/commit/7ada5d86311378efc8a89494894adb85c9fbbd6e))
-* Update Heart of the Pack (Altruism) range and name [skip ci] ([#3031](https://github.com/Wynntils/Wynntils/issues/3031)) ([9cfebae](https://github.com/Wynntils/Wynntils/commit/9cfebaea97d1caed451ad7ca53e63cc66540fce7))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3034](https://github.com/Wynntils/Wynntils/issues/3034)) ([70a4326](https://github.com/Wynntils/Wynntils/commit/70a4326f17174e45517f2529d1b656f4fc434fbf))
-* **release:** v2.4.8 [skip ci] ([a68e820](https://github.com/Wynntils/Wynntils/commit/a68e820be872191391005fb935f571fd89bd7132))
 
