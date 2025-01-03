@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun;
@@ -394,7 +394,8 @@ public class LootrunModel extends Model {
                 }
 
                 if (foundLootrunMythic) {
-                    WynntilsMod.postEvent(new MythicFoundEvent(itemStack, true));
+                    WynntilsMod.postEvent(
+                            new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST));
                     dryPulls.store(0);
                 }
             }

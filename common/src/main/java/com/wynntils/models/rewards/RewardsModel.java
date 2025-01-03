@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards;
@@ -69,13 +69,18 @@ public class RewardsModel extends Model {
         return new CharmItem(charmInfo, CharmInstance.create(result.rerolls(), charmInfo, result.identifications()));
     }
 
-    public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name) {
+    public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name, String tomeName, boolean isUnidentified) {
         GearTier gearTier = GearTier.fromStyledText(name);
 
-        TomeInfo tomeInfo = tomeInfoRegistry.getFromDisplayName(name.getStringWithoutFormatting());
+        TomeInfo tomeInfo = tomeInfoRegistry.getFromDisplayName(tomeName);
         if (tomeInfo == null) {
-            WynntilsMod.warn("Could not find tome info for " + name.getStringWithoutFormatting());
+            WynntilsMod.warn("Could not find tome info for " + tomeName + " (Originally "
+                    + StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting() + ")");
             return null;
+        }
+
+        if (isUnidentified) {
+            return new TomeItem(tomeInfo, null);
         }
 
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, tomeInfo.getVariableStatsMap());
