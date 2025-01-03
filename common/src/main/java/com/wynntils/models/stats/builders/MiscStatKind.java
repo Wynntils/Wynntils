@@ -17,7 +17,7 @@ public enum MiscStatKind {
     LIFE_STEAL("Life Steal", StatUnit.PER_3_S, "lifeSteal"),
     MANA_REGEN("Mana Regen", StatUnit.PER_5_S, "manaRegen"),
     MANA_STEAL("Mana Steal", StatUnit.PER_3_S, "manaSteal"),
-    MAX_MANA("Max Mana", StatUnit.RAW, "maxMana"),
+    MAX_MANA_RAW("Max Mana", StatUnit.RAW, "rawMaxMana", "MAX_MANA"),
 
     // Movement
     WALK_SPEED("Walk Speed", StatUnit.PERCENT, "walkSpeed", "SPEED"),
@@ -27,13 +27,14 @@ public enum MiscStatKind {
 
     // Damage
     ATTACK_SPEED("Attack Speed", StatUnit.TIER, "rawAttackSpeed", "ATTACKSPEED"),
+    MAIN_ATTACK_RANGE("Main Attack Range", StatUnit.PERCENT, "mainAttackRange", "MAIN_ATTACK_RANGE"),
     REFLECTION("Reflection", StatUnit.PERCENT, "reflection"),
     THORNS("Thorns", StatUnit.PERCENT, "thorns"),
     EXPLODING("Exploding", StatUnit.PERCENT, "exploding"),
     POISON("Poison", StatUnit.PER_3_S, "poison"),
     KNOCKBACK("Knockback", StatUnit.PERCENT, "knockback"),
-    SLOW_ENEMY("Slow Enemy", StatUnit.PERCENT, "slowEnemy"),
-    WEAKEN_ENEMY("Weaken Enemy", StatUnit.PERCENT, "weakenEnemy"),
+    SLOW_ENEMY("Slow Enemy", StatUnit.PERCENT, "slowEnemy", "SLOW_ENEMY"),
+    WEAKEN_ENEMY("Weaken Enemy", StatUnit.PERCENT, "weakenEnemy", "WEAKEN_ENEMY"),
 
     // Bonuses for emeralds, XP, loot and gathering
     STEALING("Stealing", StatUnit.PERCENT, "stealing", "EMERALDSTEALING"),

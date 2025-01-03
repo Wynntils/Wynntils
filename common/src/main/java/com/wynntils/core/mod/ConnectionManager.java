@@ -7,6 +7,7 @@ package com.wynntils.core.mod;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -21,6 +22,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class ConnectionManager extends Manager {
     private static final Pattern WYNNCRAFT_SERVER_PATTERN =
             Pattern.compile("^(?:(.*)\\.)?wynncraft\\.(?:com|net|org)$");
+    private static final StyledText TRANSFERRED_MESSAGE = StyledText.fromString("Transferred to another server");
 
     private boolean isConnected = false;
 
@@ -35,7 +37,9 @@ public final class ConnectionManager extends Manager {
     // ScreenOpenedEvent.Pre is used, because it is always posted
     @SubscribeEvent
     public void onScreenOpened(ScreenOpenedEvent.Pre e) {
-        if (e.getScreen() instanceof DisconnectedScreen) {
+        if (e.getScreen() instanceof DisconnectedScreen disconnectedScreen) {
+            if (StyledText.fromComponent(disconnectedScreen.details.reason()).equals(TRANSFERRED_MESSAGE)) return;
+
             disconnect();
         }
     }

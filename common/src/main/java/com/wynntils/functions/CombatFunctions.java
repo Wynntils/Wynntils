@@ -14,7 +14,7 @@ public class CombatFunctions {
     public static class AreaDamagePerSecondFunction extends Function<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
-            return Models.Damage.getAreaDamagePerSecond();
+            return Models.Combat.getAreaDamagePerSecond();
         }
 
         @Override
@@ -26,7 +26,7 @@ public class CombatFunctions {
     public static class AreaDamageAverageFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.Damage.getAverageAreaDamagePerSecond(
+            return Models.Combat.getAverageAreaDamagePerSecond(
                     arguments.getArgument("seconds").getIntegerValue());
         }
 
@@ -51,6 +51,25 @@ public class CombatFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("agl", "above_ground_level");
+        }
+    }
+
+    public static class KillsPerMinuteFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Combat.getKillsPerMinute(
+                    arguments.getArgument("includeShared").getBooleanValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("includeShared", Boolean.class, true)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("kpm");
         }
     }
 
@@ -117,7 +136,7 @@ public class CombatFunctions {
     public static class FocusedMobNameFunction extends Function<String> {
         @Override
         public String getValue(final FunctionArguments arguments) {
-            return Models.Damage.getFocusedMobName();
+            return Models.Combat.getFocusedMobName();
         }
 
         @Override
@@ -129,7 +148,7 @@ public class CombatFunctions {
     public static class FocusedMobHealthFunction extends Function<Long> {
         @Override
         public Long getValue(final FunctionArguments arguments) {
-            return Models.Damage.getFocusedMobHealth();
+            return Models.Combat.getFocusedMobHealth();
         }
 
         @Override
@@ -141,7 +160,7 @@ public class CombatFunctions {
     public static class FocusedMobHealthPercentFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Damage.getFocusedMobHealthPercent();
+            return Models.Combat.getFocusedMobHealthPercent();
         }
 
         @Override
@@ -153,7 +172,7 @@ public class CombatFunctions {
     public static class TimeSinceLastDamageDealtFunction extends Function<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
-            return System.currentTimeMillis() - Models.Damage.getLastDamageDealtTimestamp();
+            return System.currentTimeMillis() - Models.Combat.getLastDamageDealtTimestamp();
         }
 
         @Override

@@ -13,25 +13,24 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.ArmSwingEvent;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.spells.event.SpellEvent;
+import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.items.properties.ClassableItemProperty;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -40,51 +39,68 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.COMBAT)
 public class QuickCastFeature extends Feature {
     @RegisterKeyBind
-    private final KeyBind castFirstSpell = new KeyBind("Cast 1st Spell", GLFW.GLFW_KEY_Z, true, this::castFirstSpell);
+    private final KeyBind castFirstSpell = new KeyBind("Cast 1st Spell", GLFW.GLFW_KEY_Z, false, this::castFirstSpell);
 
     @RegisterKeyBind
-    private final KeyBind castSecondSpell = new KeyBind("Cast 2nd Spell", GLFW.GLFW_KEY_X, true, this::castSecondSpell);
+    private final KeyBind castSecondSpell =
+            new KeyBind("Cast 2nd Spell", GLFW.GLFW_KEY_X, false, this::castSecondSpell);
 
     @RegisterKeyBind
-    private final KeyBind castThirdSpell = new KeyBind("Cast 3rd Spell", GLFW.GLFW_KEY_C, true, this::castThirdSpell);
+    private final KeyBind castThirdSpell = new KeyBind("Cast 3rd Spell", GLFW.GLFW_KEY_C, false, this::castThirdSpell);
 
     @RegisterKeyBind
-    private final KeyBind castFourthSpell = new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, true, this::castFourthSpell);
+    private final KeyBind castFourthSpell =
+            new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, false, this::castFourthSpell);
+
+    @Persisted
+    private final Config<Integer> leftClickTickDelay = new Config<>(3);
 
     @Persisted
     private final Config<Integer> rightClickTickDelay = new Config<>(3);
 
     @Persisted
-    private final Config<Boolean> safeCasting = new Config<>(true);
+    private final Config<Boolean> blockAttacks = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> checkValidWeapon = new Config<>(true);
+
+    @Persisted
+    private final Config<SafeCastType> safeCasting = new Config<>(SafeCastType.NONE);
 
     @Persisted
     private final Config<Integer> spellCooldown = new Config<>(0);
 
-    private static final Pattern INCORRECT_CLASS_PATTERN = compileCCRegex("§✖§ Class Req: (.+)");
-    private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
-
-    private SpellDirection[] spellInProgress = SpellDirection.NO_SPELL;
-
-    private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
-
+    private int lastSpellTick = 0;
     private int packetCountdown = 0;
-    private int spellCountdown = 0;
-    private int lastSelectedSlot = 0;
 
     @SubscribeEvent
-    public void onSpellSequenceUpdate(SpellEvent.Partial e) {
-        updateSpell(e.getSpellDirectionArray());
+    public void onSwing(ArmSwingEvent event) {
+        lastSpellTick = McUtils.player().tickCount;
+
+        if (!blockAttacks.get()) return;
+        if (event.getActionContext() != ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
+        if (event.getHand() != InteractionHand.MAIN_HAND) return;
+
+        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
     }
 
-    private void updateSpell(SpellDirection[] spell) {
-        if (Arrays.equals(spellInProgress, spell)) return;
-        if (spell.length == 3) {
-            spellInProgress = SpellDirection.NO_SPELL;
-            spellCountdown = 0;
-        } else {
-            spellInProgress = spell;
-            spellCountdown = 40;
-        }
+    @SubscribeEvent
+    public void onUseItem(UseItemEvent event) {
+        lastSpellTick = McUtils.player().tickCount;
+
+        if (!blockAttacks.get()) return;
+
+        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
+    }
+
+    @SubscribeEvent
+    public void onHeldItemChange(ChangeCarriedItemEvent event) {
+        resetState();
+    }
+
+    @SubscribeEvent
+    public void onWorldChange(WorldStateEvent e) {
+        resetState();
     }
 
     private void castFirstSpell() {
@@ -104,122 +120,122 @@ public class QuickCastFeature extends Feature {
     }
 
     private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
-        if (!SPELL_PACKET_QUEUE.isEmpty()) {
-            sendCancelReason(Component.translatable("feature.wynntils.quickCast.anotherInProgress"));
+        if (!Models.Spell.isSpellQueueEmpty()) return;
+
+        SpellDirection[] spellInProgress = Models.Spell.getLastSpell();
+        // SpellModel keeps the last spell for other uses but here we just want to know the inputs so if a full spell
+        // is the last spell then we just reset it to empty
+        if (spellInProgress.length == 3) {
+            spellInProgress = SpellDirection.NO_SPELL;
+        }
+
+        if (safeCasting.get() == SafeCastType.BLOCK_ALL && spellInProgress.length != 0) {
+            sendCancelReason(Component.translatable("feature.wynntils.quickCast.spellInProgress"));
+            return;
+        }
+        if (safeCasting.get() == SafeCastType.FINISH_COMPATIBLE && spellInProgress.length != 0 && lastSpellTick == 0) {
+            sendCancelReason(Component.translatable("feature.wynntils.quickCast.spellInProgress"));
             return;
         }
 
-        ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+        boolean isArcher = Models.Character.getClassType() == ClassType.ARCHER;
 
-        if (!ItemUtils.isWeapon(heldItem)) {
-            sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
-            return;
-        }
+        if (checkValidWeapon.get()) {
+            ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
-        List<StyledText> loreLines = LoreUtils.getLore(heldItem);
+            if (!ItemUtils.isWeapon(heldItem)) {
+                sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
+                return;
+            }
 
-        boolean isArcher = false;
-        for (StyledText lore : loreLines) {
-            if (lore.contains("Archer/Hunter")) isArcher = true;
-            Matcher matcher = lore.getMatcher(INCORRECT_CLASS_PATTERN);
-            if (!matcher.matches()) continue;
-            sendCancelReason(Component.translatable("feature.wynntils.quickCast.classMismatch", matcher.group(1)));
-            return;
-        }
+            // First check if the character is an archer or not in case CharacterModel failed to parse correctly
+            Optional<ClassableItemProperty> classItemPropOpt =
+                    Models.Item.asWynnItemProperty(heldItem, ClassableItemProperty.class);
 
-        for (StyledText lore : loreLines) {
-            Matcher matcher = lore.getMatcher(LVL_MIN_NOT_REACHED_PATTERN);
-            if (!matcher.matches()) continue;
-            sendCancelReason(Component.translatable(
-                    "feature.wynntils.quickCast.levelRequirementNotReached", matcher.group(1), matcher.group(2)));
-            return;
+            if (classItemPropOpt.isEmpty()) {
+                sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
+                return;
+            } else {
+                isArcher = classItemPropOpt.get().getRequiredClass() == ClassType.ARCHER;
+            }
+
+            // Now check for met requirements
+            Optional<RequirementItemProperty> reqItemPropOpt =
+                    Models.Item.asWynnItemProperty(heldItem, RequirementItemProperty.class);
+
+            if (reqItemPropOpt.isPresent() && !reqItemPropOpt.get().meetsActualRequirements()) {
+                sendCancelReason(Component.translatable("feature.wynntils.quickCast.notMetRequirements"));
+                return;
+            }
         }
 
         boolean isSpellInverted = isArcher;
-        List<SpellDirection> spell = Stream.of(a, b, c)
+        List<SpellDirection> unconfirmedSpell = Stream.of(a, b, c)
                 .map(x -> (x == SpellUnit.PRIMARY) != isSpellInverted ? SpellDirection.RIGHT : SpellDirection.LEFT)
                 .toList();
 
-        if (safeCasting.get()) {
-            for (int i = 0; i < spellInProgress.length; ++i) {
-                if (spellInProgress[i] != spell.get(i)) {
+        List<SpellDirection> confirmedSpell = new ArrayList<>(unconfirmedSpell);
+
+        if (safeCasting.get() == SafeCastType.FINISH_COMPATIBLE && spellInProgress.length != 0) {
+            for (int i = 0; i < spellInProgress.length; i++) {
+                if (spellInProgress[i] == unconfirmedSpell.get(i)) {
+                    confirmedSpell.removeFirst();
+                } else {
                     sendCancelReason(Component.translatable("feature.wynntils.quickCast.incompatibleInProgress"));
                     return;
                 }
             }
         }
 
-        lastSelectedSlot = McUtils.inventory().selected;
-        List<SpellDirection> remainder = spell.subList(spellInProgress.length, spell.size());
-        SPELL_PACKET_QUEUE.addAll(remainder);
+        Models.Spell.addSpellToQueue(confirmedSpell);
     }
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
         if (!Models.WorldState.onWorld()) return;
 
-        // Clear spell after the 40 tick timeout period
-        if (spellCountdown > 0) {
-            spellCountdown--;
-            if (spellCountdown <= 0) {
-                spellInProgress = SpellDirection.NO_SPELL;
-            }
-        }
-
         if (packetCountdown > 0) {
             packetCountdown--;
         }
 
         if (packetCountdown > 0) return;
-        if (SPELL_PACKET_QUEUE.isEmpty()) return;
 
-        int currSelectedSlot = McUtils.inventory().selected;
-        boolean slotChanged = currSelectedSlot != lastSelectedSlot;
+        if (Models.Spell.isSpellQueueEmpty()) return;
 
-        if (slotChanged) {
-            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(lastSelectedSlot));
-        }
+        SpellDirection nextDirection = Models.Spell.checkNextSpellDirection();
 
-        // Right clicks need a tick delay between them (2-3 ticks), left clicks don't
-        boolean didRightClick = false;
-        do {
-            SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
-            spellDirection.getSendPacketRunnable().run();
+        if (nextDirection == null) return;
 
-            if (spellDirection == SpellDirection.RIGHT) {
-                didRightClick = true;
-            }
-        } while (!SPELL_PACKET_QUEUE.isEmpty()
-                && (!didRightClick || SPELL_PACKET_QUEUE.peek() != SpellDirection.RIGHT));
+        int comparisonTime =
+                nextDirection == SpellDirection.LEFT ? leftClickTickDelay.get() : rightClickTickDelay.get();
+        if (McUtils.player().tickCount - lastSpellTick < comparisonTime) return;
 
-        if (slotChanged) {
-            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(currSelectedSlot));
-        }
+        Models.Spell.sendNextSpell();
+        lastSpellTick = McUtils.player().tickCount;
 
-        // Right clicks need a tick delay between them (2-3 ticks), left clicks don't
-        // So, we add a delay between right clicks, and new casts
-        packetCountdown = didRightClick ? rightClickTickDelay.get() : 0;
-        if (SPELL_PACKET_QUEUE.isEmpty()) {
+        if (Models.Spell.isSpellQueueEmpty()) {
+            lastSpellTick = 0;
             packetCountdown = Math.max(packetCountdown, spellCooldown.get());
         }
     }
 
-    @SubscribeEvent
-    public void onWorldChange(WorldStateEvent e) {
-        SPELL_PACKET_QUEUE.clear();
-        spellInProgress = SpellDirection.NO_SPELL;
+    private void resetState() {
+        lastSpellTick = 0;
+        packetCountdown = 0;
     }
 
     private static void sendCancelReason(MutableComponent reason) {
         Managers.Notification.queueMessage(reason.withStyle(ChatFormatting.RED));
     }
 
-    private static Pattern compileCCRegex(String regex) {
-        return Pattern.compile(regex.replace("§", "(?:§[0-9a-fklmnor])*"));
-    }
-
     public enum SpellUnit {
         PRIMARY,
         SECONDARY
+    }
+
+    public enum SafeCastType {
+        NONE,
+        BLOCK_ALL,
+        FINISH_COMPATIBLE
     }
 }

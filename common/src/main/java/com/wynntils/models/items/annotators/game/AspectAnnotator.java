@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class AspectAnnotator implements GameItemAnnotator {
     private static final Pattern ASPECT_PATTERN = Pattern.compile("^§(.)(?:(?:(.+) Embodiment)|(?:Aspect)) of .*$");
-    private static final Pattern CLASS_PATTERN = Pattern.compile("^§(?:c✖|a✔) §7Class Req: §f(?<name>.+)$");
+    private static final Pattern CLASS_PATTERN = Pattern.compile("^§(?:c✖|a✔) §7Class Req: §f(?<name>.+)/.+$");
     private static final Pattern TIER_PATTERN = Pattern.compile("§.Tier ([IV]+).*");
 
     @Override

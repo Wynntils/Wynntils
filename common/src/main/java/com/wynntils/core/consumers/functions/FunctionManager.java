@@ -442,6 +442,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.CappedOphanimFunction());
         registerFunction(new CharacterFunctions.CappedSacredSurgeFunction());
         registerFunction(new CharacterFunctions.ClassFunction());
+        registerFunction(new CharacterFunctions.CommanderActivatedFunction());
+        registerFunction(new CharacterFunctions.CommanderDurationFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
@@ -456,6 +458,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
         registerFunction(new CombatFunctions.BlocksAboveGroundFunction());
+        registerFunction(new CombatFunctions.KillsPerMinuteFunction());
         registerFunction(new CombatFunctions.LastSpellNameFunction());
         registerFunction(new CombatFunctions.LastSpellRepeatCountFunction());
         registerFunction(new CombatFunctions.TicksSinceLastSpellFunction());
@@ -520,9 +523,11 @@ public final class FunctionManager extends Manager {
         registerFunction(new GuildFunctions.ObjectiveStreakFunction());
 
         registerFunction(new HorseFunctions.CappedHorseLevelFunction());
+        registerFunction(new HorseFunctions.CappedHorseTotalLevelTimeFunction());
         registerFunction(new HorseFunctions.CappedHorseXpFunction());
         registerFunction(new HorseFunctions.HorseLevelFunction());
         registerFunction(new HorseFunctions.HorseLevelMaxFunction());
+        registerFunction(new HorseFunctions.HorseLevelTimeFunction());
         registerFunction(new HorseFunctions.HorseNameFunction());
         registerFunction(new HorseFunctions.HorseTierFunction());
         registerFunction(new HorseFunctions.HorseXpFunction());

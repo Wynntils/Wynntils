@@ -10,16 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 // If a texture is currently in a specific category but you want to use
 // it elsewhere, please move it to a more appropriate location
 public enum Texture implements AbstractTexture {
-    // region Character Selection
-    CHANGE_WORLD_BUTTON("character_selection/change_world_button.png", 26, 52),
-    CHARACTER_BUTTON("character_selection/character_button.png", 104, 64),
-    CHARACTER_INFO("character_selection/character_info.png", 123, 52),
-    CHARACTER_LIST_BACKGROUND("character_selection/character_list_background.png", 118, 254),
-    DISCONNECT_BUTTON("character_selection/disconnect_button.png", 26, 54),
-    PLAY_BUTTON("character_selection/play_button.png", 79, 78),
-    XP_BAR("character_selection/xp_bar.png", 77, 6),
-    // endregion
-
     // region Content Book
     CONFIG_BOOK_BACKGROUND("content_book/config_book.png", 400, 220),
     CONFIG_BOOK_SCROLL_AREA("content_book/config_book_scroll_area.png", 168, 175),

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.builders;
@@ -25,6 +25,14 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
                 callback.accept(rawType);
             }
         }
+
+        // If a raw critical damage bonus stat is added, add to AttackType
+        callback.accept(new DamageStatType(
+                "CRITICAL_DAMAGE_BONUS",
+                "Critical Damage Bonus",
+                "criticalDamageBonus",
+                "CRITICAL_DAMAGE_BONUS",
+                StatUnit.PERCENT));
 
         // Special case for "damageToMobs" tome stat
         callback.accept(new DamageStatType(

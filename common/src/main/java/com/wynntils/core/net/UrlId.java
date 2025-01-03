@@ -55,7 +55,7 @@ public enum UrlId {
     DATA_WYNNCRAFT_LEADERBOARD("dataWynncraftLeaderboard"),
     LINK_WIKI_LOOKUP("linkWikiLookup"),
     LINK_WYNNCRAFT_PLAYER_STATS("linkWynncraftPlayerStats"),
-    LINK_WYNNDATA_ITEM_LOOKUP("linkWynndataItemLookup"),
+    LINK_WYNNCRAFT_ITEM_LOOKUP("linkWynncraftItemLookup"),
     LINK_WYNNTILS_DISCORD_INVITE("linkWynntilsDiscordInvite"),
     LINK_WYNNTILS_PATREON("linkWynntilsPatreon"),
     LINK_WYNNTILS_REGISTER_ACCOUNT("linkWynntilsRegisterAccount"),

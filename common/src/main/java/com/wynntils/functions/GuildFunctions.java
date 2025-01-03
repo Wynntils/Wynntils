@@ -7,7 +7,7 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.models.players.type.GuildRank;
+import com.wynntils.models.guild.type.GuildRank;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 

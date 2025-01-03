@@ -44,6 +44,7 @@ public final class StatListOrderer {
             "DAMAGE_MAIN_ATTACK_AIR_PERCENT",
             "DAMAGE_MAIN_ATTACK_RAINBOW_RAW",
             "DAMAGE_MAIN_ATTACK_RAINBOW_PERCENT",
+            "CRITICAL_DAMAGE_BONUS",
             "DAMAGE_SPELL_ALL_RAW",
             "DAMAGE_SPELL_ALL_PERCENT",
             "DAMAGE_SPELL_NEUTRAL_RAW",
@@ -67,7 +68,7 @@ public final class StatListOrderer {
             "MISC_LIFE_STEAL",
             "MISC_MANA_REGEN",
             "MISC_MANA_STEAL",
-            "MISC_MAX_MANA",
+            "MISC_MAX_MANA_RAW",
             "", // delimiter
             "DAMAGE_ANY_ALL_RAW",
             "DAMAGE_ANY_ALL_PERCENT",
@@ -125,6 +126,7 @@ public final class StatListOrderer {
             "MISC_KNOCKBACK",
             "MISC_SLOW_ENEMY",
             "MISC_WEAKEN_ENEMY",
+            "MISC_MAIN_ATTACK_RANGE",
             "", // delimiter
             // Charm specific stats
             "DEFENCE_TO_MOBS",
@@ -155,10 +157,11 @@ public final class StatListOrderer {
             MiscStatKind.HEALTH,
             MiscStatKind.STEALING,
             MiscStatKind.HEALTH_REGEN_RAW,
-            MiscStatKind.MAX_MANA,
+            MiscStatKind.MAX_MANA_RAW,
             MiscStatKind.HEALING_EFFICIENCY,
             MiscStatKind.SLOW_ENEMY,
-            MiscStatKind.WEAKEN_ENEMY);
+            MiscStatKind.WEAKEN_ENEMY,
+            MiscStatKind.MAIN_ATTACK_RANGE);
     private static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_2 =
             List.of(MiscStatKind.SPRINT, MiscStatKind.SPRINT_REGEN);
     private static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_3 = List.of(

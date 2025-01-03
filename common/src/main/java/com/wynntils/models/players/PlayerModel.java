@@ -11,6 +11,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
@@ -43,7 +44,7 @@ public final class PlayerModel extends Model {
             .registerTypeHierarchyAdapter(WynnPlayerInfo.class, new WynnPlayerInfo.WynnPlayerInfoDeserializer())
             .create();
     private static final String ATHENA_USER_NOT_FOUND = "User not found";
-    private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_WC(\\d+)$");
+    private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_([A-Z]+)(\\d+)$");
 
     // If there is a failure with the API, give it time to recover
     private static final int ERROR_TIMEOUT_MINUTE = 5;
@@ -115,11 +116,18 @@ public final class PlayerModel extends Model {
         }
         if (event.getNewState() == WorldState.WORLD) {
             clearGhostCache();
+
+            // Lookup self info here as PlayerJoinedWorldEvent will only be posted for self when off world
+            Player player = McUtils.player();
+            if (player == null || player.getUUID() == null) return;
+            loadUser(player.getUUID(), player.getScoreboardName());
         }
     }
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerJoinedWorldEvent event) {
+        if (!Models.WorldState.onWorld()) return;
+
         Player player = event.getPlayer();
         if (player == null || player.getUUID() == null) return;
         StyledText name = StyledText.fromString(player.getGameProfile().getName());
@@ -145,7 +153,7 @@ public final class PlayerModel extends Model {
             return;
         }
 
-        int world = Integer.parseInt(matcher.group(1));
+        int world = Integer.parseInt(matcher.group(2));
         ghosts.put(uuid, world);
     }
 

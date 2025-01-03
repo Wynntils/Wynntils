@@ -42,7 +42,8 @@ public record WynnItemParseResult(
         Optional<ShinyStat> shinyStat,
         boolean allRequirementsMet,
         Optional<SetInstance> setInstance) {
-    public static WynnItemParseResult fromInternallRoll(List<StatActualValue> identifications, List<Powder> powders) {
+    public static WynnItemParseResult fromInternallRoll(
+            List<StatActualValue> identifications, List<Powder> powders, int rerolls) {
         return new WynnItemParseResult(
                 null,
                 null,
@@ -57,7 +58,7 @@ public record WynnItemParseResult(
                 List.of(),
                 powders,
                 0,
-                0,
+                rerolls,
                 0,
                 0,
                 Optional.empty(),

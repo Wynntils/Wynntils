@@ -126,8 +126,8 @@ public final class LootrunPathFileParser {
                         note.component(), McUtils.mc().player.registryAccess());
 
                 // Parse the JSON string back into a JSON object
-                JsonObject noteObject = JsonParser.parseString(noteString).getAsJsonObject();
-                noteJson.add("note", noteObject);
+                JsonElement noteElement = JsonParser.parseString(noteString);
+                noteJson.add("note", noteElement);
                 notes.add(noteJson);
             }
             json.add("notes", notes);

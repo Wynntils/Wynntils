@@ -11,10 +11,12 @@ import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
 import com.wynntils.models.containers.containers.AspectsContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
 import com.wynntils.models.containers.containers.CraftingStationContainer;
 import com.wynntils.models.containers.containers.GuildBadgesContainer;
 import com.wynntils.models.containers.containers.GuildBankContainer;
+import com.wynntils.models.containers.containers.GuildLogContainer;
 import com.wynntils.models.containers.containers.GuildManagementContainer;
 import com.wynntils.models.containers.containers.GuildMemberListContainer;
 import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
@@ -47,6 +49,7 @@ import com.wynntils.models.containers.containers.reward.EventContainer;
 import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.ObjectiveRewardContainer;
+import com.wynntils.models.guild.type.GuildLogType;
 import com.wynntils.models.profession.type.ProfessionType;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +111,7 @@ public final class ContainerModel extends Model {
         registerContainer(new ChallengeRewardContainer());
         registerContainer(new CharacterBankContainer());
         registerContainer(new CharacterInfoContainer());
+        registerContainer(new CharacterSelectionContainer());
         registerContainer(new ContentBookContainer());
         registerContainer(new DailyRewardContainer());
         registerContainer(new EventContainer());
@@ -142,6 +146,10 @@ public final class ContainerModel extends Model {
 
         for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
             registerContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
+        }
+
+        for (GuildLogType type : GuildLogType.values()) {
+            registerContainer(new GuildLogContainer(type));
         }
     }
 

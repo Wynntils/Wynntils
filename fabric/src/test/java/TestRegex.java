@@ -14,11 +14,12 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
-import com.wynntils.models.character.CharacterSelectionModel;
+import com.wynntils.models.combat.CombatModel;
+import com.wynntils.models.combat.label.DamageLabelParser;
+import com.wynntils.models.combat.label.KillLabelParser;
 import com.wynntils.models.containers.ContainerModel;
-import com.wynntils.models.damage.DamageModel;
-import com.wynntils.models.damage.label.DamageLabelParser;
 import com.wynntils.models.gear.GearModel;
+import com.wynntils.models.guild.GuildModel;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
 import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
@@ -29,7 +30,6 @@ import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import com.wynntils.models.npc.label.NpcLabelParser;
 import com.wynntils.models.players.FriendsModel;
-import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
@@ -142,9 +142,13 @@ public class TestRegex {
     public void BombModel_BOMB_THROWN_PATTERN() {
         PatternTester p = new PatternTester(BombModel.class, "BOMB_THROWN_PATTERN");
         p.shouldMatch(
-                "§bExampleUser1§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp §3for §b20 minutes§3!");
+                "§bExampleUser§3 has thrown a §bProfession Speed Bomb§3! §bResource respawn time/Crafting Resource requirements are halved§3, and the entire server gets §bdouble Crafting/Gathering Speed§3 for §b10 minutes§3!");
         p.shouldMatch(
-                "§bExampleUser1§3 has thrown a §bProfession Speed Bomb§3! The entire server gets §bdouble Crafting/Gathering Speed, and Resource respawn time/Crafting Resource requirements are halved §3for §b10 minutes§3!");
+                "§b§oExampleNickname§3 has thrown a §bProfession Speed Bomb§3! §bResource respawn time/Crafting Resource requirements are halved§3, and the entire server gets §bdouble Crafting/Gathering Speed§3 for §b10 minutes§3!");
+        p.shouldMatch(
+                "§bExampleUser§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp§3 for §b20 minutes§3!");
+        p.shouldMatch(
+                "§b§oExampleNickname§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp§3 for §b20 minutes§3!");
     }
 
     @Test
@@ -185,29 +189,6 @@ public class TestRegex {
     }
 
     @Test
-    public void CharacterSelectionModel_CLASS_ITEM_CLASS_PATTERN() {
-        PatternTester p = new PatternTester(CharacterSelectionModel.class, "CLASS_ITEM_CLASS_PATTERN");
-        // Hunter
-        p.shouldMatch("§e- §7Class: §fHunter");
-        // Mage
-        p.shouldMatch("§e- §7Class: §fMage");
-        // Craftsman Dark Wizard
-        p.shouldMatch("§e- §7Class: §3\uE026§r §fDark Wizard");
-        // Hardcore Assassin
-        p.shouldMatch("§e- §7Class: §c\uE027§r §fAssassin");
-        // Hunted Ninja
-        p.shouldMatch("§e- §7Class: §5\uE028§r §fNinja");
-        // Ultimate Ironman Shaman
-        p.shouldMatch("§e- §7Class: §b\uE083§r §fShaman");
-        // Ultimate HIC Warrior
-        p.shouldMatch("§e- §7Class: §c\uE027§b\uE083§3\uE026§5\uE028§r §fWarrior");
-        // HIC Skyseer
-        p.shouldMatch("§e- §7Class: §c\uE027§6\uE029§3\uE026§5\uE028§r §fSkyseer");
-        // Ironman Archer
-        p.shouldMatch("§e- §7Class: §6\uE029§r §fArcher");
-    }
-
-    @Test
     public void ChatHandler_NPC_CONFIRM_PATTERN() {
         PatternTester p = new PatternTester(ChatHandler.class, "NPC_CONFIRM_PATTERN");
         p.shouldMatch("§7Press §fSHIFT §7to continue");
@@ -241,6 +222,17 @@ public class TestRegex {
     }
 
     @Test
+    public void CombatModel_DAMAGE_BAR_PATTERN() {
+        PatternTester p = new PatternTester(CombatModel.class, "DAMAGE_BAR_PATTERN");
+        p.shouldMatch("§aTravelling Merchant§r - §c5985§4❤");
+        p.shouldMatch("§aGrook§r - §c23§4❤");
+        p.shouldMatch("§cZombie§r - §c43§4❤");
+        p.shouldMatch("§cFeligember Frog§r - §c1553§4❤§r - §7§e✦Weak §c✹Dam §c✹Def");
+        p.shouldMatch("§cLongleg Gripper§r - §c40500§4❤§r - §2✤Dam §e✦§c✹Def");
+        p.shouldMatch("§cBlinder§r - §c6566§4❤");
+    }
+
+    @Test
     public void ContainerModel_ABILITY_TREE_PATTERN() {
         PatternTester p = new PatternTester(ContainerModel.class, "ABILITY_TREE_PATTERN");
         p.shouldMatch("\uDAFF\uDFEA\uE000");
@@ -261,14 +253,20 @@ public class TestRegex {
     }
 
     @Test
-    public void DamageModel_DAMAGE_BAR_PATTERN() {
-        PatternTester p = new PatternTester(DamageModel.class, "DAMAGE_BAR_PATTERN");
-        p.shouldMatch("§aTravelling Merchant§r - §c5985§4❤");
-        p.shouldMatch("§aGrook§r - §c23§4❤");
-        p.shouldMatch("§cZombie§r - §c43§4❤");
-        p.shouldMatch("§cFeligember Frog§r - §c1553§4❤§r - §7§e✦Weak §c✹Dam §c✹Def");
-        p.shouldMatch("§cLongleg Gripper§r - §c40500§4❤§r - §2✤Dam §e✦§c✹Def");
-        p.shouldMatch("§cBlinder§r - §c6566§4❤");
+    public void KillLabelParser_KILL_LABEL_PATTERN() {
+        PatternTester p = new PatternTester(KillLabelParser.class, "KILL_LABEL_PATTERN");
+        // No guild xp
+        p.shouldMatch("§7[§f+483 Combat XP§7]\n[ShadowCat117]");
+        // Dxp no guild xp
+        p.shouldMatch("§dx2 §7[§f+§d6§f Combat XP§7]\n[ShadowCat117]");
+        // Guild xp
+        p.shouldMatch("§7[§f+0 Combat XP§7]\n[§f+11 Guild XP§7]\n[ShadowCat117]");
+        // Dxp guild xp
+        p.shouldMatch("§dx2 §7[§f+§d0§f Combat XP§7]\n§dx2 §7[§f+§d2132§f Guild XP§7]\n[ShadowCat117]");
+        // Guild xp with blessing
+        p.shouldMatch("§7[§f+0 Combat XP§7]\n§bx1.1 §7[§f+§b1058§f Guild XP§7]\n[ShadowCat117]");
+        // Dxp guild xp with blessing
+        p.shouldMatch("§dx2 §7[§f+§d0§f Combat XP§7]\n§dx2 §bx1.1 §7[§f+§b1661§f Guild XP§7]\n[ShadowCat117]");
     }
 
     @Test
@@ -302,9 +300,18 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildAttackTimerModel_CAPTURED_PATTERN() {
+        PatternTester p = new PatternTester(GuildAttackTimerModel.class, "CAPTURED_PATTERN");
+        p.shouldMatch("§c\uE001 [YCY] captured the territory Paper Trail.");
+        p.shouldMatch("§c\uE001 [ANO] captured the territory Collapsed Bridge.");
+        p.shouldMatch("§c\uE006\uE002 [Tsd] captured the territory Paper Trail.");
+    }
+
+    @Test
     public void GuildAttackTimerModel_WAR_MESSAGE_PATTERN() {
         PatternTester p = new PatternTester(GuildAttackTimerModel.class, "WAR_MESSAGE_PATTERN");
         p.shouldMatch("§c\uE006\uE002 The war for Detlas will start in 1 minute.");
+        p.shouldMatch("§c\uE001 The war for Detlas will start in 1 minute.");
         p.shouldMatch("§c\uE006\uE002 The war for Detlas will start in 2 minutes.");
         p.shouldMatch("§c\uE006\uE002 The war for Detlas will start in 1 minute and 30 seconds.");
         p.shouldMatch("§c\uE006\uE002 The war for Detlas Close Suburbs will start in 30 seconds.");
@@ -744,13 +751,13 @@ public class TestRegex {
     @Test
     public void TradeMarketPriceMatchFeature_HIGHEST_BUY_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "HIGHEST_BUY_PATTERN");
-        p.shouldMatch("§7Highest Buy Offer: §a100000²§8 (24¼² 26²½ 32²)");
+        p.shouldMatch("§7Highest Buy Offer: §f806 §8(12²½ 38²)");
     }
 
     @Test
     public void TradeMarketPriceMatchFeature_LOWEST_SELL_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "LOWEST_SELL_PATTERN");
-        p.shouldMatch("§7Lowest Sell Offer: §a1050000²§8 (4stx 0.35¼²)");
+        p.shouldMatch("§7Cheapest Sell Offer: §f806 §8(12²½ 38²)");
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.bossbars;
@@ -22,8 +22,7 @@ public final class BloodPoolBar extends TrackedBar {
         try {
             current = Integer.parseInt(match.group(1));
         } catch (NumberFormatException e) {
-            WynntilsMod.error(String.format(
-                    "Failed to parse current for blood pool bar (%s out of %s)", match.group(1), match.group(2)));
+            WynntilsMod.error(String.format("Failed to parse current for blood pool bar (%s)", match.group(1)));
         }
     }
 
@@ -31,13 +30,13 @@ public final class BloodPoolBar extends TrackedBar {
     @Override
     public void onUpdateProgress(float progress) {
         if (progress != 0f) {
-            // Round to nearest 30
+            // Round to nearest 10
             int unroundedMax = (int) (current / progress);
-            int remainder = unroundedMax % 30;
+            int remainder = unroundedMax % 10;
 
             int max = unroundedMax - remainder;
-            if (remainder > 15) {
-                max += 30;
+            if (remainder > 5) {
+                max += 10;
             }
             updateValue(current, max);
         }

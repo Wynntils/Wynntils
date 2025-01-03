@@ -125,6 +125,12 @@ public class AddCommandExpansionFeature extends Feature {
 
         addAlias(root, classNode, "classes", AliasCommandLevel.ALL);
 
+        // "characters" aliases
+        CommandNode<CommandSourceStack> charactersNode = literal("characters").build();
+        addNode(root, charactersNode);
+
+        addAlias(root, charactersNode, "char", AliasCommandLevel.ALL);
+
         // "crate" aliases
         CommandNode<CommandSourceStack> crateNode = literal("crate").build();
         addNode(root, crateNode);
@@ -339,7 +345,7 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(
                 root,
                 literal("switch")
-                        .then(argument("world", IntegerArgumentType.integer()))
+                        .then(argument("world", StringArgumentType.string()))
                         .build());
 
         addNode(
@@ -451,7 +457,6 @@ public class AddCommandExpansionFeature extends Feature {
                 literal("toggle")
                         .then(literal("100"))
                         .then(literal("attacksound"))
-                        .then(literal("autojoin"))
                         .then(literal("autotracking"))
                         .then(literal("beacon"))
                         .then(literal("blood"))

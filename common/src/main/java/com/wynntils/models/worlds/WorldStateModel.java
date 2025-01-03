@@ -9,22 +9,22 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.PosUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -33,15 +33,16 @@ public final class WorldStateModel extends Model {
     private static final Pattern WORLD_NAME = Pattern.compile("^§f {2}§lGlobal \\[(.*)\\]$");
     private static final Pattern HOUSING_NAME = Pattern.compile("^§f  §l([^§\"\\\\]{1,35})$");
     private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com \n$");
-    private static final Pattern STREAMER_MESSAGE = Pattern.compile("§2Streamer mode (disabled|was enabled)\\.");
+    private static final Pattern STREAMER_MESSAGE =
+            Pattern.compile("§a(?:\uE008\uE002|\uE001) Streamer mode (disabled|was enabled)\\..*", Pattern.DOTALL);
     private static final Position CHARACTER_SELECTION_POSITION = new Vec3(-1337.5, 16.2, -1120.5);
     private static final String WYNNCRAFT_BETA_NAME = "beta";
     private static final String UNKNOWN_WORLD = "WC??";
-    private static final StyledText CHARACTER_SELECTION_TITLE = StyledText.fromString("§8§lSelect a Character");
 
     private StyledText currentTabListFooter = StyledText.EMPTY;
     private String currentWorldName = "";
     private String currentHousingName = "";
+    private ServerRegion currentRegion = ServerRegion.WC;
     private long serverJoinTimestamp = 0;
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
@@ -88,6 +89,12 @@ public final class WorldStateModel extends Model {
         if (newState == WorldState.WORLD) {
             serverJoinTimestamp = System.currentTimeMillis();
         }
+
+        if (currentWorldName.length() >= 2) {
+            String region = currentWorldName.substring(0, 2);
+            currentRegion = ServerRegion.fromString(region);
+        }
+
         WynntilsMod.postEvent(new WorldStateEvent(newState, oldState, newWorldName, isFirstJoinWorld));
     }
 
@@ -123,7 +130,9 @@ public final class WorldStateModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        Matcher matcher = e.getStyledText().getMatcher(STREAMER_MESSAGE);
+        StyledText styledText =
+                StyledTextUtils.unwrap(e.getOriginalStyledText()).stripAlignment();
+        Matcher matcher = styledText.getMatcher(STREAMER_MESSAGE);
 
         if (matcher.matches()) {
             inStream = matcher.group(1).equals("was enabled");
@@ -140,14 +149,6 @@ public final class WorldStateModel extends Model {
                 // Don't lose the CHARACTER_SELECTION state if that is the case
                 setState(WorldState.INTERIM);
             }
-        }
-    }
-
-    @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre e) {
-        if (e.getMenuType() == MenuType.GENERIC_9x3
-                && StyledText.fromComponent(e.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
-            setState(WorldState.CHARACTER_SELECTION);
         }
     }
 
@@ -196,11 +197,19 @@ public final class WorldStateModel extends Model {
         return false;
     }
 
+    public void onCharacterSelection() {
+        setState(WorldState.CHARACTER_SELECTION);
+    }
+
     /**
-     * @return Full name of the current world, such as "WC32"
+     * @return Full name of the current world, such as "NA32"
      */
     public String getCurrentWorldName() {
         return currentWorldName;
+    }
+
+    public ServerRegion getCurrentServerRegion() {
+        return currentRegion;
     }
 
     public String getCurrentHousingName() {
