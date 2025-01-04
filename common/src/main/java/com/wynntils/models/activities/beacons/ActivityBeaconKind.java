@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.beacons;
@@ -15,16 +15,16 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.CustomModelData;
 
 public enum ActivityBeaconKind implements BeaconKind {
-    QUEST(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x29CC96)),
-    STORYLINE_QUEST(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x33B33B)),
-    MINI_QUEST(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xB38FAD)),
-    WORLD_EVENT(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x00BDBF)),
-    DISCOVERY(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xA1C3E6)),
-    CAVE(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF8C19)),
-    DUNGEON(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xCC6677)),
-    RAID(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xD6401E)),
-    BOSS_ALTAR(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xF2D349)),
-    LOOTRUN_CAMP(Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x3399CC));
+    QUEST(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x29CC96)),
+    STORYLINE_QUEST(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x33B33B)),
+    MINI_QUEST(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xB38FAD)),
+    WORLD_EVENT(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x00BDBF)),
+    DISCOVERY(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xA1C3E6)),
+    CAVE(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF8C19)),
+    DUNGEON(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xCC6677)),
+    RAID(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xD6401E)),
+    BOSS_ALTAR(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xF2D349)),
+    LOOTRUN_CAMP(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x3399CC));
 
     private final int customModelData;
     private final CustomColor customColor;
