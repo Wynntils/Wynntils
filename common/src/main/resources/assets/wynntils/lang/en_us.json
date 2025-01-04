@@ -69,6 +69,8 @@
   "core.wynntils.category.uncategorized": "Uncategorized",
   "core.wynntils.category.utilities": "Utilities",
   "core.wynntils.category.wynntils": "Wynntils",
+  "crowdSourcedDataType.wynntils.fastTravelLocations.description": "Collects the locations of fast travels. A fast travel location is collected when a fast travel nametag is loaded.",
+  "crowdSourcedDataType.wynntils.fastTravelLocations.name": "Fast Travel Locations",
   "crowdSourcedDataType.wynntils.lootrunTaskLocations.description": "Collects the location of lootrun tasks. Used for predicting lootrun locations. A lootrun location is collected when a player selects a task during a lootrun.",
   "crowdSourcedDataType.wynntils.lootrunTaskLocations.name": "Lootrun Task Locations and Type",
   "crowdSourcedDataType.wynntils.npcLocations.description": "Collects the locations of NPCs. An NPC location is collected when an NPC nametag is loaded.",
