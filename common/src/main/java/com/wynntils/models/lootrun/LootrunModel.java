@@ -458,7 +458,7 @@ public class LootrunModel extends Model {
         double oldBeaconDistanceToPlayer = closestBeacon == null
                 ? Double.MAX_VALUE
                 : VectorUtils.distanceIgnoringY(
-                closestBeacon.position(), McUtils.mc().player.position());
+                        closestBeacon.position(), McUtils.mc().player.position());
         if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
                 && newBeaconDistanceToPlayer <= oldBeaconDistanceToPlayer) {
             setClosestBeacon(event.getBeacon());
@@ -563,7 +563,7 @@ public class LootrunModel extends Model {
         }
 
         boolean foundBeacon = updateTaskLocationPrediction(
-                beaconPair.a(), lootrunMarker, beaconMarker.distance().get())
+                        beaconPair.a(), lootrunMarker, beaconMarker.distance().get())
                 || beacons.containsKey(beaconPair.a().beaconKind());
 
         entity.setRendered(!foundBeacon || !shouldHide);
