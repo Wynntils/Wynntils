@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.storage;
@@ -160,7 +160,7 @@ public final class StorageManager extends Manager {
         });
     }
 
-    private void writeToJson() {
+    private synchronized void writeToJson() {
         JsonObject storageJson = new JsonObject();
 
         // Save upfixers
