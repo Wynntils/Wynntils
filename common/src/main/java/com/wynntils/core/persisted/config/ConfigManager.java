@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -177,7 +177,7 @@ public final class ConfigManager extends Manager {
                 .toList();
     }
 
-    public void saveConfig() {
+    public synchronized void saveConfig() {
         // Requesting to save before we have read the old config? Just skip it
         if (configObject == null) return;
 
