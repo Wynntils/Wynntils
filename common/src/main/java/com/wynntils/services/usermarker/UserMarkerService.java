@@ -10,7 +10,6 @@ import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
 import com.wynntils.services.mapdata.attributes.MapMarkerOptionsBuilder;
-import com.wynntils.services.mapdata.attributes.impl.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
@@ -31,11 +30,17 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Stream;
 
 public class UserMarkerService extends Service {
+    private static final MapAttributesBuilder MARKED_MAP_FEATURE_ATTRIBUTES = new MapAttributesBuilder()
+            .setHasMarker(true)
+            .setIconVisibility(DefaultMapAttributes.ICON_ALWAYS)
+            .setLabelVisibility(DefaultMapAttributes.LABEL_ALWAYS)
+            .setMarkerOptions(new MapMarkerOptionsBuilder().withHasLabel(false).build());
+
     // These are map features that already exist in the map data, and are "marked" by the user
-    private final Set<MapLocation> userOverridenMapFeatures = new CopyOnWriteArraySet<>();
+    private final Set<MapLocation> userOverridenMapLocations = new CopyOnWriteArraySet<>();
 
     // There are markers that are created by the user, and do not exist in the map data, but they are still "marked"
-    private final Set<MapLocation> userMarkerMapFeatures = new CopyOnWriteArraySet<>();
+    private final Set<MapLocation> userMarkerMapLocations = new CopyOnWriteArraySet<>();
 
     private static final String MARKED_OVERRIDE_PROVIDER_ID = "override:user_marked_provider";
     private final UserMarkerOverrideProvider userMarkedOverrideProvider = new UserMarkerOverrideProvider();
@@ -51,7 +56,7 @@ public class UserMarkerService extends Service {
 
     public void addMarkerAtLocation(Location location, String name) {
         MapLocation userMarker = new UserMarker(location, name);
-        userMarkerMapFeatures.add(userMarker);
+        userMarkerMapLocations.add(userMarker);
         userMarkedOverrideProvider.notifyCallbacks(userMarker);
     }
 
@@ -60,38 +65,38 @@ public class UserMarkerService extends Service {
     }
 
     public void removeMarkerAtLocation(Location location) {
-        userMarkerMapFeatures.stream()
+        userMarkerMapLocations.stream()
                 .filter(feature -> feature instanceof UserMarker)
                 .filter(feature -> feature.getLocation().equals(location))
                 .findFirst()
                 .ifPresent(userMarker -> {
-                    userMarkerMapFeatures.remove(userMarker);
+                    userMarkerMapLocations.remove(userMarker);
                     userMarkedOverrideProvider.notifyCallbacks(userMarker);
                 });
     }
 
     public void addUserMarkedFeature(MapLocation mapFeature) {
-        userOverridenMapFeatures.add(mapFeature);
+        userOverridenMapLocations.add(mapFeature);
         userMarkedOverrideProvider.notifyCallbacks(mapFeature);
     }
 
     public void removeUserMarkedFeature(MapLocation mapFeature) {
-        userOverridenMapFeatures.remove(mapFeature);
+        userOverridenMapLocations.remove(mapFeature);
         userMarkedOverrideProvider.notifyCallbacks(mapFeature);
     }
 
     public void removeAllUserMarkedFeatures() {
-        List<MapFeature> removedFeatures = new ArrayList<>(userOverridenMapFeatures);
-        userOverridenMapFeatures.clear();
+        List<MapFeature> removedFeatures = new ArrayList<>(userOverridenMapLocations);
+        userOverridenMapLocations.clear();
         removedFeatures.forEach(userMarkedOverrideProvider::notifyCallbacks);
 
-        removedFeatures = new ArrayList<>(userMarkerMapFeatures);
-        userMarkerMapFeatures.clear();
+        removedFeatures = new ArrayList<>(userMarkerMapLocations);
+        userMarkerMapLocations.clear();
         removedFeatures.forEach(userMarkedOverrideProvider::notifyCallbacks);
     }
 
     public Stream<MapLocation> getMarkedFeatures() {
-        return Stream.concat(userOverridenMapFeatures.stream(), userMarkerMapFeatures.stream());
+        return Stream.concat(userOverridenMapLocations.stream(), userMarkerMapLocations.stream());
     }
 
     private static final class UserMarker extends MapLocationImpl {
@@ -101,15 +106,10 @@ public class UserMarkerService extends Service {
         private UserMarker(Location location, String name) {
             super("user-marker-" + location.hashCode(), "wynntils:personal:waypoint:user-marker", null, location);
             this.name = name;
-            this.userMarkerAttributes = new MapAttributesBuilder()
-                    .setHasMarker(true)
+            this.userMarkerAttributes = MARKED_MAP_FEATURE_ATTRIBUTES
                     .setIcon(MapIconsProvider.getIconIdFromTexture(Texture.WAYPOINT))
-                    .setIconVisibility(DefaultMapAttributes.ICON_ALWAYS)
                     .setLabel(name)
-                    .setLabelVisibility(DefaultMapAttributes.LABEL_ALWAYS)
                     .setLabelColor(CommonColors.WHITE)
-                    .setMarkerOptions(
-                            new MapMarkerOptionsBuilder().withHasLabel(false).build())
                     .asLocationAttributes()
                     .build();
         }
@@ -133,24 +133,22 @@ public class UserMarkerService extends Service {
 
         @Override
         public Stream<MapFeature> getFeatures() {
-            return userMarkerMapFeatures.stream().map(f -> f);
+            return userMarkerMapLocations.stream().map(f -> f);
         }
     }
 
     private final class UserMarkerOverrideProvider extends AbstractMapDataOverrideProvider {
+        private static final MapAttributes BUILT_MAP_LOCATION_ATTRIBUTES =
+                MARKED_MAP_FEATURE_ATTRIBUTES.asLocationAttributes().build();
+
         @Override
         public MapAttributes getOverrideAttributes() {
-            return new AbstractMapAttributes() {
-                @Override
-                public Optional<Boolean> getHasMarker() {
-                    return Optional.of(true);
-                }
-            };
+            return BUILT_MAP_LOCATION_ATTRIBUTES;
         }
 
         @Override
         public Stream<String> getOverridenFeatureIds() {
-            return userOverridenMapFeatures.stream().map(MapFeature::getFeatureId);
+            return userOverridenMapLocations.stream().map(MapFeature::getFeatureId);
         }
 
         @Override
