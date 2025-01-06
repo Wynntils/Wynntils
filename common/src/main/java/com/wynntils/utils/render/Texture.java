@@ -4,12 +4,11 @@
  */
 package com.wynntils.utils.render;
 
-import com.wynntils.utils.render.type.AbstractTexture;
 import net.minecraft.resources.ResourceLocation;
 
 // If a texture is currently in a specific category but you want to use
 // it elsewhere, please move it to a more appropriate location
-public enum Texture implements AbstractTexture {
+public enum Texture {
     // region Content Book
     CONFIG_BOOK_BACKGROUND("content_book/config_book.png", 400, 220),
     CONFIG_BOOK_SCROLL_AREA("content_book/config_book_scroll_area.png", 168, 175),

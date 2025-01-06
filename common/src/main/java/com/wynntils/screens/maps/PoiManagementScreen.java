@@ -28,11 +28,9 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -661,21 +659,21 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         }
 
         this.poiManagerWidgets.clear();
-
-        // Get full list of pois
-        pois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream()
-                .filter(poi -> searchMatches(poi.getName()))
-                .collect(Collectors.toList());
+        //
+        //        // Get full list of pois
+        //        pois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream()
+        //                .filter(poi -> searchMatches(poi.getName()))
+        //                .collect(Collectors.toList());
 
         // No pois
         if (pois.isEmpty()) {
             return;
         }
 
-        // Filter pois based on filtered icons
-        pois = pois.stream()
-                .filter(poi -> filteredIcons.getOrDefault(poi.getIcon(), true))
-                .collect(Collectors.toList());
+        //        // Filter pois based on filtered icons
+        //        pois = pois.stream()
+        //                .filter(poi -> filteredIcons.getOrDefault(poi.getIcon(), true))
+        //                .collect(Collectors.toList());
 
         // Hide buttons if no filtered pois
         iconSortButton.visible = !pois.isEmpty();
@@ -748,25 +746,29 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
     private void sortPois() {
         // Sort pois, ignore case and for null Y's, treat them as 0
-        switch (sortOrder) {
-            case ICON_ASC -> pois.sort(Comparator.comparing(CustomPoi::getIcon));
-            case ICON_DESC -> pois.sort(Comparator.comparing(CustomPoi::getIcon).reversed());
-            case NAME_ASC -> pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
-            case NAME_DESC -> pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
-                    .reversed());
-            case X_ASC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getX()));
-            case X_DESC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
-            case Y_ASC -> pois.sort(Comparator.comparing(
-                    poi -> poi.getLocation().getY().orElse(null), Comparator.nullsFirst(Comparator.naturalOrder())));
-            case Y_DESC -> pois.sort(Comparator.comparing(
-                    poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
-            case Z_ASC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getZ()));
-            case Z_DESC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
-        }
+        //        switch (sortOrder) {
+        //            case ICON_ASC -> pois.sort(Comparator.comparing(CustomPoi::getIcon));
+        //            case ICON_DESC -> pois.sort(Comparator.comparing(CustomPoi::getIcon).reversed());
+        //            case NAME_ASC -> pois.sort(Comparator.comparing(CustomPoi::getName,
+        // String.CASE_INSENSITIVE_ORDER));
+        //            case NAME_DESC -> pois.sort(Comparator.comparing(CustomPoi::getName,
+        // String.CASE_INSENSITIVE_ORDER)
+        //                    .reversed());
+        //            case X_ASC -> pois.sort(
+        //                    Comparator.comparing(poi -> poi.getLocation().getX()));
+        //            case X_DESC -> pois.sort(
+        //                    Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
+        //            case Y_ASC -> pois.sort(Comparator.comparing(
+        //                    poi -> poi.getLocation().getY().orElse(null),
+        // Comparator.nullsFirst(Comparator.naturalOrder())));
+        //            case Y_DESC -> pois.sort(Comparator.comparing(
+        //                    poi -> poi.getLocation().getY().orElse(null),
+        // Comparator.nullsLast(Comparator.reverseOrder())));
+        //            case Z_ASC -> pois.sort(
+        //                    Comparator.comparing(poi -> poi.getLocation().getZ()));
+        //            case Z_DESC -> pois.sort(
+        //                    Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
+        //        }
     }
 
     private void toggleMarkers(boolean addMarkers) {
@@ -860,14 +862,14 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
     private void updateAllUsedIcons() {
         // Get all icons from all pois, default their "active" boolean to true.
-        filteredIcons = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream()
-                .map(CustomPoi::getIcon)
-                .distinct()
-                .collect(Collectors.toMap(
-                        Function.identity(),
-                        texture -> filteredIcons.getOrDefault(texture, true),
-                        (existing, replacement) -> existing,
-                        () -> new EnumMap<>(Texture.class)));
+        //        filteredIcons = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream()
+        //                .map(CustomPoi::getIcon)
+        //                .distinct()
+        //                .collect(Collectors.toMap(
+        //                        Function.identity(),
+        //                        texture -> filteredIcons.getOrDefault(texture, true),
+        //                        (existing, replacement) -> existing,
+        //                        () -> new EnumMap<>(Texture.class)));
 
         // Only show filter button if there is more than 1 used icon
         filterButton.visible = filteredIcons.size() > 1;

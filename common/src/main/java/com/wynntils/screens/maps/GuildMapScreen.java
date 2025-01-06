@@ -17,10 +17,10 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
-import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.services.map.type.TerritoryDefenseFilterType;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -245,8 +245,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
             Handlers.Command.queueCommand(
                     "gu territory " + territoryArea.getTerritoryProfile().getName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            if (hovered instanceof WaypointPoi) {
-                Services.UserMarker.removeMarkerAtLocation(hovered.getLocation().asLocation());
+            if (hoveredFeature instanceof MapLocation mapLocation
+                    && Services.UserMarker.isFeatureMarked(hoveredFeature)) {
+                Services.UserMarker.removeMarkerAtLocation(mapLocation.getLocation());
                 return true;
             }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {

@@ -95,6 +95,11 @@ public class UserMarkerService extends Service {
         removedFeatures.forEach(userMarkedOverrideProvider::notifyCallbacks);
     }
 
+    public boolean isFeatureMarked(MapFeature mapFeature) {
+        if (!(mapFeature instanceof MapLocation mapLocation)) return false;
+        return userOverridenMapLocations.contains(mapLocation) || userMarkerMapLocations.contains(mapLocation);
+    }
+
     public Stream<MapLocation> getMarkedFeatures() {
         return Stream.concat(userOverridenMapLocations.stream(), userMarkerMapLocations.stream());
     }

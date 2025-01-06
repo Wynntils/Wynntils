@@ -14,7 +14,6 @@ import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.IconButton;
 import com.wynntils.services.map.pois.CustomPoi;
-import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
@@ -26,9 +25,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -43,7 +40,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -410,30 +406,30 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         mapHeight);
 
         if (parsedXInput != null && parsedZInput != null) {
-            Poi poi = new CustomPoi(
-                    new PoiLocation(parsedXInput, null, parsedZInput),
-                    nameInput.getTextBoxInput(),
-                    CustomColor.fromHexString(colorInput.getTextBoxInput()) == CustomColor.NONE
-                            ? CommonColors.WHITE
-                            : CustomColor.fromHexString(colorInput.getTextBoxInput()),
-                    selectedIcon,
-                    selectedVisiblity);
-
-            MultiBufferSource.BufferSource bufferSource =
-                    McUtils.mc().renderBuffers().bufferSource();
-
-            poi.renderAt(
-                    poseStack,
-                    bufferSource,
-                    MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
-                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
-                    hoveredFeature == poi,
-                    1,
-                    zoomRenderScale,
-                    zoomLevel,
-                    true);
-
-            bufferSource.endBatch();
+            //            Poi poi = new CustomPoi(
+            //                    new PoiLocation(parsedXInput, null, parsedZInput),
+            //                    nameInput.getTextBoxInput(),
+            //                    CustomColor.fromHexString(colorInput.getTextBoxInput()) == CustomColor.NONE
+            //                            ? CommonColors.WHITE
+            //                            : CustomColor.fromHexString(colorInput.getTextBoxInput()),
+            //                    selectedIcon,
+            //                    selectedVisiblity);
+            //
+            //            MultiBufferSource.BufferSource bufferSource =
+            //                    McUtils.mc().renderBuffers().bufferSource();
+            //
+            //            poi.renderAt(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
+            //                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
+            //                    hoveredFeature == poi,
+            //                    1,
+            //                    zoomRenderScale,
+            //                    zoomLevel,
+            //                    true);
+            //
+            //            bufferSource.endBatch();
         }
 
         renderCursor(
