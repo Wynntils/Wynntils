@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.providers.json;
@@ -11,14 +11,28 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.MalformedJsonException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
-import com.wynntils.services.mapdata.attributes.type.MapIcon;
-import com.wynntils.services.mapdata.providers.MapDataProvider;
+import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
+import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
+import com.wynntils.services.mapdata.features.impl.MapAreaImpl;
+import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
+import com.wynntils.services.mapdata.features.impl.MapPathImpl;
+import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.impl.MapCategoryImpl;
+import com.wynntils.services.mapdata.impl.MapIconImpl;
+import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
-import com.wynntils.services.mapdata.type.MapFeature;
+import com.wynntils.services.mapdata.type.MapDataProvidedType;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -36,6 +50,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public final class JsonProvider implements MapDataProvider {
@@ -153,6 +168,17 @@ public final class JsonProvider implements MapDataProvider {
         return icons.stream();
     }
 
+    @Override
+    public void onChange(Consumer<MapDataProvidedType> callback) {
+        // The json does not change, as long as we do not implement a
+        // reload of the file, so we do not need to register callbacks.
+    }
+
+    @Override
+    public void reloadData() {
+        // FIXME: To be implemented if needed (when the first json provider is added)
+    }
+
     private static final class CategoryDeserializer implements JsonDeserializer<MapCategory> {
         @Override
         public MapCategory deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
@@ -162,10 +188,10 @@ public final class JsonProvider implements MapDataProvider {
             String id = json.get("id").getAsString();
             String name = JsonUtils.getNullableJsonString(json, "name");
             JsonElement attributesJson = json.get("attributes");
-            JsonMapAttributes attributes =
-                    attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAttributes.class);
+            MapAttributesImpl attributes =
+                    attributesJson == null ? null : GSON.fromJson(attributesJson, MapAttributesImpl.class);
 
-            return new JsonCategory(id, name, attributes);
+            return new MapCategoryImpl(id, name, attributes);
         }
     }
 
@@ -178,12 +204,67 @@ public final class JsonProvider implements MapDataProvider {
             String id = JsonUtils.getNullableJsonString(json, "id");
             String category = JsonUtils.getNullableJsonString(json, "category");
             JsonElement locationJson = json.get("location");
-            Location location = GSON.fromJson(locationJson, Location.class);
-            JsonElement attributesJson = json.get("attributes");
-            JsonMapAttributes attributes =
-                    attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAttributes.class);
+            JsonElement pathJson = json.get("path");
+            JsonElement areaJson = json.get("area");
 
-            return new JsonMapLocation(id, category, attributes, location);
+            if (locationJson != null) {
+                if (pathJson != null || areaJson != null) {
+                    throw new JsonParseException("Feature can only have one of location, path or area");
+                }
+
+                Location location = GSON.fromJson(locationJson, Location.class);
+                JsonElement attributesJson = json.get("attributes");
+                MapLocationAttributesImpl attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, MapLocationAttributesImpl.class);
+
+                MapLocationAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
+                    if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
+                        WynntilsMod.warn("Unsupported attribute set for location: " + invalidAttribute);
+                    }
+                });
+
+                return new MapLocationImpl(id, category, attributes, location);
+            }
+
+            if (pathJson != null) {
+                if (areaJson != null) {
+                    throw new JsonParseException("Feature can only have one of location, path or area");
+                }
+
+                Type type = new TypeToken<List<Location>>() {}.getType();
+                List<Location> path = GSON.fromJson(pathJson, type);
+                JsonElement attributesJson = json.get("attributes");
+
+                MapPathAttributesImpl attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, MapPathAttributesImpl.class);
+
+                MapPathAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
+                    if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
+                        WynntilsMod.warn("Unsupported attribute set for path: " + invalidAttribute);
+                    }
+                });
+
+                return new MapPathImpl(id, category, attributes, path);
+            }
+
+            if (areaJson != null) {
+                Type type = new TypeToken<List<Location>>() {}.getType();
+                List<Location> path = GSON.fromJson(pathJson, type);
+                List<Location> polygonArea = GSON.fromJson(pathJson, type);
+                JsonElement attributesJson = json.get("attributes");
+                MapAreaAttributesImpl attributes =
+                        attributesJson == null ? null : GSON.fromJson(attributesJson, MapAreaAttributesImpl.class);
+
+                MapAreaAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
+                    if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
+                        WynntilsMod.warn("Unsupported attribute set for area: " + invalidAttribute);
+                    }
+                });
+
+                return new MapAreaImpl(id, category, attributes, polygonArea);
+            }
+
+            throw new JsonParseException("Feature neither has location, path nor area");
         }
     }
 
@@ -198,7 +279,7 @@ public final class JsonProvider implements MapDataProvider {
             byte[] texture = Base64.getDecoder().decode(base64Texture);
 
             try {
-                return new JsonIcon(id, texture);
+                return new MapIconImpl(id, texture);
             } catch (IOException e) {
                 WynntilsMod.warn("Bad icon texture for " + id, e);
                 return null;

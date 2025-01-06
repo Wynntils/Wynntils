@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -7,22 +7,15 @@ package com.wynntils.screens.maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
-import com.wynntils.models.marker.type.DynamicLocationSupplier;
-import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
-import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.pois.CustomPoi;
-import com.wynntils.services.map.pois.IconPoi;
-import com.wynntils.services.map.pois.PlayerMainMapPoi;
-import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.map.pois.TerritoryPoi;
-import com.wynntils.services.map.pois.WaypointPoi;
+import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
+import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -30,22 +23,16 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.type.BoundingBox;
-import com.wynntils.utils.wynn.LocationUtils;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public final class MainMapScreen extends AbstractMapScreen {
-    private MarkerInfo focusedMarker;
-
     private MainMapScreen() {
         super();
         centerMapAroundPlayer();
@@ -74,7 +61,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 7 + 20 * 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 8),
                 10,
                 16,
@@ -119,7 +106,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 3,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 8),
                 12,
                 16,
@@ -136,7 +123,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 7),
                 16,
                 14,
@@ -163,7 +150,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 8),
                 12,
                 16,
@@ -174,17 +161,17 @@ public final class MainMapScreen extends AbstractMapScreen {
                         return;
                     }
 
-                    List<MarkerInfo> markers = Models.Marker.USER_WAYPOINTS_PROVIDER
-                            .getMarkerInfos()
-                            .toList();
-                    if (!markers.isEmpty()) {
-                        // -1 is fine as the index since we always increment it by 1
-                        int index = markers.indexOf(focusedMarker);
-                        MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
-                        focusedMarker = markerInfo;
-                        Location location = markerInfo.location();
-                        updateMapCenter(location.x, location.z);
-                    }
+                    //                    List<MarkerInfo> markers = Models.Marker.USER_WAYPOINTS_PROVIDER
+                    //                            .getMarkerInfos()
+                    //                            .toList();
+                    //                    if (!markers.isEmpty()) {
+                    //                        // -1 is fine as the index since we always increment it by 1
+                    //                        int index = markers.indexOf(focusedMarker);
+                    //                        MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
+                    //                        focusedMarker = markerInfo;
+                    //                        Location location = markerInfo.location();
+                    //                        updateMapCenter(location.x, location.z);
+                    //                    }
                 },
                 List.of(
                         Component.literal("[>] ")
@@ -201,7 +188,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
                         - 7),
                 14,
                 14,
@@ -215,14 +202,11 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY))));
 
         if (firstInit) {
-            BoundingBox textureBoundingBox =
-                    BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
-
             // When in an unmapped area, center to the middle of the map if the feature is enabled
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                             .centerWhenUnmapped
                             .get()
-                    && Services.Map.getMapsForBoundingBox(textureBoundingBox).isEmpty()) {
+                    && Services.Map.getMapsForBoundingBox(mapBoundingBox).isEmpty()) {
                 centerMapOnWorld();
             }
 
@@ -253,7 +237,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
 
-        renderPois(poseStack, mouseX, mouseY);
+        renderMapFeatures(poseStack, mouseX, mouseY);
 
         if (Managers.Feature.getFeatureInstance(MappingProgressFeature.class).isEnabled()) {
             renderChunkBorders(poseStack);
@@ -303,45 +287,21 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        Stream<? extends Poi> pois = Services.Poi.getServicePois();
+    @Override
+    protected Stream<MapFeature> getRenderedMapFeatures() {
+        // Get all MapData features as Pois
+        Stream<MapFeature> mapFeatures = Services.MapData.getFeatures();
 
-        pois = Stream.concat(pois, Services.Poi.getCombatPois());
-        pois = Stream.concat(pois, Services.Poi.getLabelPois());
-        pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
-        pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
-        pois = Stream.concat(pois, Models.Marker.getAllPois());
-        pois = Stream.concat(
-                pois,
-                getPlayerPois(
-                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                .renderRemotePartyPlayers
-                                .get(),
-                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                .renderRemoteFriendPlayers
-                                .get()));
-
-        if (showTerrs) {
-            pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
+        if (!KeyboardUtils.isControlDown()) {
+            mapFeatures = mapFeatures.filter(feature -> !(feature instanceof TerritoryArea));
         }
 
-        renderPois(
-                pois.collect(Collectors.toList()),
-                poseStack,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .poiScale
-                        .get(),
-                mouseX,
-                mouseY);
-    }
+        // FIXME: Add back the pois that are still not converted to MapData
+        //        - Provided custom pois
+        //        - Marker waypoints
+        //        - Remote players
 
-    private Stream<PlayerMainMapPoi> getPlayerPois(
-            boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers) {
-        return Services.Hades.getHadesUsers()
-                .filter(hadesUser -> (hadesUser.getRelation() == PlayerRelation.PARTY && renderRemotePartyPlayers)
-                        || (hadesUser.getRelation() == PlayerRelation.FRIEND && renderRemoteFriendPlayers))
-                .map(PlayerMainMapPoi::new);
+        return mapFeatures;
     }
 
     @Override
@@ -382,63 +342,64 @@ public final class MainMapScreen extends AbstractMapScreen {
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            List<MarkerInfo> markers =
-                    Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
-            if (KeyboardUtils.isShiftDown() && !markers.isEmpty()) {
-                // -1 is fine as the index since we always increment it by 1
-                int index = markers.indexOf(focusedMarker);
-                MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
-                focusedMarker = markerInfo;
-                Location location = markerInfo.location();
-                updateMapCenter(location.x, location.z);
-                return true;
-            }
+            //            List<MarkerInfo> markers =
+            //                    Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
+            //            if (KeyboardUtils.isShiftDown() && !markers.isEmpty()) {
+            //                // -1 is fine as the index since we always increment it by 1
+            //                int index = markers.indexOf(focusedMarker);
+            //                MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
+            //                focusedMarker = markerInfo;
+            //                Location location = markerInfo.location();
+            //                updateMapCenter(location.x, location.z);
+            //                return true;
+            //            }
 
             centerMapAroundPlayer();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            if (hovered instanceof WaypointPoi) {
-                Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
-                        hovered.getLocation().asLocation());
-                return true;
-            }
+            //            if (hovered instanceof WaypointPoi) {
+            //                Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
+            //                        hovered.getLocation().asLocation());
+            //                return true;
+            //            }
 
-            if (hovered != null && !(hovered instanceof TerritoryPoi)) {
-                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
-
-                // If shift is not held down, clear all waypoints to only have the new one
-                if (!KeyboardUtils.isShiftDown()) {
-                    Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-                }
-
-                if (hovered.hasStaticLocation()) {
-                    if (hovered instanceof IconPoi iconPoi) {
-                        if (iconPoi instanceof CustomPoi customPoi) {
-                            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                                    new Location(hovered.getLocation()),
-                                    iconPoi.getIcon(),
-                                    customPoi.getColor(),
-                                    customPoi.getColor(),
-                                    hovered.getName());
-                        } else {
-                            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                                    new Location(hovered.getLocation()), iconPoi.getIcon(), hovered.getName());
-                        }
-                    } else {
-                        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                                new Location(hovered.getLocation()), hovered.getName());
-                    }
-                } else {
-                    final Poi finalHovered = hovered;
-                    Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                            new DynamicLocationSupplier(
-                                    () -> finalHovered.getLocation().asLocation()),
-                            finalHovered.getName());
-                }
-                return true;
+            if (hoveredFeature != null && !(hoveredFeature instanceof TerritoryArea)) {
+                //                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
+                //
+                //                // If shift is not held down, clear all waypoints to only have the new one
+                //                if (!KeyboardUtils.isShiftDown()) {
+                //                    Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
+                //                }
+                //
+                //                if (hovered.hasStaticLocation()) {
+                //                    if (hovered instanceof IconPoi iconPoi) {
+                //                        if (iconPoi instanceof CustomPoi customPoi) {
+                //                            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                //                                    new Location(hovered.getLocation()),
+                //                                    iconPoi.getIcon(),
+                //                                    customPoi.getColor(),
+                //                                    customPoi.getColor(),
+                //                                    hovered.getName());
+                //                        } else {
+                //                            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                //                                    new Location(hovered.getLocation()), iconPoi.getIcon(),
+                // hovered.getName());
+                //                        }
+                //                    } else {
+                //                        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                //                                new Location(hovered.getLocation()), hovered.getName());
+                //                    }
+                //                } else {
+                //                    final Poi finalHovered = hovered;
+                //                    Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                //                            new DynamicLocationSupplier(
+                //                                    () -> finalHovered.getLocation().asLocation()),
+                //                            finalHovered.getName());
+                //                }
+                //                return true;
             }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
-                if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
+                if (hoveredFeature instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
                     McUtils.mc().setScreen(PoiCreationScreen.create(this, customPoi));
                 } else {
                     int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
@@ -447,7 +408,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                     McUtils.mc().setScreen(PoiCreationScreen.create(this, new Location(gameX, 0, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
-                if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
+                if (hoveredFeature instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
                     HiddenConfig<List<CustomPoi>> customPois =
                             Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
                     customPois.get().remove(customPoi);
@@ -463,30 +424,26 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private void shareLocationOrCompass(int button) {
-        List<MarkerInfo> markers =
-                Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
-
-        boolean shareCompass = KeyboardUtils.isShiftDown() && !markers.isEmpty();
-
-        String target = null;
-
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            target = "guild";
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            target = "party";
-        }
-
-        if (target == null) return;
-
-        if (shareCompass) {
-            // FIXME: Find an intuitive way to share compasses with multiple waypoints
-            LocationUtils.shareCompass(target, markers.getFirst().location());
-        } else {
-            LocationUtils.shareLocation(target);
-        }
-    }
-
-    public void setHovered(Poi hovered) {
-        this.hovered = hovered;
+        //        List<MarkerInfo> markers =
+        //                Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
+        //
+        //        boolean shareCompass = KeyboardUtils.isShiftDown() && !markers.isEmpty();
+        //
+        //        String target = null;
+        //
+        //        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        //            target = "guild";
+        //        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        //            target = "party";
+        //        }
+        //
+        //        if (target == null) return;
+        //
+        //        if (shareCompass) {
+        //            // FIXME: Find an intuitive way to share compasses with multiple waypoints
+        //            LocationUtils.shareCompass(target, markers.getFirst().location());
+        //        } else {
+        //            LocationUtils.shareLocation(target);
+        //        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.features;
@@ -81,11 +81,10 @@ import com.wynntils.features.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.inventory.LootchestTextFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
-import com.wynntils.features.map.BeaconBeamFeature;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
-import com.wynntils.features.map.WorldWaypointDistanceFeature;
+import com.wynntils.features.map.WorldMarkersFeature;
 import com.wynntils.features.overlays.AnnihilationSunOverlayFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackerOverlayFeature;
 import com.wynntils.features.overlays.BombBellOverlayFeature;
@@ -287,11 +286,10 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region map
-        registerFeature(new BeaconBeamFeature());
         registerFeature(new GuildMapFeature());
         registerFeature(new MainMapFeature());
         registerFeature(new MinimapFeature());
-        registerFeature(new WorldWaypointDistanceFeature());
+        registerFeature(new WorldMarkersFeature());
         // endregion
 
         // region overlays
