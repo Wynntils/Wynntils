@@ -264,7 +264,6 @@ public class MinimapOverlay extends Overlay {
 
         // FIXME: Add back the pois that are still not converted to MapData
         //        - Provided custom pois
-        //        - Marker waypoints
         //        - Remote players
 
         Vector2f mapCenter = new Vector2f((float) playerX, (float) playerZ);
@@ -296,7 +295,7 @@ public class MinimapOverlay extends Overlay {
 
         bufferSource.endBatch();
 
-        // Compass icon
+        // Render all marked features
         List<MapLocation> userMarkers = Services.UserMarker.getMarkedFeatures()
                 .filter(feature -> feature instanceof MapLocation)
                 .toList();
@@ -372,18 +371,6 @@ public class MinimapOverlay extends Overlay {
                         compassSize,
                         compassSize);
                 poseStack.popPose();
-            } else {
-                BufferedRenderUtils.drawColoredTexturedRect(
-                        poseStack,
-                        bufferSource,
-                        icon.get().getResourceLocation(),
-                        attributes.iconColor(),
-                        iconAlpha,
-                        compassRenderX - compassSize / 2,
-                        compassRenderZ - compassSize / 2,
-                        0,
-                        compassSize,
-                        compassSize);
             }
 
             bufferSource.endBatch();
