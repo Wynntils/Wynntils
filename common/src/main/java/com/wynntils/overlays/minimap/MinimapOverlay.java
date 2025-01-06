@@ -312,7 +312,7 @@ public class MinimapOverlay extends Overlay {
             if (!drawIcon || icon.isEmpty()) continue;
 
             float compassOffsetX = (compassLocation.x() - (float) playerX) / zoomRenderScale;
-            float compassOffsetZ = (compassLocation.y() - (float) playerZ) / zoomRenderScale;
+            float compassOffsetZ = (compassLocation.z() - (float) playerZ) / zoomRenderScale;
 
             if (followPlayerRotation.get()) {
                 float tempCompassOffsetX = compassOffsetX * cosRotationRadians - compassOffsetZ * sinRotationRadians;
