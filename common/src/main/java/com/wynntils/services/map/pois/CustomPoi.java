@@ -4,62 +4,51 @@
  */
 package com.wynntils.services.map.pois;
 
-import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
 import java.util.Objects;
 
-public class CustomPoi extends StaticIconPoi {
+// The poi system is not used anymore. This special class is kept so upfixing old pois to mapdata is possible.
+@Deprecated
+public class CustomPoi {
+    private final PoiLocation location;
     private final String name;
     private final CustomColor color;
     private final Texture icon;
     private final Visibility visibility;
 
-    public CustomPoi(PoiLocation location, String name, CustomColor color, Texture icon, Visibility visibility) {
-        super(location);
-
+    private CustomPoi(PoiLocation location, String name, CustomColor color, Texture icon, Visibility visibility) {
+        this.location = location;
         this.name = name;
         this.color = color;
         this.icon = icon;
         this.visibility = visibility;
     }
 
-    @Override
-    public Texture getIcon() {
-        return icon;
+    @Deprecated
+    public PoiLocation getLocation() {
+        return location;
     }
 
-    @Override
-    public float getMinZoomForRender() {
-        return switch (getVisibility()) {
-            case ALWAYS -> -1;
-            case HIDDEN -> Integer.MAX_VALUE;
-            case DEFAULT -> 0.28f; // This is unused now
-        };
-    }
-
-    @Override
+    @Deprecated
     public String getName() {
         return name;
     }
 
+    @Deprecated
     public CustomColor getColor() {
         return color;
     }
 
+    @Deprecated
+    public Texture getIcon() {
+        return icon;
+    }
+
+    @Deprecated
     public Visibility getVisibility() {
         return visibility;
-    }
-
-    @Override
-    public CustomColor getIconColor() {
-        return this.getColor();
-    }
-
-    @Override
-    public DisplayPriority getDisplayPriority() {
-        return DisplayPriority.LOW;
     }
 
     @Override

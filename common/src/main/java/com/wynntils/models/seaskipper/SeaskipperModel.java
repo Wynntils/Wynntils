@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.seaskipper;
@@ -18,7 +18,6 @@ import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationProfile;
 import com.wynntils.screens.maps.CustomSeaskipperScreen;
-import com.wynntils.services.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.io.Reader;
@@ -95,32 +94,23 @@ public final class SeaskipperModel extends Model {
         }
     }
 
-    public List<SeaskipperDestinationPoi> getPois(boolean includeAll) {
-        List<SeaskipperDestinationPoi> pois = new ArrayList<>();
-
-        for (SeaskipperDestination destination : availableDestinations) {
-            pois.add(new SeaskipperDestinationPoi(destination));
-        }
+    public List<SeaskipperDestination> getDestinations(boolean includeAll) {
+        List<SeaskipperDestination> destinations = new ArrayList<>(availableDestinations);
 
         // Include the destination we are currently at
         allDestinations.stream()
                 .filter(SeaskipperDestination::isPlayerInside)
                 .findFirst()
-                .ifPresent(profile -> pois.add(new SeaskipperDestinationPoi(profile)));
+                .ifPresent(destinations::add);
 
         if (includeAll) {
-            List<SeaskipperDestination> notAvailableProfiles = allDestinations.stream()
-                    .filter(profile -> pois.stream()
-                            .map(SeaskipperDestinationPoi::getDestination)
+            allDestinations.stream()
+                    .filter(profile -> destinations.stream()
                             .noneMatch(destination -> destination.profile().equals(profile.profile())))
-                    .toList();
-
-            pois.addAll(notAvailableProfiles.stream()
-                    .map(SeaskipperDestinationPoi::new)
-                    .toList());
+                    .forEach(destinations::add);
         }
 
-        return pois;
+        return destinations;
     }
 
     public void purchaseBoat() {

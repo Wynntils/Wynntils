@@ -16,7 +16,6 @@ import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.services.map.MapTexture;
-import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.features.type.MapFeature;
@@ -90,8 +89,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected float zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(zoomLevel);
     protected BoundingBox mapBoundingBox = BoundingBox.EMPTY;
 
-    // TODO: This is not used anymore. It's only here to make the code compile.
-    protected Poi hovered = null;
     protected MapFeature hoveredFeature = null;
 
     protected AbstractMapScreen() {
