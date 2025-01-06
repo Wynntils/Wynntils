@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.discoveries;
@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -65,8 +66,7 @@ public final class DiscoveryModel extends Model {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 
-            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                    new Location(centerX, 0, centerZ), guildTerritory.getName());
+            Services.UserMarker.addMarkerAtLocation(new Location(centerX, 0, centerZ), guildTerritory.getName());
         }
     }
 
@@ -251,7 +251,7 @@ public final class DiscoveryModel extends Model {
                     // We can't run this is on request thread
                 case MAP -> Managers.TickScheduler.scheduleNextTick(
                         () -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
-                case COMPASS -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z), name);
+                case COMPASS -> Services.UserMarker.addMarkerAtLocation(new Location(x, 0, z), name);
             }
         });
     }

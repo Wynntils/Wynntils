@@ -16,22 +16,25 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.services.map.MapTexture;
-import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
+import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.features.type.MapLocation;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.PoiLocation;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
@@ -41,6 +44,7 @@ import com.wynntils.utils.type.BoundingCircle;
 import com.wynntils.utils.type.Pair;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
@@ -49,6 +53,7 @@ import org.joml.Vector2f;
 
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
+    private static final float MINIMUM_RENDER_ALPHA = 0.1f;
 
     @Persisted
     public final Config<Float> zoomLevel = new Config<>(MapRenderer.DEFAULT_ZOOM_LEVEL);
@@ -82,6 +87,9 @@ public class MinimapOverlay extends Overlay {
 
     @Persisted
     public final Config<Float> remotePlayersHeadScale = new Config<>(0.7f);
+
+    @Persisted
+    public final Config<Boolean> renderTerritories = new Config<>(false);
 
     public MinimapOverlay() {
         super(
@@ -255,12 +263,12 @@ public class MinimapOverlay extends Overlay {
         // Get all MapData features as Pois
         Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = Services.MapData.getFeatures()
                 .filter(feature -> feature.isVisible(textureBoundingCircle))
+                .filter(feature -> feature instanceof TerritoryArea ? renderTerritories.get() : true)
                 .map(feature -> Pair.of(feature, Services.MapData.resolveMapAttributes(feature)))
                 .sorted(Comparator.comparing(pair -> pair.b().priority()));
 
         // FIXME: Add back the pois that are still not converted to MapData
         //        - Provided custom pois
-        //        - Marker waypoints
         //        - Remote players
 
         Vector2f mapCenter = new Vector2f((float) playerX, (float) playerZ);
@@ -292,15 +300,23 @@ public class MinimapOverlay extends Overlay {
 
         bufferSource.endBatch();
 
-        // Compass icon
-        List<WaypointPoi> waypointPois =
-                Models.Marker.USER_WAYPOINTS_PROVIDER.getPois().toList();
-        for (WaypointPoi waypointPoi : waypointPois) {
-            PoiLocation compassLocation = waypointPoi.getLocation();
-            if (compassLocation == null) return;
+        // Render all marked features
+        List<MapLocation> userMarkers = Services.UserMarker.getMarkedFeatures()
+                .filter(feature -> feature instanceof MapLocation)
+                .toList();
+        for (MapLocation userMarker : userMarkers) {
+            Location compassLocation = userMarker.getLocation();
+            if (compassLocation == null) continue;
 
-            float compassOffsetX = (compassLocation.getX() - (float) playerX) / zoomRenderScale;
-            float compassOffsetZ = (compassLocation.getZ() - (float) playerZ) / zoomRenderScale;
+            ResolvedMapAttributes attributes = Services.MapData.resolveMapAttributes(userMarker);
+            float iconAlpha = Services.MapData.calculateVisibility(attributes.iconVisibility(), zoomLevel);
+            Optional<MapIcon> icon = Services.MapData.getIcon(attributes.iconId());
+            boolean drawIcon = iconAlpha > MINIMUM_RENDER_ALPHA;
+
+            if (!drawIcon || icon.isEmpty()) continue;
+
+            float compassOffsetX = (compassLocation.x() - (float) playerX) / zoomRenderScale;
+            float compassOffsetZ = (compassLocation.z() - (float) playerZ) / zoomRenderScale;
 
             if (followPlayerRotation.get()) {
                 float tempCompassOffsetX = compassOffsetX * cosRotationRadians - compassOffsetZ * sinRotationRadians;
@@ -310,8 +326,8 @@ public class MinimapOverlay extends Overlay {
             }
 
             final float compassSize = Math.max(
-                            waypointPoi.getWidth(currentZoom, mapFeatureScale.get()),
-                            waypointPoi.getHeight(currentZoom, mapFeatureScale.get()))
+                            icon.get().getWidth() * mapFeatureScale.get(),
+                            icon.get().getHeight() * mapFeatureScale.get())
                     * 0.8f;
 
             float compassRenderX = compassOffsetX + centerX;
@@ -348,30 +364,18 @@ public class MinimapOverlay extends Overlay {
 
                 poseStack.pushPose();
                 RenderUtils.rotatePose(poseStack, compassRenderX, compassRenderZ, angle);
-                waypointPoi
-                        .getPointerPoi()
-                        .renderAt(
-                                poseStack,
-                                bufferSource,
-                                compassRenderX,
-                                compassRenderZ,
-                                false,
-                                mapFeatureScale.get(),
-                                1f / zoomRenderScale,
-                                zoomLevel,
-                                false);
-                poseStack.popPose();
-            } else {
-                waypointPoi.renderAt(
+                BufferedRenderUtils.drawColoredTexturedRect(
                         poseStack,
                         bufferSource,
+                        Texture.POINTER.resource(),
+                        attributes.iconColor(),
+                        iconAlpha,
                         compassRenderX,
                         compassRenderZ,
-                        false,
-                        mapFeatureScale.get(),
-                        currentZoom,
-                        zoomLevel,
-                        false);
+                        0,
+                        compassSize,
+                        compassSize);
+                poseStack.popPose();
             }
 
             bufferSource.endBatch();

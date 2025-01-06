@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.GuildMapFeature;
@@ -247,8 +246,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                     "gu territory " + territoryArea.getTerritoryProfile().getName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
-                Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
-                        hovered.getLocation().asLocation());
+                Services.UserMarker.removeMarkerAtLocation(hovered.getLocation().asLocation());
                 return true;
             }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {

@@ -10,11 +10,11 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.services.mapdata.attributes.impl.AbstractMapAreaAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
 import com.wynntils.services.mapdata.features.type.MapArea;
+import com.wynntils.utils.MapDataUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.BoundingPolygon;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 public class TerritoryArea implements MapArea {
@@ -60,11 +60,7 @@ public class TerritoryArea implements MapArea {
 
     @Override
     public String getFeatureId() {
-        return territoryProfile
-                .getName()
-                .replace(" ", "-")
-                .replaceAll("[^a-zA-Z\\-]", "")
-                .toLowerCase(Locale.ROOT);
+        return MapDataUtils.sanitizeFeatureId(territoryProfile.getName());
     }
 
     @Override
