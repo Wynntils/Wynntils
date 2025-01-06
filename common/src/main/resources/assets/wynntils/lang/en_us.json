@@ -1022,6 +1022,8 @@
   "feature.wynntils.minimap.overlay.minimap.pointerType.name": "Minimap Pointer Type",
   "feature.wynntils.minimap.overlay.minimap.remotePlayersHeadScale.description": "How big should remote player heads be?",
   "feature.wynntils.minimap.overlay.minimap.remotePlayersHeadScale.name": "Remote Players Head Scale",
+  "feature.wynntils.minimap.overlay.minimap.renderTerritories.description": "Should territories be rendered on the minimap?",
+  "feature.wynntils.minimap.overlay.minimap.renderTerritories.name": "Render Territories",
   "feature.wynntils.minimap.overlay.minimap.showCompass.description": "How should the cardinal directions (N/E/S/W) be displayed on the minimap?",
   "feature.wynntils.minimap.overlay.minimap.showCompass.name": "Show Compass Directions",
   "feature.wynntils.minimap.overlay.minimap.zoomLevel.description": "How zoomed in should the minimap be?",

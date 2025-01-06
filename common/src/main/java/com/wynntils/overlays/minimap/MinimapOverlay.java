@@ -18,6 +18,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
+import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.services.mapdata.type.MapIcon;
@@ -86,6 +87,9 @@ public class MinimapOverlay extends Overlay {
 
     @Persisted
     public final Config<Float> remotePlayersHeadScale = new Config<>(0.7f);
+
+    @Persisted
+    public final Config<Boolean> renderTerritories = new Config<>(false);
 
     public MinimapOverlay() {
         super(
@@ -259,6 +263,7 @@ public class MinimapOverlay extends Overlay {
         // Get all MapData features as Pois
         Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = Services.MapData.getFeatures()
                 .filter(feature -> feature.isVisible(textureBoundingCircle))
+                .filter(feature -> feature instanceof TerritoryArea ? renderTerritories.get() : true)
                 .map(feature -> Pair.of(feature, Services.MapData.resolveMapAttributes(feature)))
                 .sorted(Comparator.comparing(pair -> pair.b().priority()));
 
