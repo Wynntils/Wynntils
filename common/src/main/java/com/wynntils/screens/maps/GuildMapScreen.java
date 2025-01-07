@@ -17,7 +17,7 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
-import com.wynntils.services.map.type.TerritoryDefenseFilterType;
+import com.wynntils.services.map.type.TerritoryFilterType;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
@@ -43,12 +43,16 @@ import org.lwjgl.glfw.GLFW;
 public final class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
     private boolean territoryDefenseFilterEnabled = false;
+    private boolean territoryTreasuryFilterEnabled = false;
     private boolean hybridMode = true;
 
     private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VERY_HIGH;
-    private TerritoryDefenseFilterType territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
+    private GuildResourceValues territoryTreasuryeFilterLevel = GuildResourceValues.VERY_HIGH;
+    private TerritoryFilterType territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
+    private TerritoryFilterType territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
 
     private BasicTexturedButton territoryDefenseFilterButton;
+    private BasicTexturedButton territoryTreasuryFilterButton;
     private BasicTexturedButton hybridModeButton;
 
     private GuildMapScreen() {
@@ -92,7 +96,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         this.addRenderableWidget(
                 hybridModeButton = new BasicTexturedButton(
-                        width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
+                        width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 3,
                         (int) (this.renderHeight
                                 - this.renderedBorderYOffset
                                 - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
@@ -105,6 +109,46 @@ public final class GuildMapScreen extends AbstractMapScreen {
                             hybridModeButton.setTooltip(getHybridModeTooltip());
                         },
                         getHybridModeTooltip()));
+
+        territoryTreasuryFilterButton = this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
+                        - 7),
+                16,
+                14,
+                Texture.TREASURY,
+                (b) -> {
+                    // Left and right clicks cycle through the treasury levels, middle click resets to OFF
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                        territoryTreasuryFilterEnabled = false;
+                        territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
+                        territoryTreasuryFilterButton.setTooltip(getCompleteTreasuryFilterTooltip());
+                        return;
+                    }
+
+                    // Holding shift filters higher, ctrl filters lower
+                    if (KeyboardUtils.isShiftDown()) {
+                        territoryTreasuryFilterType = TerritoryFilterType.HIGHER;
+                    } else if (KeyboardUtils.isControlDown()) {
+                        territoryTreasuryFilterType = TerritoryFilterType.LOWER;
+                    } else {
+                        territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
+                    }
+
+                    territoryTreasuryFilterEnabled = true;
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                        territoryTreasuryeFilterLevel = territoryTreasuryeFilterLevel.getFilterNext(
+                                territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
+                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                        territoryTreasuryeFilterLevel = territoryTreasuryeFilterLevel.getFilterPrevious(
+                                territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
+                    }
+
+                    territoryTreasuryFilterButton.setTooltip(getCompleteTreasuryFilterTooltip());
+                },
+                getCompleteTreasuryFilterTooltip()));
 
         territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20,
@@ -119,32 +163,32 @@ public final class GuildMapScreen extends AbstractMapScreen {
                     // Left and right clicks cycle through the defense levels, middle click resets to OFF
                     if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
                         territoryDefenseFilterEnabled = false;
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
-                        territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
+                        territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
+                        territoryDefenseFilterButton.setTooltip(getCompleteDefenseFilterTooltip());
                         return;
                     }
 
                     // Holding shift filters higher, ctrl filters lower
                     if (KeyboardUtils.isShiftDown()) {
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.HIGHER;
+                        territoryDefenseFilterType = TerritoryFilterType.HIGHER;
                     } else if (KeyboardUtils.isControlDown()) {
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.LOWER;
+                        territoryDefenseFilterType = TerritoryFilterType.LOWER;
                     } else {
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
+                        territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
                     }
 
                     territoryDefenseFilterEnabled = true;
                     if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                         territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterNext(
-                                territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
+                                territoryDefenseFilterType != TerritoryFilterType.DEFAULT);
                     } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                         territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterPrevious(
-                                territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
+                                territoryDefenseFilterType != TerritoryFilterType.DEFAULT);
                     }
 
-                    territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
+                    territoryDefenseFilterButton.setTooltip(getCompleteDefenseFilterTooltip());
                 },
-                getCompleteFilterTooltip()));
+                getCompleteDefenseFilterTooltip()));
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
@@ -226,6 +270,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         // FIXME: Add back hybrid/advancement mode
         // FIXME: Add territory connection map paths
         // FIXME: Add user markers
+        // FIXME: Filter based on defense/treasury filter
         return Services.MapData.getFeaturesForCategory("wynntils:territory");
     }
 
@@ -504,25 +549,48 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         TextShadow.OUTLINE);
     }
 
-    private List<Component> getCompleteFilterTooltip() {
+    private List<Component> getCompleteDefenseFilterTooltip() {
         Component lastLine = territoryDefenseFilterEnabled
-                ? Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
+                ? Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
                         .withStyle(ChatFormatting.GRAY)
                         .append(territoryDefenseFilterLevel.getDefenceColor()
                                 + territoryDefenseFilterLevel.getAsString())
                         .append(territoryDefenseFilterType.asComponent())
-                : Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
+                : Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
                         .withStyle(ChatFormatting.GRAY)
                         .append("Off");
         return List.of(
                 Component.literal("[>] ")
                         .withStyle(ChatFormatting.BLUE)
                         .append(Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.name")),
-                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description1")
+                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description")
                         .withStyle(ChatFormatting.GRAY),
-                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description2")
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description1")
                         .withStyle(ChatFormatting.GRAY),
-                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description3")
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description2")
+                        .withStyle(ChatFormatting.GRAY),
+                lastLine);
+    }
+
+    private List<Component> getCompleteTreasuryFilterTooltip() {
+        Component lastLine = territoryTreasuryFilterEnabled
+                ? Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(territoryTreasuryeFilterLevel.getTreasuryColor()
+                                + territoryTreasuryeFilterLevel.getAsString())
+                        .append(territoryTreasuryFilterType.asComponent())
+                : Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append("Off");
+        return List.of(
+                Component.literal("[>] ")
+                        .withStyle(ChatFormatting.YELLOW)
+                        .append(Component.translatable("screens.wynntils.guildMap.cycleTerritoryFilter.name")),
+                Component.translatable("screens.wynntils.guildMap.cycleTerritoryFilter.description")
+                        .withStyle(ChatFormatting.GRAY),
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description1")
+                        .withStyle(ChatFormatting.GRAY),
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description2")
                         .withStyle(ChatFormatting.GRAY),
                 lastLine);
     }
