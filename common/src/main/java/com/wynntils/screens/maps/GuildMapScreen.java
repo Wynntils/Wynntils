@@ -16,7 +16,7 @@ import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
-import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.map.type.TerritoryFilterType;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
@@ -51,9 +51,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
     private TerritoryFilterType territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
     private TerritoryFilterType territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
 
-    private BasicTexturedButton territoryDefenseFilterButton;
-    private BasicTexturedButton territoryTreasuryFilterButton;
-    private BasicTexturedButton hybridModeButton;
+    private MapButton territoryDefenseFilterButton;
+    private MapButton territoryTreasuryFilterButton;
+    private MapButton hybridModeButton;
 
     private GuildMapScreen() {
         super();
@@ -68,96 +68,17 @@ public final class GuildMapScreen extends AbstractMapScreen {
     protected void doInit() {
         super.doInit();
 
-        // Buttons have to be added in reverse order (right to left) so they don't overlap
-
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 7 + 20 * 6,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
-                        - 8),
-                10,
-                16,
-                Texture.HELP_ICON,
-                (b) -> {},
+        addMapButton(new MapButton(
+                Texture.ADD_ICON,
+                (b) -> resourceMode = !resourceMode,
                 List.of(
                         Component.literal("[>] ")
-                                .withStyle(ChatFormatting.YELLOW)
-                                .append(Component.translatable("screens.wynntils.map.help.name")),
-                        Component.literal("- ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.guildMap.help.description1")),
-                        Component.literal("- ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.guildMap.help.description2")),
-                        Component.literal("- ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.guildMap.help.description3")))));
+                                .withStyle(ChatFormatting.GOLD)
+                                .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
+                        Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
+                                .withStyle(ChatFormatting.GRAY))));
 
-        this.addRenderableWidget(
-                hybridModeButton = new BasicTexturedButton(
-                        width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 3,
-                        (int) (this.renderHeight
-                                - this.renderedBorderYOffset
-                                - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
-                                - 8),
-                        16,
-                        16,
-                        Texture.OVERLAY_EXTRA_ICON,
-                        (b) -> {
-                            hybridMode = !hybridMode;
-                            hybridModeButton.setTooltip(getHybridModeTooltip());
-                        },
-                        getHybridModeTooltip()));
-
-        territoryTreasuryFilterButton = this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
-                        - 7),
-                16,
-                14,
-                Texture.TREASURY,
-                (b) -> {
-                    // Left and right clicks cycle through the treasury levels, middle click resets to OFF
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-                        territoryTreasuryFilterEnabled = false;
-                        territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
-                        territoryTreasuryFilterButton.setTooltip(getCompleteTreasuryFilterTooltip());
-                        return;
-                    }
-
-                    // Holding shift filters higher, ctrl filters lower
-                    if (KeyboardUtils.isShiftDown()) {
-                        territoryTreasuryFilterType = TerritoryFilterType.HIGHER;
-                    } else if (KeyboardUtils.isControlDown()) {
-                        territoryTreasuryFilterType = TerritoryFilterType.LOWER;
-                    } else {
-                        territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
-                    }
-
-                    territoryTreasuryFilterEnabled = true;
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                        territoryTreasuryeFilterLevel = territoryTreasuryeFilterLevel.getFilterNext(
-                                territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
-                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                        territoryTreasuryeFilterLevel = territoryTreasuryeFilterLevel.getFilterPrevious(
-                                territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
-                    }
-
-                    territoryTreasuryFilterButton.setTooltip(getCompleteTreasuryFilterTooltip());
-                },
-                getCompleteTreasuryFilterTooltip()));
-
-        territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
-                        - 8),
-                16,
-                16,
+        territoryDefenseFilterButton = new MapButton(
                 Texture.DEFENSE_FILTER_ICON,
                 (b) -> {
                     // Left and right clicks cycle through the defense levels, middle click resets to OFF
@@ -188,24 +109,68 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
                     territoryDefenseFilterButton.setTooltip(getCompleteDefenseFilterTooltip());
                 },
-                getCompleteDefenseFilterTooltip()));
+                getCompleteDefenseFilterTooltip());
+        addMapButton(territoryDefenseFilterButton);
 
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
-                        - 7),
-                14,
-                14,
-                Texture.ADD_ICON,
-                (b) -> resourceMode = !resourceMode,
+        territoryTreasuryFilterButton = new MapButton(
+                Texture.TREASURY,
+                (b) -> {
+                    // Left and right clicks cycle through the treasury levels, middle click resets to OFF
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                        territoryTreasuryFilterEnabled = false;
+                        territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
+                        territoryTreasuryFilterButton.setTooltip(getCompleteTreasuryFilterTooltip());
+                        return;
+                    }
+
+                    // Holding shift filters higher, ctrl filters lower
+                    if (KeyboardUtils.isShiftDown()) {
+                        territoryTreasuryFilterType = TerritoryFilterType.HIGHER;
+                    } else if (KeyboardUtils.isControlDown()) {
+                        territoryTreasuryFilterType = TerritoryFilterType.LOWER;
+                    } else {
+                        territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
+                    }
+
+                    territoryTreasuryFilterEnabled = true;
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                        territoryTreasuryeFilterLevel = territoryTreasuryeFilterLevel.getFilterNext(
+                                territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
+                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                        territoryTreasuryeFilterLevel = territoryTreasuryeFilterLevel.getFilterPrevious(
+                                territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
+                    }
+
+                    territoryTreasuryFilterButton.setTooltip(getCompleteTreasuryFilterTooltip());
+                },
+                getCompleteTreasuryFilterTooltip());
+        addMapButton(territoryTreasuryFilterButton);
+
+        hybridModeButton = new MapButton(
+                Texture.OVERLAY_EXTRA_ICON,
+                (b) -> {
+                    hybridMode = !hybridMode;
+                    hybridModeButton.setTooltip(getHybridModeTooltip());
+                },
+                getHybridModeTooltip());
+        addMapButton(hybridModeButton);
+
+        addMapButton(new MapButton(
+                Texture.HELP_ICON,
+                (b) -> {},
                 List.of(
                         Component.literal("[>] ")
-                                .withStyle(ChatFormatting.GOLD)
-                                .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
-                        Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
-                                .withStyle(ChatFormatting.GRAY))));
+                                .withStyle(ChatFormatting.YELLOW)
+                                .append(Component.translatable("screens.wynntils.map.help.name")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description1")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description2")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description3")))));
 
         if (firstInit) {
             // When outside of the main map, center to the middle of the map

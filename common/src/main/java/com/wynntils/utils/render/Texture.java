@@ -208,7 +208,9 @@ public enum Texture {
 
     // Map Components
     CIRCLE_MASK("map/map_components/circle_mask.png", 256, 256),
-    MAP_BUTTONS_BACKGROUND("map/map_components/map_buttons_background.png", 144, 26),
+    MAP_BUTTONS_BACKGROUND_LEFT("map/map_components/map_buttons_background_left.png", 2, 26),
+    MAP_BUTTONS_BACKGROUND_MIDDLE("map/map_components/map_buttons_background_middle.png", 20, 26),
+    MAP_BUTTONS_BACKGROUND_RIGHT("map/map_components/map_buttons_background_right.png", 2, 26),
     MAP_INFO_NAME_BOX("map/map_components/map_info_name_box.png", 200, 20),
     MAP_INFO_TOOLTIP_CENTER("map/map_components/map_info_tooltip_center.png", 200, 5),
     MAP_INFO_TOOLTIP_TOP("map/map_components/map_info_tooltip_top.png", 200, 10),

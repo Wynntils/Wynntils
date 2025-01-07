@@ -11,7 +11,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
-import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
@@ -57,14 +57,78 @@ public final class MainMapScreen extends AbstractMapScreen {
     protected void doInit() {
         super.doInit();
 
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 7 + 20 * 6,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
-                        - 8),
-                10,
-                16,
+        addMapButton(new MapButton(
+                Texture.ADD_ICON,
+                (b) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.DARK_GREEN)
+                                .append(Component.translatable("screens.wynntils.map.waypoints.add.name")),
+                        Component.translatable("screens.wynntils.map.waypoints.add.description")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
+                Texture.WAYPOINT_FOCUS_ICON,
+                (b) -> {
+                    if (KeyboardUtils.isShiftDown()) {
+                        centerMapAroundPlayer();
+                        return;
+                    }
+
+                    //                    List<MarkerInfo> markers = Models.Marker.USER_WAYPOINTS_PROVIDER
+                    //                            .getMarkerInfos()
+                    //                            .toList();
+                    //                    if (!markers.isEmpty()) {
+                    //                        // -1 is fine as the index since we always increment it by 1
+                    //                        int index = markers.indexOf(focusedMarker);
+                    //                        MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
+                    //                        focusedMarker = markerInfo;
+                    //                        Location location = markerInfo.location();
+                    //                        updateMapCenter(location.x, location.z);
+                    //                    }
+                },
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.YELLOW)
+                                .append(Component.translatable("screens.wynntils.map.focus.name")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.focus.description1")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.focus.description2")))));
+
+        addMapButton(new MapButton(
+                Texture.SHARE_ICON,
+                this::shareLocationOrCompass,
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.DARK_AQUA)
+                                .append(Component.translatable("screens.wynntils.map.share.name")),
+                        Component.translatable("screens.wynntils.map.share.description1_1")
+                                .withStyle(ChatFormatting.AQUA)
+                                .append(Component.translatable("screens.wynntils.map.share.description1_2")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        Component.translatable("screens.wynntils.map.share.description2_1")
+                                .withStyle(ChatFormatting.AQUA)
+                                .append(Component.translatable("screens.wynntils.map.share.description2_2")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        Component.translatable("screens.wynntils.map.share.description3_1")
+                                .withStyle(ChatFormatting.AQUA)
+                                .append(Component.translatable("screens.wynntils.map.share.description3_2")
+                                        .withStyle(ChatFormatting.GRAY)))));
+
+        addMapButton(new MapButton(
+                Texture.WAYPOINT_MANAGER_ICON,
+                (b) -> McUtils.mc().setScreen(PoiManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.RED)
+                                .append(Component.translatable("screens.wynntils.map.manager.name")),
+                        Component.translatable("screens.wynntils.map.manager.description")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
                 Texture.HELP_ICON,
                 (b) -> {},
                 List.of(
@@ -101,105 +165,6 @@ public final class MainMapScreen extends AbstractMapScreen {
                         Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(Component.translatable("screens.wynntils.map.help.description10")))));
-
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 3,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
-                        - 8),
-                12,
-                16,
-                Texture.WAYPOINT_MANAGER_ICON,
-                (b) -> McUtils.mc().setScreen(PoiManagementScreen.create(this)),
-                List.of(
-                        Component.literal("[>] ")
-                                .withStyle(ChatFormatting.RED)
-                                .append(Component.translatable("screens.wynntils.map.manager.name")),
-                        Component.translatable("screens.wynntils.map.manager.description")
-                                .withStyle(ChatFormatting.GRAY))));
-
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
-                        - 7),
-                16,
-                14,
-                Texture.SHARE_ICON,
-                this::shareLocationOrCompass,
-                List.of(
-                        Component.literal("[>] ")
-                                .withStyle(ChatFormatting.DARK_AQUA)
-                                .append(Component.translatable("screens.wynntils.map.share.name")),
-                        Component.translatable("screens.wynntils.map.share.description1_1")
-                                .withStyle(ChatFormatting.AQUA)
-                                .append(Component.translatable("screens.wynntils.map.share.description1_2")
-                                        .withStyle(ChatFormatting.GRAY)),
-                        Component.translatable("screens.wynntils.map.share.description2_1")
-                                .withStyle(ChatFormatting.AQUA)
-                                .append(Component.translatable("screens.wynntils.map.share.description2_2")
-                                        .withStyle(ChatFormatting.GRAY)),
-                        Component.translatable("screens.wynntils.map.share.description3_1")
-                                .withStyle(ChatFormatting.AQUA)
-                                .append(Component.translatable("screens.wynntils.map.share.description3_2")
-                                        .withStyle(ChatFormatting.GRAY)))));
-
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
-                        - 8),
-                12,
-                16,
-                Texture.WAYPOINT_FOCUS_ICON,
-                (b) -> {
-                    if (KeyboardUtils.isShiftDown()) {
-                        centerMapAroundPlayer();
-                        return;
-                    }
-
-                    //                    List<MarkerInfo> markers = Models.Marker.USER_WAYPOINTS_PROVIDER
-                    //                            .getMarkerInfos()
-                    //                            .toList();
-                    //                    if (!markers.isEmpty()) {
-                    //                        // -1 is fine as the index since we always increment it by 1
-                    //                        int index = markers.indexOf(focusedMarker);
-                    //                        MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
-                    //                        focusedMarker = markerInfo;
-                    //                        Location location = markerInfo.location();
-                    //                        updateMapCenter(location.x, location.z);
-                    //                    }
-                },
-                List.of(
-                        Component.literal("[>] ")
-                                .withStyle(ChatFormatting.YELLOW)
-                                .append(Component.translatable("screens.wynntils.map.focus.name")),
-                        Component.literal("- ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.map.focus.description1")),
-                        Component.literal("- ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.map.focus.description2")))));
-
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2f
-                        - 7),
-                14,
-                14,
-                Texture.ADD_ICON,
-                (b) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)),
-                List.of(
-                        Component.literal("[>] ")
-                                .withStyle(ChatFormatting.DARK_GREEN)
-                                .append(Component.translatable("screens.wynntils.map.waypoints.add.name")),
-                        Component.translatable("screens.wynntils.map.waypoints.add.description")
-                                .withStyle(ChatFormatting.GRAY))));
 
         if (firstInit) {
             // When in an unmapped area, center to the middle of the map if the feature is enabled
