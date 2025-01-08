@@ -199,7 +199,8 @@ public final class JsonProvider implements MapDataProvider {
         }
     }
 
-    public static final class JsonAttributeSerializer implements JsonDeserializer<MapAttributesImpl> {
+    public static final class JsonAttributeSerializer
+            implements JsonDeserializer<MapAttributesImpl>, JsonSerializer<MapAttributesImpl> {
         @Override
         public MapAttributesImpl deserialize(JsonElement json, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
@@ -246,6 +247,40 @@ public final class JsonProvider implements MapDataProvider {
             }
 
             throw new JsonParseException("Attribute type is not location, path or area");
+        }
+
+        @Override
+        public JsonElement serialize(MapAttributesImpl mapAttributes, Type type, JsonSerializationContext context) {
+            // For the base class, we just serialize the attributes as is
+            if (type.equals(MapAttributesImpl.class)) {
+                return GSON.toJsonTree(mapAttributes);
+            }
+
+            // For the specific implementations, we need to serialize the attributes that make sense,
+            // explicitly skipping null and unsupported attributes
+            JsonObject attributesJson =
+                    GSON.toJsonTree(mapAttributes, MapAttributesImpl.class).getAsJsonObject();
+            JsonObject result = new JsonObject();
+
+            attributesJson.entrySet().forEach(entry -> {
+                String attribute = entry.getKey();
+                JsonElement value = entry.getValue();
+                if (value != null) {
+                    result.add(attribute, value);
+                }
+            });
+
+            if (type.equals(MapLocationAttributesImpl.class)) {
+                MapLocationAttributes.getUnsupportedAttributes().forEach(result::remove);
+            } else if (type.equals(MapPathAttributesImpl.class)) {
+                MapPathAttributes.getUnsupportedAttributes().forEach(result::remove);
+            } else if (type.equals(MapAreaAttributesImpl.class)) {
+                MapAreaAttributes.getUnsupportedAttributes().forEach(result::remove);
+            } else {
+                throw new JsonParseException("Attribute type is not location, path or area, nor the base class");
+            }
+
+            return result;
         }
     }
 
