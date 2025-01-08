@@ -1,3 +1,20 @@
+## [2.4.14](https://github.com/Wynntils/Wynntils/compare/v2.4.13...v2.4.14) (2025-01-08)
+
+
+### Bug Fixes
+
+* Fix typo in workflow [skip ci] ([#3059](https://github.com/Wynntils/Wynntils/issues/3059)) ([1f38720](https://github.com/Wynntils/Wynntils/commit/1f38720ccf6e151c6f5b1c472354493cd9e1bcc1))
+* Hide default overhealth bar and background when disabled [skip ci] ([#3065](https://github.com/Wynntils/Wynntils/issues/3065)) ([9888ef4](https://github.com/Wynntils/Wynntils/commit/9888ef45c2bf18f5df5982692354ec4886d4ab60))
+* Mark config and storage saving as synchronized [skip ci] ([#3062](https://github.com/Wynntils/Wynntils/issues/3062)) ([6ebd0bc](https://github.com/Wynntils/Wynntils/commit/6ebd0bc35107597f36c9406f815e1fe9e88d79c5))
+* Rework lootrun beacon tracking to support 4+ beacons ([#3061](https://github.com/Wynntils/Wynntils/issues/3061)) ([0e6bba1](https://github.com/Wynntils/Wynntils/commit/0e6bba1640b053625ed85d3997d096dbe3a0a789))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3057](https://github.com/Wynntils/Wynntils/issues/3057)) ([39f0e5e](https://github.com/Wynntils/Wynntils/commit/39f0e5ec9da55ae91e372c3c39f17840b361389c))
+* [auto-generated] Update urls.json [ci skip] ([#3058](https://github.com/Wynntils/Wynntils/issues/3058)) ([a4c3b87](https://github.com/Wynntils/Wynntils/commit/a4c3b87f0d3f8043f20fd9bede370feb2b00f4e0))
+* [auto-generated] Update urls.json [ci skip] ([#3060](https://github.com/Wynntils/Wynntils/issues/3060)) ([d5f046f](https://github.com/Wynntils/Wynntils/commit/d5f046f5feef9987ed0bca27d9502af6fc0841f4))
+
 ## [2.4.13](https://github.com/Wynntils/Wynntils/compare/v2.4.12...v2.4.13) (2025-01-03)
 
 
@@ -12,6 +29,11 @@
 * Fix auto attack sending an input when casting spells quickly [skip ci] ([#3040](https://github.com/Wynntils/Wynntils/issues/3040)) ([a85040c](https://github.com/Wynntils/Wynntils/commit/a85040cf52accf10e462f7729e3f71d2d1025156))
 * Fix quick cast keybinds crashing if no gear instance [skip ci] ([#3051](https://github.com/Wynntils/Wynntils/issues/3051)) ([38c5e0c](https://github.com/Wynntils/Wynntils/commit/38c5e0c2f1045043b96bf5c3a87a1f23e0e4fa03))
 * trade market price match buttons [skip ci] ([#3050](https://github.com/Wynntils/Wynntils/issues/3050)) ([d8ca1ca](https://github.com/Wynntils/Wynntils/commit/d8ca1caef085e62a927db515c17f876d29c5cad1))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.4.13 [skip ci] ([3faa5db](https://github.com/Wynntils/Wynntils/commit/3faa5dbfb44d192b60893257e97574fcc81a443b))
 
 ## [2.4.12](https://github.com/Wynntils/Wynntils/compare/v2.4.11...v2.4.12) (2024-12-29)
 
@@ -61,22 +83,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.4.10 [skip ci] ([504ae64](https://github.com/Wynntils/Wynntils/commit/504ae640d9560e89a471a0660b82aadbee74d34d))
-
-## [2.4.9](https://github.com/Wynntils/Wynntils/compare/v2.4.8...v2.4.9) (2024-12-22)
-
-
-### New Features
-
-* Add consumable duration, ingredient effectiveness and charges/durability/duration modifier item filters [skip ci] ([#3039](https://github.com/Wynntils/Wynntils/issues/3039)) ([83625bc](https://github.com/Wynntils/Wynntils/commit/83625bc66638c0d14c2090284c8d97b6c350d52a))
-
-
-### Bug Fixes
-
-* Fix end of lootrun stats not being parsed ([#3041](https://github.com/Wynntils/Wynntils/issues/3041)) ([f4ce4b8](https://github.com/Wynntils/Wynntils/commit/f4ce4b8ef7643d3324d3496a0baa75b02e0d25cd))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3036](https://github.com/Wynntils/Wynntils/issues/3036)) ([5764e9d](https://github.com/Wynntils/Wynntils/commit/5764e9db65c31a5c734a2958044f847eb8f705c8))
-* **release:** v2.4.9 [skip ci] ([624b053](https://github.com/Wynntils/Wynntils/commit/624b053654ac8ec1e8cf20e326cf5bdbe1565234))
 
