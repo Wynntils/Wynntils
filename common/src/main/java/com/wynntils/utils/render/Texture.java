@@ -101,6 +101,7 @@ public enum Texture {
     HELP_ICON("icons/generic/help_icon.png", 10, 16),
     INFO("icons/generic/info.png", 25, 25),
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
+    MAP("icons/generic/map_icon.png", 15, 14),
     NEXT("icons/generic/next.png", 16, 16),
     OVERLAY_EXTRA_ICON("icons/generic/overlay_extra_icon.png", 16, 16),
     PREVIOUS("icons/generic/previous.png", 16, 16),

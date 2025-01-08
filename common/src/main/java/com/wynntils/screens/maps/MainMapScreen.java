@@ -40,7 +40,10 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     private MainMapScreen(float mapCenterX, float mapCenterZ) {
         super(mapCenterX, mapCenterZ);
-        updateMapCenter(mapCenterX, mapCenterZ);
+    }
+
+    private MainMapScreen(float mapCenterX, float mapCenterZ, float zoomLevel) {
+        super(mapCenterX, mapCenterZ, zoomLevel);
     }
 
     public static Screen create() {
@@ -49,6 +52,10 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     public static Screen create(float mapCenterX, float mapCenterZ) {
         return new MainMapScreen(mapCenterX, mapCenterZ);
+    }
+
+    public static Screen create(float mapCenterX, float mapCenterZ, float zoomLevel) {
+        return new MainMapScreen(mapCenterX, mapCenterZ, zoomLevel);
     }
 
     private boolean showTerrs = false;
@@ -126,6 +133,16 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.RED)
                                 .append(Component.translatable("screens.wynntils.map.manager.name")),
                         Component.translatable("screens.wynntils.map.manager.description")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
+                Texture.DEFENSE_FILTER_ICON,
+                (b) -> McUtils.mc().setScreen(GuildMapScreen.create(mapCenterX, mapCenterZ, zoomLevel)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.BLUE)
+                                .append(Component.translatable("screens.wynntils.map.guildMap.name")),
+                        Component.translatable("screens.wynntils.map.guildMap.description")
                                 .withStyle(ChatFormatting.GRAY))));
 
         addMapButton(new MapButton(

@@ -106,6 +106,15 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         updateMapCenter(mapCenterX, mapCenterZ);
     }
 
+    protected AbstractMapScreen(float mapCenterX, float mapCenterZ, float zoomLevel) {
+        super(Component.literal("Map"));
+        updateMapCenter(mapCenterX, mapCenterZ);
+        setZoomLevel(zoomLevel);
+
+        // Overwrite so map is not centered
+        firstInit = false;
+    }
+
     @Override
     protected void doInit() {
         // FIXME: Figure out a way to not need this.

@@ -23,6 +23,7 @@ import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -60,8 +61,16 @@ public final class GuildMapScreen extends AbstractMapScreen {
         centerMapAroundPlayer();
     }
 
+    private GuildMapScreen(float mapCenterX, float mapCenterZ, float zoomLevel) {
+        super(mapCenterX, mapCenterZ, zoomLevel);
+    }
+
     public static Screen create() {
         return new GuildMapScreen();
+    }
+
+    public static Screen create(float mapCenterX, float mapCenterZ, float zoomLevel) {
+        return new GuildMapScreen(mapCenterX, mapCenterZ, zoomLevel);
     }
 
     @Override
@@ -154,6 +163,16 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 },
                 getHybridModeTooltip());
         addMapButton(hybridModeButton);
+
+        addMapButton(new MapButton(
+                Texture.MAP,
+                (b) -> McUtils.mc().setScreen(MainMapScreen.create(mapCenterX, mapCenterZ, zoomLevel)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.BLUE)
+                                .append(Component.translatable("screens.wynntils.guildMap.mainMap.name")),
+                        Component.translatable("screens.wynntils.guildMap.mainMap.description")
+                                .withStyle(ChatFormatting.GRAY))));
 
         addMapButton(new MapButton(
                 Texture.HELP_ICON,
