@@ -11,6 +11,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -52,7 +53,6 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public final class JsonProvider implements MapDataProvider {
-    // FIXME: Add JsonFeatureSerializer once it's fixed
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(MapLocationAttributesImpl.class, new JsonAttributeSerializer())
             .registerTypeAdapter(MapAreaAttributesImpl.class, new JsonAttributeSerializer())
@@ -183,8 +183,7 @@ public final class JsonProvider implements MapDataProvider {
         // FIXME: To be implemented if needed (when the first json provider is added)
     }
 
-    public static final class JsonCategorySerializer
-            implements JsonDeserializer<MapCategoryImpl>, JsonSerializer<MapCategoryImpl> {
+    public static final class JsonCategorySerializer implements JsonDeserializer<MapCategoryImpl> {
         @Override
         public MapCategoryImpl deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonSyntaxException {
@@ -198,15 +197,6 @@ public final class JsonProvider implements MapDataProvider {
 
             return new MapCategoryImpl(id, name, attributes);
         }
-
-        @Override
-        public JsonElement serialize(MapCategoryImpl mapCategory, Type type, JsonSerializationContext context) {
-            JsonObject json = new JsonObject();
-            json.addProperty("id", mapCategory.getCategoryId());
-            json.addProperty("name", mapCategory.getName().orElse(""));
-            json.add("attributes", GSON.toJsonTree(mapCategory.getAttributes()));
-            return json;
-        }
     }
 
     public static final class JsonAttributeSerializer implements JsonDeserializer<MapAttributesImpl> {
@@ -215,6 +205,11 @@ public final class JsonProvider implements MapDataProvider {
                 throws JsonParseException {
             JsonObject attributesJson = json.getAsJsonObject();
             MapAttributesImpl attributesObj = context.deserialize(json, MapAttributesImpl.class);
+
+            // We might not want a specific implementation, for example for categories
+            if (type.equals(MapAttributesImpl.class)) {
+                return attributesObj;
+            }
 
             Type locationType = new TypeToken<MapLocationAttributesImpl>() {}.getType();
             Type pathType = new TypeToken<MapPathAttributesImpl>() {}.getType();

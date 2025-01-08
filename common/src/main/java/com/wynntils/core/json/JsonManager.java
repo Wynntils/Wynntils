@@ -41,7 +41,6 @@ import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 
 public final class JsonManager extends Manager {
-    // FIXME: Add JsonFeatureSerializer once it's fixed
     public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
             .registerTypeAdapter(StyledText.class, new StyledText.StyledTextSerializer())
