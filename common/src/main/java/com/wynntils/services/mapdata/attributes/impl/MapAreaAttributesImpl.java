@@ -35,4 +35,8 @@ public final class MapAreaAttributesImpl extends MapAttributesImpl implements Ma
                 borderColor,
                 borderWidth);
     }
+
+    public MapAreaAttributesImpl(MapAttributesImpl attributes) {
+        super(attributes);
+    }
 }

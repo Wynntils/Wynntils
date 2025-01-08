@@ -11,6 +11,9 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of {@link MapLocation}. Extend this class, if a serializable subclass is desired.
+ */
 public class MapLocationImpl implements MapLocation {
     private final String featureId;
     private final String categoryId;

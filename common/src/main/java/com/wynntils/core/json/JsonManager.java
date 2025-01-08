@@ -16,9 +16,12 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.crowdsource.CrowdSourcedData;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.services.itemrecord.type.SavedItem;
-import com.wynntils.services.mapdata.impl.MapCategoryImpl;
-import com.wynntils.services.mapdata.impl.MapIconImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
+import com.wynntils.services.mapdata.type.MapCategory;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -44,8 +47,11 @@ public final class JsonManager extends Manager {
             .registerTypeAdapter(StyledText.class, new StyledText.StyledTextSerializer())
             .registerTypeAdapter(CrowdSourcedData.class, new CrowdSourcedData.CrowdSourceDataSerializer())
             .registerTypeAdapter(SavedItem.class, new SavedItem.SavedItemSerializer())
-            .registerTypeHierarchyAdapter(MapCategoryImpl.class, new JsonProvider.JsonCategorySerializer())
-            .registerTypeHierarchyAdapter(MapIconImpl.class, new JsonProvider.JsonIconSerializer())
+            .registerTypeAdapter(MapLocationAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
+            .registerTypeAdapter(MapAreaAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
+            .registerTypeAdapter(MapPathAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
+            .registerTypeHierarchyAdapter(MapCategory.class, new JsonProvider.JsonCategorySerializer())
+            .registerTypeHierarchyAdapter(MapIcon.class, new JsonProvider.JsonIconSerializer())
             .registerTypeAdapterFactory(new EnumUtils.EnumTypeAdapterFactory<>())
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()

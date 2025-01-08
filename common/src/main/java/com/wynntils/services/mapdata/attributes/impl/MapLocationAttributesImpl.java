@@ -37,4 +37,8 @@ public final class MapLocationAttributesImpl extends MapAttributesImpl implement
                 null,
                 null);
     }
+
+    public MapLocationAttributesImpl(MapAttributesImpl attributes) {
+        super(attributes);
+    }
 }
