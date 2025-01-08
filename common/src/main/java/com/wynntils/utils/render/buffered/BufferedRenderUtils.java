@@ -243,6 +243,34 @@ public final class BufferedRenderUtils {
         buffer.addVertex(matrix, x, y, z).setUv(0, 0).setColor(colorArray[0], colorArray[1], colorArray[2], alpha);
     }
 
+    public static void drawScalingTexturedRect(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            ResourceLocation tex,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            int textureWidth,
+            int textureHeight) {
+        drawTexturedRect(
+                poseStack,
+                bufferSource,
+                tex,
+                x,
+                y,
+                z,
+                width,
+                height,
+                0,
+                0,
+                textureWidth,
+                textureHeight,
+                textureWidth,
+                textureHeight);
+    }
+
     public static void drawTexturedRect(
             PoseStack poseStack, MultiBufferSource bufferSource, Texture texture, float x, float y) {
         drawTexturedRect(

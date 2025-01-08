@@ -24,8 +24,8 @@ import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -155,8 +155,9 @@ public class WynncraftButtonFeature extends Feature {
             }
 
             // Insets the icon by 3
-            RenderUtils.drawScalingTexturedRect(
+            BufferedRenderUtils.drawScalingTexturedRect(
                     guiGraphics.pose(),
+                    guiGraphics.bufferSource,
                     serverIcon.getServerIconLocation(),
                     this.getX() + 3,
                     this.getY() + 3,
