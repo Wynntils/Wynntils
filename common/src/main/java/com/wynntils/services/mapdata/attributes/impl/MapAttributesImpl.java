@@ -59,6 +59,24 @@ public class MapAttributesImpl implements MapAttributes {
         this.borderWidth = borderWidth;
     }
 
+    public MapAttributesImpl(MapAttributesImpl attributes) {
+        this(
+                attributes.priority,
+                attributes.level,
+                attributes.label,
+                attributes.labelVisibility,
+                attributes.labelColor,
+                attributes.labelShadow,
+                attributes.icon,
+                attributes.iconVisibility,
+                attributes.iconColor,
+                attributes.hasMarker,
+                attributes.markerOptions,
+                attributes.fillColor,
+                attributes.borderColor,
+                attributes.borderWidth);
+    }
+
     @Override
     public Optional<String> getLabel() {
         return Optional.ofNullable(label);

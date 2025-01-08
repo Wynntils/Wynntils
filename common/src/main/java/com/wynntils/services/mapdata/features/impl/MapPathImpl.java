@@ -11,7 +11,10 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 import java.util.Optional;
 
-public final class MapPathImpl implements MapPath {
+/**
+ * Implementation of {@link MapPath}. Extend this class, if a serializable subclass is desired.
+ */
+public class MapPathImpl implements MapPath {
     private final String featureId;
     private final String categoryId;
     private final MapPathAttributesImpl attributes;
