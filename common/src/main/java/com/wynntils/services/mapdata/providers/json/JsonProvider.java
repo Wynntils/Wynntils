@@ -11,6 +11,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.MalformedJsonException;
@@ -194,12 +196,18 @@ public final class JsonProvider implements MapDataProvider {
         }
     }
 
-    public static final class JsonAttributeSerializer implements JsonDeserializer<MapAttributesImpl> {
+    public static final class JsonAttributeSerializer
+            implements JsonDeserializer<MapAttributesImpl>, JsonSerializer<MapAttributesImpl> {
         @Override
         public MapAttributesImpl deserialize(JsonElement json, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject attributesJson = json.getAsJsonObject();
             MapAttributesImpl attributesObj = context.deserialize(json, MapAttributesImpl.class);
+
+            // We might not want a specific implementation, for example for categories
+            if (type.equals(MapAttributesImpl.class)) {
+                return attributesObj;
+            }
 
             Type locationType = new TypeToken<MapLocationAttributesImpl>() {}.getType();
             Type pathType = new TypeToken<MapPathAttributesImpl>() {}.getType();
@@ -236,6 +244,40 @@ public final class JsonProvider implements MapDataProvider {
             }
 
             throw new JsonParseException("Attribute type is not location, path or area");
+        }
+
+        @Override
+        public JsonElement serialize(MapAttributesImpl mapAttributes, Type type, JsonSerializationContext context) {
+            // For the base class, we just serialize the attributes as is
+            if (type.equals(MapAttributesImpl.class)) {
+                return GSON.toJsonTree(mapAttributes);
+            }
+
+            // For the specific implementations, we need to serialize the attributes that make sense,
+            // explicitly skipping null and unsupported attributes
+            JsonObject attributesJson =
+                    GSON.toJsonTree(mapAttributes, MapAttributesImpl.class).getAsJsonObject();
+            JsonObject result = new JsonObject();
+
+            attributesJson.entrySet().forEach(entry -> {
+                String attribute = entry.getKey();
+                JsonElement value = entry.getValue();
+                if (value != null) {
+                    result.add(attribute, value);
+                }
+            });
+
+            if (type.equals(MapLocationAttributesImpl.class)) {
+                MapLocationAttributes.getUnsupportedAttributes().forEach(result::remove);
+            } else if (type.equals(MapPathAttributesImpl.class)) {
+                MapPathAttributes.getUnsupportedAttributes().forEach(result::remove);
+            } else if (type.equals(MapAreaAttributesImpl.class)) {
+                MapAreaAttributes.getUnsupportedAttributes().forEach(result::remove);
+            } else {
+                throw new JsonParseException("Attribute type is not location, path or area, nor the base class");
+            }
+
+            return result;
         }
     }
 
