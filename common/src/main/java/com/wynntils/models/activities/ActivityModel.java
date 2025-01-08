@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities;
@@ -82,8 +82,6 @@ public final class ActivityModel extends Model {
     private static final Pattern REWARD_PATTERN = Pattern.compile("^§d\uDB00\uDC04(?<newline>- )?§7\\+?(?<reward>.+)$");
     private static final Pattern TRACKING_PATTERN = Pattern.compile("^.*§(?:#.{8}|.)§lCLICK TO (UN)?TRACK$");
     private static final Pattern OVERALL_PROGRESS_PATTERN = Pattern.compile("^\\S*§7(\\d+) of (\\d+) completed$");
-
-    public static final int BEACON_COLOR_CUSTOM_MODEL_DATA = 79;
 
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
