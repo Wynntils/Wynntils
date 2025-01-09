@@ -52,6 +52,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d{1,8}");
     private static final float GRID_DIVISIONS = 64.0f;
     private static final int ICONS_PER_PAGE = 5;
+    private static final String DEFAULT_CATEGORY = "wynntils:personal:waypoint";
 
     // Collections
     private final List<MapIcon> availableIcons = new ArrayList<>();
@@ -99,7 +100,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private MapVisibilityImpl iconVisibility;
     private MapVisibilityImpl labelVisibility;
     private MapIcon selectedIcon;
-    private String category = "";
+    private String category = ""; // The subcategories of the default
+    private String fullCategory = DEFAULT_CATEGORY; // The full category including DEFAULT_CATEGORY
     private String iconId = MapIcon.NO_ICON_ID;
     private String label = "";
     private TextShadow labelShadow = TextShadow.NORMAL;
@@ -472,11 +474,13 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         if (firstSetup && oldWaypoint != null) {
             String oldCategory = oldWaypoint.getCategoryId();
 
-            if (oldCategory.equals("wynntils:personal:waypoint")) {
+            if (oldCategory.equals(DEFAULT_CATEGORY)) {
                 category = "";
             } else {
-                category = oldCategory.substring("wynntils:personal:waypoint:".length());
+                category = oldCategory.substring((DEFAULT_CATEGORY + ":").length());
             }
+
+            fullCategory = category.isEmpty() ? DEFAULT_CATEGORY : DEFAULT_CATEGORY + ":" + category;
         }
         // endregion
 
@@ -665,7 +669,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(category.isEmpty() ? "DEFAULT" : category),
+                        StyledText.fromString(fullCategory),
                         dividedWidth * 2.0f,
                         dividedHeight * 51.0f + 10,
                         dividedWidth * 29.0f,
@@ -761,6 +765,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
     public void setCategory(String category) {
         this.category = category;
+        fullCategory = this.category.isEmpty() ? DEFAULT_CATEGORY : DEFAULT_CATEGORY + ":" + this.category;
     }
 
     public void setSelectedIcon(MapIcon selectedIcon) {
@@ -809,9 +814,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         Location location = new Location(parsedXInput, parsedYInput, parsedZInput);
 
-        Optional<MapCategory> waypointCategoryOpt = Services.MapData.getCategoryDefinitions(
-                        "wynntils:personal:waypoint")
-                .findFirst();
+        Optional<MapCategory> waypointCategoryOpt =
+                Services.MapData.getCategoryDefinitions(DEFAULT_CATEGORY).findFirst();
 
         int defaultPriority = waypointCategoryOpt
                 .flatMap(waypointCategory -> waypointCategory.getAttributes().flatMap(MapAttributes::getPriority))
