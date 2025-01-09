@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -12,6 +13,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.worlds.bossbars.InfoBar;
+import com.wynntils.models.worlds.event.BombEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
@@ -57,14 +59,26 @@ public final class BombModel extends Model {
 
         Matcher bellMatcher = message.getMatcher(BOMB_BELL_PATTERN, PartStyle.StyleType.NONE);
         if (bellMatcher.matches()) {
-            addBombFromChat(bellMatcher.group("user"), bellMatcher.group("bomb"), bellMatcher.group("server"));
+            BombInfo bombInfo =
+                    addBombFromChat(bellMatcher.group("user"), bellMatcher.group("bomb"), bellMatcher.group("server"));
+            if (bombInfo == null) return;
+
+            BombEvent.BombBell bombEvent = new BombEvent.BombBell(bombInfo, message);
+            WynntilsMod.postEvent(bombEvent);
+            event.setMessage(bombEvent.getMessage());
+
             return;
         }
 
         Matcher localMatcher = message.getMatcher(BOMB_THROWN_PATTERN);
         if (localMatcher.matches()) {
-            addBombFromChat(
+            BombInfo bombInfo = addBombFromChat(
                     localMatcher.group("user"), localMatcher.group("bomb"), Models.WorldState.getCurrentWorldName());
+            if (bombInfo == null) return;
+
+            BombEvent.Local bombEvent = new BombEvent.Local(bombInfo, message);
+            WynntilsMod.postEvent(bombEvent);
+            event.setMessage(bombEvent.getMessage());
             return;
         }
 
@@ -85,14 +99,15 @@ public final class BombModel extends Model {
         }
     }
 
-    private void addBombFromChat(String user, String bomb, String server) {
+    private BombInfo addBombFromChat(String user, String bomb, String server) {
         // Better to do a bit of processing and clean up the set than leaking memory
         removeOldTimers();
 
         BombType bombType = BombType.fromString(bomb);
-        if (bombType == null) return;
+        if (bombType == null) return null;
 
-        BOMBS.forceAdd(new BombInfo(user, bombType, server, System.currentTimeMillis(), bombType.getActiveMinutes()));
+        return BOMBS.forceAdd(
+                new BombInfo(user, bombType, server, System.currentTimeMillis(), bombType.getActiveMinutes()));
     }
 
     @SubscribeEvent
@@ -104,6 +119,7 @@ public final class BombModel extends Model {
         CURRENT_SERVER_BOMBS.put(bombInfo.bomb(), bombInfo);
 
         BOMBS.add(bombInfo);
+        WynntilsMod.postEvent(new BombEvent.Local(bombInfo, null));
     }
 
     public boolean isBombActive(BombType bombType) {
@@ -127,23 +143,24 @@ public final class BombModel extends Model {
     private static final class ActiveBombContainer {
         private final Map<BombKey, BombInfo> bombs = new ConcurrentHashMap<>();
 
-        public void add(BombInfo bombInfo) {
-            add(bombInfo, false);
+        public BombInfo add(BombInfo bombInfo) {
+            return add(bombInfo, false);
         }
 
-        public void forceAdd(BombInfo bombInfo) {
-            add(bombInfo, true);
+        public BombInfo forceAdd(BombInfo bombInfo) {
+            return add(bombInfo, true);
         }
 
-        private void add(BombInfo bombInfo, boolean replaceIfExists) {
+        private BombInfo add(BombInfo bombInfo, boolean replaceIfExists) {
             BombKey key = new BombKey(bombInfo.server(), bombInfo.bomb());
 
             // Ensure no duplicate bombs are added
             if (bombs.containsKey(key) && !replaceIfExists) {
-                return;
+                return bombs.get(key);
             }
 
             bombs.put(key, bombInfo);
+            return bombInfo;
         }
 
         public Set<BombInfo> asSet() {
