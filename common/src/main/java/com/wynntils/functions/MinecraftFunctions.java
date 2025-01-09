@@ -85,7 +85,7 @@ public class MinecraftFunctions {
             if (McUtils.player().hasEffect(effectHolder)) {
                 MobEffectInstance effectInstance = McUtils.player().getEffect(effectHolder);
 
-                if (effectInstance != null && effectInstance.getDuration() > 0) {
+                if (effectInstance != null && effectInstance.getDuration() >= 0) {
                     return effectInstance.getDuration();
                 }
             }
