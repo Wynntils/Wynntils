@@ -16,8 +16,8 @@ import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.WynntilsContainerScreen;
-import com.wynntils.screens.gearviewer.widgets.AddFriendButton;
-import com.wynntils.screens.gearviewer.widgets.InvitePartyButton;
+import com.wynntils.screens.gearviewer.widgets.FriendButton;
+import com.wynntils.screens.gearviewer.widgets.PartyButton;
 import com.wynntils.screens.gearviewer.widgets.PlayerInteractionButton;
 import com.wynntils.screens.gearviewer.widgets.SimplePlayerInteractionButton;
 import com.wynntils.utils.mc.LoreUtils;
@@ -123,13 +123,13 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
                 () -> Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_PLAYER_STATS, Map.of("username", playerName))));
 
         // add friend button
-        interactionButtons.add(new AddFriendButton(
+        interactionButtons.add(new FriendButton(
                 leftPos - 21,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 18,
                 playerName));
 
         // invite party button
-        interactionButtons.add(new InvitePartyButton(
+        interactionButtons.add(new PartyButton(
                 leftPos - 21,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 38,
                 playerName));
