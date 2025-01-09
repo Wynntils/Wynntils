@@ -98,10 +98,5 @@ public class MinecraftFunctions {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("effectName", String.class, null)));
         }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("player_effect");
-        }
     }
 }
