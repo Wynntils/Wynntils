@@ -113,6 +113,7 @@ public class MapAttributesBuilder {
     }
 
     protected void checkInvalidAttribute(String fieldName) {
+        // FIXME: WaypointLocation is giving Unsupported attribute set: borderWidth when using WaypointCreationScreen
         if (!WynntilsMod.isDevelopmentBuild()) return;
 
         try {

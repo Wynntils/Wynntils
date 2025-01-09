@@ -81,7 +81,8 @@ public final class JsonProvider implements MapDataProvider {
 
     /**
      * Load a bundled resource from the mod jar
-     * @param id The id of the resource
+     *
+     * @param id       The id of the resource
      * @param filename The filename of the resource
      * @return The loaded json provider
      */
@@ -105,7 +106,8 @@ public final class JsonProvider implements MapDataProvider {
 
     /**
      * Load a local resource from a file
-     * @param id The id of the resource
+     *
+     * @param id   The id of the resource
      * @param file The file to load
      * @return The loaded json provider
      */
@@ -128,8 +130,9 @@ public final class JsonProvider implements MapDataProvider {
 
     /**
      * Load an online resource from a url
-     * @param id The id of the resource
-     * @param url The url to load
+     *
+     * @param id               The id of the resource
+     * @param url              The url to load
      * @param registerCallback The callback to call with the loaded provider
      */
     public static void loadOnlineResource(String id, String url, BiConsumer<String, MapDataProvider> registerCallback) {
@@ -281,7 +284,7 @@ public final class JsonProvider implements MapDataProvider {
         }
     }
 
-    public static final class JsonIconSerializer implements JsonDeserializer<MapIconImpl> {
+    public static final class JsonIconSerializer implements JsonDeserializer<MapIconImpl>, JsonSerializer<MapIconImpl> {
         @Override
         public MapIconImpl deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {
@@ -297,6 +300,14 @@ public final class JsonProvider implements MapDataProvider {
                 WynntilsMod.warn("Bad icon texture for " + id, e);
                 return null;
             }
+        }
+
+        @Override
+        public JsonElement serialize(MapIconImpl mapIcon, Type type, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("id", mapIcon.getIconId());
+            json.addProperty("texture", Base64.getEncoder().encodeToString(mapIcon.getTextureBytes()));
+            return json;
         }
     }
 }

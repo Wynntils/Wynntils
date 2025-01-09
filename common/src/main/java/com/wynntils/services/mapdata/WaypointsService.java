@@ -20,15 +20,22 @@ import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
+import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
+import com.wynntils.services.mapdata.impl.MapIconImpl;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class WaypointsService extends Service {
     @Persisted
     private final Storage<List<WaypointLocation>> waypoints = new Storage<>(new ArrayList<>());
+
+    @Persisted
+    private final Storage<List<MapIconImpl>> customIcons = new Storage<>(new ArrayList<>());
 
     public WaypointsService() {
         super(List.of());
@@ -40,10 +47,34 @@ public class WaypointsService extends Service {
             startPoiMigration();
             Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
         }
+
+        if (storage == customIcons) {
+            Services.MapData.WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
+        }
     }
 
     public List<WaypointLocation> getWaypoints() {
         return Collections.unmodifiableList(waypoints.get());
+    }
+
+    public List<MapIconImpl> getCustomIcons() {
+        return Collections.unmodifiableList(customIcons.get());
+    }
+
+    public void addCustomIcon(MapIconImpl iconToAdd) {
+        customIcons.get().add(iconToAdd);
+        customIcons.touched();
+        Services.MapData.WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
+    }
+
+    public void removeCustomIcon(MapIconImpl iconToRemove) {
+        customIcons.get().remove(iconToRemove);
+        customIcons.touched();
+        Services.MapData.WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
+    }
+
+    public Set<String> getCategories() {
+        return getWaypoints().stream().map(MapLocationImpl::getCategoryId).collect(Collectors.toSet());
     }
 
     public void addWaypoint(WaypointLocation waypoint) {
