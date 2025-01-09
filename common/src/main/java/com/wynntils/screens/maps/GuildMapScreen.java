@@ -244,6 +244,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
+        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+
         renderHoveredTerritoryInfo(poseStack);
 
         renderTooltip(guiGraphics, mouseX, mouseY);

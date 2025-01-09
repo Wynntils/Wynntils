@@ -191,7 +191,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderHoveredSeaskipperDestination(poseStack);
 
