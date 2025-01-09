@@ -70,10 +70,6 @@ public class MinecraftFunctions {
         public Integer getValue(FunctionArguments arguments) {
             String effectName = arguments.getArgument("effectName").getStringValue();
             ResourceLocation effectLocation = ResourceLocation.withDefaultNamespace(effectName);
-            MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(effectLocation);
-
-            if (effect == null)
-                return -1; // Effect not found
 
             Holder<MobEffect> effectHolder =
                     BuiltInRegistries.MOB_EFFECT.getHolder(effectLocation).orElse(null);
