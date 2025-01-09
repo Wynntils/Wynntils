@@ -553,8 +553,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
         registerFunction(new MinecraftFunctions.KeyPressedFunction());
+        registerFunction(new MinecraftFunctions.MinecraftEffectDuration());
         registerFunction(new MinecraftFunctions.MyLocationFunction());
-        registerFunction(new MinecraftFunctions.PlayerEffectFunction());
         registerFunction(new MinecraftFunctions.TicksFunction());
 
         registerFunction(new ProfessionFunctions.LastHarvestMaterialLevelFunction());

@@ -65,7 +65,7 @@ public class MinecraftFunctions {
         }
     }
 
-    public static class PlayerEffectFunction extends Function<Integer> {
+    public static class MinecraftEffectDuration extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             String effectName = arguments.getArgument("effectName").getStringValue();
@@ -78,8 +78,7 @@ public class MinecraftFunctions {
             Holder<MobEffect> effectHolder =
                     BuiltInRegistries.MOB_EFFECT.getHolder(effectLocation).orElse(null);
 
-            if (effectHolder == null)
-                return -1; // Effect holder not found
+            if (effectHolder == null) return -1; // Effect holder not found
 
             // Check if the player has the effect
             if (McUtils.player().hasEffect(effectHolder)) {
