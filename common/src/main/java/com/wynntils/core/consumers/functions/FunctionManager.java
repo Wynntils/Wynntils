@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions;
@@ -555,6 +555,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.KeyPressedFunction());
         registerFunction(new MinecraftFunctions.MyLocationFunction());
         registerFunction(new MinecraftFunctions.TicksFunction());
+        registerFunction(new MinecraftFunctions.PlayerEffectFunction());
 
         registerFunction(new ProfessionFunctions.LastHarvestMaterialLevelFunction());
         registerFunction(new ProfessionFunctions.LastHarvestMaterialNameFunction());
