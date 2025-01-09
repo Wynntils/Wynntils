@@ -72,16 +72,14 @@ public class MinecraftFunctions {
             ResourceLocation effectLocation = ResourceLocation.withDefaultNamespace(effectName);
             MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(effectLocation);
 
-            if (effect == null) {
+            if (effect == null)
                 return -1; // Effect not found
-            }
 
             Holder<MobEffect> effectHolder =
                     BuiltInRegistries.MOB_EFFECT.getHolder(effectLocation).orElse(null);
 
-            if (effectHolder == null) {
+            if (effectHolder == null)
                 return -1; // Effect holder not found
-            }
 
             // Check if the player has the effect
             if (McUtils.player().hasEffect(effectHolder)) {
