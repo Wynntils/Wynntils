@@ -1,12 +1,11 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.beacons;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
@@ -18,12 +17,14 @@ import com.wynntils.models.beacons.type.BeaconKind;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.beacons.type.BeaconMarkerKind;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PreciseLocation;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
@@ -43,6 +44,8 @@ public class BeaconModel extends Model {
     // Maps base entity id to corresponding beacon
     private final Map<Integer, Beacon> beacons = new Int2ObjectArrayMap<>();
     private final Map<Integer, BeaconMarker> beaconMarkers = new Int2ObjectArrayMap<>();
+
+    public static final Integer BEACON_COLOR_CUSTOM_MODEL_DATA = 83;
 
     public BeaconModel() {
         super(List.of());
@@ -77,7 +80,11 @@ public class BeaconModel extends Model {
 
             if (beaconMarkerKind == null) return;
 
-            BeaconMarker beaconMarker = new BeaconMarker(entity.position(), beaconMarkerKind);
+            Optional<Integer> distanceOpt = beaconMarkerKind.getDistance(styledText);
+            Optional<CustomColor> customColorOpt = beaconMarkerKind.getCustomColor(styledText);
+
+            BeaconMarker beaconMarker =
+                    new BeaconMarker(entity.position(), beaconMarkerKind, distanceOpt, customColorOpt);
             beaconMarkers.put(event.getId(), beaconMarker);
             WynntilsMod.postEvent(new BeaconMarkerEvent.Added(beaconMarker, entity));
         }
@@ -93,8 +100,11 @@ public class BeaconModel extends Model {
             beacons.put(event.getEntity().getId(), newBeacon);
             WynntilsMod.postEvent(new BeaconEvent.Moved(movedBeacon, newBeacon));
         } else if (movedBeaconMarker != null) {
-            BeaconMarker newBeaconMarker =
-                    new BeaconMarker(event.getNewPosition(), movedBeaconMarker.beaconMarkerKind());
+            BeaconMarker newBeaconMarker = new BeaconMarker(
+                    event.getNewPosition(),
+                    movedBeaconMarker.beaconMarkerKind(),
+                    movedBeaconMarker.distance(),
+                    movedBeaconMarker.color());
             // Replace the old map entry
             beaconMarkers.put(event.getEntity().getId(), newBeaconMarker);
             WynntilsMod.postEvent(new BeaconMarkerEvent.Moved(movedBeaconMarker, newBeaconMarker));
@@ -149,8 +159,7 @@ public class BeaconModel extends Model {
             int customColor = potionContents.customColor().orElse(CommonColors.WHITE.asInt());
 
             // Log the color if it's likely to be a new beacon kind
-            if (customModel == Models.Activity.BEACON_COLOR_CUSTOM_MODEL_DATA
-                    || customModel == Models.Lootrun.BEACON_COLOR_CUSTOM_MODEL_DATA) {
+            if (customModel == BEACON_COLOR_CUSTOM_MODEL_DATA) {
                 WynntilsMod.warn("Unknown beacon kind: " + customModel + " " + customColor);
             }
         }

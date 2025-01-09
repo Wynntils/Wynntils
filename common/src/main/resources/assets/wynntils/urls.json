@@ -115,7 +115,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "ecf8fda7a51fd91a3a004c57861d77e2",
+    "md5": "91fa93a9d61fe9aa6c77ad4a809ffd37",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
   },
   {
@@ -155,7 +155,7 @@
   },
   {
     "id": "dataStaticLootrunTasksNamed",
-    "md5": "c147221c93bfe0771cf0cd81c4d929c1",
+    "md5": "2e0080ebd9e8d06a1635bb2dedb652fe",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/lootrun_tasks_named.json"
   },
   {
@@ -165,7 +165,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "0165174c3c0b042468ecc65d5c42b5d5",
+    "md5": "868e6cbc3ac5b6e549b2b98f845e3318",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/maps.json"
   },
   {
