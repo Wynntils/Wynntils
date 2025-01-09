@@ -35,7 +35,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketPriceMatchFeature extends Feature {
     private static final StyledText CLICK_TO_SET_PRICE = StyledText.fromString("§a§lSet Price");
-    private static final StyledText SELL_DIALOGUE_TITLE = StyledText.fromString("What would you like to sell?");
     private static final StyledText TYPE_SELL_PRICE =
             StyledText.fromString("\uDAFF\uDFFC\uE001\uDB00\uDC06 Type the price in emeralds or formatted ");
 

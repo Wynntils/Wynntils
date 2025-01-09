@@ -217,7 +217,7 @@ public class ValuablesProtectionFeature extends Feature {
             if (salePrice < lowestPrice * (tradeMarketPriceThreshold.get() / 100d)) {
                 ctrlHintTextWidget = new HintTextWidget(
                         cs.width - cs.leftPos + 2,
-                        cs.height / 2 - 54,
+                        cs.height / 2,
                         cs.leftPos,
                         11,
                         I18n.get(
@@ -229,7 +229,7 @@ public class ValuablesProtectionFeature extends Feature {
 
                 tmHintTextWidgets.add(new HintTextWidget(
                         cs.width - cs.leftPos + 2,
-                        cs.height / 2 - 34,
+                        cs.height / 2 + 20,
                         cs.leftPos,
                         11,
                         I18n.get(
@@ -245,7 +245,7 @@ public class ValuablesProtectionFeature extends Feature {
                         CommonColors.LIGHT_GRAY));
                 tmHintTextWidgets.add(new HintTextWidget(
                         cs.width - cs.leftPos + 2,
-                        cs.height / 2 + 2,
+                        cs.height / 2 + 56,
                         cs.leftPos,
                         11,
                         I18n.get("feature.wynntils.valuablesProtection.settingsHint"),
