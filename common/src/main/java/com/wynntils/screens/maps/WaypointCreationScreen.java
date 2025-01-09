@@ -15,6 +15,7 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.maps.widgets.IconButton;
+import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
@@ -288,7 +289,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         iconCheckbox = new WynntilsCheckbox(
                 (int) dividedWidth,
-                (int) (dividedHeight * 25),
+                (int) (dividedHeight * 22),
                 20,
                 Component.translatable("screens.wynntils.waypointCreation.icon"),
                 useIcon,
@@ -305,7 +306,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
                     populateIcons();
                 })
-                .pos((int) (dividedWidth * 8), (int) (dividedHeight * 25))
+                .pos((int) (dividedWidth * 8), (int) (dividedHeight * 22))
                 .size(20, 20)
                 .build();
         this.addRenderableWidget(previousIconButton);
@@ -321,7 +322,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
                     populateIcons();
                 })
-                .pos((int) (dividedWidth * 20), (int) (dividedHeight * 25))
+                .pos((int) (dividedWidth * 20), (int) (dividedHeight * 22))
                 .size(20, 20)
                 .build();
         this.addRenderableWidget(nextIconButton);
@@ -334,7 +335,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         addCustomIconButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCreation.addCustomIcon"),
                         (button) -> McUtils.mc().setScreen(CustomWaypointIconScreen.create(this)))
-                .pos((int) (dividedWidth * 8) + 20, (int) (dividedHeight * 25) + 20)
+                .pos((int) (dividedWidth * 8) + 20, (int) (dividedHeight * 22) + 20)
                 .size(iconButtonWidth, 20)
                 .build();
         this.addRenderableWidget(addCustomIconButton);
@@ -343,7 +344,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         iconColorInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 23),
-                (int) (dividedHeight * 25),
+                (int) (dividedHeight * 22),
                 (int) (dividedWidth * 5.5),
                 20,
                 (s) -> {
@@ -373,7 +374,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         }
 
         iconColorPicker =
-                new ColorPickerWidget((int) (dividedWidth * 29), (int) (dividedHeight * 25), 20, 20, iconColorInput);
+                new ColorPickerWidget((int) (dividedWidth * 29), (int) (dividedHeight * 22), 20, 20, iconColorInput);
         this.addRenderableWidget(iconColorPicker);
 
         iconColorPicker.visible = useIcon;
@@ -382,7 +383,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // region Location
         xInput = new TextInputBoxWidget(
                 (int) dividedWidth,
-                (int) (dividedHeight * 36),
+                (int) (dividedHeight * 33),
                 (int) (dividedWidth * 7),
                 20,
                 s -> {
@@ -404,7 +405,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         yInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 9),
-                (int) (dividedHeight * 36),
+                (int) (dividedHeight * 33),
                 (int) (dividedWidth * 7),
                 20,
                 s -> {
@@ -423,7 +424,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         zInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 17),
-                (int) (dividedHeight * 36),
+                (int) (dividedHeight * 33),
                 (int) (dividedWidth * 7),
                 20,
                 s -> {
@@ -460,7 +461,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                     yInput.setTextBoxInput(String.valueOf(McUtils.player().getBlockY()));
                     zInput.setTextBoxInput(String.valueOf(McUtils.player().getBlockZ()));
                 })
-                .pos((int) (dividedWidth * 26), (int) (dividedHeight * 36))
+                .pos((int) (dividedWidth * 26), (int) (dividedHeight * 33))
                 .size(20, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.waypointCreation.centerPlayer")))
                 .build();
@@ -471,11 +472,45 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                     yInput.setTextBoxInput("0");
                     zInput.setTextBoxInput(String.valueOf(MAP_CENTER_Z));
                 })
-                .pos((int) (dividedWidth * 29), (int) (dividedHeight * 36))
+                .pos((int) (dividedWidth * 29), (int) (dividedHeight * 33))
                 .size(20, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.waypointCreation.centerWorld")))
                 .build();
         this.addRenderableWidget(centerOnWorldButton);
+        // endregion
+
+        // region Visibility
+        editLabelVisibilityButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.waypointCreation.editLabelVisibility"),
+                        (button) -> McUtils.mc().setScreen(WaypointVisibilityScreen.create(this, waypoint, true)))
+                .pos((int) (dividedWidth * 3), (int) (dividedHeight * 39))
+                .size((int) (dividedWidth * 12), 20)
+                .build();
+        this.addRenderableWidget(editLabelVisibilityButton);
+
+        editIconVisibilityButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.waypointCreation.editIconVisibility"),
+                        (button) -> McUtils.mc().setScreen(WaypointVisibilityScreen.create(this, waypoint, false)))
+                .pos((int) (dividedWidth * 17), (int) (dividedHeight * 39))
+                .size((int) (dividedWidth * 12), 20)
+                .build();
+        this.addRenderableWidget(editIconVisibilityButton);
+
+        if (firstSetup) {
+            if (oldAttributes != null) {
+                labelVisibility = new MapVisibilityImpl(
+                        oldAttributes.labelVisibility().min(),
+                        oldAttributes.labelVisibility().max(),
+                        oldAttributes.labelVisibility().fade());
+                iconVisibility = new MapVisibilityImpl(
+                        oldAttributes.iconVisibility().min(),
+                        oldAttributes.iconVisibility().max(),
+                        oldAttributes.iconVisibility().fade());
+            } else {
+                labelVisibility = DefaultMapAttributes.LABEL_NEVER;
+                iconVisibility = new MapVisibilityImpl(30.0f, 100.0f, 6.0f);
+            }
+        }
         // endregion
 
         // region Category
@@ -500,22 +535,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // endregion
 
         // region Screen Interactions
-        editLabelVisibilityButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.waypointCreation.editLabelVisibility"),
-                        (button) -> McUtils.mc().setScreen(WaypointVisibilityScreen.create(this, waypoint, true)))
-                .pos((int) (dividedWidth * 3), (int) (dividedHeight * 42))
-                .size((int) (dividedWidth * 12), 20)
-                .build();
-        this.addRenderableWidget(editLabelVisibilityButton);
-
-        editIconVisibilityButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.waypointCreation.editIconVisibility"),
-                        (button) -> McUtils.mc().setScreen(WaypointVisibilityScreen.create(this, waypoint, false)))
-                .pos((int) (dividedWidth * 17), (int) (dividedHeight * 42))
-                .size((int) (dividedWidth * 12), 20)
-                .build();
-        this.addRenderableWidget(editIconVisibilityButton);
-
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCreation.cancel"), (button) -> this.onClose())
                 .pos((int) (dividedWidth * 4), (int) (dividedHeight * 56))
@@ -627,7 +646,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.waypointCreation.iconColor") + ":"),
                             dividedWidth * 23.0f,
-                            dividedHeight * 23.5f,
+                            dividedHeight * 20.5f,
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.MIDDLE,
@@ -643,7 +662,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                         poseStack,
                         StyledText.fromString("X:"),
                         dividedWidth,
-                        dividedHeight * 34.5f,
+                        dividedHeight * 31.5f,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
@@ -653,7 +672,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                         poseStack,
                         StyledText.fromString("Y:"),
                         dividedWidth * 9.0f,
-                        dividedHeight * 34.5f,
+                        dividedHeight * 31.5f,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
@@ -663,13 +682,48 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                         poseStack,
                         StyledText.fromString("Z:"),
                         dividedWidth * 17.0f,
-                        dividedHeight * 34.5f,
+                        dividedHeight * 31.5f,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
         // endregion
 
+        // region Visibility
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromComponent(Component.translatable(
+                                "screens.wynntils.waypointCreation.visibilityLevels",
+                                labelVisibility.getMin().get(),
+                                labelVisibility.getMax().get(),
+                                labelVisibility.getFade().get())),
+                        dividedWidth * 9.0f,
+                        dividedHeight * 44.0f,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL,
+                        0.8f);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromComponent(Component.translatable(
+                                "screens.wynntils.waypointCreation.visibilityLevels",
+                                iconVisibility.getMin().get(),
+                                iconVisibility.getMax().get(),
+                                iconVisibility.getFade().get())),
+                        dividedWidth * 23.0f,
+                        dividedHeight * 44.0f,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL,
+                        0.8f);
+        // endregion
+
+        // region Category
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -693,6 +747,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL,
                         1);
+        // endregion
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -836,8 +891,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 .flatMap(waypointCategory -> waypointCategory.getAttributes().flatMap(MapAttributes::getPriority))
                 .orElse(1000);
 
-        // FIXME: It is vital to only save "non-default" values to the waypoint, otherwise the default values will be
-        //        written into the config file, which is not desired.
         MapLocationAttributesImpl attributes = new MapAttributesBuilder()
                 .setLabel(label)
                 .setIcon(iconId)
@@ -889,7 +942,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
             int xPos = (int) (dividedWidth * 8) + 20 + (i * buttonWidth);
 
             IconButton iconButton = new IconButton(
-                    xPos, (int) (dividedHeight * 25), buttonWidth, currentIcon, currentIcon == selectedIcon);
+                    xPos, (int) (dividedHeight * 22), buttonWidth, currentIcon, currentIcon == selectedIcon);
 
             iconButtons.add(iconButton);
         }

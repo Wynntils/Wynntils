@@ -2634,6 +2634,7 @@
   "screens.wynntils.waypointCreation.labelVisibility": "Label Visibility",
   "screens.wynntils.waypointCreation.save": "Save",
   "screens.wynntils.waypointCreation.title": "Create Waypoint",
+  "screens.wynntils.waypointCreation.visibilityLevels": "Min: %d Max: %d Fade: %d",
   "screens.wynntils.waypointVisibility.always": "Always",
   "screens.wynntils.waypointVisibility.close": "Close",
   "screens.wynntils.waypointVisibility.description1": "Use the sliders to adjust the desired zoom levels for the waypoint to be visible at.",
