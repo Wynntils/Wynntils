@@ -22,6 +22,7 @@ import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.colors.CommonColors;
@@ -253,21 +254,35 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         availableIcons.clear();
         availableIcons.addAll(Services.MapData.getIcons().toList());
 
-        if (firstSetup && oldAttributes != null) {
-            String oldIconId = oldAttributes.iconId();
+        if (firstSetup) {
+            if (oldAttributes != null) {
+                String oldIconId = oldAttributes.iconId();
 
-            if (oldIconId.equals(MapIcon.NO_ICON_ID)) {
-                useIcon = false;
+                if (oldIconId.equals(MapIcon.NO_ICON_ID)) {
+                    useIcon = false;
+                } else {
+                    Optional<MapIcon> oldMapIcon = availableIcons.stream()
+                            .filter(mapIcon -> mapIcon.getIconId().equals(oldIconId))
+                            .findFirst();
+
+                    oldMapIcon.ifPresent(oldIcon -> selectedIcon = oldIcon);
+
+                    iconScrollOffset = availableIcons.indexOf(selectedIcon);
+
+                    iconId = oldIconId;
+                }
             } else {
-                Optional<MapIcon> oldMapIcon = availableIcons.stream()
-                        .filter(mapIcon -> mapIcon.getIconId().equals(oldIconId))
+                String flagIconId = MapIconsProvider.getIconIdFromTexture(Texture.FLAG);
+                Optional<MapIcon> flagIcon = availableIcons.stream()
+                        .filter(mapIcon -> mapIcon.getIconId().equals(flagIconId))
                         .findFirst();
 
-                oldMapIcon.ifPresent(oldIcon -> selectedIcon = oldIcon);
+                flagIcon.ifPresent(icon -> selectedIcon = icon);
 
                 iconScrollOffset = availableIcons.indexOf(selectedIcon);
 
-                iconId = oldIconId;
+                useIcon = true;
+                iconId = flagIconId;
             }
         }
 
