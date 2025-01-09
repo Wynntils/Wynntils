@@ -1,3 +1,10 @@
+## [2.4.15](https://github.com/Wynntils/Wynntils/compare/v2.4.14...v2.4.15) (2025-01-09)
+
+
+### New Features
+
+* Valuables Protection Feature ([#2935](https://github.com/Wynntils/Wynntils/issues/2935)) ([bd56e98](https://github.com/Wynntils/Wynntils/commit/bd56e985b39cc23d5a6ab7ff5f4711be38eef52d))
+
 ## [2.4.14](https://github.com/Wynntils/Wynntils/compare/v2.4.13...v2.4.14) (2025-01-08)
 
 
@@ -14,6 +21,7 @@
 * [auto-generated] Update urls.json [ci skip] ([#3057](https://github.com/Wynntils/Wynntils/issues/3057)) ([39f0e5e](https://github.com/Wynntils/Wynntils/commit/39f0e5ec9da55ae91e372c3c39f17840b361389c))
 * [auto-generated] Update urls.json [ci skip] ([#3058](https://github.com/Wynntils/Wynntils/issues/3058)) ([a4c3b87](https://github.com/Wynntils/Wynntils/commit/a4c3b87f0d3f8043f20fd9bede370feb2b00f4e0))
 * [auto-generated] Update urls.json [ci skip] ([#3060](https://github.com/Wynntils/Wynntils/issues/3060)) ([d5f046f](https://github.com/Wynntils/Wynntils/commit/d5f046f5feef9987ed0bca27d9502af6fc0841f4))
+* **release:** v2.4.14 [skip ci] ([9da4902](https://github.com/Wynntils/Wynntils/commit/9da49022a0cbca00a9cda2bf213a3c59b8764fac))
 
 ## [2.4.13](https://github.com/Wynntils/Wynntils/compare/v2.4.12...v2.4.13) (2025-01-03)
 
@@ -66,21 +74,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.4.11 [skip ci] ([e84dbb7](https://github.com/Wynntils/Wynntils/commit/e84dbb7f285f6a429b0b533496f677b8a467d392))
-
-## [2.4.10](https://github.com/Wynntils/Wynntils/compare/v2.4.9...v2.4.10) (2024-12-23)
-
-
-### New Features
-
-* Add some basic support for regional servers [skip ci] ([#3038](https://github.com/Wynntils/Wynntils/issues/3038)) ([7983587](https://github.com/Wynntils/Wynntils/commit/79835876ad4b5deaffe0c4c6eecd84bbaf5205a9))
-
-
-### Bug Fixes
-
-* User-edited chat items with invalid powders causes crash ([#3030](https://github.com/Wynntils/Wynntils/issues/3030)) ([74c62ad](https://github.com/Wynntils/Wynntils/commit/74c62ad6d9f47b5b70183a62d56e9f1e02c993be))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.4.10 [skip ci] ([504ae64](https://github.com/Wynntils/Wynntils/commit/504ae640d9560e89a471a0660b82aadbee74d34d))
 
