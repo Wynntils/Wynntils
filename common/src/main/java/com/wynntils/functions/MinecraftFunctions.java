@@ -65,7 +65,7 @@ public class MinecraftFunctions {
         }
     }
 
-    public static class MinecraftEffectDuration extends Function<Integer> {
+    public static class MinecraftEffectDurationFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             String effectName = arguments.getArgument("effectName").getStringValue();
