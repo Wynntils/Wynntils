@@ -262,7 +262,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        for (GuiEventListener child : children()) {
+        for (GuiEventListener child :
+                Stream.concat(children().stream(), mapButtons.stream()).toList()) {
             if (child.isMouseOver(mouseX, mouseY)) {
                 child.mouseClicked(mouseX, mouseY, button);
                 return true;

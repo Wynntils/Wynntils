@@ -60,7 +60,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected static final MultiBufferSource.BufferSource BUFFER_SOURCE =
             MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
-    private List<MapButton> mapButtons = new ArrayList<>();
+    protected List<MapButton> mapButtons = new ArrayList<>();
 
     protected static final float SCREEN_SIDE_OFFSET = 10;
     protected static final int MAP_CENTER_X = -360;
