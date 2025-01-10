@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.type;
@@ -7,14 +7,14 @@ package com.wynntils.services.map.type;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public enum TerritoryDefenseFilterType {
+public enum TerritoryFilterType {
     DEFAULT(""),
     HIGHER(" and higher"),
     LOWER(" and lower");
 
     private final String asString;
 
-    TerritoryDefenseFilterType(String asString) {
+    TerritoryFilterType(String asString) {
         this.asString = asString;
     }
 
