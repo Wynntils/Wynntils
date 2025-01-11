@@ -10,6 +10,7 @@ import com.wynntils.mc.extension.ChatComponentExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -63,6 +64,10 @@ public final class McUtils {
         return window().getGuiScale();
     }
 
+    public static int getChatWindowWidth() {
+        return ChatComponent.getWidth(mc().options.chatWidth().get());
+    }
+
     public static void playSoundUI(SoundEvent sound) {
         mc().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));
     }
@@ -100,7 +105,7 @@ public final class McUtils {
                     "Tried to send message to client: \"" + component.getString() + "\", but player was null.");
             return;
         }
-        player().sendSystemMessage(component);
+        player().sendSystemMessage(ComponentUtils.addWynntilsBanner(component));
     }
 
     public static void removeMessageFromChat(Component component) {
