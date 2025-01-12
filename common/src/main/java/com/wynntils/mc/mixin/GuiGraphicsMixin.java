@@ -126,7 +126,7 @@ public abstract class GuiGraphicsMixin {
             return text;
         }
 
-        String count = (itemStack.getCount() == 1) ? "" : String.valueOf(itemStack.getCount());
+        String count = (itemStack.getCount() == 1) ? null : String.valueOf(itemStack.getCount());
         String countString = (text == null) ? count : text;
 
         ItemCountOverlayRenderEvent event = new ItemCountOverlayRenderEvent(itemStack, countString, 0xFFFFFF);

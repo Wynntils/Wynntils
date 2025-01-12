@@ -22,6 +22,7 @@ import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.gui.CosmeticItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.Optional;
@@ -154,9 +155,8 @@ public class ItemHighlightFeature extends Feature {
         if (color == CustomColor.NONE) return;
 
         RenderSystem.enableDepthTest();
-        BufferedRenderUtils.drawTexturedRectWithColor(
+        RenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
-                e.getGuiGraphics().bufferSource,
                 Texture.HIGHLIGHT.resource(),
                 color.withAlpha(inventoryOpacity.get()),
                 e.getSlot().x - 1,
