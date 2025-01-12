@@ -15,7 +15,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemEntityRenderer.class)
 public class ItemEntityRendererMixin {
-    @Inject(method = "extractRenderState", at = @At("RETURN"))
+    @Inject(
+            method =
+                    "extractRenderState(Lnet/minecraft/world/entity/item/ItemEntity;Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;F)V",
+            at = @At("RETURN"))
     private void onExtractRenderState(
             ItemEntity itemEntity, ItemEntityRenderState itemEntityRenderState, float f, CallbackInfo ci) {
         if (itemEntityRenderState.item instanceof ItemStackRenderStateExtension) {

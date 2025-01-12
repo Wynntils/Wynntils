@@ -15,11 +15,13 @@ public class ItemStackRenderStateMixin implements ItemStackRenderStateExtension 
     @Unique
     private ItemStack itemStack;
 
+    @Unique
     @Override
     public void setItemStack(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
+    @Unique
     @Override
     public ItemStack getItemStack() {
         return this.itemStack;

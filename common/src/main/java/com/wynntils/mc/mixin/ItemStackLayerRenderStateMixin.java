@@ -29,8 +29,8 @@ public abstract class ItemStackLayerRenderStateMixin {
                     "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V",
             at =
                     @At(
-                            target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V",
-                            shift = At.Shift.BEFORE,
+                            target =
+                                    "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack;)V",
                             value = "INVOKE"))
     private void onRenderItem(
             PoseStack poseStack,
