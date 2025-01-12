@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -10,6 +10,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
 import com.wynntils.models.containers.containers.AspectsContainer;
+import com.wynntils.models.containers.containers.BlacksmithContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
@@ -24,6 +25,7 @@ import com.wynntils.models.containers.containers.HousingJukeboxContainer;
 import com.wynntils.models.containers.containers.HousingListContainer;
 import com.wynntils.models.containers.containers.IngredientPouchContainer;
 import com.wynntils.models.containers.containers.InventoryContainer;
+import com.wynntils.models.containers.containers.ItemIdentifierContainer;
 import com.wynntils.models.containers.containers.JukeboxContainer;
 import com.wynntils.models.containers.containers.LeaderboardRewardsContainer;
 import com.wynntils.models.containers.containers.LobbyContainer;
@@ -107,6 +109,7 @@ public final class ContainerModel extends Model {
         registerContainer(new AbilityTreeResetContainer());
         registerContainer(new AspectsContainer());
         registerContainer(new AccountBankContainer());
+        registerContainer(new BlacksmithContainer());
         registerContainer(new BookshelfContainer());
         registerContainer(new ChallengeRewardContainer());
         registerContainer(new CharacterBankContainer());
@@ -126,6 +129,7 @@ public final class ContainerModel extends Model {
         registerContainer(new HousingListContainer());
         registerContainer(new IngredientPouchContainer());
         registerContainer(new IslandBlockBankContainer());
+        registerContainer(new ItemIdentifierContainer());
         registerContainer(new InventoryContainer());
         registerContainer(new JukeboxContainer());
         registerContainer(new LeaderboardRewardsContainer());
