@@ -35,8 +35,6 @@ public class WynntilsModForge {
                 !FMLEnvironment.production,
                 modFile);
 
-        WynntilsMod.registerEventListener(this);
-
         ModLoadingContext.get()
                 .registerExtensionPoint(
                         IConfigScreenFactory.class, () -> (mc, parent) -> WynntilsBookSettingsScreen.create(parent));
