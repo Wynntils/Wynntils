@@ -20,6 +20,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.extension.MinecraftExtension;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -127,6 +128,7 @@ public class ItemScreenshotFeature extends Feature {
         fb.setClearColor(1f, 1f, 1f, 0f);
         fb.createBuffers(width * 2, height * 2);
         fb.bindWrite(false);
+        ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(fb);
         guiGraphics.pose().pushPose();
         guiGraphics.pose().scale(scalew, scaleh, 1);
         guiGraphics.renderTooltip(
@@ -138,6 +140,7 @@ public class ItemScreenshotFeature extends Feature {
         guiGraphics.pose().popPose();
         guiGraphics.flush();
         fb.unbindWrite();
+        ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(null);
         McUtils.mc().getMainRenderTarget().bindWrite(true);
 
         BufferedImage bi = SystemUtils.createScreenshot(fb);
