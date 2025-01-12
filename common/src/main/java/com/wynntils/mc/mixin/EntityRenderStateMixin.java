@@ -15,11 +15,13 @@ public class EntityRenderStateMixin implements EntityRenderStateExtension {
     @Unique
     private Entity entity;
 
+    @Unique
     @Override
     public void setEntity(Entity entity) {
         this.entity = entity;
     }
 
+    @Unique
     @Override
     public Entity getEntity() {
         return this.entity;

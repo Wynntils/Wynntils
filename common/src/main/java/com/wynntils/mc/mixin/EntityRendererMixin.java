@@ -35,7 +35,10 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
     @Shadow
     public abstract Font getFont();
 
-    @Inject(method = "extractRenderState", at = @At("RETURN"))
+    @Inject(
+            method =
+                    "extractRenderState(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+            at = @At("RETURN"))
     private void onExtractRenderState(T entity, S entityRenderState, float f, CallbackInfo ci) {
         if (entityRenderState instanceof EntityRenderStateExtension) {
             ((EntityRenderStateExtension) entityRenderState).setEntity(entity);
