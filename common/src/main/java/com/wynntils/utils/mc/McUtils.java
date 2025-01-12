@@ -6,7 +6,6 @@ package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.extension.ChatComponentExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -96,12 +95,7 @@ public final class McUtils {
     }
 
     public static void sendMessageToClient(Component component) {
-        ClientsideMessageEvent event = new ClientsideMessageEvent(component);
-        WynntilsMod.postEvent(event);
-
-        if (!event.isCanceled()) {
-            mc().gui.getChat().addMessage(component);
-        }
+        mc().getChatListener().handleSystemMessage(component, false);
     }
 
     public static void removeMessageFromChat(Component component) {

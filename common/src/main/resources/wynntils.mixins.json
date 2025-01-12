@@ -6,6 +6,7 @@
     "CapeLayerMixin",
     "accessors.ChatComponentAccessor",
     "ChatComponentMixin",
+    "ChatListenerMixin",
     "ChatScreenMixin",
     "ChestMenuMixin",
     "ClientCommonPacketListenerImplMixin",
