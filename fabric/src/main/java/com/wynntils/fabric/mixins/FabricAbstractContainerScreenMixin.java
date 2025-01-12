@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.fabric.mixins;
@@ -17,6 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +36,7 @@ public abstract class FabricAbstractContainerScreenMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V"))
+                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V"))
     private void renderTooltipPre(
             GuiGraphics instance,
             Font font,
@@ -43,6 +44,7 @@ public abstract class FabricAbstractContainerScreenMixin {
             Optional<TooltipComponent> visualTooltipComponent,
             int mouseX,
             int mouseY,
+            ResourceLocation backgroundTexture,
             Operation<Void> operation,
             @Local ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event =
@@ -56,7 +58,8 @@ public abstract class FabricAbstractContainerScreenMixin {
                 event.getTooltips(),
                 event.getItemStack().getTooltipImage(),
                 event.getMouseX(),
-                event.getMouseY());
+                event.getMouseY(),
+                backgroundTexture);
     }
 
     // See ForgeGuiGraphics#renderTooltipPost for the Forge mixin.
@@ -66,7 +69,7 @@ public abstract class FabricAbstractContainerScreenMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V",
+                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V",
                             shift = At.Shift.AFTER))
     private void renderTooltipPost(GuiGraphics guiGraphics, int x, int y, CallbackInfo ci, @Local ItemStack itemStack) {
         MixinHelper.post(new ItemTooltipRenderEvent.Post(guiGraphics, itemStack, x, y));

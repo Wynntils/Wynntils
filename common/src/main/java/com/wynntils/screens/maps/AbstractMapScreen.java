@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -27,6 +27,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
@@ -362,8 +363,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         mapHeight);
 
         // Background black void color
-        RenderUtils.drawRect(
+        BufferedRenderUtils.drawRect(
                 poseStack,
+                BUFFER_SOURCE,
                 CommonColors.BLACK,
                 renderX + renderedBorderXOffset,
                 renderY + renderedBorderYOffset,

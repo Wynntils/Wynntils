@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.inventory.type;
@@ -30,5 +30,15 @@ public enum InventoryArmor {
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+    public static int[] getSlots() {
+        int[] slots = new int[values().length];
+
+        for (int i = 0; i < values().length; i++) {
+            slots[i] = values()[i].getSlot();
+        }
+
+        return slots;
     }
 }

@@ -2,6 +2,7 @@
   "client": [
     "ForgeAbstractContainerScreenMixin",
     "ForgeGuiGraphicsMixin",
+    "ForgeLevelRendererMixin",
     "ForgeGuiMixin"
   ],
   "compatibilityLevel": "JAVA_17",

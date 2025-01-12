@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -37,6 +37,6 @@ public class DownloadProgressFeature extends Feature {
     }
 
     private void displayToast(Component title, Component message) {
-        McUtils.mc().getToasts().addToast(new SystemToast(new SystemToast.SystemToastId(10000L), title, message));
+        McUtils.mc().getToastManager().addToast(new SystemToast(new SystemToast.SystemToastId(10000L), title, message));
     }
 }

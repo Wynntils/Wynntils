@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.territorymanagement.widgets.quicksorts;
@@ -64,7 +64,7 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
         if (!this.active || !this.visible) return false;
 
         if (this.isValidClickButton(button)) {
-            boolean clicked = this.clicked(mouseX, mouseY);
+            boolean clicked = this.isMouseOver(mouseX, mouseY);
             if (clicked) {
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
 

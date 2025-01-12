@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -24,8 +24,8 @@ import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -155,8 +155,9 @@ public class WynncraftButtonFeature extends Feature {
             }
 
             // Insets the icon by 3
-            RenderUtils.drawScalingTexturedRect(
+            BufferedRenderUtils.drawScalingTexturedRect(
                     guiGraphics.pose(),
+                    guiGraphics.bufferSource,
                     serverIcon.getServerIconLocation(),
                     this.getX() + 3,
                     this.getY() + 3,
@@ -232,7 +233,7 @@ public class WynncraftButtonFeature extends Feature {
             // If someone converts this to get the actual ServerData used by the gui, check
             // ServerData#pinged here and
             // set it later
-            if (allowStale && McUtils.mc().getTextureManager().getTexture(destination, null) != null) {
+            if (allowStale && McUtils.mc().getTextureManager().getTexture(destination) != null) {
                 serverIconLocation = destination;
                 onDone();
                 return;

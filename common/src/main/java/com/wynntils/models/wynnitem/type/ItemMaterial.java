@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem.type;
@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.SkinUtils;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
@@ -83,15 +84,16 @@ public record ItemMaterial(ItemStack itemStack) {
         return fromItemId(itemId, damageCode);
     }
 
-    private static ItemStack createItemStack(Item item, int modelValue) {
+    private static ItemStack createItemStack(Item item, float modelValue) {
         ItemStack itemStack = new ItemStack(item);
 
-        itemStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(modelValue));
+        CustomModelData customModelData = new CustomModelData(List.of(modelValue), List.of(), List.of(), List.of());
+        itemStack.set(DataComponents.CUSTOM_MODEL_DATA, customModelData);
         itemStack.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
         return itemStack;
     }
 
     private static Item getItem(String itemId) {
-        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemId));
+        return BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(itemId));
     }
 }

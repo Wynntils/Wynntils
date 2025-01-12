@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -26,9 +26,7 @@ public class GammabrightFeature extends Feature {
 
     @SubscribeEvent
     public void onLightmapUpdate(LightmapEvent lightmapEvent) {
-        if (gammabrightEnabled.get()) {
-            lightmapEvent.setRgb(0xFFFFFFFF);
-        }
+        lightmapEvent.setCanceled(gammabrightEnabled.get());
     }
 
     private void toggleGammaBright() {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -80,7 +80,7 @@ public final class McUtils {
         // so use the fully qualified method with the correct order
         mc().getSoundManager()
                 .play(new SimpleSoundInstance(
-                        sound.getLocation(),
+                        sound.location(),
                         SoundSource.AMBIENT,
                         volume,
                         pitch,
@@ -95,12 +95,7 @@ public final class McUtils {
     }
 
     public static void sendMessageToClient(Component component) {
-        if (player() == null) {
-            WynntilsMod.error(
-                    "Tried to send message to client: \"" + component.getString() + "\", but player was null.");
-            return;
-        }
-        player().sendSystemMessage(component);
+        mc().getChatListener().handleSystemMessage(component, false);
     }
 
     public static void removeMessageFromChat(Component component) {

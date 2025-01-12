@@ -1,47 +1,30 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.neoforged.bus.api.Event;
 
 public class PlayerRenderEvent extends Event {
-    private final AbstractClientPlayer entity;
-    private final float entityYaw;
-    private final float partialTicks;
+    private final PlayerRenderState playerRenderState;
     private final PoseStack poseStack;
     private final MultiBufferSource buffer;
     private final int packedLight;
 
     public PlayerRenderEvent(
-            AbstractClientPlayer entity,
-            float entityYaw,
-            float partialTicks,
-            PoseStack poseStack,
-            MultiBufferSource buffer,
-            int packedLight) {
-        this.entity = entity;
-        this.entityYaw = entityYaw;
-        this.partialTicks = partialTicks;
+            PlayerRenderState playerRenderState, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        this.playerRenderState = playerRenderState;
         this.poseStack = poseStack;
         this.buffer = buffer;
         this.packedLight = packedLight;
     }
 
-    public AbstractClientPlayer getPlayer() {
-        return entity;
-    }
-
-    public float getEntityYaw() {
-        return entityYaw;
-    }
-
-    public float getPartialTicks() {
-        return partialTicks;
+    public PlayerRenderState getPlayerRenderState() {
+        return playerRenderState;
     }
 
     public PoseStack getPoseStack() {

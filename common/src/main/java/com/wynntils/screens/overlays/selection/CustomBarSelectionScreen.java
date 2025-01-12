@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection;
@@ -105,7 +105,7 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
         // Draw the custom bar centered in the screen with 50% progress
         BufferedRenderUtils.drawProgressBar(
                 poseStack,
-                guiGraphics.bufferSource(),
+                guiGraphics.bufferSource,
                 availableBars.get(barTypeIndex).a(),
                 barX,
                 barY,

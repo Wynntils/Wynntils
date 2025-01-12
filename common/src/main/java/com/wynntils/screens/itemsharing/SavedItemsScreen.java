@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemsharing;
@@ -296,7 +296,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         draggingScroll = false;
 
-        Slot dragSelectionEndSlot = super.findSlot(mouseX, mouseY);
+        Slot dragSelectionEndSlot = getHoveredSlot(mouseX, mouseY);
 
         if (dragSelectionStartIndex != -1) {
             int dragSelectionEndIndex =

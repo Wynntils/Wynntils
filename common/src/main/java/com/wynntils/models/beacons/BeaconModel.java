@@ -45,7 +45,7 @@ public class BeaconModel extends Model {
     private final Map<Integer, Beacon> beacons = new Int2ObjectArrayMap<>();
     private final Map<Integer, BeaconMarker> beaconMarkers = new Int2ObjectArrayMap<>();
 
-    public static final Integer BEACON_COLOR_CUSTOM_MODEL_DATA = 83;
+    public static final Float BEACON_COLOR_CUSTOM_MODEL_DATA = 83f;
 
     public BeaconModel() {
         super(List.of());
@@ -152,15 +152,20 @@ public class BeaconModel extends Model {
             CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
             if (customModelData == null) return null;
 
-            int customModel = customModelData.value();
+            List<Float> customModelValues = customModelData.floats().stream()
+                    .filter(value -> beaconRegistry.stream()
+                            .map(BeaconKind::getCustomModelData)
+                            .anyMatch(value::equals))
+                    .toList();
+            if (customModelValues.isEmpty()) return null;
 
             // Extract custom color from potion
             // If there is no custom color, assume it's white
             int customColor = potionContents.customColor().orElse(CommonColors.WHITE.asInt());
 
             // Log the color if it's likely to be a new beacon kind
-            if (customModel == BEACON_COLOR_CUSTOM_MODEL_DATA) {
-                WynntilsMod.warn("Unknown beacon kind: " + customModel + " " + customColor);
+            if (customModelValues.stream().anyMatch(BEACON_COLOR_CUSTOM_MODEL_DATA::equals)) {
+                WynntilsMod.warn("Unknown beacon kind: " + BEACON_COLOR_CUSTOM_MODEL_DATA + " " + customColor);
             }
         }
 
