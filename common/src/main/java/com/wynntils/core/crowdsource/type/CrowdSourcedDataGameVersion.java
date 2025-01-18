@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.crowdsource.type;
@@ -15,7 +15,8 @@ public enum CrowdSourcedDataGameVersion {
     VERSION_204_RELEASE("2.0.4 Release"),
     VERSION_204_RELEASE_2("2.0.4 Release #2"), // Bugfixes in the mod
     VERSION_210_BETA("2.1 Beta"),
-    VERSION_210_BETA_2("2.1 Beta #2"); // Bugfixes in the mod
+    VERSION_210_BETA_2("2.1 Beta #2"), // Bugfixes in the mod
+    VERSION_211_RELEASE("2.1.1");
 
     private final String readableVersion;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.crowdsource;
@@ -11,6 +11,7 @@ import com.wynntils.core.crowdsource.type.CrowdSourcedDataGameVersion;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.crowdsource.FastTravelLocationDataCollector;
 import com.wynntils.crowdsource.LootrunLocationDataCollector;
 import com.wynntils.crowdsource.NpcLocationDataCollector;
 import com.wynntils.crowdsource.ProfessionNodeLocationDataCollector;
@@ -25,7 +26,7 @@ import java.util.Set;
 
 public class CrowdSourcedDataManager extends Manager {
     public static final CrowdSourcedDataGameVersion CURRENT_GAME_VERSION =
-            CrowdSourcedDataGameVersion.VERSION_210_BETA_2;
+            CrowdSourcedDataGameVersion.VERSION_211_RELEASE;
 
     @Persisted
     private final Storage<CrowdSourcedData> collectedData = new Storage<>(new CrowdSourcedData());
@@ -74,6 +75,7 @@ public class CrowdSourcedDataManager extends Manager {
         registerCollector(
                 CrowdSourcedDataType.PROFESSION_CRAFTING_STATION_LOCATIONS,
                 new ProfessionStationLocationDataCollector());
+        registerCollector(CrowdSourcedDataType.FAST_TRAVEL_LOCATIONS, new FastTravelLocationDataCollector());
     }
 
     private void registerCollector(CrowdSourcedDataType crowdSourcedDataType, CrowdSourcedDataCollector<?> collector) {
