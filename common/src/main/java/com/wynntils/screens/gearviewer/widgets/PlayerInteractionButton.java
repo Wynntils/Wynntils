@@ -14,11 +14,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
 public abstract class PlayerInteractionButton extends WynntilsButton {
-    private final List<Component> tooltipText;
+    protected List<Component> tooltipText;
 
     public PlayerInteractionButton(int x, int y, Component tooltipText, Component buttonText) {
         super(x, y, 20, 20, buttonText);
         this.tooltipText = List.of(tooltipText);
+    }
+
+    /** Only to be used with dynamically updating buttons. Call updateIcon after this. */
+    protected PlayerInteractionButton(int x, int y) {
+        super(x, y, 20, 20, Component.empty());
     }
 
     @Override

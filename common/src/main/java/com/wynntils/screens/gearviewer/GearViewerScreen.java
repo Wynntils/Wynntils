@@ -53,6 +53,8 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
     private final PlayerTeam gearViewerTeam;
     private final PlayerTeam oldTeam;
     private List<PlayerInteractionButton> interactionButtons = new ArrayList<>();
+    private FriendButton friendButton;
+    private PartyButton partyButton;
 
     private GearViewerScreen(Player player, GearViewerMenu menu) {
         super(menu, player.getInventory(), Component.empty());
@@ -123,16 +125,18 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
                 () -> Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_PLAYER_STATS, Map.of("username", playerName))));
 
         // add friend button
-        interactionButtons.add(new FriendButton(
+        friendButton = new FriendButton(
                 leftPos - 21,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 18,
-                playerName));
+                playerName);
+        interactionButtons.add(friendButton);
 
         // invite party button
-        interactionButtons.add(new PartyButton(
+        partyButton = new PartyButton(
                 leftPos - 21,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 38,
-                playerName));
+                playerName);
+        interactionButtons.add(partyButton);
 
         // right
         // duel button
@@ -150,14 +154,6 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
                 Component.translatable("screens.wynntils.gearViewer.trade"),
                 Component.literal("T"),
                 () -> Handlers.Command.queueCommand("trade " + playerName)));
-
-        // ignore button
-        interactionButtons.add(new SimplePlayerInteractionButton(
-                leftPos + Texture.GEAR_VIEWER_BACKGROUND.width() + 1,
-                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 38,
-                Component.translatable("screens.wynntils.gearViewer.ignore"),
-                Component.literal("I"),
-                () -> Handlers.Command.queueCommand("ignore " + playerName)));
     }
 
     @Override
@@ -241,5 +237,10 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
     public Player getPlayer() {
         return player;
+    }
+
+    public void updateButtonIcons() {
+        friendButton.updateIcon();
+        partyButton.updateIcon();
     }
 }
