@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions;
@@ -553,6 +553,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
         registerFunction(new MinecraftFunctions.KeyPressedFunction());
+        registerFunction(new MinecraftFunctions.MinecraftEffectDurationFunction());
         registerFunction(new MinecraftFunctions.MyLocationFunction());
         registerFunction(new MinecraftFunctions.TicksFunction());
 
