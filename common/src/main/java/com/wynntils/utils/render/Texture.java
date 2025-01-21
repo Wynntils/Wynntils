@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
@@ -20,6 +20,22 @@ public enum Texture {
     TAG_RED("content_book/tag_red.png", 22, 44),
     TAG_RED_SELECTED("content_book/tag_red_selected.png", 22, 44),
     TAG_SEARCH("content_book/tag_search.png", 140, 30),
+    // endregion
+
+    // region Guild Log
+    ECONOMY_LOG_ICON("guild_log/economy_log_icon.png", 16, 16),
+    GENERAL_LOG_ICON("guild_log/general_log_icon.png", 16, 16),
+    GUILD_LOG_BACKGROUND("guild_log/guild_log_background.png", 410, 164),
+    HR_BANK_LOG_ICON("guild_log/hr_bank_log_icon.png", 16, 16),
+    LOG_BACK("guild_log/log_back.png", 14, 12),
+    LOG_BUTTON("guild_log/log_type_button.png", 90, 22),
+    LOG_DATE_ENTRY("guild_log/log_date_entry.png", 276, 20),
+    LOG_ENTRY_BOTTOM("guild_log/log_entry_bottom.png", 276, 4),
+    LOG_ENTRY_MIDDLE("guild_log/log_entry_middle.png", 276, 9),
+    LOG_ENTRY_TOP("guild_log/log_entry_top.png", 276, 4),
+    OBJECTIVES_LOG_ICON("guild_log/objectives_log_icon.png", 16, 16),
+    PUBLIC_BANK_LOG_ICON("guild_log/public_bank_log_icon.png", 16, 16),
+    WARS_LOG_ICON("guild_log/wars_log_icon.png", 16, 16),
     // endregion
 
     // region Icons
