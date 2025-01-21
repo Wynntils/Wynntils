@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map;
@@ -195,16 +195,22 @@ public class PoiService extends Service {
 
     public void loadCustomPoiProviders() {
         for (CustomPoiProvider poiProvider : customPoiProviders.get()) {
-            Managers.Net.download(poiProvider.getUrl(), poiProvider.getName()).handleJsonArray(elements -> {
-                List<CustomPoi> pois = new ArrayList<>();
+            try {
+                Managers.Net.download(poiProvider.getUrl(), poiProvider.getName())
+                        .handleJsonArray(elements -> {
+                            List<CustomPoi> pois = new ArrayList<>();
 
-                for (JsonElement jsonElement : elements) {
-                    CustomPoi poi = JsonManager.GSON.fromJson(jsonElement, CustomPoi.class);
-                    pois.add(poi);
-                }
+                            for (JsonElement jsonElement : elements) {
+                                CustomPoi poi = JsonManager.GSON.fromJson(jsonElement, CustomPoi.class);
+                                pois.add(poi);
+                            }
 
-                providedCustomPois.put(poiProvider, ImmutableList.copyOf(pois));
-            });
+                            providedCustomPois.put(poiProvider, ImmutableList.copyOf(pois));
+                        });
+            } catch (IllegalArgumentException exception) {
+                WynntilsMod.warn(
+                        "Failed to load custom POIs from " + poiProvider.getUrl() + ": " + exception.getMessage());
+            }
         }
     }
 
