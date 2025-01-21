@@ -33,6 +33,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -48,7 +49,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     private boolean hybridMode = true;
 
     private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VERY_HIGH;
-    private GuildResourceValues territoryTreasuryeFilterLevel = GuildResourceValues.VERY_HIGH;
+    private GuildResourceValues territoryTreasuryFilterLevel = GuildResourceValues.VERY_HIGH;
     private TerritoryFilterType territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
     private TerritoryFilterType territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
 
@@ -143,10 +144,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
                     territoryTreasuryFilterEnabled = true;
                     if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                        territoryTreasuryeFilterLevel = territoryTreasuryeFilterLevel.getFilterNext(
+                        territoryTreasuryFilterLevel = territoryTreasuryFilterLevel.getFilterNext(
                                 territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
                     } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                        territoryTreasuryeFilterLevel = territoryTreasuryeFilterLevel.getFilterPrevious(
+                        territoryTreasuryFilterLevel = territoryTreasuryFilterLevel.getFilterPrevious(
                                 territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
                     }
 
@@ -256,8 +257,12 @@ public final class GuildMapScreen extends AbstractMapScreen {
         // FIXME: Add back hybrid/advancement mode
         // FIXME: Add territory connection map paths
         // FIXME: Add user markers
-        // FIXME: Filter based on defense/treasury filter
-        return Services.MapData.getFeaturesForCategory("wynntils:territory");
+        return Services.MapData.getFeaturesForCategory("wynntils:territory")
+                .filter(f -> f instanceof TerritoryArea)
+                .map(f -> (TerritoryArea) f)
+                .filter(this::filterDefense)
+                .filter(this::filterTreasury)
+                .map(f -> f);
     }
 
     @Override
@@ -309,6 +314,43 @@ public final class GuildMapScreen extends AbstractMapScreen {
         return resourceMode;
     }
 
+    private boolean filterDefense(TerritoryArea territoryArea) {
+        return !territoryDefenseFilterEnabled
+                || filterTerritory(
+                        territoryArea,
+                        territoryDefenseFilterType,
+                        territoryDefenseFilterLevel,
+                        area -> area.getTerritoryInfo()
+                                .map(TerritoryInfo::getDefences)
+                                .orElse(null));
+    }
+
+    private boolean filterTreasury(TerritoryArea territoryArea) {
+        return !territoryTreasuryFilterEnabled
+                || filterTerritory(
+                        territoryArea,
+                        territoryTreasuryFilterType,
+                        territoryTreasuryFilterLevel,
+                        area -> area.getTerritoryInfo()
+                                .map(TerritoryInfo::getTreasury)
+                                .orElse(null));
+    }
+
+    private boolean filterTerritory(
+            TerritoryArea territoryArea,
+            TerritoryFilterType filterType,
+            GuildResourceValues filterLevel,
+            Function<TerritoryArea, GuildResourceValues> getter) {
+        GuildResourceValues guildResourceValue = getter.apply(territoryArea);
+        if (guildResourceValue == null) return false;
+
+        return switch (filterType) {
+            case HIGHER -> guildResourceValue.getLevel() >= filterLevel.getLevel();
+            case LOWER -> guildResourceValue.getLevel() <= filterLevel.getLevel();
+            case DEFAULT -> guildResourceValue.getLevel() == filterLevel.getLevel();
+        };
+    }
+
     private static void renderTerritoryTooltip(PoseStack poseStack, TerritoryArea territoryArea) {
         Optional<TerritoryInfo> territoryInfoOpt = territoryArea.getTerritoryInfo();
 
@@ -324,7 +366,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
         final float centerHeight = 75
-                + (territoryInfo.getStorage().values().size()
+                + (territoryInfo.getStorage().size()
                                 + territoryInfo.getGenerators().size())
                         * 10
                 + (territoryInfo.isHeadquarters() ? 20 : 0);
@@ -563,8 +605,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
         Component lastLine = territoryTreasuryFilterEnabled
                 ? Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
                         .withStyle(ChatFormatting.GRAY)
-                        .append(territoryTreasuryeFilterLevel.getTreasuryColor()
-                                + territoryTreasuryeFilterLevel.getAsString())
+                        .append(territoryTreasuryFilterLevel.getTreasuryColor()
+                                + territoryTreasuryFilterLevel.getAsString())
                         .append(territoryTreasuryFilterType.asComponent())
                 : Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
                         .withStyle(ChatFormatting.GRAY)
