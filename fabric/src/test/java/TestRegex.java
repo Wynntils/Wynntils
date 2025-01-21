@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 import com.wynntils.features.chat.GuildRankReplacementFeature;
@@ -28,6 +28,7 @@ import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
 import com.wynntils.models.items.annotators.gui.LeaderboardSeasonAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
+import com.wynntils.models.npc.label.FastTravelLabelParser;
 import com.wynntils.models.npc.label.NpcLabelParser;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.PartyModel;
@@ -267,6 +268,20 @@ public class TestRegex {
         p.shouldMatch("§7[§f+0 Combat XP§7]\n§bx1.1 §7[§f+§b1058§f Guild XP§7]\n[ShadowCat117]");
         // Dxp guild xp with blessing
         p.shouldMatch("§dx2 §7[§f+§d0§f Combat XP§7]\n§dx2 §bx1.1 §7[§f+§b1661§f Guild XP§7]\n[ShadowCat117]");
+    }
+
+    @Test
+    public void FastTravelLabelParser_FAST_TRAVEL_LABEL_PATTERN() {
+        PatternTester p = new PatternTester(FastTravelLabelParser.class, "FAST_TRAVEL_LABEL_PATTERN");
+
+        p.shouldMatch(
+                "§#8193ffff\uE060\uDAFF\uDFFF\uE035\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE045\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFBE§0\uE005\uE000\uE012\uE013 \uE013\uE011\uE000\uE015\uE004\uE00B\uDB00\uDC02§#8193ffff\n§#f9e79effGate of Recall\n§0 \n§7\uE01C §oTo Lutho§r§7 \uE01C\n§0 ");
+        p.shouldMatch(
+                "§#8193ffff\uE060\uDAFF\uDFFF\uE035\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE045\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFBE§0\uE005\uE000\uE012\uE013 \uE013\uE011\uE000\uE015\uE004\uE00B\uDB00\uDC02§#8193ffff\n§#f9e79effMysterious Obelisk\n§0 \n§7\uE01C §oTo Nemract§r§7 \uE01C\n§0 \n§f\uE001§7 Right-Click to interact\n§0 ");
+        p.shouldMatch(
+                "§#8193ffff\uE060\uDAFF\uDFFF\uE035\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE045\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFBE§0\uE005\uE000\uE012\uE013 \uE013\uE011\uE000\uE015\uE004\uE00B\uDB00\uDC02§#8193ffff\n§#f9e79effMysterious Obelisk\n§0 \n§7\uE01C §oTo Tempo Town§r§7 \uE01C\n§0 \n§f\uE001§7 Right-Click to interact\n§0 ");
+        p.shouldMatch(
+                "§#8193ffff\uE060\uDAFF\uDFFF\uE035\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE045\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFBE§0\uE005\uE000\uE012\uE013 \uE013\uE011\uE000\uE015\uE004\uE00B\uDB00\uDC02§#8193ffff\n§#f9e79effThe Nexus\n§0 \n§7\uE01C §oTo the Nexus Hub§r§7 \uE01C\n§0 ");
     }
 
     @Test
@@ -931,8 +946,17 @@ public class TestRegex {
     public void NpcLabelParser_NPC_LABEL_PATTERN() {
         PatternTester p = new PatternTester(NpcLabelParser.class, "NPC_LABEL_PATTERN");
 
-        p.shouldMatch("§dLootrun Master\n§7Start a Lootrun");
+        p.shouldMatch("§f\uE000\n§dArmour Merchant\n§7NPC");
+        p.shouldMatch("§f\uE002\n§dBlacksmith\n§7Sell and repair items");
+        p.shouldMatch("§f\uE001\n§dEmerald Merchant\n§7NPC");
         p.shouldMatch("§f\uE003\n§dItem Identifier\n§7NPC");
+        p.shouldMatch("§f\uE000\n§dLiquid Merchant\n§7NPC");
+        p.shouldMatch("§f\uE000\n§dPotion Merchant\n§7NPC");
+        p.shouldMatch("§f\uE004\n§dPowder Master\n§7NPC");
+        p.shouldMatch("§f\uE000\n§dScroll Merchant\n§7NPC");
+        p.shouldMatch("§f\uE000\n§dTool Merchant\n§7NPC");
+        p.shouldMatch("§f\uE000\n§dWeapon Merchant\n§7NPC");
+        p.shouldMatch("§f\uE008\n§cTrade Market§f\n§7Buy & sell items\non the market");
     }
 
     @Test

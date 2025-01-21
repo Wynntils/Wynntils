@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.profession.type;
@@ -28,6 +28,7 @@ public final class MaterialProfile {
                     new SourceMaterial("Diamond", 80),
                     new SourceMaterial("Molten", 90),
                     new SourceMaterial("Voidstone", 100),
+                    new SourceMaterial("Larbonic Geode", 105),
                     new SourceMaterial("Dernic", 110)),
             MaterialType.LOG,
             List.of(
@@ -40,6 +41,8 @@ public final class MaterialProfile {
                     new SourceMaterial("Dark", 60),
                     new SourceMaterial("Light", 70),
                     new SourceMaterial("Pine", 80),
+                    new SourceMaterial("Flerisi Tree", 85),
+                    new SourceMaterial("Flerisi Trunk", 85),
                     new SourceMaterial("Avo", 90),
                     new SourceMaterial("Sky", 100),
                     new SourceMaterial("Dernic", 110)),
@@ -56,6 +59,7 @@ public final class MaterialProfile {
                     new SourceMaterial("Rice", 80),
                     new SourceMaterial("Sorghum", 90),
                     new SourceMaterial("Hemp", 100),
+                    new SourceMaterial("Voidgloom", 105),
                     new SourceMaterial("Dernic", 110)),
             MaterialType.FISH,
             List.of(
@@ -68,6 +72,7 @@ public final class MaterialProfile {
                     new SourceMaterial("Koi", 60),
                     new SourceMaterial("Gylia", 70),
                     new SourceMaterial("Bass", 80),
+                    new SourceMaterial("Abyssal Matter", 90),
                     new SourceMaterial("Molten", 90),
                     new SourceMaterial("Starfish", 100),
                     new SourceMaterial("Dernic", 110)));

@@ -43,6 +43,7 @@ import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
 import com.wynntils.models.items.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
+import com.wynntils.models.items.annotators.gui.GuildLogAnnotator;
 import com.wynntils.models.items.annotators.gui.IngredientPouchAnnotator;
 import com.wynntils.models.items.annotators.gui.LeaderboardSeasonAnnotator;
 import com.wynntils.models.items.annotators.gui.SeaskipperDestinationAnnotator;
@@ -97,6 +98,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new CharacterAnnotator());
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
+        Handlers.Item.registerAnnotator(new GuildLogAnnotator());
         Handlers.Item.registerAnnotator(new IngredientPouchAnnotator());
         Handlers.Item.registerAnnotator(new LeaderboardSeasonAnnotator());
         Handlers.Item.registerAnnotator(new SeaskipperDestinationAnnotator());

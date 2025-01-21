@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats;
@@ -141,7 +141,19 @@ public class CombatXpModel extends Model {
     private float getCurrentXpAsFloat() {
         // We calculate our level in points by seeing how far we've progress towards our
         // current XP level's max
-        return McUtils.player().experienceProgress * getXpPointsNeededToLevelUp();
+        float progress = McUtils.player().experienceProgress;
+
+        float correctedProgress;
+        // The experience bar skips the middle part where it overlaps with the level number,
+        // so it needs to be corrected in order to calculate accurate experience points.
+        // One segment takes 0.428 of the xp bar, and the remaining 0.435 after skipping 0.565
+        if (progress < 0.5f) {
+            correctedProgress = progress / 0.856f;
+        } else {
+            correctedProgress = 0.565f + (0.435f * ((progress - 0.5f) / 0.5f));
+        }
+
+        return correctedProgress * this.getXpPointsNeededToLevelUp();
     }
 
     private int getXpPointsNeededToLevelUp() {
