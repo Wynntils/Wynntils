@@ -1,9 +1,34 @@
+## [2.4.16](https://github.com/Wynntils/Wynntils/compare/v2.4.15...v2.4.16) (2025-01-21)
+
+
+### New Features
+
+* Add custom guild log screen [skip ci] ([#3071](https://github.com/Wynntils/Wynntils/issues/3071)) ([f00170a](https://github.com/Wynntils/Wynntils/commit/f00170a84f8f492e37ac334b2a04069e4da9243a))
+* Add function for detecting Minecraft status effects [skip ci] ([#3068](https://github.com/Wynntils/Wynntils/issues/3068)) ([679cce6](https://github.com/Wynntils/Wynntils/commit/679cce6f05912645022baf49348a82bcf8736242))
+* Updates to crowd sourcing [skip ci] ([#3072](https://github.com/Wynntils/Wynntils/issues/3072)) ([55523ce](https://github.com/Wynntils/Wynntils/commit/55523ce426daaf1275c63a28ca6d9b689752e695))
+
+
+### Bug Fixes
+
+* Fix combat XP calculation being inaccurate ([#3070](https://github.com/Wynntils/Wynntils/issues/3070)) ([ea9ecde](https://github.com/Wynntils/Wynntils/commit/ea9ecdeb9eb8186f15e82647094a7b88d4652b73))
+* Fix PoiProviders crashing the game if the set URL was incorrect [skip ci] ([#3074](https://github.com/Wynntils/Wynntils/issues/3074)) ([80f69a8](https://github.com/Wynntils/Wynntils/commit/80f69a855fc3fed640d7e45071b318bf5ce1e6ad))
+
+
+### Miscellaneous Chores
+
+* Add tests for fast travel label parsing [skip ci] ([#3073](https://github.com/Wynntils/Wynntils/issues/3073)) ([876f443](https://github.com/Wynntils/Wynntils/commit/876f4430476122bf60751e243ac9eea640fef9a4))
+
 ## [2.4.15](https://github.com/Wynntils/Wynntils/compare/v2.4.14...v2.4.15) (2025-01-09)
 
 
 ### New Features
 
 * Valuables Protection Feature ([#2935](https://github.com/Wynntils/Wynntils/issues/2935)) ([bd56e98](https://github.com/Wynntils/Wynntils/commit/bd56e985b39cc23d5a6ab7ff5f4711be38eef52d))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.4.15 [skip ci] ([a498ac7](https://github.com/Wynntils/Wynntils/commit/a498ac750033f2b9f0a62a86859d345c57588ce5))
 
 ## [2.4.14](https://github.com/Wynntils/Wynntils/compare/v2.4.13...v2.4.14) (2025-01-08)
 
@@ -61,17 +86,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.4.12 [skip ci] ([57c0fdd](https://github.com/Wynntils/Wynntils/commit/57c0fdd12cf676a9c708f6c4ce78b355783f3813))
-
-## [2.4.11](https://github.com/Wynntils/Wynntils/compare/v2.4.10...v2.4.11) (2024-12-26)
-
-
-### Bug Fixes
-
-* More fixes for regional servers ([#3042](https://github.com/Wynntils/Wynntils/issues/3042)) ([7692b1b](https://github.com/Wynntils/Wynntils/commit/7692b1b18ef1892e862c6e01690804da19fa32fc))
-* Update combat XP requirement values [skip ci] ([#3043](https://github.com/Wynntils/Wynntils/issues/3043)) ([8e591ec](https://github.com/Wynntils/Wynntils/commit/8e591ecd06a1c102653c64c8ec07f47c682943fb))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.4.11 [skip ci] ([e84dbb7](https://github.com/Wynntils/Wynntils/commit/e84dbb7f285f6a429b0b533496f677b8a467d392))
 
