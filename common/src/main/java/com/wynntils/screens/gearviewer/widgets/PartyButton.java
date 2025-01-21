@@ -14,8 +14,8 @@ public class PartyButton extends PlayerInteractionButton {
 
     public PartyButton(int x, int y, String playerName) {
         super(x, y);
+        this.playerName = playerName; // Must be run before updateIcon to ensure name is set
         updateIcon();
-        this.playerName = playerName;
     }
 
     @Override
