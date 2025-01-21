@@ -146,10 +146,11 @@ public class CombatXpModel extends Model {
         float correctedProgress;
         // The experience bar skips the middle part where it overlaps with the level number,
         // so it needs to be corrected in order to calculate accurate experience points.
+        // One segment takes 0.428 of the xp bar, and the remaining 0.435 after skipping 0.565
         if (progress < 0.5f) {
             correctedProgress = progress / 0.856f;
         } else {
-            correctedProgress = 1 - (1 - progress) / 0.87f;
+            correctedProgress = 0.565f + (0.435f * ((progress - 0.5f) / 0.5f));
         }
 
         return correctedProgress * this.getXpPointsNeededToLevelUp();
