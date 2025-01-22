@@ -1,3 +1,10 @@
+## [2.4.17](https://github.com/Wynntils/Wynntils/compare/v2.4.16...v2.4.17) (2025-01-22)
+
+
+### Bug Fixes
+
+* Fix combat xp calculation logic for the second part of the bar ([#3075](https://github.com/Wynntils/Wynntils/issues/3075)) ([4b485d1](https://github.com/Wynntils/Wynntils/commit/4b485d16f1c3831d92bf2c9bbd1e53fde71cf645))
+
 ## [2.4.16](https://github.com/Wynntils/Wynntils/compare/v2.4.15...v2.4.16) (2025-01-21)
 
 
@@ -17,6 +24,7 @@
 ### Miscellaneous Chores
 
 * Add tests for fast travel label parsing [skip ci] ([#3073](https://github.com/Wynntils/Wynntils/issues/3073)) ([876f443](https://github.com/Wynntils/Wynntils/commit/876f4430476122bf60751e243ac9eea640fef9a4))
+* **release:** v2.4.16 [skip ci] ([ad95022](https://github.com/Wynntils/Wynntils/commit/ad950227de72bdc3e3032391f1549a6de3244c78))
 
 ## [2.4.15](https://github.com/Wynntils/Wynntils/compare/v2.4.14...v2.4.15) (2025-01-09)
 
@@ -67,23 +75,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.4.13 [skip ci] ([3faa5db](https://github.com/Wynntils/Wynntils/commit/3faa5dbfb44d192b60893257e97574fcc81a443b))
-
-## [2.4.12](https://github.com/Wynntils/Wynntils/compare/v2.4.11...v2.4.12) (2024-12-29)
-
-
-### New Features
-
-* Add kills per minute function [skip ci] ([#3045](https://github.com/Wynntils/Wynntils/issues/3045)) ([6e6955f](https://github.com/Wynntils/Wynntils/commit/6e6955f9f32b9d35891a3e418335cc297673ae5e))
-* Redirect dropped item messages [skip ci] ([#3048](https://github.com/Wynntils/Wynntils/issues/3048)) ([e74dc03](https://github.com/Wynntils/Wynntils/commit/e74dc0313d9a4fd38a33a47dc4f231d97ee1607f))
-
-
-### Bug Fixes
-
-* Fix streamer mode detection [skip ci] ([#3044](https://github.com/Wynntils/Wynntils/issues/3044)) ([b2c5ef9](https://github.com/Wynntils/Wynntils/commit/b2c5ef9234a64329500c2c36535b933da88db887))
-* Use correct JSON deserialization for PoiService ([#3049](https://github.com/Wynntils/Wynntils/issues/3049)) ([4928db9](https://github.com/Wynntils/Wynntils/commit/4928db9c0407d0de74683df27de39dbbc1eaba30))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.4.12 [skip ci] ([57c0fdd](https://github.com/Wynntils/Wynntils/commit/57c0fdd12cf676a9c708f6c4ce78b355783f3813))
 
