@@ -72,6 +72,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     private static final int MIN_Z = -6600;
     private static final int CENTER_ZOOM_LEVEL = 20;
 
+    private static final CustomColor ZOOM_BAR_COLOR = CustomColor.fromInt(0x82654C);
+
     protected boolean holdingMapKey = false;
     protected boolean firstInit = true;
 
@@ -496,7 +498,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
         RenderUtils.drawLine(
                 poseStack,
-                CustomColor.fromInt(0x82654c),
+                ZOOM_BAR_COLOR,
                 renderX + renderWidth - 23,
                 renderY + renderHeight - 16,
                 renderX + renderWidth - 23,
