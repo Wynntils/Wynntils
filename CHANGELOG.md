@@ -1,9 +1,21 @@
+## [2.4.18](https://github.com/Wynntils/Wynntils/compare/v2.4.17...v2.4.18) (2025-01-22)
+
+
+### Bug Fixes
+
+* Fix lootrun mythic detection ([#3077](https://github.com/Wynntils/Wynntils/issues/3077)) ([4cc49a5](https://github.com/Wynntils/Wynntils/commit/4cc49a5d343c842dfadf51324486091e5fa1b4fc))
+
 ## [2.4.17](https://github.com/Wynntils/Wynntils/compare/v2.4.16...v2.4.17) (2025-01-22)
 
 
 ### Bug Fixes
 
 * Fix combat xp calculation logic for the second part of the bar ([#3075](https://github.com/Wynntils/Wynntils/issues/3075)) ([4b485d1](https://github.com/Wynntils/Wynntils/commit/4b485d16f1c3831d92bf2c9bbd1e53fde71cf645))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.4.17 [skip ci] ([8b9a8a6](https://github.com/Wynntils/Wynntils/commit/8b9a8a680b1670226a01dc573e247bf5b30673cb))
 
 ## [2.4.16](https://github.com/Wynntils/Wynntils/compare/v2.4.15...v2.4.16) (2025-01-21)
 
@@ -55,24 +67,4 @@
 * [auto-generated] Update urls.json [ci skip] ([#3058](https://github.com/Wynntils/Wynntils/issues/3058)) ([a4c3b87](https://github.com/Wynntils/Wynntils/commit/a4c3b87f0d3f8043f20fd9bede370feb2b00f4e0))
 * [auto-generated] Update urls.json [ci skip] ([#3060](https://github.com/Wynntils/Wynntils/issues/3060)) ([d5f046f](https://github.com/Wynntils/Wynntils/commit/d5f046f5feef9987ed0bca27d9502af6fc0841f4))
 * **release:** v2.4.14 [skip ci] ([9da4902](https://github.com/Wynntils/Wynntils/commit/9da49022a0cbca00a9cda2bf213a3c59b8764fac))
-
-## [2.4.13](https://github.com/Wynntils/Wynntils/compare/v2.4.12...v2.4.13) (2025-01-03)
-
-
-### New Features
-
-* Annotate Outer Void items [skip ci] ([#3052](https://github.com/Wynntils/Wynntils/issues/3052)) ([1ed0b4d](https://github.com/Wynntils/Wynntils/commit/1ed0b4da9c3e63193526f183cbce8030337bcf6c))
-* Make bomb bell messages clickable ([#3055](https://github.com/Wynntils/Wynntils/issues/3055)) ([3fef9b6](https://github.com/Wynntils/Wynntils/commit/3fef9b6dcb705e6016f6979da781374dae6be4cd))
-
-
-### Bug Fixes
-
-* Fix auto attack sending an input when casting spells quickly [skip ci] ([#3040](https://github.com/Wynntils/Wynntils/issues/3040)) ([a85040c](https://github.com/Wynntils/Wynntils/commit/a85040cf52accf10e462f7729e3f71d2d1025156))
-* Fix quick cast keybinds crashing if no gear instance [skip ci] ([#3051](https://github.com/Wynntils/Wynntils/issues/3051)) ([38c5e0c](https://github.com/Wynntils/Wynntils/commit/38c5e0c2f1045043b96bf5c3a87a1f23e0e4fa03))
-* trade market price match buttons [skip ci] ([#3050](https://github.com/Wynntils/Wynntils/issues/3050)) ([d8ca1ca](https://github.com/Wynntils/Wynntils/commit/d8ca1caef085e62a927db515c17f876d29c5cad1))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.4.13 [skip ci] ([3faa5db](https://github.com/Wynntils/Wynntils/commit/3faa5dbfb44d192b60893257e97574fcc81a443b))
 
