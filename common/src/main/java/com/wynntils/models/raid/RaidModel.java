@@ -224,7 +224,9 @@ public class RaidModel extends Model {
         rewardChestIsOpened = true;
 
         if (hasProcessedRewards) {
-            /* Can include logic to handle scrolling through received aspects */
+            // Note: Logic here has been intentionally skipped. Only the first page of the rewarded aspects are parsed
+            // and relevant as of right now (as it is extraordinarily unlikely that a user gets more mythic aspects
+            // than the first page can hold)
             return;
         }
         hasProcessedRewards = true;
