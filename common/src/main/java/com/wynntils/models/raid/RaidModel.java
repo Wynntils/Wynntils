@@ -546,19 +546,19 @@ public class RaidModel extends Model {
         return currentRoomDamage;
     }
 
-    public int getNumRaidsWithoutMythicAspect() {
+    public int getRaidsWithoutMythicAspect() {
         return numRaidsWithoutMythicAspect.get();
     }
 
-    public int getNumAspectPullsWithoutMythicAspect() {
+    public int getAspectPullsWithoutMythicAspect() {
         return numAspectPullsWithoutMythicAspect.get();
     }
 
-    public int getNumRaidsWithoutMythicTome() {
+    public int getRaidsWithoutMythicTome() {
         return numRaidsWithoutMythicTome.get();
     }
 
-    public int getNumRewardPullsWithoutMythicTome() {
+    public int getRewardPullsWithoutMythicTome() {
         return numRewardPullsWithoutMythicTome.get();
     }
 

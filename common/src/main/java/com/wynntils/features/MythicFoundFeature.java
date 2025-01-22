@@ -172,12 +172,11 @@ public class MythicFoundFeature extends Feature {
                 .append(itemName.getComponent())
                 .append(Component.literal(" after ")
                         .withStyle(ChatFormatting.LIGHT_PURPLE)
-                        .append(Component.literal(
-                                        String.valueOf(Models.Raid.getNumRaidsWithoutMythicAspect()) + " raids")
+                        .append(Component.literal(String.valueOf(Models.Raid.getRaidsWithoutMythicAspect()) + " raids")
                                 .withStyle(ChatFormatting.GOLD)))
                 .append(Component.literal(" and ").withStyle(ChatFormatting.LIGHT_PURPLE))
                 .append(Component.literal(
-                                String.valueOf(Models.Raid.getNumAspectPullsWithoutMythicAspect()) + " aspect pulls")
+                                String.valueOf(Models.Raid.getAspectPullsWithoutMythicAspect()) + " aspect pulls")
                         .withStyle(ChatFormatting.GOLD))
                 .append(Component.literal(" without a mythic.").withStyle(ChatFormatting.LIGHT_PURPLE)));
     }
@@ -188,11 +187,11 @@ public class MythicFoundFeature extends Feature {
                 .append(itemName.getComponent())
                 .append(Component.literal(" after ")
                         .withStyle(ChatFormatting.LIGHT_PURPLE)
-                        .append(Component.literal(String.valueOf(Models.Raid.getNumRaidsWithoutMythicTome()) + " raids")
+                        .append(Component.literal(String.valueOf(Models.Raid.getRaidsWithoutMythicTome()) + " raids")
                                 .withStyle(ChatFormatting.GOLD)))
                 .append(Component.literal(" and ").withStyle(ChatFormatting.LIGHT_PURPLE))
                 .append(Component.literal(
-                                String.valueOf(Models.Raid.getNumRewardPullsWithoutMythicTome()) + " reward pulls")
+                                String.valueOf(Models.Raid.getRewardPullsWithoutMythicTome()) + " reward pulls")
                         .withStyle(ChatFormatting.GOLD))
                 .append(Component.literal(" without a mythic."))
                 .withStyle(ChatFormatting.LIGHT_PURPLE));

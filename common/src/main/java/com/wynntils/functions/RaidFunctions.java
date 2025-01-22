@@ -182,28 +182,28 @@ public class RaidFunctions {
     public static class DryAspectsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Raid.getNumAspectPullsWithoutMythicAspect();
+            return Models.Raid.getAspectPullsWithoutMythicAspect();
         }
     }
 
     public static class DryRaidsAspectsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Raid.getNumRaidsWithoutMythicAspect();
+            return Models.Raid.getRaidsWithoutMythicAspect();
         }
     }
 
     public static class DryRaidRewardPullsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Raid.getNumRewardPullsWithoutMythicTome();
+            return Models.Raid.getRewardPullsWithoutMythicTome();
         }
     }
 
     public static class DryRaidsTomesFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Raid.getNumRaidsWithoutMythicTome();
+            return Models.Raid.getRaidsWithoutMythicTome();
         }
     }
 }

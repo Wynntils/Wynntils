@@ -15,7 +15,7 @@ import net.minecraft.world.item.Items;
 
 public final class TomeAnnotator implements GameItemAnnotator {
     private static final Pattern TOME_PATTERN = Pattern.compile(
-            "^§[5abcdef](?<Unid>Unidentified )?(?<TomeName>((?<Variant>[\\w']+)? ?Tome of (?<Type>\\w+))( (?<Subtype>.+)( (?<Tier>[IVX]{1,4}))?)?)$");
+            "^§[5abcdef](?<unid>Unidentified )?(?<tomename>((?<variant>[\\w']+)? ?Tome of (?<type>\\w+))( (?<subtype>.+)( (?<tier>[IVX]{1,4}))?)?)$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -23,8 +23,8 @@ public final class TomeAnnotator implements GameItemAnnotator {
         Matcher matcher = name.getMatcher(TOME_PATTERN);
         if (!matcher.matches()) return null;
 
-        String tomeName = matcher.group("TomeName");
-        boolean isUnidentified = matcher.group("Unid") != null;
+        String tomeName = matcher.group("tomename");
+        boolean isUnidentified = matcher.group("unid") != null;
 
         return Models.Rewards.fromTomeItemStack(itemStack, name, tomeName, isUnidentified);
     }
