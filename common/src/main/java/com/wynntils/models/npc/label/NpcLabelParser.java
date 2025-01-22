@@ -22,6 +22,7 @@ public class NpcLabelParser implements LabelParser<NpcLabelInfo> {
             Pattern.compile("^(§b.*'(s)?§7 Shop.*|§f\uE000 Click §7to set up booth)$", Pattern.DOTALL);
     private static final Pattern SEASKIPPER_LABEL_PATTERN =
             Pattern.compile("^§6V.S.S. Seaskipper\n§7Right-click to Sail\n§0À$");
+    private static final Pattern LOOTRUN_MASTER_LABEL_PATTERN = Pattern.compile("§dLootrun Master\n§7Start a Lootrun");
 
     public NpcLabelInfo getInfo(StyledText label, Location location, Entity entity) {
         Matcher matcher = NPC_LABEL_PATTERN.matcher(label.getString());
@@ -45,6 +46,10 @@ public class NpcLabelParser implements LabelParser<NpcLabelInfo> {
 
         if (label.matches(SEASKIPPER_LABEL_PATTERN)) {
             return new NpcLabelInfo(label, "Seaskipper", location.offset(0, -1, 0), entity);
+        }
+
+        if (label.matches(LOOTRUN_MASTER_LABEL_PATTERN)) {
+            return new NpcLabelInfo(label, "Lootrun Master", location.offset(0, -1, 0), entity);
         }
 
         return null;

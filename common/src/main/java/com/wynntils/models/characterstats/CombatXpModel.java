@@ -150,7 +150,7 @@ public class CombatXpModel extends Model {
         if (progress < 0.5f) {
             correctedProgress = progress / 0.856f;
         } else {
-            correctedProgress = 0.565f + (0.435f * ((progress - 0.5f) / 0.5f));
+            correctedProgress = (0.5f * progress - 0.065f) / 0.435f;
         }
 
         return correctedProgress * this.getXpPointsNeededToLevelUp();
