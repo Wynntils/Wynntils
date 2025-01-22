@@ -21,6 +21,8 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public class CustomIconWidget extends AbstractWidget {
+    private static final String ICON_ID_PREFIX = "wynntils:icon:personal:";
+
     private final CustomWaypointIconScreen waypointIconScreen;
     private final float iconRenderX;
     private final float iconWidth;
@@ -69,7 +71,7 @@ public class CustomIconWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(customIcon.getIconId().substring("wynntils:icon:personal:".length())),
+                        StyledText.fromString(customIcon.getIconId().substring(ICON_ID_PREFIX.length())),
                         getX() + 15 + iconWidth,
                         getY() + getHeight() / 2f,
                         getWidth() - 40 - iconWidth,
