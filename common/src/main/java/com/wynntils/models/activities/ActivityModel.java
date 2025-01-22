@@ -9,6 +9,8 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
@@ -107,6 +109,11 @@ public final class ActivityModel extends Model {
         for (ActivityBeaconMarkerKind beaconMarkerKind : ActivityBeaconMarkerKind.values()) {
             Models.Beacon.registerBeaconMarker(beaconMarkerKind);
         }
+    }
+
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(ACTIVITY_PROVIDER);
     }
 
     @SubscribeEvent

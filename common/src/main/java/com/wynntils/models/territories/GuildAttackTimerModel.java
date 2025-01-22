@@ -8,6 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
@@ -68,6 +70,11 @@ public final class GuildAttackTimerModel extends Model {
         super(List.of());
 
         Handlers.Scoreboard.addPart(GUILD_ATTACK_SCOREBOARD_PART);
+    }
+
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(GUILD_ATTACK_LOCATION_PROVIDER);
     }
 
     @SubscribeEvent
