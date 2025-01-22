@@ -74,7 +74,7 @@ public class WaypointsService extends Service {
     }
 
     public Set<String> getCategories() {
-        return getWaypoints().stream().map(MapLocationImpl::getCategoryId).collect(Collectors.toSet());
+        return getWaypoints().stream().map(MapLocationImpl::getCategoryId).collect(Collectors.toUnmodifiableSet());
     }
 
     public void addWaypoint(WaypointLocation waypoint) {
