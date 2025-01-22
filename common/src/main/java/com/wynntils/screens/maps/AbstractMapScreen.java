@@ -76,6 +76,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected boolean holdingMapKey = false;
     protected boolean firstInit = true;
+    protected boolean shouldCenterMap = true;
 
     protected float renderWidth;
     protected float renderHeight;
@@ -120,7 +121,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         setZoomLevel(zoomLevel);
 
         // Overwrite so map is not centered
-        firstInit = false;
+        shouldCenterMap = false;
     }
 
     @Override
@@ -608,6 +609,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void centerMapOnWorld() {
+        if (!shouldCenterMap) return;
+
         updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
         setZoomLevel(CENTER_ZOOM_LEVEL);
     }
