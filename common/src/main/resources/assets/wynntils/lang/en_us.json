@@ -1467,6 +1467,8 @@
   "feature.wynntils.translation.translationService.description": "Which translation service should be used?",
   "feature.wynntils.translation.translationService.name": "Translation Service",
   "feature.wynntils.unidentifiedItemIcon.description": "Adds an icon to unidentified items.",
+  "feature.wynntils.unidentifiedItemIcon.markRevealedItems.description": "Should items that are revealed but not identified be marked with an icon?",
+  "feature.wynntils.unidentifiedItemIcon.markRevealedItems.name": "Mark Revealed Items",
   "feature.wynntils.unidentifiedItemIcon.name": "Unidentified Item Icon",
   "feature.wynntils.unidentifiedItemIcon.texture.description": "What texture should be used for the overlay icons?",
   "feature.wynntils.unidentifiedItemIcon.texture.name": "Unidentified Item Icon Texture",
