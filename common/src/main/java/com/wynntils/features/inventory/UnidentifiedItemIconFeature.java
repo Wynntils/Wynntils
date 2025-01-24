@@ -60,9 +60,11 @@ public class UnidentifiedItemIconFeature extends Feature {
     @Persisted
     public final Config<Boolean> markRevealedItems = new Config<>(true);
 
-    private static final StyledText QUESTION_MARK_TEXT = StyledText.fromComponent(Component.literal("?"));
+    @Persisted
+    public final Config<UnidentifiedItemIconLocation> markRevealedItemsLocation =
+            new Config<>(UnidentifiedItemIconLocation.CENTER);
 
-    private final IconRenderer revealedItemIconRenderer = IconRenderer.forText(gearType -> QUESTION_MARK_TEXT);
+    private static final StyledText QUESTION_MARK_TEXT = StyledText.fromComponent(Component.literal("?"));
 
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.CountPre e) {
@@ -88,7 +90,10 @@ public class UnidentifiedItemIconFeature extends Feature {
                 && wynnItem instanceof IdentifiableItemProperty identifiableItem
                 && identifiableItem.getItemInstance().isEmpty()
                 && wynnItem instanceof GearTypeItemProperty gearType) {
-            revealedItemIconRenderer.renderIcon(poseStack, slotX, slotY, z, gearType.getGearType());
+            markRevealedItemsLocation
+                    .get()
+                    .getIconRenderer()
+                    .renderIcon(poseStack, slotX, slotY, z, gearType.getGearType());
         }
     }
 
@@ -117,8 +122,11 @@ public class UnidentifiedItemIconFeature extends Feature {
             };
         }
 
-        static IconRenderer forText(Function<GearType, StyledText> textMap) {
-            int padding = 1;
+        static IconRenderer forText(
+                Function<GearType, StyledText> textMap,
+                HorizontalAlignment horizontalAlignment,
+                VerticalAlignment verticalAlignment) {
+            int padding = 0;
             int paddedDims = 16 - padding - padding;
             return (poseStack, x, y, z, gearType) -> {
                 poseStack.pushPose();
@@ -128,14 +136,14 @@ public class UnidentifiedItemIconFeature extends Feature {
                         .renderAlignedTextInBox(
                                 poseStack,
                                 text,
-                                x + padding,
-                                x + paddedDims,
-                                y + padding,
-                                y + paddedDims,
+                                x + padding + 1,
+                                x + paddedDims + 1,
+                                y + padding + 1,
+                                y + paddedDims + 1,
                                 paddedDims,
                                 CommonColors.WHITE.withAlpha(.67f),
-                                HorizontalAlignment.LEFT,
-                                VerticalAlignment.TOP,
+                                horizontalAlignment,
+                                verticalAlignment,
                                 TextShadow.OUTLINE);
                 poseStack.popPose();
             };
@@ -150,6 +158,23 @@ public class UnidentifiedItemIconFeature extends Feature {
 
         UnidentifiedItemTextures(IconRenderer iconRenderer) {
             this.iconRenderer = iconRenderer;
+        }
+
+        private IconRenderer getIconRenderer() {
+            return iconRenderer;
+        }
+    }
+
+    public enum UnidentifiedItemIconLocation {
+        TOP_LEFT(HorizontalAlignment.LEFT, VerticalAlignment.TOP),
+        BOTTOM_LEFT(HorizontalAlignment.LEFT, VerticalAlignment.BOTTOM),
+        CENTER(HorizontalAlignment.CENTER, VerticalAlignment.MIDDLE);
+
+        private final IconRenderer iconRenderer;
+
+        UnidentifiedItemIconLocation(HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) {
+            this.iconRenderer =
+                    IconRenderer.forText(gearType -> QUESTION_MARK_TEXT, horizontalAlignment, verticalAlignment);
         }
 
         private IconRenderer getIconRenderer() {
