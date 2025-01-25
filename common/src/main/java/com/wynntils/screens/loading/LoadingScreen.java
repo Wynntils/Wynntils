@@ -26,7 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 public final class LoadingScreen extends WynntilsScreen {
     private static final String LOGO_STRING = "\uE005\uDAFF\uDFFF\uE006";
     private static final String TEXT_LOGO_STRING = "Wynncraft";
-    private static final ResourceLocation LOGO_FONT_LOCATION = ResourceLocation.withDefaultNamespace("screen");
+    private static final ResourceLocation LOGO_FONT_LOCATION = ResourceLocation.withDefaultNamespace("screen/static");
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
     private static final int SPINNER_SPEED = 1200;
 
