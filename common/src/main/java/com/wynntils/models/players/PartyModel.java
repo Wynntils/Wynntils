@@ -32,6 +32,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.wynntils.utils.type.Pair;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -73,17 +75,17 @@ public final class PartyModel extends Model {
     // So effectively other than party creations, anyone joining will trigger this message.
     // We also will have no idea of the party state when we ourselves join and get this message (so req party list)
     private static final Pattern PARTY_SOMEONE_JOINED =
-            Pattern.compile(PARTY_PREFIX_REGEX + "(\\w{1,16}) has joined your party, say hello!");
+            Pattern.compile(PARTY_PREFIX_REGEX + "(.+) has joined your party, say hello!");
 
     // Other player is no longer in the party
     private static final Pattern PARTY_OTHER_LEFT =
-            Pattern.compile(PARTY_PREFIX_REGEX + "(\\w{1,16}) has left the party!");
+            Pattern.compile(PARTY_PREFIX_REGEX + "(.+) has left the party!");
     private static final Pattern PARTY_OTHER_KICKED =
-            Pattern.compile(PARTY_PREFIX_REGEX + "(\\w{1,16}) has been kicked from the party!");
+            Pattern.compile(PARTY_PREFIX_REGEX + "(.+) has been kicked from the party!");
 
     // New party leader
     private static final Pattern PARTY_NEW_LEADER = Pattern.compile(
-            PARTY_PREFIX_REGEX + "(?:§c)?(\\w{1,16})(?:§e)? is now the Party Leader!.*");
+            PARTY_PREFIX_REGEX + "(?:§c)?(.+)(?:§e)? is now the Party Leader!.*");
 
     // Temporary party event over, previous party restored
     // This actually means nothing of value to us so just re-request
@@ -91,7 +93,7 @@ public final class PartyModel extends Model {
             Pattern.compile(PARTY_PREFIX_REGEX + "Your previous party was restored");
 
     private static final Pattern PARTY_INVITED = Pattern.compile(
-            "(?:" + PARTY_PREFIX_REGEX + "|\\s+§e)You have been invited to join (\\w{1,16})'s? party!\\s*");
+            "(?:" + PARTY_PREFIX_REGEX + "|\\s+§e)You have been invited to join (.+)'s? party!\\s*");
     // endregion
 
     private static final ScoreboardPart PARTY_SCOREBOARD_PART = new PartyScoreboardPart();
@@ -171,7 +173,13 @@ public final class PartyModel extends Model {
 
         Matcher matcher = styledText.getMatcher(PARTY_SOMEONE_JOINED);
         if (matcher.matches()) {
-            String player = matcher.group(1);
+            Pair<String, String> possibleNameAndNick = StyledTextUtils.extractNameAndNick(styledText);
+            String player;
+            if (possibleNameAndNick != null) {
+                player = possibleNameAndNick.a();
+            } else {
+                player = matcher.group(1);
+            }
 
             // If this is us, then we joined a new party and have no idea about party state.
             if (player.equals(McUtils.playerName())) {
@@ -190,7 +198,13 @@ public final class PartyModel extends Model {
 
         matcher = styledText.getMatcher(PARTY_OTHER_LEFT);
         if (matcher.matches()) {
-            String player = matcher.group(1);
+            Pair<String, String> possibleNameAndNick = StyledTextUtils.extractNameAndNick(styledText);
+            String player;
+            if (possibleNameAndNick != null) {
+                player = possibleNameAndNick.a();
+            } else {
+                player = matcher.group(1);
+            }
 
             WynntilsMod.info("Other player left player's party: " + player);
 
@@ -203,7 +217,13 @@ public final class PartyModel extends Model {
 
         matcher = styledText.getMatcher(PARTY_OTHER_KICKED);
         if (matcher.matches()) {
-            String player = matcher.group(1);
+            Pair<String, String> possibleNameAndNick = StyledTextUtils.extractNameAndNick(styledText);
+            String player;
+            if (possibleNameAndNick != null) {
+                player = possibleNameAndNick.a();
+            } else {
+                player = matcher.group(1);
+            }
 
             WynntilsMod.info("Other player was kicked from player's party: " + player);
 
@@ -216,7 +236,13 @@ public final class PartyModel extends Model {
 
         matcher = styledText.getMatcher(PARTY_NEW_LEADER);
         if (matcher.matches()) {
-            String player = matcher.group(1);
+            Pair<String, String> possibleNameAndNick = StyledTextUtils.extractNameAndNick(styledText);
+            String player;
+            if (possibleNameAndNick != null) {
+                player = possibleNameAndNick.a();
+            } else {
+                player = matcher.group(1);
+            }
 
             WynntilsMod.info("Player's party has a new leader: " + player);
 
@@ -226,7 +252,13 @@ public final class PartyModel extends Model {
 
         matcher = styledText.getMatcher(PARTY_INVITED);
         if (matcher.matches()) {
-            String inviter = matcher.group(1);
+            Pair<String, String> possibleNameAndNick = StyledTextUtils.extractNameAndNick(styledText);
+            String inviter;
+            if (possibleNameAndNick != null) {
+                inviter = possibleNameAndNick.a();
+            } else {
+                inviter = matcher.group(1);
+            }
             WynntilsMod.info("Player has been invited to party by " + inviter);
 
             WynntilsMod.postEvent(new PartyEvent.Invited(inviter));
