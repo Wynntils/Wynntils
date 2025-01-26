@@ -167,31 +167,31 @@ public class MythicFoundFeature extends Feature {
     }
 
     private static void sendAspectDryStreakMessage(StyledText itemName) {
-        McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found ")
-                .withStyle(ChatFormatting.LIGHT_PURPLE)
-                .append(itemName.getComponent())
-                .append(Component.literal(" after ")
-                        .withStyle(ChatFormatting.LIGHT_PURPLE)
-                        .append(Component.literal(String.valueOf(Models.Raid.getRaidsWithoutMythicAspect()) + " raids")
-                                .withStyle(ChatFormatting.GOLD)))
-                .append(Component.literal(" and ").withStyle(ChatFormatting.LIGHT_PURPLE))
-                .append(Component.literal(
-                                String.valueOf(Models.Raid.getAspectPullsWithoutMythicAspect()) + " aspect pulls")
-                        .withStyle(ChatFormatting.GOLD))
-                .append(Component.literal(" without a mythic.").withStyle(ChatFormatting.LIGHT_PURPLE)));
+        sendRaidDryStreakMessage(
+                itemName,
+                Models.Raid.getRaidsWithoutMythicAspect(),
+                Models.Raid.getAspectPullsWithoutMythicAspect(),
+                "aspect");
     }
 
     private static void sendTomeDryStreakMessage(StyledText itemName) {
+        sendRaidDryStreakMessage(
+                itemName,
+                Models.Raid.getRaidsWithoutMythicTome(),
+                Models.Raid.getRewardPullsWithoutMythicTome(),
+                "reward");
+    }
+
+    private static void sendRaidDryStreakMessage(StyledText itemName, int numRaids, int numPulls, String pullType) {
         McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found ")
                 .withStyle(ChatFormatting.LIGHT_PURPLE)
                 .append(itemName.getComponent())
                 .append(Component.literal(" after ")
                         .withStyle(ChatFormatting.LIGHT_PURPLE)
-                        .append(Component.literal(String.valueOf(Models.Raid.getRaidsWithoutMythicTome()) + " raids")
+                        .append(Component.literal(String.valueOf(numRaids) + " raids")
                                 .withStyle(ChatFormatting.GOLD)))
                 .append(Component.literal(" and ").withStyle(ChatFormatting.LIGHT_PURPLE))
-                .append(Component.literal(
-                                String.valueOf(Models.Raid.getRewardPullsWithoutMythicTome()) + " reward pulls")
+                .append(Component.literal(String.valueOf(numPulls) + " " + pullType + " pulls")
                         .withStyle(ChatFormatting.GOLD))
                 .append(Component.literal(" without a mythic."))
                 .withStyle(ChatFormatting.LIGHT_PURPLE));
