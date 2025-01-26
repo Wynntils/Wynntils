@@ -20,6 +20,7 @@ import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -64,6 +65,11 @@ public class UnidentifiedItemIconFeature extends Feature {
     public final Config<UnidentifiedItemIconLocation> markRevealedItemsLocation =
             new Config<>(UnidentifiedItemIconLocation.CENTER);
 
+    private static final CustomColor DEFAULT_UNID_ICON_COLOR = CommonColors.WHITE.withAlpha(0.67f);
+
+    @Persisted
+    public final Config<CustomColor> markRevealedItemsIconColor = new Config<>(DEFAULT_UNID_ICON_COLOR);
+
     private static final StyledText QUESTION_MARK_TEXT = StyledText.fromComponent(Component.literal("?"));
 
     @SubscribeEvent
@@ -82,7 +88,7 @@ public class UnidentifiedItemIconFeature extends Feature {
 
         WynnItem wynnItem = wynnItemOpt.get();
         if (wynnItem instanceof GearBoxItem box) {
-            texture.get().getIconRenderer().renderIcon(poseStack, slotX, slotY, z, box.getGearType());
+            texture.get().getIconRenderer().renderIcon(poseStack, slotX, slotY, z, box.getGearType(), Optional.empty());
             return;
         }
 
@@ -93,17 +99,23 @@ public class UnidentifiedItemIconFeature extends Feature {
             markRevealedItemsLocation
                     .get()
                     .getIconRenderer()
-                    .renderIcon(poseStack, slotX, slotY, z, gearType.getGearType());
+                    .renderIcon(
+                            poseStack,
+                            slotX,
+                            slotY,
+                            z,
+                            gearType.getGearType(),
+                            Optional.of(markRevealedItemsIconColor.get()));
         }
     }
 
     @FunctionalInterface
     private interface IconRenderer {
-        void renderIcon(PoseStack poseStack, int x, int y, int z, GearType gearType);
+        void renderIcon(PoseStack poseStack, int x, int y, int z, GearType gearType, Optional<CustomColor> textColor);
 
         static IconRenderer forSpriteSheet(Texture texture, int yOffset, int padding) {
             int paddedDims = 16 - padding - padding;
-            return (poseStack, x, y, z, gearType) -> {
+            return (poseStack, x, y, z, gearType, textColor) -> {
                 Pair<Integer, Integer> textureCoords = TEXTURE_COORDS.get(gearType);
                 RenderUtils.drawTexturedRect(
                         poseStack,
@@ -128,7 +140,7 @@ public class UnidentifiedItemIconFeature extends Feature {
                 VerticalAlignment verticalAlignment) {
             int padding = 0;
             int paddedDims = 16 - padding - padding;
-            return (poseStack, x, y, z, gearType) -> {
+            return (poseStack, x, y, z, gearType, textColor) -> {
                 poseStack.pushPose();
                 poseStack.translate(0, 0, z);
                 StyledText text = textMap.apply(gearType);
@@ -141,7 +153,7 @@ public class UnidentifiedItemIconFeature extends Feature {
                                 y + padding + 1,
                                 y + paddedDims + 1,
                                 paddedDims,
-                                CommonColors.WHITE.withAlpha(.67f),
+                                textColor.orElse(DEFAULT_UNID_ICON_COLOR),
                                 horizontalAlignment,
                                 verticalAlignment,
                                 TextShadow.OUTLINE);

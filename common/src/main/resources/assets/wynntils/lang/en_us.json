@@ -1469,6 +1469,8 @@
   "feature.wynntils.unidentifiedItemIcon.description": "Adds an icon to unidentified items.",
   "feature.wynntils.unidentifiedItemIcon.markRevealedItems.description": "Should items that are revealed but not identified be marked with an icon?",
   "feature.wynntils.unidentifiedItemIcon.markRevealedItems.name": "Mark Revealed Items",
+  "feature.wynntils.unidentifiedItemIcon.markRevealedItemsIconColor.description": "What color should the question mark be?",
+  "feature.wynntils.unidentifiedItemIcon.markRevealedItemsIconColor.name": "Revealed Icon Color",
   "feature.wynntils.unidentifiedItemIcon.markRevealedItemsLocation.description": "Where on the item should the unidentified icon be rendered?",
   "feature.wynntils.unidentifiedItemIcon.markRevealedItemsLocation.name": "Revealed Icon Location",
   "feature.wynntils.unidentifiedItemIcon.name": "Unidentified Item Icon",
