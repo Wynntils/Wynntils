@@ -78,7 +78,7 @@ public class MinecraftFunctions {
             }
 
             Holder<MobEffect> effectHolder =
-                    BuiltInRegistries.MOB_EFFECT.getHolder(effectLocation).orElse(null);
+                    BuiltInRegistries.MOB_EFFECT.get(effectLocation).orElse(null);
 
             if (effectHolder == null) return -1; // Effect holder not found
 

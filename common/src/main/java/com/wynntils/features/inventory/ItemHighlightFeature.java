@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -24,6 +24,7 @@ import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
@@ -179,7 +180,15 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
-        RenderUtils.drawRect(e.getPoseStack(), color.withAlpha(hotbarOpacity.get()), e.getX(), e.getY(), 0, 16, 16);
+        BufferedRenderUtils.drawRect(
+                e.getPoseStack(),
+                e.getGuiGraphics().bufferSource,
+                color.withAlpha(hotbarOpacity.get()),
+                e.getX(),
+                e.getY(),
+                0,
+                16,
+                16);
     }
 
     private CustomColor getHighlightColor(ItemStack itemStack, boolean hotbarHighlight) {

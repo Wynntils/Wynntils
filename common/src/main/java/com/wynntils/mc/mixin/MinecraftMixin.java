@@ -1,12 +1,15 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ArmSwingEvent;
@@ -16,17 +19,22 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.mc.extension.MinecraftExtension;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-public abstract class MinecraftMixin {
+public abstract class MinecraftMixin implements MinecraftExtension {
+    @Unique
+    private RenderTarget wynntils_overridenRenderTarget;
+
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("RETURN"))
     private void setScreenPost(Screen screen, CallbackInfo ci, @Share("oldScreen") LocalRef<Screen> oldScreen) {
         if (screen == null) {
@@ -104,5 +112,19 @@ public abstract class MinecraftMixin {
         MixinHelper.post(event);
 
         return !event.isCanceled();
+    }
+
+    @WrapMethod(method = "getMainRenderTarget()Lcom/mojang/blaze3d/pipeline/RenderTarget;")
+    private RenderTarget getMainRenderTarget(Operation<RenderTarget> operation) {
+        if (this.wynntils_overridenRenderTarget != null) {
+            return this.wynntils_overridenRenderTarget;
+        }
+
+        return operation.call();
+    }
+
+    @Override
+    public void setOverridenRenderTarget(RenderTarget renderTarget) {
+        this.wynntils_overridenRenderTarget = renderTarget;
     }
 }
