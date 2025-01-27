@@ -1,9 +1,33 @@
+## [3.0.0](https://github.com/Wynntils/Wynntils/compare/v2.4.18...v3.0.0) (2025-01-27)
+
+
+### New Features
+
+* **major:** Release Wynntils 3.0.0 (Minecraft 1.21.4) ([#2973](https://github.com/Wynntils/Wynntils/issues/2973)) ([c87e52b](https://github.com/Wynntils/Wynntils/commit/c87e52b02ebef2da4753dcc0157a09284c2331c7))
+
+
+### Bug Fixes
+
+* Don't overwrite nickname hover event in bomb bell messages [skip ci] ([#3083](https://github.com/Wynntils/Wynntils/issues/3083)) ([90f5202](https://github.com/Wynntils/Wynntils/commit/90f5202ee58b8870b650e90b83bf65252cef7a2b))
+* Fix custom loading screen logo [skip ci] ([#3081](https://github.com/Wynntils/Wynntils/issues/3081)) ([ae349de](https://github.com/Wynntils/Wynntils/commit/ae349de4aca23dd368584de8e6a171eda32818b5))
+* Fix the minecraft_effect_duration function crashing if the effect name contains invalid characters [skip ci] ([#3082](https://github.com/Wynntils/Wynntils/issues/3082)) ([b6e6d75](https://github.com/Wynntils/Wynntils/commit/b6e6d75c16d4ef194d3b473e1f538f099d43a8c9))
+
+
+### Miscellaneous Chores
+
+* Revert auto attack changes from [#3040](https://github.com/Wynntils/Wynntils/issues/3040) [skip ci] ([#3080](https://github.com/Wynntils/Wynntils/issues/3080)) ([b6ea0a6](https://github.com/Wynntils/Wynntils/commit/b6ea0a65ea22cbb38b4d953b281a39dcd0d18e75))
+
 ## [2.4.18](https://github.com/Wynntils/Wynntils/compare/v2.4.17...v2.4.18) (2025-01-22)
 
 
 ### Bug Fixes
 
 * Fix lootrun mythic detection ([#3077](https://github.com/Wynntils/Wynntils/issues/3077)) ([4cc49a5](https://github.com/Wynntils/Wynntils/commit/4cc49a5d343c842dfadf51324486091e5fa1b4fc))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.4.18 [skip ci] ([ca59160](https://github.com/Wynntils/Wynntils/commit/ca59160e015bfd3275bca9289bb8895384be2463))
 
 ## [2.4.17](https://github.com/Wynntils/Wynntils/compare/v2.4.16...v2.4.17) (2025-01-22)
 
@@ -49,22 +73,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.4.15 [skip ci] ([a498ac7](https://github.com/Wynntils/Wynntils/commit/a498ac750033f2b9f0a62a86859d345c57588ce5))
-
-## [2.4.14](https://github.com/Wynntils/Wynntils/compare/v2.4.13...v2.4.14) (2025-01-08)
-
-
-### Bug Fixes
-
-* Fix typo in workflow [skip ci] ([#3059](https://github.com/Wynntils/Wynntils/issues/3059)) ([1f38720](https://github.com/Wynntils/Wynntils/commit/1f38720ccf6e151c6f5b1c472354493cd9e1bcc1))
-* Hide default overhealth bar and background when disabled [skip ci] ([#3065](https://github.com/Wynntils/Wynntils/issues/3065)) ([9888ef4](https://github.com/Wynntils/Wynntils/commit/9888ef45c2bf18f5df5982692354ec4886d4ab60))
-* Mark config and storage saving as synchronized [skip ci] ([#3062](https://github.com/Wynntils/Wynntils/issues/3062)) ([6ebd0bc](https://github.com/Wynntils/Wynntils/commit/6ebd0bc35107597f36c9406f815e1fe9e88d79c5))
-* Rework lootrun beacon tracking to support 4+ beacons ([#3061](https://github.com/Wynntils/Wynntils/issues/3061)) ([0e6bba1](https://github.com/Wynntils/Wynntils/commit/0e6bba1640b053625ed85d3997d096dbe3a0a789))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3057](https://github.com/Wynntils/Wynntils/issues/3057)) ([39f0e5e](https://github.com/Wynntils/Wynntils/commit/39f0e5ec9da55ae91e372c3c39f17840b361389c))
-* [auto-generated] Update urls.json [ci skip] ([#3058](https://github.com/Wynntils/Wynntils/issues/3058)) ([a4c3b87](https://github.com/Wynntils/Wynntils/commit/a4c3b87f0d3f8043f20fd9bede370feb2b00f4e0))
-* [auto-generated] Update urls.json [ci skip] ([#3060](https://github.com/Wynntils/Wynntils/issues/3060)) ([d5f046f](https://github.com/Wynntils/Wynntils/commit/d5f046f5feef9987ed0bca27d9502af6fc0841f4))
-* **release:** v2.4.14 [skip ci] ([9da4902](https://github.com/Wynntils/Wynntils/commit/9da49022a0cbca00a9cda2bf213a3c59b8764fac))
 
