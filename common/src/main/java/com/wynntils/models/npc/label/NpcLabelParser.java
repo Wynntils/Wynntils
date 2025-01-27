@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.npc.label;
@@ -14,11 +14,15 @@ import net.minecraft.world.entity.Entity;
 public class NpcLabelParser implements LabelParser<NpcLabelInfo> {
     // Test in NpcLabelParser_NPC_LABEL_PATTERN
     private static final Pattern NPC_LABEL_PATTERN =
-            Pattern.compile("^(?:(?<icon>§..+)\n)?§d(?<name>[^§]+)(?:\n(?<description>§..+))?$", Pattern.DOTALL);
+            Pattern.compile("^§f(?<icon>.)\n§(?:c|d)(?<name>[a-zA-Z ]*)(?:§f)?\n§7(?<description>.*)$", Pattern.DOTALL);
 
     // Special cases
-    private static final Pattern TRADE_MARKET_LABEL_PATTERN = Pattern.compile("^§cTrade Market$");
     private static final Pattern HOUSING_LABEL_PATTERN = Pattern.compile("^§fClick §7to go to your housing plot$");
+    private static final Pattern BOOTH_SHOP_LABEL_PATTERN =
+            Pattern.compile("^(§b.*'(s)?§7 Shop.*|§f\uE000 Click §7to set up booth)$", Pattern.DOTALL);
+    private static final Pattern SEASKIPPER_LABEL_PATTERN =
+            Pattern.compile("^§6V.S.S. Seaskipper\n§7Right-click to Sail\n§0À$");
+    private static final Pattern LOOTRUN_MASTER_LABEL_PATTERN = Pattern.compile("§dLootrun Master\n§7Start a Lootrun");
 
     public NpcLabelInfo getInfo(StyledText label, Location location, Entity entity) {
         Matcher matcher = NPC_LABEL_PATTERN.matcher(label.getString());
@@ -32,12 +36,20 @@ public class NpcLabelParser implements LabelParser<NpcLabelInfo> {
                     matcher.group("description"));
         }
 
-        if (label.matches(TRADE_MARKET_LABEL_PATTERN)) {
-            return new NpcLabelInfo(label, "Trade Market", location.offset(0, -1, 0), entity);
-        }
-
         if (label.matches(HOUSING_LABEL_PATTERN)) {
             return new NpcLabelInfo(label, "Housing", location, entity);
+        }
+
+        if (label.matches(BOOTH_SHOP_LABEL_PATTERN)) {
+            return new NpcLabelInfo(label, "Booth Shop", location.offset(0, -1, 0), entity);
+        }
+
+        if (label.matches(SEASKIPPER_LABEL_PATTERN)) {
+            return new NpcLabelInfo(label, "Seaskipper", location.offset(0, -1, 0), entity);
+        }
+
+        if (label.matches(LOOTRUN_MASTER_LABEL_PATTERN)) {
+            return new NpcLabelInfo(label, "Lootrun Master", location.offset(0, -1, 0), entity);
         }
 
         return null;
