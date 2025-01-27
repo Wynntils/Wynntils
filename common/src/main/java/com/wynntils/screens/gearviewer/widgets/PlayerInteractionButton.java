@@ -45,28 +45,18 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
         RenderUtils.drawTexturedRect(
                 guiGraphics.pose(),
                 icon,
-                this.getX() + 5,
+                this.getX() + 2,
                 this.getY() + 2,
                 2,
                 16,
                 16,
+                0,
+                0,
                 16,
                 16,
                 16,
-                16,
-                256,
-                64
+                16
                 );
-        RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
-                CommonColors.WHITE,
-                this.getX() + 2,
-                this.getY() + 2,
-                this.getX() + 18,
-                this.getY() + 18,
-                3,
-                1
-        );
         RenderSystem.disableDepthTest();
 
         if (isHovered) {

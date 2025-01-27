@@ -143,7 +143,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
                 leftPos + Texture.GEAR_VIEWER_BACKGROUND.width() + 1,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) - 2,
                 Component.translatable("screens.wynntils.gearViewer.duel"),
-                Component.literal("D"),
+                Texture.STATS_ICON.resource(),
                 () -> Handlers.Command.queueCommand("duel " + playerName)));
 
         // trade button
@@ -151,7 +151,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
                 leftPos + Texture.GEAR_VIEWER_BACKGROUND.width() + 1,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 18,
                 Component.translatable("screens.wynntils.gearViewer.trade"),
-                Component.literal("T"),
+                Texture.STATS_ICON.resource(),
                 () -> Handlers.Command.queueCommand("trade " + playerName)));
     }
 
