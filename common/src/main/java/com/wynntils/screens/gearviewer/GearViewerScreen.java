@@ -120,7 +120,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         interactionButtons.add(new SimplePlayerInteractionButton(
                 leftPos - 21,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5 - 2),
-                Component.translatable("screens.wynntils.gearViewer.viewStats"), Component.literal("↵"),
+                Component.translatable("screens.wynntils.gearViewer.viewStats"), Texture.STATS_ICON.resource(),
                 () -> Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_PLAYER_STATS, Map.of("username", playerName))));
 
         // add friend button

@@ -18,12 +18,13 @@ import net.minecraft.sounds.SoundEvents;
 import java.util.List;
 
 public abstract class PlayerInteractionButton extends WynntilsButton {
-    private static final ResourceLocation ICONS = ResourceLocation.withDefaultNamespace("textures/font/common.png");
     protected List<Component> tooltipText;
+    protected ResourceLocation icon;
 
-    public PlayerInteractionButton(int x, int y, Component tooltipText, Component buttonText) {
+    public PlayerInteractionButton(int x, int y, Component tooltipText, ResourceLocation icon) {
         super(x, y, 20, 20, Component.empty());
         this.tooltipText = List.of(tooltipText);
+        this.icon = icon;
     }
 
     /** Only to be used with dynamically updating buttons. Call updateIcon after this. */
@@ -43,7 +44,7 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
         RenderSystem.enableDepthTest();
         RenderUtils.drawTexturedRect(
                 guiGraphics.pose(),
-                ICONS,
+                icon,
                 this.getX() + 5,
                 this.getY() + 2,
                 2,

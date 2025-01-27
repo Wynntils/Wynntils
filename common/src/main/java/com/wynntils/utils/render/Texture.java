@@ -96,6 +96,9 @@ public enum Texture {
     UNDISCOVERED_WORLD("icons/discoveries/undiscovered_world.png", 21, 34),
     UNDISCOVERED_WORLD_ICON("icons/discoveries/undiscovered_world_icon.png", 11, 7),
 
+    // Gear Viewer
+    STATS_ICON("icons/gear_viewer/stats_icon.png", 16, 16),
+
     // Trade Market
     PRESET("trade_market/preset.png", 16, 16),
     SAVED_PRESET("trade_market/saved_preset.png", 16, 16),
