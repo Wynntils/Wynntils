@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -7,7 +7,7 @@ package com.wynntils.features.inventory;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.RecipeBookOpenEvent;
+import com.wynntils.mc.event.RecipeBookButtonCreateEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 /**
@@ -16,7 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class DisableRecipeBookFeature extends Feature {
     @SubscribeEvent
-    public void onRecipeBookOpen(RecipeBookOpenEvent event) {
+    public void onRecipeBookOpen(RecipeBookButtonCreateEvent event) {
         event.setCanceled(true);
     }
 }

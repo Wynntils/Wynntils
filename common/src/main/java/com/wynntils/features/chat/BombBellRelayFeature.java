@@ -13,6 +13,7 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.models.worlds.event.BombEvent;
 import com.wynntils.models.worlds.type.BombInfo;
 import net.minecraft.ChatFormatting;
@@ -48,9 +49,15 @@ public class BombBellRelayFeature extends Feature {
                     Component.literal(
                             "Click to switch to " + event.getBombInfo().server()));
 
-            StyledText newMessage = event.getMessage()
-                    .map(part -> part.withStyle(
-                            partStyle -> partStyle.withClickEvent(clickEvent).withHoverEvent(hoverEvent)));
+            StyledText newMessage = event.getMessage().map(part -> {
+                StyledTextPart newPart = part.withStyle(partStyle -> partStyle.withClickEvent(clickEvent));
+                // Don't overwrite the nickname hover event
+                if (part.getPartStyle().getHoverEvent() == null) {
+                    newPart = newPart.withStyle(partStyle -> partStyle.withHoverEvent(hoverEvent));
+                }
+
+                return newPart;
+            });
             event.setMessage(newMessage);
         }
     }
