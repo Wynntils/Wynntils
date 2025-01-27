@@ -190,7 +190,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         BufferedRenderUtils.drawTexturedRect(
                 guiGraphics.pose(),
-                guiGraphics.bufferSource(),
+                guiGraphics.bufferSource,
                 Texture.GEAR_VIEWER_BACKGROUND,
                 this.leftPos,
                 this.topPos);
