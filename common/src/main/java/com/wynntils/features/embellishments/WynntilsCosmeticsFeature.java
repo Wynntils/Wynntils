@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.embellishments;
@@ -12,7 +12,10 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
+import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.utils.mc.McUtils;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.EMBELLISHMENTS)
@@ -23,9 +26,12 @@ public class WynntilsCosmeticsFeature extends Feature {
     @SubscribeEvent
     public void onCapeRender(PlayerRenderLayerEvent.Cape event) {
         if (!isEnabled() || !Managers.Connection.onServer()) return;
-        if (McUtils.player().is(event.getPlayer()) && !renderOwnCape.get()) return;
 
-        if (Services.Cosmetics.shouldRenderCape(event.getPlayer(), false)) {
+        Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
+        if (McUtils.player().is(player) && !renderOwnCape.get()) return;
+
+        if (Services.Cosmetics.shouldRenderCape(player, false)) {
             // Cancel default cape rendering, so ours doesn't cause a double up of capes
             event.setCanceled(true);
         }
@@ -34,9 +40,12 @@ public class WynntilsCosmeticsFeature extends Feature {
     @SubscribeEvent
     public void onElytraRender(PlayerRenderLayerEvent.Elytra event) {
         if (!isEnabled() || !Managers.Connection.onServer()) return;
-        if (McUtils.player().is(event.getPlayer()) && !renderOwnCape.get()) return;
 
-        if (Services.Cosmetics.shouldRenderCape(event.getPlayer(), true)) {
+        Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
+        if (McUtils.player().is(player) && !renderOwnCape.get()) return;
+
+        if (Services.Cosmetics.shouldRenderCape(player, true)) {
             // This might not be necessary?
             event.setCanceled(true);
         }

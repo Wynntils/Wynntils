@@ -1,16 +1,13 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.neoforge;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import java.io.File;
 import java.nio.file.Path;
-import net.minecraft.client.Minecraft;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -38,19 +35,8 @@ public class WynntilsModForge {
                 !FMLEnvironment.production,
                 modFile);
 
-        WynntilsMod.registerEventListener(this);
-
         ModLoadingContext.get()
                 .registerExtensionPoint(
                         IConfigScreenFactory.class, () -> (mc, parent) -> WynntilsBookSettingsScreen.create(parent));
-    }
-
-    // This is slightly hacky to do this, but it works
-    @SubscribeEvent
-    public void onClientLoad(TitleScreenInitEvent.Pre event) {
-        // Enable stencil support
-        Minecraft.getInstance().getMainRenderTarget().enableStencil();
-
-        WynntilsMod.unregisterEventListener(this);
     }
 }

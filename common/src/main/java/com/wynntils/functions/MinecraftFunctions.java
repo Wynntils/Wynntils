@@ -11,6 +11,7 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -69,10 +70,15 @@ public class MinecraftFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             String effectName = arguments.getArgument("effectName").getStringValue();
-            ResourceLocation effectLocation = ResourceLocation.withDefaultNamespace(effectName);
+            ResourceLocation effectLocation;
+            try {
+                effectLocation = ResourceLocation.withDefaultNamespace(effectName);
+            } catch (ResourceLocationException e) {
+                return -1; // Effect name contains invalid characters
+            }
 
             Holder<MobEffect> effectHolder =
-                    BuiltInRegistries.MOB_EFFECT.getHolder(effectLocation).orElse(null);
+                    BuiltInRegistries.MOB_EFFECT.get(effectLocation).orElse(null);
 
             if (effectHolder == null) return -1; // Effect holder not found
 

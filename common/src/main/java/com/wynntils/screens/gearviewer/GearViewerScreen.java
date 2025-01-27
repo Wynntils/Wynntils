@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.gearviewer;
 
 import com.google.gson.JsonObject;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -22,8 +21,8 @@ import com.wynntils.screens.gearviewer.widgets.PlayerInteractionButton;
 import com.wynntils.screens.gearviewer.widgets.SimplePlayerInteractionButton;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -189,9 +188,12 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawTexturedRect(poseStack, Texture.GEAR_VIEWER_BACKGROUND, this.leftPos, this.topPos);
+        BufferedRenderUtils.drawTexturedRect(
+                guiGraphics.pose(),
+                guiGraphics.bufferSource(),
+                Texture.GEAR_VIEWER_BACKGROUND,
+                this.leftPos,
+                this.topPos);
     }
 
     @Override
