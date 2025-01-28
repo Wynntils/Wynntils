@@ -53,8 +53,9 @@ public final class PartyModel extends Model {
     */
     // Test in PartyModel_PARTY_LIST_ALL
     private static final Pattern PARTY_LIST_ALL = Pattern.compile(PARTY_PREFIX_REGEX + "Party members: (.*)");
-    private static final Pattern
-            PARTY_COMMAND_FAILED = // General purpose message for all party cmds executed when not in a party
+
+    // General purpose message for all party cmds executed when not in a party
+    private static final Pattern PARTY_COMMAND_FAILED =
             Pattern.compile(PARTY_PREFIX_REGEX + "You must be in a party to use this\\.");
 
     // Some messages have no periods. Add them back if/when Wynn does.
