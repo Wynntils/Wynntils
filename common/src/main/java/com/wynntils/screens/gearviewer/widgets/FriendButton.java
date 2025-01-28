@@ -2,6 +2,7 @@ package com.wynntils.screens.gearviewer.widgets;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
+import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class FriendButton extends PlayerInteractionButton {
 
     public void updateIcon() {
         boolean isFriend = Models.Friends.isFriend(playerName);
-        this.setMessage(Component.literal(isFriend ? "-F" : "+F"));
+        this.icon = isFriend ? Texture.FRIEND_REMOVE_ICON.resource() : Texture.FRIEND_ADD_ICON.resource();
         this.tooltipText = List.of(Component.translatable("screens.wynntils.gearViewer." + (isFriend ? "removeFriend" : "addFriend")));
     }
 }
