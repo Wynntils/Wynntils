@@ -10,6 +10,7 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -19,9 +20,9 @@ import java.util.List;
 
 public abstract class PlayerInteractionButton extends WynntilsButton {
     protected List<Component> tooltipText;
-    protected ResourceLocation icon;
+    protected Texture icon;
 
-    public PlayerInteractionButton(int x, int y, Component tooltipText, ResourceLocation icon) {
+    public PlayerInteractionButton(int x, int y, Component tooltipText, Texture icon) {
         super(x, y, 20, 20, Component.empty());
         this.tooltipText = List.of(tooltipText);
         this.icon = icon;
@@ -44,7 +45,7 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
         RenderSystem.enableDepthTest();
         RenderUtils.drawTexturedRect(
                 guiGraphics.pose(),
-                icon,
+                icon.resource(),
                 this.getX() + 2,
                 this.getY() + 2,
                 2,
@@ -52,10 +53,10 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
                 16,
                 0,
                 0,
-                16,
-                16,
-                16,
-                16
+                14,
+                14,
+                icon.width(),
+                icon.height()
                 );
         RenderSystem.disableDepthTest();
 

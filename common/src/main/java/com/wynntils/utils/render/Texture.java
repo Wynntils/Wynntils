@@ -97,9 +97,11 @@ public enum Texture {
     UNDISCOVERED_WORLD_ICON("icons/discoveries/undiscovered_world_icon.png", 11, 7),
 
     // Gear Viewer
-    FRIEND_ADD_ICON("icons/gear_viewer/friend_add_icon.png", 16, 16),
-    FRIEND_REMOVE_ICON("icons/gear_viewer/friend_remove_icon.png", 16, 16),
-    STATS_ICON("icons/gear_viewer/stats_icon.png", 16, 16),
+    FRIEND_ADD_ICON("icons/gear_viewer/friend_add_icon.png", 14, 14),
+    FRIEND_REMOVE_ICON("icons/gear_viewer/friend_remove_icon.png", 14, 14),
+    PARTY_INVITE_ICON("icons/gear_viewer/party_invite_icon.png", 14, 14),
+    PARTY_KICK_ICON("icons/gear_viewer/party_kick_icon.png", 14, 14),
+    STATS_ICON("icons/gear_viewer/stats_icon.png", 14, 14),
 
     // Trade Market
     PRESET("trade_market/preset.png", 16, 16),

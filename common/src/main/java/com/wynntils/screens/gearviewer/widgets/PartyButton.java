@@ -3,6 +3,7 @@ package com.wynntils.screens.gearviewer.widgets;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.players.event.PartyEvent;
+import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -26,7 +27,7 @@ public class PartyButton extends PlayerInteractionButton {
 
     public void updateIcon() {
         boolean isParty = Models.Party.getPartyMembers().contains(playerName);
-        this.setMessage(Component.literal(isParty ? "-P" : "+P"));
+        this.icon = isParty ? Texture.PARTY_KICK_ICON : Texture.PARTY_INVITE_ICON;
         this.tooltipText = List.of(Component.translatable("screens.wynntils.gearViewer." + (isParty ? "kickParty" : "inviteParty")));
     }
 }

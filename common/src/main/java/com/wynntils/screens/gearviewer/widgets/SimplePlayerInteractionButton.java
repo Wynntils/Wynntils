@@ -1,5 +1,6 @@
 package com.wynntils.screens.gearviewer.widgets;
 
+import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -9,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 public class SimplePlayerInteractionButton extends PlayerInteractionButton {
     private final Runnable runnable;
 
-    public SimplePlayerInteractionButton(int x, int y, Component hoverText, ResourceLocation icon, Runnable runnable) {
+    public SimplePlayerInteractionButton(int x, int y, Component hoverText, Texture icon, Runnable runnable) {
         super(x, y, hoverText, icon);
         this.runnable = runnable;
     }

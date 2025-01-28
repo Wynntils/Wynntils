@@ -120,7 +120,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         interactionButtons.add(new SimplePlayerInteractionButton(
                 leftPos - 21,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5 - 2),
-                Component.translatable("screens.wynntils.gearViewer.viewStats"), Texture.STATS_ICON.resource(),
+                Component.translatable("screens.wynntils.gearViewer.viewStats"), Texture.STATS_ICON,
                 () -> Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_PLAYER_STATS, Map.of("username", playerName))));
 
         // add friend button
@@ -143,7 +143,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
                 leftPos + Texture.GEAR_VIEWER_BACKGROUND.width() + 1,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) - 2,
                 Component.translatable("screens.wynntils.gearViewer.duel"),
-                Texture.STATS_ICON.resource(),
+                Texture.STATS_ICON,
                 () -> Handlers.Command.queueCommand("duel " + playerName)));
 
         // trade button
@@ -151,7 +151,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
                 leftPos + Texture.GEAR_VIEWER_BACKGROUND.width() + 1,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 18,
                 Component.translatable("screens.wynntils.gearViewer.trade"),
-                Texture.STATS_ICON.resource(),
+                Texture.STATS_ICON,
                 () -> Handlers.Command.queueCommand("trade " + playerName)));
     }
 
