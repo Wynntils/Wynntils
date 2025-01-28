@@ -1,14 +1,14 @@
+/*
+ * Copyright © Wynntils 2025.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.gearviewer.widgets;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.utils.render.Texture;
-import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.network.chat.Component;
-import net.neoforged.bus.api.SubscribeEvent;
-
 import java.util.List;
+import net.minecraft.network.chat.Component;
 
 public class PartyButton extends PlayerInteractionButton {
     private final String playerName;
@@ -22,12 +22,14 @@ public class PartyButton extends PlayerInteractionButton {
     @Override
     public void onPress() {
         super.onPress();
-        Handlers.Command.queueCommand("party " + (Models.Party.getPartyMembers().contains(playerName) ? "kick " : "") + playerName);
+        Handlers.Command.queueCommand(
+                "party " + (Models.Party.getPartyMembers().contains(playerName) ? "kick " : "") + playerName);
     }
 
     public void updateIcon() {
         boolean isParty = Models.Party.getPartyMembers().contains(playerName);
         this.icon = isParty ? Texture.PARTY_KICK_ICON : Texture.PARTY_INVITE_ICON;
-        this.tooltipText = List.of(Component.translatable("screens.wynntils.gearViewer." + (isParty ? "kickParty" : "inviteParty")));
+        this.tooltipText = List.of(
+                Component.translatable("screens.wynntils.gearViewer." + (isParty ? "kickParty" : "inviteParty")));
     }
 }

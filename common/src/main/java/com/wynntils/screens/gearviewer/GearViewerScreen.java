@@ -24,6 +24,10 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.wynn.ItemUtils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -38,11 +42,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team.Visibility;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMenu> {
     private static final String TEAM_NAME = "GearViewerTeam";
@@ -120,21 +119,18 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         interactionButtons.add(new SimplePlayerInteractionButton(
                 leftPos - 21,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5 - 2),
-                Component.translatable("screens.wynntils.gearViewer.viewStats"), Texture.STATS_ICON,
+                Component.translatable("screens.wynntils.gearViewer.viewStats"),
+                Texture.STATS_ICON,
                 () -> Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_PLAYER_STATS, Map.of("username", playerName))));
 
         // add friend button
-        friendButton = new FriendButton(
-                leftPos - 21,
-                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 18,
-                playerName);
+        friendButton =
+                new FriendButton(leftPos - 21, topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 18, playerName);
         interactionButtons.add(friendButton);
 
         // invite party button
-        partyButton = new PartyButton(
-                leftPos - 21,
-                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 38,
-                playerName);
+        partyButton =
+                new PartyButton(leftPos - 21, topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 38, playerName);
         interactionButtons.add(partyButton);
 
         // right

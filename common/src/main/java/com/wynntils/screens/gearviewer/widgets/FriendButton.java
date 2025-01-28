@@ -1,11 +1,14 @@
+/*
+ * Copyright © Wynntils 2025.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.gearviewer.widgets;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.utils.render.Texture;
-import net.minecraft.network.chat.Component;
-
 import java.util.List;
+import net.minecraft.network.chat.Component;
 
 public class FriendButton extends PlayerInteractionButton {
     private final String playerName;
@@ -19,12 +22,14 @@ public class FriendButton extends PlayerInteractionButton {
     @Override
     public void onPress() {
         super.onPress();
-        Handlers.Command.queueCommand("friend " + (Models.Friends.isFriend(playerName) ? "remove " : "add ") + playerName);
+        Handlers.Command.queueCommand(
+                "friend " + (Models.Friends.isFriend(playerName) ? "remove " : "add ") + playerName);
     }
 
     public void updateIcon() {
         boolean isFriend = Models.Friends.isFriend(playerName);
         this.icon = isFriend ? Texture.FRIEND_REMOVE_ICON : Texture.FRIEND_ADD_ICON;
-        this.tooltipText = List.of(Component.translatable("screens.wynntils.gearViewer." + (isFriend ? "removeFriend" : "addFriend")));
+        this.tooltipText = List.of(
+                Component.translatable("screens.wynntils.gearViewer." + (isFriend ? "removeFriend" : "addFriend")));
     }
 }

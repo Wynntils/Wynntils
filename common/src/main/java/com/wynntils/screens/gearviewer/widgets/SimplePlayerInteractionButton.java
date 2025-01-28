@@ -1,8 +1,11 @@
+/*
+ * Copyright © Wynntils 2025.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.gearviewer.widgets;
 
 import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * A simple button in the gear viewer that executes a single runnable.

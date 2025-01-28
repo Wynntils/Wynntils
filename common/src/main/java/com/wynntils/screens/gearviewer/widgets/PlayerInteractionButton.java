@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.gearviewer.widgets;
@@ -7,22 +7,19 @@ package com.wynntils.screens.gearviewer.widgets;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-
-import java.util.List;
 
 public abstract class PlayerInteractionButton extends WynntilsButton {
     protected List<Component> tooltipText;
     protected Texture icon;
 
-    public PlayerInteractionButton(int x, int y, Component tooltipText, Texture icon) {
+    protected PlayerInteractionButton(int x, int y, Component tooltipText, Texture icon) {
         super(x, y, 20, 20, Component.empty());
         this.tooltipText = List.of(tooltipText);
         this.icon = icon;
@@ -43,6 +40,7 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderSystem.enableDepthTest();
+        // +3 to center icon with 1px border in 16x16 button
         RenderUtils.drawTexturedRect(
                 guiGraphics.pose(),
                 icon.resource(),
@@ -56,8 +54,7 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
                 14,
                 14,
                 icon.width(),
-                icon.height()
-                );
+                icon.height());
         RenderSystem.disableDepthTest();
 
         if (isHovered) {
