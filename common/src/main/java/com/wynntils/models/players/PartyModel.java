@@ -1,12 +1,11 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
@@ -22,6 +21,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -32,8 +32,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import com.wynntils.utils.type.Pair;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -55,7 +53,8 @@ public final class PartyModel extends Model {
     */
     // Test in PartyModel_PARTY_LIST_ALL
     private static final Pattern PARTY_LIST_ALL = Pattern.compile(PARTY_PREFIX_REGEX + "Party members: (.*)");
-    private static final Pattern PARTY_COMMAND_FAILED = // General purpose message for all party cmds executed when not in a party
+    private static final Pattern
+            PARTY_COMMAND_FAILED = // General purpose message for all party cmds executed when not in a party
             Pattern.compile(PARTY_PREFIX_REGEX + "You must be in a party to use this\\.");
 
     // Some messages have no periods. Add them back if/when Wynn does.
@@ -78,22 +77,21 @@ public final class PartyModel extends Model {
             Pattern.compile(PARTY_PREFIX_REGEX + "(.+) has joined your party, say hello!");
 
     // Other player is no longer in the party
-    private static final Pattern PARTY_OTHER_LEFT =
-            Pattern.compile(PARTY_PREFIX_REGEX + "(.+) has left the party!");
+    private static final Pattern PARTY_OTHER_LEFT = Pattern.compile(PARTY_PREFIX_REGEX + "(.+) has left the party!");
     private static final Pattern PARTY_OTHER_KICKED =
             Pattern.compile(PARTY_PREFIX_REGEX + "(.+) has been kicked from the party!");
 
     // New party leader
-    private static final Pattern PARTY_NEW_LEADER = Pattern.compile(
-            PARTY_PREFIX_REGEX + "(?:§c)?(.+)(?:§e)? is now the Party Leader!.*");
+    private static final Pattern PARTY_NEW_LEADER =
+            Pattern.compile(PARTY_PREFIX_REGEX + "(?:§c)?(.+)(?:§e)? is now the Party Leader!.*");
 
     // Temporary party event over, previous party restored
     // This actually means nothing of value to us so just re-request
     private static final Pattern PARTY_RESTORED_SELF =
             Pattern.compile(PARTY_PREFIX_REGEX + "Your previous party was restored");
 
-    private static final Pattern PARTY_INVITED = Pattern.compile(
-            "(?:" + PARTY_PREFIX_REGEX + "|\\s+§e)You have been invited to join (.+)'s? party!\\s*");
+    private static final Pattern PARTY_INVITED =
+            Pattern.compile("(?:" + PARTY_PREFIX_REGEX + "|\\s+§e)You have been invited to join (.+)'s? party!\\s*");
     // endregion
 
     private static final ScoreboardPart PARTY_SCOREBOARD_PART = new PartyScoreboardPart();
@@ -188,8 +186,8 @@ public final class PartyModel extends Model {
             } else {
                 WynntilsMod.info("Player's party has a new member: " + player);
                 partyMembers.add(player);
-                WynntilsMod.postEvent(
-                        new HadesRelationsUpdateEvent.PartyList(Set.of(player), HadesRelationsUpdateEvent.ChangeType.ADD));
+                WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
+                        Set.of(player), HadesRelationsUpdateEvent.ChangeType.ADD));
                 WynntilsMod.postEvent(new PartyEvent.OtherJoined(player));
             }
 
