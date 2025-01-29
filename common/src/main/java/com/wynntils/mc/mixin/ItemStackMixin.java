@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -36,7 +36,7 @@ public abstract class ItemStackMixin implements ItemStackExtension {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/world/item/ItemStack;has(Lnet/minecraft/core/component/DataComponentType;)Z",
-                            ordinal = 3))
+                            ordinal = 2))
     private boolean redirectGetHideFlags(boolean original) {
         ItemStack itemStack = (ItemStack) (Object) this;
         ItemTooltipFlagsEvent.HideAdditionalTooltip event =
