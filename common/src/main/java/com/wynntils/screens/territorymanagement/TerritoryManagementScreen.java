@@ -126,7 +126,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 110,
                 holder));
 
-        this.addRenderableWidget(
+        this.addRenderableOnly(
                 new GuildOverallProductionWidget(getRenderX() - 190, getRenderY() + 10, 200, 150, holder));
 
         // Back button in the sidebar
