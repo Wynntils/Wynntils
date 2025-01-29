@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render.buffered;
@@ -241,6 +241,34 @@ public final class BufferedRenderUtils {
                 .setUv(1, 0)
                 .setColor(colorArray[0], colorArray[1], colorArray[2], alpha);
         buffer.addVertex(matrix, x, y, z).setUv(0, 0).setColor(colorArray[0], colorArray[1], colorArray[2], alpha);
+    }
+
+    public static void drawScalingTexturedRect(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            ResourceLocation tex,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            int textureWidth,
+            int textureHeight) {
+        drawTexturedRect(
+                poseStack,
+                bufferSource,
+                tex,
+                x,
+                y,
+                z,
+                width,
+                height,
+                0,
+                0,
+                textureWidth,
+                textureHeight,
+                textureWidth,
+                textureHeight);
     }
 
     public static void drawTexturedRect(
@@ -610,7 +638,7 @@ public final class BufferedRenderUtils {
 
         // Enable writing to stencil
         RenderSystem.stencilMask(0xff);
-        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT);
         RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
         RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 
