@@ -357,7 +357,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (McUtils.mc().level == null) {
-            renderBlurredBackground();
+            renderPanorama(guiGraphics, partialTick);
         }
     }
 
