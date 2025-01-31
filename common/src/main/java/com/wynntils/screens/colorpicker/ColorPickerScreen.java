@@ -140,7 +140,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBlurredBackground();
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(
                 guiGraphics.pose(), Texture.COLOR_PICKER_BACKGROUND, getTranslationX(), getTranslationY());

@@ -144,7 +144,7 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBlurredBackground();
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics.pose(),
