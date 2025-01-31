@@ -589,7 +589,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
             method =
                     "handleEntityPositionSync(Lnet/minecraft/network/protocol/game/ClientboundEntityPositionSyncPacket;)V",
             at = @At("RETURN"))
-    private void handleMoveEntity(ClientboundEntityPositionSyncPacket packet, CallbackInfo ci) {
+    private void handleEntityPositionSync(ClientboundEntityPositionSyncPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
         Entity entity = McUtils.mc().level.getEntity(packet.id());
