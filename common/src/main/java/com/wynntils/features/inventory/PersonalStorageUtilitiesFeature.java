@@ -115,7 +115,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         }
 
         Models.Bank.toggleEditingName(false);
-        widget.removeEditInput();
+        widget.toggleEditInput(false);
     }
 
     @SubscribeEvent
@@ -124,7 +124,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         if (!Models.Bank.isEditingName()) return;
 
         Models.Bank.saveCurrentPageName(widget.getName());
-        widget.removeEditInput();
+        widget.toggleEditInput(false);
         widget.updatePageName();
     }
 
@@ -133,8 +133,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         if (!Models.Bank.isEditingName()) return;
 
         // Scrolling with ContainerScrollFeature doesn't call ContainerClickEvent so toggle editing here
-        Models.Bank.toggleEditingName(false);
-        widget.removeEditInput();
+        widget.toggleEditInput(false);
     }
 
     public void jumpToDestination(int destination) {

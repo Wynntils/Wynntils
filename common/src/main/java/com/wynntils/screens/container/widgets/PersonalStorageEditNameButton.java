@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.container.widgets;
@@ -67,13 +67,7 @@ public class PersonalStorageEditNameButton extends WynntilsButton {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            if (Models.Bank.isEditingName()) {
-                parent.removeEditInput();
-            } else {
-                parent.addEditInput();
-            }
-
-            Models.Bank.toggleEditingName(!Models.Bank.isEditingName());
+            parent.toggleEditInput(!Models.Bank.isEditingName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !Models.Bank.isEditingName()) {
             Models.Bank.resetCurrentPageName();
             parent.updatePageName();
