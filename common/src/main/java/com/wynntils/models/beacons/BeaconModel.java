@@ -7,9 +7,9 @@ package com.wynntils.models.beacons;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.EntityPositionSyncEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
-import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
@@ -91,7 +91,7 @@ public class BeaconModel extends Model {
     }
 
     @SubscribeEvent
-    public void onEntityTeleport(TeleportEntityEvent event) {
+    public void onEntityPositionSync(EntityPositionSyncEvent event) {
         Beacon movedBeacon = beacons.get(event.getEntity().getId());
         BeaconMarker movedBeaconMarker = beaconMarkers.get(event.getEntity().getId());
         if (movedBeacon != null) {

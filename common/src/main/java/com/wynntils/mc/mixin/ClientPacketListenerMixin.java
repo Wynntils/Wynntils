@@ -20,6 +20,7 @@ import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.EntityPositionSyncEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.MobEffectEvent;
@@ -37,7 +38,6 @@ import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.utils.mc.McUtils;
@@ -595,7 +595,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         Entity entity = McUtils.mc().level.getEntity(packet.id());
         if (entity == null) return;
 
-        MixinHelper.post(new TeleportEntityEvent(entity, packet.values().position()));
+        MixinHelper.post(new EntityPositionSyncEvent(entity, packet.values().position()));
     }
 
     @ModifyArg(
