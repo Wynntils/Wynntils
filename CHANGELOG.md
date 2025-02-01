@@ -1,3 +1,10 @@
+## [3.0.2](https://github.com/Wynntils/Wynntils/compare/v3.0.1...v3.0.2) (2025-02-01)
+
+
+### Bug Fixes
+
+* Add named tasks v2 to urls.json ([#3097](https://github.com/Wynntils/Wynntils/issues/3097)) ([db8e407](https://github.com/Wynntils/Wynntils/commit/db8e4075b34daac5b8eafed2e52db402c8dbf0da))
+
 ## [3.0.1](https://github.com/Wynntils/Wynntils/compare/v3.0.0...v3.0.1) (2025-02-01)
 
 
@@ -17,6 +24,11 @@
 * Make sure item tooltips are cached properly ([#3085](https://github.com/Wynntils/Wynntils/issues/3085)) ([62b5ebf](https://github.com/Wynntils/Wynntils/commit/62b5ebff99699efd12b844d1e4e6612f4a133052))
 * Only save pois to disk once all queued deletions are done [skip ci] ([#3084](https://github.com/Wynntils/Wynntils/issues/3084)) ([e74da77](https://github.com/Wynntils/Wynntils/commit/e74da771839f647e0e2a8b506a1f52f4d4a7f1e5))
 * PartyModel updates for 2.1 [skip ci] ([#3086](https://github.com/Wynntils/Wynntils/issues/3086)) ([12bdf14](https://github.com/Wynntils/Wynntils/commit/12bdf146f5905acd03cd61fed3a6434a6eb48796))
+
+
+### Miscellaneous Chores
+
+* **release:** v3.0.1 [skip ci] ([b109db8](https://github.com/Wynntils/Wynntils/commit/b109db8c98c1fc7374743adbe7d42ec36a20e2c3))
 
 ## [3.0.0](https://github.com/Wynntils/Wynntils/compare/v2.4.18...v3.0.0) (2025-01-27)
 
@@ -61,25 +73,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.4.17 [skip ci] ([8b9a8a6](https://github.com/Wynntils/Wynntils/commit/8b9a8a680b1670226a01dc573e247bf5b30673cb))
-
-## [2.4.16](https://github.com/Wynntils/Wynntils/compare/v2.4.15...v2.4.16) (2025-01-21)
-
-
-### New Features
-
-* Add custom guild log screen [skip ci] ([#3071](https://github.com/Wynntils/Wynntils/issues/3071)) ([f00170a](https://github.com/Wynntils/Wynntils/commit/f00170a84f8f492e37ac334b2a04069e4da9243a))
-* Add function for detecting Minecraft status effects [skip ci] ([#3068](https://github.com/Wynntils/Wynntils/issues/3068)) ([679cce6](https://github.com/Wynntils/Wynntils/commit/679cce6f05912645022baf49348a82bcf8736242))
-* Updates to crowd sourcing [skip ci] ([#3072](https://github.com/Wynntils/Wynntils/issues/3072)) ([55523ce](https://github.com/Wynntils/Wynntils/commit/55523ce426daaf1275c63a28ca6d9b689752e695))
-
-
-### Bug Fixes
-
-* Fix combat XP calculation being inaccurate ([#3070](https://github.com/Wynntils/Wynntils/issues/3070)) ([ea9ecde](https://github.com/Wynntils/Wynntils/commit/ea9ecdeb9eb8186f15e82647094a7b88d4652b73))
-* Fix PoiProviders crashing the game if the set URL was incorrect [skip ci] ([#3074](https://github.com/Wynntils/Wynntils/issues/3074)) ([80f69a8](https://github.com/Wynntils/Wynntils/commit/80f69a855fc3fed640d7e45071b318bf5ce1e6ad))
-
-
-### Miscellaneous Chores
-
-* Add tests for fast travel label parsing [skip ci] ([#3073](https://github.com/Wynntils/Wynntils/issues/3073)) ([876f443](https://github.com/Wynntils/Wynntils/commit/876f4430476122bf60751e243ac9eea640fef9a4))
-* **release:** v2.4.16 [skip ci] ([ad95022](https://github.com/Wynntils/Wynntils/commit/ad950227de72bdc3e3032391f1549a6de3244c78))
 
