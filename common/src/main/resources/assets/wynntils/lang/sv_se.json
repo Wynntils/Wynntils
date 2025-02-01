@@ -1861,7 +1861,7 @@
   "function.wynntils.lootrunTaskName.description": "Namnet på uppgiften som fyrtornet pekar på",
   "function.wynntils.lootrunTaskName.name": "Lootrun Uppgiftsnamn",
   "function.wynntils.lootrunTaskType.argument.color": "Färgen på fyrtornet",
-  "function.wynntils.lootrunTaskType.description": "Typen av uppgift som fyrtornet pekar på. En av LOOT, SLAY, DESTROY, DEFEND, UNKNOWN",
+  "function.wynntils.lootrunTaskType.description": "Typen av uppgift som fyrtornet pekar på. En av LOOT, SLAY, TARGET, DESTROY, DEFEND, UNKNOWN",
   "function.wynntils.lootrunTaskType.name": "Lootrun Uppgiftstyp",
   "function.wynntils.lootrunTime.description": "Tiden kvar av nuvarande lootrun i sekunder",
   "function.wynntils.lootrunTime.name": "Lootrun Tid",

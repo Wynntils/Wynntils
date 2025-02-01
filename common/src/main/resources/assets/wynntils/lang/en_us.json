@@ -2052,7 +2052,7 @@
   "function.wynntils.lootrunTaskName.description": "The name of the task the beacon is pointing to",
   "function.wynntils.lootrunTaskName.name": "Lootrun Task Name",
   "function.wynntils.lootrunTaskType.argument.color": "The color of the beacon",
-  "function.wynntils.lootrunTaskType.description": "The type of the task the beacon is pointing to. One of LOOT, SLAY, DESTROY, DEFEND, UNKNOWN",
+  "function.wynntils.lootrunTaskType.description": "The type of the task the beacon is pointing to. One of LOOT, SLAY, TARGET, DESTROY, DEFEND, UNKNOWN",
   "function.wynntils.lootrunTaskType.name": "Lootrun Task Type",
   "function.wynntils.lootrunTime.description": "The time left of current lootrun in seconds",
   "function.wynntils.lootrunTime.name": "Lootrun Time",
