@@ -542,6 +542,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunBeaconCountFunction());
         registerFunction(new LootrunFunctions.LootrunChallengesFunction());
         registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconColorFunction());
+        registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconVibrantFunction());
         registerFunction(new LootrunFunctions.LootrunMissionFunction());
         registerFunction(new LootrunFunctions.LootrunRedBeaconChallengeCountFunction());
         registerFunction(new LootrunFunctions.LootrunStateFunction());
@@ -549,6 +550,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunTaskNameFunction());
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
         registerFunction(new LootrunFunctions.LootrunTimeFunction());
+        registerFunction(new LootrunFunctions.LootrunBeaconVibrantFunction());
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());

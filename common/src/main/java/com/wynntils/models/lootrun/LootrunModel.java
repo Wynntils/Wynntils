@@ -52,6 +52,7 @@ import com.wynntils.models.npc.label.NpcLabelInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.VectorUtils;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -72,6 +73,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
@@ -117,6 +119,9 @@ public class LootrunModel extends Model {
     private static final Pattern LOOTRUN_FAILED_PATTERN = Pattern.compile("\uDB00\uDC6D§c§lLootrun Failed!");
     private static final Pattern CHALLENGE_FAILED_PATTERN = Pattern.compile("\uDB00\uDC6A§c§lChallenge Failed!");
 
+    private static final Pattern CHOOSE_BEACON_PATTERN = Pattern.compile("\uDB00\uDC66§6§lChoose a Beacon!");
+    private static final Pattern BEACONS_PATTERN = Pattern.compile(
+            "[\uDB00\uDC07-\uDB00\uDC78]§(?<beaconOneColor>[a-z0-9#]+)§l(?<beaconOneVibrant>Vibrant )?.+? Beacon(§r[\uDB00\uDC07-\uDB00\uDC78]§(?<beaconTwoColor>[a-z0-9#]+)§l(?<beaconTwoVibrant>Vibrant )?.+ Beacon)?");
     private static final Pattern MISSION_COMPLETED_PATTERN = Pattern.compile("[À\\s]*§b§lMission Completed");
 
     // Some missions don't have a mission completed message, so we also look for "active" missions
@@ -162,6 +167,7 @@ public class LootrunModel extends Model {
 
     // rely on color, beacon positions change
     private Map<LootrunBeaconKind, TaskPrediction> beacons = new HashMap<>();
+    private Set<LootrunBeaconKind> vibrantBeacons = new HashSet<>();
 
     // particles can accurately show task locations
     private Set<TaskLocation> possibleTaskLocations = new HashSet<>();
@@ -179,6 +185,9 @@ public class LootrunModel extends Model {
 
     @Persisted
     private final Storage<Map<String, LootrunBeaconKind>> lastTaskBeaconColorStorage = new Storage<>(new TreeMap<>());
+
+    @Persisted
+    private final Storage<Map<String, Boolean>> lastTaskVibrantBeaconStorage = new Storage<>(new TreeMap<>());
 
     @Persisted
     private final Storage<Map<String, Beacon<LootrunBeaconKind>>> closestBeaconStorage = new Storage<>(new TreeMap<>());
@@ -336,6 +345,27 @@ public class LootrunModel extends Model {
             if (color == LootrunBeaconKind.GRAY) {
                 addMission(MissionType.FAILED);
             }
+            return;
+        }
+
+        matcher = styledText.getMatcher(BEACONS_PATTERN);
+        if (matcher.matches()) {
+            boolean beaconOneVibrant = matcher.group("beaconOneVibrant") != null;
+            boolean beaconTwoVibrant = matcher.group("beaconTwoVibrant") != null;
+
+            if (beaconOneVibrant) {
+                addVibrantBeacon(matcher.group("beaconOneColor"));
+            }
+
+            if (beaconTwoVibrant) {
+                addVibrantBeacon(matcher.group("beaconTwoColor"));
+            }
+
+            return;
+        }
+
+        if (styledText.matches(CHOOSE_BEACON_PATTERN)) {
+            newBeacons();
         }
     }
 
@@ -607,6 +637,10 @@ public class LootrunModel extends Model {
         return beacons;
     }
 
+    public boolean isBeaconVibrant(LootrunBeaconKind lootrunBeaconKind) {
+        return vibrantBeacons.contains(lootrunBeaconKind);
+    }
+
     public TaskLocation getTaskForColor(LootrunBeaconKind lootrunBeaconKind) {
         TaskPrediction taskPrediction = beacons.get(lootrunBeaconKind);
         if (taskPrediction == null) return null;
@@ -637,6 +671,10 @@ public class LootrunModel extends Model {
         return lastTaskBeaconColorStorage.get().get(Models.Character.getId());
     }
 
+    public boolean wasLastBeaconVibrant() {
+        return lastTaskVibrantBeaconStorage.get().getOrDefault(Models.Character.getId(), false);
+    }
+
     public Beacon getClosestBeacon() {
         return closestBeaconStorage.get().get(Models.Character.getId());
     }
@@ -648,11 +686,16 @@ public class LootrunModel extends Model {
     private void setLastTaskBeaconColor(LootrunBeaconKind lootrunBeaconKind) {
         if (lootrunBeaconKind == null) {
             lastTaskBeaconColorStorage.get().remove(Models.Character.getId());
+            lastTaskVibrantBeaconStorage.get().remove(Models.Character.getId());
         } else {
             lastTaskBeaconColorStorage.get().put(Models.Character.getId(), lootrunBeaconKind);
+            lastTaskVibrantBeaconStorage
+                    .get()
+                    .put(Models.Character.getId(), vibrantBeacons.contains(lootrunBeaconKind));
         }
 
         lastTaskBeaconColorStorage.touched();
+        lastTaskVibrantBeaconStorage.touched();
     }
 
     private void setClosestBeacon(Beacon beacon) {
@@ -670,6 +713,22 @@ public class LootrunModel extends Model {
 
         selectedBeaconsStorage.get().put(Models.Character.getId(), selectedBeacons);
         selectedBeaconsStorage.touched();
+    }
+
+    private void newBeacons() {
+        possibleTaskLocations.clear();
+        vibrantBeacons.clear();
+    }
+
+    private void addVibrantBeacon(String beaconColorStr) {
+        CustomColor beaconColor = beaconColorStr.startsWith("#")
+                ? CustomColor.fromHexString(beaconColorStr)
+                : CustomColor.fromChatFormatting(ChatFormatting.getByCode(beaconColorStr.charAt(0)));
+        LootrunBeaconKind beaconKind = LootrunBeaconKind.fromColor(beaconColor);
+
+        if (beaconKind == null) return;
+
+        vibrantBeacons.add(beaconKind);
     }
 
     public void addToRedBeaconTaskCount(int changeAmount) {
@@ -737,6 +796,7 @@ public class LootrunModel extends Model {
             possibleTaskLocations = new HashSet<>();
 
             beacons = new HashMap<>();
+            vibrantBeacons = new HashSet<>();
 
             timeLeft = 0;
             challenges = CappedValue.EMPTY;
@@ -759,6 +819,7 @@ public class LootrunModel extends Model {
 
             // We selected a beacon, so other beacons are no longer relevant.
             beacons.clear();
+            vibrantBeacons.clear();
             activeBeacons.clear();
             setClosestBeacon(null);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
