@@ -1835,7 +1835,7 @@
   "function.wynntils.lootrunTaskName.description": "Il nome del compito a cui punta il faro",
   "function.wynntils.lootrunTaskName.name": "Nome della Tarea di Lootrun",
   "function.wynntils.lootrunTaskType.argument.color": "Il colore del faro",
-  "function.wynntils.lootrunTaskType.description": "Il tipo di compito a cui punta il faro. Uno di LOOT, SLAY, DESTROY, DEFEND, UNKNOWN",
+  "function.wynntils.lootrunTaskType.description": "Il tipo di compito a cui punta il faro. Uno di LOOT, SLAY, TARGET, DESTROY, DEFEND, UNKNOWN",
   "function.wynntils.lootrunTaskType.name": "Tipo di Tarea di Lootrun",
   "function.wynntils.lootrunTime.description": "Il tempo rimanente del lootrun attuale in secondi",
   "function.wynntils.lootrunTime.name": "Tempo di Lootrun",

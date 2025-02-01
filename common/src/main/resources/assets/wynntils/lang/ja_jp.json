@@ -1835,7 +1835,7 @@
   "function.wynntils.lootrunTaskName.description": "ビーコンが指しているタスクの名前",
   "function.wynntils.lootrunTaskName.name": "ルートランタスクの名前",
   "function.wynntils.lootrunTaskType.argument.color": "ビーコンの色",
-  "function.wynntils.lootrunTaskType.description": "ビーコンが指しているタスクの種類。LOOT、SLAY、DESTROY、DEFEND、UNKNOWNのいずれか",
+  "function.wynntils.lootrunTaskType.description": "ビーコンが指しているタスクの種類。LOOT、SLAY、TARGET、DESTROY、DEFEND、UNKNOWNのいずれか",
   "function.wynntils.lootrunTaskType.name": "ルートランタスクの種類",
   "function.wynntils.lootrunTime.description": "現在のルートランの残り時間（秒）",
   "function.wynntils.lootrunTime.name": "ルートラン時間",

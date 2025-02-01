@@ -1835,7 +1835,7 @@
   "function.wynntils.lootrunTaskName.description": "A feladat neve, amelyre a jelzőfény mutat",
   "function.wynntils.lootrunTaskName.name": "Lootrun feladat neve",
   "function.wynntils.lootrunTaskType.argument.color": "A jelzőfény színe",
-  "function.wynntils.lootrunTaskType.description": "A feladat típusa, amelyre a jelzőfény mutat. Egy a következők közül: ZSА́KMА́NY, LEGYILKOL, MEGSEMMISÍT, VÉD, ISMERETLEN",
+  "function.wynntils.lootrunTaskType.description": "A feladat típusa, amelyre a jelzőfény mutat. Egy a következők közül: LOOT, SLAY, TARGET, DESTROY, DEFEND, UNKNOWN",
   "function.wynntils.lootrunTaskType.name": "Lootrun feladat típusa",
   "function.wynntils.lootrunTime.description": "A jelenlegi lootrun hátralévő ideje másodpercben",
   "function.wynntils.lootrunTime.name": "Lootrun idő",
