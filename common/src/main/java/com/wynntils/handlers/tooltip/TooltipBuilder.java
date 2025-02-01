@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip;
@@ -14,6 +14,7 @@ import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import net.minecraft.network.chat.Component;
 
@@ -49,7 +50,9 @@ public abstract class TooltipBuilder {
 
         // Identification lines are rendered differently depending on current class, requested
         // style and provided decorator. If all match, use cache.
-        if (currentClass != cachedCurrentClass || cachedStyle != style || cachedDecorator != decorator) {
+        if (currentClass != cachedCurrentClass
+                || !Objects.equals(cachedStyle, style)
+                || !Objects.equals(cachedDecorator, decorator)) {
             identifications = getIdentificationLines(currentClass, style, decorator);
             identificationsCache = identifications;
             cachedCurrentClass = currentClass;

@@ -106,7 +106,8 @@ public class WynncraftButtonFeature extends Feature {
                 wynncraftServer,
                 titleScreen.width / 2 + 104,
                 titleScreen.height / 4 + 48 + 24,
-                Managers.Download.graphState().error());
+                Managers.Download.graphState().error(),
+                ignoreFailedDownloads.get());
         titleScreen.addRenderableWidget(wynncraftButton);
     }
 
@@ -136,14 +137,22 @@ public class WynncraftButtonFeature extends Feature {
         private final ServerData serverData;
         private final ServerIcon serverIcon;
         private final boolean showWarning;
+        private final boolean ignoreFailedDownloads;
 
-        WynncraftButton(Screen backScreen, ServerData serverData, int x, int y, boolean showWarning) {
+        WynncraftButton(
+                Screen backScreen,
+                ServerData serverData,
+                int x,
+                int y,
+                boolean showWarning,
+                boolean ignoreFailedDownloads) {
             super(x, y, 20, 20, Component.literal(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
             this.serverData = serverData;
 
             this.serverIcon = new ServerIcon(serverData);
             this.serverIcon.loadResource(false);
             this.showWarning = showWarning;
+            this.ignoreFailedDownloads = ignoreFailedDownloads;
         }
 
         @Override
@@ -192,7 +201,7 @@ public class WynncraftButtonFeature extends Feature {
             if (!(button instanceof WynncraftButton wynncraftButton)) return;
             if (!Managers.Download.graphState().finished()) return;
 
-            if (wynncraftButton.showWarning) {
+            if (wynncraftButton.showWarning && !wynncraftButton.ignoreFailedDownloads) {
                 McUtils.mc().setScreen(DownloadScreen.create(McUtils.mc().screen, wynncraftButton.serverData));
             } else {
                 connectToServer(wynncraftButton.serverData);

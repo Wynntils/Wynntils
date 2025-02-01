@@ -41,6 +41,8 @@ public abstract class ItemStackLayerRenderStateMixin {
         if (field_55345.displayContext != ItemDisplayContext.GROUND) return;
 
         if (field_55345 instanceof ItemStackRenderStateExtension extension) {
+            if (extension.getItemStack() == null) return;
+
             MixinHelper.post(new GroundItemEntityTransformEvent(poseStack, extension.getItemStack()));
         }
     }
