@@ -1,3 +1,23 @@
+## [3.0.1](https://github.com/Wynntils/Wynntils/compare/v3.0.0...v3.0.1) (2025-02-01)
+
+
+### New Features
+
+* Differentiate slay mobs and slay target lootrun tasks [skip ci] ([#3095](https://github.com/Wynntils/Wynntils/issues/3095)) ([e324016](https://github.com/Wynntils/Wynntils/commit/e3240162f228502dd120b90f9e27a4729fd3dd0f))
+
+
+### Bug Fixes
+
+* Check for ItemStack before posting transform event [skip ci] ([#3096](https://github.com/Wynntils/Wynntils/issues/3096)) ([337a44c](https://github.com/Wynntils/Wynntils/commit/337a44cd9b60b9a42482f0702d9c0d8264247639))
+* Don't show failed downloads on connect if ignore option checked [skip ci] ([#3094](https://github.com/Wynntils/Wynntils/issues/3094)) ([e940648](https://github.com/Wynntils/Wynntils/commit/e940648807646f81aaee577e1c64c46a029cc7eb))
+* Fix lootrun beacon tracking [skip ci] ([#3092](https://github.com/Wynntils/Wynntils/issues/3092)) ([71c9320](https://github.com/Wynntils/Wynntils/commit/71c93200ece09a565d7526157ec0f3457dd489f6))
+* Fix nametags not rendering text [skip ci] ([#3087](https://github.com/Wynntils/Wynntils/issues/3087)) ([35d23f8](https://github.com/Wynntils/Wynntils/commit/35d23f814e83f7126b6750ab6a060056879c5cb2))
+* Fix not being able to set custom names for personal storage [skip ci] ([#3093](https://github.com/Wynntils/Wynntils/issues/3093)) ([c65e536](https://github.com/Wynntils/Wynntils/commit/c65e5364b90094f769419d4ba8d31a0852ea901b))
+* Fix territory management buttons not being clickable [skip ci] ([#3089](https://github.com/Wynntils/Wynntils/issues/3089)) ([5501b80](https://github.com/Wynntils/Wynntils/commit/5501b8005a6ee905ecc570cf23c1c763b50399ab))
+* Make sure item tooltips are cached properly ([#3085](https://github.com/Wynntils/Wynntils/issues/3085)) ([62b5ebf](https://github.com/Wynntils/Wynntils/commit/62b5ebff99699efd12b844d1e4e6612f4a133052))
+* Only save pois to disk once all queued deletions are done [skip ci] ([#3084](https://github.com/Wynntils/Wynntils/issues/3084)) ([e74da77](https://github.com/Wynntils/Wynntils/commit/e74da771839f647e0e2a8b506a1f52f4d4a7f1e5))
+* PartyModel updates for 2.1 [skip ci] ([#3086](https://github.com/Wynntils/Wynntils/issues/3086)) ([12bdf14](https://github.com/Wynntils/Wynntils/commit/12bdf146f5905acd03cd61fed3a6434a6eb48796))
+
 ## [3.0.0](https://github.com/Wynntils/Wynntils/compare/v2.4.18...v3.0.0) (2025-01-27)
 
 
@@ -15,6 +35,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v3.0.0 [skip ci] ([1a407a4](https://github.com/Wynntils/Wynntils/commit/1a407a4d30d750d8cd38d4210880cccbddecab1b))
 * Revert auto attack changes from [#3040](https://github.com/Wynntils/Wynntils/issues/3040) [skip ci] ([#3080](https://github.com/Wynntils/Wynntils/issues/3080)) ([b6ea0a6](https://github.com/Wynntils/Wynntils/commit/b6ea0a65ea22cbb38b4d953b281a39dcd0d18e75))
 
 ## [2.4.18](https://github.com/Wynntils/Wynntils/compare/v2.4.17...v2.4.18) (2025-01-22)
@@ -61,16 +82,4 @@
 
 * Add tests for fast travel label parsing [skip ci] ([#3073](https://github.com/Wynntils/Wynntils/issues/3073)) ([876f443](https://github.com/Wynntils/Wynntils/commit/876f4430476122bf60751e243ac9eea640fef9a4))
 * **release:** v2.4.16 [skip ci] ([ad95022](https://github.com/Wynntils/Wynntils/commit/ad950227de72bdc3e3032391f1549a6de3244c78))
-
-## [2.4.15](https://github.com/Wynntils/Wynntils/compare/v2.4.14...v2.4.15) (2025-01-09)
-
-
-### New Features
-
-* Valuables Protection Feature ([#2935](https://github.com/Wynntils/Wynntils/issues/2935)) ([bd56e98](https://github.com/Wynntils/Wynntils/commit/bd56e985b39cc23d5a6ab7ff5f4711be38eef52d))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.4.15 [skip ci] ([a498ac7](https://github.com/Wynntils/Wynntils/commit/a498ac750033f2b9f0a62a86859d345c57588ce5))
 
