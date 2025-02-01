@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public enum LootrunBeaconMarkerKind implements BeaconMarkerKind {
     SLAY("\uE00B", LootrunTaskType.SLAY),
-    TARGET("\uE00C", LootrunTaskType.SLAY),
+    TARGET("\uE00C", LootrunTaskType.TARGET),
     DEFEND("\uE00D", LootrunTaskType.DEFEND),
     SPELUNK("\uE00E", LootrunTaskType.LOOT),
     DESTROY("\uE00F", LootrunTaskType.DESTROY);

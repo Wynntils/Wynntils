@@ -209,7 +209,8 @@ public class LootrunModel extends Model {
 
     @Override
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED).handleReader(this::handleLootrunTaskLocations);
+        registry.registerDownload(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED_V2)
+                .handleReader(this::handleLootrunTaskLocations);
     }
 
     private void handleLootrunTaskLocations(Reader reader) {
