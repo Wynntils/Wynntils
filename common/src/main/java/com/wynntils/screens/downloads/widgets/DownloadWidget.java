@@ -79,7 +79,7 @@ public class DownloadWidget extends AbstractWidget {
             int innerRadius = (int) (outerRadius * 0.85f);
 
             RenderUtils.drawArc(
-                    guiGraphics.pose(), CommonColors.BLACK, getX(), arcY, 0, 0.8f, innerRadius, outerRadius, offset);
+                    guiGraphics.pose(), CommonColors.BLACK, getX() + getWidth() - height, arcY, 0, 0.8f, innerRadius, outerRadius, offset);
         }
 
         if (isHovered) {
