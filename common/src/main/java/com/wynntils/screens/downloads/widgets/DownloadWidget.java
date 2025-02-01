@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.downloads.widgets;
@@ -79,7 +79,15 @@ public class DownloadWidget extends AbstractWidget {
             int innerRadius = (int) (outerRadius * 0.85f);
 
             RenderUtils.drawArc(
-                    guiGraphics.pose(), CommonColors.BLACK, getX() + getWidth() - height, arcY, 0, 0.8f, innerRadius, outerRadius, offset);
+                    guiGraphics.pose(),
+                    CommonColors.BLACK,
+                    getX() + getWidth() - height,
+                    arcY,
+                    0,
+                    0.8f,
+                    innerRadius,
+                    outerRadius,
+                    offset);
         }
 
         if (isHovered) {
