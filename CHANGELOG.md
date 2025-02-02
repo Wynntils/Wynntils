@@ -1,9 +1,27 @@
+## [3.0.3](https://github.com/Wynntils/Wynntils/compare/v3.0.2...v3.0.3) (2025-02-02)
+
+
+### Bug Fixes
+
+* Fix screens rendering a dark overlay above ui [skip ci] ([#3091](https://github.com/Wynntils/Wynntils/issues/3091)) ([ab11d2b](https://github.com/Wynntils/Wynntils/commit/ab11d2b1bd7893f7fab9a326a6e790f77169e28d))
+* Make ItemStatInfoFeature properly use TooltipIdentificationDecorators ([#3099](https://github.com/Wynntils/Wynntils/issues/3099)) ([a0cb651](https://github.com/Wynntils/Wynntils/commit/a0cb65137bec36e148ed9a670dc5792257a50982))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3100](https://github.com/Wynntils/Wynntils/issues/3100)) ([5312f4e](https://github.com/Wynntils/Wynntils/commit/5312f4ece6d45ee72eec369014f3f3cf25d6d44c))
+
 ## [3.0.2](https://github.com/Wynntils/Wynntils/compare/v3.0.1...v3.0.2) (2025-02-01)
 
 
 ### Bug Fixes
 
 * Add named tasks v2 to urls.json ([#3097](https://github.com/Wynntils/Wynntils/issues/3097)) ([db8e407](https://github.com/Wynntils/Wynntils/commit/db8e4075b34daac5b8eafed2e52db402c8dbf0da))
+
+
+### Miscellaneous Chores
+
+* **release:** v3.0.2 [skip ci] ([cf1c41c](https://github.com/Wynntils/Wynntils/commit/cf1c41c3e1660f7192ecb89f3a5367f9856662dc))
 
 ## [3.0.1](https://github.com/Wynntils/Wynntils/compare/v3.0.0...v3.0.1) (2025-02-01)
 
@@ -61,16 +79,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.4.18 [skip ci] ([ca59160](https://github.com/Wynntils/Wynntils/commit/ca59160e015bfd3275bca9289bb8895384be2463))
-
-## [2.4.17](https://github.com/Wynntils/Wynntils/compare/v2.4.16...v2.4.17) (2025-01-22)
-
-
-### Bug Fixes
-
-* Fix combat xp calculation logic for the second part of the bar ([#3075](https://github.com/Wynntils/Wynntils/issues/3075)) ([4b485d1](https://github.com/Wynntils/Wynntils/commit/4b485d16f1c3831d92bf2c9bbd1e53fde71cf645))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.4.17 [skip ci] ([8b9a8a6](https://github.com/Wynntils/Wynntils/commit/8b9a8a680b1670226a01dc573e247bf5b30673cb))
 
