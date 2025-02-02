@@ -257,4 +257,25 @@ public class LootrunFunctions {
             return Models.Lootrun.getRedBeaconTaskCount();
         }
     }
+
+    public static class LootrunOrangeBeaconCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getActiveOrangeBeacons();
+        }
+    }
+
+    public static class LootrunNextOrangeExpireFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getChallengesTillNextOrangeExpires();
+        }
+    }
+
+    public static class LootrunRainbowBeaconCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getActiveRainbowBeacons();
+        }
+    }
 }
