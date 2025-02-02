@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.core.component.DataComponents;
@@ -139,7 +140,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
                 leftPos + Texture.GEAR_VIEWER_BACKGROUND.width() + 1,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) - 2,
                 Component.translatable("screens.wynntils.gearViewer.duel"),
-                Texture.STATS_ICON,
+                Texture.DUEL_ICON,
                 () -> Handlers.Command.queueCommand("duel " + playerName)));
 
         // trade button
@@ -147,8 +148,19 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
                 leftPos + Texture.GEAR_VIEWER_BACKGROUND.width() + 1,
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 18,
                 Component.translatable("screens.wynntils.gearViewer.trade"),
-                Texture.STATS_ICON,
+                Texture.TRADE_ICON,
                 () -> Handlers.Command.queueCommand("trade " + playerName)));
+
+        // msg button
+        interactionButtons.add(new SimplePlayerInteractionButton(
+                leftPos + Texture.GEAR_VIEWER_BACKGROUND.width() + 1,
+                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 5) + 38,
+                Component.translatable("screens.wynntils.gearViewer.message"),
+                Texture.MESSAGE_ICON,
+                () -> {
+                    this.onClose(); // Required so that nametags render properly
+                    McUtils.mc().setScreen(new ChatScreen("/msg " + playerName + " "));
+                }));
     }
 
     @Override
