@@ -66,4 +66,10 @@ public class PlayerViewerFeature extends Feature {
         if (playerViewerScreen == null) return;
         playerViewerScreen.updateButtonIcons();
     }
+
+    @SubscribeEvent
+    public void onPartyPromoted(PartyEvent.Promoted e) {
+        if (playerViewerScreen == null) return;
+        playerViewerScreen.updateButtonIcons();
+    }
 }

@@ -84,7 +84,7 @@ public final class PartyModel extends Model {
 
     // New party leader
     private static final Pattern PARTY_NEW_LEADER =
-            Pattern.compile(PARTY_PREFIX_REGEX + "(?:§c)?(.+)(?:§e)? is now the Party Leader!.*");
+            Pattern.compile(PARTY_PREFIX_REGEX + "(?:§c)?(.+)§e is now the Party Leader!.*");
 
     // Temporary party event over, previous party restored
     // This actually means nothing of value to us so just re-request
@@ -245,7 +245,10 @@ public final class PartyModel extends Model {
 
             WynntilsMod.info("Player's party has a new leader: " + player);
 
+            // Prevent race conditions for methods that manually request leader immediately on event
+            String oldLeader = partyLeader;
             partyLeader = player;
+            WynntilsMod.postEvent(new PartyEvent.Promoted(oldLeader, partyLeader));
             return true;
         }
 
