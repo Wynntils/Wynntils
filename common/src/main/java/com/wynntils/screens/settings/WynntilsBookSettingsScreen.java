@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings;
@@ -357,7 +357,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (McUtils.mc().level == null) {
-            super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+            renderPanorama(guiGraphics, partialTick);
         }
     }
 
