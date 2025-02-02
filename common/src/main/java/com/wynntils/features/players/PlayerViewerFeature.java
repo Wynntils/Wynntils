@@ -25,7 +25,7 @@ import org.lwjgl.glfw.GLFW;
 public class PlayerViewerFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind playerViewerKeybind = new KeyBind(
-            "View player", GLFW.GLFW_MOUSE_BUTTON_MIDDLE, InputConstants.Type.MOUSE, true, this::tryOpenPlayerViewer);
+            "View player's gear", GLFW.GLFW_MOUSE_BUTTON_MIDDLE, InputConstants.Type.MOUSE, true, this::tryOpenPlayerViewer);
 
     private PlayerViewerScreen playerViewerScreen = null;
 
