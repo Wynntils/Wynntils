@@ -222,6 +222,7 @@ public enum Texture {
     DESTROY("lootrun/challenge_icons/destroy.png", 12, 12),
     SLAY("lootrun/challenge_icons/slay.png", 20, 20),
     SPELUNK("lootrun/challenge_icons/spelunk.png", 18, 16),
+    TARGET("lootrun/challenge_icons/target.png", 15, 15),
     // endregion
 
     // region Map

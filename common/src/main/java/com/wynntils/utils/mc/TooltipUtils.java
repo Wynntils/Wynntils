@@ -75,15 +75,15 @@ public final class TooltipUtils {
                 .getOrCalculate(
                         WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.fromParsedItemStack(itemStack, itemInfo));
         if (builder == null) return null;
-        ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
+        ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
 
         IdentificationDecorator decorator =
-                isif.identificationDecorations.get() ? isif.new IdentificationDecorator() : null;
+                feature.identificationDecorations.get() ? feature.IDENTIFICATION_DECORATOR : null;
         TooltipStyle currentIdentificationStyle = new TooltipStyle(
-                isif.identificationsOrdering.get(),
-                isif.groupIdentifications.get(),
-                isif.showBestValueLastAlways.get(),
-                isif.showStars.get(),
+                feature.identificationsOrdering.get(),
+                feature.groupIdentifications.get(),
+                feature.showBestValueLastAlways.get(),
+                feature.showStars.get(),
                 false // this only applies to crafted items
                 );
         LinkedList<Component> tooltips = new LinkedList<>(
@@ -91,7 +91,7 @@ public final class TooltipUtils {
 
         // Update name depending on overall percentage; this needs to be done every rendering
         // for rainbow/defective effects
-        if (isif.overallPercentageInName.get() && itemInfo.hasOverallValue()) {
+        if (feature.overallPercentageInName.get() && itemInfo.hasOverallValue()) {
             updateItemName(itemInfo, tooltips);
         }
         return tooltips;

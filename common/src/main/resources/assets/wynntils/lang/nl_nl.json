@@ -1835,7 +1835,7 @@
   "function.wynntils.lootrunTaskName.description": "De naam van de taak waar het baken naar wijst",
   "function.wynntils.lootrunTaskName.name": "Lootrun taaknaam",
   "function.wynntils.lootrunTaskType.argument.color": "De kleur van het baken",
-  "function.wynntils.lootrunTaskType.description": "Het type taak waar het baken naar wijst. Een van LOOT, SLAAN, VERNIETIGEN, VERDEDIGEN, ONBEKEND",
+  "function.wynntils.lootrunTaskType.description": "Het type taak waar het baken naar wijst. Een van LOOT, SLAY, TARGET, DESTROY, DEFEND, UNKNOWN",
   "function.wynntils.lootrunTaskType.name": "Lootrun taaktype",
   "function.wynntils.lootrunTime.description": "De resterende tijd van de huidige lootrun in seconden",
   "function.wynntils.lootrunTime.name": "Lootrun tijd",

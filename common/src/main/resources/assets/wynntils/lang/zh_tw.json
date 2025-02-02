@@ -1835,7 +1835,7 @@
   "function.wynntils.lootrunTaskName.description": "信標指向的任務名稱",
   "function.wynntils.lootrunTaskName.name": "戰利品運行任務名稱",
   "function.wynntils.lootrunTaskType.argument.color": "信標的顏色",
-  "function.wynntils.lootrunTaskType.description": "信標指向的任務類型。LOOT、SLAY、DESTROY、DEFEND、UNKNOWN之一",
+  "function.wynntils.lootrunTaskType.description": "信標指向的任務類型。LOOT、SLAY、TARGET、DESTROY、DEFEND、UNKNOWN之一",
   "function.wynntils.lootrunTaskType.name": "戰利品運行任務類型",
   "function.wynntils.lootrunTime.description": "當前戰利品運行剩餘時間（秒）",
   "function.wynntils.lootrunTime.name": "戰利品運行時間",

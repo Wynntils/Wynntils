@@ -1835,7 +1835,7 @@
   "function.wynntils.lootrunTaskName.description": "비콘이 가리키는 작업의 이름",
   "function.wynntils.lootrunTaskName.name": "루트런 작업 이름",
   "function.wynntils.lootrunTaskType.argument.color": "비콘의 색상",
-  "function.wynntils.lootrunTaskType.description": "비콘이 가리키는 작업의 유형. LOOT, SLAY, DESTROY, DEFEND, UNKNOWN 중 하나",
+  "function.wynntils.lootrunTaskType.description": "비콘이 가리키는 작업의 유형. LOOT, SLAY, TARGET, DESTROY, DEFEND, UNKNOWN 중 하나",
   "function.wynntils.lootrunTaskType.name": "루트런 작업 유형",
   "function.wynntils.lootrunTime.description": "현재 루트런의 남은 시간(초)",
   "function.wynntils.lootrunTime.name": "루트런 시간",

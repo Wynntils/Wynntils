@@ -1838,7 +1838,7 @@
   "function.wynntils.lootrunTaskName.description": "Der Name der Aufgabe, auf die das Leuchtfeuer zeigt",
   "function.wynntils.lootrunTaskName.name": "Lootrun-Aufgabenname",
   "function.wynntils.lootrunTaskType.argument.color": "Die Farbe des Leuchtfeuers",
-  "function.wynntils.lootrunTaskType.description": "Der Typ der Aufgabe, auf die das Leuchtfeuer zeigt. Einer von LOOT, SLAY, DESTROY, DEFEND, UNKNOWN",
+  "function.wynntils.lootrunTaskType.description": "Der Typ der Aufgabe, auf die das Leuchtfeuer zeigt. Einer von LOOT, SLAY, TARGET, DESTROY, DEFEND, UNKNOWN",
   "function.wynntils.lootrunTaskType.name": "Lootrun-Aufgabentyp",
   "function.wynntils.lootrunTime.description": "Die verbleibende Zeit des aktuellen Lootruns in Sekunden",
   "function.wynntils.lootrunTime.name": "Lootrun-Zeit",

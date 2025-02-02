@@ -1835,7 +1835,7 @@
   "function.wynntils.lootrunTaskName.description": "O nome da tarefa para a qual o farol está apontando",
   "function.wynntils.lootrunTaskName.name": "Nome da Tarefa de Lootrun",
   "function.wynntils.lootrunTaskType.argument.color": "A cor do farol",
-  "function.wynntils.lootrunTaskType.description": "O tipo de tarefa para a qual o farol está apontando. Um de LOOT, SLAY, DESTROY, DEFEND, UNKNOWN",
+  "function.wynntils.lootrunTaskType.description": "O tipo de tarefa para a qual o farol está apontando. Um de LOOT, SLAY, TARGET, DESTROY, DEFEND, UNKNOWN",
   "function.wynntils.lootrunTaskType.name": "Tipo de Tarefa de Lootrun",
   "function.wynntils.lootrunTime.description": "O tempo restante do lootrun atual em segundos",
   "function.wynntils.lootrunTime.name": "Tempo de Lootrun",

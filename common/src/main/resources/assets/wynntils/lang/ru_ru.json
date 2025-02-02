@@ -1849,7 +1849,7 @@
   "function.wynntils.lootrunTaskName.description": "Название задачи, на которую указывает маяк",
   "function.wynntils.lootrunTaskName.name": "Название Задачи Лутрана",
   "function.wynntils.lootrunTaskType.argument.color": "Цвет маяка",
-  "function.wynntils.lootrunTaskType.description": "Тип задачи, на которую указывает маяк. Один из LOOT, SLAY, DESTROY, DEFEND, UNKNOWN",
+  "function.wynntils.lootrunTaskType.description": "Тип задачи, на которую указывает маяк. Один из LOOT, SLAY, TARGET, DESTROY, DEFEND, UNKNOWN",
   "function.wynntils.lootrunTaskType.name": "Тип Задачи Лутрана",
   "function.wynntils.lootrunTime.description": "Оставшееся время текущего лутрана в секундах",
   "function.wynntils.lootrunTime.name": "Время Лутрана",

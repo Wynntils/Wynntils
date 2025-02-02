@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
@@ -43,6 +43,8 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends Feature {
+    public final IdentificationDecorator IDENTIFICATION_DECORATOR = new IdentificationDecorator();
+
     private final Set<WynnItem> brokenItems = new HashSet<>();
 
     @Persisted
@@ -173,7 +175,9 @@ public class ItemStatInfoFeature extends Feature {
         return map;
     }
 
-    public class IdentificationDecorator implements TooltipIdentificationDecorator {
+    public final class IdentificationDecorator implements TooltipIdentificationDecorator {
+        private IdentificationDecorator() {}
+
         @Override
         public MutableComponent getSuffix(
                 StatActualValue statActualValue, StatPossibleValues possibleValues, TooltipStyle style) {

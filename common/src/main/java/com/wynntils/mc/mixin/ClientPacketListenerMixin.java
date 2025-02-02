@@ -20,6 +20,7 @@ import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.EntityPositionSyncEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.MobEffectEvent;
@@ -37,7 +38,6 @@ import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.utils.mc.McUtils;
@@ -60,6 +60,7 @@ import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundEntityPositionSyncPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
@@ -83,7 +84,6 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
-import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -586,19 +586,16 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     }
 
     @Inject(
-            method = "handleTeleportEntity(Lnet/minecraft/network/protocol/game/ClientboundTeleportEntityPacket;)V",
+            method =
+                    "handleEntityPositionSync(Lnet/minecraft/network/protocol/game/ClientboundEntityPositionSyncPacket;)V",
             at = @At("RETURN"))
-    private void handleTeleportEntity(ClientboundTeleportEntityPacket packet, CallbackInfo ci) {
+    private void handleEntityPositionSync(ClientboundEntityPositionSyncPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
         Entity entity = McUtils.mc().level.getEntity(packet.id());
         if (entity == null) return;
 
-        Vec3 position = new Vec3(
-                packet.change().position().x(),
-                packet.change().position().y(),
-                packet.change().position().z());
-        MixinHelper.post(new TeleportEntityEvent(entity, position));
+        MixinHelper.post(new EntityPositionSyncEvent(entity, packet.values().position()));
     }
 
     @ModifyArg(

@@ -1835,7 +1835,7 @@
   "function.wynntils.lootrunTaskName.description": "Le nom de la tâche vers laquelle pointe la balise",
   "function.wynntils.lootrunTaskName.name": "Nom de la Tâche de Lootrun",
   "function.wynntils.lootrunTaskType.argument.color": "La couleur de la balise",
-  "function.wynntils.lootrunTaskType.description": "Le type de tâche vers laquelle pointe la balise. L'un de LOOT, SLAY, DESTROY, DEFEND, UNKNOWN",
+  "function.wynntils.lootrunTaskType.description": "Le type de tâche vers laquelle pointe la balise. L'un de LOOT, SLAY, TARGET, DESTROY, DEFEND, UNKNOWN",
   "function.wynntils.lootrunTaskType.name": "Type de Tâche de Lootrun",
   "function.wynntils.lootrunTime.description": "Le temps restant du lootrun actuel en secondes",
   "function.wynntils.lootrunTime.name": "Temps de Lootrun",

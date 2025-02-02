@@ -1835,7 +1835,7 @@
   "function.wynntils.lootrunTaskName.description": "Nazwa zadania, na które wskazuje latarnia",
   "function.wynntils.lootrunTaskName.name": "Nazwa zadania lootrun",
   "function.wynntils.lootrunTaskType.argument.color": "Kolor latarni",
-  "function.wynntils.lootrunTaskType.description": "Typ zadania, na które wskazuje latarnia. Jeden z ŁUP, ZABIĆ, ZNISZCZYĆ, BRONIĆ, NIEZNANY",
+  "function.wynntils.lootrunTaskType.description": "Typ zadania, na które wskazuje latarnia. Jeden z LOOT, SLAY, TARGET, DESTROY, DEFEND, UNKNOWN",
   "function.wynntils.lootrunTaskType.name": "Typ zadania lootrun",
   "function.wynntils.lootrunTime.description": "Pozostały czas bieżącego lootrun w sekundach",
   "function.wynntils.lootrunTime.name": "Czas lootrun",
