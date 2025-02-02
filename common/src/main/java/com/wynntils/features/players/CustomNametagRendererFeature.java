@@ -20,7 +20,7 @@ import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
-import com.wynntils.screens.gearviewer.GearViewerScreen;
+import com.wynntils.screens.gearviewer.PlayerViewerScreen;
 import com.wynntils.services.leaderboard.type.LeaderboardBadge;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -87,8 +87,8 @@ public class CustomNametagRendererFeature extends Feature {
         }
 
         // If we are viewing this player's gears, do not show plus info
-        if (McUtils.mc().screen instanceof GearViewerScreen gearViewerScreen
-                && gearViewerScreen.getPlayer() == player) {
+        if (McUtils.mc().screen instanceof PlayerViewerScreen playerViewerScreen
+                && playerViewerScreen.getPlayer() == player) {
             return;
         }
 

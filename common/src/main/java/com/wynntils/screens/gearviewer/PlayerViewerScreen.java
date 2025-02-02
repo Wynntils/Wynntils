@@ -44,8 +44,8 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team.Visibility;
 
-public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMenu> {
-    private static final String TEAM_NAME = "GearViewerTeam";
+public final class PlayerViewerScreen extends WynntilsContainerScreen<GearViewerMenu> {
+    private static final String TEAM_NAME = "PlayerViewerTeam";
 
     private final Player player;
     private final Scoreboard scoreboard;
@@ -55,7 +55,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
     private FriendButton friendButton;
     private PartyButton partyButton;
 
-    private GearViewerScreen(Player player, GearViewerMenu menu) {
+    private PlayerViewerScreen(Player player, GearViewerMenu menu) {
         super(menu, player.getInventory(), Component.empty());
 
         this.player = player;
@@ -82,7 +82,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         }
         Collections.reverse(armorItems);
 
-        return new GearViewerScreen(player, GearViewerMenu.create(heldItem, armorItems));
+        return new PlayerViewerScreen(player, GearViewerMenu.create(heldItem, armorItems));
     }
 
     private static ItemStack createDecoratedItemStack(ItemStack itemStack, Component playerName) {
