@@ -8,8 +8,8 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
-import com.wynntils.features.tooltips.ItemStatInfoFeature.IdentificationDecorator;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
+import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
@@ -77,8 +77,8 @@ public final class TooltipUtils {
         if (builder == null) return null;
         ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
 
-        IdentificationDecorator decorator =
-                feature.identificationDecorations.get() ? feature.IDENTIFICATION_DECORATOR : null;
+        TooltipIdentificationDecorator decorator =
+                feature.identificationDecorations.get() ? feature.getDecorator() : null;
         TooltipStyle currentIdentificationStyle = new TooltipStyle(
                 feature.identificationsOrdering.get(),
                 feature.groupIdentifications.get(),
