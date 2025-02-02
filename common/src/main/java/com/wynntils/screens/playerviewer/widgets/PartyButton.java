@@ -6,6 +6,7 @@ package com.wynntils.screens.playerviewer.widgets;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -27,6 +28,12 @@ public class PartyButton extends PlayerInteractionButton {
     }
 
     public void updateIcon() {
+        // only allow button press if we can perform the action
+        if (Models.Party.isInParty()
+                && !Models.Party.isPartyLeader(
+                        McUtils.mc().player.getGameProfile().getName())) {
+            this.active = false;
+        }
         boolean isParty = Models.Party.getPartyMembers().contains(playerName);
         this.icon = isParty ? Texture.PARTY_KICK_ICON : Texture.PARTY_INVITE_ICON;
         this.tooltipText = List.of(
