@@ -29,15 +29,10 @@ public class PartyButton extends PlayerInteractionButton {
 
     public void updateIcon() {
         // only allow button press if we can perform the action
-        this.active = !Models.Party.isInParty() || Models.Party.isPartyLeader(
-                McUtils.mc().player.getGameProfile().getName());
-
-        System.out.println("updating icon, is in party: " + Models.Party.isInParty() + ", is party leader: "
-                + Models.Party.isPartyLeader(McUtils.mc().player.getGameProfile().getName()));
-        System.out.println("party leader: " + Models.Party.getPartyLeader());
+        this.active = !Models.Party.isInParty() || Models.Party.isPartyLeader(McUtils.playerName());
         boolean isPartyMember = Models.Party.getPartyMembers().contains(playerName);
         this.icon = isPartyMember ? Texture.PARTY_KICK_ICON : Texture.PARTY_INVITE_ICON;
-        this.tooltipText = List.of(
-                Component.translatable("screens.wynntils.playerViewer." + (isPartyMember ? "kickParty" : "inviteParty")));
+        this.tooltipText = List.of(Component.translatable(
+                "screens.wynntils.playerViewer." + (isPartyMember ? "kickParty" : "inviteParty")));
     }
 }

@@ -24,6 +24,7 @@ import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -53,6 +54,7 @@ public final class PartyModel extends Model {
     */
     // Test in PartyModel_PARTY_LIST_ALL
     private static final Pattern PARTY_LIST_ALL = Pattern.compile(PARTY_PREFIX_REGEX + "Party members: (.*)");
+    private static final Pattern PARTY_LIST_LEADER = Pattern.compile(PARTY_PREFIX_REGEX + "§b(.+?)(?:,|$)");
 
     // General purpose message for all party cmds executed when not in a party
     private static final Pattern PARTY_COMMAND_FAILED =
@@ -84,7 +86,7 @@ public final class PartyModel extends Model {
 
     // New party leader
     private static final Pattern PARTY_NEW_LEADER =
-            Pattern.compile(PARTY_PREFIX_REGEX + "(?:§c)?(.+)§e is now the Party Leader!.*");
+            Pattern.compile(PARTY_PREFIX_REGEX + "(?:§c)?(.+)§e is now the Party Leaderasdf!.*");
 
     // Temporary party event over, previous party restored
     // This actually means nothing of value to us so just re-request
@@ -297,17 +299,15 @@ public final class PartyModel extends Model {
                 .getStringWithoutFormatting()
                 .split("(?:,(?: and)? )");
         List<String> newPartyMembers = new ArrayList<>();
+        Collections.addAll(newPartyMembers, partyList);
 
-        boolean firstMember = true;
-
-        for (String member : partyList) {
-            if (firstMember) {
-                partyLeader = member;
-                firstMember = false;
-            }
-
-            newPartyMembers.add(member);
-        }
+        // Attempt to look for party leader with pattern.
+        // If fail, assume we are leader (no special color will appear in list)
+        Matcher leaderMatcher = StyledTextUtils.unwrap(styledText).getMatcher(PARTY_LIST_LEADER);
+        String oldLeader = partyLeader;
+        partyLeader = leaderMatcher.find() ? leaderMatcher.group(1) : McUtils.playerName();
+        WynntilsMod.postEvent(new PartyEvent.Promoted(oldLeader, partyLeader));
+        WynntilsMod.info("Successfully updated party leader, current leader is " + partyLeader + ".");
 
         // Sort the party members by the order they appear in the old party list, to preserve the order
         partyMembers = newPartyMembers.stream()
