@@ -20,7 +20,7 @@ import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
-import com.wynntils.screens.gearviewer.PlayerViewerScreen;
+import com.wynntils.screens.playerviewer.PlayerViewerScreen;
 import com.wynntils.services.leaderboard.type.LeaderboardBadge;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;

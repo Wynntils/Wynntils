@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.gearviewer.widgets;
+package com.wynntils.screens.playerviewer.widgets;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
@@ -10,10 +10,10 @@ import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
-public class FriendButton extends PlayerInteractionButton {
+public class PartyButton extends PlayerInteractionButton {
     private final String playerName;
 
-    public FriendButton(int x, int y, String playerName) {
+    public PartyButton(int x, int y, String playerName) {
         super(x, y);
         this.playerName = playerName; // Must be run before updateIcon to ensure name is set
         updateIcon();
@@ -23,13 +23,13 @@ public class FriendButton extends PlayerInteractionButton {
     public void onPress() {
         super.onPress();
         Handlers.Command.queueCommand(
-                "friend " + (Models.Friends.isFriend(playerName) ? "remove " : "add ") + playerName);
+                "party " + (Models.Party.getPartyMembers().contains(playerName) ? "kick " : "") + playerName);
     }
 
     public void updateIcon() {
-        boolean isFriend = Models.Friends.isFriend(playerName);
-        this.icon = isFriend ? Texture.FRIEND_REMOVE_ICON : Texture.FRIEND_ADD_ICON;
+        boolean isParty = Models.Party.getPartyMembers().contains(playerName);
+        this.icon = isParty ? Texture.PARTY_KICK_ICON : Texture.PARTY_INVITE_ICON;
         this.tooltipText = List.of(
-                Component.translatable("screens.wynntils.gearViewer." + (isFriend ? "removeFriend" : "addFriend")));
+                Component.translatable("screens.wynntils.playerViewer." + (isParty ? "kickParty" : "inviteParty")));
     }
 }

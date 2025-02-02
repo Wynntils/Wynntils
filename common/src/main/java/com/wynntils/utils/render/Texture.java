@@ -96,16 +96,6 @@ public enum Texture {
     UNDISCOVERED_WORLD("icons/discoveries/undiscovered_world.png", 21, 34),
     UNDISCOVERED_WORLD_ICON("icons/discoveries/undiscovered_world_icon.png", 11, 7),
 
-    // Gear Viewer
-    DUEL_ICON("icons/gear_viewer/duel_icon.png", 14, 14),
-    FRIEND_ADD_ICON("icons/gear_viewer/friend_add_icon.png", 14, 14),
-    FRIEND_REMOVE_ICON("icons/gear_viewer/friend_remove_icon.png", 14, 14),
-    MESSAGE_ICON("icons/gear_viewer/message_icon.png", 14, 14),
-    PARTY_INVITE_ICON("icons/gear_viewer/party_invite_icon.png", 14, 14),
-    PARTY_KICK_ICON("icons/gear_viewer/party_kick_icon.png", 14, 14),
-    STATS_ICON("icons/gear_viewer/stats_icon.png", 14, 14),
-    TRADE_ICON("icons/gear_viewer/trade_icon.png", 14, 14),
-
     // Trade Market
     PRESET("trade_market/preset.png", 16, 16),
     SAVED_PRESET("trade_market/saved_preset.png", 16, 16),
@@ -201,6 +191,16 @@ public enum Texture {
     WEAPON_MERCHANT("icons/map/weapon_merchant.png", 18, 15),
     WOODCUTTING("icons/map/woodcutting.png", 16, 17),
     WOODWORKING_STATION("icons/map/woodworking_station.png", 17, 15),
+
+    // Player Viewer
+    DUEL_ICON("icons/player_viewer/duel_icon.png", 14, 14),
+    FRIEND_ADD_ICON("icons/player_viewer/friend_add_icon.png", 14, 14),
+    FRIEND_REMOVE_ICON("icons/player_viewer/friend_remove_icon.png", 14, 14),
+    MESSAGE_ICON("icons/player_viewer/message_icon.png", 14, 14),
+    PARTY_INVITE_ICON("icons/player_viewer/party_invite_icon.png", 14, 14),
+    PARTY_KICK_ICON("icons/player_viewer/party_kick_icon.png", 14, 14),
+    STATS_ICON("icons/player_viewer/stats_icon.png", 14, 14),
+    TRADE_ICON("icons/player_viewer/trade_icon.png", 14, 14),
     // endregion
 
     // region Item Storage
@@ -284,11 +284,11 @@ public enum Texture {
     CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
     GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
-    GEAR_VIEWER_BACKGROUND("ui_components/gear_viewer_background.png", 103, 92),
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
+    PLAYER_VIEWER_BACKGROUND("ui_components/player_viewer_background.png", 103, 92),
     QUICK_JUMP_BUTTON("ui_components/quick_jump_button.png", 16, 32),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),

@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.players.event.FriendsEvent;
 import com.wynntils.models.players.event.PartyEvent;
-import com.wynntils.screens.gearviewer.PlayerViewerScreen;
+import com.wynntils.screens.playerviewer.PlayerViewerScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.Optional;
