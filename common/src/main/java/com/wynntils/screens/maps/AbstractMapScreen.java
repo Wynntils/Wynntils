@@ -27,7 +27,6 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
@@ -151,8 +150,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 Texture.FULLSCREEN_MAP_BORDER.height());
     }
 
-    protected void renderGradientBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+    protected void renderBlurredBackground() {
+        super.renderBlurredBackground();
     }
 
     protected void renderPois(
@@ -363,9 +362,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         mapHeight);
 
         // Background black void color
-        BufferedRenderUtils.drawRect(
+        RenderUtils.drawRect(
                 poseStack,
-                BUFFER_SOURCE,
                 CommonColors.BLACK,
                 renderX + renderedBorderXOffset,
                 renderY + renderedBorderYOffset,

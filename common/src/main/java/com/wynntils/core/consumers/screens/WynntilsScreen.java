@@ -62,6 +62,13 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
+    // All of our screens, with one exception, render in game so do not use the panorama and renderMenuBackground causes
+    // rendering issues so only render the blur
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        renderBlurredBackground();
+    }
+
     @Override
     public final boolean mouseClicked(double mouseX, double mouseY, int button) {
         try {
