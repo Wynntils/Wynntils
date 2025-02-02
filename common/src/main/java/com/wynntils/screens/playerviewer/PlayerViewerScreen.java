@@ -110,6 +110,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
     @Override
     protected void doInit() {
+        interactionButtons.clear();
         this.leftPos = (this.width - Texture.PLAYER_VIEWER_BACKGROUND.width()) / 2;
         this.topPos = (this.height - Texture.PLAYER_VIEWER_BACKGROUND.height()) / 2;
 
