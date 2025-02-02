@@ -86,7 +86,7 @@ public final class PartyModel extends Model {
 
     // New party leader
     private static final Pattern PARTY_NEW_LEADER =
-            Pattern.compile(PARTY_PREFIX_REGEX + "(?:§c)?(.+)§e is now the Party Leaderasdf!.*");
+            Pattern.compile(PARTY_PREFIX_REGEX + "(?:§c)?(.+)§e is now the Party Leader!.*");
 
     // Temporary party event over, previous party restored
     // This actually means nothing of value to us so just re-request
