@@ -17,6 +17,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
+import com.wynntils.models.items.items.game.UnknownGearItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.utils.colors.CommonColors;
@@ -93,8 +94,9 @@ public class UnidentifiedItemIconFeature extends Feature {
         }
 
         if (markRevealedItems.get()
-                && wynnItem instanceof IdentifiableItemProperty identifiableItem
-                && identifiableItem.getItemInstance().isEmpty()
+                && (wynnItem instanceof IdentifiableItemProperty identifiableItem
+                                && identifiableItem.getItemInstance().isEmpty()
+                        || wynnItem instanceof UnknownGearItem unknownGearItem && unknownGearItem.isUnidentified())
                 && wynnItem instanceof GearTypeItemProperty gearType) {
             markRevealedItemsLocation
                     .get()
