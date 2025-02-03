@@ -151,6 +151,8 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParsePartyMessages(StyledText styledText) {
+        styledText = StyledTextUtils.unwrap(styledText);
+
         if (styledText.matches(PARTY_PLAYER_CREATED)) {
             WynntilsMod.info("Player created a new party.");
 
