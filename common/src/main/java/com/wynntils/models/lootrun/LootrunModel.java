@@ -65,7 +65,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -359,15 +358,15 @@ public class LootrunModel extends Model {
             return;
         }
 
-        matcher = CHALLENGE_FAILED_PATTERN.matcher(styledText.getString());
-        if (matcher.matches()) {
-            challengeFailed();
-            return;
-        }
-
         matcher = CHALLENGE_COMPLETED_PATTERN.matcher(styledText.getString());
         if (matcher.matches()) {
             challengeCompleted();
+            return;
+        }
+
+        matcher = CHALLENGE_FAILED_PATTERN.matcher(styledText.getString());
+        if (matcher.matches()) {
+            challengeFailed();
             return;
         }
 
@@ -752,7 +751,7 @@ public class LootrunModel extends Model {
     public int getActiveOrangeBeacons() {
         return orangeBeaconCountsStorage
                 .get()
-                .getOrDefault(Models.Character.getId(), new LinkedList<>())
+                .getOrDefault(Models.Character.getId(), new ArrayList<>())
                 .size();
     }
 
@@ -764,7 +763,7 @@ public class LootrunModel extends Model {
             return 0;
         } else {
             return Collections.min(
-                    orangeBeaconCountsStorage.get().getOrDefault(Models.Character.getId(), new LinkedList<>()));
+                    orangeBeaconCountsStorage.get().getOrDefault(Models.Character.getId(), new ArrayList<>()));
         }
     }
 
@@ -808,6 +807,12 @@ public class LootrunModel extends Model {
         possibleTaskLocations.clear();
         vibrantBeacons.clear();
 
+        orangeAmount.get().remove(Models.Character.getId());
+        orangeAmount.touched();
+
+        rainbowAmount.get().remove(Models.Character.getId());
+        rainbowAmount.touched();
+
         expectOrangeBeacon = false;
         expectRainbowBeacon = false;
     }
@@ -823,6 +828,9 @@ public class LootrunModel extends Model {
     private void resetBeaconCounts() {
         redBeaconTaskCountStorage.get().remove(Models.Character.getId());
         redBeaconTaskCountStorage.touched();
+
+        orangeBeaconCountsStorage.get().remove(Models.Character.getId());
+        orangeBeaconCountsStorage.touched();
 
         rainbowBeaconCountStorage.get().remove(Models.Character.getId());
         rainbowBeaconCountStorage.touched();
