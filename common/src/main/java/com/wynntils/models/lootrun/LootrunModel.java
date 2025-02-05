@@ -423,7 +423,9 @@ public class LootrunModel extends Model {
                 orangeAmount.get().put(Models.Character.getId(), Integer.parseInt(orangeMatcher.group(1)));
                 orangeAmount.touched();
             }
-        } else if (expectRainbowBeacon) {
+        } 
+
+        if (expectRainbowBeacon) {
             Matcher rainbowMatcher = styledText.getMatcher(RAINBOW_AMOUNT_PATTERN);
 
             if (rainbowMatcher.find()) {
