@@ -42,19 +42,17 @@ public final class ConfigManager extends Manager {
     private static final String OVERLAY_GROUPS_JSON_KEY = "overlayGroups";
     private static final Set<Config<?>> CONFIGS = new TreeSet<>();
 
-    private final File userConfigFile;
+    private File userConfigFile;
     private JsonObject configObject;
 
     public ConfigManager() {
         super(List.of());
-
-        userConfigFile = new File(
-                CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
     }
 
     public void init() {
+        File config = getUserConfigFile();
         // First, we load the config file
-        configObject = Managers.Json.loadPreciousJson(userConfigFile);
+        configObject = Managers.Json.loadPreciousJson(config);
 
         // Register all features and overlays
         Managers.Feature.getFeatures().forEach(this::registerFeature);
@@ -63,7 +61,7 @@ public final class ConfigManager extends Manager {
         // FIXME: Solve generics type issue
         Set<PersistedValue<?>> workaround = new HashSet<>(CONFIGS);
         if (Managers.Upfixer.runUpfixers(configObject, workaround, UpfixerType.CONFIG)) {
-            Managers.Json.savePreciousJson(userConfigFile, configObject);
+            Managers.Json.savePreciousJson(config, configObject);
         }
 
         // Finish off the config init process
@@ -100,7 +98,7 @@ public final class ConfigManager extends Manager {
     }
 
     public void reloadConfiguration() {
-        configObject = Managers.Json.loadPreciousJson(userConfigFile);
+        configObject = Managers.Json.loadPreciousJson(getUserConfigFile());
         loadConfigOptions(true, true);
     }
 
@@ -209,10 +207,17 @@ public final class ConfigManager extends Manager {
 
         configJson.add(OVERLAY_GROUPS_JSON_KEY, overlayGroups);
 
-        Managers.Json.savePreciousJson(userConfigFile, configJson);
+        Managers.Json.savePreciousJson(getUserConfigFile(), configJson);
     }
 
     public File getUserConfigFile() {
+        String id = UndashedUuid.toString(McUtils.mc().getUser().getProfileId());
+        if (userConfigFile == null) {
+            // Lazily set this so we use the latest session's UUID.
+            // Some auth mods will update the session late, so userConfigFile shouldn't be set in the constructor.
+            userConfigFile = new File(
+                    CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
+        }
         return userConfigFile;
     }
 
