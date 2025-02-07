@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -562,12 +562,14 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         populatePois();
     }
 
-    public void deletePoi(CustomPoi poiToDelete) {
+    public void deletePoi(CustomPoi poiToDelete, boolean save) {
         HiddenConfig<List<CustomPoi>> customPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
         int deletedPoiIndex = customPois.get().indexOf(poiToDelete);
 
         customPois.get().remove(poiToDelete);
-        customPois.touched();
+        if (save) {
+            customPois.touched();
+        }
         Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
 
         deletedPois.add(poiToDelete);
@@ -895,8 +897,10 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         HiddenConfig<List<CustomPoi>> customPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
 
         for (CustomPoi poi : selectedPois) {
-            deletePoi(poi);
+            deletePoi(poi, false);
         }
+
+        customPois.touched();
 
         McUtils.sendMessageToClient(
                 Component.translatable("screens.wynntils.poiManagementGui.deletedPois", selectedPois.size())

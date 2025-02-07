@@ -209,7 +209,8 @@ public class LootrunModel extends Model {
 
     @Override
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED).handleReader(this::handleLootrunTaskLocations);
+        registry.registerDownload(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED_V2)
+                .handleReader(this::handleLootrunTaskLocations);
     }
 
     private void handleLootrunTaskLocations(Reader reader) {
@@ -407,7 +408,8 @@ public class LootrunModel extends Model {
                 }
 
                 if (foundLootrunMythic) {
-                    WynntilsMod.postEvent(new MythicFoundEvent(itemStack, true));
+                    WynntilsMod.postEvent(
+                            new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST));
                     dryPulls.store(0);
                 }
             }

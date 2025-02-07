@@ -108,7 +108,7 @@ public abstract class ScreenMixin implements ScreenExtension {
             method = "Lnet/minecraft/client/gui/screens/Screen;fillCrashDetails(Lnet/minecraft/CrashReport;)V",
             at = @At("HEAD"),
             cancellable = true)
-    private static void wrapScreenErrorPre(CrashReport crashReport, CallbackInfo ci) {
+    private void wrapScreenErrorPre(CrashReport crashReport, CallbackInfo ci) {
         if (!(Minecraft.getInstance().screen instanceof WynntilsScreen wynntilsScreen)) return;
 
         // This is too involved in error handling to worth risk sending events
