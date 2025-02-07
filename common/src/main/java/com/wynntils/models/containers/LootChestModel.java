@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -124,7 +124,7 @@ public final class LootChestModel extends Model {
 
         GearBoxItem gearBox = gearBoxItem.get();
         if (gearBox.getGearTier() == GearTier.MYTHIC) {
-            WynntilsMod.postEvent(new MythicFoundEvent(itemStack, false));
+            WynntilsMod.postEvent(new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.LOOT_CHEST));
 
             if (gearBox.getGearType() != GearType.MASTERY_TOME) {
                 storeMythicFind(itemStack, gearBox.getLevelRange());

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -176,6 +176,34 @@ public class RaidFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.Raid.getTimeLeft();
+        }
+    }
+
+    public static class DryAspectsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Raid.getAspectPullsWithoutMythicAspect();
+        }
+    }
+
+    public static class DryRaidsAspectsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Raid.getRaidsWithoutMythicAspect();
+        }
+    }
+
+    public static class DryRaidRewardPullsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Raid.getRewardPullsWithoutMythicTome();
+        }
+    }
+
+    public static class DryRaidsTomesFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Raid.getRaidsWithoutMythicTome();
         }
     }
 }

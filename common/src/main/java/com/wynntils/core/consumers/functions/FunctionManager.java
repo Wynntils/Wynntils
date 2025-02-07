@@ -574,6 +574,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new RaidFunctions.CurrentRaidRoomDamageFunction());
         registerFunction(new RaidFunctions.CurrentRaidTimeFunction());
         registerFunction(new RaidFunctions.CurrentRaidDamageFunction());
+        registerFunction(new RaidFunctions.DryAspectsFunction());
+        registerFunction(new RaidFunctions.DryRaidRewardPullsFunction());
+        registerFunction(new RaidFunctions.DryRaidsTomesFunction());
+        registerFunction(new RaidFunctions.DryRaidsAspectsFunction());
         registerFunction(new RaidFunctions.RaidChallengesFunction());
         registerFunction(new RaidFunctions.RaidIntermissionTimeFunction());
         registerFunction(new RaidFunctions.RaidRoomTimeFunction());

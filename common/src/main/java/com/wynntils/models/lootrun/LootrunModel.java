@@ -408,7 +408,8 @@ public class LootrunModel extends Model {
                 }
 
                 if (foundLootrunMythic) {
-                    WynntilsMod.postEvent(new MythicFoundEvent(itemStack, true));
+                    WynntilsMod.postEvent(
+                            new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST));
                     dryPulls.store(0);
                 }
             }
