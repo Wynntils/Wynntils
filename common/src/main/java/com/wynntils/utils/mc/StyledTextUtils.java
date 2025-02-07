@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -204,7 +204,11 @@ public final class StyledTextUtils {
         return StyledText.fromParts(newParts);
     }
 
-    public static Pair<String, String> extractNameAndNick(StyledText styledText) {
+    /**
+     * @param styledText Entire StyledText containing the nickname segment
+     * @return [username, nick] pair if a nickname is found, null otherwise
+     */
+    public static Pair<String, String> extractNameAndNick(Iterable<StyledTextPart> styledText) {
         for (StyledTextPart part : styledText) {
             HoverEvent hoverEvent = part.getPartStyle().getStyle().getHoverEvent();
 
