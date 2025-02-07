@@ -1,3 +1,16 @@
+## [3.0.4](https://github.com/Wynntils/Wynntils/compare/v3.0.3...v3.0.4) (2025-02-07)
+
+
+### New Features
+
+* Add support for raid reward chest, unid tome, and announce mythic aspect / mythic tome finds ([#3047](https://github.com/Wynntils/Wynntils/issues/3047)) ([43e65d8](https://github.com/Wynntils/Wynntils/commit/43e65d8699420846a47282c87afa2ad95f6a243c))
+* More gear viewer interaction buttons [skip ci] ([#3054](https://github.com/Wynntils/Wynntils/issues/3054)) ([43a87d0](https://github.com/Wynntils/Wynntils/commit/43a87d004204e0ff0c52db78b440d97fbe794150))
+
+
+### Bug Fixes
+
+* make ScreenMixin.wrapScreenErrorPre non-static [skip ci] ([#3105](https://github.com/Wynntils/Wynntils/issues/3105)) ([f5bb233](https://github.com/Wynntils/Wynntils/commit/f5bb23335caac8a79f713385cd6e139e36ff2cb3))
+
 ## [3.0.3](https://github.com/Wynntils/Wynntils/compare/v3.0.2...v3.0.3) (2025-02-02)
 
 
@@ -10,6 +23,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#3100](https://github.com/Wynntils/Wynntils/issues/3100)) ([5312f4e](https://github.com/Wynntils/Wynntils/commit/5312f4ece6d45ee72eec369014f3f3cf25d6d44c))
+* **release:** v3.0.3 [skip ci] ([f852da6](https://github.com/Wynntils/Wynntils/commit/f852da6a6206091a9c71724f5cf2815c0b615ba3))
 
 ## [3.0.2](https://github.com/Wynntils/Wynntils/compare/v3.0.1...v3.0.2) (2025-02-01)
 
@@ -67,16 +81,4 @@
 
 * **release:** v3.0.0 [skip ci] ([1a407a4](https://github.com/Wynntils/Wynntils/commit/1a407a4d30d750d8cd38d4210880cccbddecab1b))
 * Revert auto attack changes from [#3040](https://github.com/Wynntils/Wynntils/issues/3040) [skip ci] ([#3080](https://github.com/Wynntils/Wynntils/issues/3080)) ([b6ea0a6](https://github.com/Wynntils/Wynntils/commit/b6ea0a65ea22cbb38b4d953b281a39dcd0d18e75))
-
-## [2.4.18](https://github.com/Wynntils/Wynntils/compare/v2.4.17...v2.4.18) (2025-01-22)
-
-
-### Bug Fixes
-
-* Fix lootrun mythic detection ([#3077](https://github.com/Wynntils/Wynntils/issues/3077)) ([4cc49a5](https://github.com/Wynntils/Wynntils/commit/4cc49a5d343c842dfadf51324486091e5fa1b4fc))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.4.18 [skip ci] ([ca59160](https://github.com/Wynntils/Wynntils/commit/ca59160e015bfd3275bca9289bb8895384be2463))
 
