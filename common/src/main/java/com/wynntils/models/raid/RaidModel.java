@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.raid;
@@ -7,12 +7,22 @@ package com.wynntils.models.raid;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.combat.type.DamageDealtEvent;
+import com.wynntils.models.containers.containers.RaidRewardChestContainer;
+import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.items.items.game.AspectItem;
+import com.wynntils.models.items.items.game.EmeraldItem;
+import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
@@ -30,11 +40,14 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class RaidModel extends Model {
@@ -44,6 +57,9 @@ public class RaidModel extends Model {
     private static final Pattern CHALLENGE_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC5F§a§lChallenge Completed");
     private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
     private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
+
+    private static final Pattern REWARD_PULLS_PATTERN = Pattern.compile("§.(\\d+)§7 Reward Pulls");
+    private static final Pattern ASPECT_PULLS_PATTERN = Pattern.compile("§.(\\d+)§7 Aspect Pulls");
 
     private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
             "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff((§o)?(\\w+))§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
@@ -66,6 +82,33 @@ public class RaidModel extends Model {
     private long currentRoomDamage = 0;
     private RaidKind currentRaid = null;
     private RaidRoomType currentRoom = null;
+
+    @Persisted
+    private final Storage<Integer> numRaidsWithoutMythicAspect = new Storage<>(0);
+
+    @Persisted
+    private final Storage<Integer> numAspectPullsWithoutMythicAspect = new Storage<>(0);
+
+    @Persisted
+    private final Storage<Integer> numRaidsWithoutMythicTome = new Storage<>(0);
+
+    @Persisted
+    private final Storage<Integer> numRewardPullsWithoutMythicTome = new Storage<>(0);
+
+    public static final int RAID_REWARD_CHEST_ASPECT_SLOTS_START = 11;
+    public static final int RAID_REWARD_CHEST_ASPECT_SLOTS_END = 15;
+    public static final int RAID_REWARD_CHEST_REWARD_SLOTS_START = 27;
+    public static final int RAID_REWARD_CHEST_REWARD_SLOTS_END = 53;
+
+    private int expectedNumAspectPulls = -1;
+    private int expectedNumRewardPulls = -1;
+    private int foundNumRewardPulls;
+    private boolean foundMythicTome;
+    private boolean foundMythicAspect;
+    private boolean rewardChestIsOpened = false;
+
+    private boolean hasProcessedRewards = true;
+    private int expectedRaidRewardChestId = -2;
 
     public RaidModel() {
         super(List.of());
@@ -94,10 +137,22 @@ public class RaidModel extends Model {
         }
     }
 
-    // One challenge in Nexus of Light does not display the scoreboard upon challenge completion
-    // so we have to check for the chat message
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
+        StyledText styledText = event.getOriginalStyledText();
+
+        Matcher rewardPullMatcher = styledText.getMatcher(REWARD_PULLS_PATTERN);
+        if (rewardPullMatcher.find()) {
+            expectedNumRewardPulls = Integer.parseInt(rewardPullMatcher.group(1));
+            hasProcessedRewards = false;
+            return;
+        }
+        Matcher aspectPullMatcher = styledText.getMatcher(ASPECT_PULLS_PATTERN);
+        if (aspectPullMatcher.find()) {
+            expectedNumAspectPulls = Integer.parseInt(aspectPullMatcher.group(1));
+            return;
+        }
+
         if (inBuffRoom()) {
             Matcher matcher = event.getOriginalStyledText().stripAlignment().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
             if (matcher.matches()) {
@@ -119,6 +174,8 @@ public class RaidModel extends Model {
 
         if (!inChallengeRoom()) return;
 
+        // One challenge in Nexus of Light does not display the scoreboard upon challenge completion so we have to check
+        // for the chat message
         if (event.getStyledText().matches(CHALLENGE_COMPLETED_PATTERN)) {
             completeChallenge();
         }
@@ -151,9 +208,146 @@ public class RaidModel extends Model {
         }
     }
 
+    // Process raid rewards
+    @SubscribeEvent
+    public void onScreenInit(ScreenInitEvent.Pre e) {
+        if (Models.Container.getCurrentContainer() instanceof RaidRewardChestContainer raidRewardChest) {
+            expectedRaidRewardChestId = raidRewardChest.getContainerId();
+        } else {
+            expectedRaidRewardChestId = -2;
+        }
+    }
+
+    @SubscribeEvent
+    public void onSetContent(ContainerSetContentEvent.Post event) {
+        if (event.getContainerId() != expectedRaidRewardChestId) return;
+        rewardChestIsOpened = true;
+
+        if (hasProcessedRewards) {
+            // Note: Logic here has been intentionally skipped. Only the first page of the rewarded aspects are parsed
+            // and relevant as of right now (as it is extraordinarily unlikely that a user gets more mythic aspects
+            // than the first page can hold)
+            return;
+        }
+        hasProcessedRewards = true;
+        if (expectedNumAspectPulls == -1 || expectedNumRewardPulls == -1) {
+            WynntilsMod.warn(
+                    "[RaidModel] Set content of raid reward chest, but did not detect number of expected pulls. Got expectedNumAspectPulls="
+                            + expectedNumAspectPulls + " and expectedNumRewardPulls=" + expectedNumRewardPulls
+                            + ". Probably, the player tried closing the chest before, which got cancelled and the contents of the chest got refreshed. Ignoring contents of this raid chest.");
+            return;
+        }
+
+        List<ItemStack> items = event.getItems();
+
+        // Aspects only appear in slots 11..15 and item rewards only appear in slots 27..53
+        foundMythicAspect = false;
+        for (int i = RAID_REWARD_CHEST_ASPECT_SLOTS_START; i <= RAID_REWARD_CHEST_ASPECT_SLOTS_END; i++) {
+            processAspectItemFind(items.get(i), i);
+        }
+
+        foundMythicTome = false;
+        foundNumRewardPulls = 0;
+        for (int i = RAID_REWARD_CHEST_REWARD_SLOTS_START; i <= RAID_REWARD_CHEST_REWARD_SLOTS_END; i++) {
+            processRewardItemFind(items.get(i), i);
+        }
+    }
+
+    @SubscribeEvent
+    public void onContainerClose(ContainerCloseEvent.Post event) {
+        if (!rewardChestIsOpened) return;
+        expectedRaidRewardChestId = -2; // Reset to null
+
+        if (expectedNumRewardPulls == -1 || expectedNumAspectPulls == -1) {
+            WynntilsMod.warn(
+                    "[RaidModel] Failed to update dry raid counts after closing the reward chest. Did not detect number of expected pulls. Got expectedNumAspectPulls="
+                            + expectedNumAspectPulls + " and expectedNumRewardPulls=" + expectedNumRewardPulls
+                            + ". Probably, the player tried closing the chest before, which got cancelled and the contents of the chest got refreshed.");
+            return;
+        }
+
+        if (foundMythicAspect) {
+            numRaidsWithoutMythicAspect.store(0);
+            numAspectPullsWithoutMythicAspect.store(0);
+        } else {
+            numRaidsWithoutMythicAspect.store(numRaidsWithoutMythicAspect.get() + 1);
+            numAspectPullsWithoutMythicAspect.store(numAspectPullsWithoutMythicAspect.get() + expectedNumAspectPulls);
+        }
+
+        if (expectedNumRewardPulls <= (RAID_REWARD_CHEST_REWARD_SLOTS_END - RAID_REWARD_CHEST_REWARD_SLOTS_START + 1)
+                && foundNumRewardPulls != expectedNumRewardPulls) {
+            WynntilsMod.warn("[RaidModel] Expected user to receive " + expectedNumRewardPulls
+                    + " pulls based on raid summary in chat. However, detected "
+                    + foundNumRewardPulls + " items in reward chest. Awarding "
+                    + expectedNumRewardPulls + " pulls based on raid summary chat message.");
+        }
+
+        if (foundMythicTome) {
+            numRaidsWithoutMythicTome.store(0);
+            numRewardPullsWithoutMythicTome.store(0);
+        } else {
+            numRaidsWithoutMythicTome.store(numRaidsWithoutMythicTome.get() + 1);
+            numRewardPullsWithoutMythicTome.store(numRewardPullsWithoutMythicTome.get() + expectedNumRewardPulls);
+        }
+
+        expectedNumAspectPulls = -1;
+        expectedNumRewardPulls = -1;
+        rewardChestIsOpened = false;
+    }
+
+    private void processAspectItemFind(ItemStack itemStack, int slotId) {
+        if (itemStack.getItem() == Items.AIR) return;
+
+        Optional<AspectItem> aspectOptional = Models.Item.asWynnItem(itemStack, AspectItem.class);
+        if (aspectOptional.isPresent()) {
+            AspectItem aspectItem = aspectOptional.get();
+            if (aspectItem.getGearTier() == GearTier.MYTHIC) {
+                foundMythicAspect = true;
+                WynntilsMod.postEvent(new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.RAID_REWARD_CHEST));
+            }
+            return;
+        }
+
+        WynntilsMod.warn("[RaidModel] Unexpectedly found item \""
+                + StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting() + "\" at slot "
+                + slotId + ", but this slot should be an aspect reward slot.");
+    }
+
+    private void processRewardItemFind(ItemStack itemStack, int slotId) {
+        if (itemStack.getItem() == Items.AIR) return;
+
+        foundNumRewardPulls += 1;
+
+        Optional<AspectItem> aspectOptional = Models.Item.asWynnItem(itemStack, AspectItem.class);
+        if (aspectOptional.isPresent()) {
+            AspectItem aspectItem = aspectOptional.get();
+            WynntilsMod.warn("[RaidModel] User found aspect item \"" + aspectItem.toString() + "\" at slot " + slotId
+                    + ", but this slot should be a reward item slot.");
+            return;
+        }
+
+        Optional<EmeraldItem> emeraldOptional = Models.Item.asWynnItem(itemStack, EmeraldItem.class);
+        if (emeraldOptional.isPresent()) {
+            // Can track the number of emeralds the player receives for completing the raid
+            return;
+        }
+
+        Optional<TomeItem> tomeItemOptional = Models.Item.asWynnItemProperty(itemStack, TomeItem.class);
+        if (tomeItemOptional.isPresent()) {
+            TomeItem tomeItem = tomeItemOptional.get();
+            if (tomeItem.getGearTier() == GearTier.MYTHIC) {
+                foundMythicTome = true;
+                WynntilsMod.postEvent(new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.RAID_REWARD_CHEST));
+            }
+            return;
+        }
+    }
+
     // This is called when the "Go to the exit" scoreboard line is displayed.
-    // If we are in the final buff room when this is shown, then we are now in the boss intermission.
-    // Otherwise, if we are in the intro or another buff room then we are now in an instructions room.
+    // If we are in the final buff room when this is shown, then we are now in the
+    // boss intermission.
+    // Otherwise, if we are in the intro or another buff room then we are now in an
+    // instructions room.
     public void tryEnterChallengeIntermission() {
         if (currentRoom == RaidRoomType.BUFF_3) {
             currentRoom = RaidRoomType.BOSS_INTERMISSION;
@@ -352,6 +546,22 @@ public class RaidModel extends Model {
 
     public long getCurrentRoomDamage() {
         return currentRoomDamage;
+    }
+
+    public int getRaidsWithoutMythicAspect() {
+        return numRaidsWithoutMythicAspect.get();
+    }
+
+    public int getAspectPullsWithoutMythicAspect() {
+        return numAspectPullsWithoutMythicAspect.get();
+    }
+
+    public int getRaidsWithoutMythicTome() {
+        return numRaidsWithoutMythicTome.get();
+    }
+
+    public int getRewardPullsWithoutMythicTome() {
+        return numRewardPullsWithoutMythicTome.get();
     }
 
     private boolean inInstructionsRoom() {

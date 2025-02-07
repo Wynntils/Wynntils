@@ -1,8 +1,8 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.gearviewer;
+package com.wynntils.screens.playerviewer;
 
 import java.util.List;
 import net.minecraft.world.Container;
@@ -12,8 +12,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public final class GearViewerMenu extends AbstractContainerMenu {
-    private GearViewerMenu(Container container) {
+public final class PlayerViewerMenu extends AbstractContainerMenu {
+    private PlayerViewerMenu(Container container) {
         super(null, 100);
 
         this.addSlot(new Slot(container, 0, 78, 67));
@@ -34,8 +34,8 @@ public final class GearViewerMenu extends AbstractContainerMenu {
         }
     }
 
-    public static GearViewerMenu create(ItemStack heldItem, List<ItemStack> armorItems) {
-        GearViewerMenu menu = new GearViewerMenu(new SimpleContainer(5));
+    public static PlayerViewerMenu create(ItemStack heldItem, List<ItemStack> armorItems) {
+        PlayerViewerMenu menu = new PlayerViewerMenu(new SimpleContainer(5));
         menu.setHeldItem(heldItem);
         menu.setArmorItems(armorItems);
         return menu;

@@ -2,17 +2,23 @@
  * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.gearviewer;
+package com.wynntils.screens.playerviewer;
 
 import com.google.gson.JsonObject;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.WynntilsContainerScreen;
-import com.wynntils.screens.gearviewer.widgets.ViewPlayerStatsButton;
+import com.wynntils.screens.playerviewer.widgets.FriendButton;
+import com.wynntils.screens.playerviewer.widgets.PartyButton;
+import com.wynntils.screens.playerviewer.widgets.PlayerInteractionButton;
+import com.wynntils.screens.playerviewer.widgets.SimplePlayerInteractionButton;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
@@ -21,7 +27,9 @@ import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.core.component.DataComponents;
@@ -36,31 +44,33 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team.Visibility;
 
-public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMenu> {
-    private static final String TEAM_NAME = "GearViewerTeam";
+public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerViewerMenu> {
+    private static final String TEAM_NAME = "PlayerViewerTeam";
 
     private final Player player;
     private final Scoreboard scoreboard;
-    private final PlayerTeam gearViewerTeam;
+    private final PlayerTeam playerViewerTeam;
     private final PlayerTeam oldTeam;
-    private ViewPlayerStatsButton viewPlayerStatsButton;
+    private List<PlayerInteractionButton> interactionButtons = new ArrayList<>();
+    private FriendButton friendButton;
+    private PartyButton partyButton;
 
-    private GearViewerScreen(Player player, GearViewerMenu menu) {
+    private PlayerViewerScreen(Player player, PlayerViewerMenu menu) {
         super(menu, player.getInventory(), Component.empty());
 
         this.player = player;
         this.scoreboard = player.level().getScoreboard();
 
         if (scoreboard.getTeamNames().contains(TEAM_NAME)) {
-            gearViewerTeam = scoreboard.getPlayerTeam(TEAM_NAME);
+            playerViewerTeam = scoreboard.getPlayerTeam(TEAM_NAME);
         } else {
-            gearViewerTeam = scoreboard.addPlayerTeam(TEAM_NAME);
-            gearViewerTeam.setNameTagVisibility(Visibility.NEVER);
+            playerViewerTeam = scoreboard.addPlayerTeam(TEAM_NAME);
+            playerViewerTeam.setNameTagVisibility(Visibility.NEVER);
         }
 
         // this is done to prevent the player's nametag from rendering in the GUI
         oldTeam = scoreboard.getPlayersTeam(player.getScoreboardName());
-        scoreboard.addPlayerToTeam(player.getScoreboardName(), gearViewerTeam);
+        scoreboard.addPlayerToTeam(player.getScoreboardName(), playerViewerTeam);
     }
 
     public static Screen create(Player player) {
@@ -72,7 +82,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         }
         Collections.reverse(armorItems);
 
-        return new GearViewerScreen(player, GearViewerMenu.create(heldItem, armorItems));
+        return new PlayerViewerScreen(player, PlayerViewerMenu.create(heldItem, armorItems));
     }
 
     private static ItemStack createDecoratedItemStack(ItemStack itemStack, Component playerName) {
@@ -100,15 +110,58 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
     @Override
     protected void doInit() {
-        this.leftPos = (this.width - Texture.GEAR_VIEWER_BACKGROUND.width()) / 2;
-        this.topPos = (this.height - Texture.GEAR_VIEWER_BACKGROUND.height()) / 2;
+        interactionButtons.clear();
+        this.leftPos = (this.width - Texture.PLAYER_VIEWER_BACKGROUND.width()) / 2;
+        this.topPos = (this.height - Texture.PLAYER_VIEWER_BACKGROUND.height()) / 2;
 
-        viewPlayerStatsButton = new ViewPlayerStatsButton(
-                leftPos - 20,
-                topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 4),
-                18,
-                20,
-                StyledText.fromComponent(player.getName()).getStringWithoutFormatting());
+        String playerName = StyledText.fromComponent(player.getName()).getStringWithoutFormatting();
+
+        // left
+        // view player stats button
+        interactionButtons.add(new SimplePlayerInteractionButton(
+                leftPos - 21,
+                topPos + (Texture.PLAYER_VIEWER_BACKGROUND.height() / 5 - 2),
+                Component.translatable("screens.wynntils.playerViewer.viewStats"),
+                Texture.STATS_ICON,
+                () -> Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_PLAYER_STATS, Map.of("username", playerName))));
+
+        // add friend button
+        friendButton = new FriendButton(
+                leftPos - 21, topPos + (Texture.PLAYER_VIEWER_BACKGROUND.height() / 5) + 18, playerName);
+        interactionButtons.add(friendButton);
+
+        // invite party button
+        partyButton = new PartyButton(
+                leftPos - 21, topPos + (Texture.PLAYER_VIEWER_BACKGROUND.height() / 5) + 38, playerName);
+        interactionButtons.add(partyButton);
+
+        // right
+        // duel button
+        interactionButtons.add(new SimplePlayerInteractionButton(
+                leftPos + Texture.PLAYER_VIEWER_BACKGROUND.width() + 1,
+                topPos + (Texture.PLAYER_VIEWER_BACKGROUND.height() / 5) - 2,
+                Component.translatable("screens.wynntils.playerViewer.duel"),
+                Texture.DUEL_ICON,
+                () -> Handlers.Command.queueCommand("duel " + playerName)));
+
+        // trade button
+        interactionButtons.add(new SimplePlayerInteractionButton(
+                leftPos + Texture.PLAYER_VIEWER_BACKGROUND.width() + 1,
+                topPos + (Texture.PLAYER_VIEWER_BACKGROUND.height() / 5) + 18,
+                Component.translatable("screens.wynntils.playerViewer.trade"),
+                Texture.TRADE_ICON,
+                () -> Handlers.Command.queueCommand("trade " + playerName)));
+
+        // msg button
+        interactionButtons.add(new SimplePlayerInteractionButton(
+                leftPos + Texture.PLAYER_VIEWER_BACKGROUND.width() + 1,
+                topPos + (Texture.PLAYER_VIEWER_BACKGROUND.height() / 5) + 38,
+                Component.translatable("screens.wynntils.playerViewer.message"),
+                Texture.MESSAGE_ICON,
+                () -> {
+                    this.onClose(); // Required so that nametags render properly
+                    McUtils.mc().setScreen(new ChatScreen("/msg " + playerName + " "));
+                }));
     }
 
     @Override
@@ -119,15 +172,15 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
-        viewPlayerStatsButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        interactionButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     private void renderPlayerModel(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        int renderX = (this.width - Texture.GEAR_VIEWER_BACKGROUND.width()) / 2;
-        int renderY = (this.height - Texture.GEAR_VIEWER_BACKGROUND.height()) / 2;
+        int renderX = (this.width - Texture.PLAYER_VIEWER_BACKGROUND.width()) / 2;
+        int renderY = (this.height - Texture.PLAYER_VIEWER_BACKGROUND.height()) / 2;
 
-        int renderWidth = Texture.GEAR_VIEWER_BACKGROUND.width();
-        int renderHeight = Texture.GEAR_VIEWER_BACKGROUND.height();
+        int renderWidth = Texture.PLAYER_VIEWER_BACKGROUND.width();
+        int renderHeight = Texture.PLAYER_VIEWER_BACKGROUND.height();
 
         InventoryScreen.renderEntityInInventoryFollowsMouse(
                 guiGraphics,
@@ -147,7 +200,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         BufferedRenderUtils.drawTexturedRect(
                 guiGraphics.pose(),
                 guiGraphics.bufferSource,
-                Texture.GEAR_VIEWER_BACKGROUND,
+                Texture.PLAYER_VIEWER_BACKGROUND,
                 this.leftPos,
                 this.topPos);
     }
@@ -159,7 +212,12 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return viewPlayerStatsButton.mouseClicked(mouseX, mouseY, button);
+        for (PlayerInteractionButton interactionButton : interactionButtons) {
+            if (interactionButton.mouseClicked(mouseX, mouseY, button)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -180,7 +238,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
     @Override
     public void onClose() {
         // restore previous scoreboard team setup
-        scoreboard.removePlayerFromTeam(player.getScoreboardName(), gearViewerTeam);
+        scoreboard.removePlayerFromTeam(player.getScoreboardName(), playerViewerTeam);
         if (oldTeam != null) {
             scoreboard.addPlayerToTeam(player.getScoreboardName(), oldTeam);
         }
@@ -190,5 +248,10 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
     public Player getPlayer() {
         return player;
+    }
+
+    public void updateButtonIcons() {
+        friendButton.updateIcon();
+        partyButton.updateIcon();
     }
 }
