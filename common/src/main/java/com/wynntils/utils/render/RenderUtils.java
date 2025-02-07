@@ -809,7 +809,7 @@ public final class RenderUtils {
             matrixStack.pushPose();
             matrixStack.translate(0.0F, yOffset, 0.0F);
             matrixStack.mulPose(dispatcher.cameraOrientation());
-            matrixStack.scale(0.025F * nametagScale, -0.025F * nametagScale, -0.025F * nametagScale);
+            matrixStack.scale(0.025F * nametagScale, -0.025F * nametagScale, 0.025F * nametagScale);
             Matrix4f matrix4f = matrixStack.last().pose();
 
             font.drawInBatch(
@@ -854,7 +854,7 @@ public final class RenderUtils {
 
             poseStack.translate(0, entity.getBbHeight() + 0.25F + customOffset, 0);
             poseStack.mulPose(dispatcher.cameraOrientation());
-            poseStack.scale(0.025F, -0.025F, -0.025F);
+            poseStack.scale(0.025F, -0.025F, 0.025F);
 
             Matrix4f matrix = poseStack.last().pose();
 

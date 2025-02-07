@@ -117,11 +117,11 @@ import com.wynntils.features.overlays.TowerEffectOverlayFeature;
 import com.wynntils.features.overlays.TowerStatsFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
-import com.wynntils.features.players.GearViewerFeature;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.features.players.PartyManagementScreenFeature;
 import com.wynntils.features.players.PlayerArmorHidingFeature;
 import com.wynntils.features.players.PlayerGhostTransparencyFeature;
+import com.wynntils.features.players.PlayerViewerFeature;
 import com.wynntils.features.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.redirects.InventoryRedirectFeature;
@@ -331,11 +331,11 @@ public final class FeatureManager extends Manager {
         // region players
         registerFeature(new AutoJoinPartyFeature());
         registerFeature(new CustomNametagRendererFeature());
-        registerFeature(new GearViewerFeature());
         registerFeature(new HadesFeature());
         registerFeature(new PartyManagementScreenFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
+        registerFeature(new PlayerViewerFeature());
         // endregion
 
         // region redirects
