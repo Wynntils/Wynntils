@@ -64,8 +64,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -126,7 +126,8 @@ public class LootrunModel extends Model {
     private static final Pattern BEACONS_PATTERN = Pattern.compile(
             "[\uDB00\uDC07-\uDB00\uDC78]§(?<beaconOneColor>[a-z0-9#]+)§l(?<beaconOneVibrant>Vibrant )?.+? Beacon(§r[\uDB00\uDC07-\uDB00\uDC78]§(?<beaconTwoColor>[a-z0-9#]+)§l(?<beaconTwoVibrant>Vibrant )?.+ Beacon)?");
     private static final Pattern ORANGE_AMOUNT_PATTERN = Pattern.compile(".+§7(?:.+?)?for (\\d+) Challenges");
-    private static final Pattern RAINBOW_AMOUNT_PATTERN = Pattern.compile(".+§7(?:.+?)?next §b(\\d+)§(r|7) Challenges");
+    private static final Pattern RAINBOW_AMOUNT_PATTERN =
+            Pattern.compile(".+§7(?:.+?)?next (?:§b)?(\\d+)(§(r|7))? Challenges");
     private static final Pattern MISSION_COMPLETED_PATTERN = Pattern.compile("[À\\s]*§b§lMission Completed");
 
     // Some missions don't have a mission completed message, so we also look for "active" missions
@@ -423,7 +424,7 @@ public class LootrunModel extends Model {
                 orangeAmount.get().put(Models.Character.getId(), Integer.parseInt(orangeMatcher.group(1)));
                 orangeAmount.touched();
             }
-        } 
+        }
 
         if (expectRainbowBeacon) {
             Matcher rainbowMatcher = styledText.getMatcher(RAINBOW_AMOUNT_PATTERN);
@@ -982,7 +983,7 @@ public class LootrunModel extends Model {
                 orangeBeaconCountsStorage.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
 
         if (!orangeCounts.isEmpty()) {
-            Iterator<Integer> orangeIterator = orangeCounts.iterator();
+            ListIterator<Integer> orangeIterator = orangeCounts.listIterator();
 
             while (orangeIterator.hasNext()) {
                 int currentOrangeCount = orangeIterator.next();
@@ -990,7 +991,7 @@ public class LootrunModel extends Model {
 
                 orangeIterator.remove();
                 if (currentOrangeCount > 0) {
-                    orangeCounts.add(currentOrangeCount);
+                    orangeIterator.add(currentOrangeCount);
                 }
             }
         }
