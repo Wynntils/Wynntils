@@ -547,6 +547,12 @@ public class TestRegex {
         p.shouldMatch("\uDB00\uDC0C§#ffff33ff§lVibrant Yellow Beacon§r\uDB00\uDC1F§#ff0000ff§lVibrant Red Beacon");
         p.shouldMatch(
                 "\uDAFF\uDFFF§#808080ff§lVibrant Dark Grey Beacon§r\uDB00\uDC07§#ff9500ff§lVibrant Orange Beacon");
+        p.shouldMatch("\uDB00\uDC23§#ff00ffff§lPurple Beacon§r\uDB00\uDC4B§b§lAqua Beacon");
+        p.shouldMatch("\uDB00\uDC2A§#5c5ce6ff§lBlue Beacon§r\uDB00\uDC4F§#ffff33ff§lYellow Beacon");
+        p.shouldMatch("\uDB00\uDC0A§#ff00ffff§lVibrant Purple Beacon§r\uDB00\uDC34§#5c5ce6ff§lBlue Beacon");
+        p.shouldMatch("\uDB00\uDC25§#ffff33ff§lYellow Beacon§r\uDB00\uDC46§#ff9500ff§lOrange Beacon");
+        p.shouldMatch("\uDB00\uDC72§#ffff33ff§lYellow Beacon");
+        p.shouldMatch("\uDB00\uDC60§#ff0000ff§lVibrant Red Beacon");
     }
 
     @Test
