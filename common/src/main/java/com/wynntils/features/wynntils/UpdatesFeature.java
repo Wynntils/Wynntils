@@ -43,9 +43,33 @@ public class UpdatesFeature extends Feature {
                         return;
                     }
 
-                    if (Objects.equals(version, WynntilsMod.getVersion())) {
-                        WynntilsMod.info("Mod is on latest version, not attempting update reminder or auto-update.");
+                    String[] newVersionParts = version.split("\\.");
+                    String[] currentVersionParts = WynntilsMod.getVersion().split("\\.");
+
+                    if (newVersionParts.length == 0 || currentVersionParts.length == 0 || newVersionParts.length != currentVersionParts.length) {
+                        WynntilsMod.info("Version schema mismatch, not attempting update reminder or auto-update.");
+                        WynntilsMod.info("New version: " + version + ", current version: " + WynntilsMod.getVersion());
                         return;
+                    }
+
+                    for (int i = 0; i < newVersionParts.length; i++) {
+                        int newPart = Integer.parseInt(newVersionParts[i]);
+                        int currentPart = Integer.parseInt(currentVersionParts[i]);
+
+                        if (newPart < currentPart) {
+                            WynntilsMod.info("New version is older than current version, not attempting update reminder or auto-update.");
+                            return;
+                        }
+                        if (newPart == currentPart) {
+                            if (i == newVersionParts.length - 1) {
+                                WynntilsMod.info("New version is the same as current version, not attempting update reminder or auto-update.");
+                                return;
+                            }
+                            continue;
+                        }
+                        if (newPart > currentPart) {
+                            break;
+                        }
                     }
 
                     if (updateReminder.get()) {
