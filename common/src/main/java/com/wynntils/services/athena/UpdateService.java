@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.athena;
@@ -59,13 +59,13 @@ public final class UpdateService extends Service {
     public boolean isNewerVersion(String version) {
         String currentVersion = WynntilsMod.getVersion();
         String[] newVersionParts = version.replace("v", "").split("\\.");
-        String[] currentVersionParts =
-                currentVersion.replace("v", "").split("\\.");
+        String[] currentVersionParts = currentVersion.replace("v", "").split("\\.");
 
         if (newVersionParts.length == 0
                 || currentVersionParts.length == 0
                 || newVersionParts.length != currentVersionParts.length) {
-            WynntilsMod.warn("Version schema mismatch for new version: " + version + ", current version: " + currentVersion);
+            WynntilsMod.warn(
+                    "Version schema mismatch for new version: " + version + ", current version: " + currentVersion);
             return false;
         }
 
