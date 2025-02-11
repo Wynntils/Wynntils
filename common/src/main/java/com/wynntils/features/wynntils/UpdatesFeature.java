@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -15,7 +15,6 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.services.athena.UpdateService;
 import com.wynntils.utils.mc.McUtils;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -43,12 +42,16 @@ public class UpdatesFeature extends Feature {
                         return;
                     }
 
-                    String[] newVersionParts = version.split("\\.");
-                    String[] currentVersionParts = WynntilsMod.getVersion().split("\\.");
+                    String currentVersion = WynntilsMod.getVersion();
+                    String[] newVersionParts = version.replace("v", "").split("\\.");
+                    String[] currentVersionParts =
+                            currentVersion.replace("v", "").split("\\.");
 
-                    if (newVersionParts.length == 0 || currentVersionParts.length == 0 || newVersionParts.length != currentVersionParts.length) {
+                    if (newVersionParts.length == 0
+                            || currentVersionParts.length == 0
+                            || newVersionParts.length != currentVersionParts.length) {
                         WynntilsMod.info("Version schema mismatch, not attempting update reminder or auto-update.");
-                        WynntilsMod.info("New version: " + version + ", current version: " + WynntilsMod.getVersion());
+                        WynntilsMod.info("New version: " + version + ", current version: " + currentVersion);
                         return;
                     }
 
@@ -57,36 +60,32 @@ public class UpdatesFeature extends Feature {
                         int currentPart = Integer.parseInt(currentVersionParts[i]);
 
                         if (newPart < currentPart) {
-                            WynntilsMod.info("New version is older than current version, not attempting update reminder or auto-update.");
+                            WynntilsMod.info("New version (" + version + ") is older than current version ("
+                                    + currentVersion + "), not attempting update reminder or auto-update.");
                             return;
                         }
-                        if (newPart == currentPart) {
-                            if (i == newVersionParts.length - 1) {
-                                WynntilsMod.info("New version is the same as current version, not attempting update reminder or auto-update.");
-                                return;
-                            }
-                            continue;
+                        if (newPart == currentPart && i == newVersionParts.length - 1) {
+                            WynntilsMod.info("New version (" + version + ") is the same as current version ("
+                                    + currentVersion + "), not attempting update reminder or auto-update.");
+                            return;
                         }
                         if (newPart > currentPart) {
                             break;
                         }
                     }
 
-                    if (updateReminder.get()) {
-                        if (WynntilsMod.isDevelopmentEnvironment()) {
-                            WynntilsMod.info("Tried to show update reminder, but we are in development environment.");
-                            return;
-                        }
+                    if (WynntilsMod.isDevelopmentEnvironment()) {
+                        WynntilsMod.info(
+                                "Update checks completed, but not attempting update reminder or auto-update in development environment.");
+                        WynntilsMod.info("New version: " + version + ", current version: " + WynntilsMod.getVersion());
+                        return;
+                    }
 
+                    if (updateReminder.get()) {
                         remindToUpdateIfExists(version);
                     }
 
                     if (autoUpdate.get()) {
-                        if (WynntilsMod.isDevelopmentEnvironment()) {
-                            WynntilsMod.info("Tried to auto-update, but we are in development environment.");
-                            return;
-                        }
-
                         WynntilsMod.info("Attempting to auto-update.");
 
                         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.updates.updating")
