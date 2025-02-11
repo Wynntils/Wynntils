@@ -42,36 +42,10 @@ public class UpdatesFeature extends Feature {
                         return;
                     }
 
-                    String currentVersion = WynntilsMod.getVersion();
-                    String[] newVersionParts = version.replace("v", "").split("\\.");
-                    String[] currentVersionParts =
-                            currentVersion.replace("v", "").split("\\.");
-
-                    if (newVersionParts.length == 0
-                            || currentVersionParts.length == 0
-                            || newVersionParts.length != currentVersionParts.length) {
-                        WynntilsMod.info("Version schema mismatch, not attempting update reminder or auto-update.");
-                        WynntilsMod.info("New version: " + version + ", current version: " + currentVersion);
+                    if (!Services.Update.isNewerVersion(version)) {
+                        WynntilsMod.info("New version (" + version + ") is older than current version ("
+                                + WynntilsMod.getVersion() + "), not attempting update reminder or auto-update.");
                         return;
-                    }
-
-                    for (int i = 0; i < newVersionParts.length; i++) {
-                        int newPart = Integer.parseInt(newVersionParts[i]);
-                        int currentPart = Integer.parseInt(currentVersionParts[i]);
-
-                        if (newPart < currentPart) {
-                            WynntilsMod.info("New version (" + version + ") is older than current version ("
-                                    + currentVersion + "), not attempting update reminder or auto-update.");
-                            return;
-                        }
-                        if (newPart == currentPart && i == newVersionParts.length - 1) {
-                            WynntilsMod.info("New version (" + version + ") is the same as current version ("
-                                    + currentVersion + "), not attempting update reminder or auto-update.");
-                            return;
-                        }
-                        if (newPart > currentPart) {
-                            break;
-                        }
                     }
 
                     if (WynntilsMod.isDevelopmentEnvironment()) {

@@ -33,6 +33,9 @@ public final class UpdateService extends Service {
         super(List.of());
     }
 
+    /**
+     * @return A future that will complete with the latest remote build version, which may or may not be *older* than the current version.
+     */
     public CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
@@ -51,6 +54,33 @@ public final class UpdateService extends Service {
                     future.complete(null);
                 });
         return future;
+    }
+
+    public boolean isNewerVersion(String version) {
+        String currentVersion = WynntilsMod.getVersion();
+        String[] newVersionParts = version.replace("v", "").split("\\.");
+        String[] currentVersionParts =
+                currentVersion.replace("v", "").split("\\.");
+
+        if (newVersionParts.length == 0
+                || currentVersionParts.length == 0
+                || newVersionParts.length != currentVersionParts.length) {
+            WynntilsMod.warn("Version schema mismatch for new version: " + version + ", current version: " + currentVersion);
+            return false;
+        }
+
+        for (int i = 0; i < newVersionParts.length; i++) {
+            int newPart = Integer.parseInt(newVersionParts[i]);
+            int currentPart = Integer.parseInt(currentVersionParts[i]);
+
+            if (newPart > currentPart) {
+                return true;
+            } else if (newPart < currentPart) {
+                return false;
+            }
+        }
+
+        return false;
     }
 
     private String getStream() {
