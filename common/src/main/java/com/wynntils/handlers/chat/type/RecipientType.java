@@ -13,9 +13,11 @@ public enum RecipientType {
     // Test in RecipientType_NPC_foregroundPattern
     NPC("^§7\\[\\d+\\/\\d+\\](?:§.)? ?§[25] ?.+: ?§..*$", "^§8\\[\\d+\\/\\d+\\] .+: ?§..*$", "NPC"),
     // Test in RecipientType_GLOBAL_foregroundPattern and RecipientType_GLOBAL_backgroundPattern
-    GLOBAL("^§7[\uE040-\uE059]{2}[\uE060-\uE069]{1,3}§r .+", "§7\uE056\uE042[\uE060-\uE069]{1,3}§r .+", "Global"),
+    GLOBAL("^§7[\uE040-\uE059]{2}[\uE060-\uE069]{1,3}§r .+", "§7[\uE040-\uE059]{2}[\uE060-\uE069]{1,3}§r .+", "Global"),
     // Test in RecipientType_LOCAL_foregroundPattern and RecipientType_LOCAL_backgroundPattern
-    LOCAL("^§f[\uE040-\uE059]{2}[\uE060-\uE069]{1,3}(?:§r)? .+", "^§8\uE056\uE042[\uE060-\uE069]{1,3}§r .+", "Local"),
+    LOCAL(
+            "^§f[\uE040-\uE059]{2}[\uE060-\uE069]{1,3}(?:§r)? .+",
+            "^§8[\uE040-\uE059]{2}[\uE060-\uE069]{1,3}§r .+", "Local"),
     // Test in RecipientType_GUILD_foregroundPattern and RecipientType_GUILD_backgroundPattern
     GUILD(
             "^§b((\uDAFF\uDFFC\uE006\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)).*$",
