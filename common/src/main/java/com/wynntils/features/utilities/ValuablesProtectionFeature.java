@@ -80,6 +80,7 @@ public class ValuablesProtectionFeature extends Feature {
     private static final int TM_ITEM_SLOT = 22;
     private static final int TM_PRICE_SLOT = 28;
     private static final int TM_CONFIRM_BUTTON_SLOT = 34;
+    private static final StyledText WITHDRAW_STATE = StyledText.fromString("§a§lWithdraw Items");
 
     private Class<? extends BoundedContainerProperty> currentContainerType;
     /** Represents the slots to draw red circles on where necessary.*/
@@ -122,6 +123,17 @@ public class ValuablesProtectionFeature extends Feature {
 
         Container currentContainer = Models.Container.getCurrentContainer();
         if (currentContainer == null) return;
+
+        if (currentContainer instanceof ItemIdentifierContainer) {
+            if (StyledText.fromComponent(cs.getMenu()
+                            .getSlot(BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT)
+                            .getItem()
+                            .getHoverName())
+                    .equals(WITHDRAW_STATE)) {
+                resetAll();
+                return;
+            }
+        }
 
         resetAll();
         doBlacksmithIdentifierChecks(currentContainer, cs);
