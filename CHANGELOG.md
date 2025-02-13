@@ -1,3 +1,10 @@
+## [3.0.6](https://github.com/Wynntils/Wynntils/compare/v3.0.5...v3.0.6) (2025-02-13)
+
+
+### Bug Fixes
+
+* Make the mod check the recommended update version, don't update in case of MC version mismatch ([#3116](https://github.com/Wynntils/Wynntils/issues/3116)) ([14dae0f](https://github.com/Wynntils/Wynntils/commit/14dae0fab610a4683232101a9d9c0f6a98bdf7c9))
+
 ## [3.0.5](https://github.com/Wynntils/Wynntils/compare/v3.0.4...v3.0.5) (2025-02-13)
 
 
@@ -13,6 +20,11 @@
 * Figura blocks bulk buy from working [skip ci] ([#3112](https://github.com/Wynntils/Wynntils/issues/3112)) ([7df6a38](https://github.com/Wynntils/Wynntils/commit/7df6a38897671ba3805366cee53bef874d4af22d))
 * Fix RecipientType background for regional servers [skip ci] ([#3115](https://github.com/Wynntils/Wynntils/issues/3115)) ([41dc48b](https://github.com/Wynntils/Wynntils/commit/41dc48badeb677bd263bb821207d57b50044b0d4))
 * Fix RecipientType for regional servers [skip ci] ([#3113](https://github.com/Wynntils/Wynntils/issues/3113)) ([b19ee99](https://github.com/Wynntils/Wynntils/commit/b19ee99fdd93cb2e6ac4340eec5f7db41ba82409))
+
+
+### Miscellaneous Chores
+
+* **release:** v3.0.5 [skip ci] ([a720c39](https://github.com/Wynntils/Wynntils/commit/a720c390a2afdd9005a9c48363d89f0e966cee99))
 
 ## [3.0.4](https://github.com/Wynntils/Wynntils/compare/v3.0.3...v3.0.4) (2025-02-07)
 
@@ -57,29 +69,4 @@
 ### Miscellaneous Chores
 
 * **release:** v3.0.2 [skip ci] ([cf1c41c](https://github.com/Wynntils/Wynntils/commit/cf1c41c3e1660f7192ecb89f3a5367f9856662dc))
-
-## [3.0.1](https://github.com/Wynntils/Wynntils/compare/v3.0.0...v3.0.1) (2025-02-01)
-
-
-### New Features
-
-* Differentiate slay mobs and slay target lootrun tasks [skip ci] ([#3095](https://github.com/Wynntils/Wynntils/issues/3095)) ([e324016](https://github.com/Wynntils/Wynntils/commit/e3240162f228502dd120b90f9e27a4729fd3dd0f))
-
-
-### Bug Fixes
-
-* Check for ItemStack before posting transform event [skip ci] ([#3096](https://github.com/Wynntils/Wynntils/issues/3096)) ([337a44c](https://github.com/Wynntils/Wynntils/commit/337a44cd9b60b9a42482f0702d9c0d8264247639))
-* Don't show failed downloads on connect if ignore option checked [skip ci] ([#3094](https://github.com/Wynntils/Wynntils/issues/3094)) ([e940648](https://github.com/Wynntils/Wynntils/commit/e940648807646f81aaee577e1c64c46a029cc7eb))
-* Fix lootrun beacon tracking [skip ci] ([#3092](https://github.com/Wynntils/Wynntils/issues/3092)) ([71c9320](https://github.com/Wynntils/Wynntils/commit/71c93200ece09a565d7526157ec0f3457dd489f6))
-* Fix nametags not rendering text [skip ci] ([#3087](https://github.com/Wynntils/Wynntils/issues/3087)) ([35d23f8](https://github.com/Wynntils/Wynntils/commit/35d23f814e83f7126b6750ab6a060056879c5cb2))
-* Fix not being able to set custom names for personal storage [skip ci] ([#3093](https://github.com/Wynntils/Wynntils/issues/3093)) ([c65e536](https://github.com/Wynntils/Wynntils/commit/c65e5364b90094f769419d4ba8d31a0852ea901b))
-* Fix territory management buttons not being clickable [skip ci] ([#3089](https://github.com/Wynntils/Wynntils/issues/3089)) ([5501b80](https://github.com/Wynntils/Wynntils/commit/5501b8005a6ee905ecc570cf23c1c763b50399ab))
-* Make sure item tooltips are cached properly ([#3085](https://github.com/Wynntils/Wynntils/issues/3085)) ([62b5ebf](https://github.com/Wynntils/Wynntils/commit/62b5ebff99699efd12b844d1e4e6612f4a133052))
-* Only save pois to disk once all queued deletions are done [skip ci] ([#3084](https://github.com/Wynntils/Wynntils/issues/3084)) ([e74da77](https://github.com/Wynntils/Wynntils/commit/e74da771839f647e0e2a8b506a1f52f4d4a7f1e5))
-* PartyModel updates for 2.1 [skip ci] ([#3086](https://github.com/Wynntils/Wynntils/issues/3086)) ([12bdf14](https://github.com/Wynntils/Wynntils/commit/12bdf146f5905acd03cd61fed3a6434a6eb48796))
-
-
-### Miscellaneous Chores
-
-* **release:** v3.0.1 [skip ci] ([b109db8](https://github.com/Wynntils/Wynntils/commit/b109db8c98c1fc7374743adbe7d42ec36a20e2c3))
 
