@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.lootrun;
@@ -34,7 +34,7 @@ public class LootrunMissionsOverlay extends TextOverlay {
     public LootrunMissionsOverlay() {
         super(
                 new OverlayPosition(
-                        270,
+                        80,
                         5,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
