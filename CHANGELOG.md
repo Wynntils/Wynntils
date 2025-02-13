@@ -1,3 +1,19 @@
+## [3.0.5](https://github.com/Wynntils/Wynntils/compare/v3.0.4...v3.0.5) (2025-02-13)
+
+
+### New Features
+
+* Add vibrant, orange and rainbow lootrun functions ([#3101](https://github.com/Wynntils/Wynntils/issues/3101)) ([d63c3b6](https://github.com/Wynntils/Wynntils/commit/d63c3b61f866ed083b0f2e3b21534084591864ae))
+* Mark unidentified but revealed items [skip ci] ([#3078](https://github.com/Wynntils/Wynntils/issues/3078)) ([f0b37cc](https://github.com/Wynntils/Wynntils/commit/f0b37cc899fad166e724e0b6ebd4ad5d2e61d2e8))
+
+
+### Bug Fixes
+
+* Don't block item withdraws in valuables protection [skip ci] ([#3109](https://github.com/Wynntils/Wynntils/issues/3109)) ([da4a781](https://github.com/Wynntils/Wynntils/commit/da4a78113ab1935d398df390326e23d1edf44e55))
+* Figura blocks bulk buy from working [skip ci] ([#3112](https://github.com/Wynntils/Wynntils/issues/3112)) ([7df6a38](https://github.com/Wynntils/Wynntils/commit/7df6a38897671ba3805366cee53bef874d4af22d))
+* Fix RecipientType background for regional servers [skip ci] ([#3115](https://github.com/Wynntils/Wynntils/issues/3115)) ([41dc48b](https://github.com/Wynntils/Wynntils/commit/41dc48badeb677bd263bb821207d57b50044b0d4))
+* Fix RecipientType for regional servers [skip ci] ([#3113](https://github.com/Wynntils/Wynntils/issues/3113)) ([b19ee99](https://github.com/Wynntils/Wynntils/commit/b19ee99fdd93cb2e6ac4340eec5f7db41ba82409))
+
 ## [3.0.4](https://github.com/Wynntils/Wynntils/compare/v3.0.3...v3.0.4) (2025-02-07)
 
 
@@ -10,6 +26,11 @@
 ### Bug Fixes
 
 * make ScreenMixin.wrapScreenErrorPre non-static [skip ci] ([#3105](https://github.com/Wynntils/Wynntils/issues/3105)) ([f5bb233](https://github.com/Wynntils/Wynntils/commit/f5bb23335caac8a79f713385cd6e139e36ff2cb3))
+
+
+### Miscellaneous Chores
+
+* **release:** v3.0.4 [skip ci] ([a980eac](https://github.com/Wynntils/Wynntils/commit/a980eac0429e2f70083f82372cb738dbe3394edc))
 
 ## [3.0.3](https://github.com/Wynntils/Wynntils/compare/v3.0.2...v3.0.3) (2025-02-02)
 
@@ -61,24 +82,4 @@
 ### Miscellaneous Chores
 
 * **release:** v3.0.1 [skip ci] ([b109db8](https://github.com/Wynntils/Wynntils/commit/b109db8c98c1fc7374743adbe7d42ec36a20e2c3))
-
-## [3.0.0](https://github.com/Wynntils/Wynntils/compare/v2.4.18...v3.0.0) (2025-01-27)
-
-
-### New Features
-
-* **major:** Release Wynntils 3.0.0 (Minecraft 1.21.4) ([#2973](https://github.com/Wynntils/Wynntils/issues/2973)) ([c87e52b](https://github.com/Wynntils/Wynntils/commit/c87e52b02ebef2da4753dcc0157a09284c2331c7))
-
-
-### Bug Fixes
-
-* Don't overwrite nickname hover event in bomb bell messages [skip ci] ([#3083](https://github.com/Wynntils/Wynntils/issues/3083)) ([90f5202](https://github.com/Wynntils/Wynntils/commit/90f5202ee58b8870b650e90b83bf65252cef7a2b))
-* Fix custom loading screen logo [skip ci] ([#3081](https://github.com/Wynntils/Wynntils/issues/3081)) ([ae349de](https://github.com/Wynntils/Wynntils/commit/ae349de4aca23dd368584de8e6a171eda32818b5))
-* Fix the minecraft_effect_duration function crashing if the effect name contains invalid characters [skip ci] ([#3082](https://github.com/Wynntils/Wynntils/issues/3082)) ([b6e6d75](https://github.com/Wynntils/Wynntils/commit/b6e6d75c16d4ef194d3b473e1f538f099d43a8c9))
-
-
-### Miscellaneous Chores
-
-* **release:** v3.0.0 [skip ci] ([1a407a4](https://github.com/Wynntils/Wynntils/commit/1a407a4d30d750d8cd38d4210880cccbddecab1b))
-* Revert auto attack changes from [#3040](https://github.com/Wynntils/Wynntils/issues/3040) [skip ci] ([#3080](https://github.com/Wynntils/Wynntils/issues/3080)) ([b6ea0a6](https://github.com/Wynntils/Wynntils/commit/b6ea0a65ea22cbb38b4d953b281a39dcd0d18e75))
 
