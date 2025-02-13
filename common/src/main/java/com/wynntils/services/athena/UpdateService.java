@@ -1,14 +1,16 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.athena;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.services.athena.type.ModUpdateInfo;
 import com.wynntils.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
+import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -33,8 +36,8 @@ public final class UpdateService extends Service {
         super(List.of());
     }
 
-    public CompletableFuture<String> getLatestBuild() {
-        CompletableFuture<String> future = new CompletableFuture<>();
+    public CompletableFuture<ModUpdateInfo> getLatestBuild() {
+        CompletableFuture<ModUpdateInfo> future = new CompletableFuture<>();
 
         String stream = getStream();
         WynntilsMod.info("Checking for update for stream " + stream + ".");
@@ -43,7 +46,7 @@ public final class UpdateService extends Service {
                 Services.WynntilsAccount.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", stream));
         apiResponse.handleJsonObject(
                 json -> {
-                    String version = json.getAsJsonPrimitive("version").getAsString();
+                    ModUpdateInfo version = Managers.Json.GSON.fromJson(json, ModUpdateInfo.class);
                     future.complete(version);
                 },
                 onError -> {
@@ -85,16 +88,21 @@ public final class UpdateService extends Service {
                 Services.WynntilsAccount.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", stream));
         apiResponse.handleJsonObject(
                 json -> {
-                    String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();
+                    ModUpdateInfo updateInfo = Managers.Json.GSON.fromJson(json, ModUpdateInfo.class);
 
-                    if (latestMd5 == null) {
+                    if (updateInfo.md5() == null) {
                         future.complete(UpdateResult.ERROR);
                         return;
                     }
 
                     String currentMd5 = FileUtils.getMd5(WynntilsMod.getModJar());
-                    if (Objects.equals(currentMd5, latestMd5)) {
+                    if (Objects.equals(currentMd5, updateInfo.md5())) {
                         future.complete(UpdateResult.ALREADY_ON_LATEST);
+                        return;
+                    }
+
+                    if (!Objects.equals(updateInfo.supportedMcVersion(), SharedConstants.VERSION_STRING)) {
+                        future.complete(UpdateResult.INCORRECT_VERSION_RECEIVED);
                         return;
                     }
 
@@ -103,7 +111,7 @@ public final class UpdateService extends Service {
                         String localUpdateMd5 = FileUtils.getMd5(localUpdateFile);
 
                         // If the local update file is the same as the latest update, we can just use that.
-                        if (Objects.equals(localUpdateMd5, latestMd5)) {
+                        if (Objects.equals(localUpdateMd5, updateInfo.md5())) {
                             future.complete(UpdateResult.UPDATE_PENDING);
                             return;
                         } else {
@@ -112,9 +120,7 @@ public final class UpdateService extends Service {
                         }
                     }
 
-                    String latestDownload = json.getAsJsonPrimitive("url").getAsString();
-
-                    tryFetchNewUpdate(latestDownload, latestMd5, future);
+                    tryFetchNewUpdate(updateInfo, future);
                 },
                 onError -> {
                     WynntilsMod.error("Exception while trying to load new update.");
@@ -134,12 +140,12 @@ public final class UpdateService extends Service {
         return new File(updatesDir, WYNNTILS_UPDATE_FILE_NAME);
     }
 
-    private void tryFetchNewUpdate(String latestUrl, String latestMd5, CompletableFuture<UpdateResult> future) {
+    private void tryFetchNewUpdate(ModUpdateInfo updateInfo, CompletableFuture<UpdateResult> future) {
         File oldJar = WynntilsMod.getModJar();
         File newJar = getUpdateFile();
 
         try {
-            URL downloadUrl = new URL(latestUrl);
+            URL downloadUrl = new URL(updateInfo.url());
             InputStream in = downloadUrl.openStream();
 
             FileUtils.createNewFile(newJar);
@@ -148,7 +154,7 @@ public final class UpdateService extends Service {
 
             String downloadedUpdateFileMd5 = FileUtils.getMd5(newJar);
 
-            if (!Objects.equals(downloadedUpdateFileMd5, latestMd5)) {
+            if (!Objects.equals(downloadedUpdateFileMd5, updateInfo.md5())) {
                 newJar.delete();
                 future.complete(UpdateResult.ERROR);
                 WynntilsMod.error("Downloaded update file is corrupted!");
@@ -191,6 +197,8 @@ public final class UpdateService extends Service {
         ALREADY_ON_LATEST(
                 Component.translatable("service.wynntils.updates.result.latest").withStyle(ChatFormatting.YELLOW)),
         UPDATE_PENDING(Component.translatable("service.wynntils.updates.result.pending")
+                .withStyle(ChatFormatting.YELLOW)),
+        INCORRECT_VERSION_RECEIVED(Component.translatable("service.wynntils.updates.result.incorrect")
                 .withStyle(ChatFormatting.YELLOW)),
         ERROR(Component.translatable("service.wynntils.updates.result.error").withStyle(ChatFormatting.DARK_RED));
 
