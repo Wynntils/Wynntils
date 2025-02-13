@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -43,6 +43,7 @@ public class UnknownGearItem extends GameItem
     private final String name;
     private final GearType gearType;
     private final GearTier gearTier;
+    private final boolean isUnidentified;
     private final int level;
     private final GearAttackSpeed attackSpeed;
     private final int health;
@@ -61,6 +62,7 @@ public class UnknownGearItem extends GameItem
             String name,
             GearType gearType,
             GearTier gearTier,
+            boolean isUnidentified,
             int level,
             GearAttackSpeed attackSpeed,
             int health,
@@ -77,6 +79,7 @@ public class UnknownGearItem extends GameItem
         this.name = name;
         this.gearType = gearType;
         this.gearTier = gearTier;
+        this.isUnidentified = isUnidentified;
         this.level = level;
         this.attackSpeed = attackSpeed;
         this.health = health;
@@ -129,6 +132,10 @@ public class UnknownGearItem extends GameItem
 
     public GearRequirements getRequirements() {
         return requirements;
+    }
+
+    public boolean isUnidentified() {
+        return isUnidentified;
     }
 
     public List<StatActualValue> getIdentifications() {
