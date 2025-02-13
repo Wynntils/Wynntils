@@ -52,6 +52,7 @@ public class UpdatesFeature extends Feature {
                     if (!Objects.equals(updateInfo.supportedMcVersion(), SharedConstants.VERSION_STRING)) {
                         WynntilsMod.info(
                                 "Athena sent an update for a different MC version, not attempting update reminder or auto-update.");
+                        return;
                     }
 
                     if (updateReminder.get()) {
