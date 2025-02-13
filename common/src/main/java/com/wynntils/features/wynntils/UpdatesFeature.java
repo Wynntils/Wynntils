@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -18,6 +18,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
+import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -36,16 +37,21 @@ public class UpdatesFeature extends Feature {
         if (!event.isFirstJoinWorld()) return;
 
         CompletableFuture.runAsync(() -> Services.Update.getLatestBuild()
-                .whenCompleteAsync((version, throwable) -> Managers.TickScheduler.scheduleNextTick(() -> {
-                    if (version == null) {
+                .whenCompleteAsync((updateInfo, throwable) -> Managers.TickScheduler.scheduleNextTick(() -> {
+                    if (updateInfo.version() == null) {
                         WynntilsMod.info(
                                 "Couldn't fetch latest version, not attempting update reminder or auto-update.");
                         return;
                     }
 
-                    if (Objects.equals(version, WynntilsMod.getVersion())) {
+                    if (Objects.equals(updateInfo.version(), WynntilsMod.getVersion())) {
                         WynntilsMod.info("Mod is on latest version, not attempting update reminder or auto-update.");
                         return;
+                    }
+
+                    if (!Objects.equals(updateInfo.supportedMcVersion(), SharedConstants.VERSION_STRING)) {
+                        WynntilsMod.info(
+                                "Athena sent an update for a different MC version, not attempting update reminder or auto-update.");
                     }
 
                     if (updateReminder.get()) {
@@ -54,7 +60,7 @@ public class UpdatesFeature extends Feature {
                             return;
                         }
 
-                        remindToUpdateIfExists(version);
+                        remindToUpdateIfExists(updateInfo.version());
                     }
 
                     if (autoUpdate.get()) {
