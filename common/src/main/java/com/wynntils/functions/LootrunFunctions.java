@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -202,6 +202,24 @@ public class LootrunFunctions {
         }
     }
 
+    public static class LootrunBeaconVibrantFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            String color = arguments.getArgument("color").getStringValue();
+
+            LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
+            if (lootrunBeaconKind == null) return false;
+
+            return Models.Lootrun.isBeaconVibrant(lootrunBeaconKind);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("color", String.class, null)));
+        }
+    }
+
     public static class LootrunTimeFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
@@ -226,10 +244,38 @@ public class LootrunFunctions {
         }
     }
 
+    public static class LootrunLastSelectedBeaconVibrantFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Lootrun.wasLastBeaconVibrant();
+        }
+    }
+
     public static class LootrunRedBeaconChallengeCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.Lootrun.getRedBeaconTaskCount();
+        }
+    }
+
+    public static class LootrunOrangeBeaconCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getActiveOrangeBeacons();
+        }
+    }
+
+    public static class LootrunNextOrangeExpireFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getChallengesTillNextOrangeExpires();
+        }
+    }
+
+    public static class LootrunRainbowBeaconCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getActiveRainbowBeacons();
         }
     }
 }
