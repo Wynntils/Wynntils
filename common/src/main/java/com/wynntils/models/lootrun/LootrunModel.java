@@ -10,6 +10,8 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
@@ -237,6 +239,11 @@ public class LootrunModel extends Model {
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED_V2)
                 .handleReader(this::handleLootrunTaskLocations);
+    }
+
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(LOOTRUN_LOCATION_PROVIDER);
     }
 
     private void handleLootrunTaskLocations(Reader reader) {
