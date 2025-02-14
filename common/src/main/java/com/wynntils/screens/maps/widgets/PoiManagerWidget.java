@@ -71,7 +71,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         deleteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.delete"), (button) -> {
-                            managementScreen.deletePoi(poi);
+                            managementScreen.deletePoi(poi, true);
                         })
                 .pos(x + width - 20 - manageButtonsWidth, y)
                 .size(manageButtonsWidth, 20)

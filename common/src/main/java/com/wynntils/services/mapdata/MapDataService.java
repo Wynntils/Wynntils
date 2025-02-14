@@ -5,7 +5,6 @@
 package com.wynntils.services.mapdata;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.services.mapdata.attributes.resolving.MapAttributesResolver;
@@ -69,10 +68,6 @@ public class MapDataService extends Service {
         super(List.of());
 
         createBuiltInProviders();
-        // FIXME: Fix counter component references
-        registerBuiltInProvider(Models.Activity.ACTIVITY_PROVIDER);
-        registerBuiltInProvider(Models.GuildAttackTimer.GUILD_ATTACK_LOCATION_PROVIDER);
-        registerBuiltInProvider(Models.Lootrun.LOOTRUN_LOCATION_PROVIDER);
     }
 
     @Override
@@ -187,6 +182,10 @@ public class MapDataService extends Service {
         invalidateAllCaches();
     }
 
+    /**
+     * Register a built-in provider. Call this method in a listener for {@link com.wynntils.core.mod.event.WynntilsInitEvent.ModInitFinished}, unless you have a good reason not to.
+     * @param provider The provider to register
+     */
     public void registerBuiltInProvider(BuiltInProvider provider) {
         registerProvider("built-in:" + provider.getProviderId(), provider);
         WynntilsMod.registerEventListener(provider);

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.statistics;
@@ -55,7 +55,7 @@ public final class StatisticsCollectors {
     public void onMythicFoundEvent(MythicFoundEvent event) {
         Services.Statistics.increaseStatistics(StatisticKind.MYTHICS_FOUND);
 
-        if (event.isLootrunEndReward()) {
+        if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST) {
             Services.Statistics.addToStatistics(
                     StatisticKind.LOOTRUNS_PULLS_WITHOUT_MYTHIC, Models.Lootrun.dryPulls.get());
         }

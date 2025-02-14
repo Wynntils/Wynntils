@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
@@ -43,6 +43,12 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends Feature {
+    private final Map<DecoratorType, TooltipIdentificationDecorator> decorators = Map.of(
+            DecoratorType.PERCENTAGE, new PercentageIdentificationDecorator(),
+            DecoratorType.REROLL, new RerollIdentificationDecorator(),
+            DecoratorType.RANGE, new RangeIdentificationDecorator(),
+            DecoratorType.INNER_ROLL, new InnerRollIdentificationDecorator());
+
     private final Set<WynnItem> brokenItems = new HashSet<>();
 
     @Persisted
@@ -152,6 +158,10 @@ public class ItemStatInfoFeature extends Feature {
         return colorLerp.get() ? LERP_MAP : flatMap;
     }
 
+    public TooltipIdentificationDecorator getDecorator() {
+        return decorators.get(DecoratorType.getCurrentType());
+    }
+
     private NavigableMap<Float, TextColor> createFlatMap() {
         boolean useLegacyColors = legacyColors.get();
 
@@ -173,7 +183,7 @@ public class ItemStatInfoFeature extends Feature {
         return map;
     }
 
-    public class IdentificationDecorator implements TooltipIdentificationDecorator {
+    private abstract static class IdentificationDecorator implements TooltipIdentificationDecorator {
         @Override
         public MutableComponent getSuffix(
                 StatActualValue statActualValue, StatPossibleValues possibleValues, TooltipStyle style) {
@@ -184,45 +194,28 @@ public class ItemStatInfoFeature extends Feature {
                 return Component.literal(" [NEW]").withStyle(ChatFormatting.GOLD);
             }
 
-            if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)
-                    && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
-                return getInnerRollSuffix(style, statActualValue, possibleValues);
-            } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-                return getRangeSuffix(style, statActualValue, possibleValues);
-            } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
-                return getRerollSuffix(style, statActualValue, possibleValues);
-            } else {
-                return getPercentSuffix(style, statActualValue, possibleValues);
-            }
+            return getRollSuffix(style, statActualValue, possibleValues);
         }
 
-        private MutableComponent getInnerRollSuffix(
-                TooltipStyle style, StatActualValue statActualValue, StatPossibleValues possibleValues) {
-            MutableComponent rangeTextComponent = Component.literal(" <")
-                    .append(Component.literal(statActualValue.internalRoll().low() + "% to "
-                                    + statActualValue.internalRoll().high() + "%")
-                            .withStyle(ChatFormatting.GREEN))
-                    .append(">")
-                    .withStyle(ChatFormatting.DARK_GREEN);
+        protected abstract MutableComponent getRollSuffix(
+                TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues);
+    }
 
-            return rangeTextComponent;
-        }
-
-        private MutableComponent getRangeSuffix(
+    private class PercentageIdentificationDecorator extends IdentificationDecorator {
+        @Override
+        protected MutableComponent getRollSuffix(
                 TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-            Pair<Integer, Integer> displayRange =
-                    StatCalculator.getDisplayRange(possibleValues, style.showBestValueLastAlways());
+            float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
+            MutableComponent percentageTextComponent = ColorScaleUtils.getPercentageTextComponent(
+                    getColorMap(), percentage, colorLerp.get(), decimalPlaces.get());
 
-            MutableComponent rangeTextComponent = Component.literal(" [")
-                    .append(Component.literal(displayRange.a() + ", " + displayRange.b())
-                            .withStyle(ChatFormatting.GREEN))
-                    .append("]")
-                    .withStyle(ChatFormatting.DARK_GREEN);
-
-            return rangeTextComponent;
+            return percentageTextComponent;
         }
+    }
 
-        private MutableComponent getRerollSuffix(
+    private static class RerollIdentificationDecorator extends IdentificationDecorator {
+        @Override
+        protected MutableComponent getRollSuffix(
                 TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
             MutableComponent rerollChancesComponent = Component.literal(String.format(
                             Locale.ROOT, " \u2605%.2f%%", StatCalculator.getPerfectChance(possibleValues)))
@@ -240,14 +233,60 @@ public class ItemStatInfoFeature extends Feature {
 
             return rerollChancesComponent;
         }
+    }
 
-        private MutableComponent getPercentSuffix(
+    private static class RangeIdentificationDecorator extends IdentificationDecorator {
+        @Override
+        protected MutableComponent getRollSuffix(
                 TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-            float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
-            MutableComponent percentageTextComponent = ColorScaleUtils.getPercentageTextComponent(
-                    getColorMap(), percentage, colorLerp.get(), decimalPlaces.get());
+            Pair<Integer, Integer> displayRange =
+                    StatCalculator.getDisplayRange(possibleValues, style.showBestValueLastAlways());
 
-            return percentageTextComponent;
+            MutableComponent rangeTextComponent = Component.literal(" [")
+                    .append(Component.literal(displayRange.a() + ", " + displayRange.b())
+                            .withStyle(ChatFormatting.GREEN))
+                    .append("]")
+                    .withStyle(ChatFormatting.DARK_GREEN);
+
+            return rangeTextComponent;
+        }
+    }
+
+    private static class InnerRollIdentificationDecorator extends IdentificationDecorator {
+        @Override
+        protected MutableComponent getRollSuffix(
+                TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
+            MutableComponent rangeTextComponent = Component.literal(" <")
+                    .append(Component.literal(actualValue.internalRoll().low() + "% to "
+                                    + actualValue.internalRoll().high() + "%")
+                            .withStyle(ChatFormatting.GREEN))
+                    .append(">")
+                    .withStyle(ChatFormatting.DARK_GREEN);
+
+            return rangeTextComponent;
+        }
+    }
+
+    private enum DecoratorType {
+        INNER_ROLL(Set.of(GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_LEFT_CONTROL)),
+        REROLL(Set.of(GLFW.GLFW_KEY_LEFT_CONTROL)),
+        RANGE(Set.of(GLFW.GLFW_KEY_LEFT_SHIFT)),
+        PERCENTAGE(Set.of());
+
+        private final Set<Integer> keyCodes;
+
+        DecoratorType(Set<Integer> keyCodes) {
+            this.keyCodes = keyCodes;
+        }
+
+        public static DecoratorType getCurrentType() {
+            for (DecoratorType type : values()) {
+                if (type.keyCodes.stream().allMatch(KeyboardUtils::isKeyDown)) {
+                    return type;
+                }
+            }
+
+            return PERCENTAGE;
         }
     }
 
