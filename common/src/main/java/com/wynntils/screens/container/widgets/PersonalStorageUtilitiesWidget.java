@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.container.widgets;
@@ -32,11 +32,11 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     private final PersonalStorageContainer container;
     private final List<QuickJumpButton> quickJumpButtons = new ArrayList<>();
     private final PersonalStorageEditNameButton editButton;
+    private final TextInputBoxWidget editInput;
     private final PersonalStorageUtilitiesFeature feature;
     private final AbstractContainerScreen<?> screen;
 
     private String pageName;
-    private TextInputBoxWidget editInput;
 
     public PersonalStorageUtilitiesWidget(
             int x,
@@ -51,6 +51,17 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
         this.screen = screen;
 
         editButton = new PersonalStorageEditNameButton(x + 86, y + 9, 14, 14, this);
+
+        editInput = new TextInputBoxWidget(
+                getX() + 2,
+                getY() + 10,
+                getWidth() - 18,
+                FontRenderer.getInstance().getFont().lineHeight + 2,
+                null,
+                (ScreenExtension) screen);
+        editInput.setTextBoxInput(Models.Bank.getPageName(Models.Bank.getCurrentPage()));
+        editInput.visible = false;
+        screen.addRenderableWidget(editInput);
 
         updatePageName();
 
@@ -77,6 +88,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
         }
 
         editButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        editInput.render(guiGraphics, mouseX, mouseY, partialTick);
 
         quickJumpButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
     }
@@ -97,29 +109,15 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     }
 
     public void jumpToPage(int destination) {
+        toggleEditInput(false);
         feature.jumpToDestination(destination);
     }
 
-    public void addEditInput() {
-        if (editInput != null) return;
-
-        editInput = new TextInputBoxWidget(
-                getX() + 2,
-                getY() + 10,
-                getWidth() - 18,
-                FontRenderer.getInstance().getFont().lineHeight + 2,
-                null,
-                (ScreenExtension) screen);
-
+    public void toggleEditInput(boolean visible) {
+        editInput.visible = visible;
         editInput.setTextBoxInput(Models.Bank.getPageName(Models.Bank.getCurrentPage()));
-        screen.addRenderableWidget(editInput);
-    }
 
-    public void removeEditInput() {
-        if (editInput == null) return;
-
-        screen.removeWidget(editInput);
-        editInput = null;
+        Models.Bank.toggleEditingName(visible);
     }
 
     public void updatePageName() {

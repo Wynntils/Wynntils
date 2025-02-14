@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.trademarket;
@@ -7,19 +7,23 @@ package com.wynntils.models.trademarket;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.models.containers.containers.TradeMarketSellContainer;
 import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
 import com.wynntils.screens.trademarket.TradeMarketSearchResultHolder;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -40,6 +44,12 @@ public class TradeMarketModel extends Model {
     // Price Parsing
     private static final int TRADE_MARKET_PRICE_LINE = 1;
     private static final Pattern PRICE_STR = Pattern.compile("§6Price:");
+
+    public static final int TM_SELL_PRICE_SLOT = 28;
+    private static final Pattern TM_SELL_PRICE_PATTERN = Pattern.compile("- §7Per Unit:§f (\\d{1,3}(?:,\\d{3})*)");
+    private static final int TM_PRICE_CHECK_SLOT = 51;
+    private static final Pattern TM_PRICE_CHECK_PATTERN =
+            Pattern.compile("§7Cheapest Sell Offer: §f(\\d{1,3}(?:,\\d{3})*)");
 
     // Test in TradeMarketModel_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile(
@@ -114,5 +124,45 @@ public class TradeMarketModel extends Model {
         int amount = amountStr == null ? 1 : Integer.parseInt(amountStr.replace(",", ""));
 
         return new TradeMarketPriceInfo(price, silverbullPrice, amount);
+    }
+
+    /**
+     * @return The unit price of the item currently being sold in the sell screen.
+     */
+    public int getUnitPrice() {
+        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return -1;
+        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return -1;
+
+        ItemStack priceCheckItem = cs.getMenu().getItems().get(TM_SELL_PRICE_SLOT);
+        if (priceCheckItem.isEmpty()) return -1;
+
+        String lore = LoreUtils.getStringLore(priceCheckItem).getString();
+        Matcher priceCheckMatcher = TM_SELL_PRICE_PATTERN.matcher(lore);
+        if (priceCheckMatcher.find()) {
+            String priceCheckString = priceCheckMatcher.group(1);
+            return Integer.parseInt(priceCheckString.replace(",", ""));
+        }
+
+        return -1;
+    }
+
+    /**
+     * @return The TM's lowest price for the current item from the price check slot.
+     */
+    public int getLowestPrice() {
+        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return -1;
+        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return -1;
+
+        ItemStack priceCheckItem = cs.getMenu().getItems().get(TM_PRICE_CHECK_SLOT);
+        if (priceCheckItem.isEmpty()) return -1;
+
+        String lore = LoreUtils.getStringLore(priceCheckItem).getString();
+        Matcher priceCheckMatcher = TM_PRICE_CHECK_PATTERN.matcher(lore);
+        if (priceCheckMatcher.find()) {
+            String priceCheckString = priceCheckMatcher.group(1);
+            return Integer.parseInt(priceCheckString.replace(",", ""));
+        }
+
+        return -1;
     }
 }

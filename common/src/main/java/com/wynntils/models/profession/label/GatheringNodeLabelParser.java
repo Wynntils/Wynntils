@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.profession.label;
@@ -16,14 +16,15 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.Entity;
 
 public class GatheringNodeLabelParser implements LabelParser<ProfessionGatheringNodeLabelInfo> {
-    // Note: At the moment, only "Dernic" tier does not have the types consistently as a suffix
-    private static final Pattern GATHERING_NODE_LABEL = Pattern.compile("^§(.)(.+?)(:?\\s(Fish|Seed|Ore|Wood))?\n$");
+    // A few nodes have an extra suffix so handle them here so that SourceMaterial does not need a "node name" field
+    private static final Pattern GATHERING_NODE_LABEL = Pattern.compile(
+            "^§(.)(.+?)(?= Roots| Seed| Fish| Eel)?(?: Roots| Seed| Fish| Eel)?\n§(a✔|c✖)§f .§7 .+ Lv\\. Min: §f\\d+(\n\n§8Left-Click for .+\nRight-Click for .+)?$");
 
     @Override
     public ProfessionGatheringNodeLabelInfo getInfo(StyledText label, Location location, Entity entity) {
         if (label.isEmpty()) return null;
 
-        Matcher matcher = StyledText.fromPart(label.getFirstPart()).getMatcher(GATHERING_NODE_LABEL);
+        Matcher matcher = label.getMatcher(GATHERING_NODE_LABEL);
         if (matcher.matches()) {
             Optional<Pair<MaterialProfile.MaterialType, MaterialProfile.SourceMaterial>> materialLookup =
                     MaterialProfile.findByMaterialName(

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities;
@@ -40,7 +40,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class ShamanTotemModel extends Model {
     // Test in ShamanTotemModel_SHAMAN_TOTEM_TIMER_PATTERN
-    private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(?<time>\\d+)s(\n\\+(?<regen>\\d+)❤§7/s)?");
+    private static final Pattern SHAMAN_TOTEM_TIMER =
+            Pattern.compile("§b(?<username>.+)'(?:s)? §7Totem\n(§c\\+(?<regen>\\d+)❤§7/s )?§d\uE01F §7(?<time>\\d+)s");
     private static final int MAX_TOTEM_COUNT = 4;
     private static final double TOTEM_SEARCH_RADIUS = 1;
     private static final int TOTEM_DATA_DELAY_TICKS = 2;
@@ -124,7 +125,8 @@ public class ShamanTotemModel extends Model {
         StyledText name = event.getText();
         if (name.isEmpty()) return;
         Matcher m = name.getMatcher(SHAMAN_TOTEM_TIMER);
-        if (!m.find()) return;
+        if (!m.matches()) return;
+        if (!(m.group("username").equals(McUtils.playerName()))) return;
 
         int parsedTime = Integer.parseInt(m.group("time"));
         int timerId = textDisplay.getId();

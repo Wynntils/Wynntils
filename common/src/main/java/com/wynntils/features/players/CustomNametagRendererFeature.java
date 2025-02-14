@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -16,10 +16,11 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
+import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
-import com.wynntils.screens.gearviewer.GearViewerScreen;
+import com.wynntils.screens.playerviewer.PlayerViewerScreen;
 import com.wynntils.services.leaderboard.type.LeaderboardBadge;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -30,9 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -74,7 +77,9 @@ public class CustomNametagRendererFeature extends Feature {
 
     @SubscribeEvent
     public void onPlayerNameTagRender(PlayerNametagRenderEvent event) {
-        if (Models.Player.isNpc(event.getEntity())) return;
+        Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
+        if (Models.Player.isNpc(player)) return;
 
         if (hidePlayerNametags.get()) {
             event.setCanceled(true);
@@ -82,8 +87,8 @@ public class CustomNametagRendererFeature extends Feature {
         }
 
         // If we are viewing this player's gears, do not show plus info
-        if (McUtils.mc().screen instanceof GearViewerScreen gearViewerScreen
-                && gearViewerScreen.getPlayer() == event.getEntity()) {
+        if (McUtils.mc().screen instanceof PlayerViewerScreen playerViewerScreen
+                && playerViewerScreen.getPlayer() == player) {
             return;
         }
 
@@ -123,11 +128,13 @@ public class CustomNametagRendererFeature extends Feature {
     }
 
     private void addGearNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
-        LocalPlayer player = McUtils.player();
+        Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
+        LocalPlayer localPlayer = McUtils.player();
 
-        if (hitPlayerCache != event.getEntity()) return;
+        if (hitPlayerCache != player) return;
 
-        if (!Models.Player.isLocalPlayer(player)) return;
+        if (!Models.Player.isLocalPlayer(localPlayer)) return;
 
         ItemStack heldItem = hitPlayerCache.getMainHandItem();
         MutableComponent handComp = getItemComponent(heldItem);
@@ -154,7 +161,10 @@ public class CustomNametagRendererFeature extends Feature {
     }
 
     private void addAccountTypeNametag(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
-        WynntilsUser user = Models.Player.getUser(event.getEntity().getUUID());
+        Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
+
+        WynntilsUser user = Models.Player.getUser(player.getUUID());
         if (user == null) {
             if (!nametags.isEmpty()) {
                 // We will cancel vanilla rendering, so we must add back the normal vanilla base nametag
@@ -190,6 +200,9 @@ public class CustomNametagRendererFeature extends Feature {
     }
 
     private void drawNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
+        Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
+
         // calculate color of nametag box
         int backgroundColor =
                 hideNametagBackground.get() ? 0 : ((int) (McUtils.options().getBackgroundOpacity(0.25F) * 255f) << 24);
@@ -205,7 +218,7 @@ public class CustomNametagRendererFeature extends Feature {
                     event.getPackedLight(),
                     backgroundColor,
                     event.getEntityRenderDispatcher(),
-                    event.getEntity(),
+                    player,
                     nametag.nametagComponent(),
                     event.getFont(),
                     nametag.nametagScale(),
@@ -218,9 +231,10 @@ public class CustomNametagRendererFeature extends Feature {
     private void drawBadges(PlayerNametagRenderEvent event, float height) {
         if (!showLeaderboardBadges.get()) return;
         if (badgeCount.get() <= 0) return;
+        Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
 
-        List<LeaderboardBadge> allBadges =
-                Services.Leaderboard.getBadges(event.getEntity().getUUID());
+        List<LeaderboardBadge> allBadges = Services.Leaderboard.getBadges(player.getUUID());
 
         if (allBadges.isEmpty()) return;
 
@@ -246,7 +260,7 @@ public class CustomNametagRendererFeature extends Feature {
             RenderUtils.renderProfessionBadge(
                     event.getPoseStack(),
                     event.getEntityRenderDispatcher(),
-                    event.getEntity(),
+                    player,
                     Texture.LEADERBOARD_BADGES.resource(),
                     LeaderboardBadge.WIDTH,
                     LeaderboardBadge.HEIGHT,

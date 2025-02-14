@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
@@ -11,10 +11,12 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.InsulatorItem;
 import com.wynntils.models.items.items.game.SimulatorItem;
+import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -31,63 +33,107 @@ public class MythicFoundFeature extends Feature {
             ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found-modern");
 
     @Persisted
-    public final Config<Boolean> playSound = new Config<>(true);
-
-    @Persisted
     private final Config<MythicSound> chestSound = new Config<>(MythicSound.MODERN);
 
     @Persisted
     private final Config<MythicSound> lootrunSound = new Config<>(MythicSound.MODERN);
 
     @Persisted
+    private final Config<MythicSound> aspectFoundSound = new Config<>(MythicSound.MODERN);
+
+    @Persisted
+    private final Config<MythicSound> tomeFoundSound = new Config<>(MythicSound.NONE);
+
+    @Persisted
     public final Config<Boolean> showDryStreakMessage = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> showAspectDryStreakMessage = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> showTomeDryStreakMessage = new Config<>(false);
 
     @SubscribeEvent
     public void onMythicFound(MythicFoundEvent event) {
-        if (!playSound.get() && !showDryStreakMessage.get()) return;
-
         ItemStack itemStack = event.getMythicBoxItem();
 
         // Normal loot chest reward
-        Optional<GearBoxItem> gearBoxItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
-        if (gearBoxItem.isPresent()) {
-            if (gearBoxItem.get().getGearType() != GearType.MASTERY_TOME) {
-                if (playSound.get()) {
-                    McUtils.playSoundAmbient(chestSound.get().getSoundEvent());
-                }
+        if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOT_CHEST
+                && (showDryStreakMessage.get() || chestSound.get() != MythicSound.NONE)) {
+            Optional<GearBoxItem> gearBoxItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
+            if (gearBoxItem.isPresent()) {
+                if (gearBoxItem.get().getGearType() != GearType.MASTERY_TOME) {
+                    if (chestSound.get() != MythicSound.NONE) {
+                        McUtils.playSoundAmbient(chestSound.get().getSoundEvent());
+                    }
 
-                if (!showDryStreakMessage.get()) return;
-                sendNormalDryStreakMessage(
-                        StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
+                    if (!showDryStreakMessage.get()) return;
+                    sendNormalDryStreakMessage(
+                            StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
+                }
+                return;
             }
-            return;
         }
 
         // Lootrun rewards
-        boolean validLootrunMythic = false;
-        Optional<GearItem> gearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
-        if (gearItem.isPresent()) {
-            validLootrunMythic = true;
-        }
-
-        Optional<InsulatorItem> insulatorItem = Models.Item.asWynnItem(itemStack, InsulatorItem.class);
-        if (insulatorItem.isPresent()) {
-            validLootrunMythic = true;
-        }
-
-        Optional<SimulatorItem> simulatorItem = Models.Item.asWynnItem(itemStack, SimulatorItem.class);
-        if (simulatorItem.isPresent()) {
-            validLootrunMythic = true;
-        }
-
-        if (validLootrunMythic) {
-            if (playSound.get()) {
-                McUtils.playSoundAmbient(lootrunSound.get().getSoundEvent());
+        if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST
+                && (showDryStreakMessage.get() || lootrunSound.get() != MythicSound.NONE)) {
+            boolean validLootrunMythic = false;
+            Optional<GearItem> gearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
+            if (gearItem.isPresent()) {
+                validLootrunMythic = true;
             }
 
-            if (!showDryStreakMessage.get()) return;
-            sendLootrunDryStreakMessage(
-                    StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
+            Optional<InsulatorItem> insulatorItem = Models.Item.asWynnItem(itemStack, InsulatorItem.class);
+            if (insulatorItem.isPresent()) {
+                validLootrunMythic = true;
+            }
+
+            Optional<SimulatorItem> simulatorItem = Models.Item.asWynnItem(itemStack, SimulatorItem.class);
+            if (simulatorItem.isPresent()) {
+                validLootrunMythic = true;
+            }
+
+            if (validLootrunMythic) {
+                if (lootrunSound.get() != MythicSound.NONE) {
+                    McUtils.playSoundAmbient(lootrunSound.get().getSoundEvent());
+                }
+
+                if (!showDryStreakMessage.get()) return;
+                sendLootrunDryStreakMessage(
+                        StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
+            }
+        }
+
+        // Raid rewards
+        if (event.getMythicSource() == MythicFoundEvent.MythicSource.RAID_REWARD_CHEST) {
+            if (showAspectDryStreakMessage.get() || aspectFoundSound.get() != MythicSound.NONE) {
+                Optional<AspectItem> aspectItem = Models.Item.asWynnItem(itemStack, AspectItem.class);
+                if (aspectItem.isPresent()) {
+                    if (aspectFoundSound.get() != MythicSound.NONE) {
+                        McUtils.playSoundAmbient(aspectFoundSound.get().getSoundEvent());
+                    }
+                    if (showAspectDryStreakMessage.get()) {
+                        sendAspectDryStreakMessage(StyledText.fromComponent(
+                                event.getMythicBoxItem().getHoverName()));
+                    }
+                    return;
+                }
+            }
+
+            if (showTomeDryStreakMessage.get() || tomeFoundSound.get() != MythicSound.NONE) {
+                Optional<TomeItem> tomeItem = Models.Item.asWynnItem(itemStack, TomeItem.class);
+                if (tomeItem.isPresent()) {
+                    if (tomeFoundSound.get() != MythicSound.NONE) {
+                        McUtils.playSoundAmbient(tomeFoundSound.get().getSoundEvent());
+                    }
+                    if (showTomeDryStreakMessage.get()) {
+                        sendTomeDryStreakMessage(StyledText.fromComponent(
+                                event.getMythicBoxItem().getHoverName()));
+                    }
+                    return;
+                }
+            }
         }
     }
 
@@ -120,9 +166,41 @@ public class MythicFoundFeature extends Feature {
                 .append(Component.literal(" dry boxes.")));
     }
 
+    private static void sendAspectDryStreakMessage(StyledText itemName) {
+        sendRaidDryStreakMessage(
+                itemName,
+                Models.Raid.getRaidsWithoutMythicAspect(),
+                Models.Raid.getAspectPullsWithoutMythicAspect(),
+                "aspect");
+    }
+
+    private static void sendTomeDryStreakMessage(StyledText itemName) {
+        sendRaidDryStreakMessage(
+                itemName,
+                Models.Raid.getRaidsWithoutMythicTome(),
+                Models.Raid.getRewardPullsWithoutMythicTome(),
+                "reward");
+    }
+
+    private static void sendRaidDryStreakMessage(StyledText itemName, int numRaids, int numPulls, String pullType) {
+        McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found ")
+                .withStyle(ChatFormatting.LIGHT_PURPLE)
+                .append(itemName.getComponent())
+                .append(Component.literal(" after ")
+                        .withStyle(ChatFormatting.LIGHT_PURPLE)
+                        .append(Component.literal(String.valueOf(numRaids) + " raids")
+                                .withStyle(ChatFormatting.GOLD)))
+                .append(Component.literal(" and ").withStyle(ChatFormatting.LIGHT_PURPLE))
+                .append(Component.literal(String.valueOf(numPulls) + " " + pullType + " pulls")
+                        .withStyle(ChatFormatting.GOLD))
+                .append(Component.literal(" without a mythic."))
+                .withStyle(ChatFormatting.LIGHT_PURPLE));
+    }
+
     private enum MythicSound {
         MODERN(SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_MODERN_ID)),
-        CLASSIC(SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_CLASSIC_ID));
+        CLASSIC(SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_CLASSIC_ID)),
+        NONE(null);
 
         private final SoundEvent soundEvent;
 

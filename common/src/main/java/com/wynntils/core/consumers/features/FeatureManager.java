@@ -116,11 +116,11 @@ import com.wynntils.features.overlays.TowerEffectOverlayFeature;
 import com.wynntils.features.overlays.TowerStatsFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
-import com.wynntils.features.players.GearViewerFeature;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.features.players.PartyManagementScreenFeature;
 import com.wynntils.features.players.PlayerArmorHidingFeature;
 import com.wynntils.features.players.PlayerGhostTransparencyFeature;
+import com.wynntils.features.players.PlayerViewerFeature;
 import com.wynntils.features.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.redirects.InventoryRedirectFeature;
@@ -138,6 +138,7 @@ import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CosmeticsPreviewFeature;
 import com.wynntils.features.ui.CraftingProfessionLevelProgressBarFeature;
+import com.wynntils.features.ui.CustomGuildLogScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
@@ -156,6 +157,7 @@ import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.TranslationFeature;
+import com.wynntils.features.utilities.ValuablesProtectionFeature;
 import com.wynntils.features.utilities.XpGainMessageFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
@@ -327,11 +329,11 @@ public final class FeatureManager extends Manager {
         // region players
         registerFeature(new AutoJoinPartyFeature());
         registerFeature(new CustomNametagRendererFeature());
-        registerFeature(new GearViewerFeature());
         registerFeature(new HadesFeature());
         registerFeature(new PartyManagementScreenFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
+        registerFeature(new PlayerViewerFeature());
         // endregion
 
         // region redirects
@@ -361,6 +363,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ContainerScrollFeature());
         registerFeature(new CosmeticsPreviewFeature());
         registerFeature(new CraftingProfessionLevelProgressBarFeature());
+        registerFeature(new CustomGuildLogScreenFeature());
         registerFeature(new CustomLoadingScreenFeature());
         registerFeature(new CustomSeaskipperScreenFeature());
         registerFeature(new CustomTerritoryManagementScreenFeature());
@@ -377,6 +380,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CharacterSelectionUtilitiesFeature());
         registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GammabrightFeature());
+        registerFeature(new ValuablesProtectionFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new SkillPointLoadoutsFeature());

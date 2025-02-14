@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -21,6 +21,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Vector2ic;
@@ -40,7 +41,7 @@ public abstract class GuiGraphicsMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V"))
+                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V"))
     private void renderTooltipPre(
             GuiGraphics instance,
             Font font,
@@ -48,6 +49,7 @@ public abstract class GuiGraphicsMixin {
             Optional<TooltipComponent> visualTooltipComponent,
             int mouseX,
             int mouseY,
+            ResourceLocation backgroundTexture,
             Operation<Void> operation,
             @Local(argsOnly = true) ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event = new ItemTooltipRenderEvent.Pre(
@@ -66,7 +68,8 @@ public abstract class GuiGraphicsMixin {
                 event.getTooltips(),
                 event.getItemStack().getTooltipImage(),
                 event.getMouseX(),
-                event.getMouseY());
+                event.getMouseY(),
+                backgroundTexture);
     }
 
     @Inject(
@@ -78,7 +81,7 @@ public abstract class GuiGraphicsMixin {
 
     @WrapOperation(
             method =
-                    "renderTooltipInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V",
+                    "renderTooltipInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/ResourceLocation;)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -106,11 +109,11 @@ public abstract class GuiGraphicsMixin {
 
     @ModifyVariable(
             method =
-                    "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+                    "renderItemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
             at = @At("HEAD"),
             ordinal = 0,
             argsOnly = true)
-    private String renderItemDecorations(
+    private String renderItemCount(
             String text,
             Font font,
             ItemStack itemStack,
@@ -123,7 +126,7 @@ public abstract class GuiGraphicsMixin {
             return text;
         }
 
-        String count = (itemStack.getCount() == 1) ? "" : String.valueOf(itemStack.getCount());
+        String count = (itemStack.getCount() == 1) ? null : String.valueOf(itemStack.getCount());
         String countString = (text == null) ? count : text;
 
         ItemCountOverlayRenderEvent event = new ItemCountOverlayRenderEvent(itemStack, countString, 0xFFFFFF);
@@ -135,7 +138,7 @@ public abstract class GuiGraphicsMixin {
 
     @WrapOperation(
             method =
-                    "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+                    "renderItemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
             at =
                     @At(
                             value = "INVOKE",

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players.event;
@@ -110,6 +110,27 @@ public abstract class PartyEvent extends Event {
 
         public int getPriority() {
             return priority;
+        }
+    }
+
+    /**
+     * Fired upon any member being promoted to party leader
+     */
+    public static class Promoted extends PartyEvent {
+        private final String oldLeader;
+        private final String newLeader;
+
+        public Promoted(String oldLeader, String newLeader) {
+            this.oldLeader = oldLeader;
+            this.newLeader = newLeader;
+        }
+
+        public String getOldLeader() {
+            return oldLeader;
+        }
+
+        public String getNewLeader() {
+            return newLeader;
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear;
@@ -170,7 +170,7 @@ public final class GearModel extends Model {
     }
 
     public UnknownGearItem parseUnknownGearItem(
-            String name, GearType gearType, GearTier gearTier, ItemStack itemStack) {
+            String name, GearType gearType, GearTier gearTier, boolean isUnidentified, ItemStack itemStack) {
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
 
         if (gearType == GearType.WEAPON) {
@@ -185,6 +185,7 @@ public final class GearModel extends Model {
                 name,
                 gearType,
                 gearTier,
+                isUnidentified,
                 result.level(),
                 result.attackSpeed(),
                 result.health(),

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -8,13 +8,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public class EntityNameTagRenderEvent extends Event implements ICancellableEvent {
-    private final Entity entity;
+    private final EntityRenderState renderState;
     private final Component displayName;
     private final PoseStack poseStack;
     private final MultiBufferSource buffer;
@@ -25,7 +25,7 @@ public class EntityNameTagRenderEvent extends Event implements ICancellableEvent
     private float backgroundOpacity;
 
     public EntityNameTagRenderEvent(
-            Entity entity,
+            EntityRenderState renderState,
             Component displayName,
             PoseStack poseStack,
             MultiBufferSource buffer,
@@ -33,7 +33,7 @@ public class EntityNameTagRenderEvent extends Event implements ICancellableEvent
             EntityRenderDispatcher entityRenderDispatcher,
             Font font,
             float backgroundOpacity) {
-        this.entity = entity;
+        this.renderState = renderState;
         this.displayName = displayName;
         this.poseStack = poseStack;
         this.buffer = buffer;
@@ -43,8 +43,8 @@ public class EntityNameTagRenderEvent extends Event implements ICancellableEvent
         this.backgroundOpacity = backgroundOpacity;
     }
 
-    public Entity getEntity() {
-        return entity;
+    public EntityRenderState getEntityRenderState() {
+        return renderState;
     }
 
     public Component getDisplayName() {
