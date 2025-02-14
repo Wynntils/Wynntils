@@ -15,6 +15,7 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
+import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -193,7 +194,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 14,
                 14,
                 Texture.ADD_ICON,
-                (b) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)),
+                (b) -> McUtils.mc().setScreen(WaypointCreationScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.DARK_GREEN)
@@ -280,7 +281,9 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         renderCoordinates(poseStack, mouseX, mouseY);
 
-        renderZoomWidget(poseStack, mouseX, mouseY);
+        if (KeyboardUtils.isShiftDown()) {
+            renderZoomWidget(poseStack);
+        }
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -399,13 +402,13 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
-                if (hoveredFeature instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
-                    McUtils.mc().setScreen(PoiCreationScreen.create(this, customPoi));
+                if (hoveredFeature instanceof WaypointLocation location) {
+                    McUtils.mc().setScreen(WaypointCreationScreen.create(this, location));
                 } else {
                     int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
                     int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
 
-                    McUtils.mc().setScreen(PoiCreationScreen.create(this, new Location(gameX, 0, gameZ)));
+                    McUtils.mc().setScreen(WaypointCreationScreen.create(this, new Location(gameX, 0, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hoveredFeature instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
