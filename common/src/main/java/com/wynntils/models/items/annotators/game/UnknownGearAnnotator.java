@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -43,6 +43,8 @@ public final class UnknownGearAnnotator implements GameItemAnnotator {
             return null;
         }
 
-        return Models.Gear.parseUnknownGearItem(gearName, gearType, gearTier, itemStack);
+        boolean isUnidentified = matcher.group("unidentified") != null;
+
+        return Models.Gear.parseUnknownGearItem(gearName, gearType, gearTier, isUnidentified, itemStack);
     }
 }

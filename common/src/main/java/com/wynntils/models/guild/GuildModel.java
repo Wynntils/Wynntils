@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.guild;
@@ -30,6 +30,7 @@ import com.wynntils.models.guild.type.DiplomacyInfo;
 import com.wynntils.models.guild.type.GuildInfo;
 import com.wynntils.models.guild.type.GuildRank;
 import com.wynntils.models.territories.type.GuildResource;
+import com.wynntils.screens.guildlog.GuildLogHolder;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -143,6 +144,8 @@ public class GuildModel extends Model {
         super(List.of());
 
         Handlers.Label.registerParser(new GuildSeasonLeaderboardLabelParser());
+
+        Handlers.WrappedScreen.registerWrappedScreen(new GuildLogHolder());
     }
 
     @Override

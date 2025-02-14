@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -24,8 +24,8 @@ import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -106,7 +106,8 @@ public class WynncraftButtonFeature extends Feature {
                 wynncraftServer,
                 titleScreen.width / 2 + 104,
                 titleScreen.height / 4 + 48 + 24,
-                Managers.Download.graphState().error());
+                Managers.Download.graphState().error(),
+                ignoreFailedDownloads.get());
         titleScreen.addRenderableWidget(wynncraftButton);
     }
 
@@ -136,14 +137,22 @@ public class WynncraftButtonFeature extends Feature {
         private final ServerData serverData;
         private final ServerIcon serverIcon;
         private final boolean showWarning;
+        private final boolean ignoreFailedDownloads;
 
-        WynncraftButton(Screen backScreen, ServerData serverData, int x, int y, boolean showWarning) {
+        WynncraftButton(
+                Screen backScreen,
+                ServerData serverData,
+                int x,
+                int y,
+                boolean showWarning,
+                boolean ignoreFailedDownloads) {
             super(x, y, 20, 20, Component.literal(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
             this.serverData = serverData;
 
             this.serverIcon = new ServerIcon(serverData);
             this.serverIcon.loadResource(false);
             this.showWarning = showWarning;
+            this.ignoreFailedDownloads = ignoreFailedDownloads;
         }
 
         @Override
@@ -155,8 +164,9 @@ public class WynncraftButtonFeature extends Feature {
             }
 
             // Insets the icon by 3
-            RenderUtils.drawScalingTexturedRect(
+            BufferedRenderUtils.drawScalingTexturedRect(
                     guiGraphics.pose(),
+                    guiGraphics.bufferSource,
                     serverIcon.getServerIconLocation(),
                     this.getX() + 3,
                     this.getY() + 3,
@@ -191,7 +201,7 @@ public class WynncraftButtonFeature extends Feature {
             if (!(button instanceof WynncraftButton wynncraftButton)) return;
             if (!Managers.Download.graphState().finished()) return;
 
-            if (wynncraftButton.showWarning) {
+            if (wynncraftButton.showWarning && !wynncraftButton.ignoreFailedDownloads) {
                 McUtils.mc().setScreen(DownloadScreen.create(McUtils.mc().screen, wynncraftButton.serverData));
             } else {
                 connectToServer(wynncraftButton.serverData);
@@ -232,7 +242,7 @@ public class WynncraftButtonFeature extends Feature {
             // If someone converts this to get the actual ServerData used by the gui, check
             // ServerData#pinged here and
             // set it later
-            if (allowStale && McUtils.mc().getTextureManager().getTexture(destination, null) != null) {
+            if (allowStale && McUtils.mc().getTextureManager().getTexture(destination) != null) {
                 serverIconLocation = destination;
                 onDone();
                 return;

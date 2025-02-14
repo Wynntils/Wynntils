@@ -1,30 +1,30 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class PlayerRenderLayerEvent extends Event implements ICancellableEvent {
-    private final Player player;
+    private final PlayerRenderState playerRenderState;
 
-    protected PlayerRenderLayerEvent(Player player) {
-        this.player = player;
+    protected PlayerRenderLayerEvent(PlayerRenderState playerRenderState) {
+        this.playerRenderState = playerRenderState;
     }
 
-    public Player getPlayer() {
-        return player;
+    public PlayerRenderState getPlayerRenderState() {
+        return playerRenderState;
     }
 
     public static class Armor extends PlayerRenderLayerEvent {
         private final EquipmentSlot slot;
 
-        public Armor(Player player, EquipmentSlot slot) {
-            super(player);
+        public Armor(PlayerRenderState playerRenderState, EquipmentSlot slot) {
+            super(playerRenderState);
             this.slot = slot;
         }
 
@@ -34,14 +34,14 @@ public abstract class PlayerRenderLayerEvent extends Event implements ICancellab
     }
 
     public static class Cape extends PlayerRenderLayerEvent {
-        public Cape(Player player) {
-            super(player);
+        public Cape(PlayerRenderState playerRenderState) {
+            super(playerRenderState);
         }
     }
 
     public static class Elytra extends PlayerRenderLayerEvent {
-        public Elytra(Player player) {
-            super(player);
+        public Elytra(PlayerRenderState playerRenderState) {
+            super(playerRenderState);
         }
     }
 }

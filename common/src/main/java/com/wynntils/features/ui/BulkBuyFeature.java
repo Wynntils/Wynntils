@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -93,7 +93,7 @@ public class BulkBuyFeature extends Feature {
             return;
         }
 
-        String title = acm.getSlot(4).getItem().getHoverName().getString();
+        StyledText title = StyledText.fromComponent(acm.getSlot(4).getItem().getHoverName());
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;
 
         bulkBuyWidget = new BulkBuyWidget(
@@ -242,7 +242,7 @@ public class BulkBuyFeature extends Feature {
     }
 
     private boolean isBulkBuyable(AbstractContainerMenu menu, ItemStack toBuy) {
-        String title = menu.getSlot(4).getItem().getHoverName().getString();
+        StyledText title = StyledText.fromComponent(menu.getSlot(4).getItem().getHoverName());
 
         return title.startsWith(ChatFormatting.GREEN.toString())
                 && title.endsWith(" Shop")

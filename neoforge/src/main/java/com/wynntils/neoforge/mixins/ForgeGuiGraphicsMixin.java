@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.neoforge.mixins;
@@ -16,6 +16,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,12 +30,12 @@ public abstract class ForgeGuiGraphicsMixin {
     //       See FabricAbstractContainerScreenMixin#renderTooltipPre for the Fabric mixin.
     @WrapOperation(
             method =
-                    "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;II)V",
+                    "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/resources/ResourceLocation;)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V"),
+                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V"),
             remap = false)
     private void renderTooltipPre(
             GuiGraphics instance,
@@ -43,6 +44,7 @@ public abstract class ForgeGuiGraphicsMixin {
             Optional<TooltipComponent> visualTooltipComponent,
             int mouseX,
             int mouseY,
+            ResourceLocation backgroundTexture,
             Operation<Void> operation,
             @Local(argsOnly = true) ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event = new ItemTooltipRenderEvent.Pre(
@@ -61,7 +63,8 @@ public abstract class ForgeGuiGraphicsMixin {
                 event.getTooltips(),
                 event.getItemStack().getTooltipImage(),
                 event.getMouseX(),
-                event.getMouseY());
+                event.getMouseY(),
+                backgroundTexture);
     }
 
     // See FabricAbstractContainerScreenMixin#renderTooltipPost for the Fabric mixin.

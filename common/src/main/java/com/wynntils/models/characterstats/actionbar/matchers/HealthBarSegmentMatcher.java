@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
@@ -30,7 +30,7 @@ public class HealthBarSegmentMatcher implements ActionBarSegmentMatcher {
 
     // These are the characters that build the health bar, collected from the resource pack
     private static final List<String> HEALTH_BAR_CHARS =
-            List.of("\uE020-\uE028", "\uE030-\uE038", "\uE040-\uE048", "\uE051-\uE058");
+            List.of("\uE020-\uE028", "\uE030-\uE038", "\uE040-\uE048", "\uE050-\uE058");
 
     // The health bar should have 10 spacer+bar pairs
     private static final Pattern HEALTH_BAR_PATTERN =

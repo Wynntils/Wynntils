@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.crowdsource.type;
 
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.crowdsource.datatype.LootrunTaskLocation;
+import com.wynntils.models.npc.label.FastTravelLabelInfo;
 import com.wynntils.models.npc.label.NpcLabelInfo;
 import com.wynntils.models.profession.label.ProfessionCraftingStationLabelInfo;
 import com.wynntils.models.profession.label.ProfessionGatheringNodeLabelInfo;
@@ -18,7 +19,8 @@ public enum CrowdSourcedDataType {
     LOOTRUN_TASK_LOCATIONS(LootrunTaskLocation.class),
     NPC_LOCATIONS(NpcLabelInfo.class),
     PROFESSION_NODE_LOCATIONS(ProfessionGatheringNodeLabelInfo.class),
-    PROFESSION_CRAFTING_STATION_LOCATIONS(ProfessionCraftingStationLabelInfo.class);
+    PROFESSION_CRAFTING_STATION_LOCATIONS(ProfessionCraftingStationLabelInfo.class),
+    FAST_TRAVEL_LOCATIONS(FastTravelLabelInfo.class);
 
     private final Class<? extends Comparable<?>> dataClass;
 
