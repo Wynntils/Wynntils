@@ -313,7 +313,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        renderZoomWidget(poseStack);
+        renderZoomText(poseStack);
     }
 
     @Override
