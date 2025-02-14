@@ -215,7 +215,6 @@ public final class MainMapScreen extends AbstractMapScreen {
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
 
-        MapFeature oldHoveredFeature = hoveredFeature;
         renderMapFeatures(poseStack, mouseX, mouseY);
 
         if (Managers.Feature.getFeatureInstance(MappingProgressFeature.class).isEnabled()) {
