@@ -378,14 +378,14 @@ public class WorldMarkersFeature extends Feature {
                         event.getPoseStack(),
                         icon.getResourceLocation(),
                         displayPositionX
-                                - textRenderScale.get() * icon.getWidth() / 2
-                                + pointerOffsetX * (1 - textRenderScale.get()),
+                                - iconRenderScale.get() * icon.getWidth() / 2
+                                + pointerOffsetX * (1 - iconRenderScale.get()),
                         displayPositionY
-                                - textRenderScale.get() * icon.getHeight() / 2
-                                + pointerOffsetY * (1 - textRenderScale.get()),
+                                - iconRenderScale.get() * icon.getHeight() / 2
+                                + pointerOffsetY * (1 - iconRenderScale.get()),
                         0,
-                        textRenderScale.get() * icon.getWidth(),
-                        textRenderScale.get() * icon.getHeight(),
+                        iconRenderScale.get() * icon.getWidth(),
+                        iconRenderScale.get() * icon.getHeight(),
                         icon.getWidth(),
                         icon.getHeight());
                 RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -399,12 +399,17 @@ public class WorldMarkersFeature extends Feature {
                 poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
                 Texture pointerTexture = Texture.POINTER;
-                BufferedRenderUtils.drawTexturedRect(
+                BufferedRenderUtils.drawScalingTexturedRect(
                         poseStack,
                         BUFFER_SOURCE,
-                        pointerTexture,
+                        pointerTexture.resource(),
                         pointerDisplayPositionX - pointerTexture.width() / 2f,
-                        pointerDisplayPositionY - pointerTexture.height() / 2f);
+                        pointerDisplayPositionY - pointerTexture.height() / 2f,
+                        0,
+                        iconRenderScale.get() * pointerTexture.width(),
+                        iconRenderScale.get() * pointerTexture.height(),
+                        pointerTexture.width(),
+                        pointerTexture.height());
 
                 BUFFER_SOURCE.endBatch();
                 poseStack.popPose();
