@@ -157,7 +157,7 @@ public class UserMarkerService extends Service {
                 MARKED_MAP_FEATURE_ATTRIBUTES.asLocationAttributes().build();
 
         @Override
-        public MapAttributes getOverrideAttributes() {
+        public MapAttributes getOverrideAttributes(MapFeature mapFeature) {
             return BUILT_MAP_LOCATION_ATTRIBUTES;
         }
 

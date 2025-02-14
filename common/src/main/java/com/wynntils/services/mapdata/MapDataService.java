@@ -138,7 +138,7 @@ public class MapDataService extends Service {
                                 .anyMatch(attrFeatureId -> attrFeatureId.equals(feature.getFeatureId()))),
                         overrideProviders.values().stream().filter(attr -> attr.getOverridenCategoryIds()
                                 .anyMatch(attrCategoryId -> attrCategoryId.equals(feature.getCategoryId()))))
-                .map(MapDataOverrideProvider::getOverrideAttributes)
+                .map(provider -> provider.getOverrideAttributes(feature))
                 .toList());
     }
 
