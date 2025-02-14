@@ -6,8 +6,10 @@ package com.wynntils.services.map;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
+import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.map.pois.CustomPoi;
