@@ -50,6 +50,10 @@ import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 public final class GuildMapScreen extends AbstractMapScreen {
+    private static final String TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER_ID = "override:territory_advancement_mode";
+    private static final TerritoryAreaAdvancementModeOverrideProvider TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER =
+            new TerritoryAreaAdvancementModeOverrideProvider();
+
     private static final String TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER_ID =
             "override:territory_resource_generation_colors";
     private static final TerritoryAreaResourceGenerationColorsOverrideProvider
@@ -183,6 +187,15 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 Texture.OVERLAY_EXTRA_ICON,
                 (b) -> {
                     hybridMode = !hybridMode;
+
+                    if (!hybridMode) {
+                        Services.MapData.registerOverrideProvider(
+                                TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER_ID,
+                                TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER);
+                    } else {
+                        Services.MapData.unregisterOverrideProvider(TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER_ID);
+                    }
+
                     hybridModeButton.setTooltip(getHybridModeTooltip());
                 },
                 getHybridModeTooltip());
@@ -316,7 +329,6 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     @Override
     protected Stream<MapFeature> getRenderedMapFeatures() {
-        // FIXME: Add back hybrid/advancement mode
         // FIXME: Add user markers
         return Services.MapData.getFeaturesForCategory("wynntils:territory")
                 .filter(f -> f instanceof TerritoryArea)
@@ -362,7 +374,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         poseStack.pushPose();
         poseStack.translate(width - SCREEN_SIDE_OFFSET - 250, SCREEN_SIDE_OFFSET + 40, 101);
 
-        if (territoryArea.isTerritoryProfileOutdated()) {
+        if (hybridMode && territoryArea.isTerritoryProfileOutdated()) {
             renderTerritoryTooltipWithFakeInfo(poseStack, territoryArea);
         } else {
             renderTerritoryTooltip(poseStack, territoryArea);
@@ -700,6 +712,55 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                                 .withStyle(ChatFormatting.GREEN)
                                         : Component.translatable("screens.wynntils.guildMap.hybridMode.advancement")
                                                 .withStyle(ChatFormatting.RED))));
+    }
+
+    private static final class TerritoryAreaAdvancementModeOverrideProvider extends AbstractMapDataOverrideProvider {
+        @Override
+        public MapAttributes getOverrideAttributes(MapFeature mapFeature) {
+            // This should never happen, but just in case
+            if (!(mapFeature instanceof TerritoryArea territoryArea)) return new AbstractMapAreaAttributes() {};
+
+            // If there is no advancement data, just return the default attributes
+            // Also, we don't have to change anything if the owners are the same for advancement and api
+            if (!territoryArea.isTerritoryProfileOutdated()) return new AbstractMapAreaAttributes() {};
+
+            // Territory info should be present if the territory profile deemed to be outdated
+            TerritoryInfo territoryInfo = territoryArea.getTerritoryInfo().get();
+
+            return new AbstractMapAreaAttributes() {
+                private CustomColor guildColor = Models.Guild.getColor(territoryInfo.getGuildName());
+
+                @Override
+                public Optional<String> getLabel() {
+                    return Optional.of(territoryInfo.getGuildPrefix());
+                }
+
+                @Override
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(guildColor);
+                }
+
+                @Override
+                public Optional<CustomColor> getFillColor() {
+                    return Optional.of(guildColor.withAlpha(80));
+                }
+
+                @Override
+                public Optional<CustomColor> getBorderColor() {
+                    return Optional.of(guildColor);
+                }
+            };
+        }
+
+        @Override
+        public Stream<String> getOverridenFeatureIds() {
+            return Stream.empty();
+        }
+
+        @Override
+        public Stream<String> getOverridenCategoryIds() {
+            return Stream.of("wynntils:territory");
+        }
     }
 
     private static final class TerritoryAreaResourceGenerationColorsOverrideProvider

@@ -71,6 +71,8 @@ public class TerritoryArea implements MapArea {
     @Override
     public Optional<MapAreaAttributes> getAttributes() {
         return Optional.of(new AbstractMapAreaAttributes() {
+            private CustomColor guildColor = Models.Guild.getColor(territoryProfile.getGuild());
+
             @Override
             public Optional<String> getLabel() {
                 return Optional.of(territoryProfile.getGuildPrefix());
@@ -78,18 +80,17 @@ public class TerritoryArea implements MapArea {
 
             @Override
             public Optional<CustomColor> getLabelColor() {
-                return Optional.of(Models.Guild.getColor(territoryProfile.getGuild()));
+                return Optional.of(guildColor);
             }
 
             @Override
             public Optional<CustomColor> getFillColor() {
-                return Optional.of(
-                        Models.Guild.getColor(territoryProfile.getGuild()).withAlpha(80));
+                return Optional.of(guildColor.withAlpha(80));
             }
 
             @Override
             public Optional<CustomColor> getBorderColor() {
-                return Optional.of(Models.Guild.getColor(territoryProfile.getGuild()));
+                return Optional.of(guildColor);
             }
 
             @Override
