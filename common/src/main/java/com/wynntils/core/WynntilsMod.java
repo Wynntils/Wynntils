@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core;
@@ -17,6 +17,7 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
@@ -209,6 +210,8 @@ public final class WynntilsMod {
         Managers.Url.loadUrls();
 
         addCrashCallbacks();
+
+        WynntilsMod.postEvent(new WynntilsInitEvent.ModInitFinished());
     }
 
     private static void registerComponents(Class<?> registryClass, Class<? extends CoreComponent> componentClass) {
