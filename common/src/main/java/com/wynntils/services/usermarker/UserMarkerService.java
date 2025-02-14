@@ -10,7 +10,6 @@ import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
-import com.wynntils.services.mapdata.attributes.MapMarkerOptionsBuilder;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
@@ -34,9 +33,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class UserMarkerService extends Service {
     private static final MapAttributesBuilder MARKED_MAP_FEATURE_ATTRIBUTES = new MapAttributesBuilder()
             .setHasMarker(true)
+            .setPriority(1000)
             .setIconVisibility(DefaultMapAttributes.ICON_ALWAYS)
-            .setLabelVisibility(DefaultMapAttributes.LABEL_ALWAYS)
-            .setMarkerOptions(new MapMarkerOptionsBuilder().withHasLabel(false).build());
+            .setLabelVisibility(DefaultMapAttributes.LABEL_ALWAYS);
 
     // These are map features that already exist in the map data, and are "marked" by the user
     private final Set<MapLocation> userOverridenMapLocations = new CopyOnWriteArraySet<>();

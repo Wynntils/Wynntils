@@ -88,6 +88,11 @@ public class CategoriesProvider extends BuiltInProvider {
                 public Optional<String> getIconId() {
                     return Optional.of(MapIconsProvider.FALLBACK_ICON_ID);
                 }
+
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(new MapMarkerOptionsBuilder().withHasLabel(false));
+                }
             });
         }
     }
@@ -352,12 +357,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<CustomColor> getLabelColor() {
-                    return Optional.of(
-                            switch (placeType) {
-                                case PROVINCE -> CommonColors.DARK_AQUA;
-                                case CITY -> CommonColors.YELLOW;
-                                case TOWN_OR_PLACE -> CommonColors.WHITE;
-                            });
+                    return Optional.of(getPlaceColor());
                 }
 
                 @Override
@@ -374,7 +374,23 @@ public class CategoriesProvider extends BuiltInProvider {
                                 case TOWN_OR_PLACE -> PLACE_VISIBILITY;
                             });
                 }
+
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(new MapMarkerOptionsBuilder()
+                            .withHasDistance(true)
+                            .withHasLabel(true)
+                            .withBeaconColor(getPlaceColor()));
+                }
             });
+        }
+
+        private CustomColor getPlaceColor() {
+            return switch (placeType) {
+                case PROVINCE -> CommonColors.DARK_AQUA;
+                case CITY -> CommonColors.YELLOW;
+                case TOWN_OR_PLACE -> CommonColors.WHITE;
+            };
         }
     }
 
