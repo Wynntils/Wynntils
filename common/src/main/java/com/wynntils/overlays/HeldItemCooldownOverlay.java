@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -38,7 +38,7 @@ public class HeldItemCooldownOverlay extends Overlay {
         Player player = McUtils.player();
         float cooldownPercent = player.getCooldowns()
                 .getCooldownPercent(
-                        player.getItemInHand(InteractionHand.MAIN_HAND).getItem(),
+                        player.getItemInHand(InteractionHand.MAIN_HAND),
                         deltaTracker.getGameTimeDeltaPartialTick(true));
         if (cooldownPercent <= 0f) return;
         renderOverlay(poseStack, bufferSource, cooldownPercent);

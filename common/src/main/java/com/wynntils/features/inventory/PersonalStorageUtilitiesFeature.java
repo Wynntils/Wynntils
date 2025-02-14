@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -10,6 +10,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.MouseScrollEvent;
@@ -79,9 +80,14 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         // Mods such as Flow still render the widget after we close the screen so name has to be
         // set here instead of being retrieved in the widgets render method
         widget.updatePageName();
+    }
 
+    @SubscribeEvent
+    public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
+        if (Models.Bank.getStorageContainerType() == null) return;
         if (!quickJumping) return;
 
+        // ContainerSetSlotEvent will click too early so we have to do it after content set
         if (pageDestination > lastPage) {
             quickJumping = false;
             pageDestination = currentPage;
@@ -109,7 +115,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         }
 
         Models.Bank.toggleEditingName(false);
-        widget.removeEditInput();
+        widget.toggleEditInput(false);
     }
 
     @SubscribeEvent
@@ -118,7 +124,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         if (!Models.Bank.isEditingName()) return;
 
         Models.Bank.saveCurrentPageName(widget.getName());
-        widget.removeEditInput();
+        widget.toggleEditInput(false);
         widget.updatePageName();
     }
 
@@ -127,8 +133,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         if (!Models.Bank.isEditingName()) return;
 
         // Scrolling with ContainerScrollFeature doesn't call ContainerClickEvent so toggle editing here
-        Models.Bank.toggleEditingName(false);
-        widget.removeEditInput();
+        widget.toggleEditInput(false);
     }
 
     public void jumpToDestination(int destination) {

@@ -12,7 +12,10 @@ import com.wynntils.utils.type.BoundingPolygon;
 import java.util.List;
 import java.util.Optional;
 
-public final class MapAreaImpl implements MapArea {
+/**
+ * Implementation of {@link MapArea}. Extend this class, if a serializable subclass is desired.
+ */
+public class MapAreaImpl implements MapArea {
     private final String featureId;
     private final String categoryId;
     private final MapAreaAttributesImpl attributes;

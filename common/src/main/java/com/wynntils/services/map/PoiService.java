@@ -6,8 +6,10 @@ package com.wynntils.services.map;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
+import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -87,16 +89,22 @@ public class PoiService extends Service {
 
     public void loadCustomPoiProviders() {
         for (CustomPoiProvider poiProvider : customPoiProviders.get()) {
-            Managers.Net.download(poiProvider.getUrl(), poiProvider.getName()).handleJsonArray(elements -> {
-                List<CustomPoi> pois = new ArrayList<>();
+            try {
+                Managers.Net.download(poiProvider.getUrl(), poiProvider.getName())
+                        .handleJsonArray(elements -> {
+                            List<CustomPoi> pois = new ArrayList<>();
 
-                for (JsonElement jsonElement : elements) {
-                    CustomPoi poi = Managers.Json.GSON.fromJson(jsonElement, CustomPoi.class);
-                    pois.add(poi);
-                }
+                            for (JsonElement jsonElement : elements) {
+                                CustomPoi poi = JsonManager.GSON.fromJson(jsonElement, CustomPoi.class);
+                                pois.add(poi);
+                            }
 
-                providedCustomPois.put(poiProvider, ImmutableList.copyOf(pois));
-            });
+                            providedCustomPois.put(poiProvider, ImmutableList.copyOf(pois));
+                        });
+            } catch (IllegalArgumentException exception) {
+                WynntilsMod.warn(
+                        "Failed to load custom POIs from " + poiProvider.getUrl() + ": " + exception.getMessage());
+            }
         }
     }
 }

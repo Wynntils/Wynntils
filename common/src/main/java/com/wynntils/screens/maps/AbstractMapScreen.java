@@ -215,8 +215,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 Texture.FULLSCREEN_MAP_BORDER.height());
     }
 
-    protected void renderGradientBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+    protected void renderBlurredBackground() {
+        super.renderBlurredBackground();
     }
 
     protected void renderMapFeatures(PoseStack poseStack, int mouseX, int mouseY) {

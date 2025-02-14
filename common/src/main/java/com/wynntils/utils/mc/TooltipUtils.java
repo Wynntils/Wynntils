@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -8,13 +8,14 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
-import com.wynntils.features.tooltips.ItemStatInfoFeature.IdentificationDecorator;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
+import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -37,7 +38,10 @@ public final class TooltipUtils {
 
     public static int getTooltipHeight(List<ClientTooltipComponent> lines) {
         return (lines.size() == 1 ? -2 : 0)
-                + lines.stream().mapToInt(ClientTooltipComponent::getHeight).sum();
+                + lines.stream()
+                        .mapToInt(clientTooltip -> clientTooltip.getHeight(
+                                FontRenderer.getInstance().getFont()))
+                        .sum();
     }
 
     public static List<ClientTooltipComponent> getClientTooltipComponent(List<Component> components) {
@@ -71,15 +75,15 @@ public final class TooltipUtils {
                 .getOrCalculate(
                         WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.fromParsedItemStack(itemStack, itemInfo));
         if (builder == null) return null;
-        ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
+        ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
 
-        IdentificationDecorator decorator =
-                isif.identificationDecorations.get() ? isif.new IdentificationDecorator() : null;
+        TooltipIdentificationDecorator decorator =
+                feature.identificationDecorations.get() ? feature.getDecorator() : null;
         TooltipStyle currentIdentificationStyle = new TooltipStyle(
-                isif.identificationsOrdering.get(),
-                isif.groupIdentifications.get(),
-                isif.showBestValueLastAlways.get(),
-                isif.showStars.get(),
+                feature.identificationsOrdering.get(),
+                feature.groupIdentifications.get(),
+                feature.showBestValueLastAlways.get(),
+                feature.showStars.get(),
                 false // this only applies to crafted items
                 );
         LinkedList<Component> tooltips = new LinkedList<>(
@@ -87,7 +91,7 @@ public final class TooltipUtils {
 
         // Update name depending on overall percentage; this needs to be done every rendering
         // for rainbow/defective effects
-        if (isif.overallPercentageInName.get() && itemInfo.hasOverallValue()) {
+        if (feature.overallPercentageInName.get() && itemInfo.hasOverallValue()) {
             updateItemName(itemInfo, tooltips);
         }
         return tooltips;
