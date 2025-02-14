@@ -17,6 +17,7 @@ import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -24,6 +25,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.wynn.LocationUtils;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -31,9 +33,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public final class MainMapScreen extends AbstractMapScreen {
+    private MapLocation focusedMarker = null;
+
     private MainMapScreen() {
         super();
         centerMapAroundPlayer();
@@ -83,17 +88,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         return;
                     }
 
-                    //                    List<MarkerInfo> markers = Models.Marker.USER_WAYPOINTS_PROVIDER
-                    //                            .getMarkerInfos()
-                    //                            .toList();
-                    //                    if (!markers.isEmpty()) {
-                    //                        // -1 is fine as the index since we always increment it by 1
-                    //                        int index = markers.indexOf(focusedMarker);
-                    //                        MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
-                    //                        focusedMarker = markerInfo;
-                    //                        Location location = markerInfo.location();
-                    //                        updateMapCenter(location.x, location.z);
-                    //                    }
+                    focusNextMarkedLocation();
                 },
                 List.of(
                         Component.literal("[>] ")
@@ -328,60 +323,29 @@ public final class MainMapScreen extends AbstractMapScreen {
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            //            List<MarkerInfo> markers =
-            //                    Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
-            //            if (KeyboardUtils.isShiftDown() && !markers.isEmpty()) {
-            //                // -1 is fine as the index since we always increment it by 1
-            //                int index = markers.indexOf(focusedMarker);
-            //                MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
-            //                focusedMarker = markerInfo;
-            //                Location location = markerInfo.location();
-            //                updateMapCenter(location.x, location.z);
-            //                return true;
-            //            }
+            if (KeyboardUtils.isShiftDown()) {
+                focusNextMarkedLocation();
+                return true;
+            }
 
             centerMapAroundPlayer();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            //            if (hovered instanceof WaypointPoi) {
-            //                Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
-            //                        hovered.getLocation().asLocation());
-            //                return true;
-            //            }
+            if (hoveredFeature instanceof MapLocation hoveredLocation) {
+                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
-            if (hoveredFeature != null && !(hoveredFeature instanceof TerritoryArea)) {
-                //                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
-                //
-                //                // If shift is not held down, clear all waypoints to only have the new one
-                //                if (!KeyboardUtils.isShiftDown()) {
-                //                    Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-                //                }
-                //
-                //                if (hovered.hasStaticLocation()) {
-                //                    if (hovered instanceof IconPoi iconPoi) {
-                //                        if (iconPoi instanceof CustomPoi customPoi) {
-                //                            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                //                                    new Location(hovered.getLocation()),
-                //                                    iconPoi.getIcon(),
-                //                                    customPoi.getColor(),
-                //                                    customPoi.getColor(),
-                //                                    hovered.getName());
-                //                        } else {
-                //                            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                //                                    new Location(hovered.getLocation()), iconPoi.getIcon(),
-                // hovered.getName());
-                //                        }
-                //                    } else {
-                //                        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                //                                new Location(hovered.getLocation()), hovered.getName());
-                //                    }
-                //                } else {
-                //                    final Poi finalHovered = hovered;
-                //                    Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                //                            new DynamicLocationSupplier(
-                //                                    () -> finalHovered.getLocation().asLocation()),
-                //                            finalHovered.getName());
-                //                }
-                //                return true;
+                if (Services.UserMarker.isUserMarkedFeature(hoveredLocation)) {
+                    Services.UserMarker.removeUserMarkedFeature(hoveredLocation);
+                    return true;
+                }
+
+                // If shift is not held down, clear all waypoints to only have the new one
+                if (!KeyboardUtils.isShiftDown()) {
+                    Services.UserMarker.removeAllUserMarkedFeatures();
+                }
+
+                Services.UserMarker.addUserMarkedFeature(hoveredLocation);
+
+                return true;
             }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
@@ -409,27 +373,47 @@ public final class MainMapScreen extends AbstractMapScreen {
         return super.doMouseClicked(mouseX, mouseY, button);
     }
 
+    private void focusNextMarkedLocation() {
+        List<MapLocation> markedLocations =
+                Services.UserMarker.getMarkedFeatures().toList();
+        if (markedLocations.isEmpty()) return;
+
+        // Invalidate the focused marker if it's not marked anymore
+        if (!Services.UserMarker.isUserMarkedFeature(focusedMarker)) {
+            focusedMarker = null;
+        }
+
+        // -1 is fine as the index since we always increment it by 1
+        int index = markedLocations.indexOf(focusedMarker);
+        MapLocation mapLocation = markedLocations.get((index + 1) % markedLocations.size());
+        focusedMarker = mapLocation;
+
+        Location location = mapLocation.getLocation();
+        updateMapCenter(location.x, location.z);
+    }
+
     private void shareLocationOrCompass(int button) {
-        //        List<MarkerInfo> markers =
-        //                Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
-        //
-        //        boolean shareCompass = KeyboardUtils.isShiftDown() && !markers.isEmpty();
-        //
-        //        String target = null;
-        //
-        //        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-        //            target = "guild";
-        //        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-        //            target = "party";
-        //        }
-        //
-        //        if (target == null) return;
-        //
-        //        if (shareCompass) {
-        //            // FIXME: Find an intuitive way to share compasses with multiple waypoints
-        //            LocationUtils.shareCompass(target, markers.getFirst().location());
-        //        } else {
-        //            LocationUtils.shareLocation(target);
-        //        }
+        List<MapLocation> markedLocations =
+                Services.UserMarker.getMarkedFeatures().toList();
+
+        boolean shareCompass = KeyboardUtils.isShiftDown() && !markedLocations.isEmpty();
+
+        String target = null;
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            target = "guild";
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            target = "party";
+        }
+
+        if (target == null) return;
+
+        if (shareCompass) {
+            LocationUtils.shareCompass(
+                    target,
+                    markedLocations.stream().map(MapLocation::getLocation).toList());
+        } else {
+            LocationUtils.shareLocation(target);
+        }
     }
 }

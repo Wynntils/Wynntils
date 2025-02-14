@@ -90,6 +90,10 @@ public class UserMarkerService extends Service {
         userMarkedOverrideProvider.notifyCallbacks(mapFeature);
     }
 
+    public boolean isUserMarkedFeature(MapLocation mapFeature) {
+        return userOverridenMapLocations.contains(mapFeature);
+    }
+
     public void removeAllUserMarkedFeatures() {
         List<MapFeature> removedFeatures = new ArrayList<>(userOverridenMapLocations);
         userOverridenMapLocations.clear();
