@@ -130,7 +130,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         this.firstSetup = true;
     }
 
-    private WaypointCreationScreen(PoiManagementScreen managementScreen, WaypointLocation oldWaypoint) {
+    private WaypointCreationScreen(WaypointManagementScreen managementScreen, WaypointLocation oldWaypoint) {
         super();
         this.returnScreen = managementScreen;
 
@@ -150,7 +150,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         return new WaypointCreationScreen(oldMapScreen, oldWaypoint);
     }
 
-    public static Screen create(PoiManagementScreen managementScreen, WaypointLocation oldWaypoint) {
+    public static Screen create(WaypointManagementScreen managementScreen, WaypointLocation oldWaypoint) {
         return new WaypointCreationScreen(managementScreen, oldWaypoint);
     }
 

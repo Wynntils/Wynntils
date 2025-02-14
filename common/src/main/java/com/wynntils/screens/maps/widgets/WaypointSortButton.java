@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
@@ -7,7 +7,7 @@ package com.wynntils.screens.maps.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.maps.PoiManagementScreen;
+import com.wynntils.screens.maps.WaypointManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -17,22 +17,22 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
-public class PoiSortButton extends WynntilsButton {
+public class WaypointSortButton extends WynntilsButton {
     private final Component title;
-    private final PoiManagementScreen managementScreen;
-    private final PoiManagementScreen.PoiSortType sortType;
+    private final WaypointManagementScreen managementScreen;
+    private final WaypointManagementScreen.WaypointSortType sortType;
 
     private boolean ascending = true;
     private StyledText titleToRender;
 
-    public PoiSortButton(
+    public WaypointSortButton(
             int x,
             int y,
             int width,
             int height,
             Component title,
-            PoiManagementScreen managementScreen,
-            PoiManagementScreen.PoiSortType sortType) {
+            WaypointManagementScreen managementScreen,
+            WaypointManagementScreen.WaypointSortType sortType) {
         super(x, y, width, height, title);
 
         this.title = title;

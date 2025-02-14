@@ -13,8 +13,8 @@ import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
 import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.maps.widgets.PoiManagerWidget;
-import com.wynntils.screens.maps.widgets.PoiSortButton;
+import com.wynntils.screens.maps.widgets.WaypointManagerWidget;
+import com.wynntils.screens.maps.widgets.WaypointSortButton;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -42,14 +42,14 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
+public final class WaypointManagementScreen extends WynntilsGridLayoutScreen {
     // Constants
     private static final int GRID_ROWS_PER_PAGE = 43;
     private static final int HEADER_HEIGHT = 12;
 
     // Collections
-    private final List<AbstractWidget> poiManagerWidgets = new ArrayList<>();
-    private final List<CustomPoi> deletedPois = new ArrayList<>();
+    private final List<AbstractWidget> waypointManagerWidgets = new ArrayList<>();
+    private final List<CustomPoi> deletedWaypoints = new ArrayList<>();
     private final List<Integer> deletedIndexes = new ArrayList<>();
 
     // Previous screen
@@ -66,13 +66,12 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     private Button setMarkersButton;
     private Button undoDeleteButton;
     private Button upButton;
-    private PoiSortButton activeSortButton;
-    private PoiSortButton iconSortButton;
-    private PoiSortButton nameSortButton;
-    private PoiSortButton xSortButton;
-    private PoiSortButton ySortButton;
-    private PoiSortButton zSortButton;
-    private TextInputBoxWidget focusedTextInput;
+    private WaypointSortButton activeSortButton;
+    private WaypointSortButton iconSortButton;
+    private WaypointSortButton nameSortButton;
+    private WaypointSortButton xSortButton;
+    private WaypointSortButton ySortButton;
+    private WaypointSortButton zSortButton;
     private TextInputBoxWidget searchInput;
 
     // UI size, position etc
@@ -84,29 +83,29 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     private float scrollButtonHeight;
     private float scrollButtonRenderX;
     private float scrollButtonRenderY;
-    private int maxPoisToDisplay;
+    private int maxWaypointsToDisplay;
     private int scrollAreaHeight;
     private int scrollOffset = 0;
 
-    // Poi display
+    // Waypoint display
     private boolean selectionMode = false;
-    private List<CustomPoi> selectedPois = new ArrayList<>();
-    private List<CustomPoi> pois;
+    private List<CustomPoi> selectedWaypoints = new ArrayList<>();
+    private List<CustomPoi> waypoints;
     private Map<Texture, Boolean> filteredIcons = new EnumMap<>(Texture.class);
-    private PoiSortOrder sortOrder;
+    private WaypointSortOrder sortOrder;
 
-    private PoiManagementScreen(MainMapScreen oldMapScreen) {
-        super(Component.literal("Poi Management Screen"));
+    private WaypointManagementScreen(MainMapScreen oldMapScreen) {
+        super(Component.literal("Waypoint Management Screen"));
 
         this.oldMapScreen = oldMapScreen;
     }
 
     public static Screen create() {
-        return new PoiManagementScreen(null);
+        return new WaypointManagementScreen(null);
     }
 
     public static Screen create(MainMapScreen oldMapScreen) {
-        return new PoiManagementScreen(oldMapScreen);
+        return new WaypointManagementScreen(oldMapScreen);
     }
 
     @Override
@@ -117,8 +116,8 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     @Override
     protected void doInit() {
         super.doInit();
-        // How many pois can fit on the background
-        maxPoisToDisplay = (int) (dividedHeight * GRID_ROWS_PER_PAGE) / 20;
+        // How many waypoint widgets can fit on the background
+        maxWaypointsToDisplay = (int) (dividedHeight * GRID_ROWS_PER_PAGE) / 20;
         backgroundX = dividedWidth * 10;
         backgroundWidth = dividedWidth * 44;
         backgroundY = dividedHeight * 7;
@@ -148,34 +147,36 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 3),
                 (int) (dividedHeight * 4),
                 Component.literal("")
-                        .append(Component.translatable("screens.wynntils.poiManagementGui.help")
+                        .append(Component.translatable("screens.wynntils.waypointManagementGui.help")
                                 .withStyle(ChatFormatting.UNDERLINE))
                         .append(Component.literal("\n"))
-                        .append(Component.translatable("screens.wynntils.poiManagementGui.help1")
+                        .append(Component.translatable("screens.wynntils.waypointManagementGui.help1")
                                 .withStyle(ChatFormatting.GRAY))
                         .append(Component.literal("\n"))
-                        .append(Component.translatable("screens.wynntils.poiManagementGui.help2")
+                        .append(Component.translatable("screens.wynntils.waypointManagementGui.help2")
                                 .withStyle(ChatFormatting.GRAY))
                         .append(Component.literal("\n"))
-                        .append(Component.translatable("screens.wynntils.poiManagementGui.help3")
+                        .append(Component.translatable("screens.wynntils.waypointManagementGui.help3")
                                 .withStyle(ChatFormatting.GRAY))));
         // endregion
 
         // region import/export
         this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.import"),
+                        Component.translatable("screens.wynntils.waypointManagementGui.import"),
                         (button) -> importFromClipboard())
                 .pos((int) (dividedWidth * 22), (int) (dividedHeight * 58))
                 .size(importExportButtonWidth, 20)
-                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiManagementGui.import.tooltip")))
+                .tooltip(
+                        Tooltip.create(Component.translatable("screens.wynntils.waypointManagementGui.import.tooltip")))
                 .build());
 
         exportButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.export"),
+                        Component.translatable("screens.wynntils.waypointManagementGui.export"),
                         (button) -> exportToClipboard())
                 .pos((int) (dividedWidth * 36), (int) (dividedHeight * 58))
                 .size(importExportButtonWidth, 20)
-                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiManagementGui.exportAll.tooltip")))
+                .tooltip(Tooltip.create(
+                        Component.translatable("screens.wynntils.waypointManagementGui.exportAll.tooltip")))
                 .build();
 
         this.addRenderableWidget(exportButton);
@@ -183,7 +184,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
         // region delete buttons
         undoDeleteButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.undo"), (button) -> undoDelete())
+                        Component.translatable("screens.wynntils.waypointManagementGui.undo"), (button) -> undoDelete())
                 .pos((int) (dividedWidth * 55), (int) (dividedHeight * 58))
                 .size((int) (dividedWidth * 8), 20)
                 .build();
@@ -191,8 +192,8 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         this.addRenderableWidget(undoDeleteButton);
 
         deleteSelectedButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.deleteSelected"),
-                        (button) -> deleteSelectedPois())
+                        Component.translatable("screens.wynntils.waypointManagementGui.deleteSelected"),
+                        (button) -> deleteSelectedWaypoints())
                 .pos((int) (dividedWidth * 55), (int) (dividedHeight * 58) - 25)
                 .size((int) (dividedWidth * 8), 20)
                 .build();
@@ -204,11 +205,12 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
         // region marker buttons
         setMarkersButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.setMarkers"),
+                        Component.translatable("screens.wynntils.waypointManagementGui.setMarkers"),
                         (button) -> toggleMarkers(true))
                 .pos((int) dividedWidth, (int) (dividedHeight * 58) - 75)
                 .size((int) (dividedWidth * 8), 20)
-                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiManagementGui.setMarkers.tooltip")))
+                .tooltip(Tooltip.create(
+                        Component.translatable("screens.wynntils.waypointManagementGui.setMarkers.tooltip")))
                 .build();
 
         setMarkersButton.active = false;
@@ -216,12 +218,12 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         this.addRenderableWidget(setMarkersButton);
 
         removeMarkersButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.removeMarkers"),
+                        Component.translatable("screens.wynntils.waypointManagementGui.removeMarkers"),
                         (button) -> toggleMarkers(false))
                 .pos((int) dividedWidth, (int) (dividedHeight * 58) - 50)
                 .size((int) (dividedWidth * 8), 20)
                 .tooltip(Tooltip.create(
-                        Component.translatable("screens.wynntils.poiManagementGui.removeMarkers.tooltip")))
+                        Component.translatable("screens.wynntils.waypointManagementGui.removeMarkers.tooltip")))
                 .build();
 
         removeMarkersButton.active = false;
@@ -231,7 +233,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
         // region select buttons
         deselectAllButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.deselectAll"),
+                        Component.translatable("screens.wynntils.waypointManagementGui.deselectAll"),
                         (button) -> toggleSelectAll(false))
                 .pos((int) dividedWidth, (int) (dividedHeight * 58))
                 .size((int) (dividedWidth * 8), 20)
@@ -242,7 +244,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         this.addRenderableWidget(deselectAllButton);
 
         selectAllButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.selectAll"),
+                        Component.translatable("screens.wynntils.waypointManagementGui.selectAll"),
                         (button) -> toggleSelectAll(true))
                 .pos((int) dividedWidth, (int) (dividedHeight * 58) - 25)
                 .size((int) (dividedWidth * 8), 20)
@@ -252,7 +254,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         // endregion
 
         // region up/down buttons
-        upButton = new Button.Builder(Component.literal("🠝"), (button) -> updateSelectedPoiPositions(-1))
+        upButton = new Button.Builder(Component.literal("🠝"), (button) -> updateSelectedWaypointPositions(-1))
                 .pos((width / 2) - 22, (int) (dividedHeight * 58))
                 .size(20, 20)
                 .build();
@@ -261,7 +263,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
         this.addRenderableWidget(upButton);
 
-        downButton = new Button.Builder(Component.literal("🠟"), (button) -> updateSelectedPoiPositions(1))
+        downButton = new Button.Builder(Component.literal("🠟"), (button) -> updateSelectedWaypointPositions(1))
                 .pos((width / 2) + 2, (int) (dividedHeight * 58))
                 .size(20, 20)
                 .build();
@@ -275,7 +277,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         int filterButtonWidth = (int) (dividedWidth * 10);
 
         filterButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.filter"), (button) -> {
+                        Component.translatable("screens.wynntils.waypointManagementGui.filter"), (button) -> {
                             scrollOffset = 0;
                             McUtils.mc().setScreen(IconFilterScreen.create(this, filteredIcons));
                         })
@@ -294,7 +296,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                 20,
                 (s) -> {
                     scrollOffset = 0;
-                    populatePois();
+                    populateWaypoints();
                 },
                 this,
                 searchInput);
@@ -305,67 +307,67 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         // endregion
 
         // region sort buttons
-        int iconTitleWidth = (McUtils.mc().font.width(I18n.get("screens.wynntils.poiManagementGui.icon"))) + 1;
+        int iconTitleWidth = (McUtils.mc().font.width(I18n.get("screens.wynntils.waypointManagementGui.icon"))) + 1;
 
-        int nameTitleWidth = (McUtils.mc().font.width(I18n.get("screens.wynntils.poiManagementGui.name"))) + 1;
+        int nameTitleWidth = (McUtils.mc().font.width(I18n.get("screens.wynntils.waypointManagementGui.name"))) + 1;
 
         int coordinateTitleWidth = (McUtils.mc().font.width("X")) + 1;
 
-        iconSortButton = this.addRenderableWidget(new PoiSortButton(
+        iconSortButton = this.addRenderableWidget(new WaypointSortButton(
                 (int) (dividedWidth * 13) - (iconTitleWidth / 2),
                 (int) (dividedHeight * HEADER_HEIGHT) - 10,
                 iconTitleWidth,
                 10,
-                Component.translatable("screens.wynntils.poiManagementGui.icon"),
+                Component.translatable("screens.wynntils.waypointManagementGui.icon"),
                 this,
-                PoiSortType.ICON));
+                WaypointSortType.ICON));
 
-        nameSortButton = this.addRenderableWidget(new PoiSortButton(
+        nameSortButton = this.addRenderableWidget(new WaypointSortButton(
                 (int) (dividedWidth * 22) - (nameTitleWidth / 2),
                 (int) (dividedHeight * HEADER_HEIGHT) - 10,
                 nameTitleWidth,
                 10,
-                Component.translatable("screens.wynntils.poiManagementGui.name"),
+                Component.translatable("screens.wynntils.waypointManagementGui.name"),
                 this,
-                PoiSortType.NAME));
+                WaypointSortType.NAME));
 
-        xSortButton = this.addRenderableWidget(new PoiSortButton(
+        xSortButton = this.addRenderableWidget(new WaypointSortButton(
                 (int) (dividedWidth * 32) - (coordinateTitleWidth / 2),
                 (int) (dividedHeight * HEADER_HEIGHT) - 10,
                 coordinateTitleWidth,
                 10,
                 Component.literal("X"),
                 this,
-                PoiSortType.X));
+                WaypointSortType.X));
 
-        ySortButton = this.addRenderableWidget(new PoiSortButton(
+        ySortButton = this.addRenderableWidget(new WaypointSortButton(
                 (int) (dividedWidth * 35) - (coordinateTitleWidth / 2),
                 (int) (dividedHeight * HEADER_HEIGHT) - 10,
                 coordinateTitleWidth,
                 10,
                 Component.literal("Y"),
                 this,
-                PoiSortType.Y));
+                WaypointSortType.Y));
 
-        zSortButton = this.addRenderableWidget(new PoiSortButton(
+        zSortButton = this.addRenderableWidget(new WaypointSortButton(
                 (int) (dividedWidth * 38) - (coordinateTitleWidth / 2),
                 (int) (dividedHeight * HEADER_HEIGHT) - 10,
                 coordinateTitleWidth,
                 10,
                 Component.literal("Z"),
                 this,
-                PoiSortType.Z));
+                WaypointSortType.Z));
         // endregion
 
         if (deletedIndexes.isEmpty()) {
             undoDeleteButton.active = false;
         }
 
-        pois = Managers.Feature.getFeatureInstance(MainMapFeature.class)
+        waypoints = Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
                 .get();
 
-        if (pois.isEmpty()) {
+        if (waypoints.isEmpty()) {
             searchInput.visible = false;
             filterButton.visible = false;
             iconSortButton.visible = false;
@@ -377,7 +379,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         }
 
         updateAllUsedIcons();
-        populatePois();
+        populateWaypoints();
     }
 
     @Override
@@ -394,7 +396,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromComponent(
-                                    Component.translatable("screens.wynntils.poiManagementGui.noPois")),
+                                    Component.translatable("screens.wynntils.waypointManagementGui.noWaypoints")),
                             (int) (dividedWidth * 32),
                             (int) (dividedHeight * 32),
                             CommonColors.WHITE,
@@ -408,7 +410,8 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.search")),
+                        StyledText.fromComponent(
+                                Component.translatable("screens.wynntils.waypointManagementGui.search")),
                         (int) (dividedWidth * 10) + 5,
                         (int) dividedHeight,
                         CommonColors.WHITE,
@@ -416,12 +419,12 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        if (pois.isEmpty()) {
+        if (waypoints.isEmpty()) {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromComponent(
-                                    Component.translatable("screens.wynntils.poiManagementGui.noFilteredPois")),
+                            StyledText.fromComponent(Component.translatable(
+                                    "screens.wynntils.waypointManagementGui.noFilteredWaypoints")),
                             (int) (dividedWidth * 32),
                             (int) (dividedHeight * 32),
                             CommonColors.WHITE,
@@ -458,7 +461,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        if (!draggingScroll && (pois.size() > maxPoisToDisplay)) {
+        if (!draggingScroll && (waypoints.size() > maxWaypointsToDisplay)) {
             if (MathUtils.isInside(
                     (int) mouseX,
                     (int) mouseY,
@@ -487,7 +490,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                 scrollAreaStartY,
                 scrollAreaStartY + scrollAreaHeight,
                 0,
-                Math.max(0, pois.size() - maxPoisToDisplay)));
+                Math.max(0, waypoints.size() - maxWaypointsToDisplay)));
 
         scroll(newValue - scrollOffset);
 
@@ -508,44 +511,44 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         return true;
     }
 
-    public void selectPoi(CustomPoi selectedPoi) {
-        boolean addedPoi = true;
+    public void selectWaypoint(CustomPoi selectedWaypoint) {
+        boolean addedWaypoint = true;
 
-        // Deselect a poi
-        if (selectedPois.contains(selectedPoi)) {
-            selectedPois.remove(selectedPoi);
+        // Deselect a waypoint
+        if (selectedWaypoints.contains(selectedWaypoint)) {
+            selectedWaypoints.remove(selectedWaypoint);
 
-            addedPoi = false;
+            addedWaypoint = false;
         } else {
-            selectedPois.add(selectedPoi);
+            selectedWaypoints.add(selectedWaypoint);
         }
 
-        selectAllButton.active = selectedPois.size() < pois.size();
+        selectAllButton.active = selectedWaypoints.size() < waypoints.size();
 
-        if (addedPoi || selectedPois.isEmpty()) {
-            selectionMode = addedPoi;
+        if (addedWaypoint || selectedWaypoints.isEmpty()) {
+            selectionMode = addedWaypoint;
 
-            deselectAllButton.active = addedPoi;
-            deleteSelectedButton.active = addedPoi;
-            setMarkersButton.active = addedPoi;
-            removeMarkersButton.active = addedPoi;
+            deselectAllButton.active = addedWaypoint;
+            deleteSelectedButton.active = addedWaypoint;
+            setMarkersButton.active = addedWaypoint;
+            removeMarkersButton.active = addedWaypoint;
 
-            upButton.visible = addedPoi;
-            downButton.visible = addedPoi;
+            upButton.visible = addedWaypoint;
+            downButton.visible = addedWaypoint;
 
-            // Export tooltip should display how many of the pois will be exported
-            Component tooltip = addedPoi
+            // Export tooltip should display how many of the waypoints will be exported
+            Component tooltip = addedWaypoint
                     ? Component.translatable(
-                            "screens.wynntils.poiManagementGui.exportSelected.tooltip", selectedPois.size())
-                    : Component.translatable("screens.wynntils.poiManagementGui.exportAll.tooltip");
+                            "screens.wynntils.waypointManagementGui.exportSelected.tooltip", selectedWaypoints.size())
+                    : Component.translatable("screens.wynntils.waypointManagementGui.exportAll.tooltip");
 
             exportButton.setTooltip(Tooltip.create(tooltip));
         }
 
-        populatePois();
+        populateWaypoints();
     }
 
-    public void toggleSortType(PoiSortType sortType, PoiSortButton selectedButton) {
+    public void toggleSortType(WaypointSortType sortType, WaypointSortButton selectedButton) {
         if (activeSortButton != null && activeSortButton != selectedButton) {
             activeSortButton.setSelected(false);
         }
@@ -556,25 +559,26 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
         selectedButton.setSelected(selected);
 
-        populatePois();
+        populateWaypoints();
     }
 
-    public void deletePoi(CustomPoi poiToDelete, boolean save) {
-        HiddenConfig<List<CustomPoi>> customPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-        int deletedPoiIndex = customPois.get().indexOf(poiToDelete);
+    public void deleteWaypoint(CustomPoi waypointToDelete, boolean save) {
+        HiddenConfig<List<CustomPoi>> savedWaypoints =
+                Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
+        int deletedWaypointIndex = savedWaypoints.get().indexOf(waypointToDelete);
 
-        customPois.get().remove(poiToDelete);
+        savedWaypoints.get().remove(waypointToDelete);
         if (save) {
-            customPois.touched();
+            savedWaypoints.touched();
         }
         // Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
 
-        deletedPois.add(poiToDelete);
-        deletedIndexes.add(deletedPoiIndex);
+        deletedWaypoints.add(waypointToDelete);
+        deletedIndexes.add(deletedWaypointIndex);
 
         undoDeleteButton.active = true;
 
-        if (customPois.get().isEmpty()) {
+        if (savedWaypoints.get().isEmpty()) {
             searchInput.visible = false;
             iconSortButton.visible = false;
             nameSortButton.visible = false;
@@ -585,41 +589,44 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
             exportButton.active = false;
         }
 
-        // Handles scrolling when deleting the last poi
-        if (scrollOffset == Math.max(0, pois.size() - maxPoisToDisplay)) {
+        // Handles scrolling when deleting the last waypoint
+        if (scrollOffset == Math.max(0, waypoints.size() - maxWaypointsToDisplay)) {
             scroll(-1);
         }
 
         updateAllUsedIcons();
 
-        populatePois();
+        populateWaypoints();
     }
 
-    public void updatePoiPosition(CustomPoi poiToMove, int direction) {
-        int poiToMoveIndex = pois.indexOf(poiToMove);
+    public void updateWaypointPosition(CustomPoi waypointToMove, int direction) {
+        int waypointToMoveIndex = waypoints.indexOf(waypointToMove);
 
-        // If poi is at the top/bottom of list or if it was selected but then filtered out, don't move it
-        if (poiToMoveIndex == -1 || poiToMoveIndex + direction < 0 || poiToMoveIndex + direction > pois.size() - 1) {
+        // If waypoint is at the top/bottom of list or if it was selected but then filtered out, don't move it
+        if (waypointToMoveIndex == -1
+                || waypointToMoveIndex + direction < 0
+                || waypointToMoveIndex + direction > waypoints.size() - 1) {
             return;
         }
 
-        CustomPoi poiToSwap = pois.get(pois.indexOf(poiToMove) + direction);
+        CustomPoi waypointToSwap = waypoints.get(waypoints.indexOf(waypointToMove) + direction);
 
-        HiddenConfig<List<CustomPoi>> customPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
+        HiddenConfig<List<CustomPoi>> savedWaypoints =
+                Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
 
         Collections.swap(
-                customPois.get(),
-                customPois.get().indexOf(poiToMove),
-                customPois.get().indexOf(poiToSwap));
+                savedWaypoints.get(),
+                savedWaypoints.get().indexOf(waypointToMove),
+                savedWaypoints.get().indexOf(waypointToSwap));
 
-        customPois.touched();
+        savedWaypoints.touched();
         // Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
 
-        populatePois();
+        populateWaypoints();
     }
 
-    public List<CustomPoi> getPois() {
-        return Collections.unmodifiableList(pois);
+    public List<CustomPoi> getWaypoints() {
+        return Collections.unmodifiableList(waypoints);
     }
 
     public void setFilteredIcons(Map<Texture, Boolean> filteredIcons) {
@@ -628,12 +635,12 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
     private void renderScrollButton(PoseStack poseStack) {
         // Don't render the scroll button if it will not be useable
-        if (pois.size() <= maxPoisToDisplay) return;
+        if (waypoints.size() <= maxWaypointsToDisplay) return;
 
         // Calculate where the scroll button should be on the Y axis
         scrollButtonRenderY = (this.height - backgroundHeight) / 2
                 + (int) (dividedHeight * 3)
-                + MathUtils.map(scrollOffset, 0, pois.size() - maxPoisToDisplay, 0, scrollAreaHeight);
+                + MathUtils.map(scrollOffset, 0, waypoints.size() - maxWaypointsToDisplay, 0, scrollAreaHeight);
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
@@ -648,49 +655,49 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     }
 
     private void scroll(int delta) {
-        // Calculate how many pois should be scrolled past
-        scrollOffset = MathUtils.clamp(scrollOffset + delta, 0, Math.max(0, pois.size() - maxPoisToDisplay));
+        // Calculate how many waypoint widgets should be scrolled past
+        scrollOffset = MathUtils.clamp(scrollOffset + delta, 0, Math.max(0, waypoints.size() - maxWaypointsToDisplay));
 
-        populatePois();
+        populateWaypoints();
     }
 
-    private void populatePois() {
+    private void populateWaypoints() {
         // Remove old widgets
-        for (AbstractWidget widget : poiManagerWidgets) {
+        for (AbstractWidget widget : waypointManagerWidgets) {
             this.removeWidget(widget);
         }
 
-        this.poiManagerWidgets.clear();
+        this.waypointManagerWidgets.clear();
         //
-        //        // Get full list of pois
+        //        // Get full list of waypoints
         //        pois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream()
         //                .filter(poi -> searchMatches(poi.getName()))
         //                .collect(Collectors.toList());
 
-        // No pois
-        if (pois.isEmpty()) {
+        // No waypoints
+        if (waypoints.isEmpty()) {
             return;
         }
 
-        //        // Filter pois based on filtered icons
+        //        // Filter waypoints based on filtered icons
         //        pois = pois.stream()
         //                .filter(poi -> filteredIcons.getOrDefault(poi.getIcon(), true))
         //                .collect(Collectors.toList());
 
-        // Hide buttons if no filtered pois
-        iconSortButton.visible = !pois.isEmpty();
-        nameSortButton.visible = !pois.isEmpty();
-        xSortButton.visible = !pois.isEmpty();
-        ySortButton.visible = !pois.isEmpty();
-        zSortButton.visible = !pois.isEmpty();
-        exportButton.active = !pois.isEmpty();
-        selectAllButton.active = !pois.isEmpty();
-        deselectAllButton.active = !selectedPois.isEmpty();
-        setMarkersButton.active = !selectedPois.isEmpty();
-        removeMarkersButton.active = !selectedPois.isEmpty();
+        // Hide buttons if no filtered waypoints
+        iconSortButton.visible = !waypoints.isEmpty();
+        nameSortButton.visible = !waypoints.isEmpty();
+        xSortButton.visible = !waypoints.isEmpty();
+        ySortButton.visible = !waypoints.isEmpty();
+        zSortButton.visible = !waypoints.isEmpty();
+        exportButton.active = !waypoints.isEmpty();
+        selectAllButton.active = !waypoints.isEmpty();
+        deselectAllButton.active = !selectedWaypoints.isEmpty();
+        setMarkersButton.active = !selectedWaypoints.isEmpty();
+        removeMarkersButton.active = !selectedWaypoints.isEmpty();
 
-        // Only hide search bar & filter button if no pois at all
-        // Can't check if filtered pois is empty as they may be empty due to the filters
+        // Only hide search bar & filter button if no waypoints at all
+        // Can't check if filtered waypoints is empty as they may be empty due to the filters
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
                 .get()
@@ -699,55 +706,56 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
             filterButton.visible = false;
         }
 
-        // No filtered pois
-        if (pois.isEmpty()) {
+        // No filtered waypoints
+        if (waypoints.isEmpty()) {
             return;
         }
 
-        // Sort pois
+        // Sort waypoints
         if (sortOrder != null) {
-            sortPois();
+            sortWaypoints();
         }
 
-        // Starting Y position for the pois
+        // Starting Y position for the waypoints
         int row = (int) ((int) (dividedHeight * HEADER_HEIGHT) + (dividedHeight / 2f));
 
-        int currentPoi;
+        int currentWaypoint;
 
         // Render manager widgets
-        for (int i = 0; i < maxPoisToDisplay; i++) {
-            // Get the poi to render
-            currentPoi = i + scrollOffset;
+        for (int i = 0; i < maxWaypointsToDisplay; i++) {
+            // Get the waypoint to render
+            currentWaypoint = i + scrollOffset;
 
-            // If user has less pois than maxPoisToDisplay, make sure we don't try and get a poi out of range
-            if (currentPoi > pois.size() - 1) {
+            // If user has less waypoints than maxWaypointsToDisplay, make sure we don't try and get a waypoint out of
+            // range
+            if (currentWaypoint > waypoints.size() - 1) {
                 break;
             }
 
-            CustomPoi poi = pois.get(currentPoi);
+            CustomPoi waypoint = waypoints.get(currentWaypoint);
 
-            PoiManagerWidget poiWidget = new PoiManagerWidget(
+            WaypointManagerWidget waypointWidget = new WaypointManagerWidget(
                     (int) (dividedWidth * 12),
                     row,
                     (int) (dividedWidth * 38),
                     20,
-                    poi,
+                    waypoint,
                     this,
                     dividedWidth,
                     selectionMode,
-                    selectedPois.contains(poi));
+                    selectedWaypoints.contains(waypoint));
 
             // Each widget height is 20, add 20 for Y position of next widget
             row += 20;
 
-            poiManagerWidgets.add(poiWidget);
+            waypointManagerWidgets.add(waypointWidget);
 
-            this.addRenderableWidget(poiWidget);
+            this.addRenderableWidget(waypointWidget);
         }
     }
 
-    private void sortPois() {
-        // Sort pois, ignore case and for null Y's, treat them as 0
+    private void sortWaypoints() {
+        // Sort waypoints, ignore case and for null Y's, treat them as 0
         //        switch (sortOrder) {
         //            case ICON_ASC -> pois.sort(Comparator.comparing(CustomPoi::getIcon));
         //            case ICON_DESC -> pois.sort(Comparator.comparing(CustomPoi::getIcon).reversed());
@@ -795,60 +803,60 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         Component tooltip;
 
         if (select) {
-            selectedPois = pois;
+            selectedWaypoints = waypoints;
 
             tooltip = Component.translatable(
-                    "screens.wynntils.poiManagementGui.exportSelected.tooltip", selectedPois.size());
+                    "screens.wynntils.waypointManagementGui.exportSelected.tooltip", selectedWaypoints.size());
         } else {
-            selectedPois.clear();
+            selectedWaypoints.clear();
 
-            tooltip = Component.translatable("screens.wynntils.poiManagementGui.exportAll.tooltip");
+            tooltip = Component.translatable("screens.wynntils.waypointManagementGui.exportAll.tooltip");
         }
 
         exportButton.setTooltip(Tooltip.create(tooltip));
 
-        populatePois();
+        populateWaypoints();
     }
 
-    private boolean toggleSortOrder(PoiSortType sortType) {
-        PoiSortOrder newOrder = null;
+    private boolean toggleSortOrder(WaypointSortType sortType) {
+        WaypointSortOrder newOrder = null;
         boolean selected = true;
 
-        // Update the sort order of pois, first click is ascending, second descending and third will reset
+        // Update the sort order of waypoints, first click is ascending, second descending and third will reset
         switch (sortType) {
             case ICON -> {
                 if (sortOrder == null) {
-                    newOrder = PoiSortOrder.ICON_ASC;
-                } else if (sortOrder == PoiSortOrder.ICON_ASC) {
-                    newOrder = PoiSortOrder.ICON_DESC;
+                    newOrder = WaypointSortOrder.ICON_ASC;
+                } else if (sortOrder == WaypointSortOrder.ICON_ASC) {
+                    newOrder = WaypointSortOrder.ICON_DESC;
                 }
             }
             case NAME -> {
                 if (sortOrder == null) {
-                    newOrder = PoiSortOrder.NAME_ASC;
-                } else if (sortOrder == PoiSortOrder.NAME_ASC) {
-                    newOrder = PoiSortOrder.NAME_DESC;
+                    newOrder = WaypointSortOrder.NAME_ASC;
+                } else if (sortOrder == WaypointSortOrder.NAME_ASC) {
+                    newOrder = WaypointSortOrder.NAME_DESC;
                 }
             }
             case X -> {
                 if (sortOrder == null) {
-                    newOrder = PoiSortOrder.X_ASC;
-                } else if (sortOrder == PoiSortOrder.X_ASC) {
-                    newOrder = PoiSortOrder.X_DESC;
+                    newOrder = WaypointSortOrder.X_ASC;
+                } else if (sortOrder == WaypointSortOrder.X_ASC) {
+                    newOrder = WaypointSortOrder.X_DESC;
                 }
             }
             case Y -> {
                 if (sortOrder == null) {
-                    newOrder = PoiSortOrder.Y_ASC;
-                } else if (sortOrder == PoiSortOrder.Y_ASC) {
-                    newOrder = PoiSortOrder.Y_DESC;
+                    newOrder = WaypointSortOrder.Y_ASC;
+                } else if (sortOrder == WaypointSortOrder.Y_ASC) {
+                    newOrder = WaypointSortOrder.Y_DESC;
                 }
             }
             case Z -> {
                 if (sortOrder == null) {
-                    newOrder = PoiSortOrder.Z_ASC;
-                } else if (sortOrder == PoiSortOrder.Z_ASC) {
-                    newOrder = PoiSortOrder.Z_DESC;
+                    newOrder = WaypointSortOrder.Z_ASC;
+                } else if (sortOrder == WaypointSortOrder.Z_ASC) {
+                    newOrder = WaypointSortOrder.Z_DESC;
                 }
             }
             default -> {
@@ -863,7 +871,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     }
 
     private void updateAllUsedIcons() {
-        // Get all icons from all pois, default their "active" boolean to true.
+        // Get all icons from all waypoints, default their "active" boolean to true.
         //        filteredIcons = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream()
         //                .map(CustomPoi::getIcon)
         //                .distinct()
@@ -877,39 +885,41 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         filterButton.visible = filteredIcons.size() > 1;
     }
 
-    private boolean searchMatches(String poiName) {
-        return StringUtils.partialMatch(poiName, searchInput.getTextBoxInput());
+    private boolean searchMatches(String waypointName) {
+        return StringUtils.partialMatch(waypointName, searchInput.getTextBoxInput());
     }
 
-    private void updateSelectedPoiPositions(int direction) {
-        // Get selected pois in the same order they are in pois
-        List<CustomPoi> orderedPois =
-                pois.stream().filter(poi -> selectedPois.contains(poi)).collect(Collectors.toList());
+    private void updateSelectedWaypointPositions(int direction) {
+        // Get selected waypoints in the same order they are in waypoints
+        List<CustomPoi> orderedWaypoints = waypoints.stream()
+                .filter(waypoint -> selectedWaypoints.contains(waypoint))
+                .collect(Collectors.toList());
 
-        // If we are shifting pois down the list needs to be reversed
+        // If we are shifting waypoints down the list needs to be reversed
         if (direction == 1) {
-            Collections.reverse(orderedPois);
+            Collections.reverse(orderedWaypoints);
         }
 
-        for (CustomPoi selectedPoi : orderedPois) {
-            updatePoiPosition(selectedPoi, direction);
+        for (CustomPoi selectedWaypoint : orderedWaypoints) {
+            updateWaypointPosition(selectedWaypoint, direction);
         }
     }
 
-    private void deleteSelectedPois() {
-        HiddenConfig<List<CustomPoi>> customPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
+    private void deleteSelectedWaypoints() {
+        HiddenConfig<List<CustomPoi>> savedWaypoints =
+                Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
 
-        for (CustomPoi poi : selectedPois) {
-            deletePoi(poi, false);
+        for (CustomPoi waypoint : selectedWaypoints) {
+            deleteWaypoint(waypoint, false);
         }
 
-        customPois.touched();
+        savedWaypoints.touched();
 
-        McUtils.sendMessageToClient(
-                Component.translatable("screens.wynntils.poiManagementGui.deletedPois", selectedPois.size())
-                        .withStyle(ChatFormatting.GREEN));
+        McUtils.sendMessageToClient(Component.translatable(
+                        "screens.wynntils.waypointManagementGui.deletedWaypoints", selectedWaypoints.size())
+                .withStyle(ChatFormatting.GREEN));
 
-        if (customPois.get().isEmpty()) {
+        if (savedWaypoints.get().isEmpty()) {
             selectAllButton.active = false;
             filterButton.visible = false;
             iconSortButton.visible = false;
@@ -919,104 +929,105 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
             zSortButton.visible = false;
         }
 
-        // Scroll up 1 poi
-        if (scrollOffset == Math.max(0, pois.size() - maxPoisToDisplay)) {
+        // Scroll up 1 waypoint widget
+        if (scrollOffset == Math.max(0, waypoints.size() - maxWaypointsToDisplay)) {
             scroll(-1);
         }
 
-        // If any pois were selected, deselect them all as they were deleted
+        // If any waypoint widgets were selected, deselect them all as they were deleted
         toggleSelectAll(false);
     }
 
     private void importFromClipboard() {
         String clipboard = McUtils.mc().keyboardHandler.getClipboard();
 
-        CustomPoi[] customPois;
+        CustomPoi[] newWaypoints;
         try {
-            customPois = Managers.Json.GSON.fromJson(clipboard, CustomPoi[].class);
+            newWaypoints = Managers.Json.GSON.fromJson(clipboard, CustomPoi[].class);
         } catch (JsonSyntaxException e) {
-            McUtils.sendErrorToClient(I18n.get("screens.wynntils.poiManagementGui.import.error"));
+            McUtils.sendErrorToClient(I18n.get("screens.wynntils.waypointManagementGui.import.error"));
             return;
         }
 
-        if (customPois == null) {
-            McUtils.sendErrorToClient(I18n.get("screens.wynntils.poiManagementGui.import.error"));
+        if (newWaypoints == null) {
+            McUtils.sendErrorToClient(I18n.get("screens.wynntils.waypointManagementGui.import.error"));
             return;
         }
 
-        HiddenConfig<List<CustomPoi>> customPoiConfig =
+        HiddenConfig<List<CustomPoi>> waypointsConfig =
                 Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-        List<CustomPoi> existingPois = new ArrayList<>(customPoiConfig.get());
+        List<CustomPoi> existingWaypoints = new ArrayList<>(waypointsConfig.get());
 
-        // Only add pois that don't already exist
-        List<CustomPoi> poisToAdd = Stream.of(customPois)
-                .filter(newPoi -> !existingPois.contains(newPoi))
+        // Only add waypoints that don't already exist
+        List<CustomPoi> waypointsToAdd = Stream.of(newWaypoints)
+                .filter(newWaypoint -> !existingWaypoints.contains(newWaypoint))
                 .toList();
 
-        existingPois.addAll(poisToAdd);
-        customPoiConfig.setValue(existingPois);
-        customPoiConfig.touched();
+        existingWaypoints.addAll(waypointsToAdd);
+        waypointsConfig.setValue(existingWaypoints);
+        waypointsConfig.touched();
         // Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
 
-        // Enable search and filter after importing new pois
-        if (!customPoiConfig.get().isEmpty()) {
+        // Enable search and filter after importing new waypoints
+        if (!waypointsConfig.get().isEmpty()) {
             searchInput.visible = true;
             filterButton.visible = true;
         }
 
         updateAllUsedIcons();
 
-        populatePois();
+        populateWaypoints();
 
         McUtils.sendMessageToClient(
-                Component.translatable("screens.wynntils.poiManagementGui.import.success", poisToAdd.size())
+                Component.translatable("screens.wynntils.waypointManagementGui.import.success", waypointsToAdd.size())
                         .withStyle(ChatFormatting.GREEN));
     }
 
     private void exportToClipboard() {
-        List<CustomPoi> poisToExport = selectedPois.isEmpty()
+        List<CustomPoi> waypointsToExport = selectedWaypoints.isEmpty()
                 ? Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .customPois
                         .get()
-                : selectedPois;
+                : selectedWaypoints;
 
         McUtils.mc()
                 .keyboardHandler
-                .setClipboard(poisToExport.stream()
+                .setClipboard(waypointsToExport.stream()
                         .map(Managers.Json.GSON::toJson)
                         .toList()
                         .toString());
 
-        McUtils.sendMessageToClient(
-                Component.translatable("screens.wynntils.poiManagementGui.exportedPois", poisToExport.size())
-                        .withStyle(ChatFormatting.GREEN));
+        McUtils.sendMessageToClient(Component.translatable(
+                        "screens.wynntils.waypointManagementGui.exportedWaypoints", waypointsToExport.size())
+                .withStyle(ChatFormatting.GREEN));
     }
 
     private void undoDelete() {
-        HiddenConfig<List<CustomPoi>> allPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
+        HiddenConfig<List<CustomPoi>> allWaypoints =
+                Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
 
-        // Potentially a poi that was deleted had been imported so don't want a duplicate
-        if (!allPois.get().contains(deletedPois.getLast())) {
-            allPois.get().add(deletedIndexes.getLast(), deletedPois.getLast());
+        // Potentially a waypoint that was deleted had been imported so don't want a duplicate
+        if (!allWaypoints.get().contains(deletedWaypoints.getLast())) {
+            allWaypoints.get().add(deletedIndexes.getLast(), deletedWaypoints.getLast());
 
-            allPois.touched();
+            allWaypoints.touched();
             // Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
 
-            // Scroll up 1 poi if not already at the top of the list
+            // Scroll up 1 waypoint widget if not already at the top of the list
             scrollOffset = Math.max(scrollOffset - 1, 0);
 
             updateAllUsedIcons();
 
-            populatePois();
+            populateWaypoints();
         }
 
         deletedIndexes.removeLast();
-        deletedPois.removeLast();
+        deletedWaypoints.removeLast();
 
         undoDeleteButton.active = !deletedIndexes.isEmpty();
     }
 
-    public enum PoiSortType {
+    public enum WaypointSortType {
         ICON,
         NAME,
         X,
@@ -1024,7 +1035,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         Z
     }
 
-    private enum PoiSortOrder {
+    private enum WaypointSortOrder {
         ICON_ASC,
         ICON_DESC,
         NAME_ASC,

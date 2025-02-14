@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -31,7 +31,7 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
     private final Map<Texture, Boolean> icons;
 
     // Previous screen
-    private final PoiManagementScreen previousScreen;
+    private final WaypointManagementScreen previousScreen;
 
     // Widgets
     private Button includeAllButton;
@@ -53,14 +53,14 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
     // Icon display
     private List<Texture> usedIcons;
 
-    private IconFilterScreen(PoiManagementScreen previousScreen, Map<Texture, Boolean> icons) {
+    private IconFilterScreen(WaypointManagementScreen previousScreen, Map<Texture, Boolean> icons) {
         super(Component.literal("Icon Filter Screen"));
 
         this.previousScreen = previousScreen;
         this.icons = icons;
     }
 
-    public static Screen create(PoiManagementScreen previousScreen, Map<Texture, Boolean> icons) {
+    public static Screen create(WaypointManagementScreen previousScreen, Map<Texture, Boolean> icons) {
         return new IconFilterScreen(previousScreen, icons);
     }
 
