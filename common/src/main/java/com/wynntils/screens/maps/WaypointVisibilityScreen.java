@@ -203,7 +203,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
-        renderGradientBackground(guiGraphics, mouseX, mouseY, partialTick);
+        renderBlurredBackground();
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
