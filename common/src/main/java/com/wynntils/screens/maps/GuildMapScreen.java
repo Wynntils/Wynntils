@@ -797,7 +797,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         @Override
         public Stream<String> getOverridenCategoryIds() {
-            return Stream.of("wynntils:territory");
+            return Stream.of("wynntils:territory:headquarters");
         }
     }
 

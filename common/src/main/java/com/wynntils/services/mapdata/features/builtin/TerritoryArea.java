@@ -65,7 +65,9 @@ public class TerritoryArea implements MapArea {
 
     @Override
     public String getCategoryId() {
-        return "wynntils:territory";
+        return territoryInfo != null && territoryInfo.isHeadquarters()
+                ? "wynntils:territory:headquarters"
+                : "wynntils:territory";
     }
 
     @Override

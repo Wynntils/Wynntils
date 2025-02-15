@@ -171,15 +171,22 @@ public class MapDataService extends Service {
         overrideProviders.putFirst(overrideProviderId, provider);
         provider.onChange(this::onProviderChange);
 
-        // Invalidate caches
-        invalidateAllCaches();
+        // Invalidate caches for the features that this provider overrides
+        this.getFeatures()
+                .filter(feature -> provider.getOverridenCategoryIds().anyMatch(feature.getCategoryId()::equals)
+                        || provider.getOverridenFeatureIds().anyMatch(feature.getFeatureId()::equals))
+                .forEach(this::onProviderChange);
     }
 
     public void unregisterOverrideProvider(String overrideProviderId) {
-        overrideProviders.remove(overrideProviderId);
+        MapDataOverrideProvider provider = overrideProviders.remove(overrideProviderId);
+        if (provider == null) return;
 
-        // Invalidate caches
-        invalidateAllCaches();
+        // Invalidate caches for the features that this provider overrides
+        this.getFeatures()
+                .filter(feature -> provider.getOverridenCategoryIds().anyMatch(feature.getCategoryId()::equals)
+                        || provider.getOverridenFeatureIds().anyMatch(feature.getFeatureId()::equals))
+                .forEach(this::onProviderChange);
     }
 
     /**
