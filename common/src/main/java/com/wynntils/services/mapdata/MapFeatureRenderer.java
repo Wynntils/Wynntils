@@ -224,7 +224,7 @@ public final class MapFeatureRenderer {
                 bufferSource,
                 attributes.fillColor(),
                 attributes.borderColor(),
-                attributes.borderWidth(),
+                attributes.borderWidth() + (hovered ? 1 : 0),
                 screenVertices,
                 0);
 

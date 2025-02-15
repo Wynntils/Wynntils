@@ -10,6 +10,7 @@ import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
+import com.wynntils.services.mapdata.attributes.MapMarkerOptionsBuilder;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
@@ -80,6 +81,12 @@ public class UserMarkerService extends Service {
                 });
     }
 
+    public boolean isMarkerAtLocation(Location location) {
+        return userMarkerMapLocations.stream()
+                .filter(feature -> feature instanceof UserMarker)
+                .anyMatch(feature -> feature.getLocation().equals(location));
+    }
+
     public void addUserMarkedFeature(MapLocation mapFeature) {
         userOverridenMapLocations.add(mapFeature);
         userMarkedOverrideProvider.notifyCallbacks(mapFeature);
@@ -124,6 +131,8 @@ public class UserMarkerService extends Service {
                     .setIcon(MapIconsProvider.getIconIdFromTexture(Texture.WAYPOINT))
                     .setLabel(name)
                     .setLabelColor(CommonColors.WHITE)
+                    .setMarkerOptions(
+                            new MapMarkerOptionsBuilder().withHasLabel(true).build())
                     .asLocationAttributes()
                     .build();
         }
