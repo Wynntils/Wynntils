@@ -246,7 +246,7 @@ public final class MapFeatureRenderer {
                         StyledText.fromString(attributes.label()),
                         centroid.x(),
                         centroid.y(),
-                        boundingPolygon.maxWidth(),
+                        0, // max width does not need to be set, as the text is scaled to fit the polygon
                         attributes.labelColor(),
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
