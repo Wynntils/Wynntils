@@ -199,6 +199,16 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         Services.MapData.registerOverrideProvider(
                                 TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER_ID,
                                 TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER);
+
+                        if (resourceMode) {
+                            // If resource mode is enabled, we need to re-register the resource generation provider
+                            // so it takes priority over the advancement mode provider
+                            Services.MapData.unregisterOverrideProvider(
+                                    TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER_ID);
+                            Services.MapData.registerOverrideProvider(
+                                    TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER_ID,
+                                    TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER);
+                        }
                     } else {
                         Services.MapData.unregisterOverrideProvider(TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER_ID);
                     }
