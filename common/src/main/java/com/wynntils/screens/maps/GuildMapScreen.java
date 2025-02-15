@@ -409,8 +409,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
                     Services.UserMarker.removeAllUserMarkedFeatures();
                 }
 
-                Location location =
-                        Location.containing(territoryArea.getBoundingPolygon().centroid());
+                double gameX = (mouseX - centerX) / zoomRenderScale + mapCenterX;
+                double gameZ = (mouseY - centerZ) / zoomRenderScale + mapCenterZ;
+                Location location = Location.containing(gameX, 0, gameZ);
+
                 Services.UserMarker.addMarkerAtLocation(
                         location, territoryArea.getTerritoryProfile().getName());
                 return true;
