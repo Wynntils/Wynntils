@@ -364,7 +364,15 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
 
                 ResolvedMapAttributes attributes = Services.MapData.resolveMapAttributes(mapArea);
-                Services.UserMarker.addMarkerAtLocation(centroid, attributes.label());
+
+                String label = attributes.label();
+
+                // Special case for territories, use the territory name
+                if (mapArea instanceof TerritoryArea territoryArea) {
+                    label = territoryArea.getTerritoryProfile().getName();
+                }
+
+                Services.UserMarker.addMarkerAtLocation(centroid, label);
 
                 return true;
             }

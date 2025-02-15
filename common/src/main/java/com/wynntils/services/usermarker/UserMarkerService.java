@@ -125,7 +125,7 @@ public class UserMarkerService extends Service {
         private final MapLocationAttributesImpl userMarkerAttributes;
 
         private UserMarker(Location location, String name) {
-            super("user-marker-" + location.hashCode(), "wynntils:personal:waypoint:user-marker", null, location);
+            super("user-marker-" + location.hashCode(), "wynntils:personal:user-marker", null, location);
             this.name = name;
             this.userMarkerAttributes = MARKED_MAP_FEATURE_ATTRIBUTES
                     .setIcon(MapIconsProvider.getIconIdFromTexture(Texture.WAYPOINT))

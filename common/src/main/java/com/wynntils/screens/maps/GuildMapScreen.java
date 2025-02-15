@@ -29,6 +29,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -46,6 +47,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
@@ -329,13 +331,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     @Override
     protected Stream<MapFeature> getRenderedMapFeatures() {
-        // FIXME: Add user markers
-        return Services.MapData.getFeaturesForCategory("wynntils:territory")
-                .filter(f -> f instanceof TerritoryArea)
-                .map(f -> (TerritoryArea) f)
-                .filter(this::filterDefense)
-                .filter(this::filterTreasury)
-                .map(f -> f);
+        return Stream.concat(
+                Services.MapData.getFeaturesForCategory("wynntils:territory")
+                        .filter(f -> f instanceof TerritoryArea)
+                        .map(f -> (TerritoryArea) f)
+                        .filter(this::filterDefense)
+                        .filter(this::filterTreasury),
+                Services.MapData.getFeaturesForCategory("wynntils:personal:user-marker"));
     }
 
     @Override
@@ -349,19 +351,32 @@ public final class GuildMapScreen extends AbstractMapScreen {
         }
 
         // Manage on shift right click
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
-                && KeyboardUtils.isShiftDown()
-                && hoveredFeature instanceof TerritoryArea territoryArea) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && hoveredFeature instanceof TerritoryArea territoryArea) {
             Handlers.Command.queueCommand(
                     "gu territory " + territoryArea.getTerritoryProfile().getName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hoveredFeature instanceof MapLocation mapLocation
-                    && Services.UserMarker.isFeatureMarked(hoveredFeature)) {
+                    && Services.UserMarker.isMarkerAtLocation(mapLocation.getLocation())) {
                 Services.UserMarker.removeMarkerAtLocation(mapLocation.getLocation());
                 return true;
             }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            setCompassToMouseCoords(mouseX, mouseY, !KeyboardUtils.isShiftDown());
+            if (hoveredFeature instanceof TerritoryArea territoryArea) {
+                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
+
+                // If shift is not held down, clear all waypoints to only have the new one
+                if (!KeyboardUtils.isShiftDown()) {
+                    Services.UserMarker.removeAllUserMarkedFeatures();
+                }
+
+                Location location =
+                        Location.containing(territoryArea.getBoundingPolygon().centroid());
+                Services.UserMarker.addMarkerAtLocation(
+                        location, territoryArea.getTerritoryProfile().getName());
+                return true;
+            } else {
+                setCompassToMouseCoords(mouseX, mouseY, !KeyboardUtils.isShiftDown());
+            }
             return true;
         }
 

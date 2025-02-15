@@ -79,6 +79,11 @@ public class TerritoryArea implements MapArea {
             }
 
             @Override
+            public Optional<String> getSecondaryLabel() {
+                return Optional.of(territoryProfile.getName());
+            }
+
+            @Override
             public Optional<CustomColor> getLabelColor() {
                 return Optional.of(guildColor);
             }

@@ -12,6 +12,7 @@ public record ResolvedMapAttributes(
         int priority,
         int level,
         String label,
+        String secondaryLabel,
         ResolvedMapVisibility labelVisibility,
         CustomColor labelColor,
         TextShadow labelShadow,
