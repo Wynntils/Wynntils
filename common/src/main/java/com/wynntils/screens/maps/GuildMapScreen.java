@@ -13,6 +13,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.GuildMapFeature;
+import com.wynntils.models.territories.TerritoryAttackTimer;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
@@ -37,7 +38,9 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.BoundingPolygon;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -295,6 +298,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderHeadquarterIcons(poseStack);
 
+        renderAttackTimers(poseStack);
+
         renderCursor(
                 poseStack,
                 1.5f,
@@ -377,6 +382,65 @@ public final class GuildMapScreen extends AbstractMapScreen {
                     Texture.GUILD_HEADQUARTERS,
                     worldX - Texture.GUILD_HEADQUARTERS.width() / 2,
                     worldZ - Texture.GUILD_HEADQUARTERS.height() / 2);
+        }
+    }
+
+    private void renderAttackTimers(PoseStack poseStack) {
+        List<Pair<TerritoryArea, Optional<TerritoryAttackTimer>>> attackedTerritories = getRenderedMapFeatures()
+                .filter(f -> f instanceof TerritoryArea)
+                .map(f -> (TerritoryArea) f)
+                .map(territoryArea -> Pair.of(
+                        territoryArea,
+                        Models.GuildAttackTimer.getAttackTimerForTerritory(
+                                territoryArea.getTerritoryProfile().getName())))
+                .filter(pair -> pair.b().isPresent())
+                .toList();
+
+        for (Pair<TerritoryArea, Optional<TerritoryAttackTimer>> pair : attackedTerritories) {
+            TerritoryArea territoryArea = pair.a();
+            BoundingPolygon boundingPolygon = territoryArea.getBoundingPolygon();
+
+            if (boundingPolygon.axes().size() != 4) {
+                WynntilsMod.warn(
+                        "TerritoryArea %s has a non-quadrilateral bounding polygon. Skipping attack timer rendering."
+                                .formatted(territoryArea.getTerritoryProfile().getName()));
+                continue;
+            }
+
+            float inWorldX = MapRenderer.getRenderX(
+                    (int) boundingPolygon.vertices().get(1).x(), mapCenterX, centerX, zoomRenderScale);
+            float inWorldY = MapRenderer.getRenderZ(
+                    (int) boundingPolygon.vertices().get(1).y(), mapCenterZ, centerZ, zoomRenderScale);
+            float inWorldX2 = MapRenderer.getRenderX(
+                    (int) boundingPolygon.vertices().get(3).x(), mapCenterX, centerX, zoomRenderScale);
+            float inWorldY2 = MapRenderer.getRenderZ(
+                    (int) boundingPolygon.vertices().get(3).y(), mapCenterZ, centerZ, zoomRenderScale);
+
+            // Order the coordinates so that the first coordinate is the top left corner
+            if (inWorldX > inWorldX2) {
+                float temp = inWorldX;
+                inWorldX = inWorldX2;
+                inWorldX2 = temp;
+            }
+            if (inWorldY > inWorldY2) {
+                float temp = inWorldY;
+                inWorldY = inWorldY2;
+                inWorldY2 = temp;
+            }
+
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(pair.b().get().timerString()),
+                            inWorldX,
+                            inWorldX2,
+                            inWorldY,
+                            inWorldY2,
+                            0,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.OUTLINE);
         }
     }
 
