@@ -250,9 +250,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void onClose() {
+    public void removed() {
         Services.MapData.unregisterOverrideProvider(TERRITORY_AREA_HQ_LABEL_REMOVER_OVERRIDE_PROVIDER_ID);
-        super.onClose();
+        Services.MapData.unregisterOverrideProvider(TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER_ID);
+        Services.MapData.unregisterOverrideProvider(TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER_ID);
     }
 
     @Override
