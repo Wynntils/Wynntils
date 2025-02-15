@@ -298,7 +298,7 @@ public enum Texture {
     QUICK_JUMP_BUTTON("ui_components/quick_jump_button.png", 16, 32),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),
-    WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 400, 256),
+    WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 358, 206),
     SCROLLBAR_BACKGROUND("ui_components/generic_container_scrollbar.png", 25, 136),
     SCROLLBAR_BUTTON("ui_components/scroll_button_container.png", 12, 15),
     VIGNETTE("ui_components/vignette.png", 512, 512);

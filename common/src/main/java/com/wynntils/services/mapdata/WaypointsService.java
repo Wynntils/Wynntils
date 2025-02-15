@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.mapdata;
 
+import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
@@ -23,12 +24,17 @@ import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.services.mapdata.impl.MapIconImpl;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 
 public class WaypointsService extends Service {
     @Persisted
@@ -83,10 +89,61 @@ public class WaypointsService extends Service {
         Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
     }
 
-    public void removeWaypoint(WaypointLocation waypoint) {
-        waypoints.get().remove(waypoint);
+    public void addWaypointAtIndex(WaypointLocation waypoint, int index) {
+        waypoints.get().add(index, waypoint);
         waypoints.touched();
         Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
+    }
+
+    public void reorderWaypoints(WaypointLocation waypointA, WaypointLocation waypointB) {
+        Collections.swap(
+                waypoints.get(),
+                waypoints.get().indexOf(waypointA),
+                waypoints.get().indexOf(waypointB));
+
+        waypoints.touched();
+    }
+
+    public void removeWaypoint(WaypointLocation waypoint, boolean save) {
+        waypoints.get().remove(waypoint);
+        if (save) {
+            waypoints.touched();
+        }
+        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
+    }
+
+    public boolean importWaypoints() {
+        String clipboard = McUtils.mc().keyboardHandler.getClipboard();
+
+        WaypointLocation[] newWaypoints;
+        try {
+            newWaypoints = Managers.Json.GSON.fromJson(clipboard, WaypointLocation[].class);
+        } catch (JsonSyntaxException e) {
+            McUtils.sendErrorToClient(I18n.get("service.wynntils.waypoint.importError"));
+            return false;
+        }
+
+        if (newWaypoints == null) {
+            McUtils.sendErrorToClient(I18n.get("service.wynntils.waypoint.importError"));
+            return false;
+        }
+
+        // Only add waypoints that don't already exist
+        List<WaypointLocation> waypointsToAdd = Stream.of(newWaypoints)
+                .filter(newWaypoint -> waypoints.get().stream()
+                        .noneMatch(existingWaypoint ->
+                                existingWaypoint.getFeatureId().equals(newWaypoint.getFeatureId())))
+                .toList();
+
+        waypoints.get().addAll(waypointsToAdd);
+        waypoints.touched();
+        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
+
+        McUtils.sendMessageToClient(
+                Component.translatable("service.wynntils.waypoint.importSuccess", waypointsToAdd.size())
+                        .withStyle(ChatFormatting.GREEN));
+
+        return true;
     }
 
     // region Poi Migration
