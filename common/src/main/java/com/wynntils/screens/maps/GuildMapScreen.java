@@ -52,6 +52,11 @@ import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 public final class GuildMapScreen extends AbstractMapScreen {
+    private static final String TERRITORY_AREA_HQ_LABEL_REMOVER_OVERRIDE_PROVIDER_ID =
+            "override:territory_area_hq_label_remover";
+    private static final TerritoryAreaHqLabelRemoverOverrideProvider TERRITORY_AREA_HQ_LABEL_REMOVER_OVERRIDE_PROVIDER =
+            new TerritoryAreaHqLabelRemoverOverrideProvider();
+
     private static final String TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER_ID = "override:territory_advancement_mode";
     private static final TerritoryAreaAdvancementModeOverrideProvider TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER =
             new TerritoryAreaAdvancementModeOverrideProvider();
@@ -236,8 +241,18 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 centerMapOnWorld();
             }
 
+            Services.MapData.registerOverrideProvider(
+                    TERRITORY_AREA_HQ_LABEL_REMOVER_OVERRIDE_PROVIDER_ID,
+                    TERRITORY_AREA_HQ_LABEL_REMOVER_OVERRIDE_PROVIDER);
+
             firstInit = false;
         }
+    }
+
+    @Override
+    public void onClose() {
+        Services.MapData.unregisterOverrideProvider(TERRITORY_AREA_HQ_LABEL_REMOVER_OVERRIDE_PROVIDER_ID);
+        super.onClose();
     }
 
     @Override
@@ -266,6 +281,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
         renderTerritoryAreaPaths(poseStack);
 
         renderMapFeatures(poseStack, mouseX, mouseY);
+
+        renderHeadquarterIcons(poseStack);
 
         renderCursor(
                 poseStack,
@@ -326,6 +343,29 @@ public final class GuildMapScreen extends AbstractMapScreen {
                             poseStack, CommonColors.BLACK, firstWorldX, firstWorldZ, secondWorldX, secondWorldZ, 0, 1);
                 }
             }
+        }
+    }
+
+    private void renderHeadquarterIcons(PoseStack poseStack) {
+        List<TerritoryArea> hqTerritoryAreas = getRenderedMapFeatures()
+                .filter(f -> f instanceof TerritoryArea)
+                .map(f -> (TerritoryArea) f)
+                .filter(territoryArea -> territoryArea
+                        .getTerritoryInfo()
+                        .map(TerritoryInfo::isHeadquarters)
+                        .orElse(false))
+                .toList();
+
+        for (TerritoryArea hqTerritoryArea : hqTerritoryAreas) {
+            Vector2f centroid = hqTerritoryArea.getBoundingPolygon().centroid();
+            float worldX = MapRenderer.getRenderX((int) centroid.x(), mapCenterX, centerX, zoomRenderScale);
+            float worldZ = MapRenderer.getRenderZ((int) centroid.y(), mapCenterZ, centerZ, zoomRenderScale);
+
+            RenderUtils.drawTexturedRect(
+                    poseStack,
+                    Texture.GUILD_HEADQUARTERS,
+                    worldX - Texture.GUILD_HEADQUARTERS.width() / 2,
+                    worldZ - Texture.GUILD_HEADQUARTERS.height() / 2);
         }
     }
 
@@ -727,6 +767,36 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                                 .withStyle(ChatFormatting.GREEN)
                                         : Component.translatable("screens.wynntils.guildMap.hybridMode.advancement")
                                                 .withStyle(ChatFormatting.RED))));
+    }
+
+    private static final class TerritoryAreaHqLabelRemoverOverrideProvider extends AbstractMapDataOverrideProvider {
+        @Override
+        public MapAttributes getOverrideAttributes(MapFeature mapFeature) {
+            if (!(mapFeature instanceof TerritoryArea territoryArea)) return new AbstractMapAreaAttributes() {};
+            if (!territoryArea
+                    .getTerritoryInfo()
+                    .map(TerritoryInfo::isHeadquarters)
+                    .orElse(false)) {
+                return new AbstractMapAreaAttributes() {};
+            }
+
+            return new AbstractMapAreaAttributes() {
+                @Override
+                public Optional<String> getLabel() {
+                    return Optional.of("");
+                }
+            };
+        }
+
+        @Override
+        public Stream<String> getOverridenFeatureIds() {
+            return Stream.empty();
+        }
+
+        @Override
+        public Stream<String> getOverridenCategoryIds() {
+            return Stream.of("wynntils:territory");
+        }
     }
 
     private static final class TerritoryAreaAdvancementModeOverrideProvider extends AbstractMapDataOverrideProvider {
