@@ -137,7 +137,8 @@ public class MapDataService extends Service {
                         overrideProviders.values().stream().filter(attr -> attr.getOverridenFeatureIds()
                                 .anyMatch(attrFeatureId -> attrFeatureId.equals(feature.getFeatureId()))),
                         overrideProviders.values().stream().filter(attr -> attr.getOverridenCategoryIds()
-                                .anyMatch(attrCategoryId -> attrCategoryId.equals(feature.getCategoryId()))))
+                                .anyMatch(attrCategoryId ->
+                                        feature.getCategoryId().startsWith(attrCategoryId))))
                 .map(provider -> provider.getOverrideAttributes(feature))
                 .toList());
     }
@@ -173,7 +174,8 @@ public class MapDataService extends Service {
 
         // Invalidate caches for the features that this provider overrides
         this.getFeatures()
-                .filter(feature -> provider.getOverridenCategoryIds().anyMatch(feature.getCategoryId()::equals)
+                .filter(feature -> provider.getOverridenCategoryIds()
+                                .anyMatch(categoryId -> feature.getCategoryId().startsWith(categoryId))
                         || provider.getOverridenFeatureIds().anyMatch(feature.getFeatureId()::equals))
                 .forEach(this::onProviderChange);
     }
@@ -184,7 +186,8 @@ public class MapDataService extends Service {
 
         // Invalidate caches for the features that this provider overrides
         this.getFeatures()
-                .filter(feature -> provider.getOverridenCategoryIds().anyMatch(feature.getCategoryId()::equals)
+                .filter(feature -> provider.getOverridenCategoryIds()
+                                .anyMatch(categoryId -> feature.getCategoryId().startsWith(categoryId))
                         || provider.getOverridenFeatureIds().anyMatch(feature.getFeatureId()::equals))
                 .forEach(this::onProviderChange);
     }
