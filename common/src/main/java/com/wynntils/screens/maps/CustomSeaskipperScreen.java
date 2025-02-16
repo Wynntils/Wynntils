@@ -8,9 +8,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.models.seaskipper.type.SeaskipperDestination;
+import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.screens.maps.widgets.SeaskipperDestinationButton;
 import com.wynntils.screens.maps.widgets.SeaskipperTravelButton;
@@ -50,11 +52,9 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     // Collections
     private List<SeaskipperDestinationButton> destinationButtons = new ArrayList<>();
     private List<SeaskipperDestination> availableDestinations = new ArrayList<>();
-    private List<SeaskipperDestination> destinationDestinations = new ArrayList<>();
 
     // Seaskipper pois
     private SeaskipperDestination currentLocation = null;
-    private SeaskipperDestination hoveredDestionation;
     private SeaskipperDestination selectedDestination;
 
     // UI Size, position etc
@@ -168,6 +168,8 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         renderMap(poseStack);
 
+        renderMapFeatures(poseStack, mouseX, mouseY);
+
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
@@ -230,14 +232,13 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         }
 
         // If clicked on a destination and it is available, try and purchase a pass
-        for (SeaskipperDestination destination : destinationDestinations) {
-            if (hoveredDestionation == destination) {
-                if (destination.isAvailable()) {
-                    Models.Seaskipper.purchasePass(destination);
-                }
-
-                return true;
+        if (hoveredFeature instanceof SeaskipperDestinationArea seaskipperDestinationArea) {
+            if (seaskipperDestinationArea.getDestination().isAvailable()
+                    && !seaskipperDestinationArea.getDestination().equals(currentLocation)) {
+                Models.Seaskipper.purchasePass(seaskipperDestinationArea.getDestination());
             }
+
+            return true;
         }
 
         // If clicked on a destination button, set it as selected and zoom on the destination.
@@ -322,17 +323,14 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     }
 
     public void reloadDestinations() {
-        destinationDestinations = new ArrayList<>();
-
-        destinationDestinations.addAll(Models.Seaskipper.getDestinations(renderAllDestinations));
-
-        currentLocation = destinationDestinations.stream()
+        List<SeaskipperDestination> destinations = Models.Seaskipper.getDestinations(false);
+        currentLocation = destinations.stream()
                 .filter(SeaskipperDestination::isPlayerInside)
                 .findFirst()
                 .orElse(null);
 
-        // Available pois to use for the departure list
-        availableDestinations = destinationDestinations.stream()
+        // Available destinations to use for the departure list
+        availableDestinations = destinations.stream()
                 .filter(SeaskipperDestination::isAvailable)
                 .sorted(Comparator.comparing(
                         destination -> destination.profile().destination(), String.CASE_INSENSITIVE_ORDER))
@@ -353,120 +351,22 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
     @Override
     protected Stream<MapFeature> getRenderedMapFeatures() {
-        return Stream.empty();
+        return Services.MapData.getFeaturesForCategory("wynntils:seaskipper-destination")
+                .filter(feature -> feature instanceof SeaskipperDestinationArea)
+                .map(feature -> (SeaskipperDestinationArea) feature)
+                .filter(area -> area.getDestination().isAvailable()
+                        || area.getDestination().isPlayerInside())
+                .map(f -> f);
     }
 
-    //    private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-    //        renderDestinations(
-    //                destinationDestinations,
-    //                poseStack,
-    //                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
-    //                1,
-    //                mouseX,
-    //                mouseY);
-    //    }
-
-    //    private void renderDestinations(
-    //            List<SeaskipperDestination> destinations,
-    //            PoseStack poseStack,
-    //            BoundingBox textureBoundingBox,
-    //            float poiScale,
-    //            int mouseX,
-    //            int mouseY) {
-    //        hoveredDestionation = null;
-    //
-    //        List<SeaskipperDestination> filteredDestinations =
-    //                getRenderedDestinations(destinations, textureBoundingBox, poiScale, mouseX, mouseY);
-    //
-    //        if (renderRoutes) {
-    //            float poiRenderX = MapRenderer.getRenderX(currentLocation, mapCenterX, centerX, zoomRenderScale);
-    //            float poiRenderZ = MapRenderer.getRenderZ(currentLocation, mapCenterZ, centerZ, zoomRenderScale);
-    //
-    //            for (SeaskipperDestinationPoi poi : destinationDestinations.stream()
-    //                    .filter(SeaskipperDestinationPoi::isAvailable)
-    //                    .toList()) {
-    //                float x = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
-    //                float z = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
-    //
-    //                RenderUtils.drawLine(
-    //                        poseStack, CommonColors.DARK_GRAY.withAlpha(0.5f), poiRenderX, poiRenderZ, x, z, 0, 1);
-    //            }
-    //        }
-    //
-    //        MultiBufferSource.BufferSource bufferSource =
-    //                McUtils.mc().renderBuffers().bufferSource();
-    //
-    //        for (int i = filteredDestinations.size() - 1; i >= 0; i--) {
-    //            SeaskipperDestinationPoi poi = filteredDestinations.get(i);
-    //
-    //            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
-    //            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
-    //
-    //            if (hideTerritoryBorders) {
-    //                poi.renderAtWithoutBorders(poseStack, bufferSource, poiRenderX, poiRenderZ, zoomRenderScale);
-    //            } else {
-    //                poi.renderAt(
-    //                        poseStack,
-    //                        bufferSource,
-    //                        poiRenderX,
-    //                        poiRenderZ,
-    //                        hoveredDestionation == poi,
-    //                        poiScale,
-    //                        zoomRenderScale,
-    //                        zoomLevel,
-    //                        true);
-    //            }
-    //        }
-    //
-    //        bufferSource.endBatch();
-    //    }
-
-    //    private List<SeaskipperDestinationPoi> getRenderedDestinations(
-    //            List<SeaskipperDestinationPoi> pois,
-    //            BoundingBox textureBoundingBox,
-    //            float poiScale,
-    //            int mouseX,
-    //            int mouseY) {
-    //        List<SeaskipperDestinationPoi> filteredPois = new ArrayList<>();
-    //
-    //        for (int i = pois.size() - 1; i >= 0; i--) {
-    //            SeaskipperDestinationPoi poi = pois.get(i);
-    //            PoiLocation location = poi.getLocation();
-    //
-    //            if (location == null) continue;
-    //
-    //            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
-    //            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
-    //
-    //            float poiWidth = poi.getWidth(zoomRenderScale, poiScale);
-    //            float poiHeight = poi.getHeight(zoomRenderScale, poiScale);
-    //
-    //            BoundingBox filterBox = BoundingBox.centered(location.getX(), location.getZ(), poiWidth, poiHeight);
-    //            BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
-    //
-    //            if (BoundingShape.intersects(filterBox, textureBoundingBox)) {
-    //                filteredPois.add(poi);
-    //                if (hoveredDestionation == null && mouseBox.contains(mouseX, mouseY)) {
-    //                    hoveredDestionation = poi;
-    //                }
-    //            }
-    //        }
-    //
-    //        if (hoveredDestionation != null) {
-    //            filteredPois.remove(hoveredDestionation);
-    //            filteredPois.addFirst(hoveredDestionation);
-    //        }
-    //
-    //        return filteredPois;
-    //    }
-
     private void renderHoveredSeaskipperDestination(PoseStack poseStack) {
-        if (hoveredDestionation == null) return;
+        if (!(hoveredFeature instanceof SeaskipperDestinationArea seaskipperDestinationArea)) return;
+        SeaskipperDestination destination = seaskipperDestinationArea.getDestination();
 
         poseStack.pushPose();
         poseStack.translate(width - SCREEN_SIDE_OFFSET - 250, SCREEN_SIDE_OFFSET + 40, 101);
 
-        boolean isAccessible = hoveredDestionation.isAvailable();
+        boolean isAccessible = destination.isAvailable();
 
         final float centerHeight = isAccessible ? 50 : 30;
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
@@ -489,7 +389,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                         poseStack,
                         StyledText.fromComponent(Component.translatable(
                                 "screens.wynntils.customSeaskipperScreen.level",
-                                hoveredDestionation.profile().combatLevel())),
+                                destination.profile().combatLevel())),
                         10,
                         10,
                         CommonColors.ORANGE,
@@ -499,16 +399,15 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         float renderYOffset = 10;
 
-        boolean origin = hoveredDestionation == currentLocation;
+        boolean origin = destination == currentLocation;
 
         if (isAccessible) {
-            int price = hoveredDestionation.item().getPrice();
+            int price = destination.item().getPrice();
 
             CustomColor priceColor;
             Component travelComponent;
 
-            if (Models.Emerald.getAmountInInventory()
-                    >= hoveredDestionation.item().getPrice()) {
+            if (Models.Emerald.getAmountInInventory() >= destination.item().getPrice()) {
                 priceColor = CommonColors.GREEN;
                 travelComponent = Component.translatable("screens.wynntils.customSeaskipperScreen.clickToGo");
             } else {
@@ -575,7 +474,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString(hoveredDestionation.profile().destination()),
+                        StyledText.fromString(destination.profile().destination()),
                         7,
                         textureWidth,
                         Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight,

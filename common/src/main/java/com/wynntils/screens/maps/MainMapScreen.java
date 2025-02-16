@@ -11,6 +11,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -278,9 +279,10 @@ public final class MainMapScreen extends AbstractMapScreen {
             mapFeatures = mapFeatures.filter(feature -> !(feature instanceof TerritoryArea));
         }
 
+        mapFeatures = mapFeatures.filter(feature -> !(feature instanceof SeaskipperDestinationArea));
+
         // FIXME: Add back the pois that are still not converted to MapData
         //        - Provided custom pois
-        //        - Marker waypoints
         //        - Remote players
 
         return mapFeatures;

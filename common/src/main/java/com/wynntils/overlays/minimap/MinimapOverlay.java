@@ -15,6 +15,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
@@ -264,6 +265,7 @@ public class MinimapOverlay extends Overlay {
         Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = Services.MapData.getFeatures()
                 .filter(feature -> feature.isVisible(textureBoundingCircle))
                 .filter(feature -> feature instanceof TerritoryArea ? renderTerritories.get() : true)
+                .filter(feature -> !(feature instanceof SeaskipperDestinationArea))
                 .map(feature -> Pair.of(feature, Services.MapData.resolveMapAttributes(feature)))
                 .sorted(Comparator.comparing(pair -> pair.b().priority()));
 
