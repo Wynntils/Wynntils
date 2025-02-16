@@ -10,6 +10,7 @@ import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
+import com.wynntils.services.mapdata.attributes.MapMarkerOptionsBuilder;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
@@ -80,6 +81,12 @@ public class UserMarkerService extends Service {
                 });
     }
 
+    public boolean isMarkerAtLocation(Location location) {
+        return userMarkerMapLocations.stream()
+                .filter(feature -> feature instanceof UserMarker)
+                .anyMatch(feature -> feature.getLocation().equals(location));
+    }
+
     public void addUserMarkedFeature(MapLocation mapFeature) {
         userOverridenMapLocations.add(mapFeature);
         userMarkedOverrideProvider.notifyCallbacks(mapFeature);
@@ -118,12 +125,14 @@ public class UserMarkerService extends Service {
         private final MapLocationAttributesImpl userMarkerAttributes;
 
         private UserMarker(Location location, String name) {
-            super("user-marker-" + location.hashCode(), "wynntils:personal:waypoint:user-marker", null, location);
+            super("user-marker-" + location.hashCode(), "wynntils:personal:user-marker", null, location);
             this.name = name;
             this.userMarkerAttributes = MARKED_MAP_FEATURE_ATTRIBUTES
                     .setIcon(MapIconsProvider.getIconIdFromTexture(Texture.WAYPOINT))
                     .setLabel(name)
                     .setLabelColor(CommonColors.WHITE)
+                    .setMarkerOptions(
+                            new MapMarkerOptionsBuilder().withHasLabel(true).build())
                     .asLocationAttributes()
                     .build();
         }
@@ -156,7 +165,7 @@ public class UserMarkerService extends Service {
                 MARKED_MAP_FEATURE_ATTRIBUTES.asLocationAttributes().build();
 
         @Override
-        public MapAttributes getOverrideAttributes() {
+        public MapAttributes getOverrideAttributes(MapFeature mapFeature) {
             return BUILT_MAP_LOCATION_ATTRIBUTES;
         }
 

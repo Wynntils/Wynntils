@@ -244,7 +244,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
 
-        List<Pair<MapFeature, ResolvedMapAttributes>> renderedFeatures = mapFeatures.toList();
+        List<Pair<MapFeature, ResolvedMapAttributes>> renderedFeatures =
+                mapFeatures.collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
         // Find the hovered feature that is "on top" of all other features
         for (int i = renderedFeatures.size() - 1; i >= 0; i--) {
@@ -266,6 +267,12 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 break;
             }
         }
+
+        // Re-sort the features, based on priority, but secondarily based on hover state
+        Comparator<Pair<MapFeature, ResolvedMapAttributes>> hoverComparator =
+                Comparator.comparing(pair -> pair.b().priority());
+        hoverComparator = hoverComparator.thenComparing(pair -> pair.a() == hoveredFeature);
+        renderedFeatures.sort(hoverComparator);
 
         for (Pair<MapFeature, ResolvedMapAttributes> renderedFeature : renderedFeatures) {
             MapFeature feature = renderedFeature.a();

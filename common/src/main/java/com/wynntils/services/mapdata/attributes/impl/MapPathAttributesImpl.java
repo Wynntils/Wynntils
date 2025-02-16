@@ -13,6 +13,7 @@ public final class MapPathAttributesImpl extends MapAttributesImpl implements Ma
             int priority,
             int level,
             String label,
+            String secondaryLabel,
             MapVisibilityImpl labelVisibility,
             CustomColor labelColor,
             TextShadow labelShadow) {
@@ -20,6 +21,7 @@ public final class MapPathAttributesImpl extends MapAttributesImpl implements Ma
                 priority,
                 level,
                 label,
+                secondaryLabel,
                 labelVisibility,
                 labelColor,
                 labelShadow,

@@ -15,12 +15,14 @@ import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingPolygon;
 import java.util.List;
@@ -224,18 +226,18 @@ public final class MapFeatureRenderer {
                 bufferSource,
                 attributes.fillColor(),
                 attributes.borderColor(),
-                attributes.borderWidth(),
+                attributes.borderWidth() + (hovered ? 1 : 0),
                 screenVertices,
                 0);
 
         BoundingPolygon boundingPolygon = BoundingPolygon.fromVertices(screenVertices);
         Vector2f centroid = boundingPolygon.centroid();
 
-        int labelWidth = (int)
-                (FontRenderer.getInstance().getFont().width(attributes.label()) * TEXT_SCALE * featureRenderScale);
-        int maxLabelWidth = (int) (boundingPolygon.maxWidth() * featureRenderScale);
-
-        float labelScaleModifier = Math.max(1f, labelWidth / (float) maxLabelWidth);
+        float labelWidth =
+                FontRenderer.getInstance().getFont().width(attributes.label()) * TEXT_SCALE * featureRenderScale;
+        float maxLabelWidth = boundingPolygon.maxWidth() * featureRenderScale;
+        float labelScaleModifier = Math.max(1f, labelWidth / maxLabelWidth);
+        float textScale = TEXT_SCALE * featureRenderScale / labelScaleModifier;
 
         BufferedFontRenderer.getInstance()
                 .renderText(
@@ -244,12 +246,30 @@ public final class MapFeatureRenderer {
                         StyledText.fromString(attributes.label()),
                         centroid.x(),
                         centroid.y(),
-                        boundingPolygon.maxWidth(),
+                        0, // max width does not need to be set, as the text is scaled to fit the polygon
                         attributes.labelColor(),
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         attributes.labelShadow(),
-                        TEXT_SCALE * featureRenderScale / labelScaleModifier);
+                        textScale);
+
+        // If hovered, draw secondary label
+        if (hovered && !attributes.secondaryLabel().isEmpty()) {
+            // The secondary label is rendered below the primary label, with the full scale
+            BufferedFontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            bufferSource,
+                            StyledText.fromString(attributes.secondaryLabel()),
+                            centroid.x(),
+                            centroid.y() + FontRenderer.getInstance().getFont().lineHeight * textScale,
+                            0f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.OUTLINE,
+                            TEXT_SCALE);
+        }
     }
 
     public static boolean isHovered(

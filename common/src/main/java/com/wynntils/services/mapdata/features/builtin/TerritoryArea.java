@@ -65,31 +65,39 @@ public class TerritoryArea implements MapArea {
 
     @Override
     public String getCategoryId() {
-        return "wynntils:territory";
+        return territoryInfo != null && territoryInfo.isHeadquarters()
+                ? "wynntils:territory:headquarters"
+                : "wynntils:territory";
     }
 
     @Override
     public Optional<MapAreaAttributes> getAttributes() {
         return Optional.of(new AbstractMapAreaAttributes() {
+            private CustomColor guildColor = Models.Guild.getColor(territoryProfile.getGuild());
+
             @Override
             public Optional<String> getLabel() {
                 return Optional.of(territoryProfile.getGuildPrefix());
             }
 
             @Override
+            public Optional<String> getSecondaryLabel() {
+                return Optional.of(territoryProfile.getName());
+            }
+
+            @Override
             public Optional<CustomColor> getLabelColor() {
-                return Optional.of(Models.Guild.getColor(territoryProfile.getGuild()));
+                return Optional.of(guildColor);
             }
 
             @Override
             public Optional<CustomColor> getFillColor() {
-                return Optional.of(
-                        Models.Guild.getColor(territoryProfile.getGuild()).withAlpha(80));
+                return Optional.of(guildColor.withAlpha(80));
             }
 
             @Override
             public Optional<CustomColor> getBorderColor() {
-                return Optional.of(Models.Guild.getColor(territoryProfile.getGuild()));
+                return Optional.of(guildColor);
             }
 
             @Override

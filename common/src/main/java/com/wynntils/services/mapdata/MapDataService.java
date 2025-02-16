@@ -137,8 +137,9 @@ public class MapDataService extends Service {
                         overrideProviders.values().stream().filter(attr -> attr.getOverridenFeatureIds()
                                 .anyMatch(attrFeatureId -> attrFeatureId.equals(feature.getFeatureId()))),
                         overrideProviders.values().stream().filter(attr -> attr.getOverridenCategoryIds()
-                                .anyMatch(attrCategoryId -> attrCategoryId.equals(feature.getCategoryId()))))
-                .map(MapDataOverrideProvider::getOverrideAttributes)
+                                .anyMatch(attrCategoryId ->
+                                        feature.getCategoryId().startsWith(attrCategoryId))))
+                .map(provider -> provider.getOverrideAttributes(feature))
                 .toList());
     }
 
@@ -171,15 +172,24 @@ public class MapDataService extends Service {
         overrideProviders.putFirst(overrideProviderId, provider);
         provider.onChange(this::onProviderChange);
 
-        // Invalidate caches
-        invalidateAllCaches();
+        // Invalidate caches for the features that this provider overrides
+        this.getFeatures()
+                .filter(feature -> provider.getOverridenCategoryIds()
+                                .anyMatch(categoryId -> feature.getCategoryId().startsWith(categoryId))
+                        || provider.getOverridenFeatureIds().anyMatch(feature.getFeatureId()::equals))
+                .forEach(this::onProviderChange);
     }
 
     public void unregisterOverrideProvider(String overrideProviderId) {
-        overrideProviders.remove(overrideProviderId);
+        MapDataOverrideProvider provider = overrideProviders.remove(overrideProviderId);
+        if (provider == null) return;
 
-        // Invalidate caches
-        invalidateAllCaches();
+        // Invalidate caches for the features that this provider overrides
+        this.getFeatures()
+                .filter(feature -> provider.getOverridenCategoryIds()
+                                .anyMatch(categoryId -> feature.getCategoryId().startsWith(categoryId))
+                        || provider.getOverridenFeatureIds().anyMatch(feature.getFeatureId()::equals))
+                .forEach(this::onProviderChange);
     }
 
     /**

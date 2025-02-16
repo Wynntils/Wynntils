@@ -49,6 +49,11 @@ public final class DefaultMapAttributes implements MapAttributes {
     }
 
     @Override
+    public Optional<String> getSecondaryLabel() {
+        return Optional.of("");
+    }
+
+    @Override
     public Optional<MapVisibility> getLabelVisibility() {
         return Optional.of(LABEL_ALWAYS);
     }
