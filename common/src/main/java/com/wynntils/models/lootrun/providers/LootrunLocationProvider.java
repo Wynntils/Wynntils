@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.lootrun.mapdata;
+package com.wynntils.models.lootrun.providers;
 
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.components.Managers;

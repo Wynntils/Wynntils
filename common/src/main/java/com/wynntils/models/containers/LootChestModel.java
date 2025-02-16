@@ -9,6 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
@@ -22,6 +23,7 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.providers.LootChestsProvider;
 import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.gear.type.GearTier;
@@ -52,6 +54,8 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class LootChestModel extends Model {
+    private static final LootChestsProvider LOOT_CHESTS_PROVIDER = new LootChestsProvider();
+
     public static final int LOOT_CHEST_ITEM_COUNT = 27;
 
     @Persisted
@@ -82,11 +86,16 @@ public final class LootChestModel extends Model {
         super(List.of());
     }
 
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(LOOT_CHESTS_PROVIDER);
+    }
+
     @Override
     public void onStorageLoad(Storage<?> storage) {
         if (storage == foundChestLocations) {
             startPoiMigration();
-            Services.MapData.LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
+            LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
         }
     }
 
@@ -194,13 +203,13 @@ public final class LootChestModel extends Model {
     public void addFoundChestLocation(FoundChestLocation location) {
         foundChestLocations.get().add(location);
         foundChestLocations.touched();
-        Services.MapData.LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
+        LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
     }
 
     public void removeFoundChestLocation(FoundChestLocation location) {
         foundChestLocations.get().remove(location);
         foundChestLocations.touched();
-        Services.MapData.LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
+        LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
     }
 
     private void processItemFind(ItemStack itemStack) {

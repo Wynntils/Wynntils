@@ -59,7 +59,6 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
     // UI Size, position etc
     private boolean draggingScroll = false;
-    private boolean firstInit = true;
     private double currentUnusedScroll = 0;
     private float currentTextureScale;
     private float departureBoardY;
@@ -153,7 +152,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         if (firstInit) {
             centerMapAroundPlayer();
             setZoomLevel(DEFAULT_ZOOM_LEVEL);
-            reloadDestinationPois();
+            reloadDestinations();
             firstInit = false;
         }
 
@@ -322,7 +321,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         }
     }
 
-    public void reloadDestinationPois() {
+    public void reloadDestinations() {
         destinationDestinations = new ArrayList<>();
 
         destinationDestinations.addAll(Models.Seaskipper.getDestinations(renderAllDestinations));
@@ -672,7 +671,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     private void toggleDestinations() {
         renderAllDestinations = !renderAllDestinations;
 
-        reloadDestinationPois();
+        reloadDestinations();
     }
 
     private void toggleRoutes() {
