@@ -356,7 +356,14 @@ public final class GuildMapScreen extends AbstractMapScreen {
                     float secondWorldZ =
                             MapRenderer.getRenderZ((int) secondCentroid.y(), mapCenterZ, centerZ, zoomRenderScale);
                     RenderUtils.drawLine(
-                            poseStack, CommonColors.BLACK, firstWorldX, firstWorldZ, secondWorldX, secondWorldZ, 0, 1);
+                            poseStack,
+                            CommonColors.DARK_GRAY.withAlpha(0.5f),
+                            firstWorldX,
+                            firstWorldZ,
+                            secondWorldX,
+                            secondWorldZ,
+                            0,
+                            1);
                 }
             }
         }
