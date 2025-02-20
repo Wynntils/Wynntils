@@ -13,8 +13,8 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 
 public class MapAttributesImpl implements MapAttributes {
-    private final int priority;
-    private final int level;
+    private final Integer priority;
+    private final Integer level;
     private final String label;
     private final String secondaryLabel;
     private final MapVisibilityImpl labelVisibility;
@@ -30,8 +30,8 @@ public class MapAttributesImpl implements MapAttributes {
     private final Float borderWidth;
 
     public MapAttributesImpl(
-            int priority,
-            int level,
+            Integer priority,
+            Integer level,
             String label,
             String secondaryLabel,
             MapVisibilityImpl labelVisibility,
@@ -88,12 +88,12 @@ public class MapAttributesImpl implements MapAttributes {
 
     @Override
     public Optional<Integer> getPriority() {
-        return Optional.of(priority);
+        return Optional.ofNullable(priority);
     }
 
     @Override
     public Optional<Integer> getLevel() {
-        return Optional.of(level);
+        return Optional.ofNullable(level);
     }
 
     @Override

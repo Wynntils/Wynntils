@@ -25,6 +25,9 @@ import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.services.mapdata.impl.MapIconImpl;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
+import com.wynntils.services.mapdata.providers.json.JsonAggregatorProvider;
+import com.wynntils.services.mapdata.providers.json.JsonProvider;
+import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,12 +38,18 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class WaypointsService extends Service {
     private static final WaypointsProvider WAYPOINTS_PROVIDER = new WaypointsProvider();
+    private static final JsonAggregatorProvider JSON_AGGREGATOR_PROVIDER = new JsonAggregatorProvider();
 
     @Persisted
     private final Storage<List<WaypointLocation>> waypoints = new Storage<>(new ArrayList<>());
 
     @Persisted
     private final Storage<List<MapIconImpl>> customIcons = new Storage<>(new ArrayList<>());
+
+    @Persisted
+    private final Storage<List<JsonProviderInfo>> jsonProviderInfos = new Storage<>(new ArrayList<>());
+
+    private final List<JsonProvider> jsonProviders = new ArrayList<>();
 
     public WaypointsService() {
         super(List.of());
@@ -49,6 +58,7 @@ public class WaypointsService extends Service {
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
         Services.MapData.registerBuiltInProvider(WAYPOINTS_PROVIDER);
+        Services.MapData.registerBuiltInProvider(JSON_AGGREGATOR_PROVIDER);
     }
 
     @Override
@@ -60,6 +70,16 @@ public class WaypointsService extends Service {
 
         if (storage == customIcons) {
             WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
+        }
+
+        if (storage == jsonProviderInfos) {
+            jsonProviders.clear();
+            for (JsonProviderInfo jsonProviderInfo : jsonProviderInfos.get()) {
+                jsonProviderInfo.load((id, provider) -> {
+                    jsonProviders.add(provider);
+                    JSON_AGGREGATOR_PROVIDER.updateProviders(jsonProviders);
+                });
+            }
         }
     }
 

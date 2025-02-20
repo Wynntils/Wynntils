@@ -10,8 +10,8 @@ import com.wynntils.utils.render.type.TextShadow;
 
 public final class MapLocationAttributesImpl extends MapAttributesImpl implements MapLocationAttributes {
     public MapLocationAttributesImpl(
-            int priority,
-            int level,
+            Integer priority,
+            Integer level,
             String label,
             String secondaryLabel,
             MapVisibilityImpl labelVisibility,
