@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -36,7 +36,6 @@ import com.wynntils.models.inventory.InventoryModel;
 import com.wynntils.models.items.ItemEncodingModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootrun.LootrunModel;
-import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.mobtotem.MobTotemModel;
 import com.wynntils.models.npc.NpcModel;
 import com.wynntils.models.npcdialogue.NpcDialogueModel;
@@ -69,6 +68,7 @@ public final class Models {
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
     public static final BankModel Bank = new BankModel();
     public static final BeaconModel Beacon = new BeaconModel();
+    public static final ActivityModel Activity = new ActivityModel(Beacon);
     public static final BombModel Bomb = new BombModel();
     public static final CaveModel Cave = new CaveModel();
     public static final CharacterModel Character = new CharacterModel();
@@ -83,6 +83,7 @@ public final class Models {
     public static final EmeraldModel Emerald = new EmeraldModel();
     public static final FriendsModel Friends = new FriendsModel();
     public static final GearModel Gear = new GearModel();
+    public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final GuildModel Guild = new GuildModel();
     public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
     public static final HorseModel Horse = new HorseModel();
@@ -91,7 +92,7 @@ public final class Models {
     public static final ItemEncodingModel ItemEncoding = new ItemEncodingModel();
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
-    public static final MarkerModel Marker = new MarkerModel();
+    public static final LootrunModel Lootrun = new LootrunModel();
     public static final MobTotemModel MobTotem = new MobTotemModel();
     public static final NpcDialogueModel NpcDialogue = new NpcDialogueModel();
     public static final NpcModel Npc = new NpcModel();
@@ -121,9 +122,4 @@ public final class Models {
     public static final WorldStateModel WorldState = new WorldStateModel();
     public static final WynnAlphabetModel WynnAlphabet = new WynnAlphabetModel();
     public static final WynnItemModel WynnItem = new WynnItemModel();
-
-    // Models with constructor dependencies, ordered alphabetically as far as possible
-    public static final ActivityModel Activity = new ActivityModel(Marker);
-    public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel(Marker);
-    public static final LootrunModel Lootrun = new LootrunModel(Marker);
 }

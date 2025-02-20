@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -9,6 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -26,6 +27,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.athena.event.AthenaLoginEvent;
 import com.wynntils.services.hades.event.HadesEvent;
+import com.wynntils.services.hades.providers.PlayerProvider;
 import com.wynntils.services.hades.type.PlayerStatus;
 import com.wynntils.utils.mc.McUtils;
 import java.net.InetAddress;
@@ -48,6 +50,8 @@ public final class HadesService extends Service {
     private static final int TICKS_PER_UPDATE = 2;
     private static final int MS_PER_PING = 1000;
 
+    private static final PlayerProvider PLAYER_PROVIDER = new PlayerProvider();
+
     private final HadesUserRegistry userRegistry = new HadesUserRegistry();
 
     private HadesConnection hadesConnection;
@@ -57,6 +61,11 @@ public final class HadesService extends Service {
 
     public HadesService() {
         super(List.of());
+    }
+
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(PLAYER_PROVIDER);
     }
 
     public Stream<HadesUser> getHadesUsers() {
