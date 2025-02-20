@@ -7,12 +7,10 @@ package com.wynntils.models.territories.providers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.territories.TerritoryAttackTimer;
 import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapMarkerOptionsBuilder;
 import com.wynntils.services.mapdata.attributes.impl.AbstractMapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
@@ -90,30 +88,11 @@ public class GuildAttackLocationProvider extends BuiltInProvider {
                 }
 
                 @Override
-                public Optional<MapVisibility> getLabelVisibility() {
-                    return Optional.of(DefaultMapAttributes.LABEL_ALWAYS);
-                }
-
-                @Override
-                public Optional<MapVisibility> getIconVisibility() {
-                    return Optional.of(DefaultMapAttributes.ICON_ALWAYS);
-                }
-
-                @Override
-                public Optional<Boolean> getHasMarker() {
-                    return Optional.of(true);
-                }
-
-                @Override
                 public Optional<MapMarkerOptions> getMarkerOptions() {
                     Optional<CustomColor> beaconColor = getAttackColor();
                     if (beaconColor.isEmpty()) return Optional.empty();
 
-                    return Optional.of(new MapMarkerOptionsBuilder()
-                            .withBeaconColor(beaconColor.get())
-                            .withHasIcon(true)
-                            .withHasLabel(true)
-                            .withHasDistance(true));
+                    return Optional.of(new MapMarkerOptionsBuilder().withBeaconColor(beaconColor.get()));
                 }
 
                 @Override

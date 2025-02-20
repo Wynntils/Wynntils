@@ -88,16 +88,6 @@ public class SeaskipperDestinationArea implements MapArea {
                 return Optional.of(getColor());
             }
 
-            @Override
-            public Optional<Integer> getPriority() {
-                return Optional.of(900);
-            }
-
-            @Override
-            public Optional<Float> getBorderWidth() {
-                return Optional.of(1f);
-            }
-
             private CustomColor getColor() {
                 if (destination.isPlayerInside()) return CommonColors.ORANGE;
                 return destination.isAvailable()
