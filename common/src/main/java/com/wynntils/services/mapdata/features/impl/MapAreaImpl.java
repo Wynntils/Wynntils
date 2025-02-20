@@ -21,7 +21,7 @@ public class MapAreaImpl implements MapArea {
     private final MapAreaAttributesImpl attributes;
     private final List<Location> polygonArea;
 
-    private final transient BoundingPolygon boundingPolygon;
+    private transient BoundingPolygon boundingPolygon;
 
     public MapAreaImpl(
             String featureId, String categoryId, MapAreaAttributesImpl attributes, List<Location> polygonArea) {
@@ -30,7 +30,9 @@ public class MapAreaImpl implements MapArea {
         this.attributes = attributes;
         this.polygonArea = polygonArea;
 
-        this.boundingPolygon = BoundingPolygon.fromLocations(polygonArea);
+        // Compute the bounding polygon
+        // (the caching happens in the getter for json deserialization)
+        getBoundingPolygon();
     }
 
     @Override
@@ -60,6 +62,8 @@ public class MapAreaImpl implements MapArea {
 
     @Override
     public BoundingPolygon getBoundingPolygon() {
-        return boundingPolygon;
+        return boundingPolygon != null
+                ? boundingPolygon
+                : (boundingPolygon = BoundingPolygon.fromLocations(polygonArea));
     }
 }

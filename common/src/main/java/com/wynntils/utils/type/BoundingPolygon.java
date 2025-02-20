@@ -7,6 +7,7 @@ package com.wynntils.utils.type;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import org.joml.Vector2f;
 
@@ -26,7 +27,8 @@ public record BoundingPolygon(List<Vector2f> vertices, List<Vector2f> axes) impl
     }
 
     public static BoundingPolygon fromVertices(List<Vector2f> vertices) {
-        List<Vector2f> verticeList = Collections.unmodifiableList(vertices);
+        // Sort the vertices in counterclockwise order
+        List<Vector2f> verticeList = sortVerticesCCW(vertices);
         List<Vector2f> axes = Collections.unmodifiableList(computeAxes(verticeList));
 
         // Assert that the polygon has at least 3 vertices
@@ -178,6 +180,23 @@ public record BoundingPolygon(List<Vector2f> vertices, List<Vector2f> axes) impl
         float centerProjection = circleCenter.dot(axis);
         float radiusProjection = circle.radius() * axis.length();
         return new Projection(centerProjection - radiusProjection, centerProjection + radiusProjection);
+    }
+
+    private static List<Vector2f> sortVerticesCCW(List<Vector2f> vertices) {
+        // Compute centroid (simple average, no need for weighting unlike centroid())
+        float centroidX = 0, centroidY = 0;
+        for (Vector2f v : vertices) {
+            centroidX += v.x;
+            centroidY += v.y;
+        }
+        centroidX /= vertices.size();
+        centroidY /= vertices.size();
+        Vector2f centroid = new Vector2f(centroidX, centroidY);
+
+        // Sort by angle relative to centroid
+        return vertices.stream()
+                .sorted(Comparator.comparingDouble(v -> Math.atan2(v.y - centroid.y, v.x - centroid.x)))
+                .toList();
     }
 
     private static List<Vector2f> computeAxes(List<Vector2f> vertices) {
