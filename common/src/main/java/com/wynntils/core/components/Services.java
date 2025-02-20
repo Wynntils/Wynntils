@@ -17,7 +17,6 @@ import com.wynntils.services.itemrecord.ItemRecordService;
 import com.wynntils.services.leaderboard.LeaderboardService;
 import com.wynntils.services.lootrunpaths.LootrunPathsService;
 import com.wynntils.services.map.MapService;
-import com.wynntils.services.map.PoiService;
 import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.mapdata.WaypointsService;
 import com.wynntils.services.ping.PingService;
@@ -42,7 +41,6 @@ public final class Services {
     public static final MapDataService MapData = new MapDataService();
     public static final MapService Map = new MapService();
     public static final PingService Ping = new PingService();
-    public static final PoiService Poi = new PoiService();
     public static final ResourcePackService ResourcePack = new ResourcePackService();
     public static final SplashService Splash = new SplashService();
     public static final StatisticsService Statistics = new StatisticsService();
