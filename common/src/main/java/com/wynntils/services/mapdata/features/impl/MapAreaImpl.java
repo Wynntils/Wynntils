@@ -66,4 +66,8 @@ public class MapAreaImpl implements MapArea {
                 ? boundingPolygon
                 : (boundingPolygon = BoundingPolygon.fromLocations(polygonArea));
     }
+
+    public boolean validate() {
+        return featureId != null && categoryId != null && polygonArea != null && !polygonArea.isEmpty();
+    }
 }

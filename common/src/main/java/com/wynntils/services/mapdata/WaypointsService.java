@@ -73,13 +73,7 @@ public class WaypointsService extends Service {
         }
 
         if (storage == jsonProviderInfos) {
-            jsonProviders.clear();
-            for (JsonProviderInfo jsonProviderInfo : jsonProviderInfos.get()) {
-                jsonProviderInfo.load((id, provider) -> {
-                    jsonProviders.add(provider);
-                    JSON_AGGREGATOR_PROVIDER.updateProviders(jsonProviders);
-                });
-            }
+            reloadJsonProviders();
         }
     }
 
@@ -89,6 +83,10 @@ public class WaypointsService extends Service {
 
     public List<MapIconImpl> getCustomIcons() {
         return Collections.unmodifiableList(customIcons.get());
+    }
+
+    public Set<String> getCategories() {
+        return getWaypoints().stream().map(MapLocationImpl::getCategoryId).collect(Collectors.toUnmodifiableSet());
     }
 
     public void addCustomIcon(MapIconImpl iconToAdd) {
@@ -103,10 +101,6 @@ public class WaypointsService extends Service {
         WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
     }
 
-    public Set<String> getCategories() {
-        return getWaypoints().stream().map(MapLocationImpl::getCategoryId).collect(Collectors.toUnmodifiableSet());
-    }
-
     public void addWaypoint(WaypointLocation waypoint) {
         waypoints.get().add(waypoint);
         waypoints.touched();
@@ -117,6 +111,16 @@ public class WaypointsService extends Service {
         waypoints.get().remove(waypoint);
         waypoints.touched();
         WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
+    }
+
+    public void reloadJsonProviders() {
+        jsonProviders.clear();
+        for (JsonProviderInfo jsonProviderInfo : jsonProviderInfos.get()) {
+            jsonProviderInfo.load((id, provider) -> {
+                jsonProviders.add(provider);
+                JSON_AGGREGATOR_PROVIDER.updateProviders(jsonProviders);
+            });
+        }
     }
 
     // region Poi Migration

@@ -154,9 +154,9 @@ public class MapDataService extends Service {
 
     public void createOnlineProvider(String id, String url) {
         String completeId = "online:" + id;
-        JsonProvider.loadOnlineResource(completeId, url, this::registerProvider);
         // Register a dummy provider; this will be replaced once loading has finished
         registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
+        JsonProvider.loadOnlineResource(completeId, url, this::registerProvider);
     }
 
     public void registerOverrideProvider(String overrideProviderId, MapDataOverrideProvider provider) {

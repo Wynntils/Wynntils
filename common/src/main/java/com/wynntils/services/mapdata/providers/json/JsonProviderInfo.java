@@ -45,16 +45,16 @@ public final class JsonProviderInfo {
         return new JsonProviderInfo(providerId, JsonProviderType.REMOTE, null, null, providerUrl);
     }
 
-    public void load(BiConsumer<String, JsonProvider> callback) {
+    public void load(BiConsumer<String, JsonProvider> loadedCallback) {
         switch (providerType) {
             case BUILTIN:
-                callback.accept(providerId, JsonProvider.loadBundledResource(providerId, providerFilename));
+                loadedCallback.accept(providerId, JsonProvider.loadBundledResource(providerId, providerFilename));
                 break;
             case LOCAL:
-                callback.accept(providerId, JsonProvider.loadLocalFile(providerId, new File(providerFilePath)));
+                loadedCallback.accept(providerId, JsonProvider.loadLocalFile(providerId, new File(providerFilePath)));
                 break;
             case REMOTE:
-                JsonProvider.loadOnlineResource(providerId, providerUrl, callback);
+                JsonProvider.loadOnlineResource(providerId, providerUrl, loadedCallback);
                 break;
         }
     }

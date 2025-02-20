@@ -4,8 +4,6 @@
  */
 package com.wynntils.services.mapdata.providers.json;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -36,9 +34,7 @@ import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapIcon;
-import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
-import com.wynntils.utils.colors.CustomColor;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -55,22 +51,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-// FIXME: Provide user error
 // FIXME: Reloading
 // FIXME: Commands
 // FIXME: Test builtin/remote loading
 public final class JsonProvider implements MapDataProvider {
-    private static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(MapLocationAttributesImpl.class, new JsonAttributeSerializer())
-            .registerTypeAdapter(MapAreaAttributesImpl.class, new JsonAttributeSerializer())
-            .registerTypeAdapter(MapPathAttributesImpl.class, new JsonAttributeSerializer())
-            .registerTypeHierarchyAdapter(MapCategory.class, new JsonCategorySerializer())
-            .registerTypeHierarchyAdapter(MapIcon.class, new JsonIconSerializer())
-            .registerTypeHierarchyAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-            .registerTypeAdapterFactory(new EnumUtils.EnumTypeAdapterFactory<>())
-            .enableComplexMapKeySerialization()
-            .create();
-
     // Note: The version field is not used, but is kept for future compatibility
     //       If the need arises, it can be used to handle different versions of the json format
     //       This is easily achieved by GSON switching to different deserializers based on the version
@@ -96,7 +80,7 @@ public final class JsonProvider implements MapDataProvider {
     public static JsonProvider loadBundledResource(String id, String filename) {
         try (InputStream inputStream = WynntilsMod.getModResourceAsStream(filename);
                 Reader targetReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-            return GSON.fromJson(targetReader, JsonProvider.class);
+            return Managers.Json.GSON.fromJson(targetReader, JsonProvider.class);
         } catch (MalformedJsonException e) {
             WynntilsMod.warn("Error parsing map data for '" + id + "'", e);
         } catch (IOException e) {
@@ -117,7 +101,7 @@ public final class JsonProvider implements MapDataProvider {
      */
     public static JsonProvider loadLocalFile(String id, File file) {
         try (Reader reader = new FileReader(file, StandardCharsets.UTF_8)) {
-            return GSON.fromJson(reader, JsonProvider.class);
+            return Managers.Json.GSON.fromJson(reader, JsonProvider.class);
         } catch (MalformedJsonException e) {
             WynntilsMod.warn("Error parsing map data for '" + id + "'", e);
         } catch (IOException e) {
@@ -141,7 +125,7 @@ public final class JsonProvider implements MapDataProvider {
         dl.handleReader(
                 reader -> {
                     try {
-                        registerCallback.accept(id, GSON.fromJson(reader, JsonProvider.class));
+                        registerCallback.accept(id, Managers.Json.GSON.fromJson(reader, JsonProvider.class));
                     } catch (Throwable e) {
                         // This is either a json parse error or a NPE in GSON parsing
                         WynntilsMod.warn("Error parsing map data for '" + id + "'", e);
@@ -182,6 +166,69 @@ public final class JsonProvider implements MapDataProvider {
         // Json providers do not need to reload data, as the whole object is reloaded by the owner service instead
     }
 
+    public static final class JsonProviderSerializer implements JsonDeserializer<JsonProvider> {
+        @Override
+        public JsonProvider deserialize(JsonElement json, Type type, JsonDeserializationContext context)
+                throws JsonParseException {
+            JsonObject jsonProvider = json.getAsJsonObject();
+
+            JsonElement versionJson = JsonUtils.getNullableJsonObject(jsonProvider, "version");
+            if (!versionJson.isJsonPrimitive()) {
+                throw new JsonParseException("Missing or incorrect version field in json provider.");
+            }
+
+            int version = versionJson.getAsInt();
+
+            // Manually construct the JsonFeatures object, so we don't have empty lists
+            JsonFeatures features = new JsonFeatures(
+                    context.deserialize(
+                            JsonUtils.getNullableJsonArray(jsonProvider, "locations"),
+                            new TypeToken<List<MapLocationImpl>>() {}.getType()),
+                    context.deserialize(
+                            JsonUtils.getNullableJsonArray(jsonProvider, "areas"),
+                            new TypeToken<List<MapAreaImpl>>() {}.getType()),
+                    context.deserialize(
+                            JsonUtils.getNullableJsonArray(jsonProvider, "paths"),
+                            new TypeToken<List<MapPathImpl>>() {}.getType()));
+
+            List<MapCategory> categories = context.deserialize(
+                    JsonUtils.getNullableJsonArray(jsonProvider, "categories"),
+                    new TypeToken<List<MapCategory>>() {}.getType());
+            List<MapIcon> icons = context.deserialize(
+                    JsonUtils.getNullableJsonArray(jsonProvider, "icons"), new TypeToken<List<MapIcon>>() {}.getType());
+
+            return new JsonProvider(version, features, categories, icons);
+        }
+    }
+
+    public static final class JsonFeatureSerializer implements JsonDeserializer<MapFeature> {
+        @Override
+        public MapFeature deserialize(JsonElement json, Type type, JsonDeserializationContext context)
+                throws JsonParseException {
+            if (type.equals(MapLocationImpl.class)) {
+                MapLocationImpl location = context.deserialize(json, MapLocationImpl.class);
+                if (!location.validate()) {
+                    throw new JsonParseException("Location was invalid while deserializing.");
+                }
+                return location;
+            } else if (type.equals(MapAreaImpl.class)) {
+                MapAreaImpl area = context.deserialize(json, MapAreaImpl.class);
+                if (!area.validate()) {
+                    throw new JsonParseException("Area was invalid while deserializing.");
+                }
+                return area;
+            } else if (type.equals(MapPathImpl.class)) {
+                MapPathImpl path = context.deserialize(json, MapPathImpl.class);
+                if (!path.validate()) {
+                    throw new JsonParseException("Path was invalid while deserializing.");
+                }
+                return path;
+            }
+
+            throw new JsonParseException("Feature to be deserialized is not location, path or area.");
+        }
+    }
+
     public static final class JsonCategorySerializer implements JsonDeserializer<MapCategoryImpl> {
         @Override
         public MapCategoryImpl deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
@@ -191,8 +238,9 @@ public final class JsonProvider implements MapDataProvider {
             String id = json.get("id").getAsString();
             String name = JsonUtils.getNullableJsonString(json, "name");
             JsonElement attributesJson = json.get("attributes");
-            MapAttributesImpl attributes =
-                    attributesJson == null ? null : GSON.fromJson(attributesJson, MapAttributesImpl.class);
+            MapAttributesImpl attributes = attributesJson == null
+                    ? null
+                    : Managers.Json.GSON.fromJson(attributesJson, MapAttributesImpl.class);
 
             return new MapCategoryImpl(id, name, attributes);
         }
@@ -252,13 +300,14 @@ public final class JsonProvider implements MapDataProvider {
         public JsonElement serialize(MapAttributesImpl mapAttributes, Type type, JsonSerializationContext context) {
             // For the base class, we just serialize the attributes as is
             if (type.equals(MapAttributesImpl.class)) {
-                return GSON.toJsonTree(mapAttributes);
+                return Managers.Json.GSON.toJsonTree(mapAttributes);
             }
 
             // For the specific implementations, we need to serialize the attributes that make sense,
             // explicitly skipping null and unsupported attributes
-            JsonObject attributesJson =
-                    GSON.toJsonTree(mapAttributes, MapAttributesImpl.class).getAsJsonObject();
+            JsonObject attributesJson = Managers.Json.GSON
+                    .toJsonTree(mapAttributes, MapAttributesImpl.class)
+                    .getAsJsonObject();
             JsonObject result = new JsonObject();
 
             attributesJson.entrySet().forEach(entry -> {
@@ -284,8 +333,6 @@ public final class JsonProvider implements MapDataProvider {
     }
 
     public static final class JsonIconSerializer implements JsonDeserializer<MapIconImpl>, JsonSerializer<MapIconImpl> {
-        private static final String DATA_URL_PREFIX = "data:image/png;base64,";
-
         @Override
         public MapIconImpl deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {
@@ -293,11 +340,6 @@ public final class JsonProvider implements MapDataProvider {
 
             String id = json.get("id").getAsString();
             String base64Texture = json.get("texture").getAsString();
-
-            // Remove the data url prefix if it exists
-            if (base64Texture.startsWith(DATA_URL_PREFIX)) {
-                base64Texture = base64Texture.substring(DATA_URL_PREFIX.length());
-            }
 
             byte[] texture = Base64.getDecoder().decode(base64Texture);
 
@@ -318,7 +360,6 @@ public final class JsonProvider implements MapDataProvider {
         }
     }
 
-    // FIXME: Validate the objects (null checks)
     private record JsonFeatures(List<MapLocationImpl> locations, List<MapAreaImpl> areas, List<MapPathImpl> paths) {
         public Stream<MapFeature> stream() {
             return Stream.of(locations, areas, paths).filter(Objects::nonNull).flatMap(List::stream);
