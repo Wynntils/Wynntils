@@ -10,12 +10,10 @@ import com.wynntils.core.components.Models;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.models.lootrun.type.TaskLocation;
-import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapMarkerOptionsBuilder;
 import com.wynntils.services.mapdata.attributes.impl.AbstractMapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
@@ -84,27 +82,8 @@ public class LootrunLocationProvider extends BuiltInProvider {
                 }
 
                 @Override
-                public Optional<MapVisibility> getIconVisibility() {
-                    return Optional.of(DefaultMapAttributes.ICON_ALWAYS);
-                }
-
-                @Override
-                public Optional<MapVisibility> getLabelVisibility() {
-                    return Optional.of(DefaultMapAttributes.LABEL_ALWAYS);
-                }
-
-                @Override
-                public Optional<Boolean> getHasMarker() {
-                    return Optional.of(true);
-                }
-
-                @Override
                 public Optional<MapMarkerOptions> getMarkerOptions() {
-                    return Optional.of(new MapMarkerOptionsBuilder()
-                            .withHasIcon(true)
-                            .withHasLabel(true)
-                            .withHasDistance(true)
-                            .withBeaconColor(beaconKind.getDisplayColor()));
+                    return Optional.of(new MapMarkerOptionsBuilder().withBeaconColor(beaconKind.getDisplayColor()));
                 }
             });
         }
