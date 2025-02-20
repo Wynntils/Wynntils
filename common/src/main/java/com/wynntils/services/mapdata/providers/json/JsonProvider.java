@@ -135,7 +135,7 @@ public final class JsonProvider implements MapDataProvider {
      * @param url              The url to load
      * @param registerCallback The callback to call with the loaded provider
      */
-    public static void loadOnlineResource(String id, String url, BiConsumer<String, MapDataProvider> registerCallback) {
+    public static void loadOnlineResource(String id, String url, BiConsumer<String, JsonProvider> registerCallback) {
         Download dl = Managers.Net.download(URI.create(url), id);
         dl.handleReader(
                 reader -> {
@@ -180,7 +180,7 @@ public final class JsonProvider implements MapDataProvider {
 
     @Override
     public void reloadData() {
-        // FIXME: To be implemented if needed (when the first json provider is added)
+        // Json providers do not need to reload data, as the whole object is reloaded by the owner service instead
     }
 
     public static final class JsonCategorySerializer implements JsonDeserializer<MapCategoryImpl> {
