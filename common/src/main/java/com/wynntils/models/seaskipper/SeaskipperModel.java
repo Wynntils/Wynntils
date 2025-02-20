@@ -8,6 +8,8 @@ import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -15,6 +17,7 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
+import com.wynntils.models.seaskipper.providers.SeaskipperDestinationAreaProvider;
 import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationProfile;
 import com.wynntils.screens.maps.CustomSeaskipperScreen;
@@ -25,14 +28,17 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public final class SeaskipperModel extends Model {
+    private static final SeaskipperDestinationAreaProvider SEASKIPPER_DESTINATION_AREA_PROVIDER =
+            new SeaskipperDestinationAreaProvider();
     private static final StyledText OAK_BOAT_NAME = StyledText.fromString("§bOak Boat");
 
-    private List<SeaskipperDestination> allDestinations = new ArrayList<>();
+    private final List<SeaskipperDestination> allDestinations = new CopyOnWriteArrayList<>();
     private List<SeaskipperDestination> availableDestinations = new ArrayList<>();
 
     private int boatSlot = -1;
@@ -42,9 +48,15 @@ public final class SeaskipperModel extends Model {
         super(List.of());
     }
 
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(SEASKIPPER_DESTINATION_AREA_PROVIDER);
+    }
+
     @Override
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_SEASKIPPER_DESTINATIONS).handleReader(this::handleSeaskipperPois);
+        registry.registerDownload(UrlId.DATA_STATIC_SEASKIPPER_DESTINATIONS)
+                .handleReader(this::handleSeaskipperDestinations);
     }
 
     @SubscribeEvent
@@ -57,7 +69,7 @@ public final class SeaskipperModel extends Model {
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Post event) {
         if (event.getContainerId() != containerId) return;
-        availableDestinations = new ArrayList<>();
+        List<SeaskipperDestination> newAvailableDestinations = new ArrayList<>();
 
         for (int i = 0; i < event.getItems().size(); i++) {
             ItemStack item = event.getItems().get(i);
@@ -85,12 +97,20 @@ public final class SeaskipperModel extends Model {
 
             SeaskipperDestinationProfile profile = destinationOptional.get().profile();
 
-            availableDestinations.add(new SeaskipperDestination(profile, destinationItem, i));
+            SeaskipperDestination newDestination = new SeaskipperDestination(profile, destinationItem, i);
+            newAvailableDestinations.add(newDestination);
         }
+
+        availableDestinations = newAvailableDestinations;
+        allDestinations.removeIf(destination -> availableDestinations.stream()
+                .anyMatch(available -> available.profile().equals(destination.profile())));
+        allDestinations.addAll(availableDestinations);
+
+        SEASKIPPER_DESTINATION_AREA_PROVIDER.updateDestinations(allDestinations);
 
         // Reload the map
         if (McUtils.mc().screen instanceof CustomSeaskipperScreen customSeaskipperScreen) {
-            customSeaskipperScreen.reloadDestinationPois();
+            customSeaskipperScreen.reloadDestinations();
         }
     }
 
@@ -135,12 +155,14 @@ public final class SeaskipperModel extends Model {
         return !allDestinations.isEmpty();
     }
 
-    private void handleSeaskipperPois(Reader reader) {
+    private void handleSeaskipperDestinations(Reader reader) {
         Type type = new TypeToken<ArrayList<SeaskipperDestinationProfile>>() {}.getType();
         List<SeaskipperDestinationProfile> profiles = WynntilsMod.GSON.fromJson(reader, type);
 
-        allDestinations = profiles.stream()
+        allDestinations.clear();
+        allDestinations.addAll(profiles.stream()
                 .map(profile -> new SeaskipperDestination(profile, null, -1))
-                .toList();
+                .toList());
+        SEASKIPPER_DESTINATION_AREA_PROVIDER.updateDestinations(allDestinations);
     }
 }

@@ -125,6 +125,11 @@ public class CategoriesProvider extends BuiltInProvider {
                 public Optional<MapVisibility> getLabelVisibility() {
                     return Optional.of(DefaultMapAttributes.LABEL_NEVER);
                 }
+
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(new MapMarkerOptionsBuilder().withHasLabel(true));
+                }
             });
         }
     }

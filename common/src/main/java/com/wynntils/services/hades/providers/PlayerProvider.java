@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.mapdata.providers.builtin;
+package com.wynntils.services.hades.providers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
@@ -17,6 +17,7 @@ import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
+import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.Texture;

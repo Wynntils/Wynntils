@@ -13,6 +13,8 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -20,6 +22,7 @@ import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.event.TerritoriesUpdatedEvent;
 import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.models.territories.providers.TerritoryProvider;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import java.util.Collection;
@@ -52,6 +55,8 @@ public final class TerritoryModel extends Model {
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
             .create();
 
+    private static final TerritoryProvider TERRITORY_PROVIDER = new TerritoryProvider();
+
     // This is the info gathered from the advancement from Wynncraft
     private final Map<String, TerritoryInfo> territoryInfoMap = new ConcurrentHashMap<>();
 
@@ -76,6 +81,11 @@ public final class TerritoryModel extends Model {
 
         scheduledFuture = timerExecutor.scheduleWithFixedDelay(
                 this::updateTerritoryProfileMap, 0, IN_GUILD_TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
+    }
+
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(TERRITORY_PROVIDER);
     }
 
     public Collection<TerritoryProfile> getTerritoryProfiles() {
