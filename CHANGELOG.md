@@ -1,9 +1,29 @@
+## [3.0.7](https://github.com/Wynntils/Wynntils/compare/v3.0.6...v3.0.7) (2025-02-21)
+
+
+### Bug Fixes
+
+* Fix beacon tracking after patch ([#3135](https://github.com/Wynntils/Wynntils/issues/3135)) ([bfeac12](https://github.com/Wynntils/Wynntils/commit/bfeac12a512139a63c19eef5f50ea75dd5496a15))
+* Fix shaman totem timer tracking [skip ci] ([#3117](https://github.com/Wynntils/Wynntils/issues/3117)) ([8a21aea](https://github.com/Wynntils/Wynntils/commit/8a21aea6dfe94f9d378a52a5c5cd0c593a98e362))
+* Make lootrun mission overlay default position visible [skip ci] ([#3118](https://github.com/Wynntils/Wynntils/issues/3118)) ([ded5986](https://github.com/Wynntils/Wynntils/commit/ded59861e249e8c42102b6f44c5a40499557b8b1))
+* Support negative stats with stars [skip ci] ([#3134](https://github.com/Wynntils/Wynntils/issues/3134)) ([a24826d](https://github.com/Wynntils/Wynntils/commit/a24826da6dc14aa5e079773406e01a85583c9b3f))
+
+
+### Code Refactoring
+
+* Introduce WynntilsInitEvent.ModInitFinished event [skip ci] ([#3119](https://github.com/Wynntils/Wynntils/issues/3119)) ([dfe441b](https://github.com/Wynntils/Wynntils/commit/dfe441b2f6d59df90a7065e6d710e265084db53f)), closes [#3076](https://github.com/Wynntils/Wynntils/issues/3076)
+
 ## [3.0.6](https://github.com/Wynntils/Wynntils/compare/v3.0.5...v3.0.6) (2025-02-13)
 
 
 ### Bug Fixes
 
 * Make the mod check the recommended update version, don't update in case of MC version mismatch ([#3116](https://github.com/Wynntils/Wynntils/issues/3116)) ([14dae0f](https://github.com/Wynntils/Wynntils/commit/14dae0fab610a4683232101a9d9c0f6a98bdf7c9))
+
+
+### Miscellaneous Chores
+
+* **release:** v3.0.6 [skip ci] ([ab1ab7c](https://github.com/Wynntils/Wynntils/commit/ab1ab7c29e6b083a1d4aea49a34374c428748528))
 
 ## [3.0.5](https://github.com/Wynntils/Wynntils/compare/v3.0.4...v3.0.5) (2025-02-13)
 
@@ -57,16 +77,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#3100](https://github.com/Wynntils/Wynntils/issues/3100)) ([5312f4e](https://github.com/Wynntils/Wynntils/commit/5312f4ece6d45ee72eec369014f3f3cf25d6d44c))
 * **release:** v3.0.3 [skip ci] ([f852da6](https://github.com/Wynntils/Wynntils/commit/f852da6a6206091a9c71724f5cf2815c0b615ba3))
-
-## [3.0.2](https://github.com/Wynntils/Wynntils/compare/v3.0.1...v3.0.2) (2025-02-01)
-
-
-### Bug Fixes
-
-* Add named tasks v2 to urls.json ([#3097](https://github.com/Wynntils/Wynntils/issues/3097)) ([db8e407](https://github.com/Wynntils/Wynntils/commit/db8e4075b34daac5b8eafed2e52db402c8dbf0da))
-
-
-### Miscellaneous Chores
-
-* **release:** v3.0.2 [skip ci] ([cf1c41c](https://github.com/Wynntils/Wynntils/commit/cf1c41c3e1660f7192ecb89f3a5367f9856662dc))
 
