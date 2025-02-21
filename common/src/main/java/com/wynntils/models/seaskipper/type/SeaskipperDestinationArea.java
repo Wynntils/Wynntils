@@ -62,7 +62,7 @@ public class SeaskipperDestinationArea implements MapArea {
 
     @Override
     public String getCategoryId() {
-        return "wynntils:seaskipper-destination";
+        return "wynntils:fast-travel:seaskipper-destination";
     }
 
     @Override
@@ -86,16 +86,6 @@ public class SeaskipperDestinationArea implements MapArea {
             @Override
             public Optional<CustomColor> getBorderColor() {
                 return Optional.of(getColor());
-            }
-
-            @Override
-            public Optional<Integer> getPriority() {
-                return Optional.of(900);
-            }
-
-            @Override
-            public Optional<Float> getBorderWidth() {
-                return Optional.of(1f);
             }
 
             private CustomColor getColor() {
