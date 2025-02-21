@@ -81,7 +81,7 @@ public class TerritoryArea implements MapArea {
             }
 
             @Override
-            public Optional<String> getSecondaryLabel() {
+            public Optional<String> getDescription() {
                 return Optional.of(territoryProfile.getName());
             }
 

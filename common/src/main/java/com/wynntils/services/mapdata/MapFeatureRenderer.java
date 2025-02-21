@@ -254,13 +254,13 @@ public final class MapFeatureRenderer {
                         textScale);
 
         // If hovered, draw secondary label
-        if (hovered && !attributes.secondaryLabel().isEmpty()) {
+        if (hovered && !attributes.description().isEmpty()) {
             // The secondary label is rendered below the primary label, with the full scale
             BufferedFontRenderer.getInstance()
                     .renderText(
                             poseStack,
                             bufferSource,
-                            StyledText.fromString(attributes.secondaryLabel()),
+                            StyledText.fromString(attributes.description()),
                             centroid.x(),
                             centroid.y() + FontRenderer.getInstance().getFont().lineHeight * textScale,
                             0f,

@@ -56,8 +56,8 @@ public final class OverrideMapAttributes implements MapAttributes {
     }
 
     @Override
-    public Optional<String> getSecondaryLabel() {
-        return resolveAttribute(MapAttributes::getSecondaryLabel);
+    public Optional<String> getDescription() {
+        return resolveAttribute(MapAttributes::getDescription);
     }
 
     @Override
