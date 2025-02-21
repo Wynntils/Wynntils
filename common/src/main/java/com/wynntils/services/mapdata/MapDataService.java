@@ -17,13 +17,9 @@ import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.CategoriesProvider;
 import com.wynntils.services.mapdata.providers.builtin.CombatListProvider;
-import com.wynntils.services.mapdata.providers.builtin.LootChestsProvider;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
-import com.wynntils.services.mapdata.providers.builtin.PlayerProvider;
 import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
-import com.wynntils.services.mapdata.providers.builtin.TerritoryProvider;
-import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.providers.type.MapDataOverrideProvider;
 import com.wynntils.services.mapdata.providers.type.MapDataProvider;
@@ -47,11 +43,6 @@ public class MapDataService extends Service {
     private static final ServiceListProvider SERVICE_LIST_PROVIDER = new ServiceListProvider();
     private static final CombatListProvider COMBAT_LIST_PROVIDER = new CombatListProvider();
     private static final PlaceListProvider PLACE_LIST_PROVIDER = new PlaceListProvider();
-    private static final PlayerProvider PLAYER_PROVIDER = new PlayerProvider();
-    private static final TerritoryProvider TERRITORY_PROVIDER = new TerritoryProvider();
-
-    public static final WaypointsProvider WAYPOINTS_PROVIDER = new WaypointsProvider();
-    public static final LootChestsProvider LOOT_CHESTS_PROVIDER = new LootChestsProvider();
 
     private static final MapDataProvider ONLINE_PLACEHOLDER_PROVIDER = new PlaceholderProvider();
     // FIXME: i18n
@@ -137,8 +128,9 @@ public class MapDataService extends Service {
                         overrideProviders.values().stream().filter(attr -> attr.getOverridenFeatureIds()
                                 .anyMatch(attrFeatureId -> attrFeatureId.equals(feature.getFeatureId()))),
                         overrideProviders.values().stream().filter(attr -> attr.getOverridenCategoryIds()
-                                .anyMatch(attrCategoryId -> attrCategoryId.equals(feature.getCategoryId()))))
-                .map(MapDataOverrideProvider::getOverrideAttributes)
+                                .anyMatch(attrCategoryId ->
+                                        feature.getCategoryId().startsWith(attrCategoryId))))
+                .map(provider -> provider.getOverrideAttributes(feature))
                 .toList());
     }
 
@@ -171,15 +163,24 @@ public class MapDataService extends Service {
         overrideProviders.putFirst(overrideProviderId, provider);
         provider.onChange(this::onProviderChange);
 
-        // Invalidate caches
-        invalidateAllCaches();
+        // Invalidate caches for the features that this provider overrides
+        this.getFeatures()
+                .filter(feature -> provider.getOverridenCategoryIds()
+                                .anyMatch(categoryId -> feature.getCategoryId().startsWith(categoryId))
+                        || provider.getOverridenFeatureIds().anyMatch(feature.getFeatureId()::equals))
+                .forEach(this::onProviderChange);
     }
 
     public void unregisterOverrideProvider(String overrideProviderId) {
-        overrideProviders.remove(overrideProviderId);
+        MapDataOverrideProvider provider = overrideProviders.remove(overrideProviderId);
+        if (provider == null) return;
 
-        // Invalidate caches
-        invalidateAllCaches();
+        // Invalidate caches for the features that this provider overrides
+        this.getFeatures()
+                .filter(feature -> provider.getOverridenCategoryIds()
+                                .anyMatch(categoryId -> feature.getCategoryId().startsWith(categoryId))
+                        || provider.getOverridenFeatureIds().anyMatch(feature.getFeatureId()::equals))
+                .forEach(this::onProviderChange);
     }
 
     /**
@@ -200,10 +201,6 @@ public class MapDataService extends Service {
         registerBuiltInProvider(SERVICE_LIST_PROVIDER);
         registerBuiltInProvider(COMBAT_LIST_PROVIDER);
         registerBuiltInProvider(PLACE_LIST_PROVIDER);
-        registerBuiltInProvider(PLAYER_PROVIDER);
-        registerBuiltInProvider(TERRITORY_PROVIDER);
-        registerBuiltInProvider(WAYPOINTS_PROVIDER);
-        registerBuiltInProvider(LOOT_CHESTS_PROVIDER);
     }
 
     private void registerProvider(String providerId, MapDataProvider provider) {

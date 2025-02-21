@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
@@ -25,6 +26,7 @@ import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.services.mapdata.impl.MapIconImpl;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,8 +37,11 @@ import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class WaypointsService extends Service {
+    private static final WaypointsProvider WAYPOINTS_PROVIDER = new WaypointsProvider();
+
     @Persisted
     private final Storage<List<WaypointLocation>> waypoints = new Storage<>(new ArrayList<>());
 
@@ -47,15 +52,20 @@ public class WaypointsService extends Service {
         super(List.of());
     }
 
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(WAYPOINTS_PROVIDER);
+    }
+
     @Override
     public void onStorageLoad(Storage<?> storage) {
         if (storage == waypoints) {
             startPoiMigration();
-            Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
+            WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
         }
 
         if (storage == customIcons) {
-            Services.MapData.WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
+            WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
         }
     }
 
@@ -70,13 +80,13 @@ public class WaypointsService extends Service {
     public void addCustomIcon(MapIconImpl iconToAdd) {
         customIcons.get().add(iconToAdd);
         customIcons.touched();
-        Services.MapData.WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
+        WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
     }
 
     public void removeCustomIcon(MapIconImpl iconToRemove) {
         customIcons.get().remove(iconToRemove);
         customIcons.touched();
-        Services.MapData.WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
+        WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
     }
 
     public Set<String> getCategories() {
@@ -86,13 +96,13 @@ public class WaypointsService extends Service {
     public void addWaypoint(WaypointLocation waypoint) {
         waypoints.get().add(waypoint);
         waypoints.touched();
-        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
+        WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
     }
 
     public void addWaypointAtIndex(WaypointLocation waypoint, int index) {
         waypoints.get().add(index, waypoint);
         waypoints.touched();
-        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
+        WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
     }
 
     public void reorderWaypoints(WaypointLocation waypointA, WaypointLocation waypointB) {
@@ -109,7 +119,7 @@ public class WaypointsService extends Service {
         if (save) {
             waypoints.touched();
         }
-        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
+        WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
     }
 
     public boolean importWaypoints() {
@@ -137,7 +147,7 @@ public class WaypointsService extends Service {
 
         waypoints.get().addAll(waypointsToAdd);
         waypoints.touched();
-        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
+        WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
 
         McUtils.sendMessageToClient(
                 Component.translatable("service.wynntils.waypoint.importSuccess", waypointsToAdd.size())

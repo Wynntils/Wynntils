@@ -23,6 +23,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +56,10 @@ public class CategoriesProvider extends BuiltInProvider {
         PROVIDED_CATEGORIES.add(new WaypointCategory());
         PROVIDED_CATEGORIES.add(new WynntilsCategory());
         PROVIDED_CATEGORIES.add(new PlayersCategory());
+        PROVIDED_CATEGORIES.add(new SeaskipperDestinationCategory());
+        PROVIDED_CATEGORIES.add(new LootrunCategory());
+        PROVIDED_CATEGORIES.add(new GuildAttackCategory());
+        PROVIDED_CATEGORIES.add(new UserMarkerCategory());
     }
 
     @Override
@@ -88,6 +93,11 @@ public class CategoriesProvider extends BuiltInProvider {
                 public Optional<String> getIconId() {
                     return Optional.of(MapIconsProvider.FALLBACK_ICON_ID);
                 }
+
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(new MapMarkerOptionsBuilder().withHasLabel(false));
+                }
             });
         }
     }
@@ -119,6 +129,11 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public Optional<MapVisibility> getLabelVisibility() {
                     return Optional.of(DefaultMapAttributes.LABEL_NEVER);
+                }
+
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(new MapMarkerOptionsBuilder().withHasLabel(true));
                 }
             });
         }
@@ -352,12 +367,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<CustomColor> getLabelColor() {
-                    return Optional.of(
-                            switch (placeType) {
-                                case PROVINCE -> CommonColors.DARK_AQUA;
-                                case CITY -> CommonColors.YELLOW;
-                                case TOWN_OR_PLACE -> CommonColors.WHITE;
-                            });
+                    return Optional.of(getPlaceColor());
                 }
 
                 @Override
@@ -374,7 +384,23 @@ public class CategoriesProvider extends BuiltInProvider {
                                 case TOWN_OR_PLACE -> PLACE_VISIBILITY;
                             });
                 }
+
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(new MapMarkerOptionsBuilder()
+                            .withHasDistance(true)
+                            .withHasLabel(true)
+                            .withBeaconColor(getPlaceColor()));
+                }
             });
+        }
+
+        private CustomColor getPlaceColor() {
+            return switch (placeType) {
+                case PROVINCE -> CommonColors.DARK_AQUA;
+                case CITY -> CommonColors.YELLOW;
+                case TOWN_OR_PLACE -> CommonColors.WHITE;
+            };
         }
     }
 
@@ -515,6 +541,161 @@ public class CategoriesProvider extends BuiltInProvider {
                 public Optional<String> getIconId() {
                     return Optional.of("wynntils:icon:content:"
                             + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, activityType.name()));
+                }
+            });
+        }
+    }
+
+    private static final class SeaskipperDestinationCategory implements MapCategory {
+        @Override
+        public String getCategoryId() {
+            return "wynntils:fast-travel:seaskipper-destination";
+        }
+
+        @Override
+        public Optional<String> getName() {
+            return Optional.of("Seaskipper Destinations");
+        }
+
+        @Override
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
+                @Override
+                public Optional<Integer> getPriority() {
+                    return Optional.of(900);
+                }
+            });
+        }
+    }
+
+    private static final class LootrunCategory implements MapCategory {
+        @Override
+        public String getCategoryId() {
+            return "wynntils:lootrun";
+        }
+
+        @Override
+        public Optional<String> getName() {
+            return Optional.of("Lootrun Locations");
+        }
+
+        @Override
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
+                @Override
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(DefaultMapAttributes.ICON_ALWAYS);
+                }
+
+                @Override
+                public Optional<MapVisibility> getLabelVisibility() {
+                    return Optional.of(DefaultMapAttributes.LABEL_ALWAYS);
+                }
+
+                @Override
+                public Optional<Boolean> getHasMarker() {
+                    return Optional.of(true);
+                }
+
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(new MapMarkerOptionsBuilder()
+                            .withHasIcon(true)
+                            .withHasLabel(true)
+                            .withHasDistance(true));
+                }
+            });
+        }
+    }
+
+    private static final class GuildAttackCategory implements MapCategory {
+        @Override
+        public String getCategoryId() {
+            return "wynntils:territory:attack";
+        }
+
+        @Override
+        public Optional<String> getName() {
+            return Optional.of("Guild Attack Locations");
+        }
+
+        @Override
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
+                @Override
+                public Optional<MapVisibility> getLabelVisibility() {
+                    return Optional.of(DefaultMapAttributes.LABEL_ALWAYS);
+                }
+
+                @Override
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(DefaultMapAttributes.ICON_ALWAYS);
+                }
+
+                @Override
+                public Optional<Boolean> getHasMarker() {
+                    return Optional.of(true);
+                }
+
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(new MapMarkerOptionsBuilder()
+                            .withHasIcon(true)
+                            .withHasLabel(true)
+                            .withHasDistance(true));
+                }
+            });
+        }
+    }
+
+    private static final class UserMarkerCategory implements MapCategory {
+        @Override
+        public String getCategoryId() {
+            return "wynntils:personal:user-marker";
+        }
+
+        @Override
+        public Optional<String> getName() {
+            return Optional.of("User Markers");
+        }
+
+        @Override
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
+                @Override
+                public Optional<Integer> getPriority() {
+                    return Optional.of(1000);
+                }
+
+                @Override
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(DefaultMapAttributes.ICON_ALWAYS);
+                }
+
+                @Override
+                public Optional<MapVisibility> getLabelVisibility() {
+                    return Optional.of(DefaultMapAttributes.LABEL_ALWAYS);
+                }
+
+                @Override
+                public Optional<String> getIconId() {
+                    return Optional.of(MapIconsProvider.getIconIdFromTexture(Texture.WAYPOINT));
+                }
+
+                @Override
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(CommonColors.WHITE);
+                }
+
+                @Override
+                public Optional<Boolean> getHasMarker() {
+                    return Optional.of(true);
+                }
+
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(
+                            new MapMarkerOptionsBuilder().withHasLabel(true).build());
                 }
             });
         }

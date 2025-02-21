@@ -16,6 +16,7 @@ public class MapAttributesImpl implements MapAttributes {
     private final int priority;
     private final int level;
     private final String label;
+    private final String description;
     private final MapVisibilityImpl labelVisibility;
     private final CustomColor labelColor;
     private final TextShadow labelShadow;
@@ -32,6 +33,7 @@ public class MapAttributesImpl implements MapAttributes {
             int priority,
             int level,
             String label,
+            String description,
             MapVisibilityImpl labelVisibility,
             CustomColor labelColor,
             TextShadow labelShadow,
@@ -46,6 +48,7 @@ public class MapAttributesImpl implements MapAttributes {
         this.priority = priority;
         this.level = level;
         this.label = label;
+        this.description = description;
         this.labelVisibility = labelVisibility;
         this.labelColor = labelColor;
         this.labelShadow = labelShadow;
@@ -64,6 +67,7 @@ public class MapAttributesImpl implements MapAttributes {
                 attributes.priority,
                 attributes.level,
                 attributes.label,
+                attributes.description,
                 attributes.labelVisibility,
                 attributes.labelColor,
                 attributes.labelShadow,
@@ -75,11 +79,6 @@ public class MapAttributesImpl implements MapAttributes {
                 attributes.fillColor,
                 attributes.borderColor,
                 attributes.borderWidth);
-    }
-
-    @Override
-    public Optional<String> getLabel() {
-        return Optional.ofNullable(label);
     }
 
     @Override
@@ -95,6 +94,16 @@ public class MapAttributesImpl implements MapAttributes {
     @Override
     public Optional<Integer> getLevel() {
         return Optional.of(level);
+    }
+
+    @Override
+    public Optional<String> getLabel() {
+        return Optional.ofNullable(label);
+    }
+
+    @Override
+    public Optional<String> getDescription() {
+        return Optional.ofNullable(description);
     }
 
     @Override

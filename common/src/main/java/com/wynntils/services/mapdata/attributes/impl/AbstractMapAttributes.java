@@ -29,6 +29,11 @@ public abstract class AbstractMapAttributes implements MapAttributes {
     }
 
     @Override
+    public Optional<String> getDescription() {
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<MapVisibility> getLabelVisibility() {
         return Optional.empty();
     }

@@ -1,24 +1,39 @@
 #!/bin/sh
 # Based on https://medium.com/@mmessell/apply-spotless-formatting-with-git-pre-commit-hook-1c484ea68c34
-# install by running `git config core.hooksPath utils/git-hooks` in your repo root
+# Install by running `git config core.hooksPath utils/git-hooks` in your repo root
 
-echo '[git hook] executing gradle spotlessApply before commit'
+echo '[git hook] Running Gradle spotlessApply before commit...'
 
 # Get list of staged files
 stagedFiles=$(git diff --staged --name-only)
 
-# Run spotlessApply with the gradle wrapper
+# Run Spotless formatting
 ./gradlew spotlessApply
+spotless_exit_code=$?
 
-# Store the last exit code
-RESULT=$?
+# Run the remove_unused_i18n.sh script
+if [ $spotless_exit_code -eq 0 ]; then
+  echo '[git hook] Running remove_unused_i18n.sh...'
+  ./utils/remove_unused_i18n.sh
+  i18n_exit_code=$?
+else
+  echo '[git hook] Spotless formatting failed, skipping remove_unused_i18n.sh.'
+  exit $spotless_exit_code
+fi
+
+# If either command fails, prevent the commit
+if [ $i18n_exit_code -ne 0 ]; then
+  echo '[git hook] remove_unused_i18n.sh failed. Commit aborted.'
+  exit $i18n_exit_code
+fi
 
 # Re-add possibly modified files to the git stage area
 for file in $stagedFiles; do
   if test -f "$file"; then
-    git add $file
+    git add "$file"
   fi
 done
 
-# Return the './gradlew spotlessApply' exit code
-exit $RESULT
+echo '[git hook] Formatting and cleanup completed successfully.'
+
+exit 0

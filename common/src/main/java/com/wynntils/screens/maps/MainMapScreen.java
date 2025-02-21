@@ -11,11 +11,14 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
+import com.wynntils.services.mapdata.features.type.MapArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.utils.colors.CommonColors;
@@ -276,9 +279,10 @@ public final class MainMapScreen extends AbstractMapScreen {
             mapFeatures = mapFeatures.filter(feature -> !(feature instanceof TerritoryArea));
         }
 
+        mapFeatures = mapFeatures.filter(feature -> !(feature instanceof SeaskipperDestinationArea));
+
         // FIXME: Add back the pois that are still not converted to MapData
         //        - Provided custom pois
-        //        - Marker waypoints
         //        - Remote players
 
         return mapFeatures;
@@ -344,6 +348,33 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
 
                 Services.UserMarker.addUserMarkedFeature(hoveredLocation);
+
+                return true;
+            } else if (hoveredFeature instanceof MapArea mapArea) {
+                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
+
+                Location centroid =
+                        Location.containing(mapArea.getBoundingPolygon().centroid());
+                if (Services.UserMarker.isMarkerAtLocation(centroid)) {
+                    Services.UserMarker.removeMarkerAtLocation(centroid);
+                    return true;
+                }
+
+                // If shift is not held down, clear all waypoints to only have the new one
+                if (!KeyboardUtils.isShiftDown()) {
+                    Services.UserMarker.removeAllUserMarkedFeatures();
+                }
+
+                ResolvedMapAttributes attributes = Services.MapData.resolveMapAttributes(mapArea);
+
+                String label = attributes.label();
+
+                // Special case for territories, use the territory name
+                if (mapArea instanceof TerritoryArea territoryArea) {
+                    label = territoryArea.getTerritoryProfile().getName();
+                }
+
+                Services.UserMarker.addMarkerAtLocation(centroid, label);
 
                 return true;
             }

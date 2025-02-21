@@ -56,6 +56,11 @@ public final class OverrideMapAttributes implements MapAttributes {
     }
 
     @Override
+    public Optional<String> getDescription() {
+        return resolveAttribute(MapAttributes::getDescription);
+    }
+
+    @Override
     public Optional<MapVisibility> getLabelVisibility() {
         return resolveAttribute(MapAttributes::getLabelVisibility);
     }

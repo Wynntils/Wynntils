@@ -2,12 +2,13 @@
  * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.mapdata.providers.builtin;
+package com.wynntils.models.territories.providers;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.territories.event.TerritoriesUpdatedEvent;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
