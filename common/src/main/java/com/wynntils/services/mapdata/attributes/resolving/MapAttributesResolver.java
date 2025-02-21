@@ -35,7 +35,7 @@ public final class MapAttributesResolver {
                 resolver.getAttribute(MapAttributes::getPriority),
                 resolver.getAttribute(MapAttributes::getLevel),
                 resolver.getAttribute(MapAttributes::getLabel),
-                resolver.getAttribute(MapAttributes::getSecondaryLabel),
+                resolver.getAttribute(MapAttributes::getDescription),
                 resolver.getResolvedMapVisibility(MapAttributes::getLabelVisibility),
                 resolver.getAttribute(MapAttributes::getLabelColor),
                 resolver.getAttribute(MapAttributes::getLabelShadow),

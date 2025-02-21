@@ -49,7 +49,7 @@ public final class DefaultMapAttributes implements MapAttributes {
     }
 
     @Override
-    public Optional<String> getSecondaryLabel() {
+    public Optional<String> getDescription() {
         return Optional.of("");
     }
 

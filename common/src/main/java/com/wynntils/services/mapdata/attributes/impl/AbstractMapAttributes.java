@@ -29,7 +29,7 @@ public abstract class AbstractMapAttributes implements MapAttributes {
     }
 
     @Override
-    public Optional<String> getSecondaryLabel() {
+    public Optional<String> getDescription() {
         return Optional.empty();
     }
 

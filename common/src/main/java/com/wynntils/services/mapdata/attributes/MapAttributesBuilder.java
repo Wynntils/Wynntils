@@ -21,7 +21,7 @@ public class MapAttributesBuilder {
     private int priority;
     private int level;
     private String label;
-    private String secondaryLabel;
+    private String description;
     private MapVisibilityImpl labelVisibility;
     private CustomColor labelColor;
     private TextShadow labelShadow;
@@ -49,8 +49,8 @@ public class MapAttributesBuilder {
         return this;
     }
 
-    public MapAttributesBuilder setSecondaryLabel(String secondaryLabel) {
-        this.secondaryLabel = secondaryLabel;
+    public MapAttributesBuilder setDescription(String description) {
+        this.description = description;
         return this;
     }
 
@@ -140,7 +140,7 @@ public class MapAttributesBuilder {
                     priority,
                     level,
                     label,
-                    secondaryLabel,
+                    description,
                     labelVisibility,
                     labelColor,
                     labelShadow,
@@ -157,7 +157,7 @@ public class MapAttributesBuilder {
             MapPathAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
 
             return new MapPathAttributesImpl(
-                    priority, level, label, secondaryLabel, labelVisibility, labelColor, labelShadow);
+                    priority, level, label, description, labelVisibility, labelColor, labelShadow);
         }
     }
 
@@ -169,7 +169,7 @@ public class MapAttributesBuilder {
                     priority,
                     level,
                     label,
-                    secondaryLabel,
+                    description,
                     labelVisibility,
                     labelColor,
                     labelShadow,

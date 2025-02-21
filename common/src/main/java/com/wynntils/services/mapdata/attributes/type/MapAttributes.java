@@ -34,7 +34,7 @@ public interface MapAttributes {
     Optional<String> getLabel();
 
     // If this is the empty string (""), then no secondary label will be displayed
-    Optional<String> getSecondaryLabel();
+    Optional<String> getDescription();
 
     // The visibility of the label on the map
     Optional<MapVisibility> getLabelVisibility();
