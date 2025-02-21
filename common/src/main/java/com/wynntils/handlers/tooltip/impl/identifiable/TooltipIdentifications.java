@@ -147,7 +147,7 @@ public final class TooltipIdentifications {
 
         if (!starString.isEmpty()) {
             line.append(Component.literal(starString)
-                    .withStyle(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
+                    .withStyle(hasPositiveEffect ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
         }
 
         line.append(Component.literal(" "
