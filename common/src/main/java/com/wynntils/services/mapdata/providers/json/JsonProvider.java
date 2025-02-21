@@ -191,6 +191,10 @@ public final class JsonProvider implements MapDataProvider {
                             JsonUtils.getNullableJsonArray(featuresObject, "paths"),
                             new TypeToken<List<MapPathImpl>>() {}.getType()));
 
+            if (!features.validate()) {
+                throw new JsonParseException("Invalid features in json provider.");
+            }
+
             List<MapCategory> categories = context.deserialize(
                     JsonUtils.getNullableJsonArray(jsonProvider, "categories"),
                     new TypeToken<List<MapCategory>>() {}.getType());
@@ -198,34 +202,6 @@ public final class JsonProvider implements MapDataProvider {
                     JsonUtils.getNullableJsonArray(jsonProvider, "icons"), new TypeToken<List<MapIcon>>() {}.getType());
 
             return new JsonProvider(version, features, categories, icons);
-        }
-    }
-
-    public static final class JsonFeatureSerializer implements JsonDeserializer<MapFeature> {
-        @Override
-        public MapFeature deserialize(JsonElement json, Type type, JsonDeserializationContext context)
-                throws JsonParseException {
-            if (type.equals(MapLocationImpl.class)) {
-                MapLocationImpl location = context.deserialize(json, MapLocationImpl.class);
-                if (!location.validate()) {
-                    throw new JsonParseException("Location was invalid while deserializing.");
-                }
-                return location;
-            } else if (type.equals(MapAreaImpl.class)) {
-                MapAreaImpl area = context.deserialize(json, MapAreaImpl.class);
-                if (!area.validate()) {
-                    throw new JsonParseException("Area was invalid while deserializing.");
-                }
-                return area;
-            } else if (type.equals(MapPathImpl.class)) {
-                MapPathImpl path = context.deserialize(json, MapPathImpl.class);
-                if (!path.validate()) {
-                    throw new JsonParseException("Path was invalid while deserializing.");
-                }
-                return path;
-            }
-
-            throw new JsonParseException("Feature to be deserialized is not location, path or area.");
         }
     }
 
@@ -363,6 +339,12 @@ public final class JsonProvider implements MapDataProvider {
     private record JsonFeatures(List<MapLocationImpl> locations, List<MapAreaImpl> areas, List<MapPathImpl> paths) {
         public Stream<MapFeature> stream() {
             return Stream.of(locations, areas, paths).filter(Objects::nonNull).flatMap(List::stream);
+        }
+
+        public boolean validate() {
+            return locations.stream().allMatch(MapLocationImpl::validate)
+                    && areas.stream().allMatch(MapAreaImpl::validate)
+                    && paths.stream().allMatch(MapPathImpl::validate);
         }
     }
 }
