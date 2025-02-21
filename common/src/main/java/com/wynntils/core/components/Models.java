@@ -68,7 +68,6 @@ public final class Models {
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
     public static final BankModel Bank = new BankModel();
     public static final BeaconModel Beacon = new BeaconModel();
-    public static final ActivityModel Activity = new ActivityModel(Beacon);
     public static final BombModel Bomb = new BombModel();
     public static final CaveModel Cave = new CaveModel();
     public static final CharacterModel Character = new CharacterModel();
@@ -122,4 +121,7 @@ public final class Models {
     public static final WorldStateModel WorldState = new WorldStateModel();
     public static final WynnAlphabetModel WynnAlphabet = new WynnAlphabetModel();
     public static final WynnItemModel WynnItem = new WynnItemModel();
+
+    // Models with constructor dependencies, ordered alphabetically as far as possible
+    public static final ActivityModel Activity = new ActivityModel(Beacon);
 }
