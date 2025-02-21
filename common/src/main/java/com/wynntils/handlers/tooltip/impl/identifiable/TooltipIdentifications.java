@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable;
@@ -146,7 +146,8 @@ public final class TooltipIdentifications {
                 .withStyle(Style.EMPTY.withColor(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
 
         if (!starString.isEmpty()) {
-            line.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
+            line.append(Component.literal(starString)
+                    .withStyle(hasPositiveEffect ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
         }
 
         line.append(Component.literal(" "
