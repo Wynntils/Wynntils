@@ -99,11 +99,6 @@ public class TerritoryArea implements MapArea {
             public Optional<CustomColor> getBorderColor() {
                 return Optional.of(guildColor);
             }
-
-            @Override
-            public Optional<Float> getBorderWidth() {
-                return Optional.of(1f);
-            }
         });
     }
 
