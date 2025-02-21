@@ -7,7 +7,6 @@ package com.wynntils.services.usermarker;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.mod.event.WynntilsInitEvent;
-import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
@@ -42,14 +41,13 @@ public class UserMarkerService extends Service {
     private static final String MARKED_OVERRIDE_PROVIDER_ID = "override:user_marked_provider";
     private final UserMarkerOverrideProvider userMarkedOverrideProvider = new UserMarkerOverrideProvider();
 
-    public UserMarkerService(MapDataService mapData) {
-        super(List.of(mapData));
-
-        Services.MapData.registerOverrideProvider(MARKED_OVERRIDE_PROVIDER_ID, userMarkedOverrideProvider);
+    public UserMarkerService() {
+        super(List.of());
     }
 
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerOverrideProvider(MARKED_OVERRIDE_PROVIDER_ID, userMarkedOverrideProvider);
         Services.MapData.registerBuiltInProvider(USER_MARKER_PROVIDER);
     }
 
