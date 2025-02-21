@@ -20,14 +20,14 @@ public interface MapDataOverrideProvider {
     MapAttributes getOverrideAttributes(MapFeature mapFeature);
 
     /**
-     * Get the feature ids that are overriden by this provider.
+     * The list of feature ids that are overriden by this provider.
      *
      * @return The feature ids that are overriden by this provider.
      */
     Stream<String> getOverridenFeatureIds();
 
     /**
-     * Get the category ids that are overriden by this provider.
+     * The list of category ids that are overriden by this provider.
      *
      * @return The category ids that are overriden by this provider.
      */
