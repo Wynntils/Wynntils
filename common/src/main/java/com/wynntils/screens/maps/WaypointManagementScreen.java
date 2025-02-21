@@ -186,6 +186,17 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         this.addRenderableWidget(deleteSelectedButton);
         // endregion
 
+        // region add waypoint button
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.waypointManagementGui.add"),
+                        (button) -> McUtils.mc().setScreen(WaypointCreationScreen.create(this)))
+                .pos(
+                        (int) (getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() + 10),
+                        (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10) - 60)
+                .size(80, 20)
+                .build());
+        // endregion
+
         // region marker buttons
         setMarkersButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.setMarkers"),

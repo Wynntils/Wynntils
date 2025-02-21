@@ -109,49 +109,38 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private TextShadow labelShadow = TextShadow.NORMAL;
     private WaypointLocation waypoint;
 
-    private WaypointCreationScreen(MainMapScreen oldMapScreen) {
+    private WaypointCreationScreen(Screen oldScreen) {
         super();
-        this.returnScreen = oldMapScreen;
+        this.returnScreen = oldScreen;
 
         this.firstSetup = true;
     }
 
-    private WaypointCreationScreen(MainMapScreen oldMapScreen, Location setupLocation) {
-        this(oldMapScreen);
+    private WaypointCreationScreen(Screen oldScreen, Location setupLocation) {
+        this(oldScreen);
 
         this.setupLocation = setupLocation;
         this.firstSetup = true;
     }
 
-    private WaypointCreationScreen(MainMapScreen oldMapScreen, WaypointLocation oldWaypoint) {
-        this(oldMapScreen);
-
-        this.oldWaypoint = oldWaypoint;
-        this.firstSetup = true;
-    }
-
-    private WaypointCreationScreen(WaypointManagementScreen managementScreen, WaypointLocation oldWaypoint) {
+    private WaypointCreationScreen(Screen oldScreen, WaypointLocation oldWaypoint) {
         super();
-        this.returnScreen = managementScreen;
+        this.returnScreen = oldScreen;
 
         this.oldWaypoint = oldWaypoint;
         this.firstSetup = true;
     }
 
-    public static Screen create(MainMapScreen oldMapScreen) {
-        return new WaypointCreationScreen(oldMapScreen);
+    public static Screen create(Screen oldScreen) {
+        return new WaypointCreationScreen(oldScreen);
     }
 
-    public static Screen create(MainMapScreen oldMapScreen, Location setupLocation) {
-        return new WaypointCreationScreen(oldMapScreen, setupLocation);
+    public static Screen create(Screen oldScreen, Location setupLocation) {
+        return new WaypointCreationScreen(oldScreen, setupLocation);
     }
 
-    public static Screen create(MainMapScreen oldMapScreen, WaypointLocation oldWaypoint) {
-        return new WaypointCreationScreen(oldMapScreen, oldWaypoint);
-    }
-
-    public static Screen create(WaypointManagementScreen managementScreen, WaypointLocation oldWaypoint) {
-        return new WaypointCreationScreen(managementScreen, oldWaypoint);
+    public static Screen create(Screen oldScreen, WaypointLocation oldWaypoint) {
+        return new WaypointCreationScreen(oldScreen, oldWaypoint);
     }
 
     @Override
