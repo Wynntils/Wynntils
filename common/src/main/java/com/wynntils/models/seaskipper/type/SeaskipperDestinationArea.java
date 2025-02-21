@@ -62,7 +62,7 @@ public class SeaskipperDestinationArea implements MapArea {
 
     @Override
     public String getCategoryId() {
-        return "wynntils:seaskipper-destination";
+        return "wynntils:fast-travel:seaskipper-destination";
     }
 
     @Override

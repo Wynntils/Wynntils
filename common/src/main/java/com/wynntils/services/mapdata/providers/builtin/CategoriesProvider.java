@@ -549,7 +549,7 @@ public class CategoriesProvider extends BuiltInProvider {
     private static final class SeaskipperDestinationCategory implements MapCategory {
         @Override
         public String getCategoryId() {
-            return "wynntils:seaskipper-destination";
+            return "wynntils:fast-travel:seaskipper-destination";
         }
 
         @Override
