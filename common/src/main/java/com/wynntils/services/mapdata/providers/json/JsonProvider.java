@@ -51,9 +51,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-// FIXME: Reloading
-// FIXME: Commands
-// FIXME: Test builtin/remote loading
+// FIXME: Toggling
 public final class JsonProvider implements MapDataProvider {
     // Note: The version field is not used, but is kept for future compatibility
     //       If the need arises, it can be used to handle different versions of the json format

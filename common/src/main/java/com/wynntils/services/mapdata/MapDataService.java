@@ -33,6 +33,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -79,6 +80,7 @@ public class MapDataService extends Service {
     @Override
     public void reloadData() {
         getProviders().forEach(MapDataProvider::reloadData);
+        jsonProviderInfos.get().forEach(this::registerJsonProvider);
     }
 
     public Stream<MapFeature> getFeatures() {
@@ -155,23 +157,29 @@ public class MapDataService extends Service {
 
     // In the future, per-account, per-character or shared
     // can be added just from disk, or downloaded from an url
-    public void createBundledProvider(String id, String filename) {
-        String completeId = "bundled:" + id;
-        JsonProvider provider = JsonProvider.loadBundledResource(completeId, filename);
-        registerProvider(completeId, provider);
+    public void addJsonProvider(JsonProviderInfo providerInfo) {
+        jsonProviderInfos.get().removeIf(i -> i.providerId().equals(providerInfo.providerId()));
+        jsonProviderInfos.get().add(providerInfo);
+        jsonProviderInfos.touched();
+        registerJsonProvider(providerInfo);
     }
 
-    public void createLocalProvider(String id, String filename) {
-        String completeId = "local:" + id;
-        JsonProvider provider = JsonProvider.loadLocalFile(completeId, new File(filename));
-        registerProvider(completeId, provider);
+    public boolean removeJsonProvider(String providerId) {
+        boolean found =
+                jsonProviderInfos.get().removeIf(info -> info.providerId().equals(providerId));
+        if (!found) return false;
+
+        jsonProviderInfos.touched();
+        allProviders.keySet().stream()
+                .filter(id -> id.endsWith(providerId))
+                .findFirst()
+                .ifPresent(allProviders::remove);
+
+        return true;
     }
 
-    public void createOnlineProvider(String id, String url) {
-        String completeId = "online:" + id;
-        // Register a dummy provider; this will be replaced once loading has finished
-        registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
-        JsonProvider.loadOnlineResource(completeId, url, this::registerProvider);
+    public List<JsonProviderInfo> getJsonProviderInfos() {
+        return Collections.unmodifiableList(jsonProviderInfos.get());
     }
 
     public void registerOverrideProvider(String overrideProviderId, MapDataOverrideProvider provider) {
@@ -240,6 +248,25 @@ public class MapDataService extends Service {
         }
     }
 
+    private void createBundledProvider(String id, String filename) {
+        String completeId = "bundled:" + id;
+        JsonProvider provider = JsonProvider.loadBundledResource(completeId, filename);
+        registerProvider(completeId, provider);
+    }
+
+    private void createLocalProvider(String id, String filename) {
+        String completeId = "local:" + id;
+        JsonProvider provider = JsonProvider.loadLocalFile(completeId, new File(filename));
+        registerProvider(completeId, provider);
+    }
+
+    private void createOnlineProvider(String id, String url) {
+        String completeId = "online:" + id;
+        // Register a dummy provider; this will be replaced once loading has finished
+        registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
+        JsonProvider.loadOnlineResource(completeId, url, this::registerProvider);
+    }
+
     private void onProviderChange(MapDataProvidedType mapDataProvidedType) {
         if (mapDataProvidedType instanceof MapFeature mapFeature) {
             resolvedAttributesCache.remove(mapFeature);
@@ -255,17 +282,19 @@ public class MapDataService extends Service {
         // As only the icon id string is cached, there is no need to invalidate the cache for features that contain
         // this provider's icons. It's enough to invalidate the icon cache below, and the icon lookup will default to
         // the correct icon.
-        resolvedAttributesCache.keySet().stream()
+        List<MapFeature> toBeRemoved = resolvedAttributesCache.keySet().stream()
                 .filter(feature ->
                         provider.getFeatures().anyMatch(f -> f.getFeatureId().equals(feature.getFeatureId()))
                                 || provider.getCategories()
                                         .anyMatch(c -> feature.getCategoryId().startsWith(c.getCategoryId())))
-                .forEach(resolvedAttributesCache::remove);
+                .toList();
+        resolvedAttributesCache.keySet().removeAll(toBeRemoved);
 
-        iconCache.keySet().stream()
+        List<String> toBeRemovedIcons = iconCache.keySet().stream()
                 .filter(iconId ->
                         provider.getIcons().anyMatch(i -> i.getIconId().equals(iconId)))
-                .forEach(iconCache::remove);
+                .toList();
+        iconCache.keySet().removeAll(toBeRemovedIcons);
     }
 
     private Stream<MapDataProvider> getProviders() {
