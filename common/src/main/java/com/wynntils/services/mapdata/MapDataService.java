@@ -7,6 +7,8 @@ package com.wynntils.services.mapdata;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.mapdata.attributes.resolving.MapAttributesResolver;
 import com.wynntils.services.mapdata.attributes.resolving.OverrideMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
@@ -21,6 +23,7 @@ import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
+import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.services.mapdata.providers.type.MapDataOverrideProvider;
 import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
@@ -29,6 +32,7 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -55,10 +59,21 @@ public class MapDataService extends Service {
     private final Map<MapFeature, ResolvedMapAttributes> resolvedAttributesCache = new HashMap<>();
     private final Map<String, Optional<MapIcon>> iconCache = new HashMap<>();
 
+    // Storage for json providers
+    @Persisted
+    private final Storage<List<JsonProviderInfo>> jsonProviderInfos = new Storage<>(new ArrayList<>());
+
     public MapDataService() {
         super(List.of());
 
         createBuiltInProviders();
+    }
+
+    @Override
+    public void onStorageLoad(Storage<?> storage) {
+        if (storage == jsonProviderInfos) {
+            jsonProviderInfos.get().forEach(this::registerJsonProvider);
+        }
     }
 
     @Override
@@ -138,7 +153,7 @@ public class MapDataService extends Service {
 
     // region Providers
 
-    // per-account, per-character or shared
+    // In the future, per-account, per-character or shared
     // can be added just from disk, or downloaded from an url
     public void createBundledProvider(String id, String filename) {
         String completeId = "bundled:" + id;
@@ -185,6 +200,7 @@ public class MapDataService extends Service {
 
     /**
      * Register a built-in provider. Call this method in a listener for {@link com.wynntils.core.mod.event.WynntilsInitEvent.ModInitFinished}, unless you have a good reason not to.
+     *
      * @param provider The provider to register
      */
     public void registerBuiltInProvider(BuiltInProvider provider) {
@@ -213,7 +229,15 @@ public class MapDataService extends Service {
         provider.onChange(this::onProviderChange);
 
         // Invalidate caches
-        invalidateAllCaches();
+        invalidateCaches(provider);
+    }
+
+    private void registerJsonProvider(JsonProviderInfo providerInfo) {
+        switch (providerInfo.providerType()) {
+            case BUNDLED -> createBundledProvider(providerInfo.providerId(), providerInfo.providerFilename());
+            case LOCAL -> createLocalProvider(providerInfo.providerId(), providerInfo.providerFilePath());
+            case REMOTE -> createOnlineProvider(providerInfo.providerId(), providerInfo.providerUrl());
+        }
     }
 
     private void onProviderChange(MapDataProvidedType mapDataProvidedType) {
@@ -222,14 +246,26 @@ public class MapDataService extends Service {
         } else if (mapDataProvidedType instanceof MapIcon mapIcon) {
             iconCache.remove(mapIcon.getIconId());
         } else if (mapDataProvidedType instanceof MapCategory mapCategory) {
-            // If this happens, we need to redo everything
-            invalidateAllCaches();
+            resolvedAttributesCache.keySet().removeIf(feature -> feature.getCategoryId()
+                    .startsWith(mapCategory.getCategoryId()));
         }
     }
 
-    private void invalidateAllCaches() {
-        resolvedAttributesCache.clear();
-        iconCache.clear();
+    private void invalidateCaches(MapDataProvider provider) {
+        // As only the icon id string is cached, there is no need to invalidate the cache for features that contain
+        // this provider's icons. It's enough to invalidate the icon cache below, and the icon lookup will default to
+        // the correct icon.
+        resolvedAttributesCache.keySet().stream()
+                .filter(feature ->
+                        provider.getFeatures().anyMatch(f -> f.getFeatureId().equals(feature.getFeatureId()))
+                                || provider.getCategories()
+                                        .anyMatch(c -> feature.getCategoryId().startsWith(c.getCategoryId())))
+                .forEach(resolvedAttributesCache::remove);
+
+        iconCache.keySet().stream()
+                .filter(iconId ->
+                        provider.getIcons().anyMatch(i -> i.getIconId().equals(iconId)))
+                .forEach(iconCache::remove);
     }
 
     private Stream<MapDataProvider> getProviders() {

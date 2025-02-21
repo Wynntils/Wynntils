@@ -19,9 +19,6 @@ import com.wynntils.services.itemrecord.type.SavedItem;
 import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
-import com.wynntils.services.mapdata.features.impl.MapAreaImpl;
-import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
-import com.wynntils.services.mapdata.features.impl.MapPathImpl;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapIcon;
@@ -50,9 +47,10 @@ public final class JsonManager extends Manager {
             .registerTypeAdapter(CrowdSourcedData.class, new CrowdSourcedData.CrowdSourceDataSerializer())
             .registerTypeAdapter(SavedItem.class, new SavedItem.SavedItemSerializer())
             .registerTypeAdapter(JsonProvider.class, new JsonProvider.JsonProviderSerializer())
-            .registerTypeAdapter(MapLocationImpl.class, new JsonProvider.JsonFeatureSerializer())
-            .registerTypeAdapter(MapAreaImpl.class, new JsonProvider.JsonFeatureSerializer())
-            .registerTypeAdapter(MapPathImpl.class, new JsonProvider.JsonFeatureSerializer())
+            // FIXME
+            //            .registerTypeAdapter(MapLocationImpl.class, new JsonProvider.JsonFeatureSerializer())
+            //            .registerTypeAdapter(MapAreaImpl.class, new JsonProvider.JsonFeatureSerializer())
+            //            .registerTypeAdapter(MapPathImpl.class, new JsonProvider.JsonFeatureSerializer())
             .registerTypeAdapter(MapLocationAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
             .registerTypeAdapter(MapAreaAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
             .registerTypeAdapter(MapPathAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())

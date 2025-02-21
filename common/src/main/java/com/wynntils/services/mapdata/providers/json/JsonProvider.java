@@ -172,23 +172,23 @@ public final class JsonProvider implements MapDataProvider {
                 throws JsonParseException {
             JsonObject jsonProvider = json.getAsJsonObject();
 
-            JsonElement versionJson = JsonUtils.getNullableJsonObject(jsonProvider, "version");
-            if (!versionJson.isJsonPrimitive()) {
+            int version = JsonUtils.getNullableJsonInt(jsonProvider, "version");
+            if (version == 0) {
                 throw new JsonParseException("Missing or incorrect version field in json provider.");
             }
 
-            int version = versionJson.getAsInt();
+            JsonObject featuresObject = JsonUtils.getNullableJsonObject(jsonProvider, "features");
 
             // Manually construct the JsonFeatures object, so we don't have empty lists
             JsonFeatures features = new JsonFeatures(
                     context.deserialize(
-                            JsonUtils.getNullableJsonArray(jsonProvider, "locations"),
+                            JsonUtils.getNullableJsonArray(featuresObject, "locations"),
                             new TypeToken<List<MapLocationImpl>>() {}.getType()),
                     context.deserialize(
-                            JsonUtils.getNullableJsonArray(jsonProvider, "areas"),
+                            JsonUtils.getNullableJsonArray(featuresObject, "areas"),
                             new TypeToken<List<MapAreaImpl>>() {}.getType()),
                     context.deserialize(
-                            JsonUtils.getNullableJsonArray(jsonProvider, "paths"),
+                            JsonUtils.getNullableJsonArray(featuresObject, "paths"),
                             new TypeToken<List<MapPathImpl>>() {}.getType()));
 
             List<MapCategory> categories = context.deserialize(
