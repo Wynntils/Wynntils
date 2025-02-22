@@ -13,6 +13,7 @@ import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import java.io.File;
 import java.net.URI;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -24,7 +25,7 @@ import net.minecraft.network.chat.MutableComponent;
 public class MapCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> PROVIDER_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Services.MapData.getJsonProviderInfos().stream()
+                    Services.MapData.getJsonProviderInfos().keySet().stream()
                             .map(JsonProviderInfo::providerId)
                             .toArray(String[]::new),
                     builder);
@@ -48,11 +49,11 @@ public class MapCommand extends Command {
                                         .suggests(PROVIDER_SUGGESTION_PROVIDER)
                                         .executes(this::removeProvider)))
                         .then(Commands.literal("list").executes(this::listPoiProviders))
-                        .then(Commands.literal("reload").executes(this::reloadProviders)));
-        //                        .then(Commands.literal("toggle")
-        //                                .then(Commands.argument("name", StringArgumentType.greedyString())
-        //                                        .suggests(POI_PROVIDER_SUGGESTION_PROVIDER)
-        //                                        .executes(this::togglePoiProvider))));
+                        .then(Commands.literal("reload").executes(this::reloadProviders))
+                        .then(Commands.literal("toggle")
+                                .then(Commands.argument("providerId", StringArgumentType.greedyString())
+                                        .suggests(PROVIDER_SUGGESTION_PROVIDER)
+                                        .executes(this::toggleProvider))));
     }
 
     private int reloadProviders(CommandContext<CommandSourceStack> context) {
@@ -123,12 +124,14 @@ public class MapCommand extends Command {
     private int listPoiProviders(CommandContext<CommandSourceStack> context) {
         MutableComponent message = Component.literal("Mapdata providers: ").withStyle(ChatFormatting.YELLOW);
 
-        for (JsonProviderInfo providerInfo : Services.MapData.getJsonProviderInfos()) {
+        for (JsonProviderInfo providerInfo :
+                Services.MapData.getJsonProviderInfos().keySet()) {
+            boolean enabled = Services.MapData.isJsonProviderEnabled(providerInfo.providerId());
+
             message.append(Component.literal("\n"));
             message.append(Component.literal(providerInfo.providerId()).withStyle(ChatFormatting.GOLD));
-            // FIXME
-            //            message.append(Component.literal(providerInfo.isEnabled() ? " (enabled)" : " (disabled)")
-            //                    .withStyle(providerInfo.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED));
+            message.append(Component.literal(enabled ? " (enabled)" : " (disabled)")
+                    .withStyle(enabled ? ChatFormatting.GREEN : ChatFormatting.RED));
             message.append(Component.empty());
             message.append(Component.literal(" (").withStyle(ChatFormatting.GRAY));
             message.append(Component.literal(providerInfo.path()).withStyle(ChatFormatting.GRAY));
@@ -139,31 +142,38 @@ public class MapCommand extends Command {
         return 1;
     }
 
-    //    private int togglePoiProvider(CommandContext<CommandSourceStack> context) {
-    //        String name = context.getArgument("name", String.class);
-    //
-    //        Optional<CustomPoiProvider> poiProvider = Services.Poi.getCustomPoiProviders().stream()
-    //                .filter(p -> p.getName().equals(name))
-    //                .findFirst();
-    //
-    //        if (poiProvider.isEmpty()) {
-    //            context.getSource()
-    //                    .sendFailure(Component.literal("The provided name does not match any POI provider.")
-    //                            .withStyle(ChatFormatting.RED));
-    //            return 0;
-    //        }
-    //
-    //        poiProvider.get().setEnabled(!poiProvider.get().isEnabled());
-    //
-    //        context.getSource()
-    //                .sendSuccess(
-    //                        () -> Component.literal("Successfully toggled POI provider ")
-    //                                .append(Component.literal(name).withStyle(ChatFormatting.GREEN))
-    //                                .append(Component.literal(" to "))
-    //                                .append(Component.literal(poiProvider.get().isEnabled() ? "enabled" : "disabled")
-    //                                        .withStyle(ChatFormatting.UNDERLINE)),
-    //                        false);
-    //
-    //        return 1;
-    //    }
+    private int toggleProvider(CommandContext<CommandSourceStack> context) {
+        String providerId = context.getArgument("providerId", String.class);
+
+        Optional<JsonProviderInfo> providerOpt = Services.MapData.getJsonProviderInfos().keySet().stream()
+                .filter(provider -> provider.providerId().equals(providerId))
+                .findFirst();
+
+        if (providerOpt.isEmpty()) {
+            context.getSource()
+                    .sendFailure(Component.literal("The provided id does not match any mapdata provider.")
+                            .withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        if (Services.MapData.toggleJsonProvider(providerOpt.get().providerId())) {
+            context.getSource()
+                    .sendSuccess(
+                            () -> Component.literal("Successfully toggled mapdata provider ")
+                                    .append(Component.literal(providerId).withStyle(ChatFormatting.GREEN))
+                                    .append(Component.literal(" to "))
+                                    .append(Component.literal(
+                                                    Services.MapData.isJsonProviderEnabled(providerId)
+                                                            ? "enabled"
+                                                            : "disabled")
+                                            .withStyle(ChatFormatting.UNDERLINE)),
+                            false);
+            return 1;
+        }
+
+        context.getSource()
+                .sendFailure(Component.literal("Could not toggle the mapdata provider with the provided id.")
+                        .withStyle(ChatFormatting.RED));
+        return 0;
+    }
 }

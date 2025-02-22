@@ -32,7 +32,6 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -62,7 +61,7 @@ public class MapDataService extends Service {
 
     // Storage for json providers
     @Persisted
-    private final Storage<List<JsonProviderInfo>> jsonProviderInfos = new Storage<>(new ArrayList<>());
+    private final Storage<Map<JsonProviderInfo, Boolean>> jsonProviderInfos = new Storage<>(new LinkedHashMap<>());
 
     public MapDataService() {
         super(List.of());
@@ -73,14 +72,14 @@ public class MapDataService extends Service {
     @Override
     public void onStorageLoad(Storage<?> storage) {
         if (storage == jsonProviderInfos) {
-            jsonProviderInfos.get().forEach(this::registerJsonProvider);
+            reloadJsonProviders();
         }
     }
 
     @Override
     public void reloadData() {
         getProviders().forEach(MapDataProvider::reloadData);
-        jsonProviderInfos.get().forEach(this::registerJsonProvider);
+        reloadJsonProviders();
     }
 
     public Stream<MapFeature> getFeatures() {
@@ -158,15 +157,15 @@ public class MapDataService extends Service {
     // In the future, per-account, per-character or shared
     // can be added just from disk, or downloaded from an url
     public void addJsonProvider(JsonProviderInfo providerInfo) {
-        jsonProviderInfos.get().removeIf(i -> i.providerId().equals(providerInfo.providerId()));
-        jsonProviderInfos.get().add(providerInfo);
+        jsonProviderInfos.get().keySet().removeIf(i -> i.providerId().equals(providerInfo.providerId()));
+        jsonProviderInfos.get().put(providerInfo, true);
         jsonProviderInfos.touched();
         registerJsonProvider(providerInfo);
     }
 
     public boolean removeJsonProvider(String providerId) {
-        boolean found =
-                jsonProviderInfos.get().removeIf(info -> info.providerId().equals(providerId));
+        boolean found = jsonProviderInfos.get().keySet().removeIf(info -> info.providerId()
+                .equals(providerId));
         if (!found) return false;
 
         jsonProviderInfos.touched();
@@ -178,8 +177,42 @@ public class MapDataService extends Service {
         return true;
     }
 
-    public List<JsonProviderInfo> getJsonProviderInfos() {
-        return Collections.unmodifiableList(jsonProviderInfos.get());
+    public boolean toggleJsonProvider(String providerId) {
+        Optional<JsonProviderInfo> providerOpt = jsonProviderInfos.get().keySet().stream()
+                .filter(info -> info.providerId().equals(providerId))
+                .findFirst();
+        if (providerOpt.isEmpty()) return false;
+
+        JsonProviderInfo provider = providerOpt.get();
+        boolean enabled = jsonProviderInfos.get().get(provider);
+        jsonProviderInfos.get().put(provider, !enabled);
+        jsonProviderInfos.touched();
+
+        if (enabled) {
+            allProviders.entrySet().stream()
+                    .filter(entry -> entry.getKey().endsWith(providerId))
+                    .findFirst()
+                    .ifPresent(entry -> {
+                        allProviders.remove(entry.getKey());
+                        invalidateCaches(entry.getValue());
+                    });
+        } else {
+            registerJsonProvider(provider);
+        }
+
+        return true;
+    }
+
+    public boolean isJsonProviderEnabled(String providerId) {
+        return jsonProviderInfos.get().keySet().stream()
+                .filter(info -> info.providerId().equals(providerId))
+                .findFirst()
+                .map(jsonProviderInfos.get()::get)
+                .orElse(false);
+    }
+
+    public Map<JsonProviderInfo, Boolean> getJsonProviderInfos() {
+        return Collections.unmodifiableMap(jsonProviderInfos.get());
     }
 
     public void registerOverrideProvider(String overrideProviderId, MapDataOverrideProvider provider) {
@@ -265,6 +298,13 @@ public class MapDataService extends Service {
         // Register a dummy provider; this will be replaced once loading has finished
         registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
         JsonProvider.loadOnlineResource(completeId, url, this::registerProvider);
+    }
+
+    private void reloadJsonProviders() {
+        jsonProviderInfos.get().entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .forEach(this::registerJsonProvider);
     }
 
     private void onProviderChange(MapDataProvidedType mapDataProvidedType) {
