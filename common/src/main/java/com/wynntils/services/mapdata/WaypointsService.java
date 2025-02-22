@@ -25,6 +25,7 @@ import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.services.mapdata.impl.MapIconImpl;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
+import com.wynntils.services.mapdata.providers.json.JsonAggregatorProvider;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +36,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class WaypointsService extends Service {
     private static final WaypointsProvider WAYPOINTS_PROVIDER = new WaypointsProvider();
+    private static final JsonAggregatorProvider JSON_AGGREGATOR_PROVIDER = new JsonAggregatorProvider();
 
     @Persisted
     private final Storage<List<WaypointLocation>> waypoints = new Storage<>(new ArrayList<>());
@@ -49,6 +51,7 @@ public class WaypointsService extends Service {
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
         Services.MapData.registerBuiltInProvider(WAYPOINTS_PROVIDER);
+        Services.MapData.registerBuiltInProvider(JSON_AGGREGATOR_PROVIDER);
     }
 
     @Override
@@ -71,6 +74,10 @@ public class WaypointsService extends Service {
         return Collections.unmodifiableList(customIcons.get());
     }
 
+    public Set<String> getCategories() {
+        return getWaypoints().stream().map(MapLocationImpl::getCategoryId).collect(Collectors.toUnmodifiableSet());
+    }
+
     public void addCustomIcon(MapIconImpl iconToAdd) {
         customIcons.get().add(iconToAdd);
         customIcons.touched();
@@ -81,10 +88,6 @@ public class WaypointsService extends Service {
         customIcons.get().remove(iconToRemove);
         customIcons.touched();
         WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
-    }
-
-    public Set<String> getCategories() {
-        return getWaypoints().stream().map(MapLocationImpl::getCategoryId).collect(Collectors.toUnmodifiableSet());
     }
 
     public void addWaypoint(WaypointLocation waypoint) {

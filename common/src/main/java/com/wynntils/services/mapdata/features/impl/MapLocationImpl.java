@@ -52,4 +52,8 @@ public class MapLocationImpl implements MapLocation {
     public Location getLocation() {
         return location;
     }
+
+    public boolean validate() {
+        return featureId != null && categoryId != null && location != null;
+    }
 }

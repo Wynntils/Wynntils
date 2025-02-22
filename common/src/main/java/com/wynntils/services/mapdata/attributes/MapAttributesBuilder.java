@@ -18,8 +18,8 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.lang.reflect.Field;
 
 public class MapAttributesBuilder {
-    private int priority;
-    private int level;
+    private Integer priority;
+    private Integer level;
     private String label;
     private String description;
     private MapVisibilityImpl labelVisibility;
@@ -34,12 +34,12 @@ public class MapAttributesBuilder {
     private CustomColor borderColor;
     private Float borderWidth;
 
-    public MapAttributesBuilder setPriority(int priority) {
+    public MapAttributesBuilder setPriority(Integer priority) {
         this.priority = priority;
         return this;
     }
 
-    public MapAttributesBuilder setLevel(int level) {
+    public MapAttributesBuilder setLevel(Integer level) {
         this.level = level;
         return this;
     }
