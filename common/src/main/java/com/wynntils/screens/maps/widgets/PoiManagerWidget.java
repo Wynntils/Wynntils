@@ -7,10 +7,9 @@ package com.wynntils.screens.maps.widgets;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.screens.maps.PoiManagementScreen;
+import com.wynntils.screens.maps.WaypointCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -27,8 +26,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
-import org.lwjgl.glfw.GLFW;
 
 public class PoiManagerWidget extends AbstractWidget {
     private final boolean selected;
@@ -66,7 +63,8 @@ public class PoiManagerWidget extends AbstractWidget {
 
         editButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.edit"),
-                        (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, poi)))
+                        // FIXME: null should be a WaypointLocation object (fix when porting PoiManagementScreen)
+                        (button) -> McUtils.mc().setScreen(WaypointCreationScreen.create(managementScreen, null)))
                 .pos(x + width - 20 - (manageButtonsWidth * 2), y)
                 .size(manageButtonsWidth, 20)
                 .build();
@@ -191,17 +189,19 @@ public class PoiManagerWidget extends AbstractWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
-
-            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                    poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor(), poi.getName());
-            return true;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
-                    poi.getLocation().asLocation());
-            return true;
-        }
+        // FIXME: Services.UserMarker
+        //        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        //            McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
+        //
+        //            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+        //                    poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor(),
+        // poi.getName());
+        //            return true;
+        //        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        //            Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
+        //                    poi.getLocation().asLocation());
+        //            return true;
+        //        }
 
         boolean clickedButton;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render.buffered;
@@ -337,7 +337,7 @@ public final class BufferedFontRenderer {
                 poseStack, bufferSource, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
-    private void renderText(
+    public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             StyledText text,
