@@ -184,15 +184,15 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         renderMap(poseStack);
 
+        RenderUtils.enableScissor(
+                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
+                        mapHeight);
+
         renderMapFeatures(poseStack, mouseX, mouseY);
 
         if (renderRoutes) {
             renderSeaskipperPaths(poseStack);
         }
-
-        RenderUtils.enableScissor(
-                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
-                        mapHeight);
 
         renderCursor(
                 poseStack,
