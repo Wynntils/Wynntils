@@ -184,15 +184,15 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         renderMap(poseStack);
 
+        RenderUtils.enableScissor(
+                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
+                        mapHeight);
+
         renderMapFeatures(poseStack, mouseX, mouseY);
 
         if (renderRoutes) {
             renderSeaskipperPaths(poseStack);
         }
-
-        RenderUtils.enableScissor(
-                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
-                        mapHeight);
 
         renderCursor(
                 poseStack,
@@ -404,7 +404,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
     @Override
     protected Stream<MapFeature> getRenderedMapFeatures() {
-        return Services.MapData.getFeaturesForCategory("wynntils:seaskipper-destination")
+        return Services.MapData.getFeaturesForCategory("wynntils:fast-travel:seaskipper-destination")
                 .filter(feature -> feature instanceof SeaskipperDestinationArea)
                 .map(feature -> (SeaskipperDestinationArea) feature)
                 .filter(area -> (area.getDestination().isAvailable() || renderAllDestinations)
@@ -659,7 +659,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         @Override
         public Stream<String> getOverridenCategoryIds() {
-            return Stream.of("wynntils:seaskipper-destination");
+            return Stream.of("wynntils:fast-travel:seaskipper-destination");
         }
     }
 }
