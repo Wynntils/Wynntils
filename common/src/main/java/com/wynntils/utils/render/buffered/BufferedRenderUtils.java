@@ -285,6 +285,34 @@ public final class BufferedRenderUtils {
                 texture.height());
     }
 
+    public static void drawTexturedRect(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            ResourceLocation tex,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            int textureWidth,
+            int textureHeight) {
+        drawTexturedRect(
+                poseStack,
+                bufferSource,
+                tex,
+                x,
+                y,
+                z,
+                width,
+                height,
+                0,
+                0,
+                (int) width,
+                (int) height,
+                textureWidth,
+                textureHeight);
+    }
+
     private static void drawTexturedRect(
             PoseStack poseStack,
             MultiBufferSource bufferSource,

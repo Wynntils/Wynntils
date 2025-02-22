@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -38,7 +38,7 @@ public class DurabilityArcFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Pre e) {
+    public void onRenderSlot(SlotRenderEvent.CountPre e) {
         if (!renderDurabilityArcInventories.get()) return;
         RenderSystem.enableDepthTest();
         drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
