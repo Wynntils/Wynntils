@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.providers.json;
@@ -11,19 +11,32 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.MalformedJsonException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
-import com.wynntils.services.mapdata.attributes.type.MapIcon;
-import com.wynntils.services.mapdata.providers.MapDataProvider;
+import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
+import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
+import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.impl.MapCategoryImpl;
+import com.wynntils.services.mapdata.impl.MapIconImpl;
+import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
-import com.wynntils.services.mapdata.type.MapFeature;
+import com.wynntils.services.mapdata.type.MapDataProvidedType;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.Location;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -36,13 +49,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public final class JsonProvider implements MapDataProvider {
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(MapCategory.class, new CategoryDeserializer())
-            .registerTypeHierarchyAdapter(MapFeature.class, new FeatureDeserializer())
-            .registerTypeHierarchyAdapter(MapIcon.class, new IconDeserializer())
+            .registerTypeAdapter(MapLocationAttributesImpl.class, new JsonAttributeSerializer())
+            .registerTypeAdapter(MapAreaAttributesImpl.class, new JsonAttributeSerializer())
+            .registerTypeAdapter(MapPathAttributesImpl.class, new JsonAttributeSerializer())
+            .registerTypeHierarchyAdapter(MapCategory.class, new JsonCategorySerializer())
+            .registerTypeHierarchyAdapter(MapIcon.class, new JsonIconSerializer())
             .registerTypeHierarchyAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
             .registerTypeAdapterFactory(new EnumUtils.EnumTypeAdapterFactory<>())
             .enableComplexMapKeySerialization()
@@ -65,7 +81,8 @@ public final class JsonProvider implements MapDataProvider {
 
     /**
      * Load a bundled resource from the mod jar
-     * @param id The id of the resource
+     *
+     * @param id       The id of the resource
      * @param filename The filename of the resource
      * @return The loaded json provider
      */
@@ -89,7 +106,8 @@ public final class JsonProvider implements MapDataProvider {
 
     /**
      * Load a local resource from a file
-     * @param id The id of the resource
+     *
+     * @param id   The id of the resource
      * @param file The file to load
      * @return The loaded json provider
      */
@@ -112,8 +130,9 @@ public final class JsonProvider implements MapDataProvider {
 
     /**
      * Load an online resource from a url
-     * @param id The id of the resource
-     * @param url The url to load
+     *
+     * @param id               The id of the resource
+     * @param url              The url to load
      * @param registerCallback The callback to call with the loaded provider
      */
     public static void loadOnlineResource(String id, String url, BiConsumer<String, MapDataProvider> registerCallback) {
@@ -153,43 +172,121 @@ public final class JsonProvider implements MapDataProvider {
         return icons.stream();
     }
 
-    private static final class CategoryDeserializer implements JsonDeserializer<MapCategory> {
+    @Override
+    public void onChange(Consumer<MapDataProvidedType> callback) {
+        // The json does not change, as long as we do not implement a
+        // reload of the file, so we do not need to register callbacks.
+    }
+
+    @Override
+    public void reloadData() {
+        // FIXME: To be implemented if needed (when the first json provider is added)
+    }
+
+    public static final class JsonCategorySerializer implements JsonDeserializer<MapCategoryImpl> {
         @Override
-        public MapCategory deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
-                throws JsonParseException {
+        public MapCategoryImpl deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
+                throws JsonSyntaxException {
             JsonObject json = jsonElement.getAsJsonObject();
 
             String id = json.get("id").getAsString();
             String name = JsonUtils.getNullableJsonString(json, "name");
             JsonElement attributesJson = json.get("attributes");
-            JsonMapAttributes attributes =
-                    attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAttributes.class);
+            MapAttributesImpl attributes =
+                    attributesJson == null ? null : GSON.fromJson(attributesJson, MapAttributesImpl.class);
 
-            return new JsonCategory(id, name, attributes);
+            return new MapCategoryImpl(id, name, attributes);
         }
     }
 
-    private static final class FeatureDeserializer implements JsonDeserializer<MapFeature> {
+    public static final class JsonAttributeSerializer
+            implements JsonDeserializer<MapAttributesImpl>, JsonSerializer<MapAttributesImpl> {
         @Override
-        public MapFeature deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
+        public MapAttributesImpl deserialize(JsonElement json, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
-            JsonObject json = jsonElement.getAsJsonObject();
+            JsonObject attributesJson = json.getAsJsonObject();
+            MapAttributesImpl attributesObj = context.deserialize(json, MapAttributesImpl.class);
 
-            String id = JsonUtils.getNullableJsonString(json, "id");
-            String category = JsonUtils.getNullableJsonString(json, "category");
-            JsonElement locationJson = json.get("location");
-            Location location = GSON.fromJson(locationJson, Location.class);
-            JsonElement attributesJson = json.get("attributes");
-            JsonMapAttributes attributes =
-                    attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAttributes.class);
+            // We might not want a specific implementation, for example for categories
+            if (type.equals(MapAttributesImpl.class)) {
+                return attributesObj;
+            }
 
-            return new JsonMapLocation(id, category, attributes, location);
+            Type locationType = new TypeToken<MapLocationAttributesImpl>() {}.getType();
+            Type pathType = new TypeToken<MapPathAttributesImpl>() {}.getType();
+            Type areaType = new TypeToken<MapAreaAttributesImpl>() {}.getType();
+
+            if (type.equals(locationType)) {
+                MapLocationAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
+                    if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
+                        WynntilsMod.warn("Unsupported attribute set for location: " + invalidAttribute);
+                    }
+                });
+
+                return new MapLocationAttributesImpl(attributesObj);
+            }
+
+            if (type.equals(areaType)) {
+                MapAreaAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
+                    if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
+                        WynntilsMod.warn("Unsupported attribute set for area: " + invalidAttribute);
+                    }
+                });
+
+                return new MapAreaAttributesImpl(attributesObj);
+            }
+
+            if (type.equals(pathType)) {
+                MapPathAttributes.getUnsupportedAttributes().forEach(invalidAttribute -> {
+                    if (attributesJson.getAsJsonObject().has(invalidAttribute)) {
+                        WynntilsMod.warn("Unsupported attribute set for path: " + invalidAttribute);
+                    }
+                });
+
+                return new MapPathAttributesImpl(attributesObj);
+            }
+
+            throw new JsonParseException("Attribute type is not location, path or area");
+        }
+
+        @Override
+        public JsonElement serialize(MapAttributesImpl mapAttributes, Type type, JsonSerializationContext context) {
+            // For the base class, we just serialize the attributes as is
+            if (type.equals(MapAttributesImpl.class)) {
+                return GSON.toJsonTree(mapAttributes);
+            }
+
+            // For the specific implementations, we need to serialize the attributes that make sense,
+            // explicitly skipping null and unsupported attributes
+            JsonObject attributesJson =
+                    GSON.toJsonTree(mapAttributes, MapAttributesImpl.class).getAsJsonObject();
+            JsonObject result = new JsonObject();
+
+            attributesJson.entrySet().forEach(entry -> {
+                String attribute = entry.getKey();
+                JsonElement value = entry.getValue();
+                if (value != null) {
+                    result.add(attribute, value);
+                }
+            });
+
+            if (type.equals(MapLocationAttributesImpl.class)) {
+                MapLocationAttributes.getUnsupportedAttributes().forEach(result::remove);
+            } else if (type.equals(MapPathAttributesImpl.class)) {
+                MapPathAttributes.getUnsupportedAttributes().forEach(result::remove);
+            } else if (type.equals(MapAreaAttributesImpl.class)) {
+                MapAreaAttributes.getUnsupportedAttributes().forEach(result::remove);
+            } else {
+                throw new JsonParseException("Attribute type is not location, path or area, nor the base class");
+            }
+
+            return result;
         }
     }
 
-    private static final class IconDeserializer implements JsonDeserializer<MapIcon> {
+    public static final class JsonIconSerializer implements JsonDeserializer<MapIconImpl>, JsonSerializer<MapIconImpl> {
         @Override
-        public MapIcon deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
+        public MapIconImpl deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject json = jsonElement.getAsJsonObject();
 
@@ -198,11 +295,19 @@ public final class JsonProvider implements MapDataProvider {
             byte[] texture = Base64.getDecoder().decode(base64Texture);
 
             try {
-                return new JsonIcon(id, texture);
+                return new MapIconImpl(id, texture);
             } catch (IOException e) {
                 WynntilsMod.warn("Bad icon texture for " + id, e);
                 return null;
             }
+        }
+
+        @Override
+        public JsonElement serialize(MapIconImpl mapIcon, Type type, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("id", mapIcon.getIconId());
+            json.addProperty("texture", Base64.getEncoder().encodeToString(mapIcon.getTextureBytes()));
+            return json;
         }
     }
 }
