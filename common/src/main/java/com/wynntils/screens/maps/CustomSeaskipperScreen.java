@@ -404,7 +404,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
     @Override
     protected Stream<MapFeature> getRenderedMapFeatures() {
-        return Services.MapData.getFeaturesForCategory("wynntils:seaskipper-destination")
+        return Services.MapData.getFeaturesForCategory("wynntils:fast-travel:seaskipper-destination")
                 .filter(feature -> feature instanceof SeaskipperDestinationArea)
                 .map(feature -> (SeaskipperDestinationArea) feature)
                 .filter(area -> (area.getDestination().isAvailable() || renderAllDestinations)
@@ -659,7 +659,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         @Override
         public Stream<String> getOverridenCategoryIds() {
-            return Stream.of("wynntils:seaskipper-destination");
+            return Stream.of("wynntils:fast-travel:seaskipper-destination");
         }
     }
 }
