@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -216,12 +216,18 @@ public class CharacterFunctions {
         }
     }
 
-    public static class CappedSacredSurgeFunction extends Function<CappedValue> {
+    public static class CappedHolyPowerFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.sacredSurgeBar.isActive()
-                    ? Models.Ability.sacredSurgeBar.getBarProgress().value()
+            return Models.Ability.holyPowerBar.isActive()
+                    ? Models.Ability.holyPowerBar.getBarProgress().value()
                     : CappedValue.EMPTY;
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            // Old function name before ability rename, keep to not break old functions
+            return List.of("capped_sacred_surge");
         }
     }
 
