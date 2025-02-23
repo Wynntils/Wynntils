@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -32,20 +32,18 @@ public class DurabilityArcFeature extends Feature {
     public final Config<Boolean> renderDurabilityArcHotbar = new Config<>(true);
 
     @SubscribeEvent
-    public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
+    public void onRenderHotbarSlot(HotbarSlotRenderEvent.CountPre e) {
         if (!renderDurabilityArcHotbar.get()) return;
-        drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), true);
+        drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Pre e) {
+    public void onRenderSlot(SlotRenderEvent.CountPre e) {
         if (!renderDurabilityArcInventories.get()) return;
-        RenderSystem.enableDepthTest();
-        drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
-        RenderSystem.disableDepthTest();
+        drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
     }
 
-    private void drawDurabilityArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+    private void drawDurabilityArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
         Optional<DurableItemProperty> durableItemOpt =
                 Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return;
@@ -58,6 +56,8 @@ public class DurabilityArcFeature extends Feature {
         CustomColor color = CustomColor.fromInt(colorInt).withAlpha(160);
 
         // draw
-        RenderUtils.drawArc(poseStack, color, slotX, slotY, hotbar ? 0 : 200, durabilityFraction, 6, 8);
+        RenderSystem.enableDepthTest();
+        RenderUtils.drawArc(poseStack, color, slotX, slotY, 100, durabilityFraction, 6, 8);
+        RenderSystem.disableDepthTest();
     }
 }

@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -20,13 +19,14 @@ import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.models.items.items.game.MultiHealthPotionItem;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
@@ -70,7 +70,7 @@ public class ItemLockFeature extends Feature {
                 continue;
             }
 
-            renderLockedSlot(event.getPoseStack(), abstractContainerScreen, lockedSlot.get());
+            renderLockedSlot(event.getGuiGraphics(), abstractContainerScreen, lockedSlot.get());
         }
     }
 
@@ -130,9 +130,11 @@ public class ItemLockFeature extends Feature {
         }
     }
 
-    private void renderLockedSlot(PoseStack poseStack, AbstractContainerScreen<?> containerScreen, Slot lockedSlot) {
-        RenderUtils.drawTexturedRect(
-                poseStack,
+    private void renderLockedSlot(
+            GuiGraphics guiGraphics, AbstractContainerScreen<?> containerScreen, Slot lockedSlot) {
+        BufferedRenderUtils.drawTexturedRect(
+                guiGraphics.pose(),
+                guiGraphics.bufferSource,
                 Texture.ITEM_LOCK.resource(),
                 ((containerScreen.leftPos + lockedSlot.x)) + 12,
                 ((containerScreen.topPos + lockedSlot.y)) - 4,
