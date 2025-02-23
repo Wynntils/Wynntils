@@ -1,3 +1,16 @@
+## [3.0.8](https://github.com/Wynntils/Wynntils/compare/v3.0.7...v3.0.8) (2025-02-23)
+
+
+### Bug Fixes
+
+* Fix item slot rendering issues from 1.21.4 port ([#3136](https://github.com/Wynntils/Wynntils/issues/3136)) ([c57a2ec](https://github.com/Wynntils/Wynntils/commit/c57a2ec93adfb8bdf25b5b43db3e8e54230af3ee))
+* Update sacred surge overlay and function to holy power [skip ci] ([#3140](https://github.com/Wynntils/Wynntils/issues/3140)) ([13bf02e](https://github.com/Wynntils/Wynntils/commit/13bf02e2b9de45eed78d046c47a13cab41efec79))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3137](https://github.com/Wynntils/Wynntils/issues/3137)) ([bffb486](https://github.com/Wynntils/Wynntils/commit/bffb48663e7edc9fb494bd2077db9191f38babcf))
+
 ## [3.0.7](https://github.com/Wynntils/Wynntils/compare/v3.0.6...v3.0.7) (2025-02-21)
 
 
@@ -7,6 +20,11 @@
 * Fix shaman totem timer tracking [skip ci] ([#3117](https://github.com/Wynntils/Wynntils/issues/3117)) ([8a21aea](https://github.com/Wynntils/Wynntils/commit/8a21aea6dfe94f9d378a52a5c5cd0c593a98e362))
 * Make lootrun mission overlay default position visible [skip ci] ([#3118](https://github.com/Wynntils/Wynntils/issues/3118)) ([ded5986](https://github.com/Wynntils/Wynntils/commit/ded59861e249e8c42102b6f44c5a40499557b8b1))
 * Support negative stats with stars [skip ci] ([#3134](https://github.com/Wynntils/Wynntils/issues/3134)) ([a24826d](https://github.com/Wynntils/Wynntils/commit/a24826da6dc14aa5e079773406e01a85583c9b3f))
+
+
+### Miscellaneous Chores
+
+* **release:** v3.0.7 [skip ci] ([e3056fd](https://github.com/Wynntils/Wynntils/commit/e3056fde1ac25840aabb3cce3db0fddbfe45e32f))
 
 
 ### Code Refactoring
@@ -63,18 +81,4 @@
 ### Miscellaneous Chores
 
 * **release:** v3.0.4 [skip ci] ([a980eac](https://github.com/Wynntils/Wynntils/commit/a980eac0429e2f70083f82372cb738dbe3394edc))
-
-## [3.0.3](https://github.com/Wynntils/Wynntils/compare/v3.0.2...v3.0.3) (2025-02-02)
-
-
-### Bug Fixes
-
-* Fix screens rendering a dark overlay above ui [skip ci] ([#3091](https://github.com/Wynntils/Wynntils/issues/3091)) ([ab11d2b](https://github.com/Wynntils/Wynntils/commit/ab11d2b1bd7893f7fab9a326a6e790f77169e28d))
-* Make ItemStatInfoFeature properly use TooltipIdentificationDecorators ([#3099](https://github.com/Wynntils/Wynntils/issues/3099)) ([a0cb651](https://github.com/Wynntils/Wynntils/commit/a0cb65137bec36e148ed9a670dc5792257a50982))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3100](https://github.com/Wynntils/Wynntils/issues/3100)) ([5312f4e](https://github.com/Wynntils/Wynntils/commit/5312f4ece6d45ee72eec369014f3f3cf25d6d44c))
-* **release:** v3.0.3 [skip ci] ([f852da6](https://github.com/Wynntils/Wynntils/commit/f852da6a6206091a9c71724f5cf2815c0b615ba3))
 
