@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.upfixers;
@@ -25,6 +25,7 @@ import com.wynntils.core.persisted.upfixers.config.OverlayConfigsIntegrationUpfi
 import com.wynntils.core.persisted.upfixers.config.OverlayRestructuringUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ProfessionBadgesToLeaderboardBadgesUpfixer;
 import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConfigsUpfixer;
+import com.wynntils.core.persisted.upfixers.config.SacredSurgeToHolyPowerUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
@@ -62,6 +63,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new CombatXpGainToXpGainUpfixer());
         registerConfigUpfixer(new ProfessionBadgesToLeaderboardBadgesUpfixer());
         registerConfigUpfixer(new TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer());
+        registerConfigUpfixer(new SacredSurgeToHolyPowerUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
