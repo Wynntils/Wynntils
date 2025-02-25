@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.inventory;
@@ -11,7 +11,6 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
-import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -76,9 +75,11 @@ public final class InventoryModel extends Model {
             returnable.add(McUtils.inventory().getItem(i + baseSize));
         }
 
-        Optional<RequirementItemProperty> wynnItem = Models.Item.asWynnItemProperty(
-                McUtils.player().getItemInHand(InteractionHand.MAIN_HAND), RequirementItemProperty.class);
-        if (wynnItem.isPresent() && wynnItem.get().meetsActualRequirements()) {
+        Optional<GearItem> handItemOpt =
+                Models.Item.asWynnItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND), GearItem.class);
+        if (handItemOpt.isPresent()
+                && handItemOpt.get().meetsActualRequirements()
+                && handItemOpt.get().getGearType().isWeapon()) {
             returnable.add(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
         }
 
