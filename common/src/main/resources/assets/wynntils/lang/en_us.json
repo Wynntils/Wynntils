@@ -2048,6 +2048,8 @@
   "function.wynntils.lastSpellRepeatCount.argument.burst": "Should only the last spell in the current burst be returned?",
   "function.wynntils.lastSpellRepeatCount.description": "The number of times the last spell has been cast in a row in the current burst",
   "function.wynntils.lastSpellRepeatCount.name": "Last Spell Repeat Count",
+  "function.wynntils.IslastSpellAShiftCast.description": "Whether the last spell cast was a shift cast (performed with the shift key held down)",
+  "function.wynntils.IslastSpellAShiftCast.name": "Is Last Spell Shift-Casted",
   "function.wynntils.level.description": "Your current combat level",
   "function.wynntils.level.name": "Lvl",
   "function.wynntils.liquidEmerald.description": "Amount of money liquid emeralds in inventory",
