@@ -466,6 +466,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.FocusedMobHealthFunction());
         registerFunction(new CombatFunctions.FocusedMobHealthPercentFunction());
         registerFunction(new CombatFunctions.TimeSinceLastDamageDealtFunction());
+        registerFunction(new CombatFunctions.WasLastSpellShiftCastedFunction());
 
         registerFunction(new CombatXpFunctions.CappedLevelFunction());
         registerFunction(new CombatXpFunctions.CappedXpFunction());
