@@ -113,7 +113,7 @@ public class CombatFunctions {
         }
     }
 
-    public static class WasLastSpellShiftCastedFunction extends Function<Boolean> {
+    public static class IsLastSpellShiftCastedFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             return Models.Spell.isShiftCast();
