@@ -46,7 +46,6 @@ public class SpellModel extends Model {
     private int repeatedSpellCount = 0;
     private int ticksSinceCastBurst = 0;
     private int ticksSinceCast = 0;
-
     private boolean shiftCast = false;
 
     public SpellModel() {
