@@ -167,7 +167,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                         Component.translatable("screens.wynntils.waypointManagementGui.undo"), (button) -> undoDelete())
                 .pos((int) (getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() + 10), (int)
                         (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10))
-                .size(80, 20)
+                .size(90, 20)
                 .build();
 
         this.addRenderableWidget(undoDeleteButton);
@@ -178,7 +178,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                 .pos(
                         (int) (getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() + 10),
                         (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10) - 30)
-                .size(80, 20)
+                .size(90, 20)
                 .build();
 
         deleteSelectedButton.active = false;
@@ -193,7 +193,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                 .pos(
                         (int) (getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() + 10),
                         (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10) - 60)
-                .size(80, 20)
+                .size(90, 20)
                 .build());
         // endregion
 
@@ -202,9 +202,9 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                         Component.translatable("screens.wynntils.waypointManagementGui.setMarkers"),
                         (button) -> toggleMarkers(true))
                 .pos(
-                        (int) (getTranslationX() - 90),
+                        (int) (getTranslationX() - 100),
                         (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10) - 90)
-                .size(80, 20)
+                .size(90, 20)
                 .tooltip(Tooltip.create(
                         Component.translatable("screens.wynntils.waypointManagementGui.setMarkers.tooltip")))
                 .build();
@@ -217,9 +217,9 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                         Component.translatable("screens.wynntils.waypointManagementGui.removeMarkers"),
                         (button) -> toggleMarkers(false))
                 .pos(
-                        (int) (getTranslationX() - 90),
+                        (int) (getTranslationX() - 100),
                         (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10) - 60)
-                .size(80, 20)
+                .size(90, 20)
                 .tooltip(Tooltip.create(
                         Component.translatable("screens.wynntils.waypointManagementGui.removeMarkers.tooltip")))
                 .build();
@@ -233,9 +233,9 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         deselectAllButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.deselectAll"),
                         (button) -> toggleSelectAll(false))
-                .pos((int) (getTranslationX() - 90), (int)
+                .pos((int) (getTranslationX() - 100), (int)
                         (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10))
-                .size(80, 20)
+                .size(90, 20)
                 .build();
 
         deselectAllButton.active = false;
@@ -246,9 +246,9 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                         Component.translatable("screens.wynntils.waypointManagementGui.selectAll"),
                         (button) -> toggleSelectAll(true))
                 .pos(
-                        (int) (getTranslationX() - 90),
+                        (int) (getTranslationX() - 100),
                         (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10) - 30)
-                .size(80, 20)
+                .size(90, 20)
                 .build();
 
         this.addRenderableWidget(selectAllButton);
