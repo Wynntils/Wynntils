@@ -122,7 +122,7 @@ public class WaypointsService extends Service {
         WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
     }
 
-    public boolean importWaypoints() {
+    public int importWaypoints() {
         String clipboard = McUtils.mc().keyboardHandler.getClipboard();
 
         WaypointLocation[] newWaypoints;
@@ -130,12 +130,12 @@ public class WaypointsService extends Service {
             newWaypoints = Managers.Json.GSON.fromJson(clipboard, WaypointLocation[].class);
         } catch (JsonSyntaxException e) {
             McUtils.sendErrorToClient(I18n.get("service.wynntils.waypoint.importError"));
-            return false;
+            return -1;
         }
 
         if (newWaypoints == null) {
             McUtils.sendErrorToClient(I18n.get("service.wynntils.waypoint.importError"));
-            return false;
+            return -1;
         }
 
         // Only add waypoints that don't already exist
@@ -153,7 +153,7 @@ public class WaypointsService extends Service {
                 Component.translatable("service.wynntils.waypoint.importSuccess", waypointsToAdd.size())
                         .withStyle(ChatFormatting.GREEN));
 
-        return true;
+        return waypointsToAdd.size();
     }
 
     // region Poi Migration

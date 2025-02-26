@@ -45,6 +45,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public final class WaypointManagementScreen extends WynntilsScreen {
     // Constants
@@ -71,6 +72,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     private Button deselectAllButton;
     private Button downButton;
     private Button exportButton;
+    private Button importButton;
     private Button removeMarkersButton;
     private Button selectAllButton;
     private Button setMarkersButton;
@@ -141,14 +143,16 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         // endregion
 
         // region import/export
-        this.addRenderableWidget(new Button.Builder(
+        importButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.import"),
                         (button) -> importFromClipboard())
                 .pos((width / 2) - 102, (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10))
                 .size(60, 20)
                 .tooltip(
                         Tooltip.create(Component.translatable("screens.wynntils.waypointManagementGui.import.tooltip")))
-                .build());
+                .build();
+
+        this.addRenderableWidget(importButton);
 
         exportButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.export"),
@@ -947,7 +951,14 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     }
 
     private void importFromClipboard() {
-        if (Services.Waypoints.importWaypoints()) {
+        int importedWaypoints = Services.Waypoints.importWaypoints();
+
+        MutableComponent importTooltip = Component.translatable("screens.wynntils.waypointManagementGui.import.tooltip")
+                .withStyle(ChatFormatting.WHITE)
+                .append(Component.literal("\n"));
+
+        // Still accept 0 as that was not a failure
+        if (importedWaypoints >= 0) {
             // Enable search after importing new waypoints
             if (!Services.Waypoints.getWaypoints().isEmpty()) {
                 searchInput.visible = true;
@@ -955,7 +966,15 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
             updateAllUsedIcons();
             populateWaypoints();
+
+            importTooltip.append(Component.translatable("service.wynntils.waypoint.importSuccess", importedWaypoints)
+                    .withStyle(ChatFormatting.GREEN));
+        } else {
+            importTooltip.append(Component.translatable("service.wynntils.waypoint.importError")
+                    .withStyle(ChatFormatting.RED));
         }
+
+        importButton.setTooltip(Tooltip.create(importTooltip));
     }
 
     private void exportToClipboard() {
@@ -969,9 +988,22 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                         .toList()
                         .toString());
 
-        McUtils.sendMessageToClient(Component.translatable(
-                        "screens.wynntils.waypointManagementGui.exportedWaypoints", waypointsToExport.size())
-                .withStyle(ChatFormatting.GREEN));
+        MutableComponent exportTooltip;
+
+        if (selectedWaypoints.isEmpty()) {
+            exportTooltip = Component.translatable("screens.wynntils.waypointManagementGui.exportAll.tooltip");
+        } else {
+            exportTooltip = Component.translatable(
+                    "screens.wynntils.waypointManagementGui.exportSelected.tooltip", selectedWaypoints.size());
+        }
+
+        exportTooltip
+                .append(Component.literal("\n"))
+                .append(Component.translatable(
+                                "screens.wynntils.waypointManagementGui.exportedWaypoints", waypointsToExport.size())
+                        .withStyle(ChatFormatting.GREEN));
+
+        exportButton.setTooltip(Tooltip.create(exportTooltip));
     }
 
     private void undoDelete() {
