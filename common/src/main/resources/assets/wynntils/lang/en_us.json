@@ -2713,7 +2713,7 @@
   "screens.wynntils.waypointManagementGui.selectAll": "Select All",
   "screens.wynntils.waypointManagementGui.setMarkers": "Set Markers",
   "screens.wynntils.waypointManagementGui.setMarkers.tooltip": "Sets a marker at all selected waypoints",
-  "screens.wynntils.waypointManagementGui.undo": "Undo delete",
+  "screens.wynntils.waypointManagementGui.undo": "Undo Delete",
   "screens.wynntils.waypointVisibility.always": "Always",
   "screens.wynntils.waypointVisibility.close": "Close",
   "screens.wynntils.waypointVisibility.description1": "Use the sliders to adjust the desired zoom levels for the waypoint to be visible at.",
