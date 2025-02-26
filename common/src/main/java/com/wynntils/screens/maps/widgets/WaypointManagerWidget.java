@@ -219,9 +219,9 @@ public class WaypointManagerWidget extends AbstractWidget {
                     poseStack,
                     selected ? CommonColors.ORANGE : CommonColors.WHITE,
                     getX(),
-                    getY() + 1,
+                    getY(),
                     getX() + width,
-                    getY() + height - 1,
+                    getY() + height,
                     0,
                     1f);
         } else {
