@@ -61,7 +61,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     private List<AbstractWidget> waypointManagerWidgets = new ArrayList<>();
     private List<AbstractWidget> iconButtons = new ArrayList<>();
     private List<WaypointLocation> selectedWaypoints = new ArrayList<>();
-    private List<WaypointLocation> waypoints;
+    private List<WaypointLocation> waypoints = new ArrayList<>();
 
     // Previous screen
     private final MainMapScreen oldMapScreen;
@@ -250,6 +250,8 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                         (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10) - 30)
                 .size(90, 20)
                 .build();
+
+        selectAllButton.active = !waypoints.isEmpty();
 
         this.addRenderableWidget(selectAllButton);
         // endregion
