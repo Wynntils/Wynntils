@@ -584,7 +584,10 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.waypointCreation.title")),
+                        StyledText.fromComponent(
+                                oldWaypoint == null
+                                        ? Component.translatable("screens.wynntils.waypointCreation.createTitle")
+                                        : Component.translatable("screens.wynntils.waypointCreation.editTitle")),
                         dividedWidth * 15,
                         dividedHeight * 6,
                         CommonColors.WHITE,
