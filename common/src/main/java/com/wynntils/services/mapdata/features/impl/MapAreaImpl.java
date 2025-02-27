@@ -31,8 +31,7 @@ public class MapAreaImpl implements MapArea {
         this.polygonArea = polygonArea;
 
         // Compute the bounding polygon
-        // (the caching happens in the getter for json deserialization)
-        getBoundingPolygon();
+        calculateBoundingPolygon();
     }
 
     @Override
@@ -62,12 +61,14 @@ public class MapAreaImpl implements MapArea {
 
     @Override
     public BoundingPolygon getBoundingPolygon() {
-        return boundingPolygon != null
-                ? boundingPolygon
-                : (boundingPolygon = BoundingPolygon.fromLocations(polygonArea));
+        return boundingPolygon != null ? boundingPolygon : (calculateBoundingPolygon());
     }
 
     public boolean validate() {
         return featureId != null && categoryId != null && polygonArea != null && !polygonArea.isEmpty();
+    }
+
+    private BoundingPolygon calculateBoundingPolygon() {
+        return boundingPolygon = BoundingPolygon.fromLocations(polygonArea);
     }
 }

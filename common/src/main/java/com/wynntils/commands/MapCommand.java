@@ -70,11 +70,11 @@ public class MapCommand extends Command {
 
     private int addProvider(CommandContext<CommandSourceStack> context) {
         String name = context.getArgument("name", String.class);
-        String urlOfPath = context.getArgument("urlOrPath", String.class);
+        String urlOrPath = context.getArgument("urlOrPath", String.class);
 
         try {
-            URI uri = URI.create(urlOfPath);
-            Services.MapData.addJsonProvider(JsonProviderInfo.createRemote(name, urlOfPath));
+            URI uri = URI.create(urlOrPath);
+            Services.MapData.addJsonProvider(JsonProviderInfo.createRemote(name, urlOrPath));
             context.getSource()
                     .sendSuccess(
                             () -> Component.literal("Successfully added remote mapdata provider.")
@@ -85,9 +85,9 @@ public class MapCommand extends Command {
             // continue, it might be a file
         }
 
-        File file = new File(urlOfPath);
+        File file = new File(urlOrPath);
         if (file.exists()) {
-            Services.MapData.addJsonProvider(JsonProviderInfo.createLocal(name, urlOfPath));
+            Services.MapData.addJsonProvider(JsonProviderInfo.createLocal(name, urlOrPath));
             context.getSource()
                     .sendSuccess(
                             () -> Component.literal("Successfully added local mapdata provider.")

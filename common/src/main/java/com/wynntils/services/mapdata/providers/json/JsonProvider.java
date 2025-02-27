@@ -171,7 +171,10 @@ public final class JsonProvider implements MapDataProvider {
 
             int version = JsonUtils.getNullableJsonInt(jsonProvider, "version");
             if (version == 0) {
-                throw new JsonParseException("Missing or incorrect version field in json provider.");
+                throw new JsonParseException("Missing version field in json provider.");
+            }
+            if (version > 1) {
+                throw new JsonParseException("Unsupported version in json provider.");
             }
 
             JsonObject featuresObject = JsonUtils.getNullableJsonObject(jsonProvider, "features");
