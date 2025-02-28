@@ -7,6 +7,8 @@ package com.wynntils.services.mapdata;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.mapdata.attributes.resolving.MapAttributesResolver;
 import com.wynntils.services.mapdata.attributes.resolving.OverrideMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
@@ -21,6 +23,7 @@ import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
+import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.services.mapdata.providers.type.MapDataOverrideProvider;
 import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
@@ -29,6 +32,7 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -55,6 +59,10 @@ public class MapDataService extends Service {
     private final Map<MapFeature, ResolvedMapAttributes> resolvedAttributesCache = new HashMap<>();
     private final Map<String, Optional<MapIcon>> iconCache = new HashMap<>();
 
+    // Storage for json providers
+    @Persisted
+    private final Storage<Map<JsonProviderInfo, Boolean>> jsonProviderInfos = new Storage<>(new LinkedHashMap<>());
+
     public MapDataService() {
         super(List.of());
 
@@ -62,8 +70,16 @@ public class MapDataService extends Service {
     }
 
     @Override
+    public void onStorageLoad(Storage<?> storage) {
+        if (storage == jsonProviderInfos) {
+            reloadJsonProviders();
+        }
+    }
+
+    @Override
     public void reloadData() {
         getProviders().forEach(MapDataProvider::reloadData);
+        reloadJsonProviders();
     }
 
     public Stream<MapFeature> getFeatures() {
@@ -138,25 +154,65 @@ public class MapDataService extends Service {
 
     // region Providers
 
-    // per-account, per-character or shared
+    // In the future, per-account, per-character or shared
     // can be added just from disk, or downloaded from an url
-    public void createBundledProvider(String id, String filename) {
-        String completeId = "bundled:" + id;
-        JsonProvider provider = JsonProvider.loadBundledResource(completeId, filename);
-        registerProvider(completeId, provider);
+    public void addJsonProvider(JsonProviderInfo providerInfo) {
+        jsonProviderInfos.get().keySet().removeIf(i -> i.providerId().equals(providerInfo.providerId()));
+        jsonProviderInfos.get().put(providerInfo, true);
+        jsonProviderInfos.touched();
+        registerJsonProvider(providerInfo);
     }
 
-    public void createLocalProvider(String id, String filename) {
-        String completeId = "local:" + id;
-        JsonProvider provider = JsonProvider.loadLocalFile(completeId, new File(filename));
-        registerProvider(completeId, provider);
+    public boolean removeJsonProvider(String providerId) {
+        boolean found = jsonProviderInfos.get().keySet().removeIf(info -> info.providerId()
+                .equals(providerId));
+        if (!found) return false;
+
+        jsonProviderInfos.touched();
+        allProviders.keySet().stream()
+                .filter(id -> id.endsWith(providerId))
+                .findFirst()
+                .ifPresent(allProviders::remove);
+
+        return true;
     }
 
-    public void createOnlineProvider(String id, String url) {
-        String completeId = "online:" + id;
-        JsonProvider.loadOnlineResource(completeId, url, this::registerProvider);
-        // Register a dummy provider; this will be replaced once loading has finished
-        registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
+    public boolean toggleJsonProvider(String providerId) {
+        Optional<JsonProviderInfo> providerOpt = jsonProviderInfos.get().keySet().stream()
+                .filter(info -> info.providerId().equals(providerId))
+                .findFirst();
+        if (providerOpt.isEmpty()) return false;
+
+        JsonProviderInfo provider = providerOpt.get();
+        boolean enabled = jsonProviderInfos.get().get(provider);
+        jsonProviderInfos.get().put(provider, !enabled);
+        jsonProviderInfos.touched();
+
+        if (enabled) {
+            allProviders.entrySet().stream()
+                    .filter(entry -> entry.getKey().endsWith(providerId))
+                    .findFirst()
+                    .ifPresent(entry -> {
+                        allProviders.remove(entry.getKey());
+                        invalidateCaches(entry.getValue());
+                    });
+        } else {
+            registerJsonProvider(provider);
+        }
+
+        return true;
+    }
+
+    public boolean isJsonProviderEnabled(String providerId) {
+        return jsonProviderInfos.get().keySet().stream()
+                .filter(info -> info.providerId().equals(providerId))
+                .findFirst()
+                .map(jsonProviderInfos.get()::get)
+                .orElse(false);
+    }
+
+    public Map<JsonProviderInfo, Boolean> getJsonProviderInfos() {
+        return Collections.unmodifiableMap(jsonProviderInfos.get());
     }
 
     public void registerOverrideProvider(String overrideProviderId, MapDataOverrideProvider provider) {
@@ -185,6 +241,7 @@ public class MapDataService extends Service {
 
     /**
      * Register a built-in provider. Call this method in a listener for {@link com.wynntils.core.mod.event.WynntilsInitEvent.ModInitFinished}, unless you have a good reason not to.
+     *
      * @param provider The provider to register
      */
     public void registerBuiltInProvider(BuiltInProvider provider) {
@@ -213,7 +270,41 @@ public class MapDataService extends Service {
         provider.onChange(this::onProviderChange);
 
         // Invalidate caches
-        invalidateAllCaches();
+        invalidateCaches(provider);
+    }
+
+    private void registerJsonProvider(JsonProviderInfo providerInfo) {
+        switch (providerInfo.providerType()) {
+            case BUNDLED -> createBundledProvider(providerInfo.providerId(), providerInfo.providerFilename());
+            case LOCAL -> createLocalProvider(providerInfo.providerId(), providerInfo.providerFilePath());
+            case REMOTE -> createOnlineProvider(providerInfo.providerId(), providerInfo.providerUrl());
+        }
+    }
+
+    private void createBundledProvider(String id, String filename) {
+        String completeId = "bundled:" + id;
+        JsonProvider provider = JsonProvider.loadBundledResource(completeId, filename);
+        registerProvider(completeId, provider);
+    }
+
+    private void createLocalProvider(String id, String filename) {
+        String completeId = "local:" + id;
+        JsonProvider provider = JsonProvider.loadLocalFile(completeId, new File(filename));
+        registerProvider(completeId, provider);
+    }
+
+    private void createOnlineProvider(String id, String url) {
+        String completeId = "online:" + id;
+        // Register a dummy provider; this will be replaced once loading has finished
+        registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
+        JsonProvider.loadOnlineResource(completeId, url, this::registerProvider);
+    }
+
+    private void reloadJsonProviders() {
+        jsonProviderInfos.get().entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .forEach(this::registerJsonProvider);
     }
 
     private void onProviderChange(MapDataProvidedType mapDataProvidedType) {
@@ -222,14 +313,28 @@ public class MapDataService extends Service {
         } else if (mapDataProvidedType instanceof MapIcon mapIcon) {
             iconCache.remove(mapIcon.getIconId());
         } else if (mapDataProvidedType instanceof MapCategory mapCategory) {
-            // If this happens, we need to redo everything
-            invalidateAllCaches();
+            resolvedAttributesCache.keySet().removeIf(feature -> feature.getCategoryId()
+                    .startsWith(mapCategory.getCategoryId()));
         }
     }
 
-    private void invalidateAllCaches() {
-        resolvedAttributesCache.clear();
-        iconCache.clear();
+    private void invalidateCaches(MapDataProvider provider) {
+        // As only the icon id string is cached, there is no need to invalidate the cache for features that contain
+        // this provider's icons. It's enough to invalidate the icon cache below, and the icon lookup will default to
+        // the correct icon.
+        List<MapFeature> toBeRemoved = resolvedAttributesCache.keySet().stream()
+                .filter(feature ->
+                        provider.getFeatures().anyMatch(f -> f.getFeatureId().equals(feature.getFeatureId()))
+                                || provider.getCategories()
+                                        .anyMatch(c -> feature.getCategoryId().startsWith(c.getCategoryId())))
+                .toList();
+        resolvedAttributesCache.keySet().removeAll(toBeRemoved);
+
+        List<String> toBeRemovedIcons = iconCache.keySet().stream()
+                .filter(iconId ->
+                        provider.getIcons().anyMatch(i -> i.getIconId().equals(iconId)))
+                .toList();
+        iconCache.keySet().removeAll(toBeRemovedIcons);
     }
 
     private Stream<MapDataProvider> getProviders() {

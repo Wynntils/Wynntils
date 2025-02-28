@@ -8,13 +8,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
-import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
-import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
@@ -389,11 +387,8 @@ public final class MainMapScreen extends AbstractMapScreen {
                     McUtils.mc().setScreen(WaypointCreationScreen.create(this, new Location(gameX, 0, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
-                if (hoveredFeature instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
-                    HiddenConfig<List<CustomPoi>> customPois =
-                            Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-                    customPois.get().remove(customPoi);
-                    customPois.touched();
+                if (hoveredFeature instanceof WaypointLocation waypointLocation) {
+                    Services.Waypoints.removeWaypoint(waypointLocation);
                 }
             } else {
                 setCompassToMouseCoords(mouseX, mouseY, true);

@@ -46,6 +46,7 @@ public final class JsonManager extends Manager {
             .registerTypeAdapter(StyledText.class, new StyledText.StyledTextSerializer())
             .registerTypeAdapter(CrowdSourcedData.class, new CrowdSourcedData.CrowdSourceDataSerializer())
             .registerTypeAdapter(SavedItem.class, new SavedItem.SavedItemSerializer())
+            .registerTypeAdapter(JsonProvider.class, new JsonProvider.JsonProviderSerializer())
             .registerTypeAdapter(MapLocationAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
             .registerTypeAdapter(MapAreaAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
             .registerTypeAdapter(MapPathAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())

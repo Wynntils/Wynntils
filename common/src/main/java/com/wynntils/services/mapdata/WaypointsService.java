@@ -77,6 +77,10 @@ public class WaypointsService extends Service {
         return Collections.unmodifiableList(customIcons.get());
     }
 
+    public Set<String> getCategories() {
+        return getWaypoints().stream().map(MapLocationImpl::getCategoryId).collect(Collectors.toUnmodifiableSet());
+    }
+
     public void addCustomIcon(MapIconImpl iconToAdd) {
         customIcons.get().add(iconToAdd);
         customIcons.touched();
@@ -87,10 +91,6 @@ public class WaypointsService extends Service {
         customIcons.get().remove(iconToRemove);
         customIcons.touched();
         WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
-    }
-
-    public Set<String> getCategories() {
-        return getWaypoints().stream().map(MapLocationImpl::getCategoryId).collect(Collectors.toUnmodifiableSet());
     }
 
     public void addWaypoint(WaypointLocation waypoint) {

@@ -51,4 +51,8 @@ public class MapPathImpl implements MapPath {
     public List<Location> getPath() {
         return path;
     }
+
+    public boolean validate() {
+        return featureId != null && categoryId != null && path != null;
+    }
 }
