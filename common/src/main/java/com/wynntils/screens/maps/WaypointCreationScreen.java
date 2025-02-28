@@ -109,49 +109,38 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private TextShadow labelShadow = TextShadow.NORMAL;
     private WaypointLocation waypoint;
 
-    private WaypointCreationScreen(MainMapScreen oldMapScreen) {
+    private WaypointCreationScreen(Screen oldScreen) {
         super();
-        this.returnScreen = oldMapScreen;
+        this.returnScreen = oldScreen;
 
         this.firstSetup = true;
     }
 
-    private WaypointCreationScreen(MainMapScreen oldMapScreen, Location setupLocation) {
-        this(oldMapScreen);
+    private WaypointCreationScreen(Screen oldScreen, Location setupLocation) {
+        this(oldScreen);
 
         this.setupLocation = setupLocation;
         this.firstSetup = true;
     }
 
-    private WaypointCreationScreen(MainMapScreen oldMapScreen, WaypointLocation oldWaypoint) {
-        this(oldMapScreen);
-
-        this.oldWaypoint = oldWaypoint;
-        this.firstSetup = true;
-    }
-
-    private WaypointCreationScreen(PoiManagementScreen managementScreen, WaypointLocation oldWaypoint) {
+    private WaypointCreationScreen(Screen oldScreen, WaypointLocation oldWaypoint) {
         super();
-        this.returnScreen = managementScreen;
+        this.returnScreen = oldScreen;
 
         this.oldWaypoint = oldWaypoint;
         this.firstSetup = true;
     }
 
-    public static Screen create(MainMapScreen oldMapScreen) {
-        return new WaypointCreationScreen(oldMapScreen);
+    public static Screen create(Screen oldScreen) {
+        return new WaypointCreationScreen(oldScreen);
     }
 
-    public static Screen create(MainMapScreen oldMapScreen, Location setupLocation) {
-        return new WaypointCreationScreen(oldMapScreen, setupLocation);
+    public static Screen create(Screen oldScreen, Location setupLocation) {
+        return new WaypointCreationScreen(oldScreen, setupLocation);
     }
 
-    public static Screen create(MainMapScreen oldMapScreen, WaypointLocation oldWaypoint) {
-        return new WaypointCreationScreen(oldMapScreen, oldWaypoint);
-    }
-
-    public static Screen create(PoiManagementScreen managementScreen, WaypointLocation oldWaypoint) {
-        return new WaypointCreationScreen(managementScreen, oldWaypoint);
+    public static Screen create(Screen oldScreen, WaypointLocation oldWaypoint) {
+        return new WaypointCreationScreen(oldScreen, oldWaypoint);
     }
 
     @Override
@@ -595,7 +584,10 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.waypointCreation.title")),
+                        StyledText.fromComponent(
+                                oldWaypoint == null
+                                        ? Component.translatable("screens.wynntils.waypointCreation.createTitle")
+                                        : Component.translatable("screens.wynntils.waypointCreation.editTitle")),
                         dividedWidth * 15,
                         dividedHeight * 6,
                         CommonColors.WHITE,
@@ -919,7 +911,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
     private void saveWaypoint() {
         if (oldWaypoint != null) {
-            Services.Waypoints.removeWaypoint(oldWaypoint);
+            Services.Waypoints.removeWaypoint(oldWaypoint, true);
         }
 
         Services.Waypoints.addWaypoint(waypoint);

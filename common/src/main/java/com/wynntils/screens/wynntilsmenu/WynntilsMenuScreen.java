@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.wynntilsmenu;
@@ -22,7 +22,7 @@ import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.screens.lootrunpaths.WynntilsLootrunPathsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
-import com.wynntils.screens.maps.PoiManagementScreen;
+import com.wynntils.screens.maps.WaypointManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.screens.statistics.WynntilsStatisticsScreen;
@@ -203,7 +203,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                 .add(new WynntilsMenuButton(
                         Texture.WAYPOINT_MANAGER_ICON,
                         false,
-                        PoiManagementScreen.create(),
+                        WaypointManagementScreen.create(),
                         List.of(
                                 Component.literal("[>] ")
                                         .withStyle(ChatFormatting.GOLD)
