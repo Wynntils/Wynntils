@@ -61,7 +61,7 @@ public class MapAreaImpl implements MapArea {
 
     @Override
     public BoundingPolygon getBoundingPolygon() {
-        return boundingPolygon != null ? boundingPolygon : (calculateBoundingPolygon());
+        return boundingPolygon != null ? boundingPolygon : calculateBoundingPolygon();
     }
 
     public boolean validate() {
@@ -69,6 +69,7 @@ public class MapAreaImpl implements MapArea {
     }
 
     private BoundingPolygon calculateBoundingPolygon() {
-        return boundingPolygon = BoundingPolygon.fromLocations(polygonArea);
+        boundingPolygon = BoundingPolygon.fromLocations(polygonArea);
+        return boundingPolygon;
     }
 }
