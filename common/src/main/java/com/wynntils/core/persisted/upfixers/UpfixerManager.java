@@ -26,6 +26,7 @@ import com.wynntils.core.persisted.upfixers.config.OverlayConfigsIntegrationUpfi
 import com.wynntils.core.persisted.upfixers.config.OverlayRestructuringUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ProfessionBadgesToLeaderboardBadgesUpfixer;
 import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConfigsUpfixer;
+import com.wynntils.core.persisted.upfixers.config.SacredSurgeToHolyPowerUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
@@ -66,6 +67,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new CombatXpGainToXpGainUpfixer());
         registerConfigUpfixer(new ProfessionBadgesToLeaderboardBadgesUpfixer());
         registerConfigUpfixer(new TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer());
+        registerConfigUpfixer(new SacredSurgeToHolyPowerUpfixer());
         registerConfigUpfixer(new WorldMarkersRenameUpfixer());
         registerConfigUpfixer(new WorldMarkersDistanceConfigRenameUpfixer());
         registerConfigUpfixer(new BeaconBeamToWorldMarkersUpfixer());

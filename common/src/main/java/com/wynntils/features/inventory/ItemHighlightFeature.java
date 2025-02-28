@@ -148,7 +148,7 @@ public class ItemHighlightFeature extends Feature {
     public final Config<Float> hotbarOpacity = new Config<>(.5f);
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onRenderSlot(SlotRenderEvent.Pre e) {
+    public void onRenderSlot(SlotRenderEvent.CountPre e) {
         if (!inventoryHighlightEnabled.get()) return;
 
         CustomColor color = getHighlightColor(e.getSlot().getItem(), false);
@@ -161,7 +161,7 @@ public class ItemHighlightFeature extends Feature {
                 color.withAlpha(inventoryOpacity.get()),
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
-                200,
+                100,
                 18,
                 18,
                 highlightTexture.get().ordinal() * 18,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
@@ -9,13 +9,13 @@ import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
-import com.wynntils.models.abilities.bossbars.SacredSurgeBar;
+import com.wynntils.models.abilities.bossbars.HolyPowerBar;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
-public class SacredSurgeBarOverlay extends BaseBarOverlay {
-    public SacredSurgeBarOverlay() {
+public class HolyPowerBarOverlay extends BaseBarOverlay {
+    public HolyPowerBarOverlay() {
         super(
                 new OverlayPosition(
                         -30,
@@ -29,12 +29,12 @@ public class SacredSurgeBarOverlay extends BaseBarOverlay {
 
     @Override
     public BossBarProgress progress() {
-        return Models.Ability.sacredSurgeBar.getBarProgress();
+        return Models.Ability.holyPowerBar.getBarProgress();
     }
 
     @Override
     protected Class<? extends TrackedBar> getTrackedBarClass() {
-        return SacredSurgeBar.class;
+        return HolyPowerBar.class;
     }
 
     @Override
@@ -44,6 +44,6 @@ public class SacredSurgeBarOverlay extends BaseBarOverlay {
 
     @Override
     public boolean isActive() {
-        return Models.Ability.sacredSurgeBar.isActive();
+        return Models.Ability.holyPowerBar.isActive();
     }
 }
