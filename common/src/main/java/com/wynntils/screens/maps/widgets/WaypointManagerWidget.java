@@ -86,7 +86,7 @@ public class WaypointManagerWidget extends AbstractWidget {
 
         deleteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.delete"), (button) -> {
-                            managementScreen.deleteWaypoint(waypoint, true);
+                            managementScreen.deleteWaypoint(waypoint);
                         })
                 .pos(x + width - 20 - 40, y)
                 .size(40, 20)

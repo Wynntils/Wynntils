@@ -562,10 +562,10 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         populateWaypoints();
     }
 
-    public void deleteWaypoint(WaypointLocation waypointToDelete, boolean save) {
+    public void deleteWaypoint(WaypointLocation waypointToDelete) {
         int deletedWaypointIndex = Services.Waypoints.getWaypoints().indexOf(waypointToDelete);
 
-        Services.Waypoints.removeWaypoint(waypointToDelete, save);
+        Services.Waypoints.removeWaypoint(waypointToDelete);
 
         deletedWaypoints.add(waypointToDelete);
         deletedIndexes.add(deletedWaypointIndex);
@@ -930,7 +930,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
     private void deleteSelectedWaypoints() {
         for (WaypointLocation waypoint : selectedWaypoints) {
-            deleteWaypoint(waypoint, false);
+            deleteWaypoint(waypoint);
         }
 
         McUtils.sendMessageToClient(Component.translatable(
