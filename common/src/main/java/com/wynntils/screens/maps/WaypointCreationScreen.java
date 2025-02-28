@@ -911,7 +911,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
     private void saveWaypoint() {
         if (oldWaypoint != null) {
-            Services.Waypoints.removeWaypoint(oldWaypoint, true);
+            Services.Waypoints.removeWaypoint(oldWaypoint);
         }
 
         Services.Waypoints.addWaypoint(waypoint);

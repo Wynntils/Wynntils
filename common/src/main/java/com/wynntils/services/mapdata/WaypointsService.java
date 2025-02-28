@@ -114,11 +114,9 @@ public class WaypointsService extends Service {
         waypoints.touched();
     }
 
-    public void removeWaypoint(WaypointLocation waypoint, boolean save) {
+    public void removeWaypoint(WaypointLocation waypoint) {
         waypoints.get().remove(waypoint);
-        if (save) {
-            waypoints.touched();
-        }
+        waypoints.touched();
         WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
     }
 
