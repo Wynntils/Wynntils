@@ -187,7 +187,7 @@ public class ContainerSearchFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onRenderSlot(SlotRenderEvent.Pre e) {
+    public void onRenderSlot(SlotRenderEvent.CountPre e) {
         ItemStack itemStack = e.getSlot().getItem();
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
@@ -196,7 +196,7 @@ public class ContainerSearchFeature extends Feature {
         if (result == null || !result) return;
 
         RenderSystem.enableDepthTest();
-        RenderUtils.drawArc(e.getPoseStack(), highlightColor.get(), e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
+        RenderUtils.drawArc(e.getPoseStack(), highlightColor.get(), e.getSlot().x, e.getSlot().y, 100, 1f, 6, 8);
         RenderSystem.disableDepthTest();
     }
 
