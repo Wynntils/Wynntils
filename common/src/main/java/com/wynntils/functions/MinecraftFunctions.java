@@ -45,10 +45,10 @@ public class MinecraftFunctions {
         }
     }
 
-    public static class TicksFunction extends Function<Integer> {
+    public static class TicksFunction extends Function<Long> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return (int) McUtils.mc().level.getGameTime();
+        public Long getValue(FunctionArguments arguments) {
+            return McUtils.mc().level.getGameTime();
         }
     }
 
