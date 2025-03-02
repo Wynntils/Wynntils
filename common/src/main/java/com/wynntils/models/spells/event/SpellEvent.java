@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells.event;
@@ -61,15 +61,17 @@ public abstract class SpellEvent extends Event {
         private final SpellType spellType;
         private final int manaCost;
         private final int healthCost;
+        private final boolean shiftCast;
 
-        public Cast(SpellType spellType, int manaCost) {
-            this(spellType, manaCost, 0);
+        public Cast(SpellType spellType, int manaCost, boolean shiftCast) {
+            this(spellType, manaCost, 0, shiftCast);
         }
 
-        public Cast(SpellType spellType, int manaCost, int healthCost) {
+        public Cast(SpellType spellType, int manaCost, int healthCost, boolean shiftCast) {
             this.spellType = spellType;
             this.manaCost = manaCost;
             this.healthCost = healthCost;
+            this.shiftCast = shiftCast;
         }
 
         public SpellType getSpellType() {
@@ -82,6 +84,10 @@ public abstract class SpellEvent extends Event {
 
         public int getHealthCost() {
             return healthCost;
+        }
+
+        public boolean isShiftCast() {
+            return shiftCast;
         }
     }
 

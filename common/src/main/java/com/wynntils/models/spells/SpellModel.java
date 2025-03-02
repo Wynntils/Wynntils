@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells;
@@ -46,6 +46,7 @@ public class SpellModel extends Model {
     private int repeatedSpellCount = 0;
     private int ticksSinceCastBurst = 0;
     private int ticksSinceCast = 0;
+    private boolean shiftCast = false;
 
     public SpellModel() {
         super(List.of());
@@ -78,7 +79,10 @@ public class SpellModel extends Model {
             int manaCost = Integer.parseInt(spellMatcher.group(2));
             int healthCost =
                     Integer.parseInt(Optional.ofNullable(spellMatcher.group(3)).orElse("0"));
-            WynntilsMod.postEvent(new SpellEvent.Cast(spellType, manaCost, healthCost));
+
+            // Capture shift state at the moment of cast detection
+            boolean isShiftCast = McUtils.player().isShiftKeyDown();
+            WynntilsMod.postEvent(new SpellEvent.Cast(spellType, manaCost, healthCost, isShiftCast));
         }
     }
 
@@ -91,6 +95,9 @@ public class SpellModel extends Model {
     public void onSpellCast(SpellEvent.Cast e) {
         ticksSinceCastBurst = 0;
         ticksSinceCast = 0;
+
+        // Update shift-cast state from the event
+        this.shiftCast = e.isShiftCast();
 
         if (e.getSpellType().getName().equals(lastBurstSpellName)) {
             repeatedBurstSpellCount++;
@@ -197,6 +204,10 @@ public class SpellModel extends Model {
 
     public int getTicksSinceCast() {
         return ticksSinceCast;
+    }
+
+    public boolean isShiftCast() {
+        return shiftCast;
     }
 
     private void updateFromSpellSegment(SpellSegment spellSegment) {
