@@ -4,9 +4,13 @@
  */
 package com.wynntils.screens.bulkbuy.widgets;
 
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.BulkBuyFeature;
+import com.wynntils.mc.extension.ItemStackRenderStateExtension;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -15,17 +19,31 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.time.Duration;
+
+import net.minecraft.CrashReport;
+import net.minecraft.CrashReportCategory;
+import net.minecraft.ReportedException;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public class BulkBuyWidget extends AbstractWidget {
     private static final int BULK_BUY_WIDGET_CENTER = 89;
 
     private final int originalX;
     private final AnimationPercentage animationPercentage;
+    private final ItemStackRenderState scratchItemStackRenderState = new ItemStackRenderState();
     private BulkBuyFeature.BulkBoughtItem bulkBoughtItem = null;
 
     public BulkBuyWidget(int x, int y, int width, int height, int animationDuration) {
@@ -77,7 +95,23 @@ public class BulkBuyWidget extends AbstractWidget {
                             TextShadow.NORMAL);
 
             // X coordinate is center of widget (BULK_BUY_WIDGET_CENTER) minus half of the item icon width (8)
-            guiGraphics.renderItem(bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);
+
+            McUtils.mc().getItemModelResolver().updateForTopItem(scratchItemStackRenderState, bulkBoughtItem.itemStack(), ItemDisplayContext.GUI, false, McUtils.mc().level, null, 0);
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().translate((float)(getX() + BULK_BUY_WIDGET_CENTER), (float)(getY() + 42), 150);
+            guiGraphics.pose().scale(16.0F, -16.0F, 16.0F);
+            scratchItemStackRenderState.render(guiGraphics.pose(), guiGraphics.bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
+            for (RenderType renderType : guiGraphics.bufferSource.fixedBuffers.keySet()) {
+                System.out.println(renderType.toString());
+                if (renderType.toString().contains("textures/atlas/blocks.png")) {
+                    guiGraphics.bufferSource.endBatch(renderType);
+                }
+            }
+            guiGraphics.pose().popPose();
+
+//            renderItem(bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34, guiGraphics.pose(), guiGraphics.bufferSource);
+//            guiGraphics.renderItem(bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);
+
             FontRenderer.getInstance()
                     .renderScrollingText(
                             guiGraphics.pose(),
