@@ -32,6 +32,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -94,8 +95,12 @@ public class InventoryEmeraldCountFeature extends Feature {
             topTextureX -= Texture.BANK_PANEL.width() + 10;
         }
 
-        if (event.getScreen().renderables.stream().anyMatch(w -> w instanceof BulkBuyWidget)) {
-            topTextureX -= Texture.BULK_BUY_PANEL.width() + 1;
+        for (Renderable r : event.getScreen().renderables) {
+            if (r instanceof BulkBuyWidget bulkBuyWidget) {
+                topTextureX -= (int) ((Texture.BULK_BUY_PANEL.width() + 1)
+                        * bulkBuyWidget.getAnimationPercentage().getAnimationWithoutUpdate());
+                break; // usually only one bulk buy widget is present, but just in case
+            }
         }
         // endregion
 

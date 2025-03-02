@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render.type;
@@ -22,6 +22,9 @@ public final class AnimationPercentage {
         this.openingDuration = openingDuration;
     }
 
+    /**
+     * @return Animation percentage between 0 and 1, continuously updating for use in render methods.
+     */
     public double getAnimation() {
         if (openingDuration.isZero() || openingDuration.isNegative()) return 1;
         if (openingProgress == 0) {
@@ -37,6 +40,13 @@ public final class AnimationPercentage {
         }
         lastTime = Instant.now();
         return applyTransformation(openingProgress);
+    }
+
+    /**
+     * @return Animation percentage between 0 and 1, without updating the animation.
+     */
+    public double getAnimationWithoutUpdate() {
+        return openingProgress;
     }
 
     public void addOpeningProgress(double openingProgress) {
