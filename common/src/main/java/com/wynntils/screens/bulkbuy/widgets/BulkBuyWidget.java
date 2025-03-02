@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.bulkbuy.widgets;
@@ -131,6 +131,10 @@ public class BulkBuyWidget extends AbstractWidget {
 
     public void setBulkBoughtItem(BulkBuyFeature.BulkBoughtItem bulkBoughtItem) {
         this.bulkBoughtItem = bulkBoughtItem;
+    }
+
+    public AnimationPercentage getAnimationPercentage() {
+        return animationPercentage;
     }
 
     @Override
