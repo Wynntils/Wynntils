@@ -95,19 +95,7 @@ public class BulkBuyWidget extends AbstractWidget {
                             TextShadow.NORMAL);
 
             // X coordinate is center of widget (BULK_BUY_WIDGET_CENTER) minus half of the item icon width (8)
-
-            McUtils.mc().getItemModelResolver().updateForTopItem(scratchItemStackRenderState, bulkBoughtItem.itemStack(), ItemDisplayContext.GUI, false, McUtils.mc().level, null, 0);
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate((float)(getX() + BULK_BUY_WIDGET_CENTER), (float)(getY() + 42), 150);
-            guiGraphics.pose().scale(16.0F, -16.0F, 16.0F);
-            scratchItemStackRenderState.render(guiGraphics.pose(), guiGraphics.bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
-            for (RenderType renderType : guiGraphics.bufferSource.fixedBuffers.keySet()) {
-                System.out.println(renderType.toString());
-                if (renderType.toString().contains("textures/atlas/blocks.png")) {
-                    guiGraphics.bufferSource.endBatch(renderType);
-                }
-            }
-            guiGraphics.pose().popPose();
+            RenderUtils.renderMaskRespectingItem(guiGraphics, bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);
 
 //            renderItem(bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34, guiGraphics.pose(), guiGraphics.bufferSource);
 //            guiGraphics.renderItem(bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);

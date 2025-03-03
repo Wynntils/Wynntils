@@ -25,11 +25,15 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -756,6 +760,24 @@ public final class RenderUtils {
 
     public static void renderItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
         guiGraphics.renderItem(itemStack, x, y);
+    }
+
+    public static void renderMaskRespectingItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
+        ItemStackRenderState scratchItemStackRenderState = new ItemStackRenderState();
+        McUtils.mc().getItemModelResolver().updateForTopItem(scratchItemStackRenderState, itemStack, ItemDisplayContext.GUI, false, McUtils.mc().level, null, 0);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate((float)(x + 8), (float)(y + 8), 150);
+        guiGraphics.pose().scale(16.0F, -16.0F, 16.0F);
+        scratchItemStackRenderState.render(guiGraphics.pose(), guiGraphics.bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
+
+        // Selectively end batches only for block textures to preserve mask
+        for (RenderType renderType : guiGraphics.bufferSource.fixedBuffers.keySet()) {
+            if (renderType.toString().contains("textures/atlas/blocks.png")) {
+                guiGraphics.bufferSource.endBatch(renderType);
+            }
+        }
+
+        guiGraphics.pose().popPose();
     }
 
     public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {
