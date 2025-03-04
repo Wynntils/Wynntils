@@ -27,7 +27,6 @@ public class BulkBuyWidget extends AbstractWidget {
 
     private final int originalX;
     private final AnimationPercentage animationPercentage;
-    private final ItemStackRenderState scratchItemStackRenderState = new ItemStackRenderState();
     private BulkBuyFeature.BulkBoughtItem bulkBoughtItem = null;
 
     public BulkBuyWidget(int x, int y, int width, int height, int animationDuration) {
