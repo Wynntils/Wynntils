@@ -89,6 +89,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/abilities.json"
   },
   {
+    "id": "dataStaticAspects",
+    "md5": "264dd719a798ee079effe7ae46e928f3",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/aspects.json"
+  },
+  {
     "id": "dataStaticCaveInfo",
     "md5": "143dd6cadb8967214da630ec3168c3bc",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/caves.json"
