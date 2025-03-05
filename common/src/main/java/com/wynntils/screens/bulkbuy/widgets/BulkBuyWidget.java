@@ -135,6 +135,10 @@ public class BulkBuyWidget extends AbstractWidget {
         this.bulkBoughtItem = bulkBoughtItem;
     }
 
+    public AnimationPercentage getAnimationPercentage() {
+        return animationPercentage;
+    }
+
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }
