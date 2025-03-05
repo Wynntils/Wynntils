@@ -48,6 +48,8 @@ public final class RenderUtils {
     // number of possible segments for arc drawing
     private static final float MAX_CIRCLE_STEPS = 16f;
 
+    private static final ItemStackRenderState scratchItemStackRenderState = new ItemStackRenderState();
+
     // See https://github.com/MinecraftForge/MinecraftForge/issues/8083 as to why this uses TRIANGLE_STRIPS.
     // TLDR: New OpenGL only supports TRIANGLES and Minecraft patched QUADS to be usable ATM, but LINES patch is broken,
     // and you can't use it.
@@ -771,7 +773,6 @@ public final class RenderUtils {
      * field MultiBufferSource$BufferSource fixedBuffers
      */
     public static void renderMaskRespectingItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
-        ItemStackRenderState scratchItemStackRenderState = new ItemStackRenderState();
         McUtils.mc()
                 .getItemModelResolver()
                 .updateForTopItem(
