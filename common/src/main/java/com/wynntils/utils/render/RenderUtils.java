@@ -5,6 +5,7 @@
 package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -787,14 +788,19 @@ public final class RenderUtils {
 
         guiGraphics.pose().translate((float) (x + 8), (float) (y + 8), 150);
         guiGraphics.pose().scale(16.0F, -16.0F, 16.0F);
+        if (!scratchItemStackRenderState.usesBlockLight()) {
+            Lighting.setupForFlatItems();
+        }
         scratchItemStackRenderState.render(
                 guiGraphics.pose(), guiGraphics.bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
-
         // Selectively end batches only for block textures to preserve mask
         for (RenderType renderType : guiGraphics.bufferSource.fixedBuffers.keySet()) {
             if (renderType.toString().contains("textures/atlas/blocks.png")) {
                 guiGraphics.bufferSource.endBatch(renderType);
             }
+        }
+        if (!scratchItemStackRenderState.usesBlockLight()) {
+            Lighting.setupFor3DItems();
         }
 
         guiGraphics.pose().popPose();
