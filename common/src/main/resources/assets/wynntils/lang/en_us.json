@@ -2842,6 +2842,8 @@
   "service.wynntils.itemFilter.stat.actual.description": "%s stat of the item",
   "service.wynntils.itemFilter.stat.chargesModifier.description": "Charges added or removed by ingredient",
   "service.wynntils.itemFilter.stat.chargesModifier.name": "Charges Modifier",
+  "service.wynntils.itemFilter.stat.class.description": "Class required to use item.",
+  "service.wynntils.itemFilter.stat.class.name": "Class",
   "service.wynntils.itemFilter.stat.countedItem.description": "Count of an item (e.g. health potion), this is not the same as the amount of items in a stack.",
   "service.wynntils.itemFilter.stat.countedItem.name": "Item Count",
   "service.wynntils.itemFilter.stat.durability.description": "Durability of the item",
