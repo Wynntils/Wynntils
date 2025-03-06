@@ -769,11 +769,13 @@ public final class RenderUtils {
 
     /**
      * Significantly derived from {@link GuiGraphics#renderItem(LivingEntity, Level, ItemStack, int, int, int, int)}
+     * Differences (originals) are commented with location matched as best as possible
      * May be a 1.21.4 only bandage fix - wasn't required in 1.21.1.
      * Needs following AWs:
      * field MultiBufferSource$BufferSource fixedBuffers
      */
     public static void renderMaskRespectingItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
+        // if (itemStack.isEmpty()) return;
         McUtils.mc()
                 .getItemModelResolver()
                 .updateForTopItem(
@@ -785,14 +787,16 @@ public final class RenderUtils {
                         null,
                         0);
         guiGraphics.pose().pushPose();
-
         guiGraphics.pose().translate((float) (x + 8), (float) (y + 8), 150);
+        // try {
         guiGraphics.pose().scale(16.0F, -16.0F, 16.0F);
         if (!scratchItemStackRenderState.usesBlockLight()) {
+            // guiGraphics.pose().flush();
             Lighting.setupForFlatItems();
         }
         scratchItemStackRenderState.render(
                 guiGraphics.pose(), guiGraphics.bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
+        // guiGraphics.pose().flush();
         // Selectively end batches only for block textures to preserve mask
         for (RenderType renderType : guiGraphics.bufferSource.fixedBuffers.keySet()) {
             if (renderType.toString().contains("textures/atlas/blocks.png")) {
@@ -802,6 +806,8 @@ public final class RenderUtils {
         if (!scratchItemStackRenderState.usesBlockLight()) {
             Lighting.setupFor3DItems();
         }
+        // }
+        // catch (Throwable throwable) { ... some crash report printing code ... }
 
         guiGraphics.pose().popPose();
     }
