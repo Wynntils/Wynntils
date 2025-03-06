@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter;
@@ -23,6 +23,7 @@ import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.ActualStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ChargesModifierStatProvider;
+import com.wynntils.services.itemfilter.statproviders.ClassStatProvider;
 import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
 import com.wynntils.services.itemfilter.statproviders.DurabilityModifierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.DurabilityStatProvider;
@@ -507,6 +508,7 @@ public class ItemFilterService extends Service {
         registerStatProvider(new DurabilityStatProvider());
         registerStatProvider(new TierStatProvider());
         registerStatProvider(new UsesStatProvider());
+        registerStatProvider(new ClassStatProvider());
         registerStatProvider(new GearRestrictionStatProvider());
         registerStatProvider(new MajorIdStatProvider());
         registerStatProvider(new PowderSlotsStatProvider());
