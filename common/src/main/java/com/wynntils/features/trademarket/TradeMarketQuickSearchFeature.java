@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.trademarket;
@@ -19,7 +19,10 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.TradeMarketContainer;
+import com.wynntils.models.containers.containers.TradeMarketFiltersContainer;
+import com.wynntils.models.containers.containers.TradeMarketSellContainer;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -93,8 +96,14 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenOpen(ScreenOpenedEvent.Post event) {
+        Container c = Models.Container.getCurrentContainer();
+        if (c instanceof TradeMarketSellContainer || c instanceof TradeMarketFiltersContainer) {
+            inSearchChat = false;
+            return;
+        }
+
         openChatWhenContainerClosed = false;
-        inTradeMarket = (Models.Container.getCurrentContainer() instanceof TradeMarketContainer);
+        inTradeMarket = c instanceof TradeMarketContainer;
         if (!inTradeMarket) return;
 
         quickSearching = false;
