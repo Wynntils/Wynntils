@@ -1,3 +1,26 @@
+## [3.0.9](https://github.com/Wynntils/Wynntils/compare/v3.0.8...v3.0.9) (2025-03-07)
+
+
+### New Features
+
+* Display tier instead of class on aspects [skip ci] ([#3155](https://github.com/Wynntils/Wynntils/issues/3155)) ([6b69feb](https://github.com/Wynntils/Wynntils/commit/6b69febd50cab65b1b44cd56fbb67fb646618a03))
+
+
+### Bug Fixes
+
+* Do not cast ticks function to int [skip ci] ([#3150](https://github.com/Wynntils/Wynntils/issues/3150)) ([e081f5c](https://github.com/Wynntils/Wynntils/commit/e081f5c58ae032d077ad351f6956a9fd4f2c0228))
+* Emerald count is detached in emerald merchants [skip ci] ([#3151](https://github.com/Wynntils/Wynntils/issues/3151)) ([974cbc6](https://github.com/Wynntils/Wynntils/commit/974cbc6df6b726ef55906206a12feb5918978ef2))
+* Fix container search arc rendering [skip ci] ([#3148](https://github.com/Wynntils/Wynntils/issues/3148)) ([fdcd499](https://github.com/Wynntils/Wynntils/commit/fdcd499ab82694e2296c3bd4fb6df8394e54a6ee))
+* Fix held item cooldown function [skip ci] ([#3147](https://github.com/Wynntils/Wynntils/issues/3147)) ([a4ced2b](https://github.com/Wynntils/Wynntils/commit/a4ced2ba8b9a9de647226b5964a951ed5a884608))
+* Held non-weapons are counted when saving skill point loadouts [skip ci] ([#3144](https://github.com/Wynntils/Wynntils/issues/3144)) ([d9ee770](https://github.com/Wynntils/Wynntils/commit/d9ee77070371e97c7a9700302ccd0e5aa9ebbcae))
+* Inventory texture disappears during bulk buy ([#3152](https://github.com/Wynntils/Wynntils/issues/3152)) ([16b75b0](https://github.com/Wynntils/Wynntils/commit/16b75b027dc345155cecac18a3226191a303361f))
+* Quick search incorrectly sends cancels after using TM buttons [skip ci] ([#3154](https://github.com/Wynntils/Wynntils/issues/3154)) ([6a9c79e](https://github.com/Wynntils/Wynntils/commit/6a9c79e5ced043e541939c227d45f9261481fc93))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3153](https://github.com/Wynntils/Wynntils/issues/3153)) ([620c2ff](https://github.com/Wynntils/Wynntils/commit/620c2ff052b9a7e65bf21d0dc31bc535d5b81b1d))
+
 ## [3.0.8](https://github.com/Wynntils/Wynntils/compare/v3.0.7...v3.0.8) (2025-02-23)
 
 
@@ -10,6 +33,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#3137](https://github.com/Wynntils/Wynntils/issues/3137)) ([bffb486](https://github.com/Wynntils/Wynntils/commit/bffb48663e7edc9fb494bd2077db9191f38babcf))
+* **release:** v3.0.8 [skip ci] ([87a20cb](https://github.com/Wynntils/Wynntils/commit/87a20cb6c202461bb7422cb3fd7866b6e0dc844d))
 
 ## [3.0.7](https://github.com/Wynntils/Wynntils/compare/v3.0.6...v3.0.7) (2025-02-21)
 
@@ -63,22 +87,4 @@
 ### Miscellaneous Chores
 
 * **release:** v3.0.5 [skip ci] ([a720c39](https://github.com/Wynntils/Wynntils/commit/a720c390a2afdd9005a9c48363d89f0e966cee99))
-
-## [3.0.4](https://github.com/Wynntils/Wynntils/compare/v3.0.3...v3.0.4) (2025-02-07)
-
-
-### New Features
-
-* Add support for raid reward chest, unid tome, and announce mythic aspect / mythic tome finds ([#3047](https://github.com/Wynntils/Wynntils/issues/3047)) ([43e65d8](https://github.com/Wynntils/Wynntils/commit/43e65d8699420846a47282c87afa2ad95f6a243c))
-* More gear viewer interaction buttons [skip ci] ([#3054](https://github.com/Wynntils/Wynntils/issues/3054)) ([43a87d0](https://github.com/Wynntils/Wynntils/commit/43a87d004204e0ff0c52db78b440d97fbe794150))
-
-
-### Bug Fixes
-
-* make ScreenMixin.wrapScreenErrorPre non-static [skip ci] ([#3105](https://github.com/Wynntils/Wynntils/issues/3105)) ([f5bb233](https://github.com/Wynntils/Wynntils/commit/f5bb23335caac8a79f713385cd6e139e36ff2cb3))
-
-
-### Miscellaneous Chores
-
-* **release:** v3.0.4 [skip ci] ([a980eac](https://github.com/Wynntils/Wynntils/commit/a980eac0429e2f70083f82372cb738dbe3394edc))
 
