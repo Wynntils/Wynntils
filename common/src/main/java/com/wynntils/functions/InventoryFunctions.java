@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -314,8 +314,7 @@ public class InventoryFunctions {
     public static class HeldItemCooldownFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getItemCooldownTicks(
-                    InventoryUtils.getItemInHand().getItem());
+            return Models.CharacterStats.getItemCooldownTicks(InventoryUtils.getItemInHand());
         }
 
         @Override

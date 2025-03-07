@@ -1,12 +1,14 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.bulkbuy.widgets;
 
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -18,10 +20,14 @@ import java.time.Duration;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 public class BulkBuyWidget extends AbstractWidget {
+    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
+
     private static final int BULK_BUY_WIDGET_CENTER = 89;
 
     private final int originalX;
@@ -77,7 +83,10 @@ public class BulkBuyWidget extends AbstractWidget {
                             TextShadow.NORMAL);
 
             // X coordinate is center of widget (BULK_BUY_WIDGET_CENTER) minus half of the item icon width (8)
-            guiGraphics.renderItem(bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);
+            GuiGraphics itemRenderGuiGraphics = new GuiGraphics(McUtils.mc(), BUFFER_SOURCE);
+            itemRenderGuiGraphics.renderItem(
+                    bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);
+
             FontRenderer.getInstance()
                     .renderScrollingText(
                             guiGraphics.pose(),
@@ -131,6 +140,10 @@ public class BulkBuyWidget extends AbstractWidget {
 
     public void setBulkBoughtItem(BulkBuyFeature.BulkBoughtItem bulkBoughtItem) {
         this.bulkBoughtItem = bulkBoughtItem;
+    }
+
+    public AnimationPercentage getAnimationPercentage() {
+        return animationPercentage;
     }
 
     @Override
