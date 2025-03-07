@@ -218,7 +218,7 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getAspectTier(), aspectTierRomanNumerals.get());
+            String text = valueToString(item.getTier(), aspectTierRomanNumerals.get());
 
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
