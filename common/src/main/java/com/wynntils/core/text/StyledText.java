@@ -101,6 +101,10 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return fromParts(parts);
     }
 
+    public static StyledText fromHtml(String htmlString) {
+        return new StyledText(StyledTextPart.fromHtmlString(htmlString), List.of(), List.of());
+    }
+
     public static StyledText fromString(String codedString) {
         return new StyledText(
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
