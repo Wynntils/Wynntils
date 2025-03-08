@@ -5,7 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.pipeline.TextureTarget;
-import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.LightmapEvent;
 import net.minecraft.client.renderer.LightTexture;
 import org.spongepowered.asm.mixin.Final;
@@ -24,7 +24,7 @@ public class LightTextureMixin {
     @Inject(method = "updateLightTexture", at = @At("HEAD"), cancellable = true)
     private void updateLightmap(float partialTicks, CallbackInfo ci) {
         final LightmapEvent lightmapEvent = new LightmapEvent();
-        WynntilsMod.postEvent(lightmapEvent);
+        MixinHelper.post(lightmapEvent);
 
         if (lightmapEvent.isCanceled()) {
             this.target.clear();
