@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.text;
@@ -248,6 +248,16 @@ public final class StyledTextPart {
         }
 
         return parts;
+    }
+
+    static List<StyledTextPart> fromHtmlString(String htmlString) {
+        if (htmlString.equals("</br>")) {
+            return List.of(new StyledTextPart("", Style.EMPTY, null, Style.EMPTY));
+        }
+
+        StringBuilder codedString = new StringBuilder();
+
+        return fromCodedString(codedString.toString(), Style.EMPTY, null, Style.EMPTY);
     }
 
     public String getString(PartStyle previousStyle, PartStyle.StyleType type) {
