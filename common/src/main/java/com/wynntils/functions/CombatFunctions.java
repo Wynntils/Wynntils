@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -39,6 +39,25 @@ public class CombatFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("adavg");
+        }
+    }
+
+    public static class TotalAreaDamageFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return Models.Combat.getTotalAreaDamageOverSeconds(
+                    arguments.getArgument("seconds").getIntegerValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("seconds", Integer.class, 10)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("total_dmg", "tdmg");
         }
     }
 
