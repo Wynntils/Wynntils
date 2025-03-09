@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
@@ -17,8 +17,8 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
-import com.wynntils.mc.event.PacketEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.ShiftKeyStateChangeEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
@@ -155,10 +155,9 @@ public class NpcDialogueFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onPacketSent(PacketEvent.PacketSentEvent<?> e) {
+    public void shiftKeyStateChanged(ShiftKeyStateChangeEvent e) {
         if (scheduledAutoProgressKeyPress == null) return;
-        if (!(e.getPacket() instanceof ServerboundPlayerCommandPacket packet)) return;
-        if (packet.getAction() != ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY) return;
+        if (e.getAction() != ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY) return;
 
         scheduledAutoProgressKeyPress.cancel(true);
 

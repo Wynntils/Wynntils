@@ -4,10 +4,13 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
+import com.wynntils.mc.event.ShiftKeyStateChangeEvent;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.minecraft.sounds.SoundEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,5 +37,16 @@ public abstract class LocalPlayerMixin {
         if (event.isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @Inject(
+            method = "sendShiftKeyState()V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
+    private void sendShiftKeyState(CallbackInfo ci, @Local(ordinal = 0) ServerboundPlayerCommandPacket.Action action) {
+        MixinHelper.post(new ShiftKeyStateChangeEvent(action));
     }
 }
