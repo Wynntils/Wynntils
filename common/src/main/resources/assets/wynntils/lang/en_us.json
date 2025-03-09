@@ -2019,6 +2019,8 @@
   "function.wynntils.isAlliedGuild.argument.guild": "The name of the guild to be checked",
   "function.wynntils.isAlliedGuild.description": "Whether or not the provided guild is an ally of your guild",
   "function.wynntils.isAlliedGuild.name": "Is Guild Allied",
+  "function.wynntils.isLastSpellAShiftCast.description": "Whether the last spell cast was a shift cast (performed with the shift key held down)",
+  "function.wynntils.isLastSpellAShiftCast.name": "Is Last Spell Shift-Casted",
   "function.wynntils.isTerritoryQueued.argument.territoryName": "The territory to check",
   "function.wynntils.isTerritoryQueued.description": "Is the specified territory queued for an attack?",
   "function.wynntils.isTerritoryQueued.name": "Is Territory Queued",

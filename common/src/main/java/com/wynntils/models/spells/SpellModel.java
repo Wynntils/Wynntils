@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells;
@@ -11,6 +11,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
+import com.wynntils.mc.event.ShiftKeyStateChangeEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.actionbar.matchers.SpellSegmentMatcher;
 import com.wynntils.models.spells.actionbar.segments.SpellSegment;
@@ -28,6 +29,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
@@ -46,6 +48,8 @@ public class SpellModel extends Model {
     private int repeatedSpellCount = 0;
     private int ticksSinceCastBurst = 0;
     private int ticksSinceCast = 0;
+    private boolean shiftCast = false;
+    private ServerboundPlayerCommandPacket.Action previousShiftAction;
 
     public SpellModel() {
         super(List.of());
@@ -78,7 +82,9 @@ public class SpellModel extends Model {
             int manaCost = Integer.parseInt(spellMatcher.group(2));
             int healthCost =
                     Integer.parseInt(Optional.ofNullable(spellMatcher.group(3)).orElse("0"));
-            WynntilsMod.postEvent(new SpellEvent.Cast(spellType, manaCost, healthCost));
+
+            boolean isShiftCast = previousShiftAction == ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY;
+            WynntilsMod.postEvent(new SpellEvent.Cast(spellType, manaCost, healthCost, isShiftCast));
         }
     }
 
@@ -88,9 +94,17 @@ public class SpellModel extends Model {
     }
 
     @SubscribeEvent
+    public void shiftKeyStateChanged(ShiftKeyStateChangeEvent e) {
+        previousShiftAction = e.getAction();
+    }
+
+    @SubscribeEvent
     public void onSpellCast(SpellEvent.Cast e) {
         ticksSinceCastBurst = 0;
         ticksSinceCast = 0;
+
+        // Update shift-cast state from the event
+        this.shiftCast = e.isShiftCast();
 
         if (e.getSpellType().getName().equals(lastBurstSpellName)) {
             repeatedBurstSpellCount++;
@@ -197,6 +211,10 @@ public class SpellModel extends Model {
 
     public int getTicksSinceCast() {
         return ticksSinceCast;
+    }
+
+    public boolean isShiftCast() {
+        return shiftCast;
     }
 
     private void updateFromSpellSegment(SpellSegment spellSegment) {
