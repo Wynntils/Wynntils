@@ -41,9 +41,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
@@ -117,9 +118,10 @@ public final class CharacterStatsModel extends Model {
         return McUtils.player().position().y - endY;
     }
 
-    public CappedValue getItemCooldownTicks(Item item) {
+    public CappedValue getItemCooldownTicks(ItemStack itemStack) {
         ItemCooldowns cooldowns = McUtils.player().getCooldowns();
-        ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(item);
+        ResourceLocation resourceLocation = cooldowns.getCooldownGroup(itemStack);
+        ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(resourceLocation);
         if (cooldown == null || cooldown.startTime >= cooldown.endTime) return CappedValue.EMPTY; // Sanity check
 
         int remaining = cooldown.endTime - cooldowns.tickCount;
