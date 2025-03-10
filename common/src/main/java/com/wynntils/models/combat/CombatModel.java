@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.combat;
@@ -160,6 +160,13 @@ public final class CombatModel extends Model {
                         .mapToLong(TimedSet.TimedEntry::getEntry)
                         .sum()
                 / (double) seconds;
+    }
+
+    public double getTotalAreaDamageOverSeconds(int seconds) {
+        return areaDamageSet.getEntries().stream()
+                .filter(timedEntry -> (System.currentTimeMillis() - timedEntry.getCreation()) <= seconds * 1000L)
+                .mapToLong(TimedSet.TimedEntry::getEntry)
+                .sum();
     }
 
     public int getKillsPerMinute(boolean includeShared) {
