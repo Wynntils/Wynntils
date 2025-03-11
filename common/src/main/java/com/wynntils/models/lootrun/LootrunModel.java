@@ -933,7 +933,7 @@ public class LootrunModel extends Model {
             if (rainbowAmount.get().getOrDefault(Models.Character.getId(), -1) != -1) {
                 rainbowBeaconCountStorage.get().put(
                         Models.Character.getId(),
-                        rainbowAmount.get().getOrDefault(Models.Character.getId(), 0)
+                        Math.max(rainbowAmount.get().get(Models.Character.getId()), 0)
                 );
                 rainbowBeaconCountStorage.touched();
             } else {
