@@ -931,10 +931,10 @@ public class LootrunModel extends Model {
 
         if (color == LootrunBeaconKind.RAINBOW) {
             if (rainbowAmount.get().getOrDefault(Models.Character.getId(), -1) != -1) {
-                Integer oldCount = rainbowBeaconCountStorage.get().getOrDefault(Models.Character.getId(), 0);
-
-                int newCount = Math.max(oldCount + rainbowAmount.get().get(Models.Character.getId()), 0);
-                rainbowBeaconCountStorage.get().put(Models.Character.getId(), newCount);
+                rainbowBeaconCountStorage.get().put(
+                        Models.Character.getId(),
+                        Math.max(rainbowAmount.get().get(Models.Character.getId()), 0)
+                );
                 rainbowBeaconCountStorage.touched();
             } else {
                 WynntilsMod.warn("Completed rainbow beacon challenge but had no rainbow amount");
