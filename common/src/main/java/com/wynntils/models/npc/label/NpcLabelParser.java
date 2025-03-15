@@ -37,7 +37,7 @@ public class NpcLabelParser implements LabelParser<NpcLabelInfo> {
         }
 
         if (label.matches(HOUSING_LABEL_PATTERN)) {
-            return new NpcLabelInfo(label, "Housing", location, entity);
+            return new NpcLabelInfo(label, "Housing Balloon", location, entity);
         }
 
         if (label.matches(BOOTH_SHOP_LABEL_PATTERN)) {
