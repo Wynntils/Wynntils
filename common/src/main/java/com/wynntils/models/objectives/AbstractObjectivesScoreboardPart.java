@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.objectives;
@@ -22,6 +22,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
     private static final Pattern OBJECTIVE_PATTERN_MULTILINE_START = Pattern.compile("^§([abc])[- ]\\s§7(.*)$");
     private static final Pattern OBJECTIVE_PATTERN_MULTILINE_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
     private static final Pattern SEGMENT_HEADER = Pattern.compile("^§.§l[A-Za-z ]+:.*$");
+    private static final Pattern EVENT_PART = Pattern.compile("([★⭑] )");
 
     private static final StyledText ALL_DONE = StyledText.fromString("§c- §7All done");
 
@@ -30,6 +31,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
 
         List<StyledText> actualContent = new ArrayList<>();
         StringBuilder multiLine = new StringBuilder();
+        boolean hasEventBonus = segment.getHeader().find(EVENT_PART);
 
         for (StyledText line : segment.getContent()) {
             if (line.matches(OBJECTIVE_PATTERN_ONE_LINE)) {
@@ -73,7 +75,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
 
             // Determine objective type with the formatting code
             boolean isGuildObjective = Objects.equals(objectiveMatcher.group(1), "b");
-            WynnObjective parsed = WynnObjective.parseObjectiveLine(line, isGuildObjective);
+            WynnObjective parsed = WynnObjective.parseObjectiveLine(line, isGuildObjective, hasEventBonus);
 
             parsedObjectives.add(parsed);
         }
