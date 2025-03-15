@@ -219,6 +219,7 @@ public class LootrunModel extends Model {
     private final Storage<Map<String, List<MissionType>>> missionStorage = new Storage<>(new TreeMap<>());
 
     private List<Pair<Beacon<LootrunBeaconKind>, EntityExtension>> activeBeacons = new ArrayList<>();
+    private Map<LootrunBeaconKind, LootrunTaskType> activeTaskTypes = new HashMap<>();
 
     public LootrunModel(MarkerModel markerModel) {
         super(List.of(markerModel));
@@ -535,6 +536,7 @@ public class LootrunModel extends Model {
         taskType = null;
         beacons = new HashMap<>();
         activeBeacons = new ArrayList<>();
+        activeTaskTypes = new HashMap<>();
         LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
 
         selectedBeacons = new TreeMap<>();
@@ -661,6 +663,8 @@ public class LootrunModel extends Model {
             entity.setRendered(true);
             return;
         }
+
+        activeTaskTypes.putIfAbsent(beaconPair.a().beaconKind(), lootrunMarker.getTaskType());
 
         boolean foundBeacon = updateTaskLocationPrediction(
                         beaconPair.a(), lootrunMarker, beaconMarker.distance().get())
@@ -909,7 +913,9 @@ public class LootrunModel extends Model {
             selectedBeaconsStorage.touched();
             setLastTaskBeaconColor(color);
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(
-                    closestBeacon, beacons.get(closestBeacon.beaconKind()).taskLocation()));
+                    closestBeacon,
+                    beacons.get(closestBeacon.beaconKind()).taskLocation(),
+                    activeTaskTypes.getOrDefault(closestBeacon.beaconKind(), LootrunTaskType.UNKNOWN)));
 
             possibleTaskLocations = new HashSet<>();
 
@@ -917,6 +923,7 @@ public class LootrunModel extends Model {
             beacons.clear();
             vibrantBeacons.clear();
             activeBeacons.clear();
+            activeTaskTypes.clear();
             setClosestBeacon(null);
             expectOrangeBeacon = false;
             expectRainbowBeacon = false;
@@ -1008,7 +1015,8 @@ public class LootrunModel extends Model {
         // Get the tasks found from particles as we know for certain there is a task there and it may include
         // unknown tasks
         Set<TaskLocation> currentTaskLocations = possibleTaskLocations.stream()
-                .filter(possibleTask -> possibleTask.taskType() == lootrunMarker.getTaskType())
+                .filter(possibleTask -> possibleTask.taskType() == lootrunMarker.getTaskType()
+                        || possibleTask.taskType() == LootrunTaskType.UNKNOWN)
                 .collect(Collectors.toSet());
 
         // Due to Wynncraft culling particles, after 5 or more beacon choices (sometimes less) we are no longer able
