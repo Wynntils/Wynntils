@@ -10,6 +10,8 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
@@ -38,8 +40,8 @@ import com.wynntils.models.lootrun.beacons.LootrunBeaconMarkerKind;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEventBuilder;
-import com.wynntils.models.lootrun.markers.LootrunBeaconMarkerProvider;
 import com.wynntils.models.lootrun.particle.LootrunTaskParticleVerifier;
+import com.wynntils.models.lootrun.providers.LootrunLocationProvider;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
@@ -47,7 +49,6 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.MissionType;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
-import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.npc.label.NpcLabelInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -153,8 +154,7 @@ public class LootrunModel extends Model {
 
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
-    private static final LootrunBeaconMarkerProvider LOOTRUN_BEACON_COMPASS_PROVIDER =
-            new LootrunBeaconMarkerProvider();
+    public static final LootrunLocationProvider LOOTRUN_LOCATION_PROVIDER = new LootrunLocationProvider();
 
     @Persisted
     public final Storage<Integer> dryPulls = new Storage<>(0);
@@ -220,12 +220,11 @@ public class LootrunModel extends Model {
 
     private List<Pair<Beacon<LootrunBeaconKind>, EntityExtension>> activeBeacons = new ArrayList<>();
 
-    public LootrunModel(MarkerModel markerModel) {
-        super(List.of(markerModel));
+    public LootrunModel() {
+        super(List.of());
 
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
         Handlers.Particle.registerParticleVerifier(ParticleType.LOOTRUN_TASK, new LootrunTaskParticleVerifier());
-        Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
 
         for (LootrunBeaconKind beaconKind : LootrunBeaconKind.values()) {
             Models.Beacon.registerBeacon(beaconKind);
@@ -240,6 +239,11 @@ public class LootrunModel extends Model {
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED_V2)
                 .handleReader(this::handleLootrunTaskLocations);
+    }
+
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(LOOTRUN_LOCATION_PROVIDER);
     }
 
     private void handleLootrunTaskLocations(Reader reader) {
@@ -535,7 +539,6 @@ public class LootrunModel extends Model {
         taskType = null;
         beacons = new HashMap<>();
         activeBeacons = new ArrayList<>();
-        LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
 
         selectedBeacons = new TreeMap<>();
 
@@ -565,7 +568,6 @@ public class LootrunModel extends Model {
         } else {
             // Note: If we get more accurate predictions, we don't need to remove if we are close.
             beacons.remove(lootrunBeaconKind);
-            LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
         }
 
         activeBeacons.removeIf(beaconPair -> beaconPair.a().beaconKind() == lootrunBeaconKind);
@@ -921,7 +923,6 @@ public class LootrunModel extends Model {
             expectOrangeBeacon = false;
             expectRainbowBeacon = false;
             reduceBeaconCounts();
-            LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
             return;
         }
     }
@@ -1092,7 +1093,6 @@ public class LootrunModel extends Model {
         }
 
         // Finally, update the markers.
-        LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
         return foundTask;
     }
 
