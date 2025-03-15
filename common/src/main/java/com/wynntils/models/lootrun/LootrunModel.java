@@ -1015,7 +1015,8 @@ public class LootrunModel extends Model {
         // Get the tasks found from particles as we know for certain there is a task there and it may include
         // unknown tasks
         Set<TaskLocation> currentTaskLocations = possibleTaskLocations.stream()
-                .filter(possibleTask -> possibleTask.taskType() == lootrunMarker.getTaskType())
+                .filter(possibleTask -> possibleTask.taskType() == lootrunMarker.getTaskType()
+                        || possibleTask.taskType() == LootrunTaskType.UNKNOWN)
                 .collect(Collectors.toSet());
 
         // Due to Wynncraft culling particles, after 5 or more beacon choices (sometimes less) we are no longer able
