@@ -1161,6 +1161,8 @@
   "feature.wynntils.personalStorageUtilities.clickToJump": "Click to jump to %s",
   "feature.wynntils.personalStorageUtilities.description": "Adds the ability to set custom names for your personal storage containers and quick jump to any page.",
   "feature.wynntils.personalStorageUtilities.name": "Personal Storage Utilities",
+  "feature.wynntils.personalStorageUtilities.onlyShowName.description": "Should the tooltip for quick jump buttons include the \"Click to jump to\" text?",
+  "feature.wynntils.personalStorageUtilities.onlyShowName.name": "Only Show Page Name",
   "feature.wynntils.personalStorageUtilities.page": "Page %d",
   "feature.wynntils.playerArmorHiding.description": "Adds the ability to hide other players' armor.",
   "feature.wynntils.playerArmorHiding.hideBoots.description": "Should players' boots be hidden?",

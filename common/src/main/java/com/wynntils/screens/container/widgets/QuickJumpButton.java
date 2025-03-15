@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.container.widgets;
@@ -23,12 +23,14 @@ import net.minecraft.network.chat.Component;
 
 public class QuickJumpButton extends WynntilsButton {
     private final int destination;
+    private final boolean onlyShowName;
     private final PersonalStorageUtilitiesWidget parent;
 
-    public QuickJumpButton(int x, int y, int destination, PersonalStorageUtilitiesWidget parent) {
+    public QuickJumpButton(int x, int y, int destination, boolean onlyShowName, PersonalStorageUtilitiesWidget parent) {
         super(x, y, 16, 16, Component.literal("Container Quick Jump Button"));
 
         this.destination = destination;
+        this.onlyShowName = onlyShowName;
         this.parent = parent;
     }
 
@@ -50,13 +52,15 @@ public class QuickJumpButton extends WynntilsButton {
                         TextShadow.NORMAL);
 
         if (isHovered) {
+            Component nameTooltip = onlyShowName
+                    ? Component.literal(Models.Bank.getPageName(destination))
+                    : Component.translatable(
+                            "feature.wynntils.personalStorageUtilities.clickToJump",
+                            Models.Bank.getPageName(destination));
+
             McUtils.mc()
                     .screen
-                    .setTooltipForNextRenderPass(Lists.transform(
-                            List.of(Component.translatable(
-                                    "feature.wynntils.personalStorageUtilities.clickToJump",
-                                    Models.Bank.getPageName(destination))),
-                            Component::getVisualOrderText));
+                    .setTooltipForNextRenderPass(Lists.transform(List.of(nameTooltip), Component::getVisualOrderText));
         }
     }
 

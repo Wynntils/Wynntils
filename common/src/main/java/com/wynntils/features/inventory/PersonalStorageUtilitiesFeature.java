@@ -6,7 +6,9 @@ package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -36,6 +38,9 @@ import org.lwjgl.glfw.GLFW;
 public class PersonalStorageUtilitiesFeature extends Feature {
     private static final int STORAGE_TYPE_SLOT = 47;
     private static final Pattern PAGE_PATTERN = Pattern.compile("§7- §f.*§8 Page (\\d+)");
+
+    @Persisted
+    public final Config<Boolean> onlyShowName = new Config<>(false);
 
     private boolean quickJumping = false;
     private int currentPage = 1;
