@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.markers;
@@ -34,7 +34,7 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider<MarkerPoi> {
             newTaskMarkers.add(new MarkerInfo(
                     EnumUtils.toNiceString(entry.getKey()) + " Beacon",
                     new StaticLocationSupplier(entry.getValue().taskLocation().location()),
-                    entry.getValue().taskLocation().taskType().getTexture(),
+                    entry.getValue().lootrunMarker().getTaskType().getTexture(),
                     entry.getKey().getDisplayColor(),
                     CommonColors.WHITE,
                     entry.getKey().getDisplayColor(),

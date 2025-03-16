@@ -210,6 +210,12 @@ public class ItemTextOverlayFeature extends Feature {
     }
 
     private final class AspectOverlay implements TextOverlayInfo {
+        private static final CustomColor TIER_1_HIGHLIGHT_COLOR =
+                CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY);
+        private static final CustomColor TIER_2_HIGHLIGHT_COLOR = new CustomColor(205, 127, 50);
+        private static final CustomColor TIER_3_HIGHLIGHT_COLOR = new CustomColor(192, 192, 192);
+        private static final CustomColor TIER_4_HIGHLIGHT_COLOR = new CustomColor(255, 215, 0);
+
         private final AspectItem item;
 
         private AspectOverlay(AspectItem item) {
@@ -218,11 +224,17 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
+            CustomColor highlightColor =
+                    switch (item.getAspectTier()) {
+                        case 2 -> TIER_2_HIGHLIGHT_COLOR;
+                        case 3 -> TIER_3_HIGHLIGHT_COLOR;
+                        case 4 -> TIER_4_HIGHLIGHT_COLOR;
+                        default -> TIER_1_HIGHLIGHT_COLOR;
+                    };
             String text = valueToString(item.getAspectTier(), aspectTierRomanNumerals.get());
 
-            TextRenderSetting style = TextRenderSetting.DEFAULT
-                    .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
-                    .withTextShadow(aspectShadow.get());
+            TextRenderSetting style =
+                    TextRenderSetting.DEFAULT.withCustomColor(highlightColor).withTextShadow(aspectShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.75f);
         }

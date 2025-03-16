@@ -458,14 +458,15 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
         registerFunction(new CombatFunctions.BlocksAboveGroundFunction());
+        registerFunction(new CombatFunctions.FocusedMobHealthFunction());
+        registerFunction(new CombatFunctions.FocusedMobHealthPercentFunction());
+        registerFunction(new CombatFunctions.FocusedMobNameFunction());
         registerFunction(new CombatFunctions.KillsPerMinuteFunction());
         registerFunction(new CombatFunctions.LastSpellNameFunction());
         registerFunction(new CombatFunctions.LastSpellRepeatCountFunction());
         registerFunction(new CombatFunctions.TicksSinceLastSpellFunction());
-        registerFunction(new CombatFunctions.FocusedMobNameFunction());
-        registerFunction(new CombatFunctions.FocusedMobHealthFunction());
-        registerFunction(new CombatFunctions.FocusedMobHealthPercentFunction());
         registerFunction(new CombatFunctions.TimeSinceLastDamageDealtFunction());
+        registerFunction(new CombatFunctions.TotalAreaDamageFunction());
 
         registerFunction(new CombatXpFunctions.CappedLevelFunction());
         registerFunction(new CombatXpFunctions.CappedXpFunction());

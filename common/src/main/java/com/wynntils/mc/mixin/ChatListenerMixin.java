@@ -6,7 +6,7 @@ package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.multiplayer.chat.ChatListener;
@@ -25,7 +25,7 @@ public abstract class ChatListenerMixin {
                                     "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;)V"))
     private void onSystemMessage(ChatComponent instance, Component component, Operation<Void> operation) {
         ClientsideMessageEvent event = new ClientsideMessageEvent(component);
-        WynntilsMod.postEvent(event);
+        MixinHelper.post(event);
 
         if (!event.isCanceled()) {
             operation.call(instance, component);

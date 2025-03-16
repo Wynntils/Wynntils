@@ -120,7 +120,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "6a6093bba4b332038cab902500895e32",
+    "md5": "f353c2e92f5a52ebfa2cf1773741291e",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
   },
   {
@@ -140,7 +140,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "6120a9902397625f15ea7ee41b63f284",
+    "md5": "78ff1a6cac3f646df38e3cf158e8b5f5",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/ingredients.json"
   },
   {
