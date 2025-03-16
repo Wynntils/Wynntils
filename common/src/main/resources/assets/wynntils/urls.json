@@ -214,6 +214,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/services.json"
   },
   {
+    "id": "dataStaticServicesCrowdsourced",
+    "md5": "6c4fa8b8906476e2ef1d7e70f5b2f357",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/services_crowdsourced.json"
+  },
+  {
     "id": "dataStaticShinyStats",
     "md5": "c1837281e4b45af5683189ebd465d1cc",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/shiny_stats.json"
