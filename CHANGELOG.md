@@ -1,3 +1,24 @@
+## [3.0.10](https://github.com/Wynntils/Wynntils/compare/v3.0.9...v3.0.10) (2025-03-16)
+
+
+### New Features
+
+* Add back tier specific colour to aspect tier annotation [skip ci] ([#3163](https://github.com/Wynntils/Wynntils/issues/3163)) ([fc32d00](https://github.com/Wynntils/Wynntils/commit/fc32d005dc6c153829a3e07f1fdccab6acc291ed))
+* Add Total Area Damage function [skip ci] ([#3160](https://github.com/Wynntils/Wynntils/issues/3160)) ([bdcfb30](https://github.com/Wynntils/Wynntils/commit/bdcfb30110979860b02ab3969d6638c670c8bf2c))
+* Display event star on daily/guild objective overlays ([#3169](https://github.com/Wynntils/Wynntils/issues/3169)) ([f59fe7c](https://github.com/Wynntils/Wynntils/commit/f59fe7c310d32ab622f22d463b9cb92e31785ed2))
+
+
+### Bug Fixes
+
+* Fix chat functionality on non-Wynncraft servers [skip ci] ([#3157](https://github.com/Wynntils/Wynntils/issues/3157)) ([365200d](https://github.com/Wynntils/Wynntils/commit/365200d26ab10bf544dd70bd8aafc38f562ef053))
+* Miscellaneous lootrun changes [skip ci] ([#3165](https://github.com/Wynntils/Wynntils/issues/3165)) ([35d2056](https://github.com/Wynntils/Wynntils/commit/35d205647225cceef80169e3df7faa2d9d126bfd))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3156](https://github.com/Wynntils/Wynntils/issues/3156)) ([963d7d3](https://github.com/Wynntils/Wynntils/commit/963d7d3edb93c40b4a0de5c299b4c6bf8a5e553e))
+* Bump crowd source version [skip ci] ([#3168](https://github.com/Wynntils/Wynntils/issues/3168)) ([3d1d7ae](https://github.com/Wynntils/Wynntils/commit/3d1d7aeb9f0bd5b90fb86e27931734dfadadaf74))
+
 ## [3.0.9](https://github.com/Wynntils/Wynntils/compare/v3.0.8...v3.0.9) (2025-03-07)
 
 
@@ -20,6 +41,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#3153](https://github.com/Wynntils/Wynntils/issues/3153)) ([620c2ff](https://github.com/Wynntils/Wynntils/commit/620c2ff052b9a7e65bf21d0dc31bc535d5b81b1d))
+* **release:** v3.0.9 [skip ci] ([43f5c1a](https://github.com/Wynntils/Wynntils/commit/43f5c1ad7277c1ca411b9762d934cc7066d583b6))
 
 ## [3.0.8](https://github.com/Wynntils/Wynntils/compare/v3.0.7...v3.0.8) (2025-02-23)
 
@@ -66,25 +88,4 @@
 ### Miscellaneous Chores
 
 * **release:** v3.0.6 [skip ci] ([ab1ab7c](https://github.com/Wynntils/Wynntils/commit/ab1ab7c29e6b083a1d4aea49a34374c428748528))
-
-## [3.0.5](https://github.com/Wynntils/Wynntils/compare/v3.0.4...v3.0.5) (2025-02-13)
-
-
-### New Features
-
-* Add vibrant, orange and rainbow lootrun functions ([#3101](https://github.com/Wynntils/Wynntils/issues/3101)) ([d63c3b6](https://github.com/Wynntils/Wynntils/commit/d63c3b61f866ed083b0f2e3b21534084591864ae))
-* Mark unidentified but revealed items [skip ci] ([#3078](https://github.com/Wynntils/Wynntils/issues/3078)) ([f0b37cc](https://github.com/Wynntils/Wynntils/commit/f0b37cc899fad166e724e0b6ebd4ad5d2e61d2e8))
-
-
-### Bug Fixes
-
-* Don't block item withdraws in valuables protection [skip ci] ([#3109](https://github.com/Wynntils/Wynntils/issues/3109)) ([da4a781](https://github.com/Wynntils/Wynntils/commit/da4a78113ab1935d398df390326e23d1edf44e55))
-* Figura blocks bulk buy from working [skip ci] ([#3112](https://github.com/Wynntils/Wynntils/issues/3112)) ([7df6a38](https://github.com/Wynntils/Wynntils/commit/7df6a38897671ba3805366cee53bef874d4af22d))
-* Fix RecipientType background for regional servers [skip ci] ([#3115](https://github.com/Wynntils/Wynntils/issues/3115)) ([41dc48b](https://github.com/Wynntils/Wynntils/commit/41dc48badeb677bd263bb821207d57b50044b0d4))
-* Fix RecipientType for regional servers [skip ci] ([#3113](https://github.com/Wynntils/Wynntils/issues/3113)) ([b19ee99](https://github.com/Wynntils/Wynntils/commit/b19ee99fdd93cb2e6ac4340eec5f7db41ba82409))
-
-
-### Miscellaneous Chores
-
-* **release:** v3.0.5 [skip ci] ([a720c39](https://github.com/Wynntils/Wynntils/commit/a720c390a2afdd9005a9c48363d89f0e966cee99))
 
