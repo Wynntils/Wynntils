@@ -670,8 +670,5 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void handlePongResponsePost(ClientboundPongResponsePacket packet, CallbackInfo ci) {
         PongReceivedEvent event = new PongReceivedEvent(packet.time());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
-            ci.cancel();
-        }
     }
 }
