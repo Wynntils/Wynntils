@@ -5,7 +5,7 @@
 package com.wynntils.services.ping;
 
 import com.wynntils.core.components.Service;
-import com.wynntils.mc.event.PacketEvent;
+import com.wynntils.mc.event.PongReceivedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -14,7 +14,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.Util;
-import net.minecraft.network.protocol.ping.ClientboundPongResponsePacket;
 import net.minecraft.network.protocol.ping.ServerboundPingRequestPacket;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -39,9 +38,8 @@ public class PingService extends Service {
     }
 
     @SubscribeEvent
-    public void onPongReceived(PacketEvent.PacketReceivedEvent<?> event) {
-        if (!(event.getPacket() instanceof ClientboundPongResponsePacket(long time))) return;
-        lastPing = (int) (Util.getMillis() - time);
+    public void onPongReceived(PongReceivedEvent event) {
+        lastPing = (int) (Util.getMillis() - event.getTime());
     }
 
     private void sendPingPacket() {
