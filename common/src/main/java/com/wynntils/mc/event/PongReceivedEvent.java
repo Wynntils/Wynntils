@@ -8,7 +8,7 @@ import com.wynntils.core.events.EventThread;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-@EventThread(EventThread.Type.ANY)
+@EventThread(EventThread.Type.IO)
 public class PongReceivedEvent extends Event implements ICancellableEvent {
     private final long time;
 
