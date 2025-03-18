@@ -664,8 +664,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     }
 
     @Inject(
-            method =
-                "handlePongResponse(Lnet/minecraft/network/protocol/ping/ClientboundPongResponsePacket;)V",
+            method = "handlePongResponse(Lnet/minecraft/network/protocol/ping/ClientboundPongResponsePacket;)V",
             at = @At("RETURN"))
     private void handlePongResponsePost(ClientboundPongResponsePacket packet, CallbackInfo ci) {
         PongReceivedEvent event = new PongReceivedEvent(packet.time());
