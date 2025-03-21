@@ -41,6 +41,7 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class TradeMarketModel extends Model {
@@ -134,7 +135,7 @@ public class TradeMarketModel extends Model {
         });
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         StyledText styledText =
                 StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
@@ -284,6 +285,10 @@ public class TradeMarketModel extends Model {
         return tradeMarketState == TradeMarketState.SEARCH_CHAT_INPUT
                 || tradeMarketState == TradeMarketState.AMOUNT_CHAT_INPUT
                 || tradeMarketState == TradeMarketState.PRICE_CHAT_INPUT;
+    }
+
+    public boolean inTradeMarket() {
+        return tradeMarketState != TradeMarketState.NOT_ACTIVE;
     }
 
     public TradeMarketState getTradeMarketState() {
