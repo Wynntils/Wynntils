@@ -14,7 +14,8 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
-import com.wynntils.models.containers.containers.TradeMarketSellContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
+import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -35,8 +36,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketPriceMatchFeature extends Feature {
     private static final StyledText CLICK_TO_SET_PRICE = StyledText.fromString("§a§lSet Price");
-    private static final StyledText TYPE_SELL_PRICE =
-            StyledText.fromString("\uDAFF\uDFFC\uE001\uDB00\uDC06 Type the price in emeralds or formatted ");
 
     // Test in TradeMarketPriceMatchFeature_HIGHEST_BUY_PATTERN
     private static final Pattern HIGHEST_BUY_PATTERN = Pattern.compile("§7Highest Buy Offer: §f([\\d,]+) §8\\(.+\\)");
@@ -72,7 +71,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent e) {
         if (!sendPriceMessage) return;
-        if (!e.getOriginalStyledText().contains(TYPE_SELL_PRICE)) return;
+        if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.PRICE_CHAT_INPUT) return;
 
         WynntilsMod.info("Trying to set trade market price to " + priceToSend);
 

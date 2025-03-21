@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.trademarket;
@@ -15,7 +15,8 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
-import com.wynntils.models.containers.containers.TradeMarketSellContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
+import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -34,8 +35,6 @@ public class TradeMarketBulkSellFeature extends Feature {
     private static final Pattern ITEM_NAME_PATTERN = Pattern.compile("(.+)À");
     private static final String SOLD_ITEM_SLOT = "Empty Item Slot";
     private static final String CLICK_TO_SET_AMOUNT = "Set Amount";
-    private static final String TYPE_SELL_AMOUNT =
-            "\uDAFF\uDFFC\uE001\uDB00\uDC06 Type the amount you wish to sell or ";
 
     private static final int SELLABLE_ITEM_SLOT = 22;
     private static final int AMOUNT_ITEM_SLOT = 31;
@@ -55,7 +54,6 @@ public class TradeMarketBulkSellFeature extends Feature {
     @SubscribeEvent
     public void onSellDialogueUpdated(ContainerSetSlotEvent.Pre e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
-
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
         StyledText amountItemName = StyledText.fromComponent(
@@ -74,7 +72,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent e) {
         if (!sendAmountMessage) return;
-        if (!e.getOriginalStyledText().contains(TYPE_SELL_AMOUNT)) return;
+        if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.AMOUNT_CHAT_INPUT) return;
 
         WynntilsMod.info("Trying to bulk sell " + amountToSend + " items");
 
