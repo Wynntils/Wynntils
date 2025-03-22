@@ -215,8 +215,8 @@
   },
   {
     "id": "dataStaticServicesCrowdsourced",
-    "md5": "6c4fa8b8906476e2ef1d7e70f5b2f357",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/services_crowdsourced.json"
+    "md5": "42716839f9c0bec60cc54b667e04bf7d",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/services_crowdsourced.json"
   },
   {
     "id": "dataStaticShinyStats",
