@@ -80,7 +80,7 @@ public class PoiService extends Service {
     @Override
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(UrlId.DATA_STATIC_PLACES).handleReader(this::handlePlaces);
-        registry.registerDownload(UrlId.DATA_STATIC_SERVICES).handleReader(this::handleServices);
+        registry.registerDownload(UrlId.DATA_STATIC_SERVICES_CROWDSOURCED).handleReader(this::handleServices);
         registry.registerDownload(UrlId.DATA_STATIC_COMBAT_LOCATIONS).handleReader(this::handleCombat);
         registry.registerDownload(UrlId.DATA_STATIC_CAVE_INFO).handleReader(this::handleCaves);
     }

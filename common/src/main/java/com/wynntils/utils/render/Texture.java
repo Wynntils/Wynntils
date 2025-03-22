@@ -155,6 +155,7 @@ public enum Texture {
     COOKING_STATION("icons/map/cooking_station.png", 18, 16),
     DIAMOND("icons/map/diamond.png", 18, 15),
     DUNGEON_ENTRANCE("icons/map/dungeon_entrance.png", 12, 12),
+    DUNGEON_MERCHANT("icons/map/dungeon_merchant.png", 15, 15),
     DUNGEON_SCROLL_MERCHANT("icons/map/dungeon_scroll_merchant.png", 18, 17),
     EMERALD_MERCHANT("icons/map/emerald_merchant.png", 17, 18),
     FARMING("icons/map/farming.png", 15, 19),
