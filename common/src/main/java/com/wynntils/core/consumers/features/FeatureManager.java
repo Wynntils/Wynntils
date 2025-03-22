@@ -68,7 +68,6 @@ import com.wynntils.features.inventory.DurabilityArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.inventory.ExtendedItemCountFeature;
-import com.wynntils.features.inventory.FixStackSizeFeature;
 import com.wynntils.features.inventory.GuildBankHotkeyFeature;
 import com.wynntils.features.inventory.HightlightDuplicateCosmeticsFeature;
 import com.wynntils.features.inventory.IngredientPouchHotkeyFeature;
@@ -273,7 +272,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new ExtendedItemCountFeature());
-        registerFeature(new FixStackSizeFeature());
         registerFeature(new GuildBankHotkeyFeature());
         registerFeature(new HightlightDuplicateCosmeticsFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
