@@ -49,7 +49,6 @@
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",
     "ScreenMixin",
-    "SimpleContainerMixin",
     "SlotMixin",
     "SoundManagerMixin",
     "WingsLayerMixin",
