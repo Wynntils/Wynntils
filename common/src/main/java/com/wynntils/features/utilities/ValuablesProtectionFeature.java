@@ -21,7 +21,7 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.BlacksmithContainer;
 import com.wynntils.models.containers.containers.ItemIdentifierContainer;
-import com.wynntils.models.containers.containers.TradeMarketSellContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.type.BoundedContainerProperty;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
