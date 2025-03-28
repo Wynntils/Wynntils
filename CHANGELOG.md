@@ -1,3 +1,25 @@
+## [3.0.11](https://github.com/Wynntils/Wynntils/compare/v3.0.10...v3.0.11) (2025-03-28)
+
+
+### Bug Fixes
+
+* Fix re-roll chance calculations for negative base values [skip ci] ([#3174](https://github.com/Wynntils/Wynntils/issues/3174)) ([7489675](https://github.com/Wynntils/Wynntils/commit/7489675aee67805a9e7fabdc6cdfde42c7b98161))
+* Temporary patch to fix nol tracking ([#3181](https://github.com/Wynntils/Wynntils/issues/3181)) ([d8442d0](https://github.com/Wynntils/Wynntils/commit/d8442d0793ef645e9e374e3f6fd8d71fb10a17b6))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3166](https://github.com/Wynntils/Wynntils/issues/3166)) ([a38eed4](https://github.com/Wynntils/Wynntils/commit/a38eed46c5cb954245c9a27abf5a3e400c7b4b27))
+* [auto-generated] Update urls.json [ci skip] ([#3179](https://github.com/Wynntils/Wynntils/issues/3179)) ([f7b7261](https://github.com/Wynntils/Wynntils/commit/f7b7261d91537352fee6784484b5655ab823c5e1))
+* Remove fix stack size feature [skip ci] ([#3177](https://github.com/Wynntils/Wynntils/issues/3177)) ([102f8c0](https://github.com/Wynntils/Wynntils/commit/102f8c0ab356bea7904b9261572e516fc5941be9))
+* Update spotless plugins for java 21 [skip ci] ([#3172](https://github.com/Wynntils/Wynntils/issues/3172)) ([0fea892](https://github.com/Wynntils/Wynntils/commit/0fea89281d141cd1b98db0d0d64536aee698e7ee))
+
+
+### Code Refactoring
+
+* Track trade market state in TradeMarketModel [skip ci] ([#3176](https://github.com/Wynntils/Wynntils/issues/3176)) ([49faf29](https://github.com/Wynntils/Wynntils/commit/49faf29d087374b3d3bcdb3912c28d28f0dbd834))
+* Use dedicated ping packets for PingService [skip ci] ([#3173](https://github.com/Wynntils/Wynntils/issues/3173)) ([d9d9fa1](https://github.com/Wynntils/Wynntils/commit/d9d9fa17deaee432975707f3dba3bc5f35358e20))
+
 ## [3.0.10](https://github.com/Wynntils/Wynntils/compare/v3.0.9...v3.0.10) (2025-03-16)
 
 
@@ -18,6 +40,7 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#3156](https://github.com/Wynntils/Wynntils/issues/3156)) ([963d7d3](https://github.com/Wynntils/Wynntils/commit/963d7d3edb93c40b4a0de5c299b4c6bf8a5e553e))
 * Bump crowd source version [skip ci] ([#3168](https://github.com/Wynntils/Wynntils/issues/3168)) ([3d1d7ae](https://github.com/Wynntils/Wynntils/commit/3d1d7aeb9f0bd5b90fb86e27931734dfadadaf74))
+* **release:** v3.0.10 [skip ci] ([f551a53](https://github.com/Wynntils/Wynntils/commit/f551a5324f46b002f1755fdf094f20fc097d7256))
 
 ## [3.0.9](https://github.com/Wynntils/Wynntils/compare/v3.0.8...v3.0.9) (2025-03-07)
 
@@ -76,16 +99,4 @@
 ### Code Refactoring
 
 * Introduce WynntilsInitEvent.ModInitFinished event [skip ci] ([#3119](https://github.com/Wynntils/Wynntils/issues/3119)) ([dfe441b](https://github.com/Wynntils/Wynntils/commit/dfe441b2f6d59df90a7065e6d710e265084db53f)), closes [#3076](https://github.com/Wynntils/Wynntils/issues/3076)
-
-## [3.0.6](https://github.com/Wynntils/Wynntils/compare/v3.0.5...v3.0.6) (2025-02-13)
-
-
-### Bug Fixes
-
-* Make the mod check the recommended update version, don't update in case of MC version mismatch ([#3116](https://github.com/Wynntils/Wynntils/issues/3116)) ([14dae0f](https://github.com/Wynntils/Wynntils/commit/14dae0fab610a4683232101a9d9c0f6a98bdf7c9))
-
-
-### Miscellaneous Chores
-
-* **release:** v3.0.6 [skip ci] ([ab1ab7c](https://github.com/Wynntils/Wynntils/commit/ab1ab7c29e6b083a1d4aea49a34374c428748528))
 
