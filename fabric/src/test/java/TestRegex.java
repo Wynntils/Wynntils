@@ -720,8 +720,14 @@ public class TestRegex {
     @Test
     public void ShamanTotemModel_SHAMAN_TOTEM_TIMER_PATTERN() {
         PatternTester p = new PatternTester(ShamanTotemModel.class, "SHAMAN_TOTEM_TIMER");
+        // Timer only
         p.shouldMatch("§bShadowCat117's §7Totem\n§d\uE01F §77s");
-        p.shouldMatch("§bShadowCat117's §7Totem\n§c+822❤§7/s §d\uE01F §753s");
+        // Timer + regen
+        p.shouldMatch("§bShadowCat117's §7Totem\n§c+1644❤§7/s §d\uE01F §753s");
+        // Timer + summons attack speed
+        p.shouldMatch("§bShadowCat117's §7Totem\n§e\uE013 §71s §d\uE01F §749s");
+        // Timer + regen + summons attack speed
+        p.shouldMatch("§bShadowCat117's §7Totem\n§c+986❤§7/s §e\uE013 §71s §d\uE01F §750s");
     }
 
     @Test
