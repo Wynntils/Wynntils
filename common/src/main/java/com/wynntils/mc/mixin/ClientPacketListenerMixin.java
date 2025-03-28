@@ -28,6 +28,7 @@ import com.wynntils.mc.event.ParticleAddedEvent;
 import com.wynntils.mc.event.PlayerInfoEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.mc.event.PongReceivedEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.ScoreboardEvent;
 import com.wynntils.mc.event.ScoreboardSetDisplayObjectiveEvent;
@@ -86,6 +87,7 @@ import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.network.protocol.ping.ClientboundPongResponsePacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -659,5 +661,13 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 
         MixinHelper.post(
                 new ChunkReceivedEvent(packet.getX(), packet.getZ(), packet.getChunkData(), packet.getLightData()));
+    }
+
+    @Inject(
+            method = "handlePongResponse(Lnet/minecraft/network/protocol/ping/ClientboundPongResponsePacket;)V",
+            at = @At("RETURN"))
+    private void handlePongResponsePost(ClientboundPongResponsePacket packet, CallbackInfo ci) {
+        PongReceivedEvent event = new PongReceivedEvent(packet.time());
+        MixinHelper.post(event);
     }
 }

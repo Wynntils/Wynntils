@@ -373,7 +373,7 @@ public class RaidModel extends Model {
     // It will be called multiple times after completing a challenge so we use completedCurrentChallenge to only
     // post the event and save timers once.
     public void completeChallenge() {
-        if (!completedCurrentChallenge) {
+        if (!completedCurrentChallenge && !inBossFight()) {
             long roomTime = System.currentTimeMillis() - roomStartTime;
             roomTimers.put(currentRoom, roomTime);
             roomStartTime = System.currentTimeMillis();
