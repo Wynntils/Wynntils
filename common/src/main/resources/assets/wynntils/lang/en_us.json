@@ -440,6 +440,8 @@
   "feature.wynntils.customNametagRenderer.showGearOnHover.name": "Show Player's Gear on Hover",
   "feature.wynntils.customNametagRenderer.showLeaderboardBadges.description": "Should the top nine players in each leaderboard have badges above their names?",
   "feature.wynntils.customNametagRenderer.showLeaderboardBadges.name": "Show Leaderboard Badges Above Nametag",
+  "feature.wynntils.customNametagRenderer.showOwnNametag.description": "Should your own nametag be shown in 3rd person?",
+  "feature.wynntils.customNametagRenderer.showOwnNametag.name": "Shown Own Nametag",
   "feature.wynntils.customNametagRenderer.showWynntilsMarker.description": "Should a player's nametag have a marker indicating that they are using Wynntils?",
   "feature.wynntils.customNametagRenderer.showWynntilsMarker.name": "Show Wynntils Marker on Nametag",
   "feature.wynntils.customPlayerListOverlay.description": "Should the default player list be replaced?",
