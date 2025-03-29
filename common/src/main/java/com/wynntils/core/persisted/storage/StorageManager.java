@@ -54,6 +54,8 @@ public final class StorageManager extends Manager {
 
         userStorageFile = new File(
                 STORAGE_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
+
+        addShutdownHook();
     }
 
     public void initComponents() {
@@ -97,6 +99,10 @@ public final class StorageManager extends Manager {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void addShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(this::writeToJson));
     }
 
     @SubscribeEvent
