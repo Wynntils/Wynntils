@@ -66,18 +66,6 @@ public final class CombatModel extends Model {
         Handlers.Label.registerParser(new KillLabelParser());
     }
 
-    public long getLastDamageDealtTimestamp() {
-        return lastDamageDealtTimestamp;
-    }
-
-    public long getLastKillTimestamp(boolean includeShared) {
-        if (includeShared) {
-            return Math.max(lastSelfKillTimestamp, lastSharedKillTimestamp);
-        } else {
-            return lastSelfKillTimestamp;
-        }
-    }
-
     @SubscribeEvent
     public void onLabelIdentified(LabelIdentifiedEvent event) {
         if (event.getLabelInfo() instanceof DamageLabelInfo damageLabelInfo) {
@@ -139,6 +127,14 @@ public final class CombatModel extends Model {
         focusedMobExpiryTime = -1L;
         lastDamageDealtTimestamp = 0L;
         liveDamageInfo.clear();
+    }
+
+    public long getLastDamageDealtTimestamp() {
+        return lastDamageDealtTimestamp;
+    }
+
+    public long getLastKillTimestamp(boolean includeShared) {
+        return includeShared ? Math.max(lastSelfKillTimestamp, lastSharedKillTimestamp) : lastSelfKillTimestamp;
     }
 
     public String getFocusedMobName() {
