@@ -7,7 +7,6 @@ package com.wynntils.features.players;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -33,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -130,10 +129,8 @@ public class CustomNametagRendererFeature extends Feature {
     @SubscribeEvent
     public void onCameraCheck(GetCameraEntityEvent e) {
         if (!showOwnNametag.get()) return;
-        // Don't render in container screens (inventory, cosmetic preview feature) or our custom screens (Wynntils menu)
-        if (McUtils.mc().screen instanceof AbstractContainerScreen || McUtils.mc().screen instanceof WynntilsScreen) {
-            return;
-        }
+        // Only render when a screen is not open or in the chat screen
+        if (McUtils.mc().screen != null && !(McUtils.mc().screen instanceof ChatScreen)) return;
 
         // We don't need to check if the entity is the local player as that is already done in
         // LivingEntityRenderer.shouldShowName
