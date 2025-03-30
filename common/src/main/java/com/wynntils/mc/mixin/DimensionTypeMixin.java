@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(DimensionType.class)
 public class DimensionTypeMixin {
-    @Inject(method = "ambientLight", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "ambientLight()F", at = @At("HEAD"), cancellable = true)
     private void getDimensionAmbientLight(CallbackInfoReturnable<Float> cir) {
         DimensionAmbientLightEvent dimensionLightEvent = new DimensionAmbientLightEvent();
         MixinHelper.post(dimensionLightEvent);
