@@ -55,6 +55,8 @@ public final class CombatModel extends Model {
     private long focusedMobExpiryTime = -1L;
 
     private long lastDamageDealtTimestamp;
+    private long lastSharedKillTimestamp;
+    private long lastSelfKillTimestamp;
 
     public CombatModel() {
         super(List.of());
@@ -66,6 +68,14 @@ public final class CombatModel extends Model {
 
     public long getLastDamageDealtTimestamp() {
         return lastDamageDealtTimestamp;
+    }
+
+    public long getLastKillTimestamp(boolean includeShared) {
+        if (includeShared) {
+            return Math.max(lastSelfKillTimestamp, lastSharedKillTimestamp);
+        } else {
+            return lastSelfKillTimestamp;
+        }
     }
 
     @SubscribeEvent
@@ -103,6 +113,12 @@ public final class CombatModel extends Model {
             lastDamageDealtTimestamp = System.currentTimeMillis();
         } else if (event.getLabelInfo() instanceof KillLabelInfo killLabelInfo) {
             killSet.put(killLabelInfo.getKillCredit());
+
+            if (killLabelInfo.getKillCredit() == KillCreditType.SELF) {
+                lastSelfKillTimestamp = System.currentTimeMillis();
+            } else if (killLabelInfo.getKillCredit() == KillCreditType.SHARED) {
+                lastSharedKillTimestamp = System.currentTimeMillis();
+            }
         }
     }
 
