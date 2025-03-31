@@ -1,3 +1,28 @@
+## [3.0.12](https://github.com/Wynntils/Wynntils/compare/v3.0.11...v3.0.12) (2025-03-31)
+
+
+### New Features
+
+* Add option to show own nametag in 3rd person [skip ci] ([#3185](https://github.com/Wynntils/Wynntils/issues/3185)) ([d53889d](https://github.com/Wynntils/Wynntils/commit/d53889d0daf8a073d9b48aac66134adb0b7c3215))
+* Add time since last kill function [skip ci] ([#3186](https://github.com/Wynntils/Wynntils/issues/3186)) ([b5f0449](https://github.com/Wynntils/Wynntils/commit/b5f044921e023ca399aea973f0ec4143f3411056))
+
+
+### Bug Fixes
+
+* Fix orange beacon counts not always being detected [skip ci] ([#3188](https://github.com/Wynntils/Wynntils/issues/3188)) ([becaa44](https://github.com/Wynntils/Wynntils/commit/becaa4467440b3fc8f62ae3aa82e497cf28c4a24))
+* Fix shaman totem timer when summoner attack speed active [skip ci] ([#3183](https://github.com/Wynntils/Wynntils/issues/3183)) ([aa7d771](https://github.com/Wynntils/Wynntils/commit/aa7d77126e7bf34bfa3b027a95743ddfeb088c80))
+* Fix war messages from chat not being detected [skip ci] ([#3182](https://github.com/Wynntils/Wynntils/issues/3182)) ([2c9b2ce](https://github.com/Wynntils/Wynntils/commit/2c9b2ce6677a4ac608e3232fb74b6805f47ce3c9))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3184](https://github.com/Wynntils/Wynntils/issues/3184)) ([84c484a](https://github.com/Wynntils/Wynntils/commit/84c484a5cd2866551f7206a0c9def5da96d58432))
+
+
+### Code Refactoring
+
+* Rework GammabrightFeature ([#3187](https://github.com/Wynntils/Wynntils/issues/3187)) ([17d4bdb](https://github.com/Wynntils/Wynntils/commit/17d4bdb468dc26034468b6b029d331d3b683c232))
+
 ## [3.0.11](https://github.com/Wynntils/Wynntils/compare/v3.0.10...v3.0.11) (2025-03-28)
 
 
@@ -11,6 +36,7 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#3166](https://github.com/Wynntils/Wynntils/issues/3166)) ([a38eed4](https://github.com/Wynntils/Wynntils/commit/a38eed46c5cb954245c9a27abf5a3e400c7b4b27))
 * [auto-generated] Update urls.json [ci skip] ([#3179](https://github.com/Wynntils/Wynntils/issues/3179)) ([f7b7261](https://github.com/Wynntils/Wynntils/commit/f7b7261d91537352fee6784484b5655ab823c5e1))
+* **release:** v3.0.11 [skip ci] ([409fac7](https://github.com/Wynntils/Wynntils/commit/409fac77c22eccc07592c941461fbae3e5ccb1f8))
 * Remove fix stack size feature [skip ci] ([#3177](https://github.com/Wynntils/Wynntils/issues/3177)) ([102f8c0](https://github.com/Wynntils/Wynntils/commit/102f8c0ab356bea7904b9261572e516fc5941be9))
 * Update spotless plugins for java 21 [skip ci] ([#3172](https://github.com/Wynntils/Wynntils/issues/3172)) ([0fea892](https://github.com/Wynntils/Wynntils/commit/0fea89281d141cd1b98db0d0d64536aee698e7ee))
 
@@ -79,24 +105,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#3137](https://github.com/Wynntils/Wynntils/issues/3137)) ([bffb486](https://github.com/Wynntils/Wynntils/commit/bffb48663e7edc9fb494bd2077db9191f38babcf))
 * **release:** v3.0.8 [skip ci] ([87a20cb](https://github.com/Wynntils/Wynntils/commit/87a20cb6c202461bb7422cb3fd7866b6e0dc844d))
-
-## [3.0.7](https://github.com/Wynntils/Wynntils/compare/v3.0.6...v3.0.7) (2025-02-21)
-
-
-### Bug Fixes
-
-* Fix beacon tracking after patch ([#3135](https://github.com/Wynntils/Wynntils/issues/3135)) ([bfeac12](https://github.com/Wynntils/Wynntils/commit/bfeac12a512139a63c19eef5f50ea75dd5496a15))
-* Fix shaman totem timer tracking [skip ci] ([#3117](https://github.com/Wynntils/Wynntils/issues/3117)) ([8a21aea](https://github.com/Wynntils/Wynntils/commit/8a21aea6dfe94f9d378a52a5c5cd0c593a98e362))
-* Make lootrun mission overlay default position visible [skip ci] ([#3118](https://github.com/Wynntils/Wynntils/issues/3118)) ([ded5986](https://github.com/Wynntils/Wynntils/commit/ded59861e249e8c42102b6f44c5a40499557b8b1))
-* Support negative stats with stars [skip ci] ([#3134](https://github.com/Wynntils/Wynntils/issues/3134)) ([a24826d](https://github.com/Wynntils/Wynntils/commit/a24826da6dc14aa5e079773406e01a85583c9b3f))
-
-
-### Miscellaneous Chores
-
-* **release:** v3.0.7 [skip ci] ([e3056fd](https://github.com/Wynntils/Wynntils/commit/e3056fde1ac25840aabb3cce3db0fddbfe45e32f))
-
-
-### Code Refactoring
-
-* Introduce WynntilsInitEvent.ModInitFinished event [skip ci] ([#3119](https://github.com/Wynntils/Wynntils/issues/3119)) ([dfe441b](https://github.com/Wynntils/Wynntils/commit/dfe441b2f6d59df90a7065e6d710e265084db53f)), closes [#3076](https://github.com/Wynntils/Wynntils/issues/3076)
 
