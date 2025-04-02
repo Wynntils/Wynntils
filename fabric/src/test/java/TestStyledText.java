@@ -6,6 +6,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -16,6 +17,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -914,5 +916,113 @@ public class TestStyledText {
                 result,
                 mappedText.getString(PartStyle.StyleType.DEFAULT),
                 "StyledText.map() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledtext_parseHtmlText() {
+        StyledText styledText = StyledTextUtils.parseHtml("<span>Some example HTML text.</span>");
+
+        final String result = "Some example HTML text.";
+
+        Assertions.assertEquals(
+                result,
+                styledText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledTextUtils.parseHtml() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledtext_parseHtmlLineBreak() {
+        StyledText styledText = StyledTextUtils.parseHtml("</br>");
+
+        final String result = "";
+
+        Assertions.assertEquals(
+                result,
+                styledText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledTextUtils.parseHtml() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledtext_parseHtmlFont() {
+        StyledText styledTextDefault = StyledTextUtils.parseHtml("<span class='font-ascii'>Text</span>");
+        StyledText styledTextFive = StyledTextUtils.parseHtml("<span class='font-five'>Text</span>");
+
+        Assertions.assertEquals(
+                ResourceLocation.withDefaultNamespace("default"),
+                styledTextDefault.getFirstPart().getPartStyle().getFont(),
+                "StyledTextUtils.parseHtml() did not return default font.");
+
+        Assertions.assertEquals(
+                ResourceLocation.withDefaultNamespace("language/five"),
+                styledTextFive.getFirstPart().getPartStyle().getFont(),
+                "StyledTextUtils.parseHtml() did not return language/five font.");
+    }
+
+    @Test
+    public void styledtext_parseHtmlColor() {
+        StyledText styledText = StyledTextUtils.parseHtml("<span style='color:#AA00FF'>Text</span>");
+
+        final CustomColor result = CustomColor.fromHexString("#AA00FF");
+
+        Assertions.assertEquals(
+                result,
+                styledText.getFirstPart().getPartStyle().getColor(),
+                "StyledTextUtils.parseHtml() did not return expected color.");
+    }
+
+    @Test
+    public void styledtext_parseHtmlUnderline() {
+        StyledText styledText = StyledTextUtils.parseHtml("<span style='text-decoration: underline'>Text</span>");
+
+        Assertions.assertEquals(
+                true,
+                styledText.getFirstPart().getPartStyle().isUnderlined(),
+                "StyledTextUtils.parseHtml() response was not underlined.");
+    }
+
+    @Test
+    public void styledtext_parseHtmlShouldProduceCorrectResult() {
+        StyledText styledText = StyledTextUtils.parseHtml(
+                "<span class='font-ascii' style='color:#5555FF'><span class='font-ascii' style='text-decoration: underline'>Blue Ascii Underlined<span class='font-five' style='color:#FFAA00'>Gold Five</span><span class='font-wynnic' style='font-weight: bolder'>Blue Wynnic Bold</span></span></span>");
+
+        Assertions.assertEquals(
+                3, styledText.getPartCount(), "StyledTextUtils.parseHtml() did not return expected part count.");
+
+        final String firstPartResult = "§9§nBlue Ascii Underlined";
+
+        Assertions.assertEquals(
+                firstPartResult,
+                styledText.getFirstPart().getString(null, PartStyle.StyleType.DEFAULT),
+                "StyledTextUtils.parseHtml() first part did not return expected value.");
+        Assertions.assertEquals(
+                ResourceLocation.withDefaultNamespace("default"),
+                styledText.getFirstPart().getPartStyle().getFont(),
+                "StyledTextUtils.parseHtml() first part did not return expected font.");
+
+        final String middlePartResult = "§6Gold Five";
+
+        Assertions.assertEquals(
+                middlePartResult,
+                styledText.getPartsAsTextArray()[1].getString(),
+                "StyledTextUtils.parseHtml() middle part did not return expected value.");
+        Assertions.assertEquals(
+                ResourceLocation.withDefaultNamespace("language/five"),
+                styledText
+                        .getPartsAsTextArray()[1]
+                        .getFirstPart()
+                        .getPartStyle()
+                        .getFont(),
+                "StyledTextUtils.parseHtml() middle part did not return expected font.");
+
+        final String lastPartResult = "§9§lBlue Wynnic Bold";
+
+        Assertions.assertEquals(
+                lastPartResult,
+                styledText.getLastPart().getString(null, PartStyle.StyleType.DEFAULT),
+                "StyledTextUtils.parseHtml() last part did not return expected value.");
+        Assertions.assertEquals(
+                ResourceLocation.withDefaultNamespace("language/wynnic"),
+                styledText.getLastPart().getPartStyle().getFont(),
+                "StyledTextUtils.parseHtml() last part did not return expected font.");
     }
 }
