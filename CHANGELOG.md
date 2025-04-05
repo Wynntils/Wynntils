@@ -1,3 +1,15 @@
+## [3.0.13](https://github.com/Wynntils/Wynntils/compare/v3.0.12...v3.0.13) (2025-04-05)
+
+
+### New Features
+
+* Use crowd sourced service locations ([#3170](https://github.com/Wynntils/Wynntils/issues/3170)) ([6b29c57](https://github.com/Wynntils/Wynntils/commit/6b29c57416f4dbdfd9a943c3d61a998cc846d9b8))
+
+
+### Bug Fixes
+
+* Add shutdown hook for storage saving [skip ci] ([#3178](https://github.com/Wynntils/Wynntils/issues/3178)) ([509275c](https://github.com/Wynntils/Wynntils/commit/509275c01cc407062a2d8a587ddda0f3dc381a4a))
+
 ## [3.0.12](https://github.com/Wynntils/Wynntils/compare/v3.0.11...v3.0.12) (2025-03-31)
 
 
@@ -17,6 +29,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#3184](https://github.com/Wynntils/Wynntils/issues/3184)) ([84c484a](https://github.com/Wynntils/Wynntils/commit/84c484a5cd2866551f7206a0c9def5da96d58432))
+* **release:** v3.0.12 [skip ci] ([937afe2](https://github.com/Wynntils/Wynntils/commit/937afe279dca11db30b3f65a4212fa98a53a25dd))
 
 
 ### Code Refactoring
@@ -91,18 +104,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#3153](https://github.com/Wynntils/Wynntils/issues/3153)) ([620c2ff](https://github.com/Wynntils/Wynntils/commit/620c2ff052b9a7e65bf21d0dc31bc535d5b81b1d))
 * **release:** v3.0.9 [skip ci] ([43f5c1a](https://github.com/Wynntils/Wynntils/commit/43f5c1ad7277c1ca411b9762d934cc7066d583b6))
-
-## [3.0.8](https://github.com/Wynntils/Wynntils/compare/v3.0.7...v3.0.8) (2025-02-23)
-
-
-### Bug Fixes
-
-* Fix item slot rendering issues from 1.21.4 port ([#3136](https://github.com/Wynntils/Wynntils/issues/3136)) ([c57a2ec](https://github.com/Wynntils/Wynntils/commit/c57a2ec93adfb8bdf25b5b43db3e8e54230af3ee))
-* Update sacred surge overlay and function to holy power [skip ci] ([#3140](https://github.com/Wynntils/Wynntils/issues/3140)) ([13bf02e](https://github.com/Wynntils/Wynntils/commit/13bf02e2b9de45eed78d046c47a13cab41efec79))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3137](https://github.com/Wynntils/Wynntils/issues/3137)) ([bffb486](https://github.com/Wynntils/Wynntils/commit/bffb48663e7edc9fb494bd2077db9191f38babcf))
-* **release:** v3.0.8 [skip ci] ([87a20cb](https://github.com/Wynntils/Wynntils/commit/87a20cb6c202461bb7422cb3fd7866b6e0dc844d))
 
