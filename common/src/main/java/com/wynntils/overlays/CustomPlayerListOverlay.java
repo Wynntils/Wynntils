@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -30,6 +30,7 @@ import java.util.Comparator;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -76,15 +77,16 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         if (!McUtils.options().keyPlayerList.isDown() && animationPercentage.finishedClosingAnimation()) return;
-        renderPlayerList(poseStack, animationPercentage.getAnimation());
+        renderPlayerList(guiGraphics, animationPercentage.getAnimation());
     }
 
     @Override
     public void renderPreview(
-            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        renderPlayerList(poseStack, 1);
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        renderPlayerList(guiGraphics, 1);
     }
 
     private static List<StyledText> getAvailablePlayers() {
@@ -102,8 +104,9 @@ public class CustomPlayerListOverlay extends Overlay {
                 .toList();
     }
 
-    private void renderPlayerList(PoseStack poseStack, double animation) {
+    private void renderPlayerList(GuiGraphics guiGraphics, double animation) {
         RenderSystem.disableDepthTest();
+        PoseStack poseStack = guiGraphics.pose();
 
         if (animation < 1) {
             RenderUtils.enableScissor(
