@@ -5,6 +5,7 @@
 package com.wynntils.features.trademarket;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -53,20 +54,25 @@ public class TradeMarketBulkSellFeature extends Feature {
 
     @SubscribeEvent
     public void onSellDialogueUpdated(ContainerSetSlotEvent.Pre e) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
-        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
+        Managers.TickScheduler.scheduleNextTick(() -> {
+            if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
+            if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
-        StyledText amountItemName = StyledText.fromComponent(
-                containerScreen.getMenu().getSlot(AMOUNT_ITEM_SLOT).getItem().getHoverName());
-        if (!amountItemName.equalsString(CLICK_TO_SET_AMOUNT, PartStyle.StyleType.NONE)) return;
+            StyledText amountItemName = StyledText.fromComponent(containerScreen
+                    .getMenu()
+                    .getSlot(AMOUNT_ITEM_SLOT)
+                    .getItem()
+                    .getHoverName());
+            if (!amountItemName.equalsString(CLICK_TO_SET_AMOUNT, PartStyle.StyleType.NONE)) return;
 
-        String soldItemName = getSoldItemName(containerScreen);
+            String soldItemName = getSoldItemName(containerScreen);
 
-        removeSellButtons(containerScreen);
+            removeSellButtons(containerScreen);
 
-        if (soldItemName == null) return;
+            if (soldItemName == null) return;
 
-        addSellButtons(containerScreen, soldItemName);
+            addSellButtons(containerScreen, soldItemName);
+        });
     }
 
     @SubscribeEvent

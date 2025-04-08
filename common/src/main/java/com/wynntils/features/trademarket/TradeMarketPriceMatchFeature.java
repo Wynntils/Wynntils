@@ -5,6 +5,7 @@
 package com.wynntils.features.trademarket;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -54,18 +55,23 @@ public class TradeMarketPriceMatchFeature extends Feature {
 
     @SubscribeEvent
     public void onSellDialogueUpdated(ContainerSetSlotEvent.Post e) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
+        Managers.TickScheduler.scheduleNextTick(() -> {
+            if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
 
-        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
+            if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
-        StyledText amountItemName = StyledText.fromComponent(
-                containerScreen.getMenu().getSlot(PRICE_SET_ITEM_SLOT).getItem().getHoverName());
+            StyledText amountItemName = StyledText.fromComponent(containerScreen
+                    .getMenu()
+                    .getSlot(PRICE_SET_ITEM_SLOT)
+                    .getItem()
+                    .getHoverName());
 
-        if (!amountItemName.equals(CLICK_TO_SET_PRICE)) return;
+            if (!amountItemName.equals(CLICK_TO_SET_PRICE)) return;
 
-        removePriceButtons(containerScreen);
+            removePriceButtons(containerScreen);
 
-        addPriceButtons(containerScreen);
+            addPriceButtons(containerScreen);
+        });
     }
 
     @SubscribeEvent
