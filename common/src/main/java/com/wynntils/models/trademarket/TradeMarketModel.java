@@ -25,6 +25,7 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderCon
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
+import com.wynntils.models.trademarket.type.TradeMarketPriceCheckInfo;
 import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -38,6 +39,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -140,7 +142,6 @@ public class TradeMarketModel extends Model {
     @SubscribeEvent
     public void onSellPageSetSlot(ContainerSetSlotEvent.Post e) {
         if (tradeMarketState != TradeMarketState.SELLING) return;
-
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -252,21 +253,31 @@ public class TradeMarketModel extends Model {
     /**
      * @return The TM's lowest price for the current item from the price check slot.
      */
-    public int getLowestPrice() {
-        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return -1;
-        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return -1;
+    public TradeMarketPriceCheckInfo getTradeMarketPriceCheckInfo() {
+        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return TradeMarketPriceCheckInfo.EMPTY;
+        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return TradeMarketPriceCheckInfo.EMPTY;
 
         ItemStack priceCheckItem = cs.getMenu().getItems().get(PRICE_CHECK_SLOT);
-        if (priceCheckItem.isEmpty()) return -1;
+        if (priceCheckItem.isEmpty()) return TradeMarketPriceCheckInfo.EMPTY;
 
         String lore = LoreUtils.getStringLore(priceCheckItem).getString();
-        Matcher priceCheckMatcher = PRICE_CHECK_ASK_PATTERN.matcher(lore);
-        if (priceCheckMatcher.find()) {
-            String priceCheckString = priceCheckMatcher.group(1);
-            return Integer.parseInt(priceCheckString.replace(",", ""));
+
+        Matcher bidMatcher = PRICE_CHECK_BID_PATTERN.matcher(lore);
+        int bidPrice = -1;
+        if (bidMatcher.find()) {
+            String priceCheckString = bidMatcher.group(1);
+            bidPrice = Integer.parseInt(priceCheckString.replace(",", ""));
         }
 
-        return -1;
+        Matcher askMatcher = PRICE_CHECK_ASK_PATTERN.matcher(lore);
+        int askPrice = -1;
+        if (askMatcher.find()) {
+            String priceCheckString = askMatcher.group(1);
+            askPrice = Integer.parseInt(priceCheckString.replace(",", ""));
+        }
+
+
+        return new TradeMarketPriceCheckInfo(bidPrice, askPrice);
     }
 
     private void updateStateFromContainer() {
