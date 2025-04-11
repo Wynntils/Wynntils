@@ -16,6 +16,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
+import com.wynntils.models.trademarket.type.TradeMarketPriceCheckInfo;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.LoreUtils;
@@ -38,13 +39,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class TradeMarketPriceMatchFeature extends Feature {
     private static final StyledText CLICK_TO_SET_PRICE = StyledText.fromString("§a§lSet Price");
 
-    // Test in TradeMarketPriceMatchFeature_HIGHEST_BUY_PATTERN
-    private static final Pattern HIGHEST_BUY_PATTERN = Pattern.compile("§7Highest Buy Offer: §f([\\d,]+) §8\\(.+\\)");
-    // Test in TradeMarketPriceMatchFeature_LOWEST_SELL_PATTERN
-    private static final Pattern LOWEST_SELL_PATTERN = Pattern.compile("§7Cheapest Sell Offer: §f([\\d,]+) §8\\(.+\\)");
-
     private static final int PRICE_SET_ITEM_SLOT = 28;
-    private static final int PRICE_INFO_ITEM_SLOT = 51;
     private static final Component SILVERBULL_STAR = Component.literal(" ✮").withStyle(ChatFormatting.AQUA);
 
     @Persisted
@@ -86,29 +81,13 @@ public class TradeMarketPriceMatchFeature extends Feature {
         sendPriceMessage = false;
     }
 
-    private Pair<Integer, Integer> getBuySellOffers(MenuAccess<ChestMenu> containerScreen) {
-        ItemStack priceInfoItem =
-                containerScreen.getMenu().getSlot(PRICE_INFO_ITEM_SLOT).getItem();
-
-        Matcher highestBuyMatcher = LoreUtils.matchLoreLine(priceInfoItem, 6, HIGHEST_BUY_PATTERN);
-        Integer highestBuy = highestBuyMatcher.matches()
-                ? Integer.parseInt(highestBuyMatcher.group(1).replace(",", "")) - undercutBy.get()
-                : null;
-        Matcher lowestSellMatcher = LoreUtils.matchLoreLine(priceInfoItem, 6, LOWEST_SELL_PATTERN);
-        Integer lowestSell = lowestSellMatcher.matches()
-                ? Integer.parseInt(lowestSellMatcher.group(1).replace(",", "")) - undercutBy.get()
-                : null;
-
-        return Pair.of(highestBuy, lowestSell);
-    }
-
     private void addPriceButtons(ContainerScreen containerScreen) {
-        Pair<Integer, Integer> buySellOffers = getBuySellOffers(containerScreen);
+        TradeMarketPriceCheckInfo priceCheckInfo = Models.TradeMarket.getTradeMarketPriceCheckInfo();
 
         int rightPos = containerScreen.leftPos + containerScreen.imageWidth + 1;
 
-        if (buySellOffers.a() != null) {
-            int untaxedA = (int) Math.round(buySellOffers.a() / Models.Emerald.getTaxAmount());
+        if (priceCheckInfo.bid() != -1) {
+            int untaxedBid = (int) Math.round(priceCheckInfo.bid() / Models.Emerald.getTaxAmount());
             MutableComponent buttonTooltip = undercutBy.get() == 0
                     ? Component.translatable("feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip")
                     : Component.translatable(
@@ -116,13 +95,13 @@ public class TradeMarketPriceMatchFeature extends Feature {
             containerScreen.addRenderableWidget(new PriceButton(
                     rightPos,
                     containerScreen.topPos + 30,
-                    untaxedA,
+                    untaxedBid,
                     Component.translatable("feature.wynntils.tradeMarketPriceMatch.highestBuyOffer"),
                     buttonTooltip
                             .append(Component.literal("\n\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.youReceive")
                                     .withStyle(ChatFormatting.GREEN))
-                            .append(Component.literal(Models.Emerald.getFormattedString(untaxedA, false))
+                            .append(Component.literal(Models.Emerald.getFormattedString(untaxedBid, false))
                                     .withStyle(ChatFormatting.GRAY)
                                     .append(
                                             Models.Character.isSilverbullSubscriber()
@@ -131,12 +110,12 @@ public class TradeMarketPriceMatchFeature extends Feature {
                             .append(Component.literal("\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
                                     .withStyle(ChatFormatting.GOLD))
-                            .append(Component.literal(Models.Emerald.getFormattedString(buySellOffers.a(), false))
+                            .append(Component.literal(Models.Emerald.getFormattedString(priceCheckInfo.bid(), false))
                                     .withStyle(ChatFormatting.GRAY))));
         }
 
-        if (buySellOffers.b() != null) {
-            int untaxedB = (int) Math.round(buySellOffers.b() / Models.Emerald.getTaxAmount());
+        if (priceCheckInfo.ask() != -1) {
+            int untaxedAsk = (int) Math.round(priceCheckInfo.ask() / Models.Emerald.getTaxAmount());
             MutableComponent buttonTooltip = undercutBy.get() == 0
                     ? Component.translatable("feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip")
                     : Component.translatable(
@@ -144,13 +123,13 @@ public class TradeMarketPriceMatchFeature extends Feature {
             containerScreen.addRenderableWidget(new PriceButton(
                     rightPos,
                     containerScreen.topPos + 51,
-                    untaxedB,
+                    untaxedAsk,
                     Component.translatable("feature.wynntils.tradeMarketPriceMatch.lowestSellOffer"),
                     buttonTooltip
                             .append(Component.literal("\n\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.youReceive")
                                     .withStyle(ChatFormatting.GREEN))
-                            .append(Component.literal(Models.Emerald.getFormattedString(untaxedB, false))
+                            .append(Component.literal(Models.Emerald.getFormattedString(untaxedAsk, false))
                                     .withStyle(ChatFormatting.GRAY)
                                     .append(
                                             Models.Character.isSilverbullSubscriber()
@@ -159,7 +138,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
                             .append(Component.literal("\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
                                     .withStyle(ChatFormatting.GOLD))
-                            .append(Component.literal(Models.Emerald.getFormattedString(buySellOffers.b(), false))
+                            .append(Component.literal(Models.Emerald.getFormattedString(priceCheckInfo.ask(), false))
                                     .withStyle(ChatFormatting.GRAY))));
         }
     }

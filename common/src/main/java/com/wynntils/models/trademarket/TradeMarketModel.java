@@ -74,8 +74,9 @@ public class TradeMarketModel extends Model {
     private static final Pattern TM_SELL_PRICE_PATTERN = Pattern.compile("- §7Per Unit:§f (\\d{1,3}(?:,\\d{3})*)");
 
     private static final int PRICE_CHECK_SLOT = 51;
-    private static final Pattern PRICE_CHECK_ASK_PATTERN = Pattern.compile("§7Cheapest Sell Offer: §f([\\d,]+) §8\\(.+\\)");
+    // Tests at TradeMarketModel_PRICE_CHECK_BID_PATTERN/TradeMarketModel_PRICE_CHECK_ASK_PATTERN
     private static final Pattern PRICE_CHECK_BID_PATTERN = Pattern.compile("§7Highest Buy Offer: §f([\\d,]+) §8\\(.+\\)");
+    private static final Pattern PRICE_CHECK_ASK_PATTERN = Pattern.compile("§7Cheapest Sell Offer: §f([\\d,]+) §8\\(.+\\)");
 
     // Test in TradeMarketModel_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile(
@@ -251,7 +252,7 @@ public class TradeMarketModel extends Model {
     }
 
     /**
-     * @return The TM's lowest price for the current item from the price check slot.
+     * @return The TM's server-side price check item information.
      */
     public TradeMarketPriceCheckInfo getTradeMarketPriceCheckInfo() {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return TradeMarketPriceCheckInfo.EMPTY;
@@ -275,7 +276,6 @@ public class TradeMarketModel extends Model {
             String priceCheckString = askMatcher.group(1);
             askPrice = Integer.parseInt(priceCheckString.replace(",", ""));
         }
-
 
         return new TradeMarketPriceCheckInfo(bidPrice, askPrice);
     }
