@@ -18,8 +18,6 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.mc.event.ContainerSetContentEvent;
-import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.bossbar.DeathScreenBar;

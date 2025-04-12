@@ -99,7 +99,6 @@ public class TradeMarketModel extends Model {
 
     private String soldItemName = null;
 
-
     public TradeMarketModel() {
         super(List.of());
 
@@ -297,11 +296,8 @@ public class TradeMarketModel extends Model {
 
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
 
-        StyledText sellPriceItemName = StyledText.fromComponent(cs
-                .getMenu()
-                .getSlot(TM_SELL_PRICE_SLOT)
-                .getItem()
-                .getHoverName());
+        StyledText sellPriceItemName = StyledText.fromComponent(
+                cs.getMenu().getSlot(TM_SELL_PRICE_SLOT).getItem().getHoverName());
 
         if (!sellPriceItemName.equals(TM_SELL_SET_PRICE_PATTERN)) return;
 

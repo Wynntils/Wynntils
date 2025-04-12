@@ -5,7 +5,6 @@
 package com.wynntils.features.trademarket;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -15,7 +14,6 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;

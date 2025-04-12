@@ -5,16 +5,13 @@
 package com.wynntils.features.trademarket;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.trademarket.TradeMarketModel;
@@ -40,7 +37,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
     private long priceToSend = 0;
 
     @SubscribeEvent
-    public void onSellDialogueUpdated(TradeMarketSellDialogueUpdatedEvent e){
+    public void onSellDialogueUpdated(TradeMarketSellDialogueUpdatedEvent e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
