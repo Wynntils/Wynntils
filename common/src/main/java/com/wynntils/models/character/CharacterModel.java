@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.character;
@@ -39,7 +39,9 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -66,9 +68,11 @@ public final class CharacterModel extends Model {
     private static final int COSMETICS_BACK_SLOT = 9;
     public static final int GUILD_MENU_SLOT = 26;
 
+    public static final Component SILVERBULL_STAR = Component.literal(" ✮").withStyle(ChatFormatting.AQUA);
+
     private static final DeathScreenBar deathScreenBar = new DeathScreenBar();
 
-    public static final int MOVE_CHECK_FREQUENCY = 10;
+    private static final int MOVE_CHECK_FREQUENCY = 10;
     private int moveCheckTicks;
     private Position currentPosition;
 

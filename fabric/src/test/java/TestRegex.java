@@ -784,13 +784,13 @@ public class TestRegex {
     }
 
     @Test
-    public void TradeMarketPriceMatchFeature_HIGHEST_BUY_PATTERN() {
+    public void TradeMarketModel_PRICE_CHECK_BID_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "HIGHEST_BUY_PATTERN");
         p.shouldMatch("§7Highest Buy Offer: §f806 §8(12²½ 38²)");
     }
 
     @Test
-    public void TradeMarketPriceMatchFeature_LOWEST_SELL_PATTERN() {
+    public void TradeMarketModel_PRICE_CHECK_ASK_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "LOWEST_SELL_PATTERN");
         p.shouldMatch("§7Cheapest Sell Offer: §f806 §8(12²½ 38²)");
     }

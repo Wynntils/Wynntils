@@ -14,8 +14,8 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
+import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
@@ -52,20 +52,13 @@ public class TradeMarketBulkSellFeature extends Feature {
     private int amountToSend = 0;
 
     @SubscribeEvent
-    public void onSellDialogueUpdated(ContainerSetSlotEvent.Pre e) {
+    public void onSellDialogueUpdated(TradeMarketSellDialogueUpdatedEvent e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
-        StyledText amountItemName = StyledText.fromComponent(
-                containerScreen.getMenu().getSlot(AMOUNT_ITEM_SLOT).getItem().getHoverName());
-        if (!amountItemName.equalsString(CLICK_TO_SET_AMOUNT, PartStyle.StyleType.NONE)) return;
-
         String soldItemName = getSoldItemName(containerScreen);
-
         removeSellButtons(containerScreen);
-
         if (soldItemName == null) return;
-
         addSellButtons(containerScreen, soldItemName);
     }
 
