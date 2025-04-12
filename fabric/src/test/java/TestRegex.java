@@ -774,6 +774,18 @@ public class TestRegex {
     }
 
     @Test
+    public void TradeMarketModel_PRICE_CHECK_BID_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_CHECK_BID_PATTERN");
+        p.shouldMatch("§7Highest Buy Offer: §f806 §8(12²½ 38²)");
+    }
+
+    @Test
+    public void TradeMarketModel_PRICE_CHECK_ASK_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_CHECK_ASK_PATTERN");
+        p.shouldMatch("§7Cheapest Sell Offer: §f806 §8(12²½ 38²)");
+    }
+
+    @Test
     public void TradeMarketModel_PRICE_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_PATTERN");
         p.shouldMatch("§7 - §f525§7² §8(8²½ 13²)");
@@ -781,18 +793,6 @@ public class TestRegex {
         p.shouldMatch("§7 - §f8 §7x §f127§7² §8(1²½ 63²)");
         p.shouldMatch("§7 - §f308 §7x §f§m16§7§m²§b ✮ 15§3² §8(15²)");
         p.shouldMatch("§7 - §f308 §7x §f§m16§7§m²§b ✮ 15§3² §8(15²)");
-    }
-
-    @Test
-    public void TradeMarketModel_PRICE_CHECK_BID_PATTERN() {
-        PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "HIGHEST_BUY_PATTERN");
-        p.shouldMatch("§7Highest Buy Offer: §f806 §8(12²½ 38²)");
-    }
-
-    @Test
-    public void TradeMarketModel_PRICE_CHECK_ASK_PATTERN() {
-        PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "LOWEST_SELL_PATTERN");
-        p.shouldMatch("§7Cheapest Sell Offer: §f806 §8(12²½ 38²)");
     }
 
     @Test
