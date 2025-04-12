@@ -15,33 +15,24 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
+import com.wynntils.models.trademarket.TradeMarketModel;
+import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
 import com.wynntils.models.trademarket.type.TradeMarketPriceCheckInfo;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ContainerUtils;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
-import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketPriceMatchFeature extends Feature {
-    private static final StyledText CLICK_TO_SET_PRICE = StyledText.fromString("§a§lSet Price");
-
-    private static final int PRICE_SET_ITEM_SLOT = 28;
-    private static final Component SILVERBULL_STAR = Component.literal(" ✮").withStyle(ChatFormatting.AQUA);
-
     @Persisted
     public final Config<Integer> undercutBy = new Config<>(0);
 
@@ -49,24 +40,12 @@ public class TradeMarketPriceMatchFeature extends Feature {
     private long priceToSend = 0;
 
     @SubscribeEvent
-    public void onSellDialogueUpdated(ContainerSetSlotEvent.Post e) {
-        Managers.TickScheduler.scheduleNextTick(() -> {
-            if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
+    public void onSellDialogueUpdated(TradeMarketSellDialogueUpdatedEvent e){
+        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
+        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
-            if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
-
-            StyledText amountItemName = StyledText.fromComponent(containerScreen
-                    .getMenu()
-                    .getSlot(PRICE_SET_ITEM_SLOT)
-                    .getItem()
-                    .getHoverName());
-
-            if (!amountItemName.equals(CLICK_TO_SET_PRICE)) return;
-
-            removePriceButtons(containerScreen);
-
-            addPriceButtons(containerScreen);
-        });
+        removePriceButtons(containerScreen);
+        addPriceButtons(containerScreen);
     }
 
     @SubscribeEvent
@@ -82,7 +61,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
     }
 
     private void addPriceButtons(ContainerScreen containerScreen) {
-        TradeMarketPriceCheckInfo priceCheckInfo = Models.TradeMarket.getTradeMarketPriceCheckInfo();
+        TradeMarketPriceCheckInfo priceCheckInfo = Models.TradeMarket.getPriceCheckInfo();
 
         int rightPos = containerScreen.leftPos + containerScreen.imageWidth + 1;
 
@@ -105,7 +84,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
                                     .withStyle(ChatFormatting.GRAY)
                                     .append(
                                             Models.Character.isSilverbullSubscriber()
-                                                    ? SILVERBULL_STAR
+                                                    ? CharacterModel.SILVERBULL_STAR
                                                     : Component.empty()))
                             .append(Component.literal("\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
@@ -133,7 +112,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
                                     .withStyle(ChatFormatting.GRAY)
                                     .append(
                                             Models.Character.isSilverbullSubscriber()
-                                                    ? SILVERBULL_STAR
+                                                    ? CharacterModel.SILVERBULL_STAR
                                                     : Component.empty()))
                             .append(Component.literal("\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
@@ -170,7 +149,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
             sendPriceMessage = true;
 
             ContainerUtils.clickOnSlot(
-                    PRICE_SET_ITEM_SLOT,
+                    TradeMarketModel.TM_SELL_PRICE_SLOT,
                     McUtils.containerMenu().containerId,
                     0,
                     McUtils.containerMenu().getItems());

@@ -221,7 +221,7 @@ public class ValuablesProtectionFeature extends Feature {
             if (!warnableItem) return;
 
             int salePrice = Models.TradeMarket.getUnitPrice();
-            int lowestPrice = Models.TradeMarket.getTradeMarketPriceCheckInfo().ask();
+            int lowestPrice = Models.TradeMarket.getPriceCheckInfo().ask();
 
             if (salePrice == -1 || lowestPrice == -1) return;
             slotsToWarn.add(TM_PRICE_SLOT);
