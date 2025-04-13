@@ -1888,7 +1888,7 @@
   "function.wynntils.raidPersonalBestTime.argument.raidName": "Nazwa rajdu, aby uzyskać najlepszy czas",
   "function.wynntils.raidPersonalBestTime.description": "Najszybszy czas potrzebny do pokonania określonego rajdu w milisekundach",
   "function.wynntils.raidPersonalBestTime.name": "Najlepszy czas osobisty rajdu",
-  "function.wynntils.raidRoomTime.argument.roomName": "Typ pokoju, aby uzyskać czas potrzebny do ukończenia. Jeden z WYZWANIE_1, WYZWANIE_2 lub WYZWANIE_3",
+  "function.wynntils.raidRoomTime.argument.roomNum": "Typ pokoju, aby uzyskać czas potrzebny do ukończenia. Jeden z WYZWANIE_1, WYZWANIE_2 lub WYZWANIE_3",
   "function.wynntils.raidRoomTime.description": "Jak długo trwało ukończenie określonego pokoju rajdu w milisekundach",
   "function.wynntils.raidRoomTime.name": "Czas pokoju rajdu",
   "function.wynntils.raidTimeRemaining.description": "Ile czasu pozostało na ukończenie rajdu w sekundach",

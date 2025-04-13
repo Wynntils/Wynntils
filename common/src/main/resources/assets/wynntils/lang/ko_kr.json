@@ -1888,7 +1888,7 @@
   "function.wynntils.raidPersonalBestTime.argument.raidName": "최고 시간을 얻기 위한 레이드 이름",
   "function.wynntils.raidPersonalBestTime.description": "지정된 레이드를 완료하는 데 걸린 가장 빠른 시간(밀리초)",
   "function.wynntils.raidPersonalBestTime.name": "레이드 개인 최고 기록 시간",
-  "function.wynntils.raidRoomTime.argument.roomName": "완료하는 데 걸린 시간을 얻기 위한 방 유형. CHALLENGE_1, CHALLENGE_2 또는 CHALLENGE_3 중 하나",
+  "function.wynntils.raidRoomTime.argument.roomNum": "완료하는 데 걸린 시간을 얻기 위한 방 유형. CHALLENGE_1, CHALLENGE_2 또는 CHALLENGE_3 중 하나",
   "function.wynntils.raidRoomTime.description": "지정된 레이드 방을 완료하는 데 걸린 시간(밀리초)",
   "function.wynntils.raidRoomTime.name": "레이드 방 시간",
   "function.wynntils.raidTimeRemaining.description": "레이드를 완료하는 데 남은 시간(초)",

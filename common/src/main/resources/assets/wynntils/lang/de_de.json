@@ -1891,7 +1891,7 @@
   "function.wynntils.raidPersonalBestTime.argument.raidName": "Der Name des Raids, um die beste Zeit zu erhalten",
   "function.wynntils.raidPersonalBestTime.description": "Die schnellste Zeit, um den angegebenen Raid in Millisekunden zu schlagen",
   "function.wynntils.raidPersonalBestTime.name": "Persönliche Bestzeit im Raid",
-  "function.wynntils.raidRoomTime.argument.roomName": "Der Raumtyp, um die benötigte Zeit zu erhalten. Einer von CHALLENGE_1, CHALLENGE_2 oder CHALLENGE_3",
+  "function.wynntils.raidRoomTime.argument.roomNum": "Der Raumtyp, um die benötigte Zeit zu erhalten. Einer von CHALLENGE_1, CHALLENGE_2 oder CHALLENGE_3",
   "function.wynntils.raidRoomTime.description": "Wie lange es gedauert hat, den angegebenen Raid-Raum in Millisekunden zu vervollständigen",
   "function.wynntils.raidRoomTime.name": "Raid-Raumzeit",
   "function.wynntils.raidTimeRemaining.description": "Wie viel Zeit noch bleibt, um den Raid in Sekunden abzuschließen",

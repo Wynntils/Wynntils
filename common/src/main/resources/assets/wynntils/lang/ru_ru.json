@@ -1902,7 +1902,7 @@
   "function.wynntils.raidPersonalBestTime.argument.raidName": "Название рейда для получения лучшего времени",
   "function.wynntils.raidPersonalBestTime.description": "Самое быстрое время прохождения указанного рейда в миллисекундах",
   "function.wynntils.raidPersonalBestTime.name": "Личное Лучшее Время Рейда",
-  "function.wynntils.raidRoomTime.argument.roomName": "Тип комнаты для получения времени завершения. Один из CHALLENGE_1, CHALLENGE_2 или CHALLENGE_3",
+  "function.wynntils.raidRoomTime.argument.roomNum": "Тип комнаты для получения времени завершения. Один из CHALLENGE_1, CHALLENGE_2 или CHALLENGE_3",
   "function.wynntils.raidRoomTime.description": "Сколько времени потребовалось для завершения указанной комнаты рейда в миллисекундах",
   "function.wynntils.raidRoomTime.name": "Время Комнаты Рейда",
   "function.wynntils.raidTimeRemaining.description": "Сколько времени осталось для завершения рейда в секундах",

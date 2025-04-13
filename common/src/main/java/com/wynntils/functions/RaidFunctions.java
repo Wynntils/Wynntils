@@ -7,8 +7,7 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.models.raid.type.RaidKind;
-import com.wynntils.models.raid.type.RaidRoomType;
+import com.wynntils.models.raid.type.RaidInfo;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
@@ -16,9 +15,11 @@ public class RaidFunctions {
     public static class CurrentRaidFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            RaidKind currentRaid = Models.Raid.getCurrentRaid();
+            RaidInfo raidInfo = Models.Raid.getCurrentRaid();
 
-            return currentRaid == null ? "" : currentRaid.getName();
+            if (raidInfo == null) return "";
+
+            return raidInfo.getRaidKind().getRaidName();
         }
 
         @Override
@@ -27,19 +28,10 @@ public class RaidFunctions {
         }
     }
 
-    public static class CurrentRaidRoomFunction extends Function<String> {
+    public static class CurrentRaidRoomNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return "";
-            // Room should never be null if the raid is not but just in case the tracking fails
-            if (Models.Raid.getCurrentRoom() == null) return "";
-
-            return Models.Raid.getCurrentRoom().name();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("raid_room");
+            return Models.Raid.getCurrentRoomName();
         }
     }
 
@@ -75,8 +67,6 @@ public class RaidFunctions {
         @Override
         public Long getValue(FunctionArguments arguments) {
             if (Models.Raid.getCurrentRaid() == null) return -1L;
-            // Room should never be null if the raid is not but just in case the tracking fails
-            if (Models.Raid.getCurrentRoom() == null) return -1L;
 
             return Models.Raid.currentRoomTime();
         }
@@ -86,10 +76,26 @@ public class RaidFunctions {
         @Override
         public Long getValue(FunctionArguments arguments) {
             if (Models.Raid.getCurrentRaid() == null) return -1L;
-            // Room should never be null if the raid is not but just in case the tracking fails
-            if (Models.Raid.getCurrentRoom() == null) return -1L;
 
             return Models.Raid.getCurrentRoomDamage();
+        }
+    }
+
+    public static class CurrentRaidChallengeCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return -1;
+
+            return Models.Raid.getRaidChallengeCount();
+        }
+    }
+
+    public static class CurrentRaidBossCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return -1;
+
+            return Models.Raid.getRaidBossCount();
         }
     }
 
@@ -109,23 +115,37 @@ public class RaidFunctions {
         }
     }
 
-    public static class RaidRoomTimeFunction extends Function<Long> {
+    public static class RaidRoomNameFunction extends Function<String> {
         @Override
-        public Long getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1L;
+        public String getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return "";
 
-            RaidRoomType roomType =
-                    RaidRoomType.fromName(arguments.getArgument("roomName").getStringValue());
+            int roomNum = arguments.getArgument("roomNum").getIntegerValue();
 
-            if (roomType == null) return -1L;
-
-            return Models.Raid.getRoomTime(roomType);
+            return Models.Raid.getRoomName(roomNum);
         }
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomName", String.class, null)));
+                    List.of(new FunctionArguments.Argument<>("roomNum", Integer.class, null)));
+        }
+    }
+
+    public static class RaidRoomTimeFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return -1L;
+
+            int roomNum = arguments.getArgument("roomNum").getIntegerValue();
+
+            return Models.Raid.getRoomTime(roomNum);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("roomNum", Integer.class, null)));
         }
     }
 
@@ -134,30 +154,56 @@ public class RaidFunctions {
         public Long getValue(FunctionArguments arguments) {
             if (Models.Raid.getCurrentRaid() == null) return -1L;
 
-            RaidRoomType roomType =
-                    RaidRoomType.fromName(arguments.getArgument("roomName").getStringValue());
+            int roomNum = arguments.getArgument("roomNum").getIntegerValue();
 
-            if (roomType == null) return -1L;
-
-            return Models.Raid.getRoomDamage(roomType);
+            return Models.Raid.getRoomDamage(roomNum);
         }
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomName", String.class, null)));
+                    List.of(new FunctionArguments.Argument<>("roomNum", Integer.class, null)));
+        }
+    }
+
+    public static class RaidHasRoomFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return false;
+
+            int roomNum = arguments.getArgument("roomNum").getIntegerValue();
+
+            return Models.Raid.raidHasRoom(roomNum);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("roomNum", Integer.class, null)));
+        }
+    }
+
+    public static class RaidIsBossRoomFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return false;
+
+            int roomNum = arguments.getArgument("roomNum").getIntegerValue();
+
+            return Models.Raid.isBossRoom(roomNum);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("roomNum", Integer.class, null)));
         }
     }
 
     public static class RaidPersonalBestTimeFunction extends Function<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
-            RaidKind raidKind =
-                    RaidKind.fromName(arguments.getArgument("raidName").getStringValue());
-
-            if (raidKind == null) return -1L;
-
-            return Models.Raid.getRaidBestTime(raidKind);
+            return Models.Raid.getRaidBestTime(arguments.getArgument("raidName").getStringValue());
         }
 
         @Override

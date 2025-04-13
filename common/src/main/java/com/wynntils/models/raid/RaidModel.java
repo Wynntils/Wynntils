@@ -26,9 +26,14 @@ import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
+import com.wynntils.models.raid.raids.NestOfTheGrootslangsRaid;
+import com.wynntils.models.raid.raids.OrphionsNexusOfLightRaid;
+import com.wynntils.models.raid.raids.RaidKind;
+import com.wynntils.models.raid.raids.TheCanyonColossusRaid;
+import com.wynntils.models.raid.raids.TheNamelessAnomalyRaid;
 import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
-import com.wynntils.models.raid.type.RaidKind;
-import com.wynntils.models.raid.type.RaidRoomType;
+import com.wynntils.models.raid.type.RaidInfo;
+import com.wynntils.models.raid.type.RaidRoomInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
@@ -36,7 +41,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,37 +55,26 @@ import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class RaidModel extends Model {
-    public static final int MAX_CHALLENGES = 3;
-    public static final int ROOM_DAMAGES_COUNT = 4;
-    public static final int ROOM_TIMERS_COUNT = 5;
+    // These should be set to whatever the highest amount in any raid is.
+    public static final Integer MAXIMUM_CHALLENGE_ROOMS = 3;
+    public static final Integer MAXIMUM_BOSS_ROOMS = 2;
+
     private static final Pattern CHALLENGE_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC5F§a§lChallenge Completed");
     private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
     private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
 
+    private static final int RAID_REWARD_CHEST_ASPECT_SLOTS_START = 11;
+    private static final int RAID_REWARD_CHEST_ASPECT_SLOTS_END = 15;
+    private static final int RAID_REWARD_CHEST_REWARD_SLOTS_START = 27;
+    private static final int RAID_REWARD_CHEST_REWARD_SLOTS_END = 53;
     private static final Pattern REWARD_PULLS_PATTERN = Pattern.compile("§.(\\d+)§7 Reward Pulls");
     private static final Pattern ASPECT_PULLS_PATTERN = Pattern.compile("§.(\\d+)§7 Aspect Pulls");
 
     private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
             "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff((§o)?(\\w+))§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
 
-    private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
-
     @Persisted
     private final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
-
-    private final Map<RaidRoomType, Long> roomTimers = new EnumMap<>(RaidRoomType.class);
-    private final Map<RaidRoomType, Long> roomDamages = new EnumMap<>(RaidRoomType.class);
-
-    private Map<String, List<String>> partyRaidBuffs = new HashMap<>();
-
-    private boolean completedCurrentChallenge = false;
-    private CappedValue challenges = CappedValue.EMPTY;
-    private int timeLeft = 0;
-    private long raidStartTime;
-    private long roomStartTime;
-    private long currentRoomDamage = 0;
-    private RaidKind currentRaid = null;
-    private RaidRoomType currentRoom = null;
 
     @Persisted
     private final Storage<Integer> numRaidsWithoutMythicAspect = new Storage<>(0);
@@ -95,25 +88,33 @@ public class RaidModel extends Model {
     @Persisted
     private final Storage<Integer> numRewardPullsWithoutMythicTome = new Storage<>(0);
 
-    public static final int RAID_REWARD_CHEST_ASPECT_SLOTS_START = 11;
-    public static final int RAID_REWARD_CHEST_ASPECT_SLOTS_END = 15;
-    public static final int RAID_REWARD_CHEST_REWARD_SLOTS_START = 27;
-    public static final int RAID_REWARD_CHEST_REWARD_SLOTS_END = 53;
+    private static final List<RaidKind> RAIDS = new ArrayList<>();
+    private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
+
+    private Map<String, List<String>> partyRaidBuffs = new HashMap<>();
 
     private int expectedNumAspectPulls = -1;
     private int expectedNumRewardPulls = -1;
     private int foundNumRewardPulls;
+    private int expectedRaidRewardChestId = -2;
     private boolean foundMythicTome;
     private boolean foundMythicAspect;
     private boolean rewardChestIsOpened = false;
-
     private boolean hasProcessedRewards = true;
-    private int expectedRaidRewardChestId = -2;
+
+    private boolean completedCurrentChallenge = false;
+    private boolean inBuffRoom = false;
+    private boolean inIntermissionRoom = false;
+    private CappedValue challenges = CappedValue.EMPTY;
+    private int timeLeft = 0;
+    private RaidInfo currentRaid;
 
     public RaidModel() {
         super(List.of());
 
         Handlers.Scoreboard.addPart(RAID_SCOREBOARD_PART);
+
+        registerRaids();
     }
 
     @SubscribeEvent
@@ -122,12 +123,10 @@ public class RaidModel extends Model {
         StyledText styledText = StyledText.fromComponent(component);
 
         if (currentRaid == null) {
-            currentRaid = RaidKind.fromTitle(styledText);
+            RaidKind raidKind = getRaidFromTitle(styledText);
 
-            if (currentRaid != null) {
-                // In a raid, set to intro room and start timer
-                currentRoom = RaidRoomType.INTRO;
-                raidStartTime = System.currentTimeMillis();
+            if (raidKind != null) {
+                currentRaid = new RaidInfo(raidKind);
                 completedCurrentChallenge = false;
             }
         } else if (styledText.matches(RAID_COMPLETED_PATTERN)) {
@@ -147,13 +146,35 @@ public class RaidModel extends Model {
             hasProcessedRewards = false;
             return;
         }
+
         Matcher aspectPullMatcher = styledText.getMatcher(ASPECT_PULLS_PATTERN);
         if (aspectPullMatcher.find()) {
             expectedNumAspectPulls = Integer.parseInt(aspectPullMatcher.group(1));
             return;
         }
 
-        if (inBuffRoom()) {
+        if (currentRaid == null) {
+            if (styledText.contains("nog")) {
+                currentRaid = new RaidInfo(new NestOfTheGrootslangsRaid());
+            }
+            if (styledText.contains("nol")) {
+                currentRaid = new RaidInfo(new OrphionsNexusOfLightRaid());
+            }
+            if (styledText.contains("tcc")) {
+                currentRaid = new RaidInfo(new TheCanyonColossusRaid());
+            }
+            if (styledText.contains("tna")) {
+                currentRaid = new RaidInfo(new TheNamelessAnomalyRaid());
+            }
+
+            return;
+        } else {
+            if (styledText.contains("endraid")) {
+                currentRaid = null;
+            }
+        }
+
+        if (inBuffRoom) {
             Matcher matcher = event.getOriginalStyledText().stripAlignment().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
             if (matcher.matches()) {
                 String playerName = matcher.group(4);
@@ -170,13 +191,15 @@ public class RaidModel extends Model {
                         .computeIfAbsent(playerName, k -> new ArrayList<>())
                         .add(buff);
             }
+
+            return;
         }
 
-        if (!inChallengeRoom()) return;
+        if (inIntermissionRoom) return;
 
         // One challenge in Nexus of Light does not display the scoreboard upon challenge completion so we have to check
         // for the chat message
-        if (event.getStyledText().matches(CHALLENGE_COMPLETED_PATTERN)) {
+        if (styledText.matches(CHALLENGE_COMPLETED_PATTERN)) {
             completeChallenge();
         }
     }
@@ -184,9 +207,10 @@ public class RaidModel extends Model {
     @SubscribeEvent
     public void onDamageDealtEvent(DamageDealtEvent event) {
         if (currentRaid == null) return;
+        if (inIntermissionRoom || inBuffRoom) return;
 
-        currentRoomDamage +=
-                event.getDamages().values().stream().mapToLong(d -> d).sum();
+        currentRaid.addDamageToCurrentRoom(
+                event.getDamages().values().stream().mapToLong(d -> d).sum());
     }
 
     @SubscribeEvent
@@ -194,12 +218,9 @@ public class RaidModel extends Model {
         // Only want to send the message once the user has returned to an actual world
         if (currentRaid != null && event.getNewState() == WorldState.WORLD) {
             currentRaid = null;
-            currentRoom = null;
             completedCurrentChallenge = false;
             timeLeft = 0;
             challenges = CappedValue.EMPTY;
-            roomTimers.clear();
-            roomDamages.clear();
             partyRaidBuffs.clear();
 
             McUtils.sendMessageToClient(Component.literal(
@@ -295,6 +316,264 @@ public class RaidModel extends Model {
         rewardChestIsOpened = false;
     }
 
+    public void tryEnterChallengeIntermission() {
+        if (currentRaid == null) return;
+        if (inIntermissionRoom) return;
+
+        inBuffRoom = false;
+        inIntermissionRoom = true;
+    }
+
+    public void tryStartChallenge(StyledText challengeLine) {
+        if (currentRaid == null) return;
+
+        int challengeNum = currentRaid.completedChallengeCount() + 1;
+
+        String roomName =
+                currentRaid.getRaidKind().getChallengeName(challengeNum, challengeLine.getStringWithoutFormatting());
+
+        if (roomName.isEmpty()) return;
+
+        inIntermissionRoom = false;
+        currentRaid.startChallenge(challengeNum, roomName);
+
+        WynntilsMod.postEvent(new RaidChallengeEvent.Started(currentRaid));
+    }
+
+    public void completeChallenge() {
+        if (!completedCurrentChallenge) {
+            currentRaid.completeCurrentChallenge();
+
+            completedCurrentChallenge = true;
+
+            WynntilsMod.postEvent(new RaidChallengeEvent.Completed(currentRaid));
+        }
+    }
+
+    // Only check for entry to a buff room once after the challenge has been completed.
+    public void enterBuffRoom() {
+        if (currentRaid == null) return;
+        if (inBuffRoom) return;
+
+        if (completedCurrentChallenge) {
+            completedCurrentChallenge = false;
+
+            inIntermissionRoom = false;
+            inBuffRoom = true;
+        }
+    }
+
+    public void failedRaid() {
+        if (currentRaid == null) return;
+
+        WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid));
+
+        currentRaid = null;
+        completedCurrentChallenge = false;
+    }
+
+    public RaidInfo getCurrentRaid() {
+        return currentRaid;
+    }
+
+    public List<String> getRaidMajorIds(String playerName) {
+        if (!partyRaidBuffs.containsKey(playerName)) return List.of();
+
+        List<String> rawBuffNames = partyRaidBuffs.get(playerName);
+        List<String> majorIds = new ArrayList<>();
+
+        for (String rawBuffName : rawBuffNames) {
+            String[] buffParts = rawBuffName.split(" ");
+            if (buffParts.length < 2) continue;
+
+            String buffName = buffParts[0];
+            int buffTier = MathUtils.integerFromRoman(buffParts[1]);
+
+            String majorId = this.currentRaid.getRaidKind().majorIdFromBuff(buffName, buffTier);
+            if (majorId == null) continue;
+
+            majorIds.add(majorId);
+        }
+
+        return majorIds;
+    }
+
+    public String getCurrentRoomName() {
+        if (currentRaid == null || inIntermissionRoom || inBuffRoom) return "";
+
+        RaidRoomInfo currentRoom = currentRaid.getCurrentRoom();
+
+        if (currentRoom == null) return "";
+
+        return currentRoom.getRoomName();
+    }
+
+    public String getRoomName(int roomNum) {
+        if (currentRaid == null) return "";
+
+        if (isBossRoom(roomNum)) {
+            return currentRaid.getRaidKind().getBossName(roomNum);
+        } else {
+            RaidRoomInfo room = currentRaid.getRoomByNumber(roomNum);
+
+            if (room == null) return "";
+
+            return room.getRoomName();
+        }
+    }
+
+    public long currentRaidTime() {
+        if (currentRaid == null) return -1L;
+
+        return currentRaid.getTimeInRaid();
+    }
+
+    public long getIntermissionTime() {
+        if (currentRaid == null) return -1L;
+
+        return currentRaid.getIntermissionTime();
+    }
+
+    public long currentRoomTime() {
+        if (currentRaid == null || currentRaid.getCurrentRoom() == null) return -1L;
+
+        return currentRaid.getCurrentRoom().getRoomTotalTime();
+    }
+
+    public long getRoomTime(int roomNum) {
+        if (currentRaid == null) return -1L;
+
+        RaidRoomInfo roomInfo = currentRaid.getRoomByNumber(roomNum);
+        if (roomInfo == null) return -1L;
+
+        return roomInfo.getRoomTotalTime();
+    }
+
+    public long getRaidDamage() {
+        if (currentRaid == null) return -1L;
+
+        return currentRaid.getRaidDamage();
+    }
+
+    public long getCurrentRoomDamage() {
+        if (currentRaid == null || currentRaid.getCurrentRoom() == null) return -1L;
+
+        return currentRaid.getCurrentRoom().getRoomDamage();
+    }
+
+    public long getRoomDamage(int roomNum) {
+        if (currentRaid == null) return -1L;
+
+        RaidRoomInfo roomInfo = currentRaid.getRoomByNumber(roomNum);
+        if (roomInfo == null) return -1L;
+
+        return roomInfo.getRoomDamage();
+    }
+
+    public int getRaidChallengeCount() {
+        if (currentRaid == null) return -1;
+
+        return currentRaid.getRaidKind().getChallengeCount();
+    }
+
+    public boolean raidHasRoom(int roomNum) {
+        if (currentRaid == null || roomNum < 1) return false;
+
+        return roomNum <= currentRaid.getRaidKind().getChallengeCount();
+    }
+
+    public int getRaidBossCount() {
+        if (currentRaid == null) return -1;
+
+        return currentRaid.getRaidKind().getBossCount();
+    }
+
+    public boolean isBossRoom(int roomNum) {
+        if (currentRaid == null || roomNum < 1) return false;
+
+        int challengeCount = currentRaid.getRaidKind().getChallengeCount();
+
+        if (roomNum <= challengeCount) return false;
+
+        return roomNum <= currentRaid.getRaidKind().getBossCount() + challengeCount;
+    }
+
+    public void setTimeLeft(int seconds) {
+        timeLeft = seconds;
+    }
+
+    public int getTimeLeft() {
+        return timeLeft;
+    }
+
+    public void setChallenges(CappedValue challenges) {
+        this.challenges = challenges;
+    }
+
+    public CappedValue getChallenges() {
+        return challenges;
+    }
+
+    public int getRaidsWithoutMythicAspect() {
+        return numRaidsWithoutMythicAspect.get();
+    }
+
+    public int getAspectPullsWithoutMythicAspect() {
+        return numAspectPullsWithoutMythicAspect.get();
+    }
+
+    public int getRaidsWithoutMythicTome() {
+        return numRaidsWithoutMythicTome.get();
+    }
+
+    public int getRewardPullsWithoutMythicTome() {
+        return numRewardPullsWithoutMythicTome.get();
+    }
+
+    public long getRaidBestTime(String raidName) {
+        for (RaidKind raidKind : RAIDS) {
+            if (raidKind.getRaidName().equalsIgnoreCase(raidName)
+                    || raidKind.getAbbreviation().equalsIgnoreCase(raidName)) {
+                return bestTimes.get().getOrDefault(raidKind.getRaidName(), -1L);
+            }
+        }
+
+        return -1L;
+    }
+
+    private void completeRaid() {
+        if (currentRaid == null) return;
+
+        currentRaid.completeCurrentChallenge();
+
+        WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid));
+
+        checkForNewPersonalBest();
+
+        currentRaid = null;
+        completedCurrentChallenge = false;
+    }
+
+    private void checkForNewPersonalBest() {
+        long timeInRaid = currentRaid.getTimeInRaid() - currentRaid.getIntermissionTime();
+
+        if (bestTimes.get().get(currentRaid.getRaidKind().getRaidName()) == null) {
+            bestTimes.get().put(currentRaid.getRaidKind().getRaidName(), timeInRaid);
+            bestTimes.touched();
+        } else {
+            long currentBestTime = bestTimes.get().get(currentRaid.getRaidKind().getRaidName());
+
+            // New time is faster
+            if (currentBestTime > timeInRaid) {
+                bestTimes.get().put(currentRaid.getRaidKind().getRaidName(), timeInRaid);
+                bestTimes.touched();
+
+                WynntilsMod.postEvent(
+                        new RaidNewBestTimeEvent(currentRaid.getRaidKind().getRaidName(), timeInRaid));
+            }
+        }
+    }
+
     private void processAspectItemFind(ItemStack itemStack, int slotId) {
         if (itemStack.getItem() == Items.AIR) return;
 
@@ -343,289 +622,21 @@ public class RaidModel extends Model {
         }
     }
 
-    // This is called when the "Go to the exit" scoreboard line is displayed.
-    // If we are in the final buff room when this is shown, then we are now in the
-    // boss intermission.
-    // Otherwise, if we are in the intro or another buff room then we are now in an
-    // instructions room.
-    public void tryEnterChallengeIntermission() {
-        if (currentRoom == RaidRoomType.BUFF_3) {
-            currentRoom = RaidRoomType.BOSS_INTERMISSION;
-        } else if (inBuffRoom() || currentRoom == RaidRoomType.INTRO) {
-            currentRoom = RaidRoomType.values()[currentRoom.ordinal() + 1];
-        }
+    private RaidKind getRaidFromTitle(StyledText title) {
+        return RAIDS.stream()
+                .filter(raid -> raid.getEntryTitle().equals(title))
+                .findFirst()
+                .orElse(null);
     }
 
-    // Since all challenges use a different instructions message the easiest way to check for a challenge
-    // beginning is from the scoreboard not showing any of the static messages and being in an instructions room.
-    // At the time of making this there is no consistent way to check for entering a boss fight either, so if we
-    // are in the boss intermission and this is called, then we have entered the boss fight.
-    // So this method will be called when no other patterns matched the first line of the raid scoreboard segment.
-    public void tryStartChallenge() {
-        if (inInstructionsRoom()) {
-            currentRoom = RaidRoomType.values()[currentRoom.ordinal() + 1];
-            WynntilsMod.postEvent(new RaidChallengeEvent.Started(currentRaid, currentRoom));
-            roomStartTime = System.currentTimeMillis();
-        }
+    private void registerRaids() {
+        registerRaid(new NestOfTheGrootslangsRaid());
+        registerRaid(new OrphionsNexusOfLightRaid());
+        registerRaid(new TheCanyonColossusRaid());
+        registerRaid(new TheNamelessAnomalyRaid());
     }
 
-    // This will only end the timer for the current room, but we are still in the room so currentRoom isn't updated.
-    // It will be called multiple times after completing a challenge so we use completedCurrentChallenge to only
-    // post the event and save timers once.
-    public void completeChallenge() {
-        if (!completedCurrentChallenge && !inBossFight()) {
-            long roomTime = System.currentTimeMillis() - roomStartTime;
-            roomTimers.put(currentRoom, roomTime);
-            roomStartTime = System.currentTimeMillis();
-
-            WynntilsMod.postEvent(new RaidChallengeEvent.Completed(currentRaid, currentRoom));
-
-            completedCurrentChallenge = true;
-        }
-    }
-
-    // Only check for entry to a buff room once after the challenge has been completed.
-    public void enterBuffRoom() {
-        if (completedCurrentChallenge) {
-            // We put the damage dealt here instead of in completeChallenge as you are still in
-            // the challenge room and can deal damage until you enter the buff room
-            roomDamages.put(currentRoom, currentRoomDamage);
-            currentRoomDamage = 0;
-
-            currentRoom = RaidRoomType.values()[currentRoom.ordinal() + 1];
-
-            completedCurrentChallenge = false;
-        }
-    }
-
-    public void startBossFight() {
-        if (currentRoom == RaidRoomType.BOSS_INTERMISSION) {
-            currentRoom = RaidRoomType.BOSS_FIGHT;
-            WynntilsMod.postEvent(new RaidChallengeEvent.Started(currentRaid, currentRoom));
-            roomStartTime = System.currentTimeMillis();
-        }
-    }
-
-    public void completeRaid() {
-        if (currentRaid == null) return;
-
-        // Add the boss time to room timers
-        long bossTime = System.currentTimeMillis() - roomStartTime;
-        roomTimers.put(RaidRoomType.BOSS_FIGHT, bossTime);
-
-        WynntilsMod.postEvent(new RaidEndedEvent.Completed(
-                currentRaid, getAllRoomTimes(), currentRaidTime(), getAllRoomDamages(), getRaidDamage()));
-
-        // Need to add boss time to get correct intermission time since
-        // currentRoom will still be boss room when getIntermissionTime() is called
-        checkForNewPersonalBest(
-                currentRaid, currentRaidTime() - (getIntermissionTime() + getRoomTime(RaidRoomType.BOSS_FIGHT)));
-
-        currentRaid = null;
-        currentRoom = null;
-        completedCurrentChallenge = false;
-        timeLeft = 0;
-        currentRoomDamage = 0;
-        challenges = CappedValue.EMPTY;
-        roomTimers.clear();
-        roomDamages.clear();
-        partyRaidBuffs.clear();
-    }
-
-    public void failedRaid() {
-        if (currentRaid == null) return;
-
-        WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid, getAllRoomTimes(), currentRaidTime()));
-
-        currentRaid = null;
-        currentRoom = null;
-        currentRoomDamage = 0;
-        completedCurrentChallenge = false;
-        timeLeft = 0;
-        challenges = CappedValue.EMPTY;
-        roomTimers.clear();
-        roomDamages.clear();
-        partyRaidBuffs.clear();
-    }
-
-    public void setTimeLeft(int seconds) {
-        timeLeft = seconds;
-    }
-
-    public int getTimeLeft() {
-        return timeLeft;
-    }
-
-    public void setChallenges(CappedValue challenges) {
-        this.challenges = challenges;
-    }
-
-    public CappedValue getChallenges() {
-        return challenges;
-    }
-
-    public long getRaidBestTime(RaidKind raidKind) {
-        return bestTimes.get().getOrDefault(raidKind.getName(), -1L);
-    }
-
-    public RaidKind getCurrentRaid() {
-        return currentRaid;
-    }
-
-    public List<String> getRaidMajorIds(String playerName) {
-        if (!partyRaidBuffs.containsKey(playerName)) return List.of();
-
-        List<String> rawBuffNames = partyRaidBuffs.get(playerName);
-        List<String> majorIds = new ArrayList<>();
-
-        for (String rawBuffName : rawBuffNames) {
-            String[] buffParts = rawBuffName.split(" ");
-            if (buffParts.length < 2) continue;
-
-            String buffName = buffParts[0];
-            int buffTier = MathUtils.integerFromRoman(buffParts[1]);
-
-            String majorId = this.currentRaid.majorIdFromBuff(buffName, buffTier);
-            if (majorId == null) continue;
-
-            majorIds.add(majorId);
-        }
-
-        return majorIds;
-    }
-
-    public RaidRoomType getCurrentRoom() {
-        return currentRoom;
-    }
-
-    public long getRoomTime(RaidRoomType roomType) {
-        if (roomType == currentRoom && !completedCurrentChallenge) {
-            return currentRoomTime();
-        }
-
-        return roomTimers.getOrDefault(roomType, -1L);
-    }
-
-    public long currentRaidTime() {
-        return System.currentTimeMillis() - raidStartTime;
-    }
-
-    public long currentRoomTime() {
-        return System.currentTimeMillis() - roomStartTime;
-    }
-
-    public long getIntermissionTime() {
-        long currentTime = System.currentTimeMillis();
-        long timeSpentInChallenges = 0;
-
-        for (long time : roomTimers.values()) {
-            timeSpentInChallenges += time;
-        }
-
-        long intermissionTime = currentTime - raidStartTime - timeSpentInChallenges;
-
-        if ((inChallengeRoom() && !completedCurrentChallenge) || currentRoom == RaidRoomType.BOSS_FIGHT) {
-            intermissionTime -= (currentTime - roomStartTime);
-        }
-
-        return intermissionTime;
-    }
-
-    public long getRaidDamage() {
-        return currentRoomDamage
-                + roomDamages.values().stream().mapToLong(d -> d).sum();
-    }
-
-    public long getRoomDamage(RaidRoomType roomType) {
-        if (roomType == currentRoom) {
-            return getCurrentRoomDamage();
-        }
-
-        return roomDamages.getOrDefault(roomType, -1L);
-    }
-
-    public long getCurrentRoomDamage() {
-        return currentRoomDamage;
-    }
-
-    public int getRaidsWithoutMythicAspect() {
-        return numRaidsWithoutMythicAspect.get();
-    }
-
-    public int getAspectPullsWithoutMythicAspect() {
-        return numAspectPullsWithoutMythicAspect.get();
-    }
-
-    public int getRaidsWithoutMythicTome() {
-        return numRaidsWithoutMythicTome.get();
-    }
-
-    public int getRewardPullsWithoutMythicTome() {
-        return numRewardPullsWithoutMythicTome.get();
-    }
-
-    private boolean inInstructionsRoom() {
-        return currentRoom == RaidRoomType.INSTRUCTIONS_1
-                || currentRoom == RaidRoomType.INSTRUCTIONS_2
-                || currentRoom == RaidRoomType.INSTRUCTIONS_3;
-    }
-
-    private boolean inChallengeRoom() {
-        return currentRoom == RaidRoomType.CHALLENGE_1
-                || currentRoom == RaidRoomType.CHALLENGE_2
-                || currentRoom == RaidRoomType.CHALLENGE_3;
-    }
-
-    private boolean inBuffRoom() {
-        return currentRoom == RaidRoomType.BUFF_1
-                || currentRoom == RaidRoomType.BUFF_2
-                || currentRoom == RaidRoomType.BUFF_3;
-    }
-
-    private boolean inBossFight() {
-        return currentRoom == RaidRoomType.BOSS_FIGHT;
-    }
-
-    private List<Long> getAllRoomTimes() {
-        List<Long> allRoomTimes = new ArrayList<>();
-
-        // Order is challenge 1, 2, 3, boss, intermission
-        allRoomTimes.add(getRoomTime(RaidRoomType.CHALLENGE_1));
-        allRoomTimes.add(getRoomTime(RaidRoomType.CHALLENGE_2));
-        allRoomTimes.add(getRoomTime(RaidRoomType.CHALLENGE_3));
-        allRoomTimes.add(getRoomTime(RaidRoomType.BOSS_FIGHT));
-        // Need to add boss time to get correct intermission time since
-        // currentRoom will still be boss room when getIntermissionTime() is called
-        allRoomTimes.add(getIntermissionTime() + getRoomTime(RaidRoomType.BOSS_FIGHT));
-
-        return allRoomTimes;
-    }
-
-    private List<Long> getAllRoomDamages() {
-        List<Long> allRoomDamages = new ArrayList<>();
-
-        allRoomDamages.add(getRoomDamage(RaidRoomType.CHALLENGE_1));
-        allRoomDamages.add(getRoomDamage(RaidRoomType.CHALLENGE_2));
-        allRoomDamages.add(getRoomDamage(RaidRoomType.CHALLENGE_3));
-        allRoomDamages.add(getRoomDamage(RaidRoomType.BOSS_FIGHT));
-
-        return allRoomDamages;
-    }
-
-    private void checkForNewPersonalBest(RaidKind raidKind, long time) {
-        if (bestTimes.get().get(raidKind.getName()) == null) {
-            bestTimes.get().put(raidKind.getName(), time);
-            bestTimes.touched();
-        } else {
-            long currentBestTime = bestTimes.get().get(raidKind.getName());
-
-            // New time is faster
-            if (currentBestTime > time) {
-                bestTimes.get().put(raidKind.getName(), time);
-                bestTimes.touched();
-
-                WynntilsMod.postEvent(new RaidNewBestTimeEvent(raidKind, time));
-            }
-        }
+    private void registerRaid(RaidKind raidKind) {
+        RAIDS.add(raidKind);
     }
 }

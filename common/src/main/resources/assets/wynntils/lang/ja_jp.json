@@ -1888,7 +1888,7 @@
   "function.wynntils.raidPersonalBestTime.argument.raidName": "ベストタイムを取得するためのレイド名",
   "function.wynntils.raidPersonalBestTime.description": "指定されたレイドをクリアするための最速時間（ミリ秒）",
   "function.wynntils.raidPersonalBestTime.name": "レイド個人ベストタイム",
-  "function.wynntils.raidRoomTime.argument.roomName": "完了するための時間を取得する部屋のタイプ。CHALLENGE_1、CHALLENGE_2、CHALLENGE_3のいずれか",
+  "function.wynntils.raidRoomTime.argument.roomNum": "完了するための時間を取得する部屋のタイプ。CHALLENGE_1、CHALLENGE_2、CHALLENGE_3のいずれか",
   "function.wynntils.raidRoomTime.description": "指定されたレイドルームを完了するのにかかった時間（ミリ秒）",
   "function.wynntils.raidRoomTime.name": "レイドルーム時間",
   "function.wynntils.raidTimeRemaining.description": "レイドを完了するまでの残り時間（秒）",

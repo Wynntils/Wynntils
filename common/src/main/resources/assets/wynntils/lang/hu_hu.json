@@ -1888,7 +1888,7 @@
   "function.wynntils.raidPersonalBestTime.argument.raidName": "A raid neve, amelyhez a legjobb időt szeretnéd megkapni",
   "function.wynntils.raidPersonalBestTime.description": "A leggyorsabb idő, amely alatt legyőzted a megadott raid-et milliszekundumban",
   "function.wynntils.raidPersonalBestTime.name": "Raid személyes legjobb idő",
-  "function.wynntils.raidRoomTime.argument.roomName": "A szobatípus, amelyhez az időt szeretnéd megkapni. Egy a következők közül: KIHÍVА́S_1, KIHÍVА́S_2 vagy KIHÍVА́S_3",
+  "function.wynntils.raidRoomTime.argument.roomNum": "A szobatípus, amelyhez az időt szeretnéd megkapni. Egy a következők közül: KIHÍVА́S_1, KIHÍVА́S_2 vagy KIHÍVА́S_3",
   "function.wynntils.raidRoomTime.description": "Mennyi ideig tartott a megadott raid szoba teljesítése milliszekundumban",
   "function.wynntils.raidRoomTime.name": "Raid szoba idő",
   "function.wynntils.raidTimeRemaining.description": "Mennyi idő van hátra a raid teljesítéséhez másodpercben",

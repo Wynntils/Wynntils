@@ -1888,7 +1888,7 @@
   "function.wynntils.raidPersonalBestTime.argument.raidName": "獲取最佳時間的突襲名稱",
   "function.wynntils.raidPersonalBestTime.description": "完成指定突襲的最快時間（毫秒）",
   "function.wynntils.raidPersonalBestTime.name": "突襲個人最佳時間",
-  "function.wynntils.raidRoomTime.argument.roomName": "獲取完成時間的房間類型。CHALLENGE_1、CHALLENGE_2或CHALLENGE_3之一",
+  "function.wynntils.raidRoomTime.argument.roomNum": "獲取完成時間的房間類型。CHALLENGE_1、CHALLENGE_2或CHALLENGE_3之一",
   "function.wynntils.raidRoomTime.description": "完成指定突襲房間所需的時間（毫秒）",
   "function.wynntils.raidRoomTime.name": "突襲房間時間",
   "function.wynntils.raidTimeRemaining.description": "完成突襲所剩的時間（秒）",

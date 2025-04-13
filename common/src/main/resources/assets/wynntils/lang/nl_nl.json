@@ -1888,7 +1888,7 @@
   "function.wynntils.raidPersonalBestTime.argument.raidName": "De naam van de raid om de beste tijd voor te krijgen",
   "function.wynntils.raidPersonalBestTime.description": "De snelste tijd die nodig was om de opgegeven raid te verslaan in milliseconden",
   "function.wynntils.raidPersonalBestTime.name": "Raid persoonlijke beste tijd",
-  "function.wynntils.raidRoomTime.argument.roomName": "Het kamertype om de tijd voor te krijgen. Een van UITDAGING_1, UITDAGING_2 of UITDAGING_3",
+  "function.wynntils.raidRoomTime.argument.roomNum": "Het kamertype om de tijd voor te krijgen. Een van UITDAGING_1, UITDAGING_2 of UITDAGING_3",
   "function.wynntils.raidRoomTime.description": "Hoe lang het duurde om de opgegeven raid kamer te voltooien in milliseconden",
   "function.wynntils.raidRoomTime.name": "Raid kamer tijd",
   "function.wynntils.raidTimeRemaining.description": "Hoeveel tijd er nog over is om de raid te voltooien in seconden",

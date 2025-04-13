@@ -1918,7 +1918,7 @@
   "function.wynntils.raidPersonalBestTime.argument.raidName": "Namnet på raiden för att få bästa tid för",
   "function.wynntils.raidPersonalBestTime.description": "Den snabbaste tiden att klara den angivna raiden i millisekunder",
   "function.wynntils.raidPersonalBestTime.name": "Personbästa Raidtid",
-  "function.wynntils.raidRoomTime.argument.roomName": "Rumstypen för att få tiden det tog att slutföra. En av CHALLENGE_1, CHALLENGE_2 eller CHALLENGE_3",
+  "function.wynntils.raidRoomTime.argument.roomNum": "Rumstypen för att få tiden det tog att slutföra. En av CHALLENGE_1, CHALLENGE_2 eller CHALLENGE_3",
   "function.wynntils.raidRoomTime.description": "Hur lång tid det tog att slutföra det angivna raidrummet i millisekunder",
   "function.wynntils.raidRoomTime.name": "Raidrumstid",
   "function.wynntils.raidTimeRemaining.description": "Hur mycket tid som återstår för att slutföra raiden i sekunder",

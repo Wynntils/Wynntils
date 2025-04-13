@@ -1888,7 +1888,7 @@
   "function.wynntils.raidPersonalBestTime.argument.raidName": "O nome da incursão para obter o melhor tempo",
   "function.wynntils.raidPersonalBestTime.description": "O tempo mais rápido para vencer a incursão especificada em milissegundos",
   "function.wynntils.raidPersonalBestTime.name": "Melhor Tempo Pessoal de Incursão",
-  "function.wynntils.raidRoomTime.argument.roomName": "O tipo de sala para obter o tempo necessário para completar. Um de CHALLENGE_1, CHALLENGE_2 ou CHALLENGE_3",
+  "function.wynntils.raidRoomTime.argument.roomNum": "O tipo de sala para obter o tempo necessário para completar. Um de CHALLENGE_1, CHALLENGE_2 ou CHALLENGE_3",
   "function.wynntils.raidRoomTime.description": "Quanto tempo levou para completar a sala de incursão especificada em milissegundos",
   "function.wynntils.raidRoomTime.name": "Tempo de Sala de Incursão",
   "function.wynntils.raidTimeRemaining.description": "Quanto tempo resta para completar a incursão em segundos",
