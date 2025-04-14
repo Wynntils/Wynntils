@@ -14,6 +14,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.Container;
@@ -24,6 +25,8 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderCon
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
+import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
+import com.wynntils.models.trademarket.type.TradeMarketPriceCheckInfo;
 import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -69,13 +72,23 @@ public class TradeMarketModel extends Model {
 
     public static final int TM_SELL_PRICE_SLOT = 28;
     private static final Pattern TM_SELL_PRICE_PATTERN = Pattern.compile("- §7Per Unit:§f (\\d{1,3}(?:,\\d{3})*)");
-    private static final int TM_PRICE_CHECK_SLOT = 51;
-    private static final Pattern TM_PRICE_CHECK_PATTERN =
-            Pattern.compile("§7Cheapest Sell Offer: §f(\\d{1,3}(?:,\\d{3})*)");
+    private static final StyledText TM_SELL_SET_PRICE_PATTERN = StyledText.fromString("§a§lSet Price");
+
+    private static final int PRICE_CHECK_SLOT = 51;
+    // Tests at TradeMarketModel_PRICE_CHECK_BID_PATTERN/TradeMarketModel_PRICE_CHECK_ASK_PATTERN
+    private static final Pattern PRICE_CHECK_BID_PATTERN =
+            Pattern.compile("§7Highest Buy Offer: §f([\\d,]+) §8\\(.+\\)");
+    private static final Pattern PRICE_CHECK_ASK_PATTERN =
+            Pattern.compile("§7Cheapest Sell Offer: §f([\\d,]+) §8\\(.+\\)");
 
     // Test in TradeMarketModel_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile(
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
+
+    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("(.+)À");
+    private static final String EMPTY_ITEM_SLOT = "Empty Item Slot";
+
+    private static final int SELLABLE_ITEM_SLOT = 22;
 
     @Persisted
     private final Storage<Map<Integer, String>> presetFilters = new Storage<>(new TreeMap<>());
@@ -88,6 +101,8 @@ public class TradeMarketModel extends Model {
     private boolean filtersActive = false;
     private boolean nameFiltersActive = false;
     private TradeMarketState tradeMarketState = TradeMarketState.NOT_ACTIVE;
+
+    private String soldItemName = null;
 
     public TradeMarketModel() {
         super(List.of());
@@ -118,7 +133,7 @@ public class TradeMarketModel extends Model {
     }
 
     @SubscribeEvent
-    public void onContainerItemsSet(ContainerSetContentEvent.Pre event) {
+    public void onFilterPageSetContent(ContainerSetContentEvent.Pre event) {
         if (tradeMarketState != TradeMarketState.FILTERS_PAGE) return;
 
         nameFiltersActive = false;
@@ -133,6 +148,16 @@ public class TradeMarketModel extends Model {
                 filtersActive = filtersActive || event.getItems().get(slot).getItem() != Items.AIR;
             }
         });
+    }
+
+    @SubscribeEvent
+    public void onSellDialogueUpdated(ContainerSetSlotEvent.Post e) {
+        handleSellDialogueUpdate();
+    }
+
+    @SubscribeEvent
+    public void onSellDialogueUpdated(ContainerSetContentEvent.Post e) {
+        handleSellDialogueUpdate();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -242,23 +267,63 @@ public class TradeMarketModel extends Model {
     }
 
     /**
-     * @return The TM's lowest price for the current item from the price check slot.
+     * @return The TM's server-side price check item information.
      */
-    public int getLowestPrice() {
-        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return -1;
-        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return -1;
+    public TradeMarketPriceCheckInfo getPriceCheckInfo() {
+        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return TradeMarketPriceCheckInfo.EMPTY;
+        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer))
+            return TradeMarketPriceCheckInfo.EMPTY;
 
-        ItemStack priceCheckItem = cs.getMenu().getItems().get(TM_PRICE_CHECK_SLOT);
-        if (priceCheckItem.isEmpty()) return -1;
+        ItemStack priceCheckItem = cs.getMenu().getItems().get(PRICE_CHECK_SLOT);
+        if (priceCheckItem.isEmpty()) return TradeMarketPriceCheckInfo.EMPTY;
 
         String lore = LoreUtils.getStringLore(priceCheckItem).getString();
-        Matcher priceCheckMatcher = TM_PRICE_CHECK_PATTERN.matcher(lore);
-        if (priceCheckMatcher.find()) {
-            String priceCheckString = priceCheckMatcher.group(1);
-            return Integer.parseInt(priceCheckString.replace(",", ""));
+
+        Matcher bidMatcher = PRICE_CHECK_BID_PATTERN.matcher(lore);
+        int bidPrice = -1;
+        if (bidMatcher.find()) {
+            String priceCheckString = bidMatcher.group(1);
+            bidPrice = Integer.parseInt(priceCheckString.replace(",", ""));
         }
 
-        return -1;
+        Matcher askMatcher = PRICE_CHECK_ASK_PATTERN.matcher(lore);
+        int askPrice = -1;
+        if (askMatcher.find()) {
+            String priceCheckString = askMatcher.group(1);
+            askPrice = Integer.parseInt(priceCheckString.replace(",", ""));
+        }
+
+        return new TradeMarketPriceCheckInfo(bidPrice, askPrice);
+    }
+
+    public String getSoldItemName() {
+        return soldItemName;
+    }
+
+    private void handleSellDialogueUpdate() {
+        if (tradeMarketState != TradeMarketState.SELLING) return;
+
+        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
+
+        ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
+        if (itemStack != ItemStack.EMPTY) {
+            StyledText itemStackName = StyledText.fromComponent(itemStack.getHoverName());
+            Matcher m = itemStackName.getMatcher(SELL_ITEM_NAME_PATTERN);
+            if (m.matches() && !m.group(1).contains(EMPTY_ITEM_SLOT)) {
+                soldItemName = m.group(1);
+            } else {
+                soldItemName = null;
+            }
+        } else {
+            soldItemName = null;
+        }
+
+        StyledText sellPriceItemName = StyledText.fromComponent(
+                cs.getMenu().getSlot(TM_SELL_PRICE_SLOT).getItem().getHoverName());
+
+        if (!sellPriceItemName.equals(TM_SELL_SET_PRICE_PATTERN)) return;
+
+        WynntilsMod.postEvent(new TradeMarketSellDialogueUpdatedEvent());
     }
 
     private void updateStateFromContainer() {
