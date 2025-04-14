@@ -44,7 +44,7 @@ public class TradeMarketBulkSellFeature extends Feature {
         if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
-        String soldItemName = Models.TradeMarket.getSoldItemName(containerScreen);
+        String soldItemName = Models.TradeMarket.getSoldItemName();
         removeSellButtons(containerScreen);
         if (soldItemName == null) return;
         addSellButtons(containerScreen, soldItemName);

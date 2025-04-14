@@ -10,7 +10,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
@@ -42,9 +41,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
-import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
@@ -89,8 +86,7 @@ public class TradeMarketModel extends Model {
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
 
     private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("(.+)À");
-    private static final String SOLD_ITEM_SLOT = "Empty Item Slot";
-    private static final String CLICK_TO_SET_AMOUNT = "Set Amount";
+    private static final String EMPTY_ITEM_SLOT = "Empty Item Slot";
 
     private static final int SELLABLE_ITEM_SLOT = 22;
 
@@ -300,23 +296,27 @@ public class TradeMarketModel extends Model {
         return new TradeMarketPriceCheckInfo(bidPrice, askPrice);
     }
 
-    public String getSoldItemName(MenuAccess<ChestMenu> cs) {
-        ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
-        if (itemStack == ItemStack.EMPTY) return null;
-
-        StyledText itemStackName = StyledText.fromComponent(itemStack.getHoverName());
-        if (itemStackName.getString(PartStyle.StyleType.NONE).equals(SOLD_ITEM_SLOT)) return null;
-
-        Matcher m = itemStackName.getMatcher(SELL_ITEM_NAME_PATTERN);
-        if (!m.matches()) return null;
-
-        return m.group(1);
+    public String getSoldItemName() {
+        return soldItemName;
     }
 
     private void handleSellDialogueUpdate() {
         if (tradeMarketState != TradeMarketState.SELLING) return;
 
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
+
+        ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
+        if (itemStack != ItemStack.EMPTY) {
+            StyledText itemStackName = StyledText.fromComponent(itemStack.getHoverName());
+            Matcher m = itemStackName.getMatcher(SELL_ITEM_NAME_PATTERN);
+            if (m.matches() && !m.group(1).contains(EMPTY_ITEM_SLOT)) {
+                soldItemName = m.group(1);
+            } else {
+                soldItemName = null;
+            }
+        } else {
+            soldItemName = null;
+        }
 
         StyledText sellPriceItemName = StyledText.fromComponent(
                 cs.getMenu().getSlot(TM_SELL_PRICE_SLOT).getItem().getHoverName());
