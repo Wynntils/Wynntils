@@ -1,3 +1,18 @@
+## [3.0.14](https://github.com/Wynntils/Wynntils/compare/v3.0.13...v3.0.14) (2025-04-14)
+
+
+### Bug Fixes
+
+* Fix custom guild log screen not displaying entries since daylight savings ([#3198](https://github.com/Wynntils/Wynntils/issues/3198)) ([e18b696](https://github.com/Wynntils/Wynntils/commit/e18b696a85d016a16d678b2d37377e67da3a76ba))
+* Fix Guild Rewards Redirector [skip ci] ([#3196](https://github.com/Wynntils/Wynntils/issues/3196)) ([e7322ac](https://github.com/Wynntils/Wynntils/commit/e7322ac843b96dfd9b5c7ac5ee472012246df82d))
+* Trade market buttons appear late sometimes [skip ci] ([#3195](https://github.com/Wynntils/Wynntils/issues/3195)) ([c5ab3a7](https://github.com/Wynntils/Wynntils/commit/c5ab3a7d7d3a8e4e47ea438856f9f83d13ee3352))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3194](https://github.com/Wynntils/Wynntils/issues/3194)) ([44a0bcb](https://github.com/Wynntils/Wynntils/commit/44a0bcb4f35e2b719156036a73fd82399f5af0d8))
+* Change Hide Info Messages config to disabled by default [skip ci] ([#3197](https://github.com/Wynntils/Wynntils/issues/3197)) ([fda245b](https://github.com/Wynntils/Wynntils/commit/fda245b4ac408d850ca1228f1bf0334413f89c96))
+
 ## [3.0.13](https://github.com/Wynntils/Wynntils/compare/v3.0.12...v3.0.13) (2025-04-05)
 
 
@@ -9,6 +24,11 @@
 ### Bug Fixes
 
 * Add shutdown hook for storage saving [skip ci] ([#3178](https://github.com/Wynntils/Wynntils/issues/3178)) ([509275c](https://github.com/Wynntils/Wynntils/commit/509275c01cc407062a2d8a587ddda0f3dc381a4a))
+
+
+### Miscellaneous Chores
+
+* **release:** v3.0.13 [skip ci] ([30812a9](https://github.com/Wynntils/Wynntils/commit/30812a95d3560f60c8c13300f95c8158013c2450))
 
 ## [3.0.12](https://github.com/Wynntils/Wynntils/compare/v3.0.11...v3.0.12) (2025-03-31)
 
@@ -80,28 +100,4 @@
 * [auto-generated] Update urls.json [ci skip] ([#3156](https://github.com/Wynntils/Wynntils/issues/3156)) ([963d7d3](https://github.com/Wynntils/Wynntils/commit/963d7d3edb93c40b4a0de5c299b4c6bf8a5e553e))
 * Bump crowd source version [skip ci] ([#3168](https://github.com/Wynntils/Wynntils/issues/3168)) ([3d1d7ae](https://github.com/Wynntils/Wynntils/commit/3d1d7aeb9f0bd5b90fb86e27931734dfadadaf74))
 * **release:** v3.0.10 [skip ci] ([f551a53](https://github.com/Wynntils/Wynntils/commit/f551a5324f46b002f1755fdf094f20fc097d7256))
-
-## [3.0.9](https://github.com/Wynntils/Wynntils/compare/v3.0.8...v3.0.9) (2025-03-07)
-
-
-### New Features
-
-* Display tier instead of class on aspects [skip ci] ([#3155](https://github.com/Wynntils/Wynntils/issues/3155)) ([6b69feb](https://github.com/Wynntils/Wynntils/commit/6b69febd50cab65b1b44cd56fbb67fb646618a03))
-
-
-### Bug Fixes
-
-* Do not cast ticks function to int [skip ci] ([#3150](https://github.com/Wynntils/Wynntils/issues/3150)) ([e081f5c](https://github.com/Wynntils/Wynntils/commit/e081f5c58ae032d077ad351f6956a9fd4f2c0228))
-* Emerald count is detached in emerald merchants [skip ci] ([#3151](https://github.com/Wynntils/Wynntils/issues/3151)) ([974cbc6](https://github.com/Wynntils/Wynntils/commit/974cbc6df6b726ef55906206a12feb5918978ef2))
-* Fix container search arc rendering [skip ci] ([#3148](https://github.com/Wynntils/Wynntils/issues/3148)) ([fdcd499](https://github.com/Wynntils/Wynntils/commit/fdcd499ab82694e2296c3bd4fb6df8394e54a6ee))
-* Fix held item cooldown function [skip ci] ([#3147](https://github.com/Wynntils/Wynntils/issues/3147)) ([a4ced2b](https://github.com/Wynntils/Wynntils/commit/a4ced2ba8b9a9de647226b5964a951ed5a884608))
-* Held non-weapons are counted when saving skill point loadouts [skip ci] ([#3144](https://github.com/Wynntils/Wynntils/issues/3144)) ([d9ee770](https://github.com/Wynntils/Wynntils/commit/d9ee77070371e97c7a9700302ccd0e5aa9ebbcae))
-* Inventory texture disappears during bulk buy ([#3152](https://github.com/Wynntils/Wynntils/issues/3152)) ([16b75b0](https://github.com/Wynntils/Wynntils/commit/16b75b027dc345155cecac18a3226191a303361f))
-* Quick search incorrectly sends cancels after using TM buttons [skip ci] ([#3154](https://github.com/Wynntils/Wynntils/issues/3154)) ([6a9c79e](https://github.com/Wynntils/Wynntils/commit/6a9c79e5ced043e541939c227d45f9261481fc93))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3153](https://github.com/Wynntils/Wynntils/issues/3153)) ([620c2ff](https://github.com/Wynntils/Wynntils/commit/620c2ff052b9a7e65bf21d0dc31bc535d5b81b1d))
-* **release:** v3.0.9 [skip ci] ([43f5c1a](https://github.com/Wynntils/Wynntils/commit/43f5c1ad7277c1ca411b9762d934cc7066d583b6))
 
