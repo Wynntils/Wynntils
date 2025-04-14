@@ -11,8 +11,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
@@ -21,22 +19,12 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
-import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketBulkSellFeature extends Feature {
-    private static final Pattern ITEM_NAME_PATTERN = Pattern.compile("(.+)À");
-    private static final String SOLD_ITEM_SLOT = "Empty Item Slot";
-    private static final String CLICK_TO_SET_AMOUNT = "Set Amount";
-
-    private static final int SELLABLE_ITEM_SLOT = 22;
     private static final int AMOUNT_ITEM_SLOT = 31;
 
     @Persisted
@@ -56,7 +44,7 @@ public class TradeMarketBulkSellFeature extends Feature {
         if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
-        String soldItemName = getSoldItemName(containerScreen);
+        String soldItemName = Models.TradeMarket.getSoldItemName(containerScreen);
         removeSellButtons(containerScreen);
         if (soldItemName == null) return;
         addSellButtons(containerScreen, soldItemName);
@@ -74,39 +62,11 @@ public class TradeMarketBulkSellFeature extends Feature {
         sendAmountMessage = false;
     }
 
-    private String getSoldItemName(MenuAccess<ChestMenu> cs) {
-        ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
-        if (itemStack == ItemStack.EMPTY) return null;
-
-        StyledText itemStackName = StyledText.fromComponent(itemStack.getHoverName());
-        if (itemStackName.getString(PartStyle.StyleType.NONE).equals(SOLD_ITEM_SLOT)) return null;
-
-        Matcher m = itemStackName.getMatcher(ITEM_NAME_PATTERN);
-        if (!m.matches()) return null;
-
-        return m.group(1);
-    }
-
-    private int getAmountInInventory(String name) {
-        int amount = 0;
-
-        for (ItemStack itemStack : McUtils.inventory().items) {
-            StyledText itemName = StyledText.fromComponent(itemStack.getHoverName())
-                    .getNormalized()
-                    .trim();
-            if (itemName.getString().endsWith(name)) {
-                amount += itemStack.getCount();
-            }
-        }
-
-        return amount;
-    }
-
     private void addSellButtons(ContainerScreen containerScreen, String soldItemName) {
         containerScreen.addRenderableWidget(new SellButton(
                 containerScreen.leftPos - SellButton.BUTTON_WIDTH - 1,
                 containerScreen.topPos + 30,
-                () -> getAmountInInventory(soldItemName),
+                () -> Models.Inventory.getAmountInInventory(soldItemName),
                 true));
 
         if (bulkSell1Amount.get() > 0) {

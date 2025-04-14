@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
@@ -41,7 +42,9 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
@@ -84,6 +87,12 @@ public class TradeMarketModel extends Model {
     // Test in TradeMarketModel_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile(
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
+
+    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("(.+)À");
+    private static final String SOLD_ITEM_SLOT = "Empty Item Slot";
+    private static final String CLICK_TO_SET_AMOUNT = "Set Amount";
+
+    private static final int SELLABLE_ITEM_SLOT = 22;
 
     @Persisted
     private final Storage<Map<Integer, String>> presetFilters = new Storage<>(new TreeMap<>());
@@ -289,6 +298,19 @@ public class TradeMarketModel extends Model {
         }
 
         return new TradeMarketPriceCheckInfo(bidPrice, askPrice);
+    }
+
+    public String getSoldItemName(MenuAccess<ChestMenu> cs) {
+        ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
+        if (itemStack == ItemStack.EMPTY) return null;
+
+        StyledText itemStackName = StyledText.fromComponent(itemStack.getHoverName());
+        if (itemStackName.getString(PartStyle.StyleType.NONE).equals(SOLD_ITEM_SLOT)) return null;
+
+        Matcher m = itemStackName.getMatcher(SELL_ITEM_NAME_PATTERN);
+        if (!m.matches()) return null;
+
+        return m.group(1);
     }
 
     private void handleSellDialogueUpdate() {
