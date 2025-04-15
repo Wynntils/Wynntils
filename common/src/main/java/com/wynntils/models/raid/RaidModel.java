@@ -153,27 +153,6 @@ public class RaidModel extends Model {
             return;
         }
 
-        if (currentRaid == null) {
-            if (styledText.contains("nog")) {
-                currentRaid = new RaidInfo(new NestOfTheGrootslangsRaid());
-            }
-            if (styledText.contains("nol")) {
-                currentRaid = new RaidInfo(new OrphionsNexusOfLightRaid());
-            }
-            if (styledText.contains("tcc")) {
-                currentRaid = new RaidInfo(new TheCanyonColossusRaid());
-            }
-            if (styledText.contains("tna")) {
-                currentRaid = new RaidInfo(new TheNamelessAnomalyRaid());
-            }
-
-            return;
-        } else {
-            if (styledText.contains("endraid")) {
-                currentRaid = null;
-            }
-        }
-
         if (inBuffRoom) {
             Matcher matcher = event.getOriginalStyledText().stripAlignment().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
             if (matcher.matches()) {
