@@ -5,6 +5,7 @@
 package com.wynntils.models.raid.raids;
 
 import com.wynntils.core.text.StyledText;
+import java.util.Collections;
 import java.util.Map;
 
 public abstract class RaidKind {
@@ -27,10 +28,10 @@ public abstract class RaidKind {
         this.raidName = raidName;
         this.abbreviation = abbreviation;
         this.entryTitle = entryTitle;
-        this.challengeNames = challengeNames;
+        this.challengeNames = Collections.unmodifiableMap(challengeNames);
         this.challengeCount = challengeCount;
         this.bossCount = bossCount;
-        this.majorIdBuffs = majorIdBuffs;
+        this.majorIdBuffs = Collections.unmodifiableMap(majorIdBuffs);
     }
 
     protected RaidKind(
