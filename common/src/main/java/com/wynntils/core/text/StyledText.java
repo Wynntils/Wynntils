@@ -5,6 +5,7 @@
 package com.wynntils.core.text;
 
 import com.google.common.collect.Iterables;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -101,8 +102,8 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return fromParts(parts);
     }
 
-    public static StyledText fromHtml(String htmlString) {
-        return new StyledText(StyledTextPart.fromHtmlString(htmlString), List.of(), List.of());
+    public static StyledText fromJson(JsonArray jsonArray) {
+        return new StyledText(StyledTextPart.fromJson(jsonArray), List.of(), List.of());
     }
 
     public static StyledText fromString(String codedString) {

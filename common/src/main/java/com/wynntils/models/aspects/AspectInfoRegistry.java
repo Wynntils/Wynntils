@@ -112,8 +112,8 @@ public class AspectInfoRegistry {
                 int threshold = tier.get("threshold").getAsInt();
 
                 List<StyledText> description = new ArrayList<>();
-                for (JsonElement element : tier.get("html_description").getAsJsonArray()) {
-                    description.add(StyledText.fromHtml(element.getAsString()));
+                for (JsonElement element : tier.get("description").getAsJsonArray()) {
+                    description.add(StyledText.fromJson(element.getAsJsonArray()));
                 }
 
                 tiers.add(Pair.of(threshold, description));
