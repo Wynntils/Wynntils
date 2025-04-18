@@ -11,7 +11,7 @@ import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
-import com.wynntils.models.character.RankModel;
+import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.combat.CombatModel;
 import com.wynntils.models.combat.label.DamageLabelParser;
 import com.wynntils.models.combat.label.KillLabelParser;
@@ -106,6 +106,35 @@ public class TestRegex {
         PatternTester p = new PatternTester(AbilityTreeAnnotator.class, "TREE_ABILITY_POINTS_PATTERN");
         p.shouldMatch("§b✦ Available Points: §f0§7/45");
         p.shouldMatch("§b✦ Available Points: §f15§7/45");
+    }
+
+    @Test
+    public void AccountModel_SILVERBULL_PATTERN() {
+        PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_PATTERN");
+        p.shouldMatch("§7Subscription: §c✖ Inactive");
+        p.shouldMatch("§7Subscription: §a✔ Active");
+    }
+
+    @Test
+    public void AccountModel_SILVERBULL_DURATION_PATTERN() {
+        PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_DURATION_PATTERN");
+        p.shouldMatch("§7Expiration: §f1 week 5 days");
+        p.shouldMatch("§7Expiration: §f5 days");
+        p.shouldMatch("§7Expiration: §f1 week");
+        p.shouldMatch("§7Expiration: §f2 days 12 hours");
+    }
+
+    @Test
+    public void AccountModel_VETERAN_PATTERN() {
+        PatternTester p = new PatternTester(AccountModel.class, "VETERAN_PATTERN");
+        // Champion
+        p.shouldMatch("§7Rank: §6Vet");
+        // Hero
+        p.shouldMatch("§7Rank: §dVet");
+        // VIP+
+        p.shouldMatch("§7Rank: §bVet");
+        // VIP
+        p.shouldMatch("§7Rank: §aVet");
     }
 
     @Test
@@ -881,35 +910,6 @@ public class TestRegex {
         p.shouldNotMatch("§f⬡ §7Mobs Killed: §f");
         p.shouldMatch("§f⬡ §7Wars Won: §f164");
         p.shouldMatch("§f⬡ §7Raids Won: §f0");
-    }
-
-    @Test
-    public void RankModel_SILVERBULL_PATTERN() {
-        PatternTester p = new PatternTester(RankModel.class, "SILVERBULL_PATTERN");
-        p.shouldMatch("§7Subscription: §c✖ Inactive");
-        p.shouldMatch("§7Subscription: §a✔ Active");
-    }
-
-    @Test
-    public void RankModel_SILVERBULL_DURATION_PATTERN() {
-        PatternTester p = new PatternTester(RankModel.class, "SILVERBULL_DURATION_PATTERN");
-        p.shouldMatch("§7Expiration: §f1 week 5 days");
-        p.shouldMatch("§7Expiration: §f5 days");
-        p.shouldMatch("§7Expiration: §f1 week");
-        p.shouldMatch("§7Expiration: §f2 days 12 hours");
-    }
-
-    @Test
-    public void RankModel_VETERAN_PATTERN() {
-        PatternTester p = new PatternTester(RankModel.class, "VETERAN_PATTERN");
-        // Champion
-        p.shouldMatch("§7Rank: §6Vet");
-        // Hero
-        p.shouldMatch("§7Rank: §dVet");
-        // VIP+
-        p.shouldMatch("§7Rank: §bVet");
-        // VIP
-        p.shouldMatch("§7Rank: §aVet");
     }
 
     @Test

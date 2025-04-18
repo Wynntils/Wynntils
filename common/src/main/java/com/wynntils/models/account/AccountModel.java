@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.character;
+package com.wynntils.models.account;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
@@ -30,15 +30,15 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public final class RankModel extends Model {
-    // Test in CharacterModel_VETERAN_PATTERN
+public final class AccountModel extends Model {
+    // Test in AccountModel_VETERAN_PATTERN
     private static final Pattern VETERAN_PATTERN = Pattern.compile("§7Rank: §[6dba]Vet");
     private static final Pattern SILVERBULL_JOIN_PATTERN =
             Pattern.compile("§3Welcome to the §b✮ Silverbull Trading Company§3!");
     private static final Pattern SILVERBULL_UPDATE_PATTERN = Pattern.compile("§7Your subscription has been extended.");
-    // Test in CharacterModel_SILVERBULL_PATTERN
+    // Test in AccountModel_SILVERBULL_PATTERN
     private static final Pattern SILVERBULL_PATTERN = Pattern.compile("§7Subscription: §[ac][✖✔] ((?:Ina|A)ctive)");
-    // Test in CharacterModel_SILVERBULL_DURATION_PATTERN
+    // Test in AccountModel_SILVERBULL_DURATION_PATTERN
     private static final Pattern SILVERBULL_DURATION_PATTERN = Pattern.compile(
             "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)? ?(?:(?<minutes>\\d+) minutes?)? ?(?:(?<seconds>\\d+) seconds?)?");
     public static final Component SILVERBULL_STAR = Component.literal(" ✮").withStyle(ChatFormatting.AQUA);
@@ -53,7 +53,7 @@ public final class RankModel extends Model {
     @Persisted
     private final Storage<ConfirmedBoolean> silverbullSubscriber = new Storage<>(ConfirmedBoolean.UNCONFIRMED);
 
-    public RankModel() {
+    public AccountModel() {
         super(List.of());
     }
 

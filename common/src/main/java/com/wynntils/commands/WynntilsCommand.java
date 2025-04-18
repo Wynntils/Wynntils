@@ -385,7 +385,7 @@ public class WynntilsCommand extends Command {
 
     private int rescan(CommandContext<CommandSourceStack> context) {
         Models.Character.scanCharacterInfo();
-        Models.Rank.scanRankInfo(true);
+        Models.Account.scanRankInfo(true);
         return 1;
     }
 
