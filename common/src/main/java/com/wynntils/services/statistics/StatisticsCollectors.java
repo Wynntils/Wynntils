@@ -12,6 +12,7 @@ import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
+import com.wynntils.models.raid.raids.RaidKind;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.war.event.GuildWarEvent;
 import com.wynntils.services.statistics.type.StatisticKind;
@@ -63,24 +64,24 @@ public final class StatisticsCollectors {
 
     @SubscribeEvent
     public void onRaidCompleted(RaidEndedEvent.Completed event) {
-        String raidName = event.getRaid().getRaidKind().getRaidName();
+        RaidKind raidKind = event.getRaid().getRaidKind();
 
-        if (raidName.equals(Models.Raid.NEST_OF_THE_GROOTSLANG.getRaidName())) {
+        if (raidKind.equals(Models.Raid.NEST_OF_THE_GROOTSLANG)) {
             Services.Statistics.increaseStatistics(StatisticKind.NEST_OF_THE_GROOTSLANGS_SUCCEEDED);
             Services.Statistics.addToStatistics(
                     StatisticKind.NEST_OF_THE_GROOTSLANGS_TIME_ELAPSED,
                     event.getRaid().getTimeInRaid() / 1000);
-        } else if (raidName.equals(Models.Raid.ORPHIONS_NEXUS_OF_LIGHT.getRaidName())) {
+        } else if (raidKind.equals(Models.Raid.ORPHIONS_NEXUS_OF_LIGHT)) {
             Services.Statistics.increaseStatistics(StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_SUCCEEDED);
             Services.Statistics.addToStatistics(
                     StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_TIME_ELAPSED,
                     event.getRaid().getTimeInRaid() / 1000);
-        } else if (raidName.equals(Models.Raid.THE_CANYON_COLOSSUS.getRaidName())) {
+        } else if (raidKind.equals(Models.Raid.THE_CANYON_COLOSSUS)) {
             Services.Statistics.increaseStatistics(StatisticKind.THE_CANYON_COLOSSUS_SUCCEEDED);
             Services.Statistics.addToStatistics(
                     StatisticKind.THE_CANYON_COLOSSUS_TIME_ELAPSED,
                     event.getRaid().getTimeInRaid() / 1000);
-        } else if (raidName.equals(Models.Raid.THE_NAMELESS_ANOMALY.getRaidName())) {
+        } else if (raidKind.equals(Models.Raid.THE_NAMELESS_ANOMALY)) {
             Services.Statistics.increaseStatistics(StatisticKind.THE_NAMELESS_ANOMALY_SUCCEEDED);
             Services.Statistics.addToStatistics(
                     StatisticKind.THE_NAMELESS_ANOMALY_TIME_ELAPSED,
@@ -90,24 +91,24 @@ public final class StatisticsCollectors {
 
     @SubscribeEvent
     public void onRaidFailed(RaidEndedEvent.Failed event) {
-        String raidName = event.getRaid().getRaidKind().getRaidName();
-
-        if (raidName.equals(Models.Raid.NEST_OF_THE_GROOTSLANG.getRaidName())) {
+        RaidKind raidKind = event.getRaid().getRaidKind();
+        
+        if (raidKind.equals(Models.Raid.NEST_OF_THE_GROOTSLANG)) {
             Services.Statistics.increaseStatistics(StatisticKind.NEST_OF_THE_GROOTSLANGS_FAILED);
             Services.Statistics.addToStatistics(
                     StatisticKind.NEST_OF_THE_GROOTSLANGS_TIME_ELAPSED,
                     event.getRaid().getTimeInRaid() / 1000);
-        } else if (raidName.equals(Models.Raid.ORPHIONS_NEXUS_OF_LIGHT.getRaidName())) {
+        } else if (raidKind.equals(Models.Raid.ORPHIONS_NEXUS_OF_LIGHT)) {
             Services.Statistics.increaseStatistics(StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_FAILED);
             Services.Statistics.addToStatistics(
                     StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_TIME_ELAPSED,
                     event.getRaid().getTimeInRaid() / 1000);
-        } else if (raidName.equals(Models.Raid.THE_CANYON_COLOSSUS.getRaidName())) {
+        } else if (raidKind.equals(Models.Raid.THE_CANYON_COLOSSUS)) {
             Services.Statistics.increaseStatistics(StatisticKind.THE_CANYON_COLOSSUS_FAILED);
             Services.Statistics.addToStatistics(
                     StatisticKind.THE_CANYON_COLOSSUS_TIME_ELAPSED,
                     event.getRaid().getTimeInRaid() / 1000);
-        } else if (raidName.equals(Models.Raid.THE_NAMELESS_ANOMALY.getRaidName())) {
+        } else if (raidKind.equals(Models.Raid.THE_NAMELESS_ANOMALY)) {
             Services.Statistics.increaseStatistics(StatisticKind.THE_NAMELESS_ANOMALY_FAILED);
             Services.Statistics.addToStatistics(
                     StatisticKind.THE_NAMELESS_ANOMALY_TIME_ELAPSED,
