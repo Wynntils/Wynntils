@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -203,9 +203,8 @@ public final class BankModel extends Model {
             case ACCOUNT_BANK -> finalAccountBankPage.get();
             case BLOCK_BANK -> finalBlockBankPage.get();
             case BOOKSHELF -> finalBookshelfPage.get();
-            case CHARACTER_BANK -> finalCharacterBankPages
-                    .get()
-                    .getOrDefault(Models.Character.getId(), MAX_CHARACTER_BANK_PAGES);
+            case CHARACTER_BANK ->
+                finalCharacterBankPages.get().getOrDefault(Models.Character.getId(), MAX_CHARACTER_BANK_PAGES);
             case MISC_BUCKET -> finalMiscBucketPage.get();
         };
     }
@@ -279,9 +278,8 @@ public final class BankModel extends Model {
             case ACCOUNT_BANK -> customAccountBankPageNames.get();
             case BLOCK_BANK -> customBlockBankPageNames.get();
             case BOOKSHELF -> customBookshelfPageNames.get();
-            case CHARACTER_BANK -> customCharacterBankPagesNames
-                    .get()
-                    .getOrDefault(Models.Character.getId(), new TreeMap<>());
+            case CHARACTER_BANK ->
+                customCharacterBankPagesNames.get().getOrDefault(Models.Character.getId(), new TreeMap<>());
             case MISC_BUCKET -> customMiscBucketPageNames.get();
         };
     }

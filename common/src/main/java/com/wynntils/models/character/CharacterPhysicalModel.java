@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2025.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.character;
 
 import com.wynntils.core.WynntilsMod;
@@ -10,10 +14,9 @@ import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterMovedEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import java.util.List;
 import net.minecraft.core.Position;
 import net.neoforged.bus.api.SubscribeEvent;
-
-import java.util.List;
 
 public final class CharacterPhysicalModel extends Model {
     private static final DeathScreenBar deathScreenBar = new DeathScreenBar();

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnalphabet;
@@ -245,9 +245,10 @@ public final class WynnAlphabetModel extends Model {
     public boolean shouldTranscribe(TranscribeCondition condition, WynnAlphabet alphabet) {
         return switch (condition) {
             case NEVER -> false;
-            case TRANSCRIBER -> alphabet == WynnAlphabet.WYNNIC
-                    ? hasTranscriber(WynnAlphabet.WYNNIC)
-                    : hasTranscriber(WynnAlphabet.GAVELLIAN);
+            case TRANSCRIBER ->
+                alphabet == WynnAlphabet.WYNNIC
+                        ? hasTranscriber(WynnAlphabet.WYNNIC)
+                        : hasTranscriber(WynnAlphabet.GAVELLIAN);
             default -> true;
         };
     }

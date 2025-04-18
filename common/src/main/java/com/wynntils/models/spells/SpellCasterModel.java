@@ -1,14 +1,17 @@
+/*
+ * Copyright © Wynntils 2025.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.spells;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class SpellCasterModel extends Model {
     private final Queue<SpellDirection> spellPacketQueue = new LinkedList<>();

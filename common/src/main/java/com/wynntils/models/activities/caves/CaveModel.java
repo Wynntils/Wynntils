@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.caves;
@@ -70,24 +70,27 @@ public final class CaveModel extends Model {
         Comparator<CaveInfo> baseComparator =
                 Comparator.comparing(caveInfo -> !caveInfo.name().equals(trackedCaveName));
         return switch (sortOrder) {
-            case LEVEL -> caveList.stream()
-                    .sorted(baseComparator
-                            .thenComparing(CaveInfo::status)
-                            .thenComparing(CaveInfo::recommendedLevel)
-                            .thenComparing(CaveInfo::name))
-                    .toList();
-            case DISTANCE -> caveList.stream()
-                    .sorted(baseComparator
-                            .thenComparing(CaveInfo::status)
-                            .thenComparing(CaveInfo::distance)
-                            .thenComparing(CaveInfo::name))
-                    .toList();
-            case ALPHABETIC -> caveList.stream()
-                    .sorted(baseComparator
-                            .thenComparing(CaveInfo::status)
-                            .thenComparing(CaveInfo::name)
-                            .thenComparing(CaveInfo::recommendedLevel))
-                    .toList();
+            case LEVEL ->
+                caveList.stream()
+                        .sorted(baseComparator
+                                .thenComparing(CaveInfo::status)
+                                .thenComparing(CaveInfo::recommendedLevel)
+                                .thenComparing(CaveInfo::name))
+                        .toList();
+            case DISTANCE ->
+                caveList.stream()
+                        .sorted(baseComparator
+                                .thenComparing(CaveInfo::status)
+                                .thenComparing(CaveInfo::distance)
+                                .thenComparing(CaveInfo::name))
+                        .toList();
+            case ALPHABETIC ->
+                caveList.stream()
+                        .sorted(baseComparator
+                                .thenComparing(CaveInfo::status)
+                                .thenComparing(CaveInfo::name)
+                                .thenComparing(CaveInfo::recommendedLevel))
+                        .toList();
         };
     }
 

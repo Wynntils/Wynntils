@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -116,9 +116,8 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
         if (scrapMenu == null) return;
 
         // Silverbull subscribers have the first 2 slots filled automatically
-        List<Integer> selectedSlots = Models.Rank.isSilverbullSubscriber()
-                ? SELECTED_COSMETIC_SLOTS.subList(2, 5)
-                : SELECTED_COSMETIC_SLOTS;
+        List<Integer> selectedSlots =
+                Models.Rank.isSilverbullSubscriber() ? SELECTED_COSMETIC_SLOTS.subList(2, 5) : SELECTED_COSMETIC_SLOTS;
 
         selectedCosmetics = new HashSet<>();
 

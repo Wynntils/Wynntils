@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2025.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.character;
 
 import com.wynntils.core.WynntilsMod;
@@ -16,16 +20,15 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.ConfirmedBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public final class RankModel extends Model {
     // Test in CharacterModel_VETERAN_PATTERN
@@ -89,12 +92,11 @@ public final class RankModel extends Model {
         if (forceParseUnexpired
                 || silverbullSubscriber.get() == ConfirmedBoolean.UNCONFIRMED
                 || (silverbullSubscriber.get() != ConfirmedBoolean.FALSE
-                && System.currentTimeMillis() > silverbullExpiresAt.get())) {
+                        && System.currentTimeMillis() > silverbullExpiresAt.get())) {
             // Open Cosmetics Menu
-            queryBuilder
-                    .then(QueryStep.clickOnSlot(COSMETICS_SLOT)
-                            .expectContainerTitle(ContainerModel.COSMETICS_MENU_NAME)
-                            .processIncomingContainer(this::parseCratesBombsCosmeticsContainer));
+            queryBuilder.then(QueryStep.clickOnSlot(COSMETICS_SLOT)
+                    .expectContainerTitle(ContainerModel.COSMETICS_MENU_NAME)
+                    .processIncomingContainer(this::parseCratesBombsCosmeticsContainer));
         } else {
             WynntilsMod.info("Skipping silverbull subscription query ("
                     + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
