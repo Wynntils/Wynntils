@@ -26,6 +26,8 @@ public class RaidInfo {
     }
 
     public void completeCurrentChallenge() {
+        if (!challenges.containsKey(challenges.size())) return;
+
         challenges.get(challenges.size()).setRoomEndTime(System.currentTimeMillis());
     }
 
