@@ -14,7 +14,7 @@ import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityLength;
 import java.util.List;
 
-public class WorldEventModel extends Model {
+public final class WorldEventModel extends Model {
     public static final AnnihilationSunBar annihilationSunBar = new AnnihilationSunBar();
 
     public WorldEventModel() {

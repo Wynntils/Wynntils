@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class WynnItemModel extends Model {
+public final class WynnItemModel extends Model {
     private Map<String, List<ItemObtainInfo>> itemObtainMap = Map.of();
     private List<MaterialConversionInfo> allMaterialConversions = List.of();
     private Map<Integer, MaterialConversionInfo> materialConversionLookup = Map.of();

@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class SpellModel extends Model {
+public final class SpellModel extends Model {
     private static final Pattern SPELL_CAST =
             Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\](?: §4\\[§c-([0-9]+) ❤§4\\])?$");
     private static final int SPELL_COST_RESET_TICKS = 60;

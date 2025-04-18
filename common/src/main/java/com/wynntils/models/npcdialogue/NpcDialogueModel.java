@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class NpcDialogueModel extends Model {
+public final class NpcDialogueModel extends Model {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §e§l(.*)$");
 
     private final Set<Feature> dialogExtractionDependents = new HashSet<>();

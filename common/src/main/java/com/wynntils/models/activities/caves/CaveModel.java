@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class CaveModel extends Model {
+public final class CaveModel extends Model {
     private final Map<String, CaveStorage> caveStorage = new HashMap<>();
 
     public CaveModel() {

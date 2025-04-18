@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class WarModel extends Model {
+public final class WarModel extends Model {
     private static final int WAR_RADIUS = 100;
     private static final ScoreboardPart WAR_SCOREBOARD_PART =
             new WarScoreboardPart(); // This is basically a party scoreboard part, but for war members

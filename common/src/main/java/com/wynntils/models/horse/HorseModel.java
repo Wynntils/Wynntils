@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
-public class HorseModel extends Model {
+public final class HorseModel extends Model {
     public HorseModel() {
         super(List.of());
     }

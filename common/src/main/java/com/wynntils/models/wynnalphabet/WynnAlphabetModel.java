@@ -26,7 +26,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class WynnAlphabetModel extends Model {
+public final class WynnAlphabetModel extends Model {
     private static final int FIFTY_INDEX = 10;
     private static final int MAX_TRANSCRIBABLE_NUMBER = 5000;
     private static final int ONE_HUNDERED_INDEX = 11;

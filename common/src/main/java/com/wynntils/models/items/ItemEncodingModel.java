@@ -16,7 +16,7 @@ import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class ItemEncodingModel extends Model {
+public final class ItemEncodingModel extends Model {
     @Persisted
     public final Storage<Boolean> extendedIdentificationEncoding = new Storage<>(false);
 

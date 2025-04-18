@@ -35,7 +35,7 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class TokenModel extends Model {
+public final class TokenModel extends Model {
     private static final Pattern TOA_GATEKEEPER_NAME_PATTERN =
             Pattern.compile("^§2Floormaster \\[Floor (\\d+), Level (\\d+)\\]$");
     private static final Pattern HIVE_GATEKEEPER_NAME_PATTERN = Pattern.compile("^§2(.*) Catalyst Collector (\\d+)$");

@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 
-public class IngredientModel extends Model {
+public final class IngredientModel extends Model {
     private static final Map<ChatFormatting, Integer> TIER_COLOR_CODES = Map.of(
             ChatFormatting.DARK_GRAY, 0,
             ChatFormatting.YELLOW, 1,

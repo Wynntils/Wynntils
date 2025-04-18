@@ -7,7 +7,7 @@ package com.wynntils.models.dungeon;
 import com.wynntils.core.components.Model;
 import java.util.List;
 
-public class DungeonModel extends Model {
+public final class DungeonModel extends Model {
     public DungeonModel() {
         super(List.of());
     }

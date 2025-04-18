@@ -24,7 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class BankModel extends Model {
+public final class BankModel extends Model {
     @Persisted
     private final Storage<Integer> finalAccountBankPage = new Storage<>(21);
 

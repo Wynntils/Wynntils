@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class ObjectivesModel extends Model {
+public final class ObjectivesModel extends Model {
     private static final ScoreboardPart DAILY_OBJECTIVES_SCOREBOARD_PART = new DailyObjectiveScoreboardPart();
     private static final ScoreboardPart GUILD_OBJECTIVES_SCOREBOARD_PART = new GuildObjectiveScoreboardPart();
 

@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
 
-public class ShinyModel extends Model {
+public final class ShinyModel extends Model {
     private Map<String, ShinyStatType> shinyStatTypes = new HashMap<>();
 
     public ShinyModel() {
