@@ -92,7 +92,7 @@ public final class StatisticsCollectors {
     @SubscribeEvent
     public void onRaidFailed(RaidEndedEvent.Failed event) {
         RaidKind raidKind = event.getRaid().getRaidKind();
-        
+
         if (raidKind.equals(Models.Raid.NEST_OF_THE_GROOTSLANG)) {
             Services.Statistics.increaseStatistics(StatisticKind.NEST_OF_THE_GROOTSLANGS_FAILED);
             Services.Statistics.addToStatistics(
