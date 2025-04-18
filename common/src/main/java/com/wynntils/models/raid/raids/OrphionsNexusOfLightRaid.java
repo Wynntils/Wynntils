@@ -20,13 +20,13 @@ public class OrphionsNexusOfLightRaid extends RaidKind {
     private static Map<Integer, Map<String, String>> buildRoomMap() {
         Map<Integer, Map<String, String>> nameMap = new TreeMap<>();
 
-        Map<String, String> challenge1Map = Map.of("Hold the tower", "Tower Room");
+        Map<String, String> challenge1Map = Map.of("Hold the tower", "Decaying Tower");
         Map<String, String> challenge2Map = Map.of(
-                "Kill all Crystalline", "Clouds Room",
-                "Collect 10 Light", "Resource Room");
+                "Kill all Crystalline", "Cloud Decay",
+                "Collect 10 Light", "Light Gathering");
         Map<String, String> challenge3Map = Map.of(
-                "Purify the decaying", "Tower Room",
-                "Escort your party to", "Maze Room");
+                "Purify the decaying", "Light Tower",
+                "Escort your party to", "Invisible Maze");
 
         nameMap.put(1, challenge1Map);
         nameMap.put(2, challenge2Map);

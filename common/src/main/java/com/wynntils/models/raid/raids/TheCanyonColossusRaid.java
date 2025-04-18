@@ -21,12 +21,12 @@ public class TheCanyonColossusRaid extends RaidKind {
         Map<Integer, Map<String, String>> nameMap = new TreeMap<>();
 
         Map<String, String> challenge1Map = Map.of(
-                "Hold the Upper and", "2 Platforms Room",
-                "Use water on", "Lava Lake Room");
+                "Hold the Upper and", "2 Platforms",
+                "Use water on", "Lava Lake");
         Map<String, String> challenge2Map = Map.of(
                 "Find and reach the", "Labyrinth",
-                "Wake the ancient", "Golem Room");
-        Map<String, String> challenge3Map = Map.of("Activate 4 Binding", "Astral Defense");
+                "Wake the ancient", "Golem Escort");
+        Map<String, String> challenge3Map = Map.of("Activate 4 Binding", "Binding Seal");
 
         nameMap.put(1, challenge1Map);
         nameMap.put(2, challenge2Map);

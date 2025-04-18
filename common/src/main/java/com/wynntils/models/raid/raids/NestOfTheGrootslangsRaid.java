@@ -22,11 +22,11 @@ public class NestOfTheGrootslangsRaid extends RaidKind {
 
         Map<String, String> challenge1Map = Map.of(
                 "Hold the platform", "Slimey Platform",
-                "Hold and defend", "Tower Room");
-        Map<String, String> challenge2Map = Map.of("Collect 10 Slimy Goo", "Gathering Room");
+                "Hold and defend", "Tower Defense");
+        Map<String, String> challenge2Map = Map.of("Collect 10 Slimy Goo", "Slime Gathering");
         Map<String, String> challenge3Map = Map.of(
-                "Have a player pick up", "Hammer Room",
-                "2 players must", "Minibosses Room");
+                "Have a player pick up", "Tunnel Traversal",
+                "2 players must", "Minibosses");
 
         nameMap.put(1, challenge1Map);
         nameMap.put(2, challenge2Map);
