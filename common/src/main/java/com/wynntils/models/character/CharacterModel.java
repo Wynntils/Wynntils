@@ -61,7 +61,7 @@ public final class CharacterModel extends Model {
         return classType;
     }
 
-    private boolean isReskinned() {
+    public boolean isReskinned() {
         if (!hasCharacter) return false;
 
         return reskinned;
