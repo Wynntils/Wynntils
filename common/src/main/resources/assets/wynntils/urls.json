@@ -90,12 +90,12 @@
   },
   {
     "id": "dataStaticAspects",
-    "md5": "2260b7f00a0b6e46fcbffa76202c384d",
+    "md5": "17f0143943f3fbddb4def091da293442",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/aspects.json"
   },
   {
     "id": "dataStaticCaveInfo",
-    "md5": "143dd6cadb8967214da630ec3168c3bc",
+    "md5": "e3a64e7b576951b7260f9c4ed4a5db01",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/caves.json"
   },
   {
@@ -120,7 +120,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "5a4c6959e1fcdcfd17edd6453784638f",
+    "md5": "691bba288befc7de0659b2f52f15ada4",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
   },
   {
@@ -140,7 +140,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "09d87bd06e293094bc5bea5030da9dc0",
+    "md5": "cf1563bd4d926db45483cf6ebd36d0bf",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/ingredients.json"
   },
   {
@@ -165,7 +165,7 @@
   },
   {
     "id": "dataStaticLootrunTasksNamedV2",
-    "md5": "c8a56fdbc7a0fd65750ed6c343e0e0fd",
+    "md5": "3b3e4bb602e34e4c5f6aab3f8bf68d98",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/lootrun_tasks_named_v2.json"
   },
   {
@@ -214,6 +214,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/services.json"
   },
   {
+    "id": "dataStaticServicesCrowdsourced",
+    "md5": "959c7d977c7108e6a97956f10153e3c3",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/services_crowdsourced.json"
+  },
+  {
     "id": "dataStaticShinyStats",
     "md5": "c1837281e4b45af5683189ebd465d1cc",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/shiny_stats.json"
@@ -225,7 +230,7 @@
   },
   {
     "id": "dataStaticTomes",
-    "md5": "dae81e18e09cf2904459d23bec819287",
+    "md5": "b040ca6331c51744cb2b350afde595b7",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/tomes.json"
   },
   {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -56,7 +56,7 @@ public class MessageFilterFeature extends Feature {
     public final Config<Boolean> hideWelcome = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> hideSystemInfo = new Config<>(true);
+    public final Config<Boolean> hideSystemInfo = new Config<>(false);
 
     @Persisted
     public final Config<Boolean> hideLevelUp = new Config<>(false);

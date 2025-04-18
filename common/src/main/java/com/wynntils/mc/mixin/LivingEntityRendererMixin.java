@@ -4,11 +4,13 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.GetCameraEntityEvent;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.RenderTranslucentCheckEvent;
 import com.wynntils.utils.colors.CommonColors;
@@ -18,6 +20,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -89,5 +92,19 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntityRenderStat
 
         PlayerRenderEvent event = new PlayerRenderEvent(playerRenderState, matrixStack, buffer, packedLight);
         MixinHelper.post(event);
+    }
+
+    @ModifyExpressionValue(
+            method = "shouldShowName(Lnet/minecraft/world/entity/LivingEntity;D)Z",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/Minecraft;getCameraEntity()Lnet/minecraft/world/entity/Entity;"))
+    private Entity getCameraEntity(Entity entity) {
+        GetCameraEntityEvent cameraEntityEvent = new GetCameraEntityEvent(entity);
+        MixinHelper.post(cameraEntityEvent);
+
+        return cameraEntityEvent.getEntity();
     }
 }

@@ -22,7 +22,7 @@ import net.minecraft.world.item.Items;
 
 public class GuildLogAnnotator implements GuiItemAnnotator {
     private static final Pattern LOG_NAME_PATTERN = Pattern.compile(
-            "§3(\\d+) ((month|week|day|hour|minute|second)s?) ago §8\\((?<month>\\d+)\\/(?<day>\\d+)\\/(?<year>\\d+) (?<hour>\\d+):(?<minute>\\d+) (AM|PM) EST\\)");
+            "§3(\\d+) ((month|week|day|hour|minute|second)s?) ago §8\\((?<month>\\d+)\\/(?<day>\\d+)\\/(?<year>\\d+) (?<hour>\\d+):(?<minute>\\d+) (AM|PM) (EST|EDT)\\)");
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("MM/dd/yy hh:mm a", Locale.ROOT);
     private static final ZoneId LOG_ZONE = ZoneId.of("America/New_York");

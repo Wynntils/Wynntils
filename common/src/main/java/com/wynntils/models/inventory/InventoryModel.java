@@ -6,6 +6,7 @@ package com.wynntils.models.inventory;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.inventory.type.InventoryAccessory;
@@ -103,6 +104,24 @@ public final class InventoryModel extends Model {
 
         return Models.Raid.getRaidMajorIds(McUtils.mc().getUser().getName()).stream()
                 .anyMatch(AUTO_CASTER_MAJOR_IDS::contains);
+    }
+
+    /**
+     * @return The number of items in the player's inventory with the given name
+     */
+    public int getAmountInInventory(String name) {
+        int amount = 0;
+
+        for (ItemStack itemStack : McUtils.inventory().items) {
+            StyledText itemName = StyledText.fromComponent(itemStack.getHoverName())
+                    .getNormalized()
+                    .trim();
+            if (itemName.getString().endsWith(name)) {
+                amount += itemStack.getCount();
+            }
+        }
+
+        return amount;
     }
 
     @SubscribeEvent

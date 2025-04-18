@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
+import com.wynntils.mc.event.GetCameraEntityEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -51,6 +53,9 @@ public class CustomNametagRendererFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> hideAllNametags = new Config<>(false);
+
+    @Persisted
+    public final Config<Boolean> showOwnNametag = new Config<>(false);
 
     @Persisted
     public final Config<Boolean> hidePlayerNametags = new Config<>(false);
@@ -119,6 +124,17 @@ public class CustomNametagRendererFeature extends Feature {
         if (hideNametagBackground.get()) {
             event.setBackgroundOpacity(0f);
         }
+    }
+
+    @SubscribeEvent
+    public void onCameraCheck(GetCameraEntityEvent e) {
+        if (!showOwnNametag.get()) return;
+        // Only render when a screen is not open or in the chat screen
+        if (McUtils.mc().screen != null && !(McUtils.mc().screen instanceof ChatScreen)) return;
+
+        // We don't need to check if the entity is the local player as that is already done in
+        // LivingEntityRenderer.shouldShowName
+        e.setEntity(null);
     }
 
     @SubscribeEvent
