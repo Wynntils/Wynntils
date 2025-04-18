@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -32,6 +32,7 @@ import com.wynntils.models.gear.SetModel;
 import com.wynntils.models.guild.GuildModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientModel;
+import com.wynntils.models.inventory.IngredientPouchModel;
 import com.wynntils.models.inventory.InventoryModel;
 import com.wynntils.models.items.ItemEncodingModel;
 import com.wynntils.models.items.ItemModel;
@@ -87,6 +88,7 @@ public final class Models {
     public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
     public static final HorseModel Horse = new HorseModel();
     public static final IngredientModel Ingredient = new IngredientModel();
+    public static final IngredientPouchModel IngredientPouch = new IngredientPouchModel();
     public static final InventoryModel Inventory = new InventoryModel();
     public static final ItemEncodingModel ItemEncoding = new ItemEncodingModel();
     public static final ItemModel Item = new ItemModel();
