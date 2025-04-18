@@ -542,6 +542,11 @@ public class RaidModel extends Model {
     private void checkForNewPersonalBest() {
         long timeInRaid = currentRaid.getTimeInRaid() - currentRaid.getIntermissionTime();
 
+        if (timeInRaid == 0) {
+            WynntilsMod.warn("Completed raid time was 0, tracking failed.");
+            return;
+        }
+
         if (bestTimes.get().get(currentRaid.getRaidKind().getRaidName()) == null) {
             bestTimes.get().put(currentRaid.getRaidKind().getRaidName(), timeInRaid);
             bestTimes.touched();
