@@ -36,8 +36,6 @@ public final class SpellModel extends Model {
     private static final int SPELL_COST_RESET_TICKS = 60;
     private static final int SPELL_EXPIRE_TICKS = 40;
 
-    private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
-
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
     private String lastBurstSpellName = "";
     private String lastSpellName = "";
@@ -132,7 +130,6 @@ public final class SpellModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
-        SPELL_PACKET_QUEUE.clear();
         lastSpell = SpellDirection.NO_SPELL;
         lastSpellTick = 0;
         lastBurstSpellName = "";
@@ -145,30 +142,8 @@ public final class SpellModel extends Model {
 
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
-        SPELL_PACKET_QUEUE.clear();
         lastSpell = SpellDirection.NO_SPELL;
         lastSpellTick = 0;
-    }
-
-    public void addSpellToQueue(List<SpellDirection> spell) {
-        if (!SPELL_PACKET_QUEUE.isEmpty()) return;
-
-        SPELL_PACKET_QUEUE.addAll(spell);
-    }
-
-    public SpellDirection checkNextSpellDirection() {
-        return SPELL_PACKET_QUEUE.peek();
-    }
-
-    public void sendNextSpell() {
-        if (SPELL_PACKET_QUEUE.isEmpty()) return;
-
-        SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
-        spellDirection.getSendPacketRunnable().run();
-    }
-
-    public boolean isSpellQueueEmpty() {
-        return SPELL_PACKET_QUEUE.isEmpty();
     }
 
     public String getLastBurstSpellName() {

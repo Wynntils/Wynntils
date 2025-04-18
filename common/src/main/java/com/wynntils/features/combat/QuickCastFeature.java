@@ -81,7 +81,7 @@ public class QuickCastFeature extends Feature {
         if (event.getActionContext() != ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
 
-        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
+        event.setCanceled(!Models.SpellCaster.isSpellQueueEmpty());
     }
 
     @SubscribeEvent
@@ -90,7 +90,7 @@ public class QuickCastFeature extends Feature {
 
         if (!blockAttacks.get()) return;
 
-        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
+        event.setCanceled(!Models.SpellCaster.isSpellQueueEmpty());
     }
 
     @SubscribeEvent
@@ -120,7 +120,7 @@ public class QuickCastFeature extends Feature {
     }
 
     private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
-        if (!Models.Spell.isSpellQueueEmpty()) return;
+        if (!Models.SpellCaster.isSpellQueueEmpty()) return;
 
         SpellDirection[] spellInProgress = Models.Spell.getLastSpell();
         // SpellModel keeps the last spell for other uses but here we just want to know the inputs so if a full spell
@@ -187,7 +187,7 @@ public class QuickCastFeature extends Feature {
             }
         }
 
-        Models.Spell.addSpellToQueue(confirmedSpell);
+        Models.SpellCaster.addSpellToQueue(confirmedSpell);
     }
 
     @SubscribeEvent
@@ -200,9 +200,9 @@ public class QuickCastFeature extends Feature {
 
         if (packetCountdown > 0) return;
 
-        if (Models.Spell.isSpellQueueEmpty()) return;
+        if (Models.SpellCaster.isSpellQueueEmpty()) return;
 
-        SpellDirection nextDirection = Models.Spell.checkNextSpellDirection();
+        SpellDirection nextDirection = Models.SpellCaster.checkNextSpellDirection();
 
         if (nextDirection == null) return;
 
@@ -210,10 +210,10 @@ public class QuickCastFeature extends Feature {
                 nextDirection == SpellDirection.LEFT ? leftClickTickDelay.get() : rightClickTickDelay.get();
         if (McUtils.player().tickCount - lastSpellTick < comparisonTime) return;
 
-        Models.Spell.sendNextSpell();
+        Models.SpellCaster.sendNextSpell();
         lastSpellTick = McUtils.player().tickCount;
 
-        if (Models.Spell.isSpellQueueEmpty()) {
+        if (Models.SpellCaster.isSpellQueueEmpty()) {
             lastSpellTick = 0;
             packetCountdown = Math.max(packetCountdown, spellCooldown.get());
         }
