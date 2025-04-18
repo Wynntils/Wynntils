@@ -351,7 +351,7 @@ public class RaidModel extends Model {
     public void failedRaid() {
         if (currentRaid == null) return;
 
-        WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid));
+        WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid));
 
         currentRaid = null;
         completedCurrentChallenge = false;
