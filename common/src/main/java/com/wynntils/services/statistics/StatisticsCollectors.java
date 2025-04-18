@@ -63,61 +63,55 @@ public final class StatisticsCollectors {
 
     @SubscribeEvent
     public void onRaidCompleted(RaidEndedEvent.Completed event) {
-        switch (event.getRaid().getRaidKind().getRaidName()) {
-            case "Nest of the Grootslangs" -> {
-                Services.Statistics.increaseStatistics(StatisticKind.NEST_OF_THE_GROOTSLANGS_SUCCEEDED);
-                Services.Statistics.addToStatistics(
-                        StatisticKind.NEST_OF_THE_GROOTSLANGS_TIME_ELAPSED,
-                        event.getRaid().getTimeInRaid() / 1000);
-            }
-            case "Orphion's Nexus of Light" -> {
-                Services.Statistics.increaseStatistics(StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_SUCCEEDED);
-                Services.Statistics.addToStatistics(
-                        StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_TIME_ELAPSED,
-                        event.getRaid().getTimeInRaid() / 1000);
-            }
-            case "The Canyon Colossus" -> {
-                Services.Statistics.increaseStatistics(StatisticKind.THE_CANYON_COLOSSUS_SUCCEEDED);
-                Services.Statistics.addToStatistics(
-                        StatisticKind.THE_CANYON_COLOSSUS_TIME_ELAPSED,
-                        event.getRaid().getTimeInRaid() / 1000);
-            }
-            case "The Nameless Anomaly" -> {
-                Services.Statistics.increaseStatistics(StatisticKind.THE_NAMELESS_ANOMALY_SUCCEEDED);
-                Services.Statistics.addToStatistics(
-                        StatisticKind.THE_NAMELESS_ANOMALY_TIME_ELAPSED,
-                        event.getRaid().getTimeInRaid() / 1000);
-            }
+        String raidName = event.getRaid().getRaidKind().getRaidName();
+
+        if (raidName.equals(Models.Raid.NEST_OF_THE_GROOTSLANG.getRaidName())) {
+            Services.Statistics.increaseStatistics(StatisticKind.NEST_OF_THE_GROOTSLANGS_SUCCEEDED);
+            Services.Statistics.addToStatistics(
+                    StatisticKind.NEST_OF_THE_GROOTSLANGS_TIME_ELAPSED,
+                    event.getRaid().getTimeInRaid() / 1000);
+        } else if (raidName.equals(Models.Raid.ORPHIONS_NEXUS_OF_LIGHT.getRaidName())) {
+            Services.Statistics.increaseStatistics(StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_SUCCEEDED);
+            Services.Statistics.addToStatistics(
+                    StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_TIME_ELAPSED,
+                    event.getRaid().getTimeInRaid() / 1000);
+        } else if (raidName.equals(Models.Raid.THE_CANYON_COLOSSUS.getRaidName())) {
+            Services.Statistics.increaseStatistics(StatisticKind.THE_CANYON_COLOSSUS_SUCCEEDED);
+            Services.Statistics.addToStatistics(
+                    StatisticKind.THE_CANYON_COLOSSUS_TIME_ELAPSED,
+                    event.getRaid().getTimeInRaid() / 1000);
+        } else if (raidName.equals(Models.Raid.THE_NAMELESS_ANOMALY.getRaidName())) {
+            Services.Statistics.increaseStatistics(StatisticKind.THE_NAMELESS_ANOMALY_SUCCEEDED);
+            Services.Statistics.addToStatistics(
+                    StatisticKind.THE_NAMELESS_ANOMALY_TIME_ELAPSED,
+                    event.getRaid().getTimeInRaid() / 1000);
         }
     }
 
     @SubscribeEvent
     public void onRaidFailed(RaidEndedEvent.Failed event) {
-        switch (event.getRaid().getRaidKind().getRaidName()) {
-            case "Nest of the Grootslangs" -> {
-                Services.Statistics.increaseStatistics(StatisticKind.NEST_OF_THE_GROOTSLANGS_FAILED);
-                Services.Statistics.addToStatistics(
-                        StatisticKind.NEST_OF_THE_GROOTSLANGS_TIME_ELAPSED,
-                        event.getRaid().getTimeInRaid() / 1000);
-            }
-            case "Orphion's Nexus of Light" -> {
-                Services.Statistics.increaseStatistics(StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_FAILED);
-                Services.Statistics.addToStatistics(
-                        StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_TIME_ELAPSED,
-                        event.getRaid().getTimeInRaid() / 1000);
-            }
-            case "The Canyon Colossus" -> {
-                Services.Statistics.increaseStatistics(StatisticKind.THE_CANYON_COLOSSUS_FAILED);
-                Services.Statistics.addToStatistics(
-                        StatisticKind.THE_CANYON_COLOSSUS_TIME_ELAPSED,
-                        event.getRaid().getTimeInRaid() / 1000);
-            }
-            case "The Nameless Anomaly" -> {
-                Services.Statistics.increaseStatistics(StatisticKind.THE_NAMELESS_ANOMALY_FAILED);
-                Services.Statistics.addToStatistics(
-                        StatisticKind.THE_NAMELESS_ANOMALY_TIME_ELAPSED,
-                        event.getRaid().getTimeInRaid() / 1000);
-            }
+        String raidName = event.getRaid().getRaidKind().getRaidName();
+
+        if (raidName.equals(Models.Raid.NEST_OF_THE_GROOTSLANG.getRaidName())) {
+            Services.Statistics.increaseStatistics(StatisticKind.NEST_OF_THE_GROOTSLANGS_FAILED);
+            Services.Statistics.addToStatistics(
+                    StatisticKind.NEST_OF_THE_GROOTSLANGS_TIME_ELAPSED,
+                    event.getRaid().getTimeInRaid() / 1000);
+        } else if (raidName.equals(Models.Raid.ORPHIONS_NEXUS_OF_LIGHT.getRaidName())) {
+            Services.Statistics.increaseStatistics(StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_FAILED);
+            Services.Statistics.addToStatistics(
+                    StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_TIME_ELAPSED,
+                    event.getRaid().getTimeInRaid() / 1000);
+        } else if (raidName.equals(Models.Raid.THE_CANYON_COLOSSUS.getRaidName())) {
+            Services.Statistics.increaseStatistics(StatisticKind.THE_CANYON_COLOSSUS_FAILED);
+            Services.Statistics.addToStatistics(
+                    StatisticKind.THE_CANYON_COLOSSUS_TIME_ELAPSED,
+                    event.getRaid().getTimeInRaid() / 1000);
+        } else if (raidName.equals(Models.Raid.THE_NAMELESS_ANOMALY.getRaidName())) {
+            Services.Statistics.increaseStatistics(StatisticKind.THE_NAMELESS_ANOMALY_FAILED);
+            Services.Statistics.addToStatistics(
+                    StatisticKind.THE_NAMELESS_ANOMALY_TIME_ELAPSED,
+                    event.getRaid().getTimeInRaid() / 1000);
         }
     }
 
