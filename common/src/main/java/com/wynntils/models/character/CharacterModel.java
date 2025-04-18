@@ -5,24 +5,15 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.persisted.Persisted;
-import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
-import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.character.bossbar.DeathScreenBar;
-import com.wynntils.models.character.event.CharacterDeathEvent;
-import com.wynntils.models.character.event.CharacterMovedEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.ContainerModel;
@@ -31,20 +22,15 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.type.ConfirmedBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.Position;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class CharacterModel extends Model {
     private static final Pattern CHARACTER_ID_PATTERN = Pattern.compile("^[a-z0-9]{8}$");
@@ -54,12 +40,6 @@ public final class CharacterModel extends Model {
     public static final int CHARACTER_INFO_SLOT = 7;
     private static final int PROFESSION_INFO_SLOT = 17;
     public static final int GUILD_MENU_SLOT = 26;
-
-    private static final DeathScreenBar deathScreenBar = new DeathScreenBar();
-
-    private static final int MOVE_CHECK_FREQUENCY = 10;
-    private int moveCheckTicks;
-    private Position currentPosition;
 
     private boolean inCharacterSelection;
     private boolean hasCharacter;
@@ -75,7 +55,6 @@ public final class CharacterModel extends Model {
     public CharacterModel() {
         super(List.of());
 
-        Handlers.BossBar.registerBar(deathScreenBar);
     }
 
     public ClassType getClassType() {
@@ -84,7 +63,7 @@ public final class CharacterModel extends Model {
         return classType;
     }
 
-    public boolean isReskinned() {
+    private boolean isReskinned() {
         if (!hasCharacter) return false;
 
         return reskinned;
@@ -140,16 +119,6 @@ public final class CharacterModel extends Model {
         }
     }
 
-
-
-    @SubscribeEvent
-    public void onBossBarAdd(BossBarAddedEvent event) {
-        if (event.getTrackedBar() == deathScreenBar) {
-            WynntilsMod.postEvent(
-                    new CharacterDeathEvent(new Location(McUtils.player().blockPosition())));
-        }
-    }
-
     @SubscribeEvent
     public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
@@ -157,18 +126,6 @@ public final class CharacterModel extends Model {
             hasCharacter = true;
             WynntilsMod.postEvent(new CharacterUpdateEvent());
             WynntilsMod.info("Selected character " + getCharacterString());
-        }
-    }
-
-    @SubscribeEvent
-    public void checkPlayerMove(TickEvent e) {
-        if (McUtils.player() == null) return;
-        if (moveCheckTicks++ % MOVE_CHECK_FREQUENCY != 0) return;
-
-        Position newPosition = McUtils.player().position();
-        if (newPosition != currentPosition) {
-            currentPosition = newPosition;
-            WynntilsMod.postEvent(new CharacterMovedEvent(currentPosition));
         }
     }
 

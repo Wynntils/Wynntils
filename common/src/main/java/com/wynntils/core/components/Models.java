@@ -16,6 +16,7 @@ import com.wynntils.models.activities.quests.QuestModel;
 import com.wynntils.models.activities.worldevents.WorldEventModel;
 import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.character.CharacterPhysicalModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.character.RankModel;
 import com.wynntils.models.character.SkillPointModel;
@@ -75,6 +76,7 @@ public final class Models {
     public static final BombModel Bomb = new BombModel();
     public static final CaveModel Cave = new CaveModel();
     public static final CharacterModel Character = new CharacterModel();
+    public static final CharacterPhysicalModel CharacterPhysical = new CharacterPhysicalModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CharacterStatsModel CharacterStats = new CharacterStatsModel();
     public static final CombatModel Combat = new CombatModel();
