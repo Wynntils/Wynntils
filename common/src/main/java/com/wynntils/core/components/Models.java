@@ -50,7 +50,6 @@ import com.wynntils.models.profession.ProfessionModel;
 import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.rewards.RewardsModel;
 import com.wynntils.models.seaskipper.SeaskipperModel;
-import com.wynntils.models.spells.SpellCasterModel;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.stats.ShinyModel;
 import com.wynntils.models.stats.StatModel;
@@ -115,7 +114,6 @@ public final class Models {
     public static final ShieldModel Shield = new ShieldModel();
     public static final ShinyModel Shiny = new ShinyModel();
     public static final SkillPointModel SkillPoint = new SkillPointModel();
-    public static final SpellCasterModel SpellCaster = new SpellCasterModel();
     public static final SpellModel Spell = new SpellModel();
     public static final StatModel Stat = new StatModel();
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();

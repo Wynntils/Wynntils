@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.spells;
+package com.wynntils.handlers.spell;
 
-import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Handler;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -13,12 +13,8 @@ import java.util.List;
 import java.util.Queue;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public final class SpellCasterModel extends Model {
+public final class SpellCastHandler extends Handler {
     private final Queue<SpellDirection> spellPacketQueue = new LinkedList<>();
-
-    public SpellCasterModel() {
-        super(List.of());
-    }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
