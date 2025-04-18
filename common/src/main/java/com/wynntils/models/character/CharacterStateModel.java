@@ -18,14 +18,14 @@ import java.util.List;
 import net.minecraft.core.Position;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public final class CharacterPhysicalModel extends Model {
+public final class CharacterStateModel extends Model {
     private static final DeathScreenBar deathScreenBar = new DeathScreenBar();
 
     private static final int MOVE_CHECK_FREQUENCY = 10;
     private int moveCheckTicks;
     private Position currentPosition;
 
-    public CharacterPhysicalModel() {
+    public CharacterStateModel() {
         super(List.of());
 
         Handlers.BossBar.registerBar(deathScreenBar);
