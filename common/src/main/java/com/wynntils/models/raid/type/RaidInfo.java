@@ -32,6 +32,8 @@ public class RaidInfo {
     }
 
     public void addDamageToCurrentRoom(long damage) {
+        if (!challenges.containsKey(challenges.size())) return;
+
         challenges.get(challenges.size()).addDamage(damage);
     }
 
