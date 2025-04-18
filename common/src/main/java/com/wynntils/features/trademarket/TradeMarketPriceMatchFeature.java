@@ -12,7 +12,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.character.RankModel;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
@@ -80,8 +80,8 @@ public class TradeMarketPriceMatchFeature extends Feature {
                             .append(Component.literal(Models.Emerald.getFormattedString(untaxedBid, false))
                                     .withStyle(ChatFormatting.GRAY)
                                     .append(
-                                            Models.Character.isSilverbullSubscriber()
-                                                    ? CharacterModel.SILVERBULL_STAR
+                                            Models.Rank.isSilverbullSubscriber()
+                                                    ? RankModel.SILVERBULL_STAR
                                                     : Component.empty()))
                             .append(Component.literal("\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
@@ -108,8 +108,8 @@ public class TradeMarketPriceMatchFeature extends Feature {
                             .append(Component.literal(Models.Emerald.getFormattedString(untaxedAsk, false))
                                     .withStyle(ChatFormatting.GRAY)
                                     .append(
-                                            Models.Character.isSilverbullSubscriber()
-                                                    ? CharacterModel.SILVERBULL_STAR
+                                            Models.Rank.isSilverbullSubscriber()
+                                                    ? RankModel.SILVERBULL_STAR
                                                     : Component.empty()))
                             .append(Component.literal("\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")

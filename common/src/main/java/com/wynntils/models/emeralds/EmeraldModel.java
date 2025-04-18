@@ -194,6 +194,6 @@ public final class EmeraldModel extends Model {
     }
 
     public double getTaxAmount() {
-        return Models.Character.isSilverbullSubscriber() ? SILVERBULL_TAX_AMOUNT : NORMAL_TAX_AMOUNT;
+        return Models.Rank.isSilverbullSubscriber() ? SILVERBULL_TAX_AMOUNT : NORMAL_TAX_AMOUNT;
     }
 }

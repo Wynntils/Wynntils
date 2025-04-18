@@ -17,6 +17,7 @@ import com.wynntils.models.activities.worldevents.WorldEventModel;
 import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
+import com.wynntils.models.character.RankModel;
 import com.wynntils.models.character.SkillPointModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;
 import com.wynntils.models.characterstats.CombatXpModel;
@@ -104,6 +105,7 @@ public final class Models {
     public static final ProfessionModel Profession = new ProfessionModel();
     public static final QuestModel Quest = new QuestModel();
     public static final RaidModel Raid = new RaidModel();
+    public static final RankModel Rank = new RankModel();
     public static final RewardsModel Rewards = new RewardsModel();
     public static final SeaskipperModel Seaskipper = new SeaskipperModel();
     public static final ServerListModel ServerList = new ServerListModel();
