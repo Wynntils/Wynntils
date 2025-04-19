@@ -82,10 +82,10 @@ public class GuideAspectItemStack extends GuideItemStack {
         } else {
             // Any other tier
             tierLine = Component.literal("     Tier " + MathUtils.toRoman(tier))
-                    .withStyle(ChatFormatting.GRAY)
+                    .withStyle(aspectInfo.gearTier().getChatFormatting())
                     .append(Component.literal(" / ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal("Tier " + MathUtils.toRoman(tier + 1))
-                            .withStyle(aspectInfo.gearTier().getChatFormatting()))
+                            .withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(
                                     " [" + aspectInfo.effects().get(tier).a() + "]")
                             .withStyle(ChatFormatting.GRAY));
