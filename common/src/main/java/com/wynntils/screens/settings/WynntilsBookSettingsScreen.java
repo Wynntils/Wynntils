@@ -422,7 +422,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         CONFIG_SCROLL_X + offsetX,
                         CONFIG_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
                         (int) configScrollRenderY,
-                        (int) (configScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2))) {
+                        (int) (configScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
             draggingConfigScroll = true;
             return true;
         }
@@ -693,7 +693,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         categoryButtons = new ArrayList<>();
 
         for (int i = 0; i < MAX_DISPLAYED_CATEGORIES; i++) {
-            xPos += Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.25;
+            xPos += (int) (Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.25);
 
             int categoryIndex;
 

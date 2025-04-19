@@ -102,8 +102,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         filterButtons.clear();
 
         filterButtons.add(new FilterButton(
-                (int) (35 + offsetX),
-                (int) (125 + offsetY),
+                35 + offsetX,
+                125 + offsetY,
                 30,
                 30,
                 Texture.DISCOVERED_TERRITORY,
@@ -126,8 +126,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 },
                 this::isShowingTerritory));
         filterButtons.add(new FilterButton(
-                (int) (70 + offsetX),
-                (int) (125 + offsetY),
+                70 + offsetX,
+                125 + offsetY,
                 30,
                 30,
                 Texture.DISCOVERED_WORLD,
@@ -150,8 +150,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 },
                 this::isShowingWorld));
         filterButtons.add(new FilterButton(
-                (int) (105 + offsetX),
-                (int) (125 + offsetY),
+                105 + offsetX,
+                125 + offsetY,
                 30,
                 30,
                 Texture.DISCOVERED_SECRET,
@@ -174,8 +174,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 },
                 this::isShowingSecrets));
         filterButtons.add(new FilterButton(
-                (int) (35 + offsetX),
-                (int) (160 + offsetY),
+                35 + offsetX,
+                160 + offsetY,
                 30,
                 30,
                 Texture.UNDISCOVERED_TERRITORY,
@@ -194,8 +194,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 },
                 this::isShowingUndiscoveredTerritory));
         filterButtons.add(new FilterButton(
-                (int) (70 + offsetX),
-                (int) (160 + offsetY),
+                70 + offsetX,
+                160 + offsetY,
                 30,
                 30,
                 Texture.UNDISCOVERED_WORLD,
@@ -214,8 +214,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 },
                 this::isShowingUndiscoveredWorld));
         filterButtons.add(new FilterButton(
-                (int) (105 + offsetX),
-                (int) (160 + offsetY),
+                105 + offsetX,
+                160 + offsetY,
                 30,
                 30,
                 Texture.UNDISCOVERED_SECRET,
@@ -236,14 +236,14 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + offsetX),
-                (int) (65 + offsetY),
+                65 + offsetY,
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ReloadButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX),
-                (int) (11 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX,
+                11 + offsetY,
                 (int) (Texture.RELOAD_ICON_OFFSET.width() / 2f / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "discovery",
@@ -251,8 +251,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                         shouldQuerySecrets(), shouldQueryWorld(), shouldQueryTerritory())));
 
         this.addRenderableWidget(new SortOrderWidget(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 1 + offsetX),
-                (int) (11 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 1 + offsetX,
+                11 + offsetY,
                 (int) (Texture.SORT_DISTANCE_OFFSET.width() / 1.7f),
                 (int) (Texture.SORT_DISTANCE_OFFSET.height() / 2f / 1.7f),
                 this));
@@ -262,14 +262,14 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
                         + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
@@ -331,7 +331,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         int offset = i % getElementsPerPage();
         return new DiscoveryButton(
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + offsetX),
-                (int) (offset * 13 + 25 + offsetY),
+                offset * 13 + 25 + offsetY,
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),

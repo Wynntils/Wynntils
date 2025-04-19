@@ -749,7 +749,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         int yPos = 31 + offsetY;
 
         for (ItemStatProvider<?> provider : itemStatProviders) {
-            providerButtons.add(new ProviderButton(7 + offsetX, yPos, 120, 18, this, provider, offsetX, offsetY));
+            providerButtons.add(new ProviderButton(7 + offsetX, yPos, 120, 18, this, provider));
 
             yPos += 21;
         }
@@ -1040,9 +1040,9 @@ public final class ItemFilterScreen extends WynntilsScreen {
             if (MathUtils.isInside(
                     mouseX,
                     mouseY,
-                    0 + offsetX,
+                    offsetX,
                     Texture.ITEM_FILTER_BACKGROUND.width() + offsetX,
-                    0 + offsetY,
+                    offsetY,
                     Texture.ITEM_FILTER_BACKGROUND.height() + offsetY)) {
                 return;
             }

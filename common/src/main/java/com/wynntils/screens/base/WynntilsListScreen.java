@@ -46,8 +46,8 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         // We have to do it like this as WynntilsQuestBookScreen can call reloadElements before the widget
         // is initialised and the screen width/height is not available in the screen constructor and as
         // guide screens don't use the same position we need to store the original
-        this.searchWidget.setX((int) (originalSearchWidgetX + offsetX));
-        this.searchWidget.setY((int) (originalSearchWidgetY + offsetY));
+        this.searchWidget.setX(originalSearchWidgetX + offsetX);
+        this.searchWidget.setY(originalSearchWidgetY + offsetY);
         this.addRenderableWidget(searchWidget);
 
         reloadElements(searchWidget.getTextBoxInput());

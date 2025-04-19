@@ -64,14 +64,14 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + offsetX),
-                (int) (65 + offsetY),
+                65 + offsetY,
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ReloadButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX),
-                (int) (11 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX,
+                11 + offsetY,
                 (int) (Texture.RELOAD_ICON_OFFSET.width() / 2f / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "lootrun",
@@ -82,14 +82,14 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
                         + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
@@ -253,7 +253,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
         int offset = i % getElementsPerPage();
         return new LootrunPathButton(
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + offsetX),
-                (int) (offset * 13 + 25 + offsetY),
+                offset * 13 + 25 + offsetY,
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),

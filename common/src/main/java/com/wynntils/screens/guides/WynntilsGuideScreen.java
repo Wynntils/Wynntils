@@ -45,16 +45,16 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         super.doInit();
 
         this.addRenderableWidget(new ItemFilterUIButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 20 + offsetX),
-                (int) (-22 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 20 + offsetX,
+                -22 + offsetY,
                 searchWidget,
                 this,
                 true,
                 supportedProviderTypes));
 
         this.addRenderableWidget(new BackButton(
-                (int) ((int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + offsetX),
-                (int) (65 + offsetY),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + offsetX,
+                65 + offsetY,
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsGuidesListScreen.create()));
@@ -64,14 +64,14 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
                         + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,

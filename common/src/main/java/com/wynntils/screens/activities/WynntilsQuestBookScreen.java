@@ -111,14 +111,14 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + offsetX),
-                (int) (65 + offsetY),
+                65 + offsetY,
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         filterButtons.add(new FilterButton(
-                (int) (55 + offsetX),
-                (int) (142 + offsetY),
+                55 + offsetX,
+                142 + offsetY,
                 30,
                 30,
                 Texture.QUESTS_SCROLL_ICON,
@@ -141,8 +141,8 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 },
                 this::isShowingQuests));
         filterButtons.add(new FilterButton(
-                (int) (90 + offsetX),
-                (int) (142 + offsetY),
+                90 + offsetX,
+                142 + offsetY,
                 30,
                 30,
                 Texture.SIGN_ICON,
@@ -170,8 +170,8 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         }
 
         this.addRenderableWidget(new ReloadButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX),
-                (int) (11 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX,
+                11 + offsetY,
                 (int) (Texture.RELOAD_ICON_OFFSET.width() / 2f / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "quest",
@@ -181,32 +181,32 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
                         + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
         this.addRenderableWidget(new DialogueHistoryButton(
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30 + offsetX),
-                (int) (15 + offsetY),
+                15 + offsetY,
                 Texture.DIALOGUE_ICON.width(),
                 Texture.DIALOGUE_ICON.height()));
         this.addRenderableWidget(new QuestInfoButton(
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 4f + offsetX),
-                (int) (12 + offsetY),
+                12 + offsetY,
                 Texture.QUESTS_SCROLL_ICON.width(),
                 Texture.QUESTS_SCROLL_ICON.height()));
 
         this.addRenderableWidget(new SortOrderWidget(
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 1 + offsetX),
-                (int) (11 + offsetY),
+                11 + offsetY,
                 (int) (Texture.SORT_DISTANCE_OFFSET.width() / 1.7f),
                 (int) (Texture.SORT_DISTANCE_OFFSET.height() / 2f / 1.7f),
                 this));
@@ -407,7 +407,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         int offset = i % getElementsPerPage();
         return new QuestButton(
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + offsetX),
-                (int) (offset * 13 + 25 + offsetY),
+                offset * 13 + 25 + offsetY,
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),

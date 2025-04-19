@@ -47,19 +47,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
     }
 
     protected void renderBackgroundTexture(PoseStack poseStack) {
-        int txWidth = Texture.CONTENT_BOOK_BACKGROUND.width();
-        int txHeight = Texture.CONTENT_BOOK_BACKGROUND.height();
-
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.CONTENT_BOOK_BACKGROUND.resource(),
-                (this.width - txWidth) / 2f,
-                (this.height - txHeight) / 2f,
-                0,
-                txWidth,
-                txHeight,
-                txWidth,
-                txHeight);
+        RenderUtils.drawTexturedRect(poseStack, Texture.CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
     protected void renderVersion(PoseStack poseStack) {
@@ -68,31 +56,20 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(version),
-                        53f + offsetX,
-                        127f + offsetX,
+                        54 + offsetX,
+                        127 + offsetX,
                         196 + offsetY,
                         202 + offsetY,
                         0,
                         CommonColors.YELLOW,
                         HorizontalAlignment.CENTER,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL,
                         0.7f);
     }
 
     protected void renderTitle(PoseStack poseStack, String titleString) {
-        int txWidth = Texture.CONTENT_BOOK_TITLE.width();
-        int txHeight = Texture.CONTENT_BOOK_TITLE.height();
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.CONTENT_BOOK_TITLE.resource(),
-                0 + offsetX,
-                30 + offsetY,
-                0,
-                txWidth,
-                txHeight,
-                txWidth,
-                txHeight);
+        RenderUtils.drawTexturedRect(poseStack, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
 
         FontRenderer.getInstance()
                 .renderText(

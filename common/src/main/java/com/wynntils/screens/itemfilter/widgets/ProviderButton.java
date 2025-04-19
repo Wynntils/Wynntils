@@ -46,24 +46,13 @@ public class ProviderButton extends WynntilsButton {
             new AnyStatFilters.AnyStatValueStatFilter());
 
     private final ItemFilterScreen filterScreen;
-    private final float offsetX;
-    private final float offsetY;
     private final ItemStatProvider<?> provider;
     private final List<Component> tooltip;
 
     public ProviderButton(
-            int x,
-            int y,
-            int width,
-            int height,
-            ItemFilterScreen filterScreen,
-            ItemStatProvider<?> provider,
-            float offsetX,
-            float offsetY) {
+            int x, int y, int width, int height, ItemFilterScreen filterScreen, ItemStatProvider<?> provider) {
         super(x, y, width, height, Component.literal(provider.getTranslatedName()));
         this.filterScreen = filterScreen;
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
         this.provider = provider;
 
         // Boolean is currently the only stat type to not support "any" so don't

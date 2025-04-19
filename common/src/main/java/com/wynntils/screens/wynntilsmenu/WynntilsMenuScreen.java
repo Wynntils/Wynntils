@@ -95,8 +95,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             buttons.add(new ArrayList<>());
         }
 
-        int x = (int) ((BUTTON_SIZE + 5) + offsetX) - 15;
-        int y = (int) ((BUTTON_SIZE + 5) + offsetY) + 15;
+        int x = ((BUTTON_SIZE + 5) + offsetX) - 15;
+        int y = (BUTTON_SIZE + 5) + offsetY + 15;
 
         // region Row 1: Content / Activities
         buttons.getFirst()
@@ -182,7 +182,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         // endregion
 
         // region Row 2: Map
-        x = (int) ((BUTTON_SIZE + 5) + offsetX) - 15;
+        x = ((BUTTON_SIZE + 5) + offsetX) - 15;
         y += (BUTTON_SIZE + 5);
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class).isEnabled()) {
             buttons.get(1)
@@ -250,7 +250,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         // endregion
 
         // region Row 3: Guides
-        x = (int) ((BUTTON_SIZE + 5) + offsetX) - 15;
+        x = ((BUTTON_SIZE + 5) + offsetX) - 15;
         y += (BUTTON_SIZE + 5);
         buttons.get(2)
                 .add(new WynntilsMenuButton(
@@ -336,7 +336,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         // endregion
 
         // region Row 4: Wynntils
-        x = (int) ((BUTTON_SIZE + 5) + offsetX) - 15;
+        x = ((BUTTON_SIZE + 5) + offsetX) - 15;
         y += (BUTTON_SIZE + 5);
         buttons.get(3)
                 .add(new WynntilsMenuButton(
@@ -450,7 +450,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.CONTENT_BOOK_TITLE.resource(),
-                0 + offsetX,
+                offsetX,
                 15 + offsetY,
                 0,
                 txWidth,

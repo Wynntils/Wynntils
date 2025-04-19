@@ -94,7 +94,7 @@ public final class WynntilsCharmGuideScreen
 
         return new GuideCharmItemStackButton(
                 (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
-                (int) (yOffset + 43 + offsetY),
+                yOffset + 43 + offsetY,
                 18,
                 18,
                 elements.get(i),

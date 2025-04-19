@@ -65,14 +65,14 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
 
         this.addRenderableWidget(new PageSelectorButton(
                 (int) (80 - Texture.FORWARD_ARROW_OFFSET.width() / 2f + offsetX),
-                (int) (Texture.SCROLL_BACKGROUND.height() - 17 + offsetY),
+                Texture.SCROLL_BACKGROUND.height() - 17 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.SCROLL_BACKGROUND.width() - 80 + offsetX),
-                (int) (Texture.SCROLL_BACKGROUND.height() - 17 + offsetY),
+                Texture.SCROLL_BACKGROUND.width() - 80 + offsetX,
+                Texture.SCROLL_BACKGROUND.height() - 17 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,

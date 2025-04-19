@@ -76,8 +76,8 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
         this.addRenderableWidget(new ReloadButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX),
-                (int) (11 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX,
+                11 + offsetY,
                 (int) (Texture.RELOAD_ICON_OFFSET.width() / 2f / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "dialogue",
@@ -87,21 +87,21 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
                         + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
         this.addRenderableWidget(new QuestsPageButton(
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30 + offsetX),
-                (int) (12 + offsetY),
+                12 + offsetY,
                 Texture.QUESTS_SCROLL_ICON.width(),
                 Texture.QUESTS_SCROLL_ICON.height()));
     }

@@ -34,7 +34,7 @@ public class WynntilsCrowdSourcingSettingsScreen
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + offsetX),
-                (int) (65 + offsetY),
+                65 + offsetY,
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
@@ -44,14 +44,14 @@ public class WynntilsCrowdSourcingSettingsScreen
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
                         + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
@@ -81,8 +81,8 @@ public class WynntilsCrowdSourcingSettingsScreen
     protected CrowdSourcedDataWidget getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new CrowdSourcedDataWidget(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 15 + offsetX),
-                (int) (offset * 13 + 25 + offsetY),
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 15 + offsetX,
+                offset * 13 + 25 + offsetY,
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),

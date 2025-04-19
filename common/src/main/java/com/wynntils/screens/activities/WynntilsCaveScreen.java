@@ -258,7 +258,7 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
         int offset = i % getElementsPerPage();
         return new CaveButton(
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + offsetX),
-                (int) (offset * 13 + 25 + offsetY),
+                offset * 13 + 25 + offsetY,
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),
