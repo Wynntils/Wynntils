@@ -1451,8 +1451,6 @@
   "function.wynntils.clockm.name": "时间",
   "function.wynntils.currentRaid.description": "你当前所在的突袭名称",
   "function.wynntils.currentRaid.name": "当前突袭",
-  "function.wynntils.currentRaidRoom.description": "你当前所在的突袭房间类型",
-  "function.wynntils.currentRaidRoom.name": "当前突袭房间",
   "function.wynntils.currentRaidRoomTime.description": "你在当前突袭房间的时间（毫秒）",
   "function.wynntils.currentRaidRoomTime.name": "当前突袭房间时间",
   "function.wynntils.currentRaidTime.description": "你在当前突袭中的时间（毫秒）",

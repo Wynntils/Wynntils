@@ -1451,8 +1451,6 @@
   "function.wynntils.clockm.name": "Ora",
   "function.wynntils.currentRaid.description": "Il nome del raid in cui ti trovi attualmente",
   "function.wynntils.currentRaid.name": "Raid Attuale",
-  "function.wynntils.currentRaidRoom.description": "Il tipo di stanza del raid in cui ti trovi attualmente",
-  "function.wynntils.currentRaidRoom.name": "Stanza del Raid Attuale",
   "function.wynntils.currentRaidRoomTime.description": "Da quanto tempo sei nella stanza del raid attuale in millisecondi",
   "function.wynntils.currentRaidRoomTime.name": "Tempo nella Stanza del Raid Attuale",
   "function.wynntils.currentRaidTime.description": "Da quanto tempo sei nel raid attuale in millisecondi",
