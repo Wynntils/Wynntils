@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides;
@@ -25,10 +25,13 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
 
         this.supportedProviderTypes = supportedProviderTypes;
 
+        originalSearchWidgetX = 0;
+        originalSearchWidgetY = -22;
+
         // Override the search widget with our own
         this.searchWidget = new ItemSearchWidget(
-                0,
-                -22,
+                originalSearchWidgetX,
+                originalSearchWidgetY,
                 Texture.CONTENT_BOOK_BACKGROUND.width() - 24,
                 20,
                 supportedProviderTypes,
@@ -42,25 +45,33 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         super.doInit();
 
         this.addRenderableWidget(new ItemFilterUIButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 20, -22, searchWidget, this, true, supportedProviderTypes));
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 20 + offsetX,
+                -22 + offsetY,
+                searchWidget,
+                this,
+                true,
+                supportedProviderTypes));
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
-                65,
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + offsetX,
+                65 + offsetY,
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsGuidesListScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f
+                        + 50
+                        - Texture.FORWARD_ARROW_OFFSET.width() / 2f
+                        + offsetX),
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
-                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,

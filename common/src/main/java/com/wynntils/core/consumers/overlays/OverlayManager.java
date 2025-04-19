@@ -271,14 +271,14 @@ public final class OverlayManager extends Manager {
                     if (selectedOverlay != null && overlay != selectedOverlay && !renderNonSelected) continue;
 
                     overlay.renderPreview(
-                            event.getPoseStack(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
+                            event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
                 } else if (shouldRender) {
                     long startTime = System.currentTimeMillis();
-                    overlay.render(event.getPoseStack(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
+                    overlay.render(event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
                     logProfilingData(startTime, overlay);
                 }
             } catch (Throwable t) {
-                RenderUtils.disableScissor();
+                RenderUtils.disableScissor(event.getGuiGraphics());
                 RenderUtils.clearMask();
 
                 // We can't disable it right away since that will cause ConcurrentModificationException

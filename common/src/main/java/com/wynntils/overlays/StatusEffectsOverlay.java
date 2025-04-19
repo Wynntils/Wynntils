@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
@@ -29,6 +28,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -87,10 +87,11 @@ public class StatusEffectsOverlay extends Overlay {
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        poseStack,
+                        guiGraphics.pose(),
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),
@@ -104,10 +105,10 @@ public class StatusEffectsOverlay extends Overlay {
 
     @Override
     public void renderPreview(
-            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        poseStack,
+                        guiGraphics.pose(),
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),
@@ -167,10 +168,11 @@ public class StatusEffectsOverlay extends Overlay {
     private String getEffectsKey(StatusEffect effect) {
         return switch (stackingBehaviour.get()) {
             case NONE, GROUP -> effect.asString().getString();
-            case SUM -> effect.getPrefix().getString()
-                    + effect.getName().getString()
-                    + effect.getModifierSuffix().getString()
-                    + effect.getDisplayedTime().getString();
+            case SUM ->
+                effect.getPrefix().getString()
+                        + effect.getName().getString()
+                        + effect.getModifierSuffix().getString()
+                        + effect.getDisplayedTime().getString();
         };
     }
 
@@ -229,7 +231,7 @@ public class StatusEffectsOverlay extends Overlay {
                                 + modifierString.substring(index));
                     }
                 }
-                    // This shouldn't be reached
+                // This shouldn't be reached
                 default -> {}
             }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -63,10 +63,6 @@ public class ItemSearchWidget extends SearchWidget {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
         helperWidget.render(guiGraphics, mouseX, mouseY, partialTick);
-        if (helperWidget.isMouseOver(mouseX, mouseY)) {
-            guiGraphics.renderComponentTooltip(
-                    FontRenderer.getInstance().getFont(), helperWidget.getTooltipLines(), mouseX, mouseY);
-        }
     }
 
     @Override
@@ -182,6 +178,20 @@ public class ItemSearchWidget extends SearchWidget {
         }
 
         return StyledText.fromString(String.valueOf(c));
+    }
+
+    @Override
+    public void setX(int x) {
+        super.setX(x);
+
+        helperWidget.setX(x + width - 14);
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+
+        helperWidget.setY(y + 6);
     }
 
     @Override

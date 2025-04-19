@@ -397,10 +397,13 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         RenderSystem.enableDepthTest();
-        renderMap(poseStack);
+        renderMap(guiGraphics);
         RenderUtils.enableScissor(
-                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
-                        mapHeight);
+                guiGraphics,
+                (int) (renderX + renderedBorderXOffset),
+                (int) (renderY + renderedBorderYOffset),
+                (int) mapWidth,
+                (int) mapHeight);
 
         if (parsedXInput != null && parsedZInput != null) {
             Poi poi = new CustomPoi(
@@ -439,7 +442,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         .pointerType
                         .get());
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
 
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);

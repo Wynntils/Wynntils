@@ -356,10 +356,15 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         MapRenderer.renderCursor(poseStack, cursorX, cursorZ, pointerScale, pointerColor, pointerType, false);
     }
 
-    protected void renderMap(PoseStack poseStack) {
+    protected void renderMap(GuiGraphics guiGraphics) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.enableScissor(
-                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
-                        mapHeight);
+                guiGraphics,
+                (int) (renderX + renderedBorderXOffset),
+                (int) (renderY + renderedBorderYOffset),
+                (int) mapWidth,
+                (int) mapHeight);
 
         // Background black void color
         RenderUtils.drawRect(
@@ -395,7 +400,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
         BUFFER_SOURCE.endBatch();
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
     }
 
     protected void renderChunkBorders(PoseStack poseStack) {

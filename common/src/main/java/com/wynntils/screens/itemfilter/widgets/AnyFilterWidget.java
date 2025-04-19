@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets;
@@ -18,8 +18,8 @@ import net.minecraft.network.chat.Component;
 public class AnyFilterWidget extends GeneralFilterWidget {
     private final Button removeButton;
 
-    protected AnyFilterWidget(ProviderFilterListWidget parent) {
-        super(150, 30, 195, 145, Component.literal("Any Filter Widget"), parent);
+    protected AnyFilterWidget(int x, int y, ProviderFilterListWidget parent) {
+        super(x, y, 195, 145, Component.literal("Any Filter Widget"), parent);
 
         this.removeButton = new Button.Builder(Component.translatable("screens.wynntils.itemFilter.removeAny"), (b -> {
                     parent.updateQuery();

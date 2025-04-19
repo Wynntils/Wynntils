@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
@@ -62,10 +62,8 @@ public class SeaskipperDestinationButton extends WynntilsButton {
                 Texture.DESTINATION_BUTTON.width(),
                 Texture.DESTINATION_BUTTON.height());
 
-        poseStack.pushPose();
-        poseStack.translate(this.getX() + this.width * 0.05f, this.getY() + this.height * 0.16f, 0f);
-        float scale = this.height * 0.032f;
-        poseStack.scale(scale, scale, 0f);
+        float x = this.getX() + this.width * 0.05f;
+        float y = this.getY() + this.height * 0.16f;
 
         FontRenderer.getInstance()
                 .renderText(
@@ -74,12 +72,13 @@ public class SeaskipperDestinationButton extends WynntilsButton {
                                 "screens.wynntils.customSeaskipperScreen.destination",
                                 destination.getName(),
                                 destination.getLevel())),
-                        0,
-                        1,
+                        x,
+                        y + 1,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
+                        TextShadow.NONE,
+                        this.height * 0.032f);
 
         CustomColor priceColor;
 
@@ -96,14 +95,13 @@ public class SeaskipperDestinationButton extends WynntilsButton {
                         StyledText.fromComponent(Component.translatable(
                                 "screens.wynntils.customSeaskipperScreen.cost",
                                 destination.getDestination().item().getPrice())),
-                        0,
-                        13,
+                        x,
+                        y + 10,
                         priceColor,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.OUTLINE);
-
-        poseStack.popPose();
+                        TextShadow.OUTLINE,
+                        this.height * 0.032f);
 
         if (isHovered) {
             List<Component> tooltip;

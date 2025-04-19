@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -106,7 +107,8 @@ public class NpcDialogueOverlay extends Overlay {
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         NpcDialogue currentDialogue = Models.NpcDialogue.getCurrentDialogue();
         List<NpcDialogue> confirmationlessDialogues = Models.NpcDialogue.getConfirmationlessDialogues();
 
@@ -133,12 +135,16 @@ public class NpcDialogueOverlay extends Overlay {
         allDialogues.removeLast();
 
         renderDialogue(
-                poseStack, bufferSource, allDialogues, currentDialogue.dialogueType(), currentDialogue.isProtected());
+                guiGraphics.pose(),
+                bufferSource,
+                allDialogues,
+                currentDialogue.dialogueType(),
+                currentDialogue.isProtected());
     }
 
     @Override
     public void renderPreview(
-            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         List<StyledText> fakeDialogue = List.of(
                 StyledText.fromString(
                         "§7[1/2] §2Random Citizen: §aDid you know that Wynntils is the best Wynncraft mod you'll probably find?"),
@@ -148,7 +154,7 @@ public class NpcDialogueOverlay extends Overlay {
         // we have to force update every time
         updateTextRenderSettings();
 
-        renderDialogue(poseStack, bufferSource, fakeDialogue, NpcDialogueType.NORMAL, true);
+        renderDialogue(guiGraphics.pose(), bufferSource, fakeDialogue, NpcDialogueType.NORMAL, true);
     }
 
     @Override

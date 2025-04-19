@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -44,7 +44,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     private int highlightPosition = 0;
     private long lastCursorSwitch = 0;
     private boolean renderCursor = true;
-    private CustomColor renderColor = CommonColors.WHITE;
+    protected CustomColor renderColor = CommonColors.WHITE;
 
     protected boolean isDragging = false;
 

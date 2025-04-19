@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
@@ -19,6 +18,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
@@ -78,19 +78,20 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     protected abstract List<T> getPreviewChildren();
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        children.forEach(o -> o.render(poseStack, bufferSource, deltaTracker, window));
+    public void render(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        children.forEach(o -> o.render(guiGraphics, bufferSource, deltaTracker, window));
     }
 
     @Override
     public void renderPreview(
-            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         List<T> previewChildren = getPreviewChildren();
         Map<T, OverlaySize> previewSize =
                 previewChildren.stream().collect(Collectors.toMap(Function.identity(), Overlay::getSize));
 
         updateLayout(previewChildren, previewSize);
-        previewChildren.forEach(o -> o.renderPreview(poseStack, bufferSource, deltaTracker, window));
+        previewChildren.forEach(o -> o.renderPreview(guiGraphics, bufferSource, deltaTracker, window));
     }
 
     @Override

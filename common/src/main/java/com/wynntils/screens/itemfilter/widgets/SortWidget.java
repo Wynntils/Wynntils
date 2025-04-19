@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets;
@@ -27,20 +27,15 @@ import net.minecraft.network.chat.Component;
 
 public class SortWidget extends AbstractWidget {
     private final ItemFilterScreen filterScreen;
-    private final float translationX;
-    private final float translationY;
 
     private final List<Button> buttons = new ArrayList<>();
 
     private SortInfo sortInfo;
 
-    public SortWidget(
-            int x, int y, ItemFilterScreen filterScreen, float translationX, float translationY, SortInfo sortInfo) {
+    public SortWidget(int x, int y, ItemFilterScreen filterScreen, SortInfo sortInfo) {
         super(x, y, 170, 20, Component.literal("Sort Widget"));
 
         this.filterScreen = filterScreen;
-        this.translationX = translationX;
-        this.translationY = translationY;
 
         this.sortInfo = sortInfo;
 

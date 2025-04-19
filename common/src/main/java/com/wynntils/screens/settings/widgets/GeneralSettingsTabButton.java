@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -22,6 +22,8 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
 
     private final OffsetDirection offsetDirection;
     private final Texture iconTexture;
+    private final int offsetX;
+    private final int offsetY;
 
     private int hoverOffset = 0;
 
@@ -34,11 +36,15 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
             List<Component> tooltip,
             Texture tagTexture,
             Texture iconTexture,
-            OffsetDirection offsetDirection) {
+            OffsetDirection offsetDirection,
+            int offsetX,
+            int offsetY) {
         super(x, y, width, height, tagTexture, onClick, tooltip);
         this.tagTexture = tagTexture;
         this.iconTexture = iconTexture;
         this.offsetDirection = offsetDirection;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
     @Override
@@ -48,12 +54,12 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
         // Don't count as hovered if mouse is hovering the book as the tags render
         // slightly underneath the book
         if (isHovered
-                && ((offsetDirection == OffsetDirection.UP && mouseY >= 0)
+                && ((offsetDirection == OffsetDirection.UP && mouseY >= offsetY)
                         || (offsetDirection == OffsetDirection.RIGHT
-                                && mouseX <= Texture.CONFIG_BOOK_BACKGROUND.width())
+                                && mouseX <= offsetX + Texture.CONFIG_BOOK_BACKGROUND.width())
                         || (offsetDirection == OffsetDirection.DOWN
-                                && mouseY <= Texture.CONFIG_BOOK_BACKGROUND.height())
-                        || (offsetDirection == OffsetDirection.LEFT && mouseX >= 0))) {
+                                && mouseY <= offsetY + Texture.CONFIG_BOOK_BACKGROUND.height())
+                        || (offsetDirection == OffsetDirection.LEFT && mouseX >= offsetX))) {
             isHovered = false;
         }
 
@@ -75,25 +81,32 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
                     : Math.max(hoverOffset, MIN_OFFSET);
         }
 
-        // Move the tag render position
-        poseStack.pushPose();
-        poseStack.translate(
-                (offsetDirection == OffsetDirection.RIGHT || offsetDirection == OffsetDirection.LEFT) ? hoverOffset : 0,
-                (offsetDirection == OffsetDirection.UP || offsetDirection == OffsetDirection.DOWN) ? hoverOffset : 0,
-                0);
+        int xOffset = 0;
+        int yOffset = 0;
 
-        RenderUtils.drawTexturedRect(poseStack, tagTexture, this.getX(), this.getY());
+        // Move the tag render position
+        if (offsetDirection == OffsetDirection.RIGHT || offsetDirection == OffsetDirection.LEFT) {
+            xOffset = hoverOffset;
+        } else {
+            yOffset = hoverOffset;
+        }
+
+        RenderUtils.drawTexturedRect(poseStack, tagTexture, this.getX() + xOffset, this.getY() + yOffset);
 
         // Render icon on tag
         if (offsetDirection == OffsetDirection.UP || offsetDirection == OffsetDirection.DOWN) {
             RenderUtils.drawTexturedRect(
-                    poseStack, iconTexture, getX() + (getWidth() - iconTexture.width()) / 2f, getY() + 14);
+                    poseStack,
+                    iconTexture,
+                    getX() + (getWidth() - iconTexture.width()) / 2f + xOffset,
+                    getY() + 14 + yOffset);
         } else {
             RenderUtils.drawTexturedRect(
-                    poseStack, iconTexture, getX() + 14, getY() + (getHeight() - iconTexture.height()) / 2f);
+                    poseStack,
+                    iconTexture,
+                    getX() + 14 + xOffset,
+                    getY() + (getHeight() - iconTexture.height()) / 2f + yOffset);
         }
-
-        poseStack.popPose();
     }
 
     protected enum OffsetDirection {

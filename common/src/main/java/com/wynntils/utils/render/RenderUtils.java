@@ -730,20 +730,12 @@ public final class RenderUtils {
         RenderSystem.disableBlend();
     }
 
-    /*
-       Normal GL implementation is in screen coordinates and thus y is inverted,
-       this changes it so it doesn't do that
-    */
-    public static void enableScissor(int x, int y, int width, int height) {
-        Window window = McUtils.window();
-        double scale = window.getGuiScale();
-        RenderSystem.enableScissor(
-                (int) (x * scale), (int) (window.getHeight() - ((y + height) * scale)), (int) (width * scale), (int)
-                        (height * scale));
+    public static void enableScissor(GuiGraphics guiGraphics, int x, int y, int width, int height) {
+        guiGraphics.enableScissor(x, y, x + width, y + height);
     }
 
-    public static void disableScissor() {
-        RenderSystem.disableScissor();
+    public static void disableScissor(GuiGraphics guiGraphics) {
+        guiGraphics.disableScissor();
     }
 
     public static void rotatePose(PoseStack poseStack, float centerX, float centerZ, float angle) {

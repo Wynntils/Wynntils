@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.minimap;
@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class MinimapOverlay extends Overlay {
@@ -117,8 +118,11 @@ public class MinimapOverlay extends Overlay {
     // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`
     // currently not working with buffer sources.
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         if (!Models.WorldState.onWorld()) return;
+
+        PoseStack poseStack = guiGraphics.pose();
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
@@ -144,10 +148,12 @@ public class MinimapOverlay extends Overlay {
 
         // enable mask
         switch (maskType.get()) {
-            case RECTANGULAR -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
-            case CIRCLE -> RenderUtils.createMask(
-                    poseStack, Texture.CIRCLE_MASK, (int) renderX, (int) renderY, (int) (renderX + width), (int)
-                            (renderY + height));
+            case RECTANGULAR ->
+                RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
+            case CIRCLE ->
+                RenderUtils.createMask(
+                        poseStack, Texture.CIRCLE_MASK, (int) renderX, (int) renderY, (int) (renderX + width), (int)
+                                (renderY + height));
         }
 
         // Always draw a black background to cover transparent map areas
@@ -221,7 +227,7 @@ public class MinimapOverlay extends Overlay {
 
         // disable mask & render border
         switch (maskType.get()) {
-            case RECTANGULAR -> RenderUtils.disableScissor();
+            case RECTANGULAR -> RenderUtils.disableScissor(guiGraphics);
             case CIRCLE -> RenderUtils.clearMask();
         }
 
