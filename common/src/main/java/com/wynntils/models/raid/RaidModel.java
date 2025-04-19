@@ -55,12 +55,6 @@ import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class RaidModel extends Model {
-    // RaidKinds
-    public static final RaidKind NEST_OF_THE_GROOTSLANG = new NestOfTheGrootslangsRaid();
-    public static final RaidKind ORPHIONS_NEXUS_OF_LIGHT = new OrphionsNexusOfLightRaid();
-    public static final RaidKind THE_CANYON_COLOSSUS = new TheCanyonColossusRaid();
-    public static final RaidKind THE_NAMELESS_ANOMALY = new TheNamelessAnomalyRaid();
-
     // These should be set to whatever the highest amount in any raid is.
     public static final Integer MAXIMUM_CHALLENGE_ROOMS = 3;
     public static final Integer MAXIMUM_BOSS_ROOMS = 2;
@@ -620,10 +614,10 @@ public class RaidModel extends Model {
     }
 
     private void registerRaids() {
-        registerRaid(NEST_OF_THE_GROOTSLANG);
-        registerRaid(ORPHIONS_NEXUS_OF_LIGHT);
-        registerRaid(THE_CANYON_COLOSSUS);
-        registerRaid(THE_NAMELESS_ANOMALY);
+        registerRaid(new NestOfTheGrootslangsRaid());
+        registerRaid(new OrphionsNexusOfLightRaid());
+        registerRaid(new TheCanyonColossusRaid());
+        registerRaid(new TheNamelessAnomalyRaid());
     }
 
     private void registerRaid(RaidKind raidKind) {
