@@ -324,6 +324,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
     private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Render territory widgets in the render area
         RenderUtils.enableScissor(
+                guiGraphics,
                 getRenderX() + RENDER_AREA_POSITION.a(),
                 getRenderY() + RENDER_AREA_POSITION.b(),
                 RENDER_AREA_SIZE.a(),
@@ -334,7 +335,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
 
         // Render normal widgets
         renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));

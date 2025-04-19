@@ -110,6 +110,7 @@ public class CustomPlayerListOverlay extends Overlay {
 
         if (animation < 1) {
             RenderUtils.enableScissor(
+                    guiGraphics,
                     (int) (getRenderX() + ROLL_WIDTH + HALF_WIDTH - HALF_WIDTH * animation),
                     0,
                     (int) (WIDTH * animation),
@@ -121,7 +122,7 @@ public class CustomPlayerListOverlay extends Overlay {
         renderPlayerNames(poseStack, availablePlayers.get());
 
         if (animation < 1) {
-            RenderUtils.disableScissor();
+            RenderUtils.disableScissor(guiGraphics);
         }
 
         float middle = getRenderX() + HALF_WIDTH + ROLL_WIDTH;

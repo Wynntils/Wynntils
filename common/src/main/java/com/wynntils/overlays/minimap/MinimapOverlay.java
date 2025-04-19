@@ -148,7 +148,8 @@ public class MinimapOverlay extends Overlay {
 
         // enable mask
         switch (maskType.get()) {
-            case RECTANGULAR -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
+            case RECTANGULAR ->
+                RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
             case CIRCLE ->
                 RenderUtils.createMask(
                         poseStack, Texture.CIRCLE_MASK, (int) renderX, (int) renderY, (int) (renderX + width), (int)
@@ -226,7 +227,7 @@ public class MinimapOverlay extends Overlay {
 
         // disable mask & render border
         switch (maskType.get()) {
-            case RECTANGULAR -> RenderUtils.disableScissor();
+            case RECTANGULAR -> RenderUtils.disableScissor(guiGraphics);
             case CIRCLE -> RenderUtils.clearMask();
         }
 

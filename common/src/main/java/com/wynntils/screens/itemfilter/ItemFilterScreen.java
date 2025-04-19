@@ -405,22 +405,23 @@ public final class ItemFilterScreen extends WynntilsScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         } else {
-            RenderUtils.enableScissor(6 + translationX, 28 + translationY, 122, MAX_PROVIDERS_PER_PAGE * 21 + 2);
+            RenderUtils.enableScissor(
+                    guiGraphics, 6 + translationX, 28 + translationY, 122, MAX_PROVIDERS_PER_PAGE * 21 + 2);
 
             for (Renderable renderable : providerButtons) {
                 renderable.render(guiGraphics, mouseX, mouseY, partialTick);
             }
 
-            RenderUtils.disableScissor();
+            RenderUtils.disableScissor(guiGraphics);
         }
 
-        RenderUtils.enableScissor(149 + translationX, 28 + translationY, 172, MAX_SORTS_PER_PAGE * 21 + 2);
+        RenderUtils.enableScissor(guiGraphics, 149 + translationX, 28 + translationY, 172, MAX_SORTS_PER_PAGE * 21 + 2);
 
         for (Renderable renderable : sortButtons) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
 
         for (Renderable renderable : presetButtons) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTick);

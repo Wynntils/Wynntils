@@ -907,21 +907,22 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             optionsButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.enableScissor(6 + translationX, 28 + translationY, 122, MAX_OVERLAYS_PER_PAGE * 21 + 2);
+        RenderUtils.enableScissor(
+                guiGraphics, 6 + translationX, 28 + translationY, 122, MAX_OVERLAYS_PER_PAGE * 21 + 2);
 
         for (AbstractWidget widget : overlays) {
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
 
-        RenderUtils.enableScissor(148 + translationX, 28 + translationY, 188, CONFIGS_PER_PAGE * 43 - 2);
+        RenderUtils.enableScissor(guiGraphics, 148 + translationX, 28 + translationY, 188, CONFIGS_PER_PAGE * 43 - 2);
 
         for (AbstractWidget widget : configs) {
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
     }
 
     private void renderOverlayScroll(PoseStack poseStack) {

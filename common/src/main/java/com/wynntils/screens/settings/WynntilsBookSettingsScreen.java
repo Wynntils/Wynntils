@@ -914,13 +914,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     private void renderConfigurables(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.enableScissor(12 + translationX, 21 + translationY, 170, CONFIGURABLES_PER_PAGE * 12 - 3);
+        RenderUtils.enableScissor(
+                guiGraphics, 12 + translationX, 21 + translationY, 170, CONFIGURABLES_PER_PAGE * 12 - 3);
 
         for (WynntilsButton configurable : configurables) {
             configurable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
     }
 
     private void renderConfigurableScroll(PoseStack poseStack) {
@@ -952,6 +953,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     private void renderConfigs(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.enableScissor(
+                guiGraphics,
                 (int) (Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 10 + translationX),
                 21 + translationY,
                 160,
@@ -961,7 +963,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             config.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
     }
 
     private void renderConfigScroll(PoseStack poseStack) {

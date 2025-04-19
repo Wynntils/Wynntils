@@ -278,7 +278,7 @@ public final class OverlayManager extends Manager {
                     logProfilingData(startTime, overlay);
                 }
             } catch (Throwable t) {
-                RenderUtils.disableScissor();
+                RenderUtils.disableScissor(event.getGuiGraphics());
                 RenderUtils.clearMask();
 
                 // We can't disable it right away since that will cause ConcurrentModificationException

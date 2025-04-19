@@ -179,7 +179,7 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
-        renderMap(poseStack);
+        renderMap(guiGraphics);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -200,11 +200,13 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
                         TextShadow.NONE);
     }
 
-    private void renderMap(PoseStack poseStack) {
+    private void renderMap(GuiGraphics guiGraphics) {
         CaveInfo trackedCaveInfo = Models.Activity.getTrackedCaveInfo();
         if (trackedCaveInfo == null) return;
         Optional<Location> nextLocation = trackedCaveInfo.getNextLocation();
         if (nextLocation.isEmpty()) return;
+
+        PoseStack poseStack = guiGraphics.pose();
 
         final float renderX = getTranslationX() + 20;
         final float renderY = getTranslationY() + 100;
@@ -219,7 +221,7 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
         final float centerX = renderX + mapWidth / 2f;
         final float centerZ = renderY + mapHeight / 2f;
 
-        RenderUtils.enableScissor((int) (renderX), (int) (renderY), mapWidth, mapHeight);
+        RenderUtils.enableScissor(guiGraphics, (int) (renderX), (int) (renderY), mapWidth, mapHeight);
 
         // Background black void color
         RenderUtils.drawRect(poseStack, CommonColors.BLACK, renderX, renderX, 0, mapWidth, mapHeight);
@@ -248,7 +250,7 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
 
         BUFFER_SOURCE.endBatch();
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
     }
 
     @Override

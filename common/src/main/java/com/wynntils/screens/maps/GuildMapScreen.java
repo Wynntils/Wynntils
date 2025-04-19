@@ -190,11 +190,14 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
 
-        renderMap(poseStack);
+        renderMap(guiGraphics);
 
         RenderUtils.enableScissor(
-                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
-                        mapHeight);
+                guiGraphics,
+                (int) (renderX + renderedBorderXOffset),
+                (int) (renderY + renderedBorderYOffset),
+                (int) mapWidth,
+                (int) mapHeight);
 
         renderPois(poseStack, mouseX, mouseY);
 
@@ -208,7 +211,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         .pointerType
                         .get());
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
 
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 

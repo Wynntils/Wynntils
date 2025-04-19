@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.downloads;
@@ -125,6 +125,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                         3f);
 
         RenderUtils.enableScissor(
+                guiGraphics,
                 (int) (dividedWidth * 16),
                 (int) (dividedHeight * WIDGET_TOP_Y),
                 (int) (dividedWidth * 32),
@@ -134,7 +135,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
             renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
 
         RenderUtils.drawRect(
                 poseStack,
