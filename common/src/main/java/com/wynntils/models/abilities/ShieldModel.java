@@ -35,7 +35,7 @@ public class ShieldModel extends Model {
     private List<Integer> spawnedIds;
     private long shieldCastTime = 0;
 
-    private String shieldTypeName = "";
+    private ShieldType activeShieldType;
 
     public ShieldModel() {
         super(List.of());
@@ -86,7 +86,7 @@ public class ShieldModel extends Model {
 
                             collector.add(shieldAS.getId());
 
-                            shieldTypeName = shieldType.getName();
+                            activeShieldType = shieldType;
 
                             // 5 tick total delay to ensure all armor stands have spawned and have their inventory set
                             Managers.TickScheduler.scheduleLater(this::registerShield, 2);
@@ -133,8 +133,8 @@ public class ShieldModel extends Model {
         return spawnedIds == null ? 0 : spawnedIds.size();
     }
 
-    public String getShieldTypeName() {
-        return shieldTypeName;
+    public ShieldType getActiveShieldType() {
+        return activeShieldType;
     }
 
     private void registerShield() {
@@ -146,6 +146,7 @@ public class ShieldModel extends Model {
 
     private void removeShield() {
         spawnedIds = null;
+        activeShieldType = null;
     }
 
     /**

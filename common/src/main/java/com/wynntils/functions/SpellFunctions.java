@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.type.ShamanTotem;
+import com.wynntils.models.abilities.type.ShieldType;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
@@ -62,7 +63,11 @@ public class SpellFunctions {
     public static class ShieldTypeNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return Models.Shield.getShieldTypeName();
+            ShieldType shieldType = Models.Shield.getActiveShieldType();
+
+            if (shieldType == null) return "";
+
+            return shieldType.getName();
         }
 
         @Override
