@@ -120,7 +120,7 @@ public class RaidFunctions {
         public String getValue(FunctionArguments arguments) {
             if (Models.Raid.getCurrentRaid() == null) return "";
 
-            int roomNum = arguments.getArgument("roomNum").getIntegerValue();
+            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
 
             return Models.Raid.getRoomName(roomNum);
         }
@@ -128,7 +128,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomNum", Integer.class, null)));
+                    List.of(new FunctionArguments.Argument<>("roomNumber", Integer.class, null)));
         }
     }
 
@@ -137,7 +137,7 @@ public class RaidFunctions {
         public Long getValue(FunctionArguments arguments) {
             if (Models.Raid.getCurrentRaid() == null) return -1L;
 
-            int roomNum = arguments.getArgument("roomNum").getIntegerValue();
+            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
 
             return Models.Raid.getRoomTime(roomNum);
         }
@@ -145,7 +145,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomNum", Integer.class, null)));
+                    List.of(new FunctionArguments.Argument<>("roomNumber", Integer.class, null)));
         }
     }
 
@@ -154,7 +154,7 @@ public class RaidFunctions {
         public Long getValue(FunctionArguments arguments) {
             if (Models.Raid.getCurrentRaid() == null) return -1L;
 
-            int roomNum = arguments.getArgument("roomNum").getIntegerValue();
+            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
 
             return Models.Raid.getRoomDamage(roomNum);
         }
@@ -162,7 +162,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomNum", Integer.class, null)));
+                    List.of(new FunctionArguments.Argument<>("roomNumber", Integer.class, null)));
         }
     }
 
@@ -171,7 +171,7 @@ public class RaidFunctions {
         public Boolean getValue(FunctionArguments arguments) {
             if (Models.Raid.getCurrentRaid() == null) return false;
 
-            int roomNum = arguments.getArgument("roomNum").getIntegerValue();
+            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
 
             return Models.Raid.raidHasRoom(roomNum);
         }
@@ -179,7 +179,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomNum", Integer.class, null)));
+                    List.of(new FunctionArguments.Argument<>("roomNumber", Integer.class, null)));
         }
     }
 
@@ -188,7 +188,7 @@ public class RaidFunctions {
         public Boolean getValue(FunctionArguments arguments) {
             if (Models.Raid.getCurrentRaid() == null) return false;
 
-            int roomNum = arguments.getArgument("roomNum").getIntegerValue();
+            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
 
             return Models.Raid.isBossRoom(roomNum);
         }
@@ -196,7 +196,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomNum", Integer.class, null)));
+                    List.of(new FunctionArguments.Argument<>("roomNumber", Integer.class, null)));
         }
     }
 
