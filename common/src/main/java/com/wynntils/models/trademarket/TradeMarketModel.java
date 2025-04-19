@@ -47,7 +47,7 @@ import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class TradeMarketModel extends Model {
+public final class TradeMarketModel extends Model {
     private static final Pattern[] ITEM_NAME_PATTERNS = {
         // Item on the create buy order menu or create sell offer menu
         Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+?)(?:§6)? for .+ Each$"),

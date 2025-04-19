@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.ingredients;
@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 
-public class IngredientModel extends Model {
+public final class IngredientModel extends Model {
     private static final Map<ChatFormatting, Integer> TIER_COLOR_CODES = Map.of(
             ChatFormatting.DARK_GRAY, 0,
             ChatFormatting.YELLOW, 1,

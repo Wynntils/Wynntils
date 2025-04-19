@@ -10,7 +10,7 @@ import com.wynntils.models.npc.label.FastTravelLabelParser;
 import com.wynntils.models.npc.label.NpcLabelParser;
 import java.util.List;
 
-public class NpcModel extends Model {
+public final class NpcModel extends Model {
     public NpcModel() {
         super(List.of());
 

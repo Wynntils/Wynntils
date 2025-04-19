@@ -53,7 +53,7 @@ import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class GuildModel extends Model {
+public final class GuildModel extends Model {
     private static final Gson GUILD_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(GuildProfile.class, new GuildProfile.GuildProfileDeserializer())
             .registerTypeHierarchyAdapter(GuildInfo.class, new GuildInfo.GuildDeserializer())

@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.models.dungeon.type.Dungeon;
+import com.wynntils.models.activities.type.Dungeon;
 import com.wynntils.models.items.properties.TargetedItemProperty;
 
 public class DungeonKeyItem extends GameItem implements TargetedItemProperty {

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
 
-public class RewardsModel extends Model {
+public final class RewardsModel extends Model {
     private final TomeInfoRegistry tomeInfoRegistry = new TomeInfoRegistry();
     private final CharmInfoRegistry charmInfoRegistry = new CharmInfoRegistry();
 

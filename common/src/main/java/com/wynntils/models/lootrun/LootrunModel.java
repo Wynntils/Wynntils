@@ -88,7 +88,7 @@ import org.joml.Vector3d;
 /** A model dedicated to lootruns (the Wynncraft lootrun runs).
  * Don't confuse this with {@link com.wynntils.services.lootrunpaths.LootrunPathsService}.
  */
-public class LootrunModel extends Model {
+public final class LootrunModel extends Model {
     //                          À§6§lLootrun Completed!
     //           ÀÀÀ§7Collect your rewards at the reward chest
     //

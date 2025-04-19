@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items;
@@ -16,7 +16,7 @@ import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class ItemEncodingModel extends Model {
+public final class ItemEncodingModel extends Model {
     @Persisted
     public final Storage<Boolean> extendedIdentificationEncoding = new Storage<>(false);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -384,7 +384,8 @@ public class WynntilsCommand extends Command {
     }
 
     private int rescan(CommandContext<CommandSourceStack> context) {
-        Models.Character.scanCharacterInfo(true);
+        Models.Character.scanCharacterInfo();
+        Models.Account.scanRankInfo(true);
         return 1;
     }
 

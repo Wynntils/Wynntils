@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class CombatXpModel extends Model {
+public final class CombatXpModel extends Model {
     /* These values were provided by HeyZeer0 in #artemis-dev
      * Note that the last value is the sum of all preceding values
      */

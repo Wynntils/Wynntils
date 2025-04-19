@@ -56,7 +56,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 
-public class ItemModel extends Model {
+public final class ItemModel extends Model {
     public ItemModel() {
         super(List.of());
 

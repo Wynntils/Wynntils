@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.labels;
@@ -31,7 +31,7 @@ import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class LabelHandler extends Handler {
+public final class LabelHandler extends Handler {
     private final List<LabelParser> parsers = new ArrayList<>();
 
     private final Map<Integer, LabelInfo> liveLabels = new HashMap<>();

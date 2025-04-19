@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnalphabet;
@@ -26,10 +26,10 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class WynnAlphabetModel extends Model {
+public final class WynnAlphabetModel extends Model {
     private static final int FIFTY_INDEX = 10;
     private static final int MAX_TRANSCRIBABLE_NUMBER = 5000;
-    private static final int ONE_HUNDERED_INDEX = 11;
+    private static final int ONE_HUNDRED_INDEX = 11;
     private static final int TEN_INDEX = 9;
     private static final List<Character> englishCharacters = List.of(
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
@@ -148,7 +148,7 @@ public class WynnAlphabetModel extends Model {
         int result = 0;
 
         for (char num : wynnicNums.toCharArray()) {
-            if (num == getOneHundered()) {
+            if (num == getOneHundred()) {
                 result += 100;
             } else if (num == getFifty()) {
                 result += 50;
@@ -219,9 +219,9 @@ public class WynnAlphabetModel extends Model {
     public String intToWynnicNum(int number) {
         StringBuilder wynnicNums = new StringBuilder();
 
-        int hundereds = number / 100;
+        int hundreds = number / 100;
 
-        number -= (hundereds * 100);
+        number -= (hundreds * 100);
 
         int fifties = number >= 50 ? 1 : 0;
 
@@ -231,7 +231,7 @@ public class WynnAlphabetModel extends Model {
 
         number -= (tens * 10);
 
-        wynnicNums.append(String.valueOf(getOneHundered()).repeat(Math.max(0, hundereds)));
+        wynnicNums.append(String.valueOf(getOneHundred()).repeat(Math.max(0, hundreds)));
         wynnicNums.append(String.valueOf(getFifty()).repeat(Math.max(0, fifties)));
         wynnicNums.append(String.valueOf(getTen()).repeat(Math.max(0, tens)));
 
@@ -245,9 +245,10 @@ public class WynnAlphabetModel extends Model {
     public boolean shouldTranscribe(TranscribeCondition condition, WynnAlphabet alphabet) {
         return switch (condition) {
             case NEVER -> false;
-            case TRANSCRIBER -> alphabet == WynnAlphabet.WYNNIC
-                    ? hasTranscriber(WynnAlphabet.WYNNIC)
-                    : hasTranscriber(WynnAlphabet.GAVELLIAN);
+            case TRANSCRIBER ->
+                alphabet == WynnAlphabet.WYNNIC
+                        ? hasTranscriber(WynnAlphabet.WYNNIC)
+                        : hasTranscriber(WynnAlphabet.GAVELLIAN);
             default -> true;
         };
     }
@@ -375,8 +376,8 @@ public class WynnAlphabetModel extends Model {
         return wynnicNumbers.get(FIFTY_INDEX);
     }
 
-    public Character getOneHundered() {
-        return wynnicNumbers.get(ONE_HUNDERED_INDEX);
+    public Character getOneHundred() {
+        return wynnicNumbers.get(ONE_HUNDRED_INDEX);
     }
 
     public Character getTen() {

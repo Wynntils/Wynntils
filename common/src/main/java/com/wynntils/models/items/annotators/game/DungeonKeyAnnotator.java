@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -7,7 +7,7 @@ package com.wynntils.models.items.annotators.game;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.models.dungeon.type.Dungeon;
+import com.wynntils.models.activities.type.Dungeon;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

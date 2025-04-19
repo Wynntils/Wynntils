@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.world.item.ItemStack;
 
-public class TooltipHandler extends Handler {
+public final class TooltipHandler extends Handler {
     private final Map<Class<? extends IdentifiableItemProperty>, IdentifiableTooltipComponent>
             identifiableTooltipComponents = new HashMap<>();
     private final Map<Class<? extends CraftedItemProperty>, CraftedTooltipComponent> craftedTooltipComponents =

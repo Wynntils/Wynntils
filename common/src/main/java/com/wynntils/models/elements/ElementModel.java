@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.elements;
@@ -11,7 +11,7 @@ import com.wynntils.models.elements.type.PowderTierInfo;
 import com.wynntils.models.elements.type.Skill;
 import java.util.List;
 
-public class ElementModel extends Model {
+public final class ElementModel extends Model {
     private final List<PowderTierInfo> allPowderTierInfo;
 
     public ElementModel() {

@@ -50,7 +50,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class RaidModel extends Model {
+public final class RaidModel extends Model {
     public static final int MAX_CHALLENGES = 3;
     public static final int ROOM_DAMAGES_COUNT = 4;
     public static final int ROOM_TIMERS_COUNT = 5;

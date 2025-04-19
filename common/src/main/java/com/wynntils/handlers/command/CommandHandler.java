@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.command;
@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class CommandHandler extends Handler {
+public final class CommandHandler extends Handler {
     private static final int TICKS_PER_EXECUTE = 7;
     private static final int NPC_DIALOGUE_WAIT_TICKS = 40;
 

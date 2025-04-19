@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.bossbar;
@@ -25,7 +25,7 @@ import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.world.BossEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class BossBarHandler extends Handler {
+public final class BossBarHandler extends Handler {
     private final Map<UUID, TrackedBar> presentBars = new HashMap<>();
     private final List<TrackedBar> knownBars = new ArrayList<>();
 
