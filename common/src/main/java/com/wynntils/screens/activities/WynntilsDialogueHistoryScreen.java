@@ -65,17 +65,19 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
 
     @Override
     protected void doInit() {
+        super.doInit();
+
         Models.Activity.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
-                (int) (((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + getTranslationX()),
-                (int) (65 + getTranslationY()),
+                (int) (((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + offsetX),
+                65 + offsetY,
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
         this.addRenderableWidget(new ReloadButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + getTranslationX()),
-                (int) (11 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX),
+                (int) (11 + offsetY),
                 (int) (Texture.RELOAD_ICON_OFFSET.width() / 2f / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "dialogue",
@@ -84,22 +86,22 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
-                        + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                        + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
         this.addRenderableWidget(new QuestsPageButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30 + getTranslationX()),
-                (int) (12 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30 + offsetX),
+                (int) (12 + offsetY),
                 Texture.QUESTS_SCROLL_ICON.width(),
                 Texture.QUESTS_SCROLL_ICON.height()));
     }
@@ -158,8 +160,8 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         FontRenderer.getInstance()
                 .renderTextsWithAlignment(
                         poseStack,
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 5 + getTranslationX(),
-                        30 + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 5 + offsetX,
+                        30 + offsetY,
                         textRenderTaskList,
                         maxWidth,
                         Texture.CONTENT_BOOK_BACKGROUND.height() - 50,
@@ -172,9 +174,9 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -239,10 +241,10 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsDialogueHistory.tryReload")),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.25f + getTranslationY(),
-                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.75f + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.25f + offsetY,
+                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.75f + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 3f,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,

@@ -73,6 +73,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     @Override
     protected void doInit() {
+        super.doInit();
+
         if (firstInit) {
             if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
                     .displayOverallProgress
@@ -93,8 +95,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             buttons.add(new ArrayList<>());
         }
 
-        int x = (int) ((BUTTON_SIZE + 5) + getTranslationX()) - 15;
-        int y = (int) ((BUTTON_SIZE + 5) + getTranslationY()) + 15;
+        int x = (int) ((BUTTON_SIZE + 5) + offsetX) - 15;
+        int y = (int) ((BUTTON_SIZE + 5) + offsetY) + 15;
 
         // region Row 1: Content / Activities
         buttons.getFirst()
@@ -180,7 +182,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         // endregion
 
         // region Row 2: Map
-        x = (int) ((BUTTON_SIZE + 5) + getTranslationX()) - 15;
+        x = (int) ((BUTTON_SIZE + 5) + offsetX) - 15;
         y += (BUTTON_SIZE + 5);
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class).isEnabled()) {
             buttons.get(1)
@@ -248,7 +250,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         // endregion
 
         // region Row 3: Guides
-        x = (int) ((BUTTON_SIZE + 5) + getTranslationX()) - 15;
+        x = (int) ((BUTTON_SIZE + 5) + offsetX) - 15;
         y += (BUTTON_SIZE + 5);
         buttons.get(2)
                 .add(new WynntilsMenuButton(
@@ -334,7 +336,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         // endregion
 
         // region Row 4: Wynntils
-        x = (int) ((BUTTON_SIZE + 5) + getTranslationX()) - 15;
+        x = (int) ((BUTTON_SIZE + 5) + offsetX) - 15;
         y += (BUTTON_SIZE + 5);
         buttons.get(3)
                 .add(new WynntilsMenuButton(
@@ -448,8 +450,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.CONTENT_BOOK_TITLE.resource(),
-                0 + getTranslationX(),
-                15 + getTranslationY(),
+                0 + offsetX,
+                15 + offsetY,
                 0,
                 txWidth,
                 txHeight,
@@ -460,8 +462,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                 .renderText(
                         poseStack,
                         StyledText.fromString(titleString),
-                        10 + getTranslationX(),
-                        21 + getTranslationY(),
+                        10 + offsetX,
+                        21 + offsetY,
                         CommonColors.YELLOW,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -479,9 +481,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                     .renderAlignedTextInBox(
                             poseStack,
                             StyledText.fromString(rank + " of"),
-                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
-                            Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
-                            40 + getTranslationY(),
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                            40 + offsetY,
                             0,
                             CommonColors.CYAN,
                             HorizontalAlignment.CENTER,
@@ -491,9 +493,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                     .renderAlignedTextInBox(
                             poseStack,
                             StyledText.fromString(Models.Guild.getGuildName()),
-                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
-                            Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
-                            50 + getTranslationY(),
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                            50 + offsetY,
                             0,
                             CommonColors.CYAN,
                             HorizontalAlignment.CENTER,
@@ -505,9 +507,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         poseStack,
                         StyledText.fromComponent(McUtils.player().getDisplayName())
                                 .withoutFormatting(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
-                        60 + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                        60 + offsetY,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -518,9 +520,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         StyledText.fromString(
                                 Models.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
                                         + Models.CombatXp.getCombatLevel().current()),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
-                        145 + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                        145 + offsetY,
                         0,
                         CommonColors.PURPLE,
                         HorizontalAlignment.CENTER,
@@ -535,9 +537,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                             StyledText.fromString(ChatFormatting.BLACK + "Progress: " + ChatFormatting.DARK_AQUA
                                     + progress.getPercentageInt() + "%" + ChatFormatting.BLACK + " ["
                                     + ChatFormatting.DARK_AQUA + progress + ChatFormatting.BLACK + "]"),
-                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
-                            Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
-                            160 + getTranslationY(),
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                            160 + offsetY,
                             0,
                             CommonColors.BLACK,
                             HorizontalAlignment.CENTER,
@@ -553,12 +555,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                     .renderAlignedTextInBox(
                             poseStack,
                             wrappedSplash[i],
-                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
-                            Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
                             Texture.CONTENT_BOOK_BACKGROUND.height()
                                     - 45
                                     + i * (McUtils.mc().font.lineHeight + 1)
-                                    + getTranslationY(),
+                                    + offsetY,
                             0,
                             CommonColors.MAGENTA,
                             HorizontalAlignment.CENTER,
@@ -567,8 +569,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     private void renderPlayer(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        int posX = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 50 + getTranslationX());
-        int posY = (int) (Texture.CONTENT_BOOK_BACKGROUND.height() / 2f - 40 + getTranslationY());
+        int posX = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 50 + offsetX);
+        int posY = (int) (Texture.CONTENT_BOOK_BACKGROUND.height() / 2f - 40 + offsetY);
 
         final int renderWidth = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 100);
         final int renderHeight = 70;

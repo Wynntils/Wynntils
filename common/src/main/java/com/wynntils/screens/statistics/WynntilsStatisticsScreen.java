@@ -46,8 +46,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + getTranslationX()),
-                (int) (65 + getTranslationY()),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + offsetX),
+                (int) (65 + offsetY),
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
@@ -56,23 +56,23 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
-                        + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                        + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
 
         this.addRenderableWidget(new FilterButton(
-                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 15) / 2f + getTranslationX()),
-                (int) (157 + getTranslationY()),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 15) / 2f + offsetX),
+                (int) (157 + offsetY),
                 30,
                 30,
                 Texture.FAVORITE_ICON,
@@ -131,8 +131,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                     .renderText(
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.statistics.noItemSelected")),
-                            20 + getTranslationX(),
-                            100 + getTranslationY(),
+                            20 + offsetX,
+                            100 + offsetY,
                             Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
@@ -150,8 +150,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                 .renderText(
                         poseStack,
                         StyledText.fromString(highlightedStatisticKind.getName()),
-                        20 + getTranslationX(),
-                        75 + getTranslationY(),
+                        20 + offsetX,
+                        75 + offsetY,
                         (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20) / 1.2f,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -172,8 +172,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                         poseStack,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.count", statisticKind.getFormattedValue(entry.count()))),
-                        20 + getTranslationX(),
-                        105 + getTranslationY(),
+                        20 + offsetX,
+                        105 + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -187,8 +187,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                         poseStack,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.total", statisticKind.getFormattedValue(entry.total()))),
-                        20 + getTranslationX(),
-                        105 + getTranslationY(),
+                        20 + offsetX,
+                        105 + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -199,8 +199,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.statistics.count", entry.count())),
-                        20 + getTranslationX(),
-                        115 + getTranslationY(),
+                        20 + offsetX,
+                        115 + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -211,8 +211,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                         poseStack,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.min", statisticKind.getFormattedValue(entry.min()))),
-                        20 + getTranslationX(),
-                        125 + getTranslationY(),
+                        20 + offsetX,
+                        125 + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -224,8 +224,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                         poseStack,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.max", statisticKind.getFormattedValue(entry.max()))),
-                        20 + getTranslationX(),
-                        135 + getTranslationY(),
+                        20 + offsetX,
+                        135 + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -238,8 +238,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.average",
                                 statisticKind.getFormattedValue(entry.average()))),
-                        20 + getTranslationX(),
-                        145 + getTranslationY(),
+                        20 + offsetX,
+                        145 + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -259,8 +259,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
     protected StatisticButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new StatisticButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + getTranslationX()),
-                (int) (offset * 13 + 25 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + offsetX),
+                (int) (offset * 13 + 25 + offsetY),
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),

@@ -23,8 +23,8 @@ import net.minecraft.network.chat.Component;
 public class OverlayOptionsButton extends BasicTexturedButton {
     private final StyledText message;
     private final Texture texture;
-    private final int translationX;
-    private final int translationY;
+    private final int offsetX;
+    private final int offsetY;
 
     private boolean isSelected;
 
@@ -38,15 +38,15 @@ public class OverlayOptionsButton extends BasicTexturedButton {
             List<Component> tooltip,
             Texture texture,
             boolean isSelected,
-            int translationX,
-            int translationY) {
+            int offsetX,
+            int offsetY) {
         super(x, y, width, height, texture, onClick, tooltip);
 
         this.message = message;
         this.texture = texture;
         this.isSelected = isSelected;
-        this.translationX = translationX;
-        this.translationY = translationY;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
     @Override
@@ -59,10 +59,10 @@ public class OverlayOptionsButton extends BasicTexturedButton {
                 && MathUtils.isInside(
                         mouseX,
                         mouseY,
-                        translationX,
-                        translationX + Texture.OVERLAY_SELECTION_GUI.width(),
-                        translationY,
-                        translationY + Texture.OVERLAY_SELECTION_GUI.height())) {
+                        offsetX,
+                        offsetX + Texture.OVERLAY_SELECTION_GUI.width(),
+                        offsetY,
+                        offsetY + Texture.OVERLAY_SELECTION_GUI.height())) {
             isHovered = false;
         }
 

@@ -84,8 +84,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     private boolean draggingConfigScroll = false;
     private float configScrollY;
     private float overlayScrollY;
-    private int translationX;
-    private int translationY;
+    private int offsetX;
+    private int offsetY;
     private int configScrollOffset = 0;
     private int overlayScrollOffset = 0;
 
@@ -118,10 +118,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
-        translationX = (int) ((this.width - Texture.OVERLAY_SELECTION_GUI.width()) / 2f);
-        translationY = (int) ((this.height - Texture.OVERLAY_SELECTION_GUI.height()) / 2f);
-        searchWidget.setX(7 + translationX);
-        searchWidget.setY(6 + translationY);
+        offsetX = (int) ((this.width - Texture.OVERLAY_SELECTION_GUI.width()) / 2f);
+        offsetY = (int) ((this.height - Texture.OVERLAY_SELECTION_GUI.height()) / 2f);
+        searchWidget.setX(7 + offsetX);
+        searchWidget.setY(6 + offsetY);
         addOptionButtons();
 
         // region Preview renderables
@@ -157,7 +157,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
         // When not rendering a preview of the selected overlay
         if (!renderPreview) {
-            RenderUtils.drawTexturedRect(poseStack, Texture.OVERLAY_SELECTION_GUI, translationX, translationY);
+            RenderUtils.drawTexturedRect(poseStack, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
 
             searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -178,10 +178,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                         .renderAlignedTextInBox(
                                 poseStack,
                                 StyledText.fromString(textToRender),
-                                146 + translationX,
-                                338 + translationX,
-                                4 + translationY,
-                                24 + translationY,
+                                146 + offsetX,
+                                338 + offsetX,
+                                4 + offsetY,
+                                24 + offsetY,
                                 200,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
@@ -193,10 +193,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                                 poseStack,
                                 StyledText.fromComponent(
                                         Component.translatable("screens.wynntils.overlaySelection.unselectedOverlay")),
-                                146 + translationX,
-                                338 + translationX,
-                                67 + translationY,
-                                160 + translationY,
+                                146 + offsetX,
+                                338 + offsetX,
+                                67 + offsetY,
+                                160 + offsetY,
                                 200,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.CENTER,
@@ -251,8 +251,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 if (MathUtils.isInside(
                         (int) mouseX,
                         (int) mouseY,
-                        translationX + 133,
-                        translationX + 133 + Texture.SCROLL_BUTTON.width(),
+                        offsetX + 133,
+                        offsetX + 133 + Texture.SCROLL_BUTTON.width(),
                         (int) (overlayScrollY),
                         (int) (overlayScrollY + Texture.SCROLL_BUTTON.height()))) {
                     draggingOverlayScroll = true;
@@ -267,8 +267,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 if (MathUtils.isInside(
                         (int) mouseX,
                         (int) mouseY,
-                        translationX + 344,
-                        translationX + 344 + Texture.SCROLL_BUTTON.width(),
+                        offsetX + 344,
+                        offsetX + 344 + Texture.SCROLL_BUTTON.width(),
                         (int) configScrollY,
                         (int) (configScrollY + Texture.SCROLL_BUTTON.height()))) {
                     draggingConfigScroll = true;
@@ -286,10 +286,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                     if (MathUtils.isInside(
                             (int) mouseX,
                             (int) mouseY,
-                            translationX,
-                            translationX + Texture.OVERLAY_SELECTION_GUI.width(),
-                            translationY,
-                            translationY + Texture.OVERLAY_SELECTION_GUI.height())) {
+                            offsetX,
+                            offsetX + Texture.OVERLAY_SELECTION_GUI.width(),
+                            offsetY,
+                            offsetY + Texture.OVERLAY_SELECTION_GUI.height())) {
                         return false;
                     }
                 }
@@ -304,7 +304,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (draggingOverlayScroll) {
-            int scrollAreaStartY = 24 + 10 + translationY;
+            int scrollAreaStartY = 24 + 10 + offsetY;
             int scrollAreaHeight = MAX_OVERLAYS_PER_PAGE * 21 - Texture.SCROLL_BUTTON.height();
 
             int newOffset = Math.round(MathUtils.map(
@@ -320,7 +320,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
             return true;
         } else if (draggingConfigScroll) {
-            int scrollAreaStartY = 24 + 10 + translationY;
+            int scrollAreaStartY = 24 + 10 + offsetY;
             int scrollAreaHeight = CONFIGS_PER_PAGE * 43 - Texture.SCROLL_BUTTON.height();
 
             int newOffset = Math.round(MathUtils.map(
@@ -361,7 +361,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         if (!renderPreview) {
             // When the mouse is to the left of the config area or no selected overlay, scroll overlays.
             // Otherwise scroll the configs
-            if (mouseX < 145 + translationX || selectedOverlay == null) {
+            if (mouseX < 145 + offsetX || selectedOverlay == null) {
                 int newOffset = Math.max(0, Math.min(overlayScrollOffset + scrollAmount, getMaxOverlayScrollOffset()));
                 scrollOverlays(newOffset);
             } else if (selectedOverlay != null
@@ -452,9 +452,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             }
         }
 
-        int yPos = 31 + translationY;
+        int yPos = 31 + offsetY;
         for (Overlay value : overlayList) {
-            overlays.add(new OverlayButton(7 + translationX, yPos, 120, 18, value, this));
+            overlays.add(new OverlayButton(7 + offsetX, yPos, 120, 18, value, this));
 
             yPos += 21;
         }
@@ -557,11 +557,11 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     public int getConfigMaskTopY() {
-        return translationY + CONFIG_MASK_TOP_Y;
+        return offsetY + CONFIG_MASK_TOP_Y;
     }
 
     public int getConfigMaskBottomY() {
-        return translationY + CONFIG_MASK_BOTTOM_Y;
+        return offsetY + CONFIG_MASK_BOTTOM_Y;
     }
 
     private void populateConfigs() {
@@ -574,10 +574,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 .sorted(Comparator.comparing(config -> !Objects.equals(config.getFieldName(), "userEnabled")))
                 .toList();
 
-        int renderY = 31 + translationY;
+        int renderY = 31 + offsetY;
 
         for (Config<?> config : configsOptions) {
-            configs.add(new ConfigTile(148 + translationX, renderY, 188, 41, this, config));
+            configs.add(new ConfigTile(148 + offsetX, renderY, 188, 41, this, config));
 
             renderY += 43;
         }
@@ -612,11 +612,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         overlayScrollOffset = newOffset;
 
         for (OverlayButton overlay : overlays) {
-            int newY = 31 + translationY + (overlays.indexOf(overlay) * 21) - overlayScrollOffset;
+            int newY = 31 + offsetY + (overlays.indexOf(overlay) * 21) - overlayScrollOffset;
 
             overlay.setY(newY);
-            overlay.visible =
-                    newY >= (31 + translationY - 21) && newY <= (31 + translationY + (MAX_OVERLAYS_PER_PAGE) * 21);
+            overlay.visible = newY >= (31 + offsetY - 21) && newY <= (31 + offsetY + (MAX_OVERLAYS_PER_PAGE) * 21);
         }
     }
 
@@ -628,11 +627,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         configScrollOffset = newOffset;
 
         for (WynntilsButton config : configs) {
-            int newY = 31 + translationY + (configs.indexOf(config) * 43) - configScrollOffset;
+            int newY = 31 + offsetY + (configs.indexOf(config) * 43) - configScrollOffset;
 
             config.setY(newY);
-            config.visible =
-                    newY >= (31 + translationY - 43) && newY <= (31 + translationY + (CONFIGS_PER_PAGE + 1) * 43);
+            config.visible = newY >= (31 + offsetY - 43) && newY <= (31 + offsetY + (CONFIGS_PER_PAGE + 1) * 43);
         }
     }
 
@@ -722,8 +720,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
         // region Add Overlay buttons
         optionButtons.add(new OverlayOptionsButton(
-                (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) - 130 + translationX),
-                (int) (-(Texture.BUTTON_TOP.height() / 2f) + 4 + translationY),
+                (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) - 130 + offsetX),
+                (int) (-(Texture.BUTTON_TOP.height() / 2f) + 4 + offsetY),
                 Texture.BUTTON_TOP.width(),
                 Texture.BUTTON_TOP.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.addInfoBox")),
@@ -731,12 +729,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 List.of(Component.translatable("screens.wynntils.overlaySelection.addInfoBoxTooltip")),
                 Texture.BUTTON_TOP,
                 false,
-                translationX,
-                translationY));
+                offsetX,
+                offsetY));
 
         optionButtons.add(new OverlayOptionsButton(
-                (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) + 10 + translationX),
-                (int) (-(Texture.BUTTON_TOP.height() / 2f) + 4 + translationY),
+                (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) + 10 + offsetX),
+                (int) (-(Texture.BUTTON_TOP.height() / 2f) + 4 + offsetY),
                 Texture.BUTTON_TOP.width(),
                 Texture.BUTTON_TOP.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.addCustomBar")),
@@ -744,14 +742,14 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 List.of(Component.translatable("screens.wynntils.overlaySelection.addCustomBarTooltip")),
                 Texture.BUTTON_TOP,
                 false,
-                translationX,
-                translationY));
+                offsetX,
+                offsetY));
         // endregion
 
         // region Filter buttons
         allButton = new OverlayOptionsButton(
-                -(Texture.BUTTON_LEFT.width()) + 4 + translationX,
-                8 + translationY,
+                -(Texture.BUTTON_LEFT.width()) + 4 + offsetX,
+                8 + offsetY,
                 Texture.BUTTON_LEFT.width(),
                 Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.all")),
@@ -759,14 +757,14 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 List.of(Component.translatable("screens.wynntils.overlaySelection.allTooltip")),
                 Texture.BUTTON_LEFT,
                 filterType == FilterType.ALL,
-                translationX,
-                translationY);
+                offsetX,
+                offsetY);
 
         optionButtons.add(allButton);
 
         builtInButton = new OverlayOptionsButton(
-                -(Texture.BUTTON_LEFT.width()) + 4 + translationX,
-                (int) (12 + Texture.BUTTON_LEFT.height() / 2f + translationY),
+                -(Texture.BUTTON_LEFT.width()) + 4 + offsetX,
+                (int) (12 + Texture.BUTTON_LEFT.height() / 2f + offsetY),
                 Texture.BUTTON_LEFT.width(),
                 Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.builtIn")),
@@ -774,14 +772,14 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 List.of(Component.translatable("screens.wynntils.overlaySelection.builtInTooltip")),
                 Texture.BUTTON_LEFT,
                 filterType == FilterType.BUILT_IN,
-                translationX,
-                translationY);
+                offsetX,
+                offsetY);
 
         optionButtons.add(builtInButton);
 
         customButton = new OverlayOptionsButton(
-                -(Texture.BUTTON_LEFT.width()) + 4 + translationX,
-                (int) (16 + (Texture.BUTTON_LEFT.height() / 2f) * 2 + translationY),
+                -(Texture.BUTTON_LEFT.width()) + 4 + offsetX,
+                (int) (16 + (Texture.BUTTON_LEFT.height() / 2f) * 2 + offsetY),
                 Texture.BUTTON_LEFT.width(),
                 Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.custom")),
@@ -789,8 +787,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 List.of(Component.translatable("screens.wynntils.overlaySelection.customTooltip")),
                 Texture.BUTTON_LEFT,
                 filterType == FilterType.CUSTOM,
-                translationX,
-                translationY);
+                offsetX,
+                offsetY);
 
         optionButtons.add(customButton);
 
@@ -803,8 +801,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
         // region Delete overlay button
         OverlayOptionsButton deleteButton = new OverlayOptionsButton(
-                -(Texture.BUTTON_LEFT.width()) + 4 + translationX,
-                (int) (28 + (Texture.BUTTON_LEFT.height() / 2f) * 5 + translationY),
+                -(Texture.BUTTON_LEFT.width()) + 4 + offsetX,
+                (int) (28 + (Texture.BUTTON_LEFT.height() / 2f) * 5 + offsetY),
                 Texture.BUTTON_LEFT.width(),
                 Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.delete")),
@@ -812,8 +810,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 List.of(Component.translatable("screens.wynntils.overlaySelection.deleteTooltip")),
                 Texture.BUTTON_LEFT,
                 false,
-                translationX,
-                translationY);
+                offsetX,
+                offsetY);
 
         optionButtons.add(deleteButton);
         deleteButton.visible = selectedOverlay != null
@@ -822,8 +820,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
         // region Edit buttons
         optionButtons.add(new OverlayOptionsButton(
-                (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) - 100 + translationX),
-                Texture.OVERLAY_SELECTION_GUI.height() - 4 + translationY,
+                (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) - 100 + offsetX),
+                Texture.OVERLAY_SELECTION_GUI.height() - 4 + offsetY,
                 Texture.BUTTON_BOTTOM.width(),
                 Texture.BUTTON_BOTTOM.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.freeMove")),
@@ -834,12 +832,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 List.of(Component.translatable("screens.wynntils.overlaySelection.freeMoveTooltip")),
                 Texture.BUTTON_BOTTOM,
                 false,
-                translationX,
-                translationY));
+                offsetX,
+                offsetY));
 
         optionButtons.add(new OverlayOptionsButton(
-                (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) - 30 + translationX),
-                Texture.OVERLAY_SELECTION_GUI.height() - 4 + translationY,
+                (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) - 30 + offsetX),
+                Texture.OVERLAY_SELECTION_GUI.height() - 4 + offsetY,
                 Texture.BUTTON_BOTTOM.width(),
                 Texture.BUTTON_BOTTOM.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.close")),
@@ -847,12 +845,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 List.of(Component.translatable("screens.wynntils.overlaySelection.closeTooltip")),
                 Texture.BUTTON_BOTTOM,
                 false,
-                translationX,
-                translationY));
+                offsetX,
+                offsetY));
 
         optionButtons.add(new OverlayOptionsButton(
-                (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) + 40 + translationX),
-                Texture.OVERLAY_SELECTION_GUI.height() - 4 + translationY,
+                (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) + 40 + offsetX),
+                Texture.OVERLAY_SELECTION_GUI.height() - 4 + offsetY,
                 Texture.BUTTON_BOTTOM.width(),
                 Texture.BUTTON_BOTTOM.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.save")),
@@ -863,14 +861,14 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 List.of(Component.translatable("screens.wynntils.overlaySelection.saveTooltip")),
                 Texture.BUTTON_BOTTOM,
                 false,
-                translationX,
-                translationY));
+                offsetX,
+                offsetY));
 
         // Add the two buttons that should only be visible when an overlay is selected
         if (selectedOverlay != null) {
             optionButtons.add(new OverlayOptionsButton(
-                    (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) - 170 + translationX),
-                    Texture.OVERLAY_SELECTION_GUI.height() - 4 + translationY,
+                    (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) - 170 + offsetX),
+                    Texture.OVERLAY_SELECTION_GUI.height() - 4 + offsetY,
                     Texture.BUTTON_BOTTOM.width(),
                     Texture.BUTTON_BOTTOM.height() / 2,
                     StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.preview")),
@@ -878,12 +876,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                     List.of(Component.translatable("screens.wynntils.overlaySelection.previewTooltip")),
                     Texture.BUTTON_BOTTOM,
                     false,
-                    translationX,
-                    translationY));
+                    offsetX,
+                    offsetY));
 
             optionButtons.add(new OverlayOptionsButton(
-                    (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) + 110 + translationX),
-                    Texture.OVERLAY_SELECTION_GUI.height() - 4 + translationY,
+                    (int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) + 110 + offsetX),
+                    Texture.OVERLAY_SELECTION_GUI.height() - 4 + offsetY,
                     Texture.BUTTON_BOTTOM.width(),
                     Texture.BUTTON_BOTTOM.height() / 2,
                     StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.edit")),
@@ -896,8 +894,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                     List.of(Component.translatable("screens.wynntils.overlaySelection.editTooltip")),
                     Texture.BUTTON_BOTTOM,
                     false,
-                    translationX,
-                    translationY));
+                    offsetX,
+                    offsetY));
         }
         // endregion
     }
@@ -907,8 +905,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             optionsButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.enableScissor(
-                guiGraphics, 6 + translationX, 28 + translationY, 122, MAX_OVERLAYS_PER_PAGE * 21 + 2);
+        RenderUtils.enableScissor(guiGraphics, 6 + offsetX, 28 + offsetY, 122, MAX_OVERLAYS_PER_PAGE * 21 + 2);
 
         for (AbstractWidget widget : overlays) {
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -916,7 +913,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
         RenderUtils.disableScissor(guiGraphics);
 
-        RenderUtils.enableScissor(guiGraphics, 148 + translationX, 28 + translationY, 188, CONFIGS_PER_PAGE * 43 - 2);
+        RenderUtils.enableScissor(guiGraphics, 148 + offsetX, 28 + offsetY, 188, CONFIGS_PER_PAGE * 43 - 2);
 
         for (AbstractWidget widget : configs) {
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -927,7 +924,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
     private void renderOverlayScroll(PoseStack poseStack) {
         overlayScrollY = 24
-                + translationY
+                + offsetY
                 + MathUtils.map(
                         overlayScrollOffset,
                         0,
@@ -935,12 +932,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                         0,
                         177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 133 + translationX, overlayScrollY);
+        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 133 + offsetX, overlayScrollY);
     }
 
     private void renderConfigScroll(PoseStack poseStack) {
         configScrollY = 24
-                + translationY
+                + offsetY
                 + MathUtils.map(
                         configScrollOffset,
                         0,
@@ -948,7 +945,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                         0,
                         177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 344 + translationX, configScrollY);
+        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 344 + offsetX, configScrollY);
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {

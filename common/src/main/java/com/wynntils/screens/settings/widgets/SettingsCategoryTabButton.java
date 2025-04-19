@@ -22,8 +22,8 @@ public class SettingsCategoryTabButton extends GeneralSettingsTabButton {
             List<Component> tooltip,
             Category category,
             boolean selectedCategory,
-            int translationX,
-            int translationY) {
+            int offsetX,
+            int offsetY) {
         super(
                 x,
                 y,
@@ -34,8 +34,8 @@ public class SettingsCategoryTabButton extends GeneralSettingsTabButton {
                 Texture.TAG_RED,
                 category.getCategoryIcon(),
                 OffsetDirection.UP,
-                translationX,
-                translationY);
+                offsetX,
+                offsetY);
         this.category = category;
         this.selectedTab = selectedCategory;
 
@@ -50,8 +50,8 @@ public class SettingsCategoryTabButton extends GeneralSettingsTabButton {
             Consumer<Integer> onClick,
             List<Component> tooltip,
             boolean selectedCategory,
-            int translationX,
-            int translationY) {
+            int offsetX,
+            int offsetY) {
         super(
                 x,
                 y,
@@ -62,8 +62,8 @@ public class SettingsCategoryTabButton extends GeneralSettingsTabButton {
                 Texture.TAG_RED,
                 Texture.ALL_CONFIG_ICON,
                 OffsetDirection.UP,
-                translationX,
-                translationY);
+                offsetX,
+                offsetY);
         this.category = null;
         this.selectedTab = selectedCategory;
 

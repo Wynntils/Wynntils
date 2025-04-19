@@ -42,11 +42,12 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     @Override
     protected void doInit() {
+        super.doInit();
         // We have to do it like this as WynntilsQuestBookScreen can call reloadElements before the widget
         // is initialised and the screen width/height is not available in the screen constructor and as
         // guide screens don't use the same position we need to store the original
-        this.searchWidget.setX((int) (originalSearchWidgetX + getTranslationX()));
-        this.searchWidget.setY((int) (originalSearchWidgetY + getTranslationY()));
+        this.searchWidget.setX((int) (originalSearchWidgetX + offsetX));
+        this.searchWidget.setY((int) (originalSearchWidgetY + offsetY));
         this.addRenderableWidget(searchWidget);
 
         reloadElements(searchWidget.getTextBoxInput());
@@ -83,9 +84,9 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -97,10 +98,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(key),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15f + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() - 15f + getTranslationX(),
-                        getTranslationY(),
-                        Texture.CONTENT_BOOK_BACKGROUND.height() + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15f + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() - 15f + offsetX,
+                        offsetY,
+                        Texture.CONTENT_BOOK_BACKGROUND.height() + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,

@@ -78,8 +78,8 @@ public final class WynntilsTomeGuideScreen extends WynntilsGuideScreen<GuideTome
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + getTranslationX(),
-                        30 + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + offsetX,
+                        30 + offsetY,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -92,8 +92,8 @@ public final class WynntilsTomeGuideScreen extends WynntilsGuideScreen<GuideTome
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
         return new GuideTomeItemStackButton(
-                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + getTranslationX()),
-                (int) (yOffset + 43 + getTranslationY()),
+                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
+                (int) (yOffset + 43 + offsetY),
                 18,
                 18,
                 elements.get(i),

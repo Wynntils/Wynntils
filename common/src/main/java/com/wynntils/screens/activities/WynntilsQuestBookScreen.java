@@ -110,15 +110,15 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + getTranslationX()),
-                (int) (65 + getTranslationY()),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + offsetX),
+                (int) (65 + offsetY),
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         filterButtons.add(new FilterButton(
-                (int) (55 + getTranslationX()),
-                (int) (142 + getTranslationY()),
+                (int) (55 + offsetX),
+                (int) (142 + offsetY),
                 30,
                 30,
                 Texture.QUESTS_SCROLL_ICON,
@@ -141,8 +141,8 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 },
                 this::isShowingQuests));
         filterButtons.add(new FilterButton(
-                (int) (90 + getTranslationX()),
-                (int) (142 + getTranslationY()),
+                (int) (90 + offsetX),
+                (int) (142 + offsetY),
                 30,
                 30,
                 Texture.SIGN_ICON,
@@ -170,8 +170,8 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         }
 
         this.addRenderableWidget(new ReloadButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + getTranslationX()),
-                (int) (11 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX),
+                (int) (11 + offsetY),
                 (int) (Texture.RELOAD_ICON_OFFSET.width() / 2f / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "quest",
@@ -180,33 +180,33 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
-                        + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                        + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
         this.addRenderableWidget(new DialogueHistoryButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30 + getTranslationX()),
-                (int) (15 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30 + offsetX),
+                (int) (15 + offsetY),
                 Texture.DIALOGUE_ICON.width(),
                 Texture.DIALOGUE_ICON.height()));
         this.addRenderableWidget(new QuestInfoButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 4f + getTranslationX()),
-                (int) (12 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 4f + offsetX),
+                (int) (12 + offsetY),
                 Texture.QUESTS_SCROLL_ICON.width(),
                 Texture.QUESTS_SCROLL_ICON.height()));
 
         this.addRenderableWidget(new SortOrderWidget(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 1 + getTranslationX()),
-                (int) (11 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 1 + offsetX),
+                (int) (11 + offsetY),
                 (int) (Texture.SORT_DISTANCE_OFFSET.width() / 1.7f),
                 (int) (Texture.SORT_DISTANCE_OFFSET.height() / 2f / 1.7f),
                 this));
@@ -268,10 +268,10 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.tryReload")),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.25f + getTranslationY(),
-                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.75f + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.25f + offsetY,
+                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.75f + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -350,9 +350,9 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.description1")),
-                        20 + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + getTranslationY(),
-                        80 + getTranslationY(),
+                        20 + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetY,
+                        80 + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -362,9 +362,9 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.description2")),
-                        20 + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + getTranslationY(),
-                        105 + getTranslationY(),
+                        20 + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetY,
+                        105 + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -406,8 +406,8 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     protected QuestButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new QuestButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + getTranslationX()),
-                (int) (offset * 13 + 25 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + offsetX),
+                (int) (offset * 13 + 25 + offsetY),
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),

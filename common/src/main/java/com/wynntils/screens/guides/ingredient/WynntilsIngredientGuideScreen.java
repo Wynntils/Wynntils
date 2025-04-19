@@ -72,8 +72,8 @@ public final class WynntilsIngredientGuideScreen
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.CONTENT_BOOK_TITLE.resource(),
-                getTranslationX(),
-                30 + getTranslationY(),
+                offsetX,
+                30 + offsetY,
                 0,
                 txWidth,
                 txHeight,
@@ -84,8 +84,8 @@ public final class WynntilsIngredientGuideScreen
                 .renderText(
                         poseStack,
                         StyledText.fromString(titleString),
-                        10 + getTranslationX(),
-                        36 + getTranslationY(),
+                        10 + offsetX,
+                        36 + offsetY,
                         CommonColors.YELLOW,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -108,8 +108,8 @@ public final class WynntilsIngredientGuideScreen
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + getTranslationX(),
-                        30 + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + offsetX,
+                        30 + offsetY,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -122,8 +122,8 @@ public final class WynntilsIngredientGuideScreen
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
         return new GuideIngredientItemStackButton(
-                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + getTranslationX()),
-                (int) (yOffset + 43 + getTranslationY()),
+                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
+                (int) (yOffset + 43 + offsetY),
                 18,
                 18,
                 elements.get(i),

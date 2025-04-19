@@ -30,6 +30,9 @@ public final class LoadingScreen extends WynntilsScreen {
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
     private static final int SPINNER_SPEED = 1200;
 
+    private int offsetX;
+    private int offsetY;
+
     private String message = "";
     private String title = "";
     private String subtitle = "";
@@ -65,6 +68,14 @@ public final class LoadingScreen extends WynntilsScreen {
     }
 
     @Override
+    public void doInit() {
+        super.doInit();
+
+        offsetX = (int) ((this.width - Texture.SCROLL_BACKGROUND.width()) / 2f);
+        offsetY = (int) ((this.height - Texture.SCROLL_BACKGROUND.height()) / 2f);
+    }
+
+    @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
@@ -90,10 +101,10 @@ public final class LoadingScreen extends WynntilsScreen {
                 textureHeight);
 
         // Draw notebook background
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, getTranslationX(), getTranslationY());
+        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
         // Draw logo
-        int centerX = (int) (Texture.SCROLL_BACKGROUND.width() / 2f + 15 + getTranslationX());
+        int centerX = (int) (Texture.SCROLL_BACKGROUND.width() / 2f + 15 + offsetX);
         Component logoComponent = Services.ResourcePack.isPreloadedPackSelected()
                 ? Component.literal(LOGO_STRING).withStyle(Style.EMPTY.withFont(LOGO_FONT_LOCATION))
                 : Component.literal(TEXT_LOGO_STRING);
@@ -102,7 +113,7 @@ public final class LoadingScreen extends WynntilsScreen {
                         poseStack,
                         StyledText.fromComponent(logoComponent),
                         centerX,
-                        60 + getTranslationY(),
+                        60 + offsetY,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -114,7 +125,7 @@ public final class LoadingScreen extends WynntilsScreen {
                         poseStack,
                         StyledText.fromString(message),
                         centerX,
-                        100 + getTranslationY(),
+                        100 + offsetY,
                         MOSS_GREEN,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -126,7 +137,7 @@ public final class LoadingScreen extends WynntilsScreen {
                         poseStack,
                         StyledText.fromString(title),
                         centerX,
-                        120 + getTranslationY(),
+                        120 + offsetY,
                         MOSS_GREEN,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -136,7 +147,7 @@ public final class LoadingScreen extends WynntilsScreen {
                         poseStack,
                         StyledText.fromString(subtitle),
                         centerX,
-                        130 + getTranslationY(),
+                        130 + offsetY,
                         MOSS_GREEN,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -144,7 +155,7 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw spinner
         boolean state = (System.currentTimeMillis() % SPINNER_SPEED) < SPINNER_SPEED / 2;
-        drawSpinner(poseStack, centerX, 150 + getTranslationY(), state);
+        drawSpinner(poseStack, centerX, 150 + offsetY, state);
     }
 
     private void drawSpinner(PoseStack poseStack, float x, float y, boolean state) {
@@ -169,13 +180,5 @@ public final class LoadingScreen extends WynntilsScreen {
                 spinnerHeight,
                 fullWidth,
                 spinnerHeight);
-    }
-
-    public float getTranslationX() {
-        return (this.width - Texture.SCROLL_BACKGROUND.width()) / 2f;
-    }
-
-    public float getTranslationY() {
-        return (this.height - Texture.SCROLL_BACKGROUND.height()) / 2f;
     }
 }

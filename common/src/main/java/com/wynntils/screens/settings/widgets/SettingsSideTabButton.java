@@ -19,19 +19,8 @@ public class SettingsSideTabButton extends GeneralSettingsTabButton {
             List<Component> tooltip,
             Texture tagTexture,
             Texture iconTexture,
-            int translationX,
-            int translationY) {
-        super(
-                x,
-                y,
-                width,
-                height,
-                onClick,
-                tooltip,
-                tagTexture,
-                iconTexture,
-                OffsetDirection.LEFT,
-                translationX,
-                translationY);
+            int offsetX,
+            int offsetY) {
+        super(x, y, width, height, onClick, tooltip, tagTexture, iconTexture, OffsetDirection.LEFT, offsetX, offsetY);
     }
 }

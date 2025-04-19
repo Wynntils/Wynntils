@@ -45,16 +45,16 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         super.doInit();
 
         this.addRenderableWidget(new ItemFilterUIButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 20 + getTranslationX()),
-                (int) (-22 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 20 + offsetX),
+                (int) (-22 + offsetY),
                 searchWidget,
                 this,
                 true,
                 supportedProviderTypes));
 
         this.addRenderableWidget(new BackButton(
-                (int) ((int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + getTranslationX()),
-                (int) (65 + getTranslationY()),
+                (int) ((int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + offsetX),
+                (int) (65 + offsetY),
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsGuidesListScreen.create()));
@@ -63,15 +63,15 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
-                        + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                        + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,

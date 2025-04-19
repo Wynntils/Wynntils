@@ -54,21 +54,21 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + getTranslationX()),
-                (int) (65 + getTranslationY()),
+                (int) ((int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + offsetX),
+                (int) (65 + offsetY),
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ImportButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + getTranslationX()),
-                (int) (11 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX),
+                (int) (11 + offsetY),
                 (int) (Texture.ADD_ICON.width() / 1.5f),
                 (int) (Texture.ADD_ICON.height() / 1.5f),
                 this::importFavorites));
         this.addRenderableWidget(new ExportButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + getTranslationX()),
-                (int) (11 + (int) (Texture.ADD_ICON.height() / 1.5f) + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX),
+                (int) (11 + (int) (Texture.ADD_ICON.height() / 1.5f) + offsetY),
                 (int) (Texture.SHARE_ICON.width() / 1.5f),
                 (int) (Texture.SHARE_ICON.height() / 1.5f),
                 this::exportFavorites));
@@ -77,15 +77,15 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
-                        + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                        + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
@@ -143,13 +143,13 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
     protected GuidesButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new GuidesButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + getTranslationX()),
-                (int) (offset * 13 + 25 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + offsetX),
+                (int) (offset * 13 + 25 + offsetY),
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),
-                getTranslationX(),
-                getTranslationY());
+                offsetX,
+                offsetY);
     }
 
     @Override

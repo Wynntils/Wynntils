@@ -26,8 +26,19 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
             ResourceLocation.fromNamespaceAndPath("wynntils", "ui.book.open");
     private static final SoundEvent BOOK_OPEN_SOUND = SoundEvent.createVariableRangeEvent(BOOK_OPEN_ID);
 
+    protected int offsetX;
+    protected int offsetY;
+
     protected WynntilsMenuScreenBase(Component component) {
         super(component);
+    }
+
+    @Override
+    protected void doInit() {
+        super.doInit();
+
+        offsetX = (int) ((this.width - Texture.CONTENT_BOOK_BACKGROUND.width()) / 2f);
+        offsetY = (int) ((this.height - Texture.CONTENT_BOOK_BACKGROUND.height()) / 2f);
     }
 
     public static void openBook(Screen screen) {
@@ -57,10 +68,10 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(version),
-                        53f + getTranslationX(),
-                        127f + getTranslationX(),
-                        196 + getTranslationY(),
-                        202 + getTranslationY(),
+                        53f + offsetX,
+                        127f + offsetX,
+                        196 + offsetY,
+                        202 + offsetY,
                         0,
                         CommonColors.YELLOW,
                         HorizontalAlignment.CENTER,
@@ -75,8 +86,8 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.CONTENT_BOOK_TITLE.resource(),
-                0 + getTranslationX(),
-                30 + getTranslationY(),
+                0 + offsetX,
+                30 + offsetY,
                 0,
                 txWidth,
                 txHeight,
@@ -87,8 +98,8 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                 .renderText(
                         poseStack,
                         StyledText.fromString(titleString),
-                        10 + getTranslationX(),
-                        36 + getTranslationY(),
+                        10 + offsetX,
+                        36 + offsetY,
                         CommonColors.YELLOW,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -101,9 +112,9 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(description),
-                        20 + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + getTranslationX(),
-                        80 + getTranslationY(),
+                        20 + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetX,
+                        80 + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -113,20 +124,12 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(filterHelper),
-                        20 + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + getTranslationY(),
-                        105 + getTranslationY(),
+                        20 + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetY,
+                        105 + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         TextShadow.NONE);
-    }
-
-    public float getTranslationX() {
-        return (this.width - Texture.CONTENT_BOOK_BACKGROUND.width()) / 2f;
-    }
-
-    public float getTranslationY() {
-        return (this.height - Texture.CONTENT_BOOK_BACKGROUND.height()) / 2f;
     }
 }

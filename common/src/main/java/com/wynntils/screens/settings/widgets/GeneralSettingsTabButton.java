@@ -22,8 +22,8 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
 
     private final OffsetDirection offsetDirection;
     private final Texture iconTexture;
-    private final int translationX;
-    private final int translationY;
+    private final int offsetX;
+    private final int offsetY;
 
     private int hoverOffset = 0;
 
@@ -37,14 +37,14 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
             Texture tagTexture,
             Texture iconTexture,
             OffsetDirection offsetDirection,
-            int translationX,
-            int translationY) {
+            int offsetX,
+            int offsetY) {
         super(x, y, width, height, tagTexture, onClick, tooltip);
         this.tagTexture = tagTexture;
         this.iconTexture = iconTexture;
         this.offsetDirection = offsetDirection;
-        this.translationX = translationX;
-        this.translationY = translationY;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
     @Override
@@ -54,12 +54,12 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
         // Don't count as hovered if mouse is hovering the book as the tags render
         // slightly underneath the book
         if (isHovered
-                && ((offsetDirection == OffsetDirection.UP && mouseY >= translationY)
+                && ((offsetDirection == OffsetDirection.UP && mouseY >= offsetY)
                         || (offsetDirection == OffsetDirection.RIGHT
-                                && mouseX <= translationX + Texture.CONFIG_BOOK_BACKGROUND.width())
+                                && mouseX <= offsetX + Texture.CONFIG_BOOK_BACKGROUND.width())
                         || (offsetDirection == OffsetDirection.DOWN
-                                && mouseY <= translationY + Texture.CONFIG_BOOK_BACKGROUND.height())
-                        || (offsetDirection == OffsetDirection.LEFT && mouseX >= translationX))) {
+                                && mouseY <= offsetY + Texture.CONFIG_BOOK_BACKGROUND.height())
+                        || (offsetDirection == OffsetDirection.LEFT && mouseX >= offsetX))) {
             isHovered = false;
         }
 

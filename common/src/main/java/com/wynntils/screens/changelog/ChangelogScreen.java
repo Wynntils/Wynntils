@@ -33,6 +33,8 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     private final String changelog;
     private List<List<TextRenderTask>> changelogTasks;
     private int currentPage = 0;
+    private int offsetX;
+    private int offsetY;
 
     private ChangelogScreen(String changelog) {
         super(Component.translatable("screens.wynntils.changelog.name"));
@@ -54,20 +56,23 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
 
     @Override
     protected void doInit() {
+        offsetX = (int) ((this.width - Texture.SCROLL_BACKGROUND.width()) / 2f);
+        offsetY = (int) ((this.height - Texture.SCROLL_BACKGROUND.height()) / 2f);
+
         calculateRenderTasks();
 
         setCurrentPage(0);
 
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (80 - Texture.FORWARD_ARROW_OFFSET.width() / 2f + getTranslationX()),
-                (int) (Texture.SCROLL_BACKGROUND.height() - 17 + getTranslationY()),
+                (int) (80 - Texture.FORWARD_ARROW_OFFSET.width() / 2f + offsetX),
+                (int) (Texture.SCROLL_BACKGROUND.height() - 17 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.SCROLL_BACKGROUND.width() - 80 + getTranslationX()),
-                (int) (Texture.SCROLL_BACKGROUND.height() - 17 + getTranslationY()),
+                (int) (Texture.SCROLL_BACKGROUND.width() - 80 + offsetX),
+                (int) (Texture.SCROLL_BACKGROUND.height() - 17 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
@@ -78,11 +83,9 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, getTranslationX(), getTranslationY());
+        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
-        FontRenderer.getInstance()
-                .renderTexts(
-                        poseStack, 45 + getTranslationX(), 15 + getTranslationY(), changelogTasks.get(currentPage));
+        FontRenderer.getInstance().renderTexts(poseStack, 45 + offsetX, 15 + offsetY, changelogTasks.get(currentPage));
 
         renderPageInfo(poseStack, getCurrentPage() + 1, getMaxPage() + 1);
 
@@ -96,9 +99,9 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
-                        80 + getTranslationX(),
-                        Texture.SCROLL_BACKGROUND.width() - 80 + getTranslationX(),
-                        Texture.SCROLL_BACKGROUND.height() - 17 + getTranslationY(),
+                        80 + offsetX,
+                        Texture.SCROLL_BACKGROUND.width() - 80 + offsetX,
+                        Texture.SCROLL_BACKGROUND.height() - 17 + offsetY,
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -163,13 +166,5 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     @Override
     public int getMaxPage() {
         return Math.max(0, this.changelogTasks.size() - 1);
-    }
-
-    private float getTranslationX() {
-        return (this.width - Texture.SCROLL_BACKGROUND.width()) / 2f;
-    }
-
-    private float getTranslationY() {
-        return (this.height - Texture.SCROLL_BACKGROUND.height()) / 2f;
     }
 }

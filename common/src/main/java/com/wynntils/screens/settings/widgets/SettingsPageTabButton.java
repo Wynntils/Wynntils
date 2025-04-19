@@ -18,8 +18,8 @@ public class SettingsPageTabButton extends GeneralSettingsTabButton {
             Consumer<Integer> onClick,
             List<Component> tooltip,
             boolean nextPage,
-            int translationX,
-            int translationY) {
+            int offsetX,
+            int offsetY) {
         super(
                 x,
                 y,
@@ -30,7 +30,7 @@ public class SettingsPageTabButton extends GeneralSettingsTabButton {
                 Texture.TAG_RED,
                 nextPage ? Texture.NEXT : Texture.PREVIOUS,
                 OffsetDirection.UP,
-                translationX,
-                translationY);
+                offsetX,
+                offsetY);
     }
 }

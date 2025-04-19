@@ -53,8 +53,8 @@ public final class WynntilsEmeraldPouchGuideScreen
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + getTranslationX()),
-                (int) (65 + getTranslationY()),
+                (int) ((int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + offsetX),
+                (int) (65 + offsetY),
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsGuidesListScreen.create()));
@@ -63,15 +63,15 @@ public final class WynntilsEmeraldPouchGuideScreen
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
-                        + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                        + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
@@ -106,8 +106,8 @@ public final class WynntilsEmeraldPouchGuideScreen
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.CONTENT_BOOK_TITLE.resource(),
-                getTranslationX(),
-                30 + getTranslationY(),
+                offsetX,
+                30 + offsetY,
                 0,
                 txWidth,
                 txHeight,
@@ -118,8 +118,8 @@ public final class WynntilsEmeraldPouchGuideScreen
                 .renderText(
                         poseStack,
                         StyledText.fromString(titleString),
-                        10 + getTranslationX(),
-                        36 + getTranslationY(),
+                        10 + offsetX,
+                        36 + offsetY,
                         CommonColors.YELLOW,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -142,8 +142,8 @@ public final class WynntilsEmeraldPouchGuideScreen
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + getTranslationX(),
-                        30 + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + offsetX,
+                        30 + offsetY,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -156,8 +156,8 @@ public final class WynntilsEmeraldPouchGuideScreen
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
         return new GuideEmeraldPouchItemStackButton(
-                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + getTranslationX()),
-                (int) (yOffset + 43 + getTranslationY()),
+                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
+                (int) (yOffset + 43 + offsetY),
                 18,
                 18,
                 elements.get(i),

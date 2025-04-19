@@ -102,8 +102,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         filterButtons.clear();
 
         filterButtons.add(new FilterButton(
-                (int) (35 + getTranslationX()),
-                (int) (125 + getTranslationY()),
+                (int) (35 + offsetX),
+                (int) (125 + offsetY),
                 30,
                 30,
                 Texture.DISCOVERED_TERRITORY,
@@ -126,8 +126,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 },
                 this::isShowingTerritory));
         filterButtons.add(new FilterButton(
-                (int) (70 + getTranslationX()),
-                (int) (125 + getTranslationY()),
+                (int) (70 + offsetX),
+                (int) (125 + offsetY),
                 30,
                 30,
                 Texture.DISCOVERED_WORLD,
@@ -150,8 +150,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 },
                 this::isShowingWorld));
         filterButtons.add(new FilterButton(
-                (int) (105 + getTranslationX()),
-                (int) (125 + getTranslationY()),
+                (int) (105 + offsetX),
+                (int) (125 + offsetY),
                 30,
                 30,
                 Texture.DISCOVERED_SECRET,
@@ -174,8 +174,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 },
                 this::isShowingSecrets));
         filterButtons.add(new FilterButton(
-                (int) (35 + getTranslationX()),
-                (int) (160 + getTranslationY()),
+                (int) (35 + offsetX),
+                (int) (160 + offsetY),
                 30,
                 30,
                 Texture.UNDISCOVERED_TERRITORY,
@@ -194,8 +194,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 },
                 this::isShowingUndiscoveredTerritory));
         filterButtons.add(new FilterButton(
-                (int) (70 + getTranslationX()),
-                (int) (160 + getTranslationY()),
+                (int) (70 + offsetX),
+                (int) (160 + offsetY),
                 30,
                 30,
                 Texture.UNDISCOVERED_WORLD,
@@ -214,8 +214,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 },
                 this::isShowingUndiscoveredWorld));
         filterButtons.add(new FilterButton(
-                (int) (105 + getTranslationX()),
-                (int) (160 + getTranslationY()),
+                (int) (105 + offsetX),
+                (int) (160 + offsetY),
                 30,
                 30,
                 Texture.UNDISCOVERED_SECRET,
@@ -235,15 +235,15 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 this::isShowingUndiscoveredSecrets));
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + getTranslationX()),
-                (int) (65 + getTranslationY()),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + offsetX),
+                (int) (65 + offsetY),
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ReloadButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + getTranslationX()),
-                (int) (11 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX),
+                (int) (11 + offsetY),
                 (int) (Texture.RELOAD_ICON_OFFSET.width() / 2f / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "discovery",
@@ -251,8 +251,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                         shouldQuerySecrets(), shouldQueryWorld(), shouldQueryTerritory())));
 
         this.addRenderableWidget(new SortOrderWidget(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 1 + getTranslationX()),
-                (int) (11 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 1 + offsetX),
+                (int) (11 + offsetY),
                 (int) (Texture.SORT_DISTANCE_OFFSET.width() / 1.7f),
                 (int) (Texture.SORT_DISTANCE_OFFSET.height() / 2f / 1.7f),
                 this));
@@ -261,15 +261,15 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f
                         + 50
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
-                        + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                        + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + getTranslationX()),
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
@@ -279,10 +279,9 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
             this.addRenderableWidget(filterButton);
         }
 
-        this.addRenderableWidget(new DiscoveryProgressButton(
-                (int) (50 + getTranslationX()), (int) (10 + getTranslationY()), 20, 20, false));
-        this.addRenderableWidget(new DiscoveryProgressButton(
-                (int) (75 + getTranslationX()), (int) (10 + getTranslationY()), 20, 20, true));
+        this.addRenderableWidget(
+                new DiscoveryProgressButton((int) (50 + offsetX), (int) (10 + offsetY), 20, 20, false));
+        this.addRenderableWidget(new DiscoveryProgressButton((int) (75 + offsetX), (int) (10 + offsetY), 20, 20, true));
     }
 
     @Override
@@ -316,10 +315,10 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsDiscoveries.noDiscoveries")),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
-                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.25f + getTranslationY(),
-                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.75f + getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.25f + offsetY,
+                        Texture.CONTENT_BOOK_BACKGROUND.height() * 0.75f + offsetY,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -331,8 +330,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
     protected DiscoveryButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new DiscoveryButton(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + getTranslationX()),
-                (int) (offset * 13 + 25 + getTranslationY()),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + offsetX),
+                (int) (offset * 13 + 25 + offsetY),
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),
