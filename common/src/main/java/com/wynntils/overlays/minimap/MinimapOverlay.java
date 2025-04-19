@@ -149,9 +149,10 @@ public class MinimapOverlay extends Overlay {
         // enable mask
         switch (maskType.get()) {
             case RECTANGULAR -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
-            case CIRCLE -> RenderUtils.createMask(
-                    poseStack, Texture.CIRCLE_MASK, (int) renderX, (int) renderY, (int) (renderX + width), (int)
-                            (renderY + height));
+            case CIRCLE ->
+                RenderUtils.createMask(
+                        poseStack, Texture.CIRCLE_MASK, (int) renderX, (int) renderY, (int) (renderX + width), (int)
+                                (renderY + height));
         }
 
         // Always draw a black background to cover transparent map areas

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.gear;
@@ -45,12 +45,6 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
 
         renderBackgroundTexture(poseStack);
 
-        // Make 0, 0 the top left corner of the rendered quest book background
-        poseStack.pushPose();
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-        poseStack.translate(translationX, translationY, 1f);
-
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.itemGuide.name"));
 
         renderDescription(
@@ -65,8 +59,6 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
-
-        poseStack.popPose();
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -86,8 +78,8 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f,
-                        30,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + getTranslationX(),
+                        30 + getTranslationY(),
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -100,8 +92,8 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
         return new GuideGearItemStackButton(
-                xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 13,
-                yOffset + 43,
+                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + getTranslationX()),
+                (int) (yOffset + 43 + getTranslationY()),
                 18,
                 18,
                 elements.get(i),

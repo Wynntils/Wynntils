@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base;
@@ -37,11 +37,19 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     protected SearchWidget searchWidget;
     protected Renderable hovered = null;
 
+    protected int originalSearchWidgetX = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15);
+    protected int originalSearchWidgetY = 0;
+
     @Override
     protected void doInit() {
-        reloadElements(searchWidget.getTextBoxInput());
-
+        // We have to do it like this as WynntilsQuestBookScreen can call reloadElements before the widget
+        // is initialised and the screen width/height is not available in the screen constructor and as
+        // guide screens don't use the same position we need to store the original
+        this.searchWidget.setX((int) (originalSearchWidgetX + getTranslationX()));
+        this.searchWidget.setY((int) (originalSearchWidgetY + getTranslationY()));
         this.addRenderableWidget(searchWidget);
+
+        reloadElements(searchWidget.getTextBoxInput());
     }
 
     protected WynntilsListScreen(Component component) {
@@ -49,7 +57,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         // Do not lose search info on re-init
         this.searchWidget = new QuestBookSearchWidget(
-                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15),
+                originalSearchWidgetX,
                 0,
                 Texture.CONTENT_BOOK_SEARCH.width(),
                 Texture.CONTENT_BOOK_SEARCH.height(),
@@ -59,15 +67,11 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     protected void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
-
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
-            renderable.render(guiGraphics, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
 
             if (renderable instanceof WynntilsButton button) {
-                if (button.isMouseOver(mouseX - translationX, mouseY - translationY)) {
+                if (button.isMouseOver(mouseX, mouseY)) {
                     this.hovered = button;
                 }
             }
@@ -79,9 +83,9 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f,
-                        Texture.CONTENT_BOOK_BACKGROUND.width(),
-                        Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + getTranslationX(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() + getTranslationX(),
+                        Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + getTranslationY(),
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -93,10 +97,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(key),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15f,
-                        Texture.CONTENT_BOOK_BACKGROUND.width() - 15f,
-                        0,
-                        Texture.CONTENT_BOOK_BACKGROUND.height(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15f + getTranslationX(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() - 15f + getTranslationX(),
+                        getTranslationY(),
+                        Texture.CONTENT_BOOK_BACKGROUND.height() + getTranslationY(),
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -118,12 +122,9 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-
         for (GuiEventListener child : new ArrayList<>(this.children())) {
-            if (child.isMouseOver(mouseX - translationX, mouseY - translationY)) {
-                child.mouseClicked(mouseX - translationX, mouseY - translationY, button);
+            if (child.isMouseOver(mouseX, mouseY)) {
+                child.mouseClicked(mouseX, mouseY, button);
             }
         }
 
@@ -132,11 +133,8 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-
         for (GuiEventListener child : new ArrayList<>(this.children())) {
-            child.mouseDragged(mouseX - translationX, mouseY - translationY, button, dragX, dragY);
+            child.mouseDragged(mouseX, mouseY, button, dragX, dragY);
         }
 
         return true;
@@ -144,11 +142,8 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-
         for (GuiEventListener child : new ArrayList<>(this.children())) {
-            child.mouseReleased(mouseX - translationX, mouseY - translationY, button);
+            child.mouseReleased(mouseX, mouseY, button);
         }
 
         return true;
@@ -262,11 +257,5 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     protected int getElementsPerPage() {
         return 13;
-    }
-
-    @Override
-    public void added() {
-        searchWidget.opened();
-        super.added();
     }
 }

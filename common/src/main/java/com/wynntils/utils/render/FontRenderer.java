@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
@@ -338,7 +338,7 @@ public final class FontRenderer {
         }
     }
 
-    private void renderText(
+    public void renderText(
             PoseStack poseStack,
             StyledText text,
             float x,

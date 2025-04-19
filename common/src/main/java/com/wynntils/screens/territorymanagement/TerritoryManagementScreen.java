@@ -329,16 +329,10 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 RENDER_AREA_SIZE.a(),
                 RENDER_AREA_SIZE.b());
 
-        //  Render area widgets need to handle the scroll offset
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(0, -scrollOffset, 0);
-
         // Render the render main area widgets
         for (AbstractWidget widget : renderAreaWidgets) {
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
         }
-
-        guiGraphics.pose().popPose();
 
         RenderUtils.disableScissor();
 
@@ -365,17 +359,13 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
     }
 
     private void renderQuickFiltersAndSorts(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.pose().pushPose();
-
-        guiGraphics
-                .pose()
-                .translate(getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5, getRenderY(), 0);
+        int xOffset = getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5;
 
         RenderUtils.drawRect(
                 guiGraphics.pose(),
                 CommonColors.BLACK.withAlpha(80),
-                0,
-                0,
+                xOffset,
+                getRenderY(),
                 0,
                 QUICK_FILTER_WIDTH,
                 Texture.TERRITORY_MANAGEMENT_BACKGROUND.height());
@@ -385,9 +375,9 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                         guiGraphics.pose(),
                         StyledText.fromComponent(
                                 Component.translatable("feature.wynntils.customTerritoryManagementScreen.filters")),
-                        0,
-                        QUICK_FILTER_WIDTH,
-                        5,
+                        xOffset,
+                        QUICK_FILTER_WIDTH + xOffset,
+                        5 + getRenderY(),
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -398,15 +388,13 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                         guiGraphics.pose(),
                         StyledText.fromComponent(
                                 Component.translatable("feature.wynntils.customTerritoryManagementScreen.sorts")),
-                        0,
-                        QUICK_FILTER_WIDTH,
-                        70,
+                        xOffset,
+                        QUICK_FILTER_WIDTH + xOffset,
+                        70 + getRenderY(),
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
-
-        guiGraphics.pose().popPose();
 
         for (TerritoryQuickFilterWidget quickFilter : quickFilters) {
             quickFilter.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -488,6 +476,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         // Scroll the render area
         setScrollOffset((float) (scrollOffset - Math.signum(scrollY) * 10f));
+        scrollAreaWidgets(scrollOffset);
         return true;
     }
 
@@ -502,6 +491,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                     0,
                     getMaxScrollOffset());
             setScrollOffset(newScrollOffset);
+            scrollAreaWidgets(scrollOffset);
             return true;
         }
 
@@ -560,12 +550,13 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 yOffset += TERRITORY_SIZE;
             }
         }
+
+        scrollAreaWidgets(scrollOffset);
     }
 
     private AbstractWidget getHoveredWidget(int mouseX, int mouseY) {
-        // For render area widgets, take the scroll offset into account
         for (AbstractWidget widget : renderAreaWidgets) {
-            if (widget.isMouseOver(mouseX, mouseY + scrollOffset)
+            if (widget.isMouseOver(mouseX, mouseY)
                     && mouseY >= getRenderY() + RENDER_AREA_POSITION.b()
                     && mouseY <= getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b()) {
                 return widget;
@@ -582,6 +573,25 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         }
 
         return null;
+    }
+
+    private void scrollAreaWidgets(float newOffset) {
+        scrollOffset = newOffset;
+
+        int y = getRenderY() + RENDER_AREA_POSITION.b();
+        int xOffset = (RENDER_AREA_SIZE.a() - TERRITORIES_PER_ROW * TERRITORY_SIZE) / 2;
+        int yOffset = 0;
+        for (AbstractWidget areaWidget : renderAreaWidgets) {
+            int newY = (int) (y + yOffset - scrollOffset);
+
+            areaWidget.setY(newY);
+
+            xOffset += TERRITORY_SIZE;
+            if (xOffset >= TERRITORY_SIZE * TERRITORIES_PER_ROW) {
+                xOffset = (RENDER_AREA_SIZE.a() - TERRITORIES_PER_ROW * TERRITORY_SIZE) / 2;
+                yOffset += TERRITORY_SIZE;
+            }
+        }
     }
 
     private void setScrollOffset(float scrollOffset) {

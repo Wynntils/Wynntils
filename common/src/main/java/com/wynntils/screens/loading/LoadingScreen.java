@@ -89,18 +89,11 @@ public final class LoadingScreen extends WynntilsScreen {
                 textureWidth,
                 textureHeight);
 
-        poseStack.pushPose();
-
         // Draw notebook background
-        poseStack.translate(
-                (this.width - Texture.SCROLL_BACKGROUND.width()) / 2f,
-                (this.height - Texture.SCROLL_BACKGROUND.height()) / 2f,
-                0);
-
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, getTranslationX(), getTranslationY());
 
         // Draw logo
-        int centerX = Texture.SCROLL_BACKGROUND.width() / 2 + 15;
+        int centerX = (int) (Texture.SCROLL_BACKGROUND.width() / 2f + 15 + getTranslationX());
         Component logoComponent = Services.ResourcePack.isPreloadedPackSelected()
                 ? Component.literal(LOGO_STRING).withStyle(Style.EMPTY.withFont(LOGO_FONT_LOCATION))
                 : Component.literal(TEXT_LOGO_STRING);
@@ -109,7 +102,7 @@ public final class LoadingScreen extends WynntilsScreen {
                         poseStack,
                         StyledText.fromComponent(logoComponent),
                         centerX,
-                        60,
+                        60 + getTranslationY(),
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -121,7 +114,7 @@ public final class LoadingScreen extends WynntilsScreen {
                         poseStack,
                         StyledText.fromString(message),
                         centerX,
-                        100,
+                        100 + getTranslationY(),
                         MOSS_GREEN,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -133,7 +126,7 @@ public final class LoadingScreen extends WynntilsScreen {
                         poseStack,
                         StyledText.fromString(title),
                         centerX,
-                        120,
+                        120 + getTranslationY(),
                         MOSS_GREEN,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -143,7 +136,7 @@ public final class LoadingScreen extends WynntilsScreen {
                         poseStack,
                         StyledText.fromString(subtitle),
                         centerX,
-                        130,
+                        130 + getTranslationY(),
                         MOSS_GREEN,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -151,20 +144,38 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw spinner
         boolean state = (System.currentTimeMillis() % SPINNER_SPEED) < SPINNER_SPEED / 2;
-        drawSpinner(poseStack, centerX, 150, state);
-
-        poseStack.popPose();
+        drawSpinner(poseStack, centerX, 150 + getTranslationY(), state);
     }
 
     private void drawSpinner(PoseStack poseStack, float x, float y, boolean state) {
         ResourceLocation resource = Texture.RELOAD_ICON_OFFSET.resource();
 
         int fullWidth = Texture.RELOAD_ICON_OFFSET.width();
-        int width = fullWidth / 2;
-        int height = Texture.RELOAD_ICON_OFFSET.height();
-        int uOffset = state ? width : 0;
+        int spinnerWidth = fullWidth / 2;
+        int spinnerHeight = Texture.RELOAD_ICON_OFFSET.height();
+        int uOffset = state ? spinnerWidth : 0;
 
         RenderUtils.drawTexturedRect(
-                poseStack, resource, x - width / 2, y, 0, width, height, uOffset, 0, width, height, fullWidth, height);
+                poseStack,
+                resource,
+                x - spinnerWidth / 2f,
+                y,
+                0,
+                spinnerWidth,
+                spinnerHeight,
+                uOffset,
+                0,
+                spinnerWidth,
+                spinnerHeight,
+                fullWidth,
+                spinnerHeight);
+    }
+
+    public float getTranslationX() {
+        return (this.width - Texture.SCROLL_BACKGROUND.width()) / 2f;
+    }
+
+    public float getTranslationY() {
+        return (this.height - Texture.SCROLL_BACKGROUND.height()) / 2f;
     }
 }

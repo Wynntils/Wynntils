@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -18,7 +18,20 @@ public class SettingsSideTabButton extends GeneralSettingsTabButton {
             Consumer<Integer> onClick,
             List<Component> tooltip,
             Texture tagTexture,
-            Texture iconTexture) {
-        super(x, y, width, height, onClick, tooltip, tagTexture, iconTexture, OffsetDirection.LEFT);
+            Texture iconTexture,
+            int translationX,
+            int translationY) {
+        super(
+                x,
+                y,
+                width,
+                height,
+                onClick,
+                tooltip,
+                tagTexture,
+                iconTexture,
+                OffsetDirection.LEFT,
+                translationX,
+                translationY);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection.widgets;
@@ -23,6 +23,8 @@ import net.minecraft.network.chat.Component;
 public class OverlayOptionsButton extends BasicTexturedButton {
     private final StyledText message;
     private final Texture texture;
+    private final int translationX;
+    private final int translationY;
 
     private boolean isSelected;
 
@@ -35,12 +37,16 @@ public class OverlayOptionsButton extends BasicTexturedButton {
             Consumer<Integer> onClick,
             List<Component> tooltip,
             Texture texture,
-            boolean isSelected) {
+            boolean isSelected,
+            int translationX,
+            int translationY) {
         super(x, y, width, height, texture, onClick, tooltip);
 
         this.message = message;
         this.texture = texture;
         this.isSelected = isSelected;
+        this.translationX = translationX;
+        this.translationY = translationY;
     }
 
     @Override
@@ -53,10 +59,10 @@ public class OverlayOptionsButton extends BasicTexturedButton {
                 && MathUtils.isInside(
                         mouseX,
                         mouseY,
-                        0,
-                        Texture.OVERLAY_SELECTION_GUI.width(),
-                        0,
-                        Texture.OVERLAY_SELECTION_GUI.height())) {
+                        translationX,
+                        translationX + Texture.OVERLAY_SELECTION_GUI.width(),
+                        translationY,
+                        translationY + Texture.OVERLAY_SELECTION_GUI.height())) {
             isHovered = false;
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets;
@@ -38,8 +38,6 @@ public class ProviderFilterListWidget extends AbstractWidget {
     private static final int SCROLLBAR_WIDTH = 6;
     private static final int SCROLLBAR_RENDER_X = 184;
 
-    private final float translationX;
-    private final float translationY;
     private final ItemFilterScreen filterScreen;
     private final ItemStatProvider<?> provider;
 
@@ -54,17 +52,15 @@ public class ProviderFilterListWidget extends AbstractWidget {
     private NumericType numericChoice = NumericType.SINGLE;
 
     public ProviderFilterListWidget(
+            int x,
+            int y,
             ItemFilterScreen filterScreen,
             ItemStatProvider<?> provider,
-            List<StatProviderAndFilterPair> filterPairs,
-            float translationX,
-            float translationY) {
-        super(150, 30, 195, 145, Component.literal("Provider Filter List Widget"));
+            List<StatProviderAndFilterPair> filterPairs) {
+        super(x, y, 195, 145, Component.literal("Provider Filter List Widget"));
 
         this.filterScreen = filterScreen;
         this.provider = provider;
-        this.translationX = translationX;
-        this.translationY = translationY;
         this.filterPairs = new ArrayList<>(filterPairs);
 
         if (provider.getType().equals(String.class) && provider.getValidInputs().isEmpty()) {
@@ -154,8 +150,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
             return;
         }
 
-        RenderUtils.enableScissor((int) (getX() + 4 + translationX), (int) (getY() + 1 + translationY), 177, (int)
-                (getScrollbarHeight() + 1));
+        RenderUtils.enableScissor(getX(), getY() - 2, getWidth(), (int) (getScrollbarHeight() + 5));
 
         for (GeneralFilterWidget widget : widgets) {
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -269,7 +264,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         if (!filterPairs.isEmpty()) {
             for (StatProviderAndFilterPair filterPair : filterPairs) {
                 if (filterPair.statFilter() instanceof AnyStatFilters.AbstractAnyStatFilter) {
-                    widgets.add(new AnyFilterWidget(this));
+                    widgets.add(new AnyFilterWidget(getX(), getY(), this));
 
                     if (addStringFilterButton != null) {
                         addStringFilterButton.visible = false;
@@ -285,9 +280,9 @@ public class ProviderFilterListWidget extends AbstractWidget {
 
         if (provider.getType().equals(Boolean.class)) {
             if (filterPairs.isEmpty()) {
-                widgets.add(new BooleanFilterWidget(null, this));
+                widgets.add(new BooleanFilterWidget(getX(), getY(), null, this));
             } else {
-                widgets.add(new BooleanFilterWidget(filterPairs.getFirst(), this));
+                widgets.add(new BooleanFilterWidget(getX(), getY(), filterPairs.getFirst(), this));
             }
 
             return;
@@ -384,16 +379,10 @@ public class ProviderFilterListWidget extends AbstractWidget {
         return provider;
     }
 
-    public float getTranslationX() {
-        return translationX;
-    }
-
-    public float getTranslationY() {
-        return translationY;
-    }
-
     private boolean isScrollable() {
-        if (provider.getValidInputs().isEmpty()) {
+        if (anyFilterActive()) {
+            return false;
+        } else if (provider.getValidInputs().isEmpty()) {
             return widgets.size() > MAX_WIDGETS_PER_PAGE;
         } else {
             return provider.getValidInputs().size() > MAX_SELECTION_WIDGETS_PER_PAGE;
@@ -401,7 +390,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
     }
 
     private float getScrollableArea() {
-        if (provider.getValidInputs().isEmpty()) {
+        if (provider.getValidInputs().isEmpty() && !anyFilterActive()) {
             return MAX_WIDGETS_PER_PAGE * 22 - SCROLLBAR_HEIGHT;
         } else {
             return MAX_SELECTION_WIDGETS_PER_PAGE * 22 - SCROLLBAR_HEIGHT;
@@ -409,7 +398,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
     }
 
     private int getMaxScrollOffset() {
-        if (provider.getValidInputs().isEmpty()) {
+        if (provider.getValidInputs().isEmpty() && !anyFilterActive()) {
             return (widgets.size() - MAX_WIDGETS_PER_PAGE) * 24;
         } else {
             return (provider.getValidInputs().size() - MAX_SELECTION_WIDGETS_PER_PAGE) * 24;
@@ -417,11 +406,15 @@ public class ProviderFilterListWidget extends AbstractWidget {
     }
 
     private float getScrollbarHeight() {
-        if (provider.getValidInputs().isEmpty()) {
+        if (provider.getValidInputs().isEmpty() && !anyFilterActive()) {
             return MAX_WIDGETS_PER_PAGE * 24;
         } else {
             return MAX_SELECTION_WIDGETS_PER_PAGE * 24;
         }
+    }
+
+    private boolean anyFilterActive() {
+        return !widgets.isEmpty() && widgets.getFirst() instanceof AnyFilterWidget;
     }
 
     private void cycleNumericChoice(int direction) {
@@ -474,12 +467,15 @@ public class ProviderFilterListWidget extends AbstractWidget {
 
     private GeneralFilterWidget getNumericFilterWidget(int renderY) {
         return switch (numericChoice) {
-            case SINGLE -> NumericFilterWidgetFactory.createSingleWidget(
-                    provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
-            case RANGED -> NumericFilterWidgetFactory.createRangedWidget(
-                    provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
-            case INEQUALITY -> NumericFilterWidgetFactory.createInequalityWidget(
-                    provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
+            case SINGLE ->
+                NumericFilterWidgetFactory.createSingleWidget(
+                        provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
+            case RANGED ->
+                NumericFilterWidgetFactory.createRangedWidget(
+                        provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
+            case INEQUALITY ->
+                NumericFilterWidgetFactory.createInequalityWidget(
+                        provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
         };
     }
 

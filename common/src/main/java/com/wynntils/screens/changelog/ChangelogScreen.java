@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.changelog;
@@ -59,15 +59,15 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         setCurrentPage(0);
 
         this.addRenderableWidget(new PageSelectorButton(
-                80 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.SCROLL_BACKGROUND.height() - 17,
+                (int) (80 - Texture.FORWARD_ARROW_OFFSET.width() / 2f + getTranslationX()),
+                (int) (Texture.SCROLL_BACKGROUND.height() - 17 + getTranslationY()),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.SCROLL_BACKGROUND.width() - 80,
-                Texture.SCROLL_BACKGROUND.height() - 17,
+                (int) (Texture.SCROLL_BACKGROUND.width() - 80 + getTranslationX()),
+                (int) (Texture.SCROLL_BACKGROUND.height() - 17 + getTranslationY()),
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
@@ -78,24 +78,17 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
-        poseStack.pushPose();
+        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, getTranslationX(), getTranslationY());
 
-        poseStack.translate(
-                (this.width - Texture.SCROLL_BACKGROUND.width()) / 2f,
-                (this.height - Texture.SCROLL_BACKGROUND.height()) / 2f,
-                0);
-
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, 0, 0);
-
-        FontRenderer.getInstance().renderTexts(poseStack, 45, 15, changelogTasks.get(currentPage));
+        FontRenderer.getInstance()
+                .renderTexts(
+                        poseStack, 45 + getTranslationX(), 15 + getTranslationY(), changelogTasks.get(currentPage));
 
         renderPageInfo(poseStack, getCurrentPage() + 1, getMaxPage() + 1);
 
         for (Renderable renderable : this.renderables) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
-
-        poseStack.popPose();
     }
 
     private void renderPageInfo(PoseStack poseStack, int currentPage, int maxPage) {
@@ -103,21 +96,13 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
-                        80,
-                        Texture.SCROLL_BACKGROUND.width() - 80,
-                        Texture.SCROLL_BACKGROUND.height() - 17,
+                        80 + getTranslationX(),
+                        Texture.SCROLL_BACKGROUND.width() - 80 + getTranslationX(),
+                        Texture.SCROLL_BACKGROUND.height() - 17 + getTranslationY(),
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
-    }
-
-    @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        double adjustedMouseX = mouseX - (this.width - Texture.SCROLL_BACKGROUND.width()) / 2f;
-        double adjustedMouseY = mouseY - (this.height - Texture.SCROLL_BACKGROUND.height()) / 2f;
-
-        return super.doMouseClicked(adjustedMouseX, adjustedMouseY, button);
     }
 
     @Override
@@ -178,5 +163,13 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     @Override
     public int getMaxPage() {
         return Math.max(0, this.changelogTasks.size() - 1);
+    }
+
+    private float getTranslationX() {
+        return (this.width - Texture.SCROLL_BACKGROUND.width()) / 2f;
+    }
+
+    private float getTranslationY() {
+        return (this.height - Texture.SCROLL_BACKGROUND.height()) / 2f;
     }
 }

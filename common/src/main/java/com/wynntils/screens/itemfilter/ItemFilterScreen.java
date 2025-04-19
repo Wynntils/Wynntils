@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter;
@@ -97,11 +97,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private boolean draggingSortScroll = false;
     private float providerScrollY;
     private float sortScrollY;
-    private float translationX;
-    private float translationY;
     private int presetsScrollOffset = 0;
     private int providersScrollOffset = 0;
     private int sortScrollOffset = 0;
+    private int translationX;
+    private int translationY;
     private Renderable hovered = null;
 
     // Screen information
@@ -171,16 +171,21 @@ public final class ItemFilterScreen extends WynntilsScreen {
     @Override
     protected void doInit() {
         super.doInit();
-
-        translationX = (this.width - Texture.ITEM_FILTER_BACKGROUND.width()) / 2f;
-        translationY = (this.height - Texture.ITEM_FILTER_BACKGROUND.height()) / 2f;
+        translationX = (int) ((this.width - Texture.ITEM_FILTER_BACKGROUND.width()) / 2f);
+        translationY = (int) ((this.height - Texture.ITEM_FILTER_BACKGROUND.height()) / 2f);
+        itemNameInput.setX(220 + translationX);
+        itemNameInput.setY(5 + translationY);
+        providerSearchWidget.setX(7 + translationX);
+        providerSearchWidget.setY(5 + translationY);
+        itemSearchWidget.setX(translationX);
+        itemSearchWidget.setY(-22 + translationY);
 
         this.addRenderableWidget(itemSearchWidget);
         this.addRenderableWidget(providerSearchWidget);
-
         this.addRenderableWidget(itemNameInput);
 
-        presetNameInput = new TextInputBoxWidget(220, 180, 100, 20, (s -> checkSaveStatus()), this, presetNameInput);
+        presetNameInput = new TextInputBoxWidget(
+                220 + translationX, 180 + translationY, 100, 20, (s -> checkSaveStatus()), this, presetNameInput);
 
         this.addRenderableWidget(presetNameInput);
 
@@ -188,7 +193,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         if (this.supportsSorting) {
             toggleSortButton = new Button.Builder(
                             Component.literal(sortMode ? "🔍" : "⇅"), (button -> toggleSortMode()))
-                    .pos(108, 5)
+                    .pos(108 + translationX, 5 + translationY)
                     .size(20, 20)
                     .tooltip(Tooltip.create(Component.translatable(
                             sortMode
@@ -200,7 +205,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
 
         Button returnButton = new Button.Builder(Component.literal("⏎"), (button -> onClose()))
-                .pos(Texture.ITEM_FILTER_BACKGROUND.width() - 18, -22)
+                .pos(Texture.ITEM_FILTER_BACKGROUND.width() - 18 + translationX, -22 + translationY)
                 .size(20, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.itemFilter.return")))
                 .build();
@@ -215,7 +220,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                     updateStateFromItemSearchWidget();
                     this.applyButton.active = false;
                 }))
-                .pos(Texture.ITEM_FILTER_BACKGROUND.width() - 39, -22)
+                .pos(Texture.ITEM_FILTER_BACKGROUND.width() - 39 + translationX, -22 + translationY)
                 .size(20, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.itemFilter.apply")))
                 .build();
@@ -226,7 +231,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         // region Preset buttons
         savePresetButton = new Button.Builder(Component.literal("💾"), (button -> savePreset()))
-                .pos(330, 180)
+                .pos(330 + translationX, 180 + translationY)
                 .size(20, 20)
                 .build();
 
@@ -236,8 +241,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         this.addRenderableWidget(savePresetButton);
 
         previousPresetButton = this.addRenderableWidget(new PresetButton(
-                Texture.ITEM_FILTER_BACKGROUND.width() - 4,
-                4,
+                Texture.ITEM_FILTER_BACKGROUND.width() - 4 + translationX,
+                4 + translationY,
                 StyledText.fromString("🠝"),
                 (b) -> scrollPresets(-1),
                 List.of(Component.translatable("screens.wynntils.itemFilter.scrollUp")),
@@ -245,8 +250,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 translationY));
 
         nextPresetButton = this.addRenderableWidget(new PresetButton(
-                Texture.ITEM_FILTER_BACKGROUND.width() - 4,
-                174,
+                Texture.ITEM_FILTER_BACKGROUND.width() - 4 + translationX,
+                174 + translationY,
                 StyledText.fromString("🠟"),
                 (b) -> scrollPresets(1),
                 List.of(Component.translatable("screens.wynntils.itemFilter.scrollDown")),
@@ -261,8 +266,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         // region Filter type buttons
         allButton = new FilterOptionsButton(
-                -(Texture.BUTTON_LEFT.width()) + 4,
-                8,
+                -(Texture.BUTTON_LEFT.width()) + 4 + translationX,
+                8 + translationY,
                 Texture.BUTTON_LEFT.width(),
                 Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.allFilter")),
@@ -272,8 +277,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 filterType == FilterType.ALL);
 
         usedButton = new FilterOptionsButton(
-                -(Texture.BUTTON_LEFT.width()) + 4,
-                12 + Texture.BUTTON_LEFT.height() / 2,
+                -(Texture.BUTTON_LEFT.width()) + 4 + translationX,
+                12 + Texture.BUTTON_LEFT.height() / 2 + translationY,
                 Texture.BUTTON_LEFT.width(),
                 Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.usedFilter")),
@@ -283,8 +288,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 filterType == FilterType.USED);
 
         unusedButton = new FilterOptionsButton(
-                -(Texture.BUTTON_LEFT.width()) + 4,
-                16 + (Texture.BUTTON_LEFT.height() / 2) * 2,
+                -(Texture.BUTTON_LEFT.width()) + 4 + translationX,
+                16 + (Texture.BUTTON_LEFT.height() / 2) * 2 + translationY,
                 Texture.BUTTON_LEFT.width(),
                 Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.unusedFilter")),
@@ -318,10 +323,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         hovered = null;
 
-        poseStack.pushPose();
-        poseStack.translate(translationX, translationY, 0);
-
-        RenderUtils.drawTexturedRect(poseStack, Texture.ITEM_FILTER_BACKGROUND, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.ITEM_FILTER_BACKGROUND, translationX, translationY);
 
         if (selectedProvider == null && !sortMode) {
             FontRenderer.getInstance()
@@ -329,10 +331,10 @@ public final class ItemFilterScreen extends WynntilsScreen {
                             poseStack,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.itemFilter.unselectedFilter")),
-                            147,
-                            345,
-                            63,
-                            123,
+                            147 + translationX,
+                            345 + translationX,
+                            63 + translationY,
+                            123 + translationY,
                             200,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
@@ -343,10 +345,10 @@ public final class ItemFilterScreen extends WynntilsScreen {
                     .renderAlignedTextInBox(
                             poseStack,
                             StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.noSorts")),
-                            147,
-                            345,
-                            63,
-                            123,
+                            147 + translationX,
+                            345 + translationX,
+                            63 + translationY,
+                            123 + translationY,
                             200,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
@@ -359,8 +361,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.itemName")),
-                            150,
-                            10,
+                            150 + translationX,
+                            10 + translationY,
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.TOP,
@@ -371,21 +373,18 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 .renderText(
                         poseStack,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.presetName")),
-                        150,
-                        185,
+                        150 + translationX,
+                        185 + translationY,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        int adjustedMouseX = mouseX - (int) translationX;
-        int adjustedMouseY = mouseY - (int) translationY;
-
         for (Renderable renderable : renderables) {
-            renderable.render(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
 
             if (renderable instanceof WynntilsButton wynntilsButton) {
-                if (wynntilsButton.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+                if (wynntilsButton.isMouseOver(mouseX, mouseY)) {
                     hovered = renderable;
                 }
             }
@@ -396,39 +395,38 @@ public final class ItemFilterScreen extends WynntilsScreen {
                     .renderAlignedTextInBox(
                             poseStack,
                             StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.noProviders")),
-                            8,
-                            127,
-                            28,
-                            169,
+                            8 + translationX,
+                            127 + translationX,
+                            28 + translationY,
+                            169 + translationY,
                             118,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         } else {
-            RenderUtils.enableScissor(
-                    (int) (6 + translationX), (int) (30 + translationY), 122, MAX_PROVIDERS_PER_PAGE * 21);
+            RenderUtils.enableScissor(6 + translationX, 28 + translationY, 122, MAX_PROVIDERS_PER_PAGE * 21 + 2);
 
             for (Renderable renderable : providerButtons) {
-                renderable.render(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
+                renderable.render(guiGraphics, mouseX, mouseY, partialTick);
             }
 
             RenderUtils.disableScissor();
         }
 
-        RenderUtils.enableScissor((int) (149 + translationX), (int) (30 + translationY), 172, MAX_SORTS_PER_PAGE * 21);
+        RenderUtils.enableScissor(149 + translationX, 28 + translationY, 172, MAX_SORTS_PER_PAGE * 21 + 2);
 
         for (Renderable renderable : sortButtons) {
-            renderable.render(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor();
 
         for (Renderable renderable : presetButtons) {
-            renderable.render(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
 
             if (renderable instanceof WynntilsButton wynntilsButton) {
-                if (wynntilsButton.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+                if (wynntilsButton.isMouseOver(mouseX, mouseY)) {
                     hovered = renderable;
                 }
             }
@@ -441,8 +439,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
         if (sortMode && sorts.size() > MAX_SORTS_PER_PAGE) {
             renderSortScroll(poseStack);
         }
-
-        poseStack.popPose();
 
         renderTooltips(guiGraphics, mouseX, mouseY);
     }
@@ -462,15 +458,12 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        double adjustedMouseX = mouseX - translationX;
-        double adjustedMouseY = mouseY - translationY;
-
         if (!draggingProviderScroll && itemStatProviders.size() > MAX_PROVIDERS_PER_PAGE) {
             if (MathUtils.isInside(
-                    (int) adjustedMouseX,
-                    (int) adjustedMouseY,
-                    133,
-                    133 + Texture.SCROLL_BUTTON.width(),
+                    (int) mouseX,
+                    (int) mouseY,
+                    133 + translationX,
+                    133 + Texture.SCROLL_BUTTON.width() + translationX,
                     (int) providerScrollY,
                     (int) (providerScrollY + Texture.SCROLL_BUTTON.height()))) {
                 draggingProviderScroll = true;
@@ -480,8 +473,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
 
         if (sortMode && !draggingSortScroll && sorts.size() > MAX_SORTS_PER_PAGE) {
-            if (MathUtils.isInside((int) adjustedMouseX, (int) adjustedMouseY, 330, 336, (int) sortScrollY, (int)
-                    (sortScrollY + 20))) {
+            if (MathUtils.isInside((int) mouseX, (int) mouseY, 330, 336, (int) sortScrollY, (int) (sortScrollY + 20))) {
                 draggingSortScroll = true;
 
                 return true;
@@ -489,22 +481,22 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
 
         for (GuiEventListener listener : getWidgetsForIteration().toList()) {
-            if (listener.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+            if (listener.isMouseOver(mouseX, mouseY)) {
                 // Preset and filter buttons have a slight bit rendered underneath the background but we don't want that
                 // part to be clickable
                 if (listener instanceof PresetButton || listener instanceof FilterOptionsButton) {
                     if (MathUtils.isInside(
-                            (int) adjustedMouseX,
-                            (int) adjustedMouseY,
-                            0,
-                            Texture.ITEM_FILTER_BACKGROUND.width(),
-                            0,
-                            Texture.ITEM_FILTER_BACKGROUND.height())) {
+                            (int) mouseX,
+                            (int) mouseY,
+                            translationX,
+                            Texture.ITEM_FILTER_BACKGROUND.width() + translationX,
+                            translationY,
+                            Texture.ITEM_FILTER_BACKGROUND.height() + translationY)) {
                         return false;
                     }
                 }
 
-                listener.mouseClicked(adjustedMouseX, adjustedMouseY, button);
+                listener.mouseClicked(mouseX, mouseY, button);
             }
         }
 
@@ -513,20 +505,17 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        double adjustedMouseX = mouseX - translationX;
-        double adjustedMouseY = mouseY - translationY;
-
         // Prevent scrolling issues in the filter widget by triggering mouse released when no longer hovering it
-        if (filterWidget != null && !filterWidget.isMouseOver(adjustedMouseX, adjustedMouseY)) {
-            filterWidget.mouseReleased(adjustedMouseX, adjustedMouseY, button);
+        if (filterWidget != null && !filterWidget.isMouseOver(mouseX, mouseY)) {
+            filterWidget.mouseReleased(mouseX, mouseY, button);
         }
 
         if (draggingProviderScroll) {
-            int scrollAreaStartY = 24 + 10;
+            int scrollAreaStartY = 24 + 10 + translationY;
             int scrollAreaHeight = MAX_PROVIDERS_PER_PAGE * 21 - Texture.SCROLL_BUTTON.height();
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) adjustedMouseY,
+                    (float) mouseY,
                     scrollAreaStartY,
                     scrollAreaStartY + scrollAreaHeight,
                     0,
@@ -536,13 +525,13 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
             scrollProviders(newOffset);
 
-            return super.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
+            return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
         } else if (draggingSortScroll) {
             int scrollAreaStartY = 30 + 10;
             int scrollAreaHeight = MAX_SORTS_PER_PAGE * 21 - 20;
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) adjustedMouseY,
+                    (float) mouseY,
                     scrollAreaStartY,
                     scrollAreaStartY + scrollAreaHeight,
                     0,
@@ -556,8 +545,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(adjustedMouseX, adjustedMouseY)) {
-                return listener.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
+            if (listener.isMouseOver(mouseX, mouseY)) {
+                return listener.mouseDragged(mouseX, mouseY, button, dragX, dragY);
             }
         }
 
@@ -566,15 +555,12 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        double adjustedMouseX = mouseX - translationX;
-        double adjustedMouseY = mouseY - translationY;
-
         draggingProviderScroll = false;
         draggingSortScroll = false;
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(adjustedMouseX, adjustedMouseY)) {
-                return listener.mouseReleased(adjustedMouseX, adjustedMouseY, button);
+            if (listener.isMouseOver(mouseX, mouseY)) {
+                return listener.mouseReleased(mouseX, mouseY, button);
             }
         }
 
@@ -583,26 +569,24 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        double adjustedMouseX = mouseX - translationX;
-        double adjustedMouseY = mouseY - translationY;
         double scrollValue = -Math.signum(deltaY);
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(adjustedMouseX, adjustedMouseY)) {
-                if (listener.mouseScrolled(adjustedMouseX, adjustedMouseY, deltaX, deltaY)) {
+            if (listener.isMouseOver(mouseX, mouseY)) {
+                if (listener.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
                     return true;
                 }
             }
         }
 
-        if (presets.size() > MAX_PRESETS && adjustedMouseX >= Texture.ITEM_FILTER_BACKGROUND.width()) {
+        if (presets.size() > MAX_PRESETS && mouseX >= Texture.ITEM_FILTER_BACKGROUND.width() + translationX) {
             scrollPresets((int) scrollValue);
             return true;
         }
 
         int scrollAmount = (int) (-deltaY * SCROLL_FACTOR);
 
-        if (sortMode && adjustedMouseX >= 150) {
+        if (sortMode && mouseX >= 150 + translationX) {
             int newOffset = Math.max(0, Math.min(sortScrollOffset + scrollAmount, getMaxSortsScrollOffset()));
             scrollSorts(newOffset);
         } else {
@@ -732,11 +716,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
     }
 
     public int getProviderMaskTopY() {
-        return PROVIDER_MASK_TOP_Y;
+        return PROVIDER_MASK_TOP_Y + translationY;
     }
 
     public int getProviderMaskBottomY() {
-        return PROVIDER_MASK_BOTTOM_Y;
+        return PROVIDER_MASK_BOTTOM_Y + translationY;
     }
 
     private void updateProviderWidgets() {
@@ -762,10 +746,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
                     .toList();
         }
 
-        int yPos = 31;
+        int yPos = 31 + translationY;
 
         for (ItemStatProvider<?> provider : itemStatProviders) {
-            providerButtons.add(new ProviderButton(7, yPos, 120, 18, this, provider, translationX, translationY));
+            providerButtons.add(
+                    new ProviderButton(7 + translationX, yPos, 120, 18, this, provider, translationX, translationY));
 
             yPos += 21;
         }
@@ -804,7 +789,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         if (presets.isEmpty()) return;
 
-        int yPos = 4;
+        int yPos = 4 + translationY;
 
         for (int i = 0; i < Math.min(MAX_PRESETS, presets.size()); i++) {
             yPos += Texture.BUTTON_RIGHT.height() / 2 + 6;
@@ -849,10 +834,10 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         sortButtons = new ArrayList<>();
 
-        int yPos = 29;
+        int yPos = 29 + translationY;
 
         for (SortInfo sort : sorts) {
-            sortButtons.add(new SortWidget(150, yPos, this, translationX, translationY, sort));
+            sortButtons.add(new SortWidget(150 + translationX, yPos, this, sort));
 
             yPos += 21;
         }
@@ -866,11 +851,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
 
         filterWidget = new ProviderFilterListWidget(
+                150 + translationX,
+                30 + translationY,
                 this,
                 selectedProvider,
-                filterMap.getOrDefault(selectedProvider, List.of()),
-                translationX,
-                translationY);
+                filterMap.getOrDefault(selectedProvider, List.of()));
         this.addRenderableWidget(filterWidget);
     }
 
@@ -878,10 +863,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
         providersScrollOffset = newOffset;
 
         for (WynntilsButton provider : providerButtons) {
-            int newY = 31 + (providerButtons.indexOf(provider) * 21) - providersScrollOffset;
+            int newY = 31 + translationY + (providerButtons.indexOf(provider) * 21) - providersScrollOffset;
 
             provider.setY(newY);
-            provider.visible = newY >= (31 - 21) && newY <= (31 + (MAX_PROVIDERS_PER_PAGE + 1) * 21);
+            provider.visible =
+                    newY >= (31 + translationY - 21) && newY <= (31 + translationY + (MAX_PROVIDERS_PER_PAGE + 1) * 21);
         }
     }
 
@@ -889,10 +875,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
         sortScrollOffset = newOffset;
 
         for (SortWidget sort : sortButtons) {
-            int newY = 31 + (sortButtons.indexOf(sort) * 21) - sortScrollOffset;
+            int newY = 31 + translationY + (sortButtons.indexOf(sort) * 21) - sortScrollOffset;
 
             sort.setY(newY);
-            sort.visible = newY >= (31 - 21) && newY <= (31 + (MAX_SORTS_PER_PAGE + 1) * 21);
+            sort.visible =
+                    newY >= (31 + translationY - 21) && newY <= (31 + translationY + (MAX_SORTS_PER_PAGE + 1) * 21);
         }
     }
 
@@ -1052,16 +1039,13 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         // Preset and filter buttons have a small bit rendered underneath the background, that shouldn't show tooltip
         if (hovered instanceof PresetButton || hovered instanceof FilterOptionsButton) {
-            int adjustedMouseX = mouseX - (int) translationX;
-            int adjustedMouseY = mouseY - (int) translationY;
-
             if (MathUtils.isInside(
-                    adjustedMouseX,
-                    adjustedMouseY,
-                    0,
-                    Texture.ITEM_FILTER_BACKGROUND.width(),
-                    0,
-                    Texture.ITEM_FILTER_BACKGROUND.height())) {
+                    mouseX,
+                    mouseY,
+                    0 + translationX,
+                    Texture.ITEM_FILTER_BACKGROUND.width() + translationX,
+                    0 + translationY,
+                    Texture.ITEM_FILTER_BACKGROUND.height() + translationY)) {
                 return;
             }
         }
@@ -1079,6 +1063,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     private void renderProvidersScroll(PoseStack poseStack) {
         providerScrollY = 24
+                + translationY
                 + MathUtils.map(
                         providersScrollOffset,
                         0,
@@ -1086,17 +1071,31 @@ public final class ItemFilterScreen extends WynntilsScreen {
                         0,
                         177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 133, providerScrollY);
+        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 133 + translationX, providerScrollY);
     }
 
     private void renderSortScroll(PoseStack poseStack) {
-        RenderUtils.drawRect(poseStack, CommonColors.LIGHT_GRAY, 330, 30, 0, 6, MAX_SORTS_PER_PAGE * 21);
+        RenderUtils.drawRect(
+                poseStack,
+                CommonColors.LIGHT_GRAY,
+                330 + translationX,
+                30 + translationY,
+                0,
+                6,
+                MAX_SORTS_PER_PAGE * 21);
 
-        sortScrollY =
-                30 + MathUtils.map(sortScrollOffset, 0, getMaxSortsScrollOffset(), 0, MAX_SORTS_PER_PAGE * 21 - 20);
+        sortScrollY = 30
+                + translationY
+                + MathUtils.map(sortScrollOffset, 0, getMaxSortsScrollOffset(), 0, MAX_SORTS_PER_PAGE * 21 - 20);
 
         RenderUtils.drawRect(
-                poseStack, draggingSortScroll ? CommonColors.BLACK : CommonColors.GRAY, 330, sortScrollY, 0, 6, 20);
+                poseStack,
+                draggingSortScroll ? CommonColors.BLACK : CommonColors.GRAY,
+                330 + translationX,
+                sortScrollY,
+                0,
+                6,
+                20);
     }
 
     private void setSelectedFilter(FilterType newFilter) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.ingredient;
@@ -47,12 +47,6 @@ public final class WynntilsIngredientGuideScreen
 
         renderBackgroundTexture(poseStack);
 
-        // Make 0, 0 the top left corner of the rendered quest book background
-        poseStack.pushPose();
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-        poseStack.translate(translationX, translationY, 1f);
-
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
 
         renderDescription(
@@ -68,8 +62,6 @@ public final class WynntilsIngredientGuideScreen
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
-        poseStack.popPose();
-
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
@@ -78,22 +70,27 @@ public final class WynntilsIngredientGuideScreen
         int txWidth = Texture.CONTENT_BOOK_TITLE.width();
         int txHeight = Texture.CONTENT_BOOK_TITLE.height();
         RenderUtils.drawScalingTexturedRect(
-                poseStack, Texture.CONTENT_BOOK_TITLE.resource(), 0, 30, 0, txWidth, txHeight, txWidth, txHeight);
+                poseStack,
+                Texture.CONTENT_BOOK_TITLE.resource(),
+                getTranslationX(),
+                30 + getTranslationY(),
+                0,
+                txWidth,
+                txHeight,
+                txWidth,
+                txHeight);
 
-        poseStack.pushPose();
-        poseStack.translate(10, 36, 0);
-        poseStack.scale(1.8f, 1.8f, 0f);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(titleString),
-                        0,
-                        0,
+                        10 + getTranslationX(),
+                        36 + getTranslationY(),
                         CommonColors.YELLOW,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NORMAL);
-        poseStack.popPose();
+                        TextShadow.NORMAL,
+                        1.8f);
     }
 
     @Override
@@ -111,8 +108,8 @@ public final class WynntilsIngredientGuideScreen
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f,
-                        30,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + getTranslationX(),
+                        30 + getTranslationY(),
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -125,8 +122,8 @@ public final class WynntilsIngredientGuideScreen
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
         return new GuideIngredientItemStackButton(
-                xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 13,
-                yOffset + 43,
+                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + getTranslationX()),
+                (int) (yOffset + 43 + getTranslationY()),
                 18,
                 18,
                 elements.get(i),
