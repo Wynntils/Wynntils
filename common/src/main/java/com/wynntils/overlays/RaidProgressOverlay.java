@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -9,8 +9,12 @@ import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class RaidProgressOverlay extends TextOverlay {
     private String template;
@@ -29,6 +33,9 @@ public class RaidProgressOverlay extends TextOverlay {
     @Persisted
     public final Config<Boolean> showDamage = new Config<>(true);
 
+    @Persisted
+    public final Config<Boolean> disableRaidInfoOnScoreboard = new Config<>(false);
+
     public RaidProgressOverlay() {
         super(
                 new OverlayPosition(
@@ -37,7 +44,7 @@ public class RaidProgressOverlay extends TextOverlay {
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
                         OverlayPosition.AnchorSection.MIDDLE_LEFT),
-                150,
+                200,
                 120);
 
         buildTemplates();
@@ -63,19 +70,31 @@ public class RaidProgressOverlay extends TextOverlay {
         return Models.Raid.getCurrentRaid() != null;
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+        if (disableRaidInfoOnScoreboard.get() && event.getSegment().getScoreboardPart() instanceof RaidScoreboardPart) {
+            event.setCanceled(true);
+        }
+    }
+
     private void buildTemplates() {
         StringBuilder templateBuilder = new StringBuilder("{concat(\"§6§l§n\";current_raid;\"\n\";");
         StringBuilder previewBuilder = new StringBuilder("§6§l§nNest of the Grootslangs\n\n");
 
-        for (int i = 0; i < Models.Raid.MAX_CHALLENGES; i++) {
+        for (int i = 0; i < Models.Raid.MAXIMUM_CHALLENGE_ROOMS; i++) {
             templateBuilder.append(getChallengeTemplate(i + 1));
         }
 
-        for (int i = 0; i < Models.Raid.MAX_CHALLENGES; i++) {
+        // Not using MAXIMUM_CHALLENGE_ROOMS as the preview template expects 3
+        for (int i = 0; i < 3; i++) {
             previewBuilder.append(getChallengePreview(i + 1));
         }
 
-        templateBuilder.append(getBossTemplate());
+        templateBuilder.append("\"\n\";");
+        for (int i = 0; i < Models.Raid.MAXIMUM_BOSS_ROOMS; i++) {
+            templateBuilder.append(getBossTemplate(i + 1));
+        }
+        templateBuilder.append("\"\n\";");
         previewBuilder.append(getBossPreview());
 
         if (showIntermission.get()) {
@@ -91,11 +110,19 @@ public class RaidProgressOverlay extends TextOverlay {
     }
 
     private String getChallengeTemplate(int challengeNum) {
-        StringBuilder challengeBuilder = new StringBuilder("\"\n§dChallenge ")
+        StringBuilder challengeBuilder = new StringBuilder("if_str(and(raid_has_room(")
                 .append(challengeNum)
-                .append(": \";if_str(eq(raid_room_time(\"challenge_")
+                .append(");not(raid_is_boss_room(")
                 .append(challengeNum)
-                .append("\");-1);\"§7");
+                .append(")));concat(\"\n§d\";if_str(eq_str(raid_room_name(")
+                .append(challengeNum)
+                .append(");\"\");\"Challenge ")
+                .append(challengeNum)
+                .append("\";raid_room_name(")
+                .append(challengeNum)
+                .append("));\": \";if_str(eq(raid_room_time(")
+                .append(challengeNum)
+                .append(");-1);\"§7");
 
         if (showMilliseconds.get()) {
             challengeBuilder.append("--:--.---");
@@ -104,40 +131,50 @@ public class RaidProgressOverlay extends TextOverlay {
         }
 
         challengeBuilder
-                .append("\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(\"challenge_")
+                .append("\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(")
                 .append(challengeNum)
-                .append("\");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(\"challenge_")
+                .append(");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(")
                 .append(challengeNum)
-                .append("\");1000);60));2)");
+                .append(");1000);60));2)");
 
         if (showMilliseconds.get()) {
             challengeBuilder
-                    .append(";\".\";leading_zeros(int(mod(raid_room_time(\"challenge_")
+                    .append(";\".\";leading_zeros(int(mod(raid_room_time(")
                     .append(challengeNum)
-                    .append("\");1000));3)));");
+                    .append(");1000));3)))");
         } else {
-            challengeBuilder.append("));");
+            challengeBuilder.append("))");
         }
 
         if (showDamage.get()) {
             challengeBuilder
-                    .append("if_str(eq(raid_room_damage(\"challenge_")
+                    .append(";if_str(eq(raid_room_damage(")
                     .append(challengeNum)
-                    .append("\");-1);\"\";concat(\" §f(§e\";format(raid_room_damage(\"challenge_")
+                    .append(");-1);\"\";concat(\" §f(§e\";format(raid_room_damage(")
                     .append(challengeNum)
-                    .append("\"));\"§f)\"));");
+                    .append("));\"§f)\")));");
+        } else {
+            challengeBuilder.append(");");
         }
+
+        challengeBuilder.append("\"\");");
 
         return challengeBuilder.toString();
     }
 
     private String getChallengePreview(int challengeNum) {
         String challengePreview;
+        String challengeName =
+                switch (challengeNum) {
+                    case 1 -> "Slimey Platform";
+                    case 2 -> "Gathering Room";
+                    default -> "Hammer Room";
+                };
 
         if (showMilliseconds.get()) {
-            challengePreview = "§dChallenge " + challengeNum + ": §b01:17.022";
+            challengePreview = "§d" + challengeName + ": §b01:17.022";
         } else {
-            challengePreview = "§dChallenge " + challengeNum + ": §b01:17";
+            challengePreview = "§d" + challengeName + ": §b01:17";
         }
 
         if (showDamage.get()) {
@@ -149,34 +186,64 @@ public class RaidProgressOverlay extends TextOverlay {
         return challengePreview;
     }
 
-    private String getBossTemplate() {
-        String bossTemplate;
+    private String getBossTemplate(int bossNum) {
+        String realBossNum = "int(add(current_raid_challenge_count;" + bossNum + "))";
+
+        StringBuilder bossBuilder = new StringBuilder("if_str(raid_is_boss_room(")
+                .append(realBossNum)
+                .append(");concat(\"\n§4\";if_str(eq_str(raid_room_name(")
+                .append(realBossNum)
+                .append(");\"The ##### Anomaly\");\"The &k##### &r&4Anomaly\";raid_room_name(")
+                .append(realBossNum)
+                .append("));\": \";if_str(eq(raid_room_time(")
+                .append(realBossNum)
+                .append(");-1);\"§7");
 
         if (showMilliseconds.get()) {
-            bossTemplate =
-                    "\"\n\n§4Boss: \";if_str(eq(raid_room_time(\"boss_fight\");-1);\"§7--:--.--\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(\"boss_fight\");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(\"boss_fight\");1000);60));2);\".\";leading_zeros(int(mod(raid_room_time(\"boss_fight\");1000));3)));";
+            bossBuilder.append("--:--.---");
         } else {
-            bossTemplate =
-                    "\"\n\n§4Boss: \";if_str(eq(raid_room_time(\"boss_fight\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(\"boss_fight\");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(\"boss_fight\");1000);60));2)));";
+            bossBuilder.append("--:--");
+        }
+
+        bossBuilder
+                .append("\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(")
+                .append(realBossNum)
+                .append(");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(")
+                .append(realBossNum)
+                .append(");1000);60));2)");
+
+        if (showMilliseconds.get()) {
+            bossBuilder
+                    .append(";\".\";leading_zeros(int(mod(raid_room_time(")
+                    .append(realBossNum)
+                    .append(");1000));3)))");
+        } else {
+            bossBuilder.append("))");
         }
 
         if (showDamage.get()) {
-            bossTemplate +=
-                    "if_str(eq(raid_room_damage(\"boss_fight\");-1);\"\n\";concat(\" §f(§e\";format(raid_room_damage(\"boss_fight\"));\"§f)\n\"));";
+            bossBuilder
+                    .append(";if_str(eq(raid_room_damage(")
+                    .append(realBossNum)
+                    .append(");-1);\"\";concat(\" §f(§e\";format(raid_room_damage(")
+                    .append(realBossNum)
+                    .append("));\"§f)\")));");
         } else {
-            bossTemplate += "\"\n\";";
+            bossBuilder.append(");");
         }
 
-        return bossTemplate;
+        bossBuilder.append("\"\");");
+
+        return bossBuilder.toString();
     }
 
     private String getBossPreview() {
         String bossPreview;
 
         if (showMilliseconds.get()) {
-            bossPreview = "\n§4Boss: §7--:--.---";
+            bossPreview = "\n§4Grootslang Wyrmling: §7--:--.---";
         } else {
-            bossPreview = "\n§4Boss: §7--:--";
+            bossPreview = "\n§4Grootslang Wyrmling: §7--:--";
         }
 
         if (showDamage.get()) {
