@@ -672,15 +672,15 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     public int getMaskTopY() {
-        return MASK_TOP_Y;
+        return offsetY + MASK_TOP_Y;
     }
 
     public int getConfigMaskBottomY() {
-        return CONFIG_MASK_BOTTOM_Y;
+        return offsetY + CONFIG_MASK_BOTTOM_Y;
     }
 
     public int getConfigurableMaskBottomY() {
-        return CONFIGURABLE_MASK_BOTTOM_Y;
+        return offsetY + CONFIGURABLE_MASK_BOTTOM_Y;
     }
 
     private void populateCategories() {
