@@ -1,3 +1,19 @@
+## [3.0.15](https://github.com/Wynntils/Wynntils/compare/v3.0.14...v3.0.15) (2025-04-21)
+
+
+### New Features
+
+* Add Aspect Guide [skip ci] ([#3158](https://github.com/Wynntils/Wynntils/issues/3158)) ([4802a84](https://github.com/Wynntils/Wynntils/commit/4802a849b5a7e675d2d63ba8b407a436a209137d))
+* Add Guardian Angels tracker overlay [skip ci] ([#3204](https://github.com/Wynntils/Wynntils/issues/3204)) ([f2d034e](https://github.com/Wynntils/Wynntils/commit/f2d034e125a0236d330fc05225a4e5b46c345dfa))
+* Improve WeeklyConfigBackupFeature [skip ci] ([#3205](https://github.com/Wynntils/Wynntils/issues/3205)) ([2b1fddc](https://github.com/Wynntils/Wynntils/commit/2b1fddcc91df7a1e594d77ef203f138d69bb5ca7))
+* Rework raid tracking to track specific rooms ([#3199](https://github.com/Wynntils/Wynntils/issues/3199)) ([9192d69](https://github.com/Wynntils/Wynntils/commit/9192d69c3e2f471e06c2019327e30033d1790aed))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3200](https://github.com/Wynntils/Wynntils/issues/3200)) ([8c24548](https://github.com/Wynntils/Wynntils/commit/8c245485c66772b8e292acb5e0efe42c37c4b5ce))
+* [auto-generated] Update urls.json [ci skip] ([#3201](https://github.com/Wynntils/Wynntils/issues/3201)) ([d7c9d0b](https://github.com/Wynntils/Wynntils/commit/d7c9d0b4d6c904d5d2683f525bfd85eb9e7c749c))
+
 ## [3.0.14](https://github.com/Wynntils/Wynntils/compare/v3.0.13...v3.0.14) (2025-04-14)
 
 
@@ -12,6 +28,7 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#3194](https://github.com/Wynntils/Wynntils/issues/3194)) ([44a0bcb](https://github.com/Wynntils/Wynntils/commit/44a0bcb4f35e2b719156036a73fd82399f5af0d8))
 * Change Hide Info Messages config to disabled by default [skip ci] ([#3197](https://github.com/Wynntils/Wynntils/issues/3197)) ([fda245b](https://github.com/Wynntils/Wynntils/commit/fda245b4ac408d850ca1228f1bf0334413f89c96))
+* **release:** v3.0.14 [skip ci] ([56a346b](https://github.com/Wynntils/Wynntils/commit/56a346b77edc4f3cb47e2269c03d6d3b92833b41))
 
 ## [3.0.13](https://github.com/Wynntils/Wynntils/compare/v3.0.12...v3.0.13) (2025-04-05)
 
@@ -78,26 +95,4 @@
 
 * Track trade market state in TradeMarketModel [skip ci] ([#3176](https://github.com/Wynntils/Wynntils/issues/3176)) ([49faf29](https://github.com/Wynntils/Wynntils/commit/49faf29d087374b3d3bcdb3912c28d28f0dbd834))
 * Use dedicated ping packets for PingService [skip ci] ([#3173](https://github.com/Wynntils/Wynntils/issues/3173)) ([d9d9fa1](https://github.com/Wynntils/Wynntils/commit/d9d9fa17deaee432975707f3dba3bc5f35358e20))
-
-## [3.0.10](https://github.com/Wynntils/Wynntils/compare/v3.0.9...v3.0.10) (2025-03-16)
-
-
-### New Features
-
-* Add back tier specific colour to aspect tier annotation [skip ci] ([#3163](https://github.com/Wynntils/Wynntils/issues/3163)) ([fc32d00](https://github.com/Wynntils/Wynntils/commit/fc32d005dc6c153829a3e07f1fdccab6acc291ed))
-* Add Total Area Damage function [skip ci] ([#3160](https://github.com/Wynntils/Wynntils/issues/3160)) ([bdcfb30](https://github.com/Wynntils/Wynntils/commit/bdcfb30110979860b02ab3969d6638c670c8bf2c))
-* Display event star on daily/guild objective overlays ([#3169](https://github.com/Wynntils/Wynntils/issues/3169)) ([f59fe7c](https://github.com/Wynntils/Wynntils/commit/f59fe7c310d32ab622f22d463b9cb92e31785ed2))
-
-
-### Bug Fixes
-
-* Fix chat functionality on non-Wynncraft servers [skip ci] ([#3157](https://github.com/Wynntils/Wynntils/issues/3157)) ([365200d](https://github.com/Wynntils/Wynntils/commit/365200d26ab10bf544dd70bd8aafc38f562ef053))
-* Miscellaneous lootrun changes [skip ci] ([#3165](https://github.com/Wynntils/Wynntils/issues/3165)) ([35d2056](https://github.com/Wynntils/Wynntils/commit/35d205647225cceef80169e3df7faa2d9d126bfd))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3156](https://github.com/Wynntils/Wynntils/issues/3156)) ([963d7d3](https://github.com/Wynntils/Wynntils/commit/963d7d3edb93c40b4a0de5c299b4c6bf8a5e553e))
-* Bump crowd source version [skip ci] ([#3168](https://github.com/Wynntils/Wynntils/issues/3168)) ([3d1d7ae](https://github.com/Wynntils/Wynntils/commit/3d1d7aeb9f0bd5b90fb86e27931734dfadadaf74))
-* **release:** v3.0.10 [skip ci] ([f551a53](https://github.com/Wynntils/Wynntils/commit/f551a5324f46b002f1755fdf094f20fc097d7256))
 
