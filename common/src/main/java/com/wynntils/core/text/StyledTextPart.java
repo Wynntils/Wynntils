@@ -1,9 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.text;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 
 public final class StyledTextPart {
     private final String text;
@@ -245,6 +249,61 @@ public final class StyledTextPart {
                         currentStyle.withClickEvent(style.getClickEvent()).withHoverEvent(style.getHoverEvent());
             }
             parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, parentStyle));
+        }
+
+        return parts;
+    }
+
+    // This will convert our JSON format that we use for parsed HTML from the API
+    // Parser located at https://github.com/Wynntils/Static-Storage/blob/main/Utils/html_parser.py
+    static List<StyledTextPart> fromJson(JsonArray jsonArray) {
+        if (jsonArray.isEmpty()) {
+            return List.of(new StyledTextPart("", Style.EMPTY, null, Style.EMPTY));
+        }
+
+        List<StyledTextPart> parts = new ArrayList<>();
+
+        for (JsonElement element : jsonArray) {
+            if (element.isJsonObject()) {
+                Style style = Style.EMPTY;
+                JsonObject jsonObject = element.getAsJsonObject();
+                String text = jsonObject.get("text").getAsString();
+
+                if (jsonObject.has("bold")) {
+                    style = style.withBold(true);
+                }
+                if (jsonObject.has("italic")) {
+                    style = style.withItalic(true);
+                }
+                if (jsonObject.has("underline")) {
+                    style = style.withUnderlined(true);
+                }
+                if (jsonObject.has("strikethrough")) {
+                    style = style.withStrikethrough(true);
+                }
+                if (jsonObject.has("font")) {
+                    style = style.withFont(ResourceLocation.withDefaultNamespace(
+                            jsonObject.get("font").getAsString()));
+                }
+                if (jsonObject.has("color")) {
+                    style = style.withColor(
+                            CustomColor.fromHexString(jsonObject.get("color").getAsString())
+                                    .asInt());
+                }
+                if (jsonObject.has("margin-left")) {
+                    String marginType = jsonObject.get("margin-left").getAsString();
+
+                    if (marginType.equals("thin")) {
+                        // FIXME: Currently a guess, there are no items with this margin but it is
+                        // a possible value according to the docs
+                        text = "À" + text;
+                    } else if (marginType.equals("large")) {
+                        text = "ÀÀÀÀ" + text;
+                    }
+                }
+
+                parts.add(new StyledTextPart(text, style, null, Style.EMPTY));
+            }
         }
 
         return parts;

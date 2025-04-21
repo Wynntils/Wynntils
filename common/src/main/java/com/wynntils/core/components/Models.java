@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -14,6 +14,7 @@ import com.wynntils.models.activities.caves.CaveModel;
 import com.wynntils.models.activities.discoveries.DiscoveryModel;
 import com.wynntils.models.activities.quests.QuestModel;
 import com.wynntils.models.activities.worldevents.WorldEventModel;
+import com.wynntils.models.aspects.AspectModel;
 import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
@@ -67,6 +68,7 @@ import com.wynntils.models.wynnitem.WynnItemModel;
 public final class Models {
     public static final AbilityModel Ability = new AbilityModel();
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
+    public static final AspectModel Aspect = new AspectModel();
     public static final BankModel Bank = new BankModel();
     public static final BeaconModel Beacon = new BeaconModel();
     public static final BombModel Bomb = new BombModel();

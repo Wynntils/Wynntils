@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.Persisted;
@@ -42,35 +41,38 @@ public class RaidProgressFeature extends Feature {
     public void onRaidCompleted(RaidEndedEvent.Completed event) {
         if (!printTimes.get()) return;
 
-        if (event.getRoomTimes().size() != Models.Raid.ROOM_TIMERS_COUNT) {
-            WynntilsMod.error("Unexpected room count on raid completion: "
-                    + event.getRoomTimes().size());
-            return;
-        } else if (event.getRoomDamages().size() != Models.Raid.ROOM_DAMAGES_COUNT) {
-            WynntilsMod.error("Unexpected room damages count on raid completion: "
-                    + event.getRoomDamages().size());
+        if (event.getRaid().completedChallengeCount() == 0) {
+            WynntilsMod.error("Completed raid but no completed rooms were tracked");
             return;
         }
 
         MutableComponent raidComponents = Component.literal("");
 
-        raidComponents.append(Component.literal(event.getRaid().getName())
+        raidComponents.append(Component.literal(event.getRaid().getRaidKind().getRaidName())
                 .withStyle(ChatFormatting.GOLD)
                 .withStyle(ChatFormatting.BOLD)
                 .withStyle(ChatFormatting.UNDERLINE));
 
         raidComponents.append(Component.literal("\n\n"));
 
-        for (int i = 0; i < Models.Raid.MAX_CHALLENGES; i++) {
+        for (int i = 0; i < event.getRaid().getRaidKind().getChallengeCount(); i++) {
+            if (event.getRaid().getRoomByNumber(i + 1) == null) {
+                WynntilsMod.warn("Completed raid "
+                        + event.getRaid().getRaidKind().getRaidName() + " but missing challenge room " + i);
+                continue;
+            }
+
             raidComponents.append(
-                    Component.literal("Challenge " + (i + 1) + ": ").withStyle(ChatFormatting.LIGHT_PURPLE));
-            raidComponents.append(
-                    Component.literal(formatTime(event.getRoomTimes().get(i))).withStyle(ChatFormatting.AQUA));
+                    Component.literal(event.getRaid().getRoomByNumber(i + 1).getRoomName() + ": ")
+                            .withStyle(ChatFormatting.LIGHT_PURPLE));
+            raidComponents.append(Component.literal(
+                            formatTime(event.getRaid().getRoomByNumber(i + 1).getRoomTotalTime()))
+                    .withStyle(ChatFormatting.AQUA));
             if (raidProgressOverlay.showDamage.get()) {
                 raidComponents
                         .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
                         .append(Component.literal(StringUtils.integerToShortString(
-                                        event.getRoomDamages().get(i)))
+                                        event.getRaid().getRoomByNumber(i + 1).getRoomDamage()))
                                 .withStyle(ChatFormatting.YELLOW))
                         .append(Component.literal(")").withStyle(ChatFormatting.WHITE));
             }
@@ -79,37 +81,59 @@ public class RaidProgressFeature extends Feature {
 
         raidComponents.append(Component.literal("\n"));
 
-        raidComponents.append(Component.literal("Boss: ").withStyle(ChatFormatting.DARK_RED));
-        raidComponents.append(
-                Component.literal(formatTime(event.getRoomTimes().get(3))).withStyle(ChatFormatting.AQUA));
-        if (raidProgressOverlay.showDamage.get()) {
-            raidComponents
-                    .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
-                    .append(Component.literal(StringUtils.integerToShortString(
-                                    event.getRoomDamages().get(3)))
-                            .withStyle(ChatFormatting.YELLOW))
-                    .append(Component.literal(")").withStyle(ChatFormatting.WHITE));
-        }
+        for (int i = 0; i < event.getRaid().getRaidKind().getBossCount(); i++) {
+            int bossRoomNum = i + event.getRaid().getRaidKind().getChallengeCount() + 1;
 
-        raidComponents.append(Component.literal("\n\n"));
+            if (event.getRaid().getRoomByNumber(bossRoomNum) == null) {
+                WynntilsMod.warn("Completed raid "
+                        + event.getRaid().getRaidKind().getRaidName() + " but missing boss room " + bossRoomNum);
+                continue;
+            }
 
-        if (raidProgressOverlay.showIntermission.get()) {
-            raidComponents.append(Component.literal("Intermission: ").withStyle(ChatFormatting.DARK_GRAY));
-            raidComponents.append(
-                    Component.literal(formatTime(event.getRoomTimes().get(4))).withStyle(ChatFormatting.AQUA));
+            String bossName = event.getRaid().getRoomByNumber(bossRoomNum).getRoomName();
+
+            if (bossName.equals("The ##### Anomaly")) {
+                raidComponents
+                        .append(Component.literal("The ").withStyle(ChatFormatting.DARK_RED))
+                        .append(Component.literal("#####")
+                                .withStyle(ChatFormatting.DARK_RED, ChatFormatting.OBFUSCATED))
+                        .append(Component.literal(" Anomaly: ").withStyle(ChatFormatting.DARK_RED));
+            } else {
+                raidComponents.append(Component.literal(bossName + ": ").withStyle(ChatFormatting.DARK_RED));
+            }
+
+            raidComponents.append(Component.literal(formatTime(
+                            event.getRaid().getRoomByNumber(bossRoomNum).getRoomTotalTime()))
+                    .withStyle(ChatFormatting.AQUA));
+            if (raidProgressOverlay.showDamage.get()) {
+                raidComponents
+                        .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
+                        .append(Component.literal(StringUtils.integerToShortString(event.getRaid()
+                                        .getRoomByNumber(bossRoomNum)
+                                        .getRoomDamage()))
+                                .withStyle(ChatFormatting.YELLOW))
+                        .append(Component.literal(")").withStyle(ChatFormatting.WHITE));
+            }
             raidComponents.append(Component.literal("\n"));
         }
 
-        raidComponents.append(Component.literal("Total: ").withStyle(ChatFormatting.DARK_PURPLE));
-        long raidTime = event.getRaidTime()
+        if (raidProgressOverlay.showIntermission.get()) {
+            raidComponents.append(Component.literal("\nIntermission: ").withStyle(ChatFormatting.DARK_GRAY));
+            raidComponents.append(Component.literal(formatTime(event.getRaid().getIntermissionTime()))
+                    .withStyle(ChatFormatting.AQUA));
+        }
+
+        raidComponents.append(Component.literal("\nTotal: ").withStyle(ChatFormatting.DARK_PURPLE));
+        long raidTime = event.getRaid().getTimeInRaid()
                 - (raidProgressOverlay.totalIntermission.get()
                         ? 0
-                        : event.getRoomTimes().get(4));
+                        : event.getRaid().getIntermissionTime());
         raidComponents.append(Component.literal(formatTime(raidTime)).withStyle(ChatFormatting.AQUA));
         if (raidProgressOverlay.showDamage.get()) {
             raidComponents
                     .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
-                    .append(Component.literal(StringUtils.integerToShortString(event.getRaidDamage()))
+                    .append(Component.literal(StringUtils.integerToShortString(
+                                    event.getRaid().getRaidDamage()))
                             .withStyle(ChatFormatting.YELLOW))
                     .append(Component.literal(")").withStyle(ChatFormatting.WHITE));
         }
@@ -127,7 +151,7 @@ public class RaidProgressFeature extends Feature {
 
         McUtils.sendMessageToClient(Component.translatable(
                         "feature.wynntils.raidProgress.personalBest",
-                        event.getRaid().getName(),
+                        event.getRaidName(),
                         minutes,
                         seconds,
                         milliseconds)
