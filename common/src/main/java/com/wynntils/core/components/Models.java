@@ -15,6 +15,7 @@ import com.wynntils.models.activities.caves.CaveModel;
 import com.wynntils.models.activities.discoveries.DiscoveryModel;
 import com.wynntils.models.activities.quests.QuestModel;
 import com.wynntils.models.activities.worldevents.WorldEventModel;
+import com.wynntils.models.aspects.AspectModel;
 import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
@@ -70,6 +71,7 @@ public final class Models {
     public static final AbilityModel Ability = new AbilityModel();
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
     public static final AccountModel Account = new AccountModel();
+    public static final AspectModel Aspect = new AspectModel();
     public static final BankModel Bank = new BankModel();
     public static final BeaconModel Beacon = new BeaconModel();
     public static final BombModel Bomb = new BombModel();
