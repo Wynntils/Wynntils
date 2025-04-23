@@ -349,6 +349,9 @@ public class RaidModel extends Model {
 
         currentRaid = null;
         completedCurrentChallenge = false;
+        timeLeft = 0;
+        challenges = CappedValue.EMPTY;
+        partyRaidBuffs.clear();
     }
 
     public RaidInfo getCurrentRaid() {
@@ -477,6 +480,14 @@ public class RaidModel extends Model {
         return roomNum <= currentRaid.getRaidKind().getBossCount() + challengeCount;
     }
 
+    public boolean isInBuffRoom() {
+        return inBuffRoom;
+    }
+
+    public boolean isInIntermissionRoom() {
+        return inIntermissionRoom;
+    }
+
     public void setTimeLeft(int seconds) {
         timeLeft = seconds;
     }
@@ -531,6 +542,9 @@ public class RaidModel extends Model {
 
         currentRaid = null;
         completedCurrentChallenge = false;
+        timeLeft = 0;
+        challenges = CappedValue.EMPTY;
+        partyRaidBuffs.clear();
     }
 
     private void checkForNewPersonalBest() {
