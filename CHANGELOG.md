@@ -1,3 +1,15 @@
+## [3.0.16](https://github.com/Wynntils/Wynntils/compare/v3.0.15...v3.0.16) (2025-04-23)
+
+
+### Bug Fixes
+
+* Reset time left, challenges and party raid buffs on raid finish ([#3207](https://github.com/Wynntils/Wynntils/issues/3207)) ([ad05877](https://github.com/Wynntils/Wynntils/commit/ad05877fbdea7459ed2325fc0dd7d91b378dd67e))
+
+
+### Miscellaneous Chores
+
+* Add getters for inBuffRoom and inIntermissionRoom to RaidModel [skip ci] ([#3206](https://github.com/Wynntils/Wynntils/issues/3206)) ([52d3d92](https://github.com/Wynntils/Wynntils/commit/52d3d922274a757f253457624832bb644b41e485))
+
 ## [3.0.15](https://github.com/Wynntils/Wynntils/compare/v3.0.14...v3.0.15) (2025-04-21)
 
 
@@ -13,6 +25,7 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#3200](https://github.com/Wynntils/Wynntils/issues/3200)) ([8c24548](https://github.com/Wynntils/Wynntils/commit/8c245485c66772b8e292acb5e0efe42c37c4b5ce))
 * [auto-generated] Update urls.json [ci skip] ([#3201](https://github.com/Wynntils/Wynntils/issues/3201)) ([d7c9d0b](https://github.com/Wynntils/Wynntils/commit/d7c9d0b4d6c904d5d2683f525bfd85eb9e7c749c))
+* **release:** v3.0.15 [skip ci] ([1a49f22](https://github.com/Wynntils/Wynntils/commit/1a49f22dcc714f722b9d673202511edb956e1798))
 
 ## [3.0.14](https://github.com/Wynntils/Wynntils/compare/v3.0.13...v3.0.14) (2025-04-14)
 
@@ -72,27 +85,4 @@
 ### Code Refactoring
 
 * Rework GammabrightFeature ([#3187](https://github.com/Wynntils/Wynntils/issues/3187)) ([17d4bdb](https://github.com/Wynntils/Wynntils/commit/17d4bdb468dc26034468b6b029d331d3b683c232))
-
-## [3.0.11](https://github.com/Wynntils/Wynntils/compare/v3.0.10...v3.0.11) (2025-03-28)
-
-
-### Bug Fixes
-
-* Fix re-roll chance calculations for negative base values [skip ci] ([#3174](https://github.com/Wynntils/Wynntils/issues/3174)) ([7489675](https://github.com/Wynntils/Wynntils/commit/7489675aee67805a9e7fabdc6cdfde42c7b98161))
-* Temporary patch to fix nol tracking ([#3181](https://github.com/Wynntils/Wynntils/issues/3181)) ([d8442d0](https://github.com/Wynntils/Wynntils/commit/d8442d0793ef645e9e374e3f6fd8d71fb10a17b6))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3166](https://github.com/Wynntils/Wynntils/issues/3166)) ([a38eed4](https://github.com/Wynntils/Wynntils/commit/a38eed46c5cb954245c9a27abf5a3e400c7b4b27))
-* [auto-generated] Update urls.json [ci skip] ([#3179](https://github.com/Wynntils/Wynntils/issues/3179)) ([f7b7261](https://github.com/Wynntils/Wynntils/commit/f7b7261d91537352fee6784484b5655ab823c5e1))
-* **release:** v3.0.11 [skip ci] ([409fac7](https://github.com/Wynntils/Wynntils/commit/409fac77c22eccc07592c941461fbae3e5ccb1f8))
-* Remove fix stack size feature [skip ci] ([#3177](https://github.com/Wynntils/Wynntils/issues/3177)) ([102f8c0](https://github.com/Wynntils/Wynntils/commit/102f8c0ab356bea7904b9261572e516fc5941be9))
-* Update spotless plugins for java 21 [skip ci] ([#3172](https://github.com/Wynntils/Wynntils/issues/3172)) ([0fea892](https://github.com/Wynntils/Wynntils/commit/0fea89281d141cd1b98db0d0d64536aee698e7ee))
-
-
-### Code Refactoring
-
-* Track trade market state in TradeMarketModel [skip ci] ([#3176](https://github.com/Wynntils/Wynntils/issues/3176)) ([49faf29](https://github.com/Wynntils/Wynntils/commit/49faf29d087374b3d3bcdb3912c28d28f0dbd834))
-* Use dedicated ping packets for PingService [skip ci] ([#3173](https://github.com/Wynntils/Wynntils/issues/3173)) ([d9d9fa1](https://github.com/Wynntils/Wynntils/commit/d9d9fa17deaee432975707f3dba3bc5f35358e20))
 
