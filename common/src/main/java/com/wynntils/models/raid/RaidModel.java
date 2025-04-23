@@ -349,6 +349,9 @@ public class RaidModel extends Model {
 
         currentRaid = null;
         completedCurrentChallenge = false;
+        timeLeft = 0;
+        challenges = CappedValue.EMPTY;
+        partyRaidBuffs.clear();
     }
 
     public RaidInfo getCurrentRaid() {
@@ -531,6 +534,9 @@ public class RaidModel extends Model {
 
         currentRaid = null;
         completedCurrentChallenge = false;
+        timeLeft = 0;
+        challenges = CappedValue.EMPTY;
+        partyRaidBuffs.clear();
     }
 
     private void checkForNewPersonalBest() {
