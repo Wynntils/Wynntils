@@ -477,6 +477,14 @@ public class RaidModel extends Model {
         return roomNum <= currentRaid.getRaidKind().getBossCount() + challengeCount;
     }
 
+    public boolean isInBuffRoom() {
+        return inBuffRoom;
+    }
+
+    public boolean isInIntermissionRoom() {
+        return inIntermissionRoom;
+    }
+
     public void setTimeLeft(int seconds) {
         timeLeft = seconds;
     }
