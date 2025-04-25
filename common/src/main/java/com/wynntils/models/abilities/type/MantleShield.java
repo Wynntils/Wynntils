@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.type;
@@ -16,11 +16,12 @@ import net.minecraft.world.item.Items;
 public class MantleShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.WARRIOR;
     private static final SpellType SPELL_TYPE = SpellType.WAR_SCREAM;
+    private static final String NAME = "Mantle";
     private static final int MANTLE_DAMAGE_VALUE = 62;
     private static final StyledText SHIELD_COOLDOWN_NAME = StyledText.fromString("§7Shield");
 
     public MantleShield() {
-        super(CLASS_TYPE, SPELL_TYPE);
+        super(CLASS_TYPE, SPELL_TYPE, NAME);
     }
 
     @Override

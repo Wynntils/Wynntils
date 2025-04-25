@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.raid.scoreboard;
@@ -26,8 +26,6 @@ public class RaidScoreboardPart extends ScoreboardPart {
     // Split onto two lines, 2nd says "died"
     private static final Pattern PLAYERS_DIED_PATTERN = Pattern.compile("^Too many players have$");
     private static final Pattern OUT_OF_TIME_PATTERN = Pattern.compile("^You ran out of time!$");
-    // Sometimes this will show between challenges so we don't want this change to trigger a new challenge
-    private static final Pattern PREPARE_PATTERN = Pattern.compile("^Prepare for the next$");
     private static final Pattern TIMER_PATTERN = Pattern.compile(
             "^[-—] Time Left: (?<hours>\\d+:)?(?<minutes>\\d+):(?<seconds>\\d+)(?: \\[\\+\\d+[msMS]\\])?$");
 
@@ -56,12 +54,8 @@ public class RaidScoreboardPart extends ScoreboardPart {
         } else if (currentStateLine.matches(PLAYERS_DIED_PATTERN, PartStyle.StyleType.NONE)
                 || (currentStateLine.matches(OUT_OF_TIME_PATTERN, PartStyle.StyleType.NONE))) {
             Models.Raid.failedRaid();
-        } else if (Models.Raid.getCurrentRaid() != null
-                && currentStateLine.matches(
-                        Models.Raid.getCurrentRaid().getBossScoreboardPattern(), PartStyle.StyleType.NONE)) {
-            Models.Raid.startBossFight();
-        } else if (!currentStateLine.matches(PREPARE_PATTERN, PartStyle.StyleType.NONE)) {
-            Models.Raid.tryStartChallenge();
+        } else {
+            Models.Raid.tryStartChallenge(currentStateLine);
         }
 
         // Some challenges have instructions that take up more than 1 line so we need to loop through the remaining

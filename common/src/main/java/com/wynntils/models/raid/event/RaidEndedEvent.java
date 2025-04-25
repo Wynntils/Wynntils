@@ -1,61 +1,32 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.raid.event;
 
-import com.wynntils.models.raid.type.RaidKind;
-import java.util.Collections;
-import java.util.List;
+import com.wynntils.models.raid.type.RaidInfo;
 import net.neoforged.bus.api.Event;
 
 public abstract class RaidEndedEvent extends Event {
-    private final RaidKind raidKind;
-    private final List<Long> roomTimes;
-    private final long raidTime;
+    private final RaidInfo raidInfo;
 
-    protected RaidEndedEvent(RaidKind raidKind, List<Long> roomTimes, long raidTime) {
-        this.raidKind = raidKind;
-        this.roomTimes = roomTimes;
-        this.raidTime = raidTime;
+    protected RaidEndedEvent(RaidInfo raidInfo) {
+        this.raidInfo = raidInfo;
     }
 
-    public RaidKind getRaid() {
-        return raidKind;
-    }
-
-    public List<Long> getRoomTimes() {
-        return roomTimes;
-    }
-
-    public long getRaidTime() {
-        return raidTime;
+    public RaidInfo getRaid() {
+        return raidInfo;
     }
 
     public static class Completed extends RaidEndedEvent {
-        private final List<Long> roomDamages;
-        private final Long raidDamage;
-
-        public Completed(
-                RaidKind raidKind, List<Long> roomTimes, long raidTime, List<Long> roomDamages, Long raidDamage) {
-            super(raidKind, roomTimes, raidTime);
-
-            this.roomDamages = roomDamages;
-            this.raidDamage = raidDamage;
-        }
-
-        public List<Long> getRoomDamages() {
-            return Collections.unmodifiableList(roomDamages);
-        }
-
-        public Long getRaidDamage() {
-            return raidDamage;
+        public Completed(RaidInfo raidInfo) {
+            super(raidInfo);
         }
     }
 
     public static class Failed extends RaidEndedEvent {
-        public Failed(RaidKind raidKind, List<Long> roomTimes, long raidTime) {
-            super(raidKind, roomTimes, raidTime);
+        public Failed(RaidInfo raidInfo) {
+            super(raidInfo);
         }
     }
 }

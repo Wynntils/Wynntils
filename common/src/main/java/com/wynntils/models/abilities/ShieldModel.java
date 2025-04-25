@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities;
@@ -11,6 +11,7 @@ import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.abilities.type.ArrowShield;
+import com.wynntils.models.abilities.type.GuardianAngelsShield;
 import com.wynntils.models.abilities.type.MantleShield;
 import com.wynntils.models.abilities.type.ShieldType;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
@@ -33,6 +34,8 @@ public class ShieldModel extends Model {
     private List<Integer> collectedIds;
     private List<Integer> spawnedIds;
     private long shieldCastTime = 0;
+
+    private ShieldType activeShieldType;
 
     public ShieldModel() {
         super(List.of());
@@ -83,11 +86,12 @@ public class ShieldModel extends Model {
 
                             collector.add(shieldAS.getId());
 
+                            activeShieldType = shieldType;
+
                             // 5 tick total delay to ensure all armor stands have spawned and have their inventory set
                             Managers.TickScheduler.scheduleLater(this::registerShield, 2);
                         },
                         3);
-                break;
             }
         }
     }
@@ -129,6 +133,10 @@ public class ShieldModel extends Model {
         return spawnedIds == null ? 0 : spawnedIds.size();
     }
 
+    public ShieldType getActiveShieldType() {
+        return activeShieldType;
+    }
+
     private void registerShield() {
         if (collectedIds != null) {
             spawnedIds = collectedIds;
@@ -138,6 +146,7 @@ public class ShieldModel extends Model {
 
     private void removeShield() {
         spawnedIds = null;
+        activeShieldType = null;
     }
 
     /**
@@ -149,6 +158,7 @@ public class ShieldModel extends Model {
 
     private void registerShieldTypes() {
         registerShieldType(new ArrowShield());
+        registerShieldType(new GuardianAngelsShield());
         registerShieldType(new MantleShield());
     }
 

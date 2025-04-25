@@ -10,6 +10,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
+import com.wynntils.screens.guides.aspect.WynntilsAspectGuideScreen;
 import com.wynntils.screens.guides.charm.WynntilsCharmGuideScreen;
 import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
@@ -38,6 +39,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
             WynntilsIngredientGuideScreen.create(),
             WynntilsTomeGuideScreen.create(),
             WynntilsCharmGuideScreen.create(),
+            WynntilsAspectGuideScreen.create(),
             WynntilsEmeraldPouchGuideScreen.create(),
             WynntilsPowderGuideScreen.create());
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.redirects;
@@ -998,7 +998,7 @@ public class ChatRedirectFeature extends Feature {
         private static final String REWARD_SYMBOL = "→";
 
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§3\\[INFO\\]§b (?<sender>.+) rewarded §3(?<reward>.+)§b to (?<recipient>.+)\\.\\n§3Rewards can be claimed in the Member Menu\\.$");
+                "^§b(?:\uE006\uE002|\uE001) §3(?<sender>.+) rewarded §e(?<reward>.+)§3 to (?<recipient>.+)$");
 
         @Override
         protected Pattern getForegroundPattern() {
