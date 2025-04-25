@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.lootrunpaths;
@@ -63,30 +63,33 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
         TaskUtils.runAsync(Services.LootrunPaths::refreshLootrunCache);
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
-                65,
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + offsetX),
+                65 + offsetY,
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ReloadButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
-                11,
-                (int) (Texture.RELOAD_ICON_OFFSET.width() / 2 / 1.7f),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX,
+                11 + offsetY,
+                (int) (Texture.RELOAD_ICON_OFFSET.width() / 2f / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "lootrun",
                 () -> TaskUtils.runAsync(Services.LootrunPaths::refreshLootrunCache)));
 
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f
+                        + 50
+                        - Texture.FORWARD_ARROW_OFFSET.width() / 2f
+                        + offsetX),
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
-                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
@@ -137,12 +140,6 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
         renderBackgroundTexture(poseStack);
 
-        // Make 0, 0 the top left corner of the rendered quest book background
-        poseStack.pushPose();
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-        poseStack.translate(translationX, translationY, 1f);
-
         renderTitle(poseStack, I18n.get("screens.wynntils.lootruns.name"));
 
         renderVersion(poseStack);
@@ -157,38 +154,31 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
-        poseStack.popPose();
-
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     private void renderDescription(PoseStack poseStack) {
         LootrunPathInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
         if (currentLootrun != null) {
-            poseStack.pushPose();
-            poseStack.translate(20, 80, 0);
-
-            poseStack.pushPose();
-            poseStack.scale(1.4f, 1.4f, 0f);
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
                             StyledText.fromString(currentLootrun.name()),
-                            0,
-                            0,
+                            20 + offsetX,
+                            80 + offsetY,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.TOP,
-                            TextShadow.NONE);
-            poseStack.popPose();
+                            TextShadow.NONE,
+                            1.4f);
 
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.chests") + ": "
                                     + currentLootrun.chests().size()),
-                            0,
-                            19,
+                            20 + offsetX,
+                            99 + offsetY,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.TOP,
@@ -199,8 +189,8 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.notes") + ": "
                                     + currentLootrun.notes().size()),
-                            0,
-                            29,
+                            20 + offsetX,
+                            109 + offsetY,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.TOP,
@@ -212,8 +202,8 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.start") + ": "
                                     + String.format("[%d, %d, %d]", (int) start.x(), (int) start.y(), (int) start.z())),
-                            0,
-                            39,
+                            20 + offsetX,
+                            119 + offsetY,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.TOP,
@@ -225,22 +215,20 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.end") + ": "
                                     + String.format("[%d, %d, %d]", (int) end.x(), (int) end.y(), (int) end.z())),
-                            0,
-                            49,
+                            20 + offsetX,
+                            129 + offsetY,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.TOP,
                             TextShadow.NONE);
-
-            poseStack.popPose();
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.description1")),
-                            20,
-                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10,
-                            80,
+                            20 + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetX,
+                            80 + offsetY,
                             Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
@@ -250,9 +238,9 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                     .renderAlignedTextInBox(
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.description2")),
-                            20,
-                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10,
-                            155,
+                            20 + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetX,
+                            155 + offsetY,
                             Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
@@ -264,8 +252,8 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
     protected LootrunPathButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new LootrunPathButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 15,
-                offset * 13 + 25,
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + offsetX),
+                offset * 13 + 25 + offsetY,
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),

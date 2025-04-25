@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -28,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -100,7 +100,8 @@ public class GameNotificationOverlay extends Overlay {
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         List<TimedMessageContainer> toRender = new ArrayList<>();
 
         ListIterator<TimedMessageContainer> messages = messageQueue.listIterator(messageQueue.size());
@@ -150,7 +151,7 @@ public class GameNotificationOverlay extends Overlay {
 
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        poseStack,
+                        guiGraphics.pose(),
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),
@@ -173,10 +174,10 @@ public class GameNotificationOverlay extends Overlay {
 
     @Override
     public void renderPreview(
-            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()
                 .renderTextWithAlignment(
-                        poseStack,
+                        guiGraphics.pose(),
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),

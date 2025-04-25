@@ -16,6 +16,7 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -34,20 +35,21 @@ public class HeldItemCooldownOverlay extends Overlay {
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         Player player = McUtils.player();
         float cooldownPercent = player.getCooldowns()
                 .getCooldownPercent(
                         player.getItemInHand(InteractionHand.MAIN_HAND),
                         deltaTracker.getGameTimeDeltaPartialTick(true));
         if (cooldownPercent <= 0f) return;
-        renderOverlay(poseStack, bufferSource, cooldownPercent);
+        renderOverlay(guiGraphics.pose(), bufferSource, cooldownPercent);
     }
 
     @Override
     public void renderPreview(
-            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        renderOverlay(poseStack, bufferSource, 1F);
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        renderOverlay(guiGraphics.pose(), bufferSource, 1F);
     }
 
     private void renderOverlay(PoseStack poseStack, MultiBufferSource bufferSource, float cooldownPercent) {

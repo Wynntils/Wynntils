@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.widgets;
@@ -23,16 +23,15 @@ public class GuidesButton extends WynntilsButton {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
 
-    private final float translationX;
-    private final float translationY;
+    private final float offsetX;
+    private final float offsetY;
     private final Screen guideScreen;
 
-    public GuidesButton(
-            int x, int y, int width, int height, Screen guideScreen, float translationX, float translationY) {
+    public GuidesButton(int x, int y, int width, int height, Screen guideScreen, float offsetX, float offsetY) {
         super(x, y, width, height, Component.literal("Guides Button"));
         this.guideScreen = guideScreen;
-        this.translationX = translationX;
-        this.translationY = translationY;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
     @Override
