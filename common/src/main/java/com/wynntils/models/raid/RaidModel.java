@@ -26,6 +26,7 @@ import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
+import com.wynntils.models.raid.event.RaidStartedEvent;
 import com.wynntils.models.raid.raids.NestOfTheGrootslangsRaid;
 import com.wynntils.models.raid.raids.OrphionsNexusOfLightRaid;
 import com.wynntils.models.raid.raids.RaidKind;
@@ -128,6 +129,8 @@ public final class RaidModel extends Model {
             if (raidKind != null) {
                 currentRaid = new RaidInfo(raidKind);
                 completedCurrentChallenge = false;
+
+                WynntilsMod.postEvent(new RaidStartedEvent(raidKind));
             }
         } else if (styledText.matches(RAID_COMPLETED_PATTERN)) {
             completeRaid();
@@ -349,6 +352,9 @@ public final class RaidModel extends Model {
 
         currentRaid = null;
         completedCurrentChallenge = false;
+        timeLeft = 0;
+        challenges = CappedValue.EMPTY;
+        partyRaidBuffs.clear();
     }
 
     public RaidInfo getCurrentRaid() {
@@ -477,6 +483,14 @@ public final class RaidModel extends Model {
         return roomNum <= currentRaid.getRaidKind().getBossCount() + challengeCount;
     }
 
+    public boolean isInBuffRoom() {
+        return inBuffRoom;
+    }
+
+    public boolean isInIntermissionRoom() {
+        return inIntermissionRoom;
+    }
+
     public void setTimeLeft(int seconds) {
         timeLeft = seconds;
     }
@@ -531,6 +545,9 @@ public final class RaidModel extends Model {
 
         currentRaid = null;
         completedCurrentChallenge = false;
+        timeLeft = 0;
+        challenges = CappedValue.EMPTY;
+        partyRaidBuffs.clear();
     }
 
     private void checkForNewPersonalBest() {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets;
@@ -17,8 +17,8 @@ public class BooleanFilterWidget extends GeneralFilterWidget {
 
     private ConfirmedBoolean state = ConfirmedBoolean.UNCONFIRMED;
 
-    protected BooleanFilterWidget(StatProviderAndFilterPair filterPair, ProviderFilterListWidget parent) {
-        super(150, 30, 195, 145, Component.literal("Boolean Filter Widget"), parent);
+    protected BooleanFilterWidget(int x, int y, StatProviderAndFilterPair filterPair, ProviderFilterListWidget parent) {
+        super(x, y, 195, 145, Component.literal("Boolean Filter Widget"), parent);
 
         this.trueCheckbox = new WynntilsCheckbox(
                 getX() + 10,

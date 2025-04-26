@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets;
@@ -46,24 +46,13 @@ public class ProviderButton extends WynntilsButton {
             new AnyStatFilters.AnyStatValueStatFilter());
 
     private final ItemFilterScreen filterScreen;
-    private final float translationX;
-    private final float translationY;
     private final ItemStatProvider<?> provider;
     private final List<Component> tooltip;
 
     public ProviderButton(
-            int x,
-            int y,
-            int width,
-            int height,
-            ItemFilterScreen filterScreen,
-            ItemStatProvider<?> provider,
-            float translationX,
-            float translationY) {
+            int x, int y, int width, int height, ItemFilterScreen filterScreen, ItemStatProvider<?> provider) {
         super(x, y, width, height, Component.literal(provider.getTranslatedName()));
         this.filterScreen = filterScreen;
-        this.translationX = translationX;
-        this.translationY = translationY;
         this.provider = provider;
 
         // Boolean is currently the only stat type to not support "any" so don't
