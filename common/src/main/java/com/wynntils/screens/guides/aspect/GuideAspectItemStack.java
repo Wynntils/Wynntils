@@ -73,12 +73,18 @@ public class GuideAspectItemStack extends GuideItemStack {
                 .withStyle(aspectInfo.gearTier().getChatFormatting()));
         this.generatedTooltip.add(Component.empty());
 
+        // The threshold in the API is cumulative so we need to subtract the previous tiers threshold
+        int threshold = aspectInfo.effects().get(tier - 1).a();
+        if (tier > 1) {
+            threshold -= aspectInfo.effects().get(tier - 2).a();
+        }
+
         MutableComponent tierLine;
         if (tier == aspectInfo.effects().size()) {
             // Max tier
             tierLine = Component.literal("           Tier " + MathUtils.toRoman(tier))
                     .withStyle(aspectInfo.gearTier().getChatFormatting())
-                    .append(Component.literal(" [MAX]").withStyle(ChatFormatting.GRAY));
+                    .append(Component.literal(" [" + threshold + "] [MAX]").withStyle(ChatFormatting.GRAY));
         } else {
             // Any other tier
             tierLine = Component.literal("     Tier " + MathUtils.toRoman(tier))
@@ -86,9 +92,7 @@ public class GuideAspectItemStack extends GuideItemStack {
                     .append(Component.literal(" / ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal("Tier " + MathUtils.toRoman(tier + 1))
                             .withStyle(ChatFormatting.GRAY))
-                    .append(Component.literal(
-                                    " [" + aspectInfo.effects().get(tier).a() + "]")
-                            .withStyle(ChatFormatting.GRAY));
+                    .append(Component.literal(" [" + threshold + "]").withStyle(ChatFormatting.GRAY));
         }
         this.generatedTooltip.add(tierLine);
         this.generatedTooltip.add(Component.empty());

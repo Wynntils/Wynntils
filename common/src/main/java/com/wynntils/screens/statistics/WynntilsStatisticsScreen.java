@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.statistics;
@@ -46,30 +46,33 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
-                65,
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + offsetX),
+                65 + offsetY,
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f
+                        + 50
+                        - Texture.FORWARD_ARROW_OFFSET.width() / 2f
+                        + offsetX),
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
-                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
 
         this.addRenderableWidget(new FilterButton(
-                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 15) / 2f),
-                157,
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 15) / 2f + offsetX),
+                157 + offsetY,
                 30,
                 30,
                 Texture.FAVORITE_ICON,
@@ -105,12 +108,6 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
 
         renderBackgroundTexture(poseStack);
 
-        // Make 0, 0 the top left corner of the rendered quest book background
-        poseStack.pushPose();
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-        poseStack.translate(translationX, translationY, 1f);
-
         renderTitle(poseStack, I18n.get("screens.wynntils.statistics.name"));
 
         renderVersion(poseStack);
@@ -125,8 +122,6 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
-        poseStack.popPose();
-
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
@@ -136,9 +131,9 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                     .renderText(
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.statistics.noItemSelected")),
-                            20,
-                            100,
-                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
+                            20 + offsetX,
+                            100 + offsetY,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.TOP,
@@ -150,59 +145,51 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                 ? Services.Statistics.getOverallStatistic(highlightedStatisticKind)
                 : Services.Statistics.getStatistic(highlightedStatisticKind);
 
-        poseStack.pushPose();
-        poseStack.translate(20, 75, 0);
-
         // Name
-        poseStack.pushPose();
-        poseStack.scale(1.2f, 1.2f, 0);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(highlightedStatisticKind.getName()),
-                        0,
-                        0,
-                        (Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20) / 1.2f,
+                        20 + offsetX,
+                        75 + offsetY,
+                        (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20) / 1.2f,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
-        poseStack.popPose();
+                        TextShadow.NONE,
+                        1.2f);
 
         // Statistics
         switch (highlightedStatisticKind.getType()) {
             case COUNT -> renderCountStatistics(poseStack, highlightedStatisticKind, entry);
             case ADVANCED -> renderAdvancedStatistics(poseStack, highlightedStatisticKind, entry);
         }
-
-        poseStack.popPose();
     }
 
-    private static void renderCountStatistics(PoseStack poseStack, StatisticKind statisticKind, StatisticEntry entry) {
+    private void renderCountStatistics(PoseStack poseStack, StatisticKind statisticKind, StatisticEntry entry) {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.count", statisticKind.getFormattedValue(entry.count()))),
-                        0,
-                        30,
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
+                        20 + offsetX,
+                        105 + offsetY,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NONE);
     }
 
-    private static void renderAdvancedStatistics(
-            PoseStack poseStack, StatisticKind statisticKind, StatisticEntry entry) {
+    private void renderAdvancedStatistics(PoseStack poseStack, StatisticKind statisticKind, StatisticEntry entry) {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.total", statisticKind.getFormattedValue(entry.total()))),
-                        0,
-                        30,
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
+                        20 + offsetX,
+                        105 + offsetY,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -212,9 +199,9 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.statistics.count", entry.count())),
-                        0,
-                        40,
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
+                        20 + offsetX,
+                        115 + offsetY,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -224,9 +211,9 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                         poseStack,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.min", statisticKind.getFormattedValue(entry.min()))),
-                        0,
-                        50,
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
+                        20 + offsetX,
+                        125 + offsetY,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -237,9 +224,9 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                         poseStack,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.max", statisticKind.getFormattedValue(entry.max()))),
-                        0,
-                        60,
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
+                        20 + offsetX,
+                        135 + offsetY,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -251,9 +238,9 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.average",
                                 statisticKind.getFormattedValue(entry.average()))),
-                        0,
-                        70,
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
+                        20 + offsetX,
+                        145 + offsetY,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -272,8 +259,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
     protected StatisticButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new StatisticButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 15,
-                offset * 13 + 25,
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + offsetX),
+                offset * 13 + 25 + offsetY,
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),

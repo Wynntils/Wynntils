@@ -56,35 +56,38 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
-                65,
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + offsetX,
+                65 + offsetY,
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ImportButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
-                11,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX,
+                11 + offsetY,
                 (int) (Texture.ADD_ICON.width() / 1.5f),
                 (int) (Texture.ADD_ICON.height() / 1.5f),
                 this::importFavorites));
         this.addRenderableWidget(new ExportButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
-                11 + (int) (Texture.ADD_ICON.height() / 1.5f),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX,
+                11 + (int) (Texture.ADD_ICON.height() / 1.5f) + offsetY,
                 (int) (Texture.SHARE_ICON.width() / 1.5f),
                 (int) (Texture.SHARE_ICON.height() / 1.5f),
                 this::exportFavorites));
 
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f
+                        + 50
+                        - Texture.FORWARD_ARROW_OFFSET.width() / 2f
+                        + offsetX),
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
-                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
                 Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
@@ -125,12 +128,6 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
 
         renderBackgroundTexture(poseStack);
 
-        // Make 0, 0 the top left corner of the rendered quest book background
-        poseStack.pushPose();
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-        poseStack.translate(translationX, translationY, 1f);
-
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.name"));
 
         renderVersion(poseStack);
@@ -141,8 +138,6 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
-        poseStack.popPose();
-
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
@@ -150,13 +145,13 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
     protected GuidesButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new GuidesButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 15,
-                offset * 13 + 25,
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15 + offsetX),
+                offset * 13 + 25 + offsetY,
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),
-                getTranslationX(),
-                getTranslationY());
+                offsetX,
+                offsetY);
     }
 
     @Override

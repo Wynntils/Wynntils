@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -25,8 +25,8 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
     public static final CustomColor HOVER_BACKGROUND_COLOR = new CustomColor(158, 52, 16);
     private final int maskTopY;
     private final int maskBottomY;
-    private final float translationX;
-    private final float translationY;
+    private final float offsetX;
+    private final float offsetY;
     private final List<Component> tooltip;
 
     protected GeneralSettingsButton(
@@ -38,14 +38,14 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
             List<Component> tooltip,
             int maskTopY,
             int maskBottomY,
-            float translationX,
-            float translationY) {
+            float offsetX,
+            float offsetY) {
         super(x, y, width, height, title);
         this.tooltip = tooltip;
         this.maskTopY = maskTopY;
         this.maskBottomY = maskBottomY;
-        this.translationX = translationX;
-        this.translationY = translationY;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
     @Override
@@ -73,8 +73,8 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
                         this.getY(),
                         this.getY() + this.height,
                         this.width - 2,
-                        translationX,
-                        translationY,
+                        offsetX,
+                        offsetY,
                         getTextColor(),
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,

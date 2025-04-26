@@ -48,12 +48,6 @@ public final class WynntilsAspectGuideScreen
 
         renderBackgroundTexture(poseStack);
 
-        // Make 0, 0 the top left corner of the rendered quest book background
-        poseStack.pushPose();
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-        poseStack.translate(translationX, translationY, 1f);
-
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.aspectGuide.name"));
 
         renderDescription(
@@ -68,8 +62,6 @@ public final class WynntilsAspectGuideScreen
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
-
-        poseStack.popPose();
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -89,8 +81,8 @@ public final class WynntilsAspectGuideScreen
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f,
-                        30,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + offsetX,
+                        30 + offsetY,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -103,8 +95,8 @@ public final class WynntilsAspectGuideScreen
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
         return new GuideAspectItemStackButton(
-                xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 13,
-                yOffset + 43,
+                xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 13 + offsetX,
+                yOffset + 43 + offsetY,
                 18,
                 18,
                 elements.get(i),

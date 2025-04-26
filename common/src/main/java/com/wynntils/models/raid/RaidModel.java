@@ -26,6 +26,7 @@ import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
+import com.wynntils.models.raid.event.RaidStartedEvent;
 import com.wynntils.models.raid.raids.NestOfTheGrootslangsRaid;
 import com.wynntils.models.raid.raids.OrphionsNexusOfLightRaid;
 import com.wynntils.models.raid.raids.RaidKind;
@@ -128,6 +129,8 @@ public class RaidModel extends Model {
             if (raidKind != null) {
                 currentRaid = new RaidInfo(raidKind);
                 completedCurrentChallenge = false;
+
+                WynntilsMod.postEvent(new RaidStartedEvent(raidKind));
             }
         } else if (styledText.matches(RAID_COMPLETED_PATTERN)) {
             completeRaid();
@@ -320,6 +323,10 @@ public class RaidModel extends Model {
     }
 
     public void completeChallenge() {
+        // We need to check we are in a raid here as this uses both the scoreboard and chat message to trigger
+        // and lootruns use the same chat message
+        if (currentRaid == null) return;
+
         if (!completedCurrentChallenge) {
             currentRaid.completeCurrentChallenge();
 

@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
@@ -20,6 +19,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 /**
@@ -67,28 +67,29 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         if (!isRendered()) return;
 
-        renderTemplate(poseStack, bufferSource, cachedLines, getTextScale());
+        renderTemplate(guiGraphics, bufferSource, cachedLines, getTextScale());
     }
 
     @Override
     public void renderPreview(
-            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         if (!Models.WorldState.onWorld()) return;
 
-        renderTemplate(poseStack, bufferSource, calculateTemplateValue(getPreviewTemplate()), getTextScale());
+        renderTemplate(guiGraphics, bufferSource, calculateTemplateValue(getPreviewTemplate()), getTextScale());
     }
 
     private void renderTemplate(
-            PoseStack poseStack, MultiBufferSource bufferSource, StyledText[] lines, float textScale) {
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
         for (StyledText line : lines) {
             BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics.pose(),
                             bufferSource,
                             line,
                             renderX,
@@ -102,7 +103,7 @@ public abstract class TextOverlay extends DynamicOverlay {
                             this.textShadow.get(),
                             textScale);
 
-            renderY += FontRenderer.getInstance().getFont().lineHeight;
+            renderY += FontRenderer.getInstance().getFont().lineHeight * textScale;
         }
     }
 

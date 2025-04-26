@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -198,11 +198,14 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
 
-        renderMap(poseStack);
+        renderMap(guiGraphics);
 
         RenderUtils.enableScissor(
-                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
-                        mapHeight);
+                guiGraphics,
+                (int) (renderX + renderedBorderXOffset),
+                (int) (renderY + renderedBorderYOffset),
+                (int) mapWidth,
+                (int) mapHeight);
 
         renderPois(poseStack, mouseX, mouseY);
 
@@ -216,7 +219,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                         .pointerType
                         .get());
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
 
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -491,39 +494,44 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         if (hoveredPoi == null) return;
 
         poseStack.pushPose();
-        poseStack.translate(width - SCREEN_SIDE_OFFSET - 250, SCREEN_SIDE_OFFSET + 40, 101);
+        poseStack.translate(0, 0, 101);
+        int xOffset = (int) (width - SCREEN_SIDE_OFFSET - 250);
+        int yOffset = (int) (SCREEN_SIDE_OFFSET + 40);
 
         boolean isAccessible = hoveredPoi.isAvailable();
 
         final float centerHeight = isAccessible ? 50 : 30;
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
-                0,
-                Texture.MAP_INFO_TOOLTIP_TOP.height(),
+                xOffset,
+                Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
                 textureWidth,
                 centerHeight,
                 textureWidth,
                 Texture.MAP_INFO_TOOLTIP_CENTER.height());
         RenderUtils.drawTexturedRect(
-                poseStack, Texture.MAP_INFO_NAME_BOX, 0, Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight);
+                poseStack,
+                Texture.MAP_INFO_NAME_BOX,
+                xOffset,
+                Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset);
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromComponent(Component.translatable(
                                 "screens.wynntils.customSeaskipperScreen.level", hoveredPoi.getLevel())),
-                        10,
-                        10,
+                        10 + xOffset,
+                        10 + yOffset,
                         CommonColors.ORANGE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
 
-        float renderYOffset = 10;
+        float renderYOffset = 10 + yOffset;
 
         boolean origin = hoveredPoi == currentLocationPoi;
 
@@ -549,7 +557,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                             poseStack,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.customSeaskipperScreen.cost", price)),
-                            10,
+                            10 + xOffset,
                             10 + renderYOffset,
                             priceColor,
                             HorizontalAlignment.LEFT,
@@ -562,7 +570,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromComponent(travelComponent),
-                            10,
+                            10 + xOffset,
                             10 + renderYOffset,
                             CommonColors.LIGHT_BLUE,
                             HorizontalAlignment.LEFT,
@@ -576,7 +584,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                             poseStack,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.customSeaskipperScreen.origin")),
-                            10,
+                            10 + xOffset,
                             10 + renderYOffset,
                             CommonColors.ORANGE,
                             HorizontalAlignment.LEFT,
@@ -590,7 +598,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                             poseStack,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.customSeaskipperScreen.inaccessible")),
-                            10,
+                            10 + xOffset,
                             10 + renderYOffset,
                             CommonColors.GRAY,
                             HorizontalAlignment.LEFT,
@@ -602,10 +610,13 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(hoveredPoi.getName()),
-                        7,
-                        textureWidth,
-                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight,
-                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + Texture.MAP_INFO_NAME_BOX.height(),
+                        7 + xOffset,
+                        textureWidth + xOffset,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height()
+                                + centerHeight
+                                + Texture.MAP_INFO_NAME_BOX.height()
+                                + yOffset,
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,

@@ -17,7 +17,7 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
     private final List<E> enumConstants;
 
     public EnumSettingsButton(
-            int x, int y, Config<E> config, int maskTopY, int maskBottomY, float translationX, float translationY) {
+            int x, int y, Config<E> config, int maskTopY, int maskBottomY, float offsetX, float offsetY) {
         super(
                 x,
                 y,
@@ -27,8 +27,8 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
                 ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150),
                 maskTopY,
                 maskBottomY,
-                translationX,
-                translationY);
+                offsetX,
+                offsetY);
         this.config = config;
         enumConstants = EnumSet.allOf((Class<E>) config.getType()).stream().toList();
     }
