@@ -400,7 +400,7 @@ public class LootrunModel extends Model {
 
             if (rainbowMatcher.find()) {
                 expectRainbowBeacon = false;
-                getCurrentLootrunDetails().setOrangeAmount(Integer.parseInt(rainbowMatcher.group(1)));
+                getCurrentLootrunDetails().setRainbowAmount(Integer.parseInt(rainbowMatcher.group(1)));
                 lootrunDetailsStorage.touched();
             }
         }
