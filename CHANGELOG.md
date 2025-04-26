@@ -1,3 +1,24 @@
+## [3.0.17](https://github.com/Wynntils/Wynntils/compare/v3.0.16...v3.0.17) (2025-04-26)
+
+
+### Bug Fixes
+
+* Account for scale in TextOverlays when rendering new lines [skip ci] ([#3214](https://github.com/Wynntils/Wynntils/issues/3214)) ([7afb47f](https://github.com/Wynntils/Wynntils/commit/7afb47f204acd29d48a23a23745867149945f2e4))
+* Display non cumulative threshold on aspects in guide [skip ci] ([#3209](https://github.com/Wynntils/Wynntils/issues/3209)) ([6cd89dd](https://github.com/Wynntils/Wynntils/commit/6cd89dd4f7680cef74c3f042e2f4eb1993a12faa))
+* Dumped statistic arg descriptions do not resolve properly [skip ci] ([#3212](https://github.com/Wynntils/Wynntils/issues/3212)) ([9cb2a86](https://github.com/Wynntils/Wynntils/commit/9cb2a86b087980d99499fb6a8833fef8d2a9ffa3))
+* Fix orange and rainbow beacons not incrementing effect counts ([#3211](https://github.com/Wynntils/Wynntils/issues/3211)) ([c4eda45](https://github.com/Wynntils/Wynntils/commit/c4eda456aa1937bb89d6ac6f9e581eecce12fe1f))
+
+
+### Miscellaneous Chores
+
+* Post event on raid start [skip ci] ([#3208](https://github.com/Wynntils/Wynntils/issues/3208)) ([34346ee](https://github.com/Wynntils/Wynntils/commit/34346eecd4832bbf619509ef5141b801a937258d))
+
+
+### Code Refactoring
+
+* Store lootrun details as a separate class [skip ci] ([#3213](https://github.com/Wynntils/Wynntils/issues/3213)) ([353cdbc](https://github.com/Wynntils/Wynntils/commit/353cdbc5cc83efe49b0cbf74da7bea2aa1e71c18))
+* Use guiGraphics for scissors in RenderUtils [skip ci] ([#3203](https://github.com/Wynntils/Wynntils/issues/3203)) ([07e3495](https://github.com/Wynntils/Wynntils/commit/07e34952ba2d3883077e635a2d8ffb00a13ddc22))
+
 ## [3.0.16](https://github.com/Wynntils/Wynntils/compare/v3.0.15...v3.0.16) (2025-04-23)
 
 
@@ -9,6 +30,7 @@
 ### Miscellaneous Chores
 
 * Add getters for inBuffRoom and inIntermissionRoom to RaidModel [skip ci] ([#3206](https://github.com/Wynntils/Wynntils/issues/3206)) ([52d3d92](https://github.com/Wynntils/Wynntils/commit/52d3d922274a757f253457624832bb644b41e485))
+* **release:** v3.0.16 [skip ci] ([ee0dce2](https://github.com/Wynntils/Wynntils/commit/ee0dce23cb4c7ee22e09f9fd1335f3374055ebfa))
 
 ## [3.0.15](https://github.com/Wynntils/Wynntils/compare/v3.0.14...v3.0.15) (2025-04-21)
 
@@ -59,30 +81,4 @@
 ### Miscellaneous Chores
 
 * **release:** v3.0.13 [skip ci] ([30812a9](https://github.com/Wynntils/Wynntils/commit/30812a95d3560f60c8c13300f95c8158013c2450))
-
-## [3.0.12](https://github.com/Wynntils/Wynntils/compare/v3.0.11...v3.0.12) (2025-03-31)
-
-
-### New Features
-
-* Add option to show own nametag in 3rd person [skip ci] ([#3185](https://github.com/Wynntils/Wynntils/issues/3185)) ([d53889d](https://github.com/Wynntils/Wynntils/commit/d53889d0daf8a073d9b48aac66134adb0b7c3215))
-* Add time since last kill function [skip ci] ([#3186](https://github.com/Wynntils/Wynntils/issues/3186)) ([b5f0449](https://github.com/Wynntils/Wynntils/commit/b5f044921e023ca399aea973f0ec4143f3411056))
-
-
-### Bug Fixes
-
-* Fix orange beacon counts not always being detected [skip ci] ([#3188](https://github.com/Wynntils/Wynntils/issues/3188)) ([becaa44](https://github.com/Wynntils/Wynntils/commit/becaa4467440b3fc8f62ae3aa82e497cf28c4a24))
-* Fix shaman totem timer when summoner attack speed active [skip ci] ([#3183](https://github.com/Wynntils/Wynntils/issues/3183)) ([aa7d771](https://github.com/Wynntils/Wynntils/commit/aa7d77126e7bf34bfa3b027a95743ddfeb088c80))
-* Fix war messages from chat not being detected [skip ci] ([#3182](https://github.com/Wynntils/Wynntils/issues/3182)) ([2c9b2ce](https://github.com/Wynntils/Wynntils/commit/2c9b2ce6677a4ac608e3232fb74b6805f47ce3c9))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3184](https://github.com/Wynntils/Wynntils/issues/3184)) ([84c484a](https://github.com/Wynntils/Wynntils/commit/84c484a5cd2866551f7206a0c9def5da96d58432))
-* **release:** v3.0.12 [skip ci] ([937afe2](https://github.com/Wynntils/Wynntils/commit/937afe279dca11db30b3f65a4212fa98a53a25dd))
-
-
-### Code Refactoring
-
-* Rework GammabrightFeature ([#3187](https://github.com/Wynntils/Wynntils/issues/3187)) ([17d4bdb](https://github.com/Wynntils/Wynntils/commit/17d4bdb468dc26034468b6b029d331d3b683c232))
 
