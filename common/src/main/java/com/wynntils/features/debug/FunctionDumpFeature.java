@@ -90,7 +90,7 @@ public class FunctionDumpFeature extends Feature {
                 String[] dataLine = {
                     String.valueOf(dataLines.size()),
                     argument.getName(),
-                    function.getTranslation("argument." + argument.getName()),
+                    function.getArgumentDescription(argument.getName()),
                     String.valueOf(function.getArgumentsBuilder() instanceof FunctionArguments.RequiredArgumentBuilder),
                     String.valueOf(i + 1),
                     argument.getType().getSimpleName(),
