@@ -323,6 +323,10 @@ public final class RaidModel extends Model {
     }
 
     public void completeChallenge() {
+        // We need to check we are in a raid here as this uses both the scoreboard and chat message to trigger
+        // and lootruns use the same chat message
+        if (currentRaid == null) return;
+
         if (!completedCurrentChallenge) {
             currentRaid.completeCurrentChallenge();
 

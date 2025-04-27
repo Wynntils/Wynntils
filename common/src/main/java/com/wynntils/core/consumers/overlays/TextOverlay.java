@@ -103,7 +103,7 @@ public abstract class TextOverlay extends DynamicOverlay {
                             this.textShadow.get(),
                             textScale);
 
-            renderY += FontRenderer.getInstance().getFont().lineHeight;
+            renderY += FontRenderer.getInstance().getFont().lineHeight * textScale;
         }
     }
 

@@ -6,6 +6,7 @@ package com.wynntils.models.abilities.type;
 
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
+import java.util.List;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +16,8 @@ public class GuardianAngelsShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.ARCHER;
     private static final SpellType SPELL_TYPE = SpellType.ARROW_SHIELD;
     private static final String NAME = "Guardian Angels";
-    private static final int GUARDIAN_ANGEL_DAMAGE_VALUE = 7;
+    // All-Seeing Panoptes ability changes the texture so we have to check for either
+    private static final List<Integer> GUARDIAN_ANGEL_DAMAGE_VALUES = List.of(7, 8);
 
     public GuardianAngelsShield() {
         super(CLASS_TYPE, SPELL_TYPE, NAME);
@@ -25,6 +27,6 @@ public class GuardianAngelsShield extends ShieldType {
     protected boolean verifyArmorStand(ArmorStand armorStand) {
         ItemStack headItem = armorStand.getItemBySlot(EquipmentSlot.HEAD);
         return headItem.getItem().equals(Items.DIAMOND_SWORD)
-                && headItem.getDamageValue() == GUARDIAN_ANGEL_DAMAGE_VALUE;
+                && GUARDIAN_ANGEL_DAMAGE_VALUES.contains(headItem.getDamageValue());
     }
 }

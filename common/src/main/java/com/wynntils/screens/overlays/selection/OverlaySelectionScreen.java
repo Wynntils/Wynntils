@@ -128,13 +128,13 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         exitPreviewButton = this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.overlaySelection.exitPreview"),
                         (button) -> togglePreview(false))
-                .pos((int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) - 40), this.height - 25)
+                .pos((int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) - 40) + offsetX, this.height - 25)
                 .size(80, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlaySelection.exitPreviewTooltip")))
                 .build());
 
         renderOverlaysCheckbox = this.addRenderableWidget(new WynntilsCheckbox(
-                (Texture.OVERLAY_SELECTION_GUI.width() / 2) - 70,
+                (Texture.OVERLAY_SELECTION_GUI.width() / 2) - 70 + offsetX,
                 this.height - 70,
                 20,
                 Component.translatable("screens.wynntils.overlaySelection.showOverlays"),
@@ -952,8 +952,14 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         // The option buttons have a slight bit rendered underneath the background, we don't want to render the tooltip
         // when hovering that bit.
         if (MathUtils.isInside(
-                mouseX, mouseY, 0, Texture.OVERLAY_SELECTION_GUI.width(), 0, Texture.OVERLAY_SELECTION_GUI.height()))
+                mouseX,
+                mouseY,
+                offsetX,
+                Texture.OVERLAY_SELECTION_GUI.width(),
+                offsetY,
+                Texture.OVERLAY_SELECTION_GUI.height())) {
             return;
+        }
 
         for (GuiEventListener child : optionButtons) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
