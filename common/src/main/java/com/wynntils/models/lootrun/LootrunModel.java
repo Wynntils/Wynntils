@@ -885,7 +885,8 @@ public class LootrunModel extends Model {
             }
         } else if (color == LootrunBeaconKind.ORANGE) {
             if (lootrunDetails.getOrangeAmount() != -1) {
-                List<Integer> orangeList = getCurrentLootrunDetails().getOrangeBeaconCounts();
+                List<Integer> orangeList =
+                        new ArrayList<>(getCurrentLootrunDetails().getOrangeBeaconCounts());
 
                 orangeList.add(lootrunDetails.getOrangeAmount());
                 lootrunDetails.setOrangeBeaconCounts(orangeList);
