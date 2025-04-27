@@ -15,7 +15,7 @@ import com.wynntils.models.items.items.game.AspectItem;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class AspectModel extends Model {
+public final class AspectModel extends Model {
     private final AspectInfoRegistry aspectInfoRegistry = new AspectInfoRegistry();
 
     public AspectModel() {
