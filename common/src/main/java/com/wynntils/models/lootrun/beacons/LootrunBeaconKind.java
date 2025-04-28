@@ -5,6 +5,7 @@
 package com.wynntils.models.lootrun.beacons;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.config.NullableConfig;
 import com.wynntils.models.beacons.type.BeaconKind;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -15,7 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.CustomModelData;
 
-public enum LootrunBeaconKind implements BeaconKind {
+public enum LootrunBeaconKind implements BeaconKind, NullableConfig {
     GREEN(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x00FF80), CommonColors.GREEN),
     YELLOW(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFFFF33), CommonColors.YELLOW),
     BLUE(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x5C5CE6), CommonColors.BLUE),
