@@ -879,7 +879,7 @@ public class LootrunModel extends Model {
                 int oldCount = lootrunDetails.getRainbowBeaconCount();
 
                 int newCount = Math.max(oldCount + lootrunDetails.getRainbowAmount(), 0);
-                lootrunDetails.setRainbowAmount(newCount);
+                lootrunDetails.setRainbowBeaconCount(newCount);
             } else {
                 WynntilsMod.warn("Completed rainbow beacon challenge but had no rainbow amount");
             }
