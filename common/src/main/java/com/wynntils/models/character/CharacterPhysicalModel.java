@@ -18,14 +18,19 @@ import java.util.List;
 import net.minecraft.core.Position;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public final class CharacterStateModel extends Model {
+/**
+ * Tracks physical, transient aspects of the player's in-world character, such as
+ * movement, death state, and position. Unlike {@link CharacterModel}, this model
+ * only concerns moment-to-moment presence in the game world.
+ */
+public final class CharacterPhysicalModel extends Model {
     private static final DeathScreenBar deathScreenBar = new DeathScreenBar();
 
     private static final int MOVE_CHECK_FREQUENCY = 10;
     private int moveCheckTicks;
     private Position currentPosition;
 
-    public CharacterStateModel() {
+    public CharacterPhysicalModel() {
         super(List.of());
 
         Handlers.BossBar.registerBar(deathScreenBar);

@@ -31,6 +31,12 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
+/**
+ * Tracks persistent metadata about the player's selected character, such as
+ * class type, level, reskin status, and unique character ID. This model is concerned with
+ * long-lived identity and conceptual properties rather than transient
+ * in-world behavior.
+ */
 public final class CharacterModel extends Model {
     private static final Pattern CHARACTER_ID_PATTERN = Pattern.compile("^[a-z0-9]{8}$");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
