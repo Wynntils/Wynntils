@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.combat;
 
-import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
@@ -85,7 +84,7 @@ public class AutoAttackFeature extends Feature {
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
-        if (!Handlers.SpellCast.isSpellQueueEmpty()) return;
+        if (!Models.Spell.isSpellQueueEmpty()) return;
 
         LocalPlayer player = McUtils.player();
         int currentSelectedSlot = McUtils.inventory().selected;

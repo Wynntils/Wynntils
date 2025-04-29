@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.combat;
 
-import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -82,7 +81,7 @@ public class QuickCastFeature extends Feature {
         if (event.getActionContext() != ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
 
-        event.setCanceled(!Handlers.SpellCast.isSpellQueueEmpty());
+        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
     }
 
     @SubscribeEvent
@@ -91,7 +90,7 @@ public class QuickCastFeature extends Feature {
 
         if (!blockAttacks.get()) return;
 
-        event.setCanceled(!Handlers.SpellCast.isSpellQueueEmpty());
+        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
     }
 
     @SubscribeEvent
@@ -121,7 +120,7 @@ public class QuickCastFeature extends Feature {
     }
 
     private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
-        if (!Handlers.SpellCast.isSpellQueueEmpty()) return;
+        if (!Models.Spell.isSpellQueueEmpty()) return;
 
         SpellDirection[] spellInProgress = Models.Spell.getLastSpell();
         // SpellModel keeps the last spell for other uses but here we just want to know the inputs so if a full spell
@@ -188,7 +187,7 @@ public class QuickCastFeature extends Feature {
             }
         }
 
-        Handlers.SpellCast.addSpellToQueue(confirmedSpell);
+        Models.Spell.addSpellToQueue(confirmedSpell);
     }
 
     @SubscribeEvent
@@ -201,9 +200,9 @@ public class QuickCastFeature extends Feature {
 
         if (packetCountdown > 0) return;
 
-        if (Handlers.SpellCast.isSpellQueueEmpty()) return;
+        if (Models.Spell.isSpellQueueEmpty()) return;
 
-        SpellDirection nextDirection = Handlers.SpellCast.checkNextSpellDirection();
+        SpellDirection nextDirection = Models.Spell.checkNextSpellDirection();
 
         if (nextDirection == null) return;
 
@@ -211,10 +210,10 @@ public class QuickCastFeature extends Feature {
                 nextDirection == SpellDirection.LEFT ? leftClickTickDelay.get() : rightClickTickDelay.get();
         if (McUtils.player().tickCount - lastSpellTick < comparisonTime) return;
 
-        Handlers.SpellCast.sendNextSpell();
+        Models.Spell.sendNextSpell();
         lastSpellTick = McUtils.player().tickCount;
 
-        if (Handlers.SpellCast.isSpellQueueEmpty()) {
+        if (Models.Spell.isSpellQueueEmpty()) {
             lastSpellTick = 0;
             packetCountdown = Math.max(packetCountdown, spellCooldown.get());
         }
