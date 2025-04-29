@@ -879,13 +879,14 @@ public class LootrunModel extends Model {
                 int oldCount = lootrunDetails.getRainbowBeaconCount();
 
                 int newCount = Math.max(oldCount + lootrunDetails.getRainbowAmount(), 0);
-                lootrunDetails.setRainbowAmount(newCount);
+                lootrunDetails.setRainbowBeaconCount(newCount);
             } else {
                 WynntilsMod.warn("Completed rainbow beacon challenge but had no rainbow amount");
             }
         } else if (color == LootrunBeaconKind.ORANGE) {
             if (lootrunDetails.getOrangeAmount() != -1) {
-                List<Integer> orangeList = getCurrentLootrunDetails().getOrangeBeaconCounts();
+                List<Integer> orangeList =
+                        new ArrayList<>(getCurrentLootrunDetails().getOrangeBeaconCounts());
 
                 orangeList.add(lootrunDetails.getOrangeAmount());
                 lootrunDetails.setOrangeBeaconCounts(orangeList);
