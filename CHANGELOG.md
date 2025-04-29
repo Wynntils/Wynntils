@@ -1,3 +1,12 @@
+## [3.0.18](https://github.com/Wynntils/Wynntils/compare/v3.0.17...v3.0.18) (2025-04-29)
+
+
+### Bug Fixes
+
+* Fix guardian angels not being detected when using All-Seeing Panoptes ability [skip ci] ([#3216](https://github.com/Wynntils/Wynntils/issues/3216)) ([b0c1fdc](https://github.com/Wynntils/Wynntils/commit/b0c1fdcf3275f6e87ddcb18afb6c0d4509cca801))
+* Fix orange and rainbow beacon effects not counting again ([#3215](https://github.com/Wynntils/Wynntils/issues/3215)) ([411259b](https://github.com/Wynntils/Wynntils/commit/411259b8e7d959ed91ee36f14d8171cc6a676924))
+* Minor fixes to overlay selection screen [skip ci] ([#3217](https://github.com/Wynntils/Wynntils/issues/3217)) ([cb32994](https://github.com/Wynntils/Wynntils/commit/cb329947767692a1d6b64dafa9daf44298e0a7d0))
+
 ## [3.0.17](https://github.com/Wynntils/Wynntils/compare/v3.0.16...v3.0.17) (2025-04-26)
 
 
@@ -12,6 +21,7 @@
 ### Miscellaneous Chores
 
 * Post event on raid start [skip ci] ([#3208](https://github.com/Wynntils/Wynntils/issues/3208)) ([34346ee](https://github.com/Wynntils/Wynntils/commit/34346eecd4832bbf619509ef5141b801a937258d))
+* **release:** v3.0.17 [skip ci] ([fa6b0f2](https://github.com/Wynntils/Wynntils/commit/fa6b0f20365fa8ea98423457f1ef73e14393c5d8))
 
 
 ### Code Refactoring
@@ -64,21 +74,4 @@
 * [auto-generated] Update urls.json [ci skip] ([#3194](https://github.com/Wynntils/Wynntils/issues/3194)) ([44a0bcb](https://github.com/Wynntils/Wynntils/commit/44a0bcb4f35e2b719156036a73fd82399f5af0d8))
 * Change Hide Info Messages config to disabled by default [skip ci] ([#3197](https://github.com/Wynntils/Wynntils/issues/3197)) ([fda245b](https://github.com/Wynntils/Wynntils/commit/fda245b4ac408d850ca1228f1bf0334413f89c96))
 * **release:** v3.0.14 [skip ci] ([56a346b](https://github.com/Wynntils/Wynntils/commit/56a346b77edc4f3cb47e2269c03d6d3b92833b41))
-
-## [3.0.13](https://github.com/Wynntils/Wynntils/compare/v3.0.12...v3.0.13) (2025-04-05)
-
-
-### New Features
-
-* Use crowd sourced service locations ([#3170](https://github.com/Wynntils/Wynntils/issues/3170)) ([6b29c57](https://github.com/Wynntils/Wynntils/commit/6b29c57416f4dbdfd9a943c3d61a998cc846d9b8))
-
-
-### Bug Fixes
-
-* Add shutdown hook for storage saving [skip ci] ([#3178](https://github.com/Wynntils/Wynntils/issues/3178)) ([509275c](https://github.com/Wynntils/Wynntils/commit/509275c01cc407062a2d8a587ddda0f3dc381a4a))
-
-
-### Miscellaneous Chores
-
-* **release:** v3.0.13 [skip ci] ([30812a9](https://github.com/Wynntils/Wynntils/commit/30812a95d3560f60c8c13300f95c8158013c2450))
 
