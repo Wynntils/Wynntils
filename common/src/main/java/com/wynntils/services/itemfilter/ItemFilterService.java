@@ -48,6 +48,7 @@ import com.wynntils.services.itemfilter.statproviders.SkillReqStatProvider;
 import com.wynntils.services.itemfilter.statproviders.SkillStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TargetStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
+import com.wynntils.services.itemfilter.statproviders.TomeTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TotalPriceStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TradeAmountStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
@@ -514,6 +515,7 @@ public class ItemFilterService extends Service {
         registerStatProvider(new PowderSlotsStatProvider());
         registerStatProvider(new HealthStatProvider());
         registerStatProvider(new TargetStatProvider());
+        registerStatProvider(new TomeTypeStatProvider());
 
         // Profession Stats
         for (ProfessionType type : ProfessionType.values()) {

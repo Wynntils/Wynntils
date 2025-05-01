@@ -2934,6 +2934,8 @@
   "service.wynntils.itemFilter.stat.territoryUpgradeLevel.description": "%s upgrade level of the territory",
   "service.wynntils.itemFilter.stat.tier.description": "Tier of the item (e.g. \"tier:6\" -> VI)",
   "service.wynntils.itemFilter.stat.tier.name": "Item Tier",
+  "service.wynntils.itemFilter.stat.tomeType.description": "The type of tome",
+  "service.wynntils.itemFilter.stat.tomeType.name": "Tome Type",
   "service.wynntils.itemFilter.stat.totalPrice.description": "Total price of the items in the stack",
   "service.wynntils.itemFilter.stat.totalPrice.name": "Total Price",
   "service.wynntils.itemFilter.stat.tradeAmount.description": "Amount of the item",
