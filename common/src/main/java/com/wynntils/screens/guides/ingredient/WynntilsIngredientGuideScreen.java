@@ -5,10 +5,15 @@
 package com.wynntils.screens.guides.ingredient;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.screens.guides.widgets.filters.ProfessionTypeFilterWidget;
+import com.wynntils.screens.guides.widgets.filters.QualityTierFilterWidget;
+import com.wynntils.screens.guides.widgets.sorts.QualityTierSortButton;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
@@ -42,17 +47,28 @@ public final class WynntilsIngredientGuideScreen
     }
 
     @Override
+    protected void doInit() {
+        super.doInit();
+
+        if (searchWidget instanceof ItemSearchWidget itemSearchWidget) {
+            guideFilterWidgets.add(this.addRenderableWidget(new ProfessionTypeFilterWidget(
+                    29 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
+            guideFilterWidgets.add(this.addRenderableWidget(
+                    new QualityTierFilterWidget(29 + offsetX, 131 + offsetY, this, itemSearchWidget.getSearchQuery())));
+
+            guideSortWidget.setSecondarySortButton(new QualityTierSortButton(this, itemSearchWidget.getSearchQuery()));
+        } else {
+            WynntilsMod.error("WynntilsIngredientGuideScreen's SearchWidget is not an ItemSearchWidget");
+        }
+    }
+
+    @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
         renderBackgroundTexture(poseStack);
 
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
-
-        renderDescription(
-                poseStack,
-                I18n.get("screens.wynntils.wynntilsGuides.guideDescription"),
-                I18n.get("screens.wynntils.wynntilsGuides.filterHelper"));
 
         renderVersion(poseStack);
 
@@ -132,6 +148,10 @@ public final class WynntilsIngredientGuideScreen
 
     protected void reloadElementsList(ItemSearchQuery searchQuery) {
         elements.addAll(Services.ItemFilter.filterAndSort(searchQuery, getAllIngredientItems()));
+
+        guideFilterWidgets.forEach(filter -> filter.updateFromQuery(searchQuery));
+        if (guideSortWidget == null) return;
+        guideSortWidget.updateFromQuery(searchQuery);
     }
 
     private List<GuideIngredientItemStack> getAllIngredientItems() {

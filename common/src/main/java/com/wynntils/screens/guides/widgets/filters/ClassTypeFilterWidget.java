@@ -1,0 +1,110 @@
+/*
+ * Copyright © Wynntils 2025.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.screens.guides.widgets.filters;
+
+import com.wynntils.models.character.type.ClassType;
+import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.services.itemfilter.filters.StringStatFilter;
+import com.wynntils.services.itemfilter.statproviders.ClassStatProvider;
+import com.wynntils.services.itemfilter.type.ItemSearchQuery;
+import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
+import com.wynntils.utils.EnumUtils;
+import com.wynntils.utils.render.Texture;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.resources.language.I18n;
+
+public class ClassTypeFilterWidget extends GuideFilterWidget {
+    private final List<ClassTypeButton> classTypeButtons = new ArrayList<>();
+
+    public ClassTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
+        super(x, y, 144, 36, guideScreen);
+
+        classTypeButtons.add(new ClassTypeButton(x, y, ClassType.WARRIOR, Texture.SPEAR_FILTER_ICON, searchQuery));
+        classTypeButtons.add(new ClassTypeButton(x + 32, y, ClassType.MAGE, Texture.WAND_FILTER_ICON, searchQuery));
+        classTypeButtons.add(
+                new ClassTypeButton(x + 64, y, ClassType.ASSASSIN, Texture.DAGGER_FILTER_ICON, searchQuery));
+        classTypeButtons.add(new ClassTypeButton(x + 96, y, ClassType.ARCHER, Texture.BOW_FILTER_ICON, searchQuery));
+        classTypeButtons.add(new ClassTypeButton(x + 128, y, ClassType.SHAMAN, Texture.RELIK_FILTER_ICON, searchQuery));
+    }
+
+    @Override
+    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        classTypeButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        boolean clicked = false;
+
+        for (ClassTypeButton classTypeButton : classTypeButtons) {
+            if (classTypeButton.isMouseOver(mouseX, mouseY)) {
+                clicked = classTypeButton.mouseClicked(mouseX, mouseY, button);
+                break;
+            }
+        }
+
+        guideScreen.updateSearchFromQuickFilters();
+
+        return clicked;
+    }
+
+    @Override
+    protected List<StatProviderAndFilterPair> getFilters() {
+        List<StatProviderAndFilterPair> filterPairs = new ArrayList<>();
+        ClassStatProvider classStatProvider = new ClassStatProvider();
+
+        for (ClassTypeButton classTypeButton : classTypeButtons) {
+            StatProviderAndFilterPair filterPair = classTypeButton.getFilterPair(classStatProvider);
+
+            if (filterPair != null) {
+                filterPairs.add(filterPair);
+            }
+        }
+
+        return filterPairs;
+    }
+
+    public void updateFromQuery(ItemSearchQuery searchQuery) {
+        classTypeButtons.forEach(classTypeButton -> classTypeButton.updateStateFromQuery(searchQuery));
+    }
+
+    private static class ClassTypeButton extends GuideFilterButton<ClassStatProvider> {
+        private final ClassType classType;
+
+        protected ClassTypeButton(int x, int y, ClassType classType, Texture texture, ItemSearchQuery searchQuery) {
+            super(x, y, texture);
+
+            this.classType = classType;
+            updateStateFromQuery(searchQuery);
+        }
+
+        @Override
+        protected void updateStateFromQuery(ItemSearchQuery searchQuery) {
+            state = searchQuery.filters().values().stream()
+                    .filter(filterPair -> filterPair.statProvider() instanceof ClassStatProvider)
+                    .anyMatch(filterPair -> filterPair.statFilter().matches(EnumUtils.toNiceString(classType)));
+        }
+
+        @Override
+        protected StatProviderAndFilterPair getFilterPair(ClassStatProvider provider) {
+            if (!state) return null;
+
+            Optional<StringStatFilter> statFilterOpt =
+                    new StringStatFilter.StringStatFilterFactory().create(classType.getName());
+
+            return statFilterOpt
+                    .map(stringStatFilter -> new StatProviderAndFilterPair(provider, stringStatFilter))
+                    .orElse(null);
+        }
+
+        @Override
+        protected String getFilterName() {
+            return I18n.get("service.wynntils.itemFilter.stat.class.name") + " " + classType.getName();
+        }
+    }
+}

@@ -5,10 +5,15 @@
 package com.wynntils.screens.guides.gear;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.screens.guides.widgets.filters.GearTypeFilterWidget;
+import com.wynntils.screens.guides.widgets.filters.RarityFilterWidget;
+import com.wynntils.screens.guides.widgets.sorts.RaritySortButton;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
@@ -40,17 +45,28 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
     }
 
     @Override
+    protected void doInit() {
+        super.doInit();
+
+        if (searchWidget instanceof ItemSearchWidget itemSearchWidget) {
+            guideFilterWidgets.add(this.addRenderableWidget(
+                    new GearTypeFilterWidget(13 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
+            guideFilterWidgets.add(this.addRenderableWidget(
+                    new RarityFilterWidget(29 + offsetX, 121 + offsetY, this, itemSearchWidget.getSearchQuery())));
+
+            guideSortWidget.setSecondarySortButton(new RaritySortButton(this, itemSearchWidget.getSearchQuery()));
+        } else {
+            WynntilsMod.error("WynntilsItemGuideScreen's SearchWidget is not an ItemSearchWidget");
+        }
+    }
+
+    @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
         renderBackgroundTexture(poseStack);
 
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.itemGuide.name"));
-
-        renderDescription(
-                poseStack,
-                I18n.get("screens.wynntils.wynntilsGuides.guideDescription"),
-                I18n.get("screens.wynntils.wynntilsGuides.filterHelper"));
 
         renderVersion(poseStack);
 
@@ -102,6 +118,10 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
 
     protected void reloadElementsList(ItemSearchQuery searchQuery) {
         elements.addAll(Services.ItemFilter.filterAndSort(searchQuery, getAllGearItems()));
+
+        guideFilterWidgets.forEach(filter -> filter.updateFromQuery(searchQuery));
+        if (guideSortWidget == null) return;
+        guideSortWidget.updateFromQuery(searchQuery);
     }
 
     private List<GuideGearItemStack> getAllGearItems() {

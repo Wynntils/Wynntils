@@ -9,16 +9,26 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.ClassableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.items.properties.NumberedTierItemProperty;
 
 public class AspectItem extends GameItem
-        implements GearTierItemProperty, ClassableItemProperty, NumberedTierItemProperty {
+        implements NamedItemProperty, GearTierItemProperty, ClassableItemProperty, NumberedTierItemProperty {
     private final AspectInfo aspectInfo;
     private final int aspectTier;
 
     public AspectItem(AspectInfo aspectInfo, int aspectTier) {
         this.aspectInfo = aspectInfo;
         this.aspectTier = aspectTier;
+    }
+
+    public AspectInfo getAspectInfo() {
+        return aspectInfo;
+    }
+
+    @Override
+    public String getName() {
+        return aspectInfo.name();
     }
 
     @Override
