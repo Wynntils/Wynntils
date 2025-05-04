@@ -30,7 +30,7 @@ public enum RecipientType {
             "Party"),
     // Test in RecipientType_PRIVATE_foregroundPattern and RecipientType_PRIVATE_backgroundPattern
     PRIVATE(
-            "^§6((\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) .* \uE003 .*:§6 §f.*$",
+            "^§6((\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) .* \uE003 .*:(§6)? §f.*$",
             "^§8\uDAFF\uDFFC.* .* \uE003 .*:§8 .*$",
             "Private"),
     SHOUT("^§5.* \\[[A-Z0-9]+\\] shouts: §d.*$", "^(§8)?.* \\[[A-Z0-9]+\\] shouts: §7.*$", "Shout"),

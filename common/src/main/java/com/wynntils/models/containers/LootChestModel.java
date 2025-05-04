@@ -23,6 +23,7 @@ import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
@@ -170,6 +171,8 @@ public final class LootChestModel extends Model {
     }
 
     private void storeMythicFind(ItemStack itemStack, RangedValue levelRange) {
+        Location chestLocation =
+                new Location(lastChestPos == null ? McUtils.player().blockPosition() : lastChestPos);
         mythicFinds
                 .get()
                 .add(new MythicFind(
@@ -180,7 +183,7 @@ public final class LootChestModel extends Model {
                         dryBoxes.get(),
                         dryEmeralds.get(),
                         dryItemTiers.get(),
-                        new Location(lastChestPos),
+                        chestLocation,
                         System.currentTimeMillis()));
 
         mythicFinds.touched();

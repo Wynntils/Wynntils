@@ -693,6 +693,7 @@ public class TestRegex {
     @Test
     public void RecipientType_PRIVATE_foregroundpattern() {
         PatternTester p = new PatternTester(RecipientType.PRIVATE, "foregroundPattern");
+        p.shouldMatch("§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE 42nao \uE003 Soulbound: §ftest");
         p.shouldMatch(
                 "§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §#ffe600ff§obol§6 \uE003 §#ffe600ff§obol§r§#ffe600ff:§6 §ftest");
         p.shouldMatch(
