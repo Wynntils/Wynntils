@@ -55,7 +55,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class RaidModel extends Model {
+public final class RaidModel extends Model {
     // These should be set to whatever the highest amount in any raid is.
     public static final Integer MAXIMUM_CHALLENGE_ROOMS = 3;
     public static final Integer MAXIMUM_BOSS_ROOMS = 2;

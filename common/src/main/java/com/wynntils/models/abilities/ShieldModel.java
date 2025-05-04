@@ -26,7 +26,7 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class ShieldModel extends Model {
+public final class ShieldModel extends Model {
     private static final double SEARCH_RADIUS = 4.5;
 
     private final List<ShieldType> shieldTypes = new ArrayList<>();

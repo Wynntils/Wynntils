@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.marker;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class MarkerModel extends Model {
+public final class MarkerModel extends Model {
     public static final UserWaypointMarkerProvider USER_WAYPOINTS_PROVIDER = new UserWaypointMarkerProvider();
 
     private final List<MarkerProvider> markerProviders = new ArrayList<>();

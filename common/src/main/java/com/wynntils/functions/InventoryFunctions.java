@@ -88,7 +88,7 @@ public class InventoryFunctions {
     public static class CappedIngredientPouchSlotsFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Inventory.getIngredientPouchSlots();
+            return Models.IngredientPouch.getIngredientPouchSlots();
         }
     }
 
@@ -196,7 +196,7 @@ public class InventoryFunctions {
     public static class IngredientPouchOpenSlotsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Inventory.getIngredientPouchSlots().getRemaining();
+            return Models.IngredientPouch.getIngredientPouchSlots().getRemaining();
         }
 
         @Override
@@ -208,7 +208,7 @@ public class InventoryFunctions {
     public static class IngredientPouchUsedSlotsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Inventory.getIngredientPouchSlots().current();
+            return Models.IngredientPouch.getIngredientPouchSlots().current();
         }
 
         @Override
