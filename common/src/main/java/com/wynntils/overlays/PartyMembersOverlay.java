@@ -238,7 +238,7 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
                     healthTexture.getTextureY2(),
                     (float) healthProgress);
 
-            if (Math.abs(healthProgress) > 1) {
+            if (healthProgress > 1) {
                 BufferedRenderUtils.drawProgressBar(
                         poseStack,
                         bufferSource,
