@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear;
@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 import net.minecraft.world.item.ItemStack;
 
-public class SetModel extends Model {
+public final class SetModel extends Model {
     // Stored as a map for quick lookup <name, SetInfo>
     private final Map<String, SetInfo> setData = new HashMap<>();
 

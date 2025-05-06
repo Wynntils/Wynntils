@@ -38,7 +38,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class ShamanTotemModel extends Model {
+public final class ShamanTotemModel extends Model {
     // Test in ShamanTotemModel_SHAMAN_TOTEM_TIMER_PATTERN
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile(
             "§b(?<username>.+)'(?:s)? §7Totem\n(§c\\+(?<regen>\\d+)❤§7/s )?(§e\uE013 §7(\\d+)s )?§d\uE01F §7(?<time>\\d+)s");

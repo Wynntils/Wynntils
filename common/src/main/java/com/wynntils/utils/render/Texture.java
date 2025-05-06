@@ -47,6 +47,11 @@ public enum Texture {
     ACTIVITY_FINISHED("icons/activities/activity_finished_icon.png", 11, 7),
     ACTIVITY_STARTED("icons/activities/activity_started_icon.png", 7, 7),
     CAVE_AVALIABLE_ICON("icons/activities/cave_avaliable_icon.png", 7, 7),
+    DISCOVERY_ICON("icons/activities/discovery_icon.png", 22, 22),
+    MINI_QUEST_ICON("icons/activities/mini_quest_icon.png", 22, 22),
+    QUEST_ICON("icons/activities/quest_icon.png", 20, 19),
+    STORYLINE_QUEST_ICON("icons/activities/storyline_quest_icon.png", 20, 19),
+    WORLD_EVENT_ICON("icons/activities/world_event_icon.png", 22, 17),
 
     // Config Categories
     ALL_CONFIG_ICON("icons/config_categories/all_config_icon.png", 16, 16),

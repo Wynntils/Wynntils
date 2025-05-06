@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.worldevents;
@@ -14,7 +14,7 @@ import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityLength;
 import java.util.List;
 
-public class WorldEventModel extends Model {
+public final class WorldEventModel extends Model {
     public static final AnnihilationSunBar annihilationSunBar = new AnnihilationSunBar();
 
     public WorldEventModel() {

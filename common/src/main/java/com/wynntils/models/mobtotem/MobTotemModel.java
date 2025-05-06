@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.mobtotem;
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.entity.Display;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class MobTotemModel extends Model {
+public final class MobTotemModel extends Model {
     private static final Pattern MOB_TOTEM_TEXT =
             Pattern.compile("^§f§l(?<user>.*)'s§6§l Mob Totem\\n§c§l(?<timer>[0-9]+:[0-9]+)$");
 

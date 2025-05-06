@@ -14,7 +14,6 @@ import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.mc.event.ScreenClosedEvent;
-import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.activities.beacons.ActivityBeaconKind;
 import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
@@ -67,9 +66,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class ActivityModel extends Model {
     public static final String CONTENT_BOOK_TITLE = "\uDAFF\uDFEE\uE004";
 
-    private static final Location WORLD_SPAWN = new Location(-1572, 41, -1668);
-    private static final Location HUB_SPAWN = new Location(295, 34, 321);
-
     private static final Pattern LEVEL_REQ_PATTERN =
             Pattern.compile("^§(.).À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
     private static final Pattern PROFESSION_REQ_PATTERN = Pattern.compile("^§(.).À?§7 (\\w+)? Lv\\. Min: (\\d+)$");
@@ -109,26 +105,6 @@ public final class ActivityModel extends Model {
     }
 
     @SubscribeEvent
-    public void onSetSpawn(SetSpawnEvent e) {
-        Location spawn = new Location(e.getSpawnPos());
-        if (spawn.equals(WORLD_SPAWN) || spawn.equals(HUB_SPAWN)) {
-            ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null);
-            return;
-        }
-
-        Location player = Location.containing(McUtils.player().position());
-        if (spawn.equals(player)) {
-            // Wynncraft "resets" tracking by setting the compass to your current
-            // location. In theory, this can fail if you happen to be standing on
-            // the spot that is the target of the activity you start tracking...
-            ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null);
-            return;
-        }
-
-        ACTIVITY_MARKER_PROVIDER.setSpawnLocation(spawn);
-    }
-
-    @SubscribeEvent
     public void onBeaconAdded(BeaconEvent.Added event) {
         Beacon beacon = event.getBeacon();
         if (!(beacon.beaconKind() instanceof ActivityBeaconKind)) return;
@@ -146,16 +122,37 @@ public final class ActivityModel extends Model {
     @SubscribeEvent
     public void onBeaconMarkerAdded(BeaconMarkerEvent.Added event) {
         BeaconMarker beaconMarker = event.getBeaconMarker();
-        if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind)) return;
+        if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind activityBeaconMarker)) return;
 
         // FIXME: Feature-model dependency
         ContentTrackerFeature feature = Managers.Feature.getFeatureInstance(ContentTrackerFeature.class);
-        if (feature.hideOriginalMarker.get() && feature.isEnabled()) {
-            // Only set this once they are added.
-            // This is cleaner than posting an event on render,
-            // but a change in the config will only have effect on newly placed beacons.
-            ((EntityExtension) event.getEntity()).setRendered(false);
+        if (feature.isEnabled()) {
+            if (feature.hideOriginalMarker.get()) {
+                // Only set this once they are added.
+                // This is cleaner than posting an event on render,
+                // but a change in the config will only have effect on newly placed beacons.
+                ((EntityExtension) event.getEntity()).setRendered(false);
+            }
+            if (feature.autoTrackCoordinates.get()) {
+                Location spawn = new Location(McUtils.mc().level.getSharedSpawnPos());
+                ACTIVITY_MARKER_PROVIDER.setSpawnLocation(activityBeaconMarker.getActivityType(), spawn);
+
+                Location trackedLocation = getTrackedLocation();
+                if (getTrackedLocation() != null && !spawn.equals(trackedLocation)) {
+                    ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(
+                            activityBeaconMarker.getActivityType(), getTrackedLocation());
+                }
+            }
         }
+    }
+
+    @SubscribeEvent
+    public void onBeaconMarkerRemoved(BeaconMarkerEvent.Removed event) {
+        BeaconMarker beaconMarker = event.getBeaconMarker();
+        if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind)) return;
+
+        ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null, null);
+        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(null, null);
     }
 
     @SubscribeEvent
@@ -372,7 +369,6 @@ public final class ActivityModel extends Model {
     void updateTracker(String name, String type, StyledText nextTask) {
         ActivityType trackedType = ActivityType.from(type);
         trackedActivity = new TrackedActivity(name, trackedType, nextTask);
-        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(getTrackedLocation(), trackedType.getColor());
 
         WynntilsMod.postEvent(new ActivityTrackerUpdatedEvent(
                 trackedActivity.trackedType(), trackedActivity.trackedName(), trackedActivity.trackedTask()));
