@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guides.widgets.filters;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.models.rewards.TomeType;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
@@ -20,6 +21,7 @@ import net.minecraft.client.resources.language.I18n;
 
 public class TomeTypeFilterWidget extends GuideFilterWidget {
     private final List<TomeTypeButton> tomeTypeButtons = new ArrayList<>();
+    private TomeTypeStatProvider provider;
 
     public TomeTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
         super(x, y, 112, 36, guideScreen);
@@ -63,10 +65,9 @@ public class TomeTypeFilterWidget extends GuideFilterWidget {
     @Override
     protected List<StatProviderAndFilterPair> getFilters() {
         List<StatProviderAndFilterPair> filterPairs = new ArrayList<>();
-        TomeTypeStatProvider tomeTypeStatProvider = new TomeTypeStatProvider();
 
         for (TomeTypeButton tomeTypeButton : tomeTypeButtons) {
-            StatProviderAndFilterPair filterPair = tomeTypeButton.getFilterPair(tomeTypeStatProvider);
+            StatProviderAndFilterPair filterPair = tomeTypeButton.getFilterPair(provider);
 
             if (filterPair != null) {
                 filterPairs.add(filterPair);
@@ -74,6 +75,15 @@ public class TomeTypeFilterWidget extends GuideFilterWidget {
         }
 
         return filterPairs;
+    }
+
+    @Override
+    public void getProvider() {
+        provider = Services.ItemFilter.getItemStatProviders().stream()
+                .filter(statProvider -> statProvider instanceof TomeTypeStatProvider)
+                .map(statProvider -> (TomeTypeStatProvider) statProvider)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not get tome type stat provider"));
     }
 
     public void updateFromQuery(ItemSearchQuery searchQuery) {

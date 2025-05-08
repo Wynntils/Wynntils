@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guides.widgets.filters;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
@@ -20,6 +21,7 @@ import net.minecraft.client.resources.language.I18n;
 
 public class ClassTypeFilterWidget extends GuideFilterWidget {
     private final List<ClassTypeButton> classTypeButtons = new ArrayList<>();
+    private ClassStatProvider provider;
 
     public ClassTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
         super(x, y, 144, 36, guideScreen);
@@ -56,10 +58,9 @@ public class ClassTypeFilterWidget extends GuideFilterWidget {
     @Override
     protected List<StatProviderAndFilterPair> getFilters() {
         List<StatProviderAndFilterPair> filterPairs = new ArrayList<>();
-        ClassStatProvider classStatProvider = new ClassStatProvider();
 
         for (ClassTypeButton classTypeButton : classTypeButtons) {
-            StatProviderAndFilterPair filterPair = classTypeButton.getFilterPair(classStatProvider);
+            StatProviderAndFilterPair filterPair = classTypeButton.getFilterPair(provider);
 
             if (filterPair != null) {
                 filterPairs.add(filterPair);
@@ -67,6 +68,15 @@ public class ClassTypeFilterWidget extends GuideFilterWidget {
         }
 
         return filterPairs;
+    }
+
+    @Override
+    public void getProvider() {
+        provider = Services.ItemFilter.getItemStatProviders().stream()
+                .filter(statProvider -> statProvider instanceof ClassStatProvider)
+                .map(statProvider -> (ClassStatProvider) statProvider)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not get class stat provider"));
     }
 
     public void updateFromQuery(ItemSearchQuery searchQuery) {

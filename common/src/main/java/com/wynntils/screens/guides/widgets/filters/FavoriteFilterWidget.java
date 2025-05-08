@@ -5,6 +5,7 @@
 package com.wynntils.screens.guides.widgets.filters;
 
 import com.google.common.collect.Lists;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.services.itemfilter.filters.BooleanStatFilter;
@@ -30,6 +31,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class FavoriteFilterWidget extends GuideFilterWidget {
     private ConfirmedBoolean state;
+    private FavoriteStatProvider provider;
 
     public FavoriteFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
         super(x, y, 16, 16, guideScreen);
@@ -92,8 +94,17 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
         if (state == ConfirmedBoolean.UNCONFIRMED) return List.of();
 
         return List.of(new StatProviderAndFilterPair(
-                new FavoriteStatProvider(),
+                provider,
                 new BooleanStatFilter.BooleanStatFilterFactory().fromBoolean(state == ConfirmedBoolean.TRUE)));
+    }
+
+    @Override
+    public void getProvider() {
+        provider = Services.ItemFilter.getItemStatProviders().stream()
+                .filter(statProvider -> statProvider instanceof FavoriteStatProvider)
+                .map(statProvider -> (FavoriteStatProvider) statProvider)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not get favorite stat provider"));
     }
 
     public void updateFromQuery(ItemSearchQuery searchQuery) {

@@ -5,6 +5,7 @@
 package com.wynntils.screens.guides.widgets.filters;
 
 import com.google.common.collect.Lists;
+import com.wynntils.core.components.Services;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.services.itemfilter.filters.BooleanStatFilter;
@@ -19,7 +20,9 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.ConfirmedBoolean;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -27,6 +30,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class ProfessionTypeFilterWidget extends GuideFilterWidget {
     private final List<ProfessionTypeButton> professionTypeButtons = new ArrayList<>();
+    private final Map<ProfessionType, ProfessionStatProvider> professionProviderMap = new HashMap<>();
 
     public ProfessionTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
         super(x, y, 160, 36, guideScreen);
@@ -47,6 +51,8 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                 x + 64, y + 20, ProfessionType.WEAPONSMITHING, Texture.WEAPONSMITHING_FILTER_ICON, searchQuery));
         professionTypeButtons.add(new ProfessionTypeButton(
                 x + 96, y + 20, ProfessionType.WOODWORKING, Texture.WOODWORKING_FILTER_ICON, searchQuery));
+
+        populateMap();
     }
 
     @Override
@@ -76,7 +82,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
 
         for (ProfessionTypeButton professionTypeButton : professionTypeButtons) {
             StatProviderAndFilterPair filterPair =
-                    professionTypeButton.getFilterPair(new ProfessionStatProvider(professionTypeButton.professionType));
+                    professionTypeButton.getFilterPair(professionProviderMap.get(professionTypeButton.professionType));
 
             if (filterPair != null) {
                 filterPairs.add(filterPair);
@@ -84,6 +90,21 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
         }
 
         return filterPairs;
+    }
+
+    @Override
+    public void getProvider() {
+        // populateMap is used instead for this widget
+    }
+
+    private void populateMap() {
+        Services.ItemFilter.getItemStatProviders().stream()
+                .filter(statProvider -> statProvider instanceof ProfessionStatProvider)
+                .map(statProvider -> (ProfessionStatProvider) statProvider)
+                .forEach(professionStatProvider -> {
+                    ProfessionType type = ProfessionType.fromString(professionStatProvider.getDisplayName());
+                    professionProviderMap.put(type, professionStatProvider);
+                });
     }
 
     public void updateFromQuery(ItemSearchQuery searchQuery) {

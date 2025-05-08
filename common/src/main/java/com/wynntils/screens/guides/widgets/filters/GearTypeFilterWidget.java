@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guides.widgets.filters;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
@@ -20,6 +21,7 @@ import net.minecraft.client.resources.language.I18n;
 
 public class GearTypeFilterWidget extends GuideFilterWidget {
     private final List<GearTypeButton> gearTypeButtons = new ArrayList<>();
+    private GearTypeStatProvider provider;
 
     public GearTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
         super(x, y, 144, 36, guideScreen);
@@ -63,10 +65,9 @@ public class GearTypeFilterWidget extends GuideFilterWidget {
     @Override
     protected List<StatProviderAndFilterPair> getFilters() {
         List<StatProviderAndFilterPair> filterPairs = new ArrayList<>();
-        GearTypeStatProvider gearTypeStatProvider = new GearTypeStatProvider();
 
         for (GearTypeButton gearTypeButton : gearTypeButtons) {
-            StatProviderAndFilterPair filterPair = gearTypeButton.getFilterPair(gearTypeStatProvider);
+            StatProviderAndFilterPair filterPair = gearTypeButton.getFilterPair(provider);
 
             if (filterPair != null) {
                 filterPairs.add(filterPair);
@@ -74,6 +75,15 @@ public class GearTypeFilterWidget extends GuideFilterWidget {
         }
 
         return filterPairs;
+    }
+
+    @Override
+    public void getProvider() {
+        provider = Services.ItemFilter.getItemStatProviders().stream()
+                .filter(statProvider -> statProvider instanceof GearTypeStatProvider)
+                .map(statProvider -> (GearTypeStatProvider) statProvider)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not get gear type stat provider"));
     }
 
     public void updateFromQuery(ItemSearchQuery searchQuery) {

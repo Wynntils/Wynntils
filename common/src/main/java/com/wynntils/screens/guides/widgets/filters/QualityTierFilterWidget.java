@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guides.widgets.filters;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.statproviders.QualityTierStatProvider;
@@ -18,6 +19,7 @@ import net.minecraft.client.resources.language.I18n;
 
 public class QualityTierFilterWidget extends GuideFilterWidget {
     private final List<QualityTierButton> qualityTierButtons = new ArrayList<>();
+    private QualityTierStatProvider provider;
 
     public QualityTierFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
         super(x, y, 160, 16, guideScreen);
@@ -52,10 +54,9 @@ public class QualityTierFilterWidget extends GuideFilterWidget {
     @Override
     protected List<StatProviderAndFilterPair> getFilters() {
         List<StatProviderAndFilterPair> filterPairs = new ArrayList<>();
-        QualityTierStatProvider qualityTierStatProvider = new QualityTierStatProvider();
 
         for (QualityTierButton qualityTierButton : qualityTierButtons) {
-            StatProviderAndFilterPair filterPair = qualityTierButton.getFilterPair(qualityTierStatProvider);
+            StatProviderAndFilterPair filterPair = qualityTierButton.getFilterPair(provider);
 
             if (filterPair != null) {
                 filterPairs.add(filterPair);
@@ -63,6 +64,15 @@ public class QualityTierFilterWidget extends GuideFilterWidget {
         }
 
         return filterPairs;
+    }
+
+    @Override
+    public void getProvider() {
+        provider = Services.ItemFilter.getItemStatProviders().stream()
+                .filter(statProvider -> statProvider instanceof QualityTierStatProvider)
+                .map(statProvider -> (QualityTierStatProvider) statProvider)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not get quality tier stat provider"));
     }
 
     public void updateFromQuery(ItemSearchQuery searchQuery) {

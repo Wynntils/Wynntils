@@ -24,6 +24,8 @@ public abstract class GuideFilterWidget extends AbstractWidget {
         super(x, y, width, height, Component.empty());
 
         this.guideScreen = guideScreen;
+
+        getProvider();
     }
 
     public final String getItemSearchQuery() {
@@ -48,6 +50,8 @@ public abstract class GuideFilterWidget extends AbstractWidget {
     public abstract void updateFromQuery(ItemSearchQuery searchQuery);
 
     protected abstract List<StatProviderAndFilterPair> getFilters();
+
+    protected abstract void getProvider();
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
