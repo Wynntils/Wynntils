@@ -13,7 +13,8 @@ import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.screens.guides.widgets.filters.ProfessionTypeFilterWidget;
 import com.wynntils.screens.guides.widgets.filters.QualityTierFilterWidget;
-import com.wynntils.screens.guides.widgets.sorts.QualityTierSortButton;
+import com.wynntils.screens.guides.widgets.sorts.GuideSortButton;
+import com.wynntils.services.itemfilter.statproviders.QualityTierStatProvider;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
@@ -56,7 +57,8 @@ public final class WynntilsIngredientGuideScreen
             guideFilterWidgets.add(this.addRenderableWidget(
                     new QualityTierFilterWidget(29 + offsetX, 131 + offsetY, this, itemSearchWidget.getSearchQuery())));
 
-            guideSortWidget.setSecondarySortButton(new QualityTierSortButton(this, itemSearchWidget.getSearchQuery()));
+            guideSortWidget.setSecondarySortButton(
+                    new GuideSortButton(itemSearchWidget.getSearchQuery(), this, QualityTierStatProvider.class));
         } else {
             WynntilsMod.error("WynntilsIngredientGuideScreen's SearchWidget is not an ItemSearchWidget");
         }

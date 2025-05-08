@@ -13,7 +13,8 @@ import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.screens.guides.widgets.filters.GearTypeFilterWidget;
 import com.wynntils.screens.guides.widgets.filters.RarityFilterWidget;
-import com.wynntils.screens.guides.widgets.sorts.RaritySortButton;
+import com.wynntils.screens.guides.widgets.sorts.GuideSortButton;
+import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
@@ -54,7 +55,8 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
             guideFilterWidgets.add(this.addRenderableWidget(
                     new RarityFilterWidget(29 + offsetX, 121 + offsetY, this, itemSearchWidget.getSearchQuery())));
 
-            guideSortWidget.setSecondarySortButton(new RaritySortButton(this, itemSearchWidget.getSearchQuery()));
+            guideSortWidget.setSecondarySortButton(
+                    new GuideSortButton(itemSearchWidget.getSearchQuery(), this, RarityStatProvider.class));
         } else {
             WynntilsMod.error("WynntilsItemGuideScreen's SearchWidget is not an ItemSearchWidget");
         }

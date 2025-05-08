@@ -5,9 +5,11 @@
 package com.wynntils.screens.guides.widgets.sorts;
 
 import com.google.common.collect.Lists;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
+import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortDirection;
 import com.wynntils.services.itemfilter.type.SortInfo;
 import com.wynntils.utils.colors.CommonColors;
@@ -19,21 +21,29 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class GuideSortButton extends AbstractWidget {
+public class GuideSortButton extends AbstractWidget {
     protected final WynntilsGuideScreen guideScreen;
+    protected final ItemStatProvider<?> provider;
 
-    protected SortDirection sortDirection = null;
+    private SortDirection sortDirection = null;
 
-    protected GuideSortButton(WynntilsGuideScreen guideScreen) {
+    public GuideSortButton(ItemSearchQuery searchQuery, WynntilsGuideScreen guideScreen, Class<?> clazz) {
         super(0, 0, 64, 16, Component.empty());
-
         this.guideScreen = guideScreen;
+
+        this.provider = Services.ItemFilter.getItemStatProviders().stream()
+                .filter(clazz::isInstance)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No provider of type " + clazz.getSimpleName()));
+
+        updateFromQuery(searchQuery);
     }
 
     @Override
@@ -100,11 +110,23 @@ public abstract class GuideSortButton extends AbstractWidget {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    public abstract void updateFromQuery(ItemSearchQuery searchQuery);
+    public final void updateFromQuery(ItemSearchQuery searchQuery) {
+        Optional<SortInfo> sortInfoOptional = searchQuery.sorts().stream()
+                .filter(sortInfo -> sortInfo.provider() == provider)
+                .findFirst();
 
-    protected abstract SortInfo getSortInfo();
+        sortDirection = sortInfoOptional.map(SortInfo::direction).orElse(null);
+    }
 
-    protected abstract String getSortName();
+    protected final SortInfo getSortInfo() {
+        if (sortDirection == null) return null;
+
+        return new SortInfo(sortDirection, provider);
+    }
+
+    private String getSortName() {
+        return provider.getDisplayName();
+    }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}

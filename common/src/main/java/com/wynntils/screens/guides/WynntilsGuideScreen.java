@@ -13,8 +13,9 @@ import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.guides.widgets.filters.FavoriteFilterWidget;
 import com.wynntils.screens.guides.widgets.filters.GuideFilterWidget;
+import com.wynntils.screens.guides.widgets.sorts.GuideSortButton;
 import com.wynntils.screens.guides.widgets.sorts.GuideSortWidget;
-import com.wynntils.screens.guides.widgets.sorts.LevelSortButton;
+import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.render.Texture;
@@ -117,7 +118,8 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
 
             guideSortWidget = this.addRenderableWidget(new GuideSortWidget(13 + offsetX, 171 + offsetY));
 
-            guideSortWidget.setPrimarySortButton(new LevelSortButton(this, itemSearchWidget.getSearchQuery()));
+            guideSortWidget.setPrimarySortButton(
+                    new GuideSortButton(itemSearchWidget.getSearchQuery(), this, LevelStatProvider.class));
         } else {
             WynntilsMod.error("WynntilsGuideScreen's SearchWidget is not an ItemSearchWidget");
         }

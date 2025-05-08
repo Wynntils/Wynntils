@@ -14,9 +14,10 @@ import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.screens.guides.widgets.filters.ClassTypeFilterWidget;
 import com.wynntils.screens.guides.widgets.filters.FavoriteFilterWidget;
 import com.wynntils.screens.guides.widgets.filters.RarityFilterWidget;
+import com.wynntils.screens.guides.widgets.sorts.GuideSortButton;
 import com.wynntils.screens.guides.widgets.sorts.GuideSortWidget;
-import com.wynntils.screens.guides.widgets.sorts.RaritySortButton;
-import com.wynntils.screens.guides.widgets.sorts.TierSortButton;
+import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
@@ -60,8 +61,10 @@ public final class WynntilsAspectGuideScreen
             guideFilterWidgets.add(this.addRenderableWidget(
                     new RarityFilterWidget(29 + offsetX, 101 + offsetY, this, itemSearchWidget.getSearchQuery())));
 
-            guideSortWidget.setPrimarySortButton(new TierSortButton(this, itemSearchWidget.getSearchQuery()));
-            guideSortWidget.setSecondarySortButton(new RaritySortButton(this, itemSearchWidget.getSearchQuery()));
+            guideSortWidget.setPrimarySortButton(
+                    new GuideSortButton(itemSearchWidget.getSearchQuery(), this, TierStatProvider.class));
+            guideSortWidget.setSecondarySortButton(
+                    new GuideSortButton(itemSearchWidget.getSearchQuery(), this, RarityStatProvider.class));
         } else {
             WynntilsMod.error("WynntilsAspectGuideScreen's SearchWidget is not an ItemSearchWidget");
         }
