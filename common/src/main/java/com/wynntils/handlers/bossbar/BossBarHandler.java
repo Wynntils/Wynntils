@@ -58,12 +58,7 @@ public final class BossBarHandler extends Handler {
                 boolean darkenScreen,
                 boolean playMusic,
                 boolean createWorldFog) {
-            Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = knownBars.stream()
-                    .flatMap(trackedBar -> trackedBar.patterns.stream().map(pattern -> new Pair<>(trackedBar, pattern)))
-                    .map(pair ->
-                            new Pair<>(pair.a(), StyledText.fromComponent(name).getMatcher(pair.b())))
-                    .filter(pair -> pair.b().matches())
-                    .findFirst();
+            Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = matchBar(name);
             if (trackedBarOpt.isEmpty()) return;
 
             TrackedBar trackedBar = trackedBarOpt.get().a();
@@ -102,6 +97,15 @@ public final class BossBarHandler extends Handler {
             }
         }
 
+        private Optional<Pair<TrackedBar, Matcher>> matchBar(Component name) {
+            return knownBars.stream()
+                    .flatMap(trackedBar -> trackedBar.patterns.stream().map(pattern -> new Pair<>(trackedBar, pattern)))
+                    .map(pair ->
+                            new Pair<>(pair.a(), StyledText.fromComponent(name).getMatcher(pair.b())))
+                    .filter(pair -> pair.b().matches())
+                    .findFirst();
+        }
+
         @Override
         public void remove(UUID id) {
             handleBarUpdate(id, trackedBar -> {
@@ -120,6 +124,12 @@ public final class BossBarHandler extends Handler {
 
         @Override
         public void updateName(UUID id, Component name) {
+            // Some bars like the skip cutscene bar start out as an empty component and set the name later
+            if (!presentBars.containsKey(id)) {
+                Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = matchBar(name);
+                trackedBarOpt.ifPresent(trackedBarMatcherPair -> presentBars.put(id, trackedBarMatcherPair.a()));
+            }
+
             handleBarUpdate(id, trackedBar -> {
                 StyledText nameText = StyledText.fromComponent(name);
 

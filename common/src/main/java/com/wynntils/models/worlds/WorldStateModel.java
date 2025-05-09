@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
@@ -13,8 +14,11 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.models.worlds.bossbars.SkipCutsceneBar;
+import com.wynntils.models.worlds.event.CutsceneStartedEvent;
 import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.CutsceneState;
 import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.PosUtils;
@@ -39,6 +43,9 @@ public final class WorldStateModel extends Model {
     private static final String WYNNCRAFT_BETA_NAME = "beta";
     private static final String UNKNOWN_WORLD = "WC??";
 
+    private static final SkipCutsceneBar skipCutsceneBar = new SkipCutsceneBar();
+    private CutsceneState cutsceneState = CutsceneState.NOT_IN_CUTSCENE;
+
     private StyledText currentTabListFooter = StyledText.EMPTY;
     private String currentWorldName = "";
     private String currentHousingName = "";
@@ -51,6 +58,8 @@ public final class WorldStateModel extends Model {
 
     public WorldStateModel() {
         super(List.of());
+
+        Handlers.BossBar.registerBar(skipCutsceneBar);
     }
 
     private WorldState currentState = WorldState.NOT_CONNECTED;
@@ -82,6 +91,7 @@ public final class WorldStateModel extends Model {
         inStream = false;
         WynntilsMod.postEvent(new StreamModeEvent(inStream));
 
+        cutsceneEnded();
         WorldState oldState = currentState;
         // Switch state before sending event
         currentState = newState;
@@ -195,6 +205,23 @@ public final class WorldStateModel extends Model {
             return true;
         }
         return false;
+    }
+
+    public void cutsceneStarted(boolean groupCutscene) {
+        if (cutsceneState == CutsceneState.NOT_IN_CUTSCENE) {
+            cutsceneState = CutsceneState.IN_CUTSCENE;
+
+            CutsceneStartedEvent event = new CutsceneStartedEvent(groupCutscene);
+            WynntilsMod.postEvent(event);
+
+            if (event.isCanceled()) {
+                cutsceneState = CutsceneState.SKIPPED_CUTSCENE;
+            }
+        }
+    }
+
+    public void cutsceneEnded() {
+        cutsceneState = CutsceneState.NOT_IN_CUTSCENE;
     }
 
     public void onCharacterSelection() {
