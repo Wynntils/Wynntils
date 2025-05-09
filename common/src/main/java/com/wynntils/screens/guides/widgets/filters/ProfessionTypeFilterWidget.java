@@ -30,7 +30,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class ProfessionTypeFilterWidget extends GuideFilterWidget {
     private final List<ProfessionTypeButton> professionTypeButtons = new ArrayList<>();
-    private final Map<ProfessionType, ProfessionStatProvider> professionProviderMap = new HashMap<>();
+    private Map<ProfessionType, ProfessionStatProvider> professionProviderMap;
 
     public ProfessionTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
         super(x, y, 160, 36, guideScreen);
@@ -51,8 +51,6 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                 x + 64, y + 20, ProfessionType.WEAPONSMITHING, Texture.WEAPONSMITHING_FILTER_ICON, searchQuery));
         professionTypeButtons.add(new ProfessionTypeButton(
                 x + 96, y + 20, ProfessionType.WOODWORKING, Texture.WOODWORKING_FILTER_ICON, searchQuery));
-
-        populateMap();
     }
 
     @Override
@@ -94,10 +92,8 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
 
     @Override
     public void getProvider() {
-        // populateMap is used instead for this widget
-    }
+        professionProviderMap = new HashMap<>();
 
-    private void populateMap() {
         Services.ItemFilter.getItemStatProviders().stream()
                 .filter(statProvider -> statProvider instanceof ProfessionStatProvider)
                 .map(statProvider -> (ProfessionStatProvider) statProvider)
