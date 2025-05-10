@@ -11,7 +11,7 @@ import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
-import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.combat.CombatModel;
 import com.wynntils.models.combat.label.DamageLabelParser;
 import com.wynntils.models.combat.label.KillLabelParser;
@@ -109,6 +109,35 @@ public class TestRegex {
     }
 
     @Test
+    public void AccountModel_SILVERBULL_PATTERN() {
+        PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_PATTERN");
+        p.shouldMatch("§7Subscription: §c✖ Inactive");
+        p.shouldMatch("§7Subscription: §a✔ Active");
+    }
+
+    @Test
+    public void AccountModel_SILVERBULL_DURATION_PATTERN() {
+        PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_DURATION_PATTERN");
+        p.shouldMatch("§7Expiration: §f1 week 5 days");
+        p.shouldMatch("§7Expiration: §f5 days");
+        p.shouldMatch("§7Expiration: §f1 week");
+        p.shouldMatch("§7Expiration: §f2 days 12 hours");
+    }
+
+    @Test
+    public void AccountModel_VETERAN_PATTERN() {
+        PatternTester p = new PatternTester(AccountModel.class, "VETERAN_PATTERN");
+        // Champion
+        p.shouldMatch("§7Rank: §6Vet");
+        // Hero
+        p.shouldMatch("§7Rank: §dVet");
+        // VIP+
+        p.shouldMatch("§7Rank: §bVet");
+        // VIP
+        p.shouldMatch("§7Rank: §aVet");
+    }
+
+    @Test
     public void ArchetypeAbilitiesAnnotator_ARCHETYPE_NAME() {
         PatternTester p = new PatternTester(ArchetypeAbilitiesAnnotator.class, "ARCHETYPE_NAME");
         p.shouldMatch("§#eb3dfeff§lSharpshooter Archetype");
@@ -157,35 +186,6 @@ public class TestRegex {
         p.shouldMatch("§6 - §a✔ §f24§7²");
         p.shouldMatch("§6 - §a✔ §f648§7²");
         p.shouldMatch("§6 - §c✖ §f24§7²");
-    }
-
-    @Test
-    public void CharacterModel_SILVERBULL_PATTERN() {
-        PatternTester p = new PatternTester(CharacterModel.class, "SILVERBULL_PATTERN");
-        p.shouldMatch("§7Subscription: §c✖ Inactive");
-        p.shouldMatch("§7Subscription: §a✔ Active");
-    }
-
-    @Test
-    public void CharacterModel_SILVERBULL_DURATION_PATTERN() {
-        PatternTester p = new PatternTester(CharacterModel.class, "SILVERBULL_DURATION_PATTERN");
-        p.shouldMatch("§7Expiration: §f1 week 5 days");
-        p.shouldMatch("§7Expiration: §f5 days");
-        p.shouldMatch("§7Expiration: §f1 week");
-        p.shouldMatch("§7Expiration: §f2 days 12 hours");
-    }
-
-    @Test
-    public void CharacterModel_VETERAN_PATTERN() {
-        PatternTester p = new PatternTester(CharacterModel.class, "VETERAN_PATTERN");
-        // Champion
-        p.shouldMatch("§7Rank: §6Vet");
-        // Hero
-        p.shouldMatch("§7Rank: §dVet");
-        // VIP+
-        p.shouldMatch("§7Rank: §bVet");
-        // VIP
-        p.shouldMatch("§7Rank: §aVet");
     }
 
     @Test
@@ -693,6 +693,7 @@ public class TestRegex {
     @Test
     public void RecipientType_PRIVATE_foregroundpattern() {
         PatternTester p = new PatternTester(RecipientType.PRIVATE, "foregroundPattern");
+        p.shouldMatch("§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE 42nao \uE003 Soulbound: §ftest");
         p.shouldMatch(
                 "§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §#ffe600ff§obol§6 \uE003 §#ffe600ff§obol§r§#ffe600ff:§6 §ftest");
         p.shouldMatch(

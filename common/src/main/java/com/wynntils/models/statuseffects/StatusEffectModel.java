@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.statuseffects;
@@ -31,7 +31,7 @@ public final class StatusEffectModel extends Model {
      * This is because the 17% in Frenzy (and certain other buffs) can change, but the static scroll buffs cannot.
      * <p>
      *
-     * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
+     * <p>Originally taken from: <a href="https://github.com/Wynntils/wynntils-legacy/pull/615">Legacy</a>
      */
     /*
      * current regex:

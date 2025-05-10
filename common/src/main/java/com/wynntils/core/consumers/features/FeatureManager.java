@@ -150,6 +150,7 @@ import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
+import com.wynntils.features.utilities.AutoSkipCutscenesFeature;
 import com.wynntils.features.utilities.CharacterSelectionUtilitiesFeature;
 import com.wynntils.features.utilities.FixCrosshairPositionFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
@@ -379,6 +380,7 @@ public final class FeatureManager extends Manager {
 
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
+        registerFeature(new AutoSkipCutscenesFeature());
         registerFeature(new CharacterSelectionUtilitiesFeature());
         registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GammabrightFeature());

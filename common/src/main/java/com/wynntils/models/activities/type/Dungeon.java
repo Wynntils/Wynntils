@@ -1,8 +1,8 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.dungeon.type;
+package com.wynntils.models.activities.type;
 
 import com.wynntils.utils.EnumUtils;
 import java.util.Arrays;
@@ -69,6 +69,9 @@ public enum Dungeon {
 
     @Override
     public String toString() {
-        return "Dungeon{" + "name='" + name + '\'' + ", removed=" + removed + '}';
+        return "Dungeon{" + "name='"
+                + name + '\'' + ", removed="
+                + removed + ", corruptedRemoved="
+                + corruptedRemoved + '}';
     }
 }

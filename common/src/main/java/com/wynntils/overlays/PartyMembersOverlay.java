@@ -238,6 +238,22 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
                     healthTexture.getTextureY2(),
                     (float) healthProgress);
 
+            if (healthProgress > 1) {
+                BufferedRenderUtils.drawProgressBar(
+                        poseStack,
+                        bufferSource,
+                        Texture.HEALTH_BAR_OVERFLOW,
+                        0,
+                        0,
+                        81 * 0.85f,
+                        healthTexture.getHeight() * 0.85f,
+                        0,
+                        healthTexture.getTextureY1(),
+                        81,
+                        healthTexture.getTextureY2(),
+                        (float) healthProgress - 1f);
+            }
+
             poseStack.translate(0, healthTexture.getHeight() * 0.85f, 0);
 
             // mana

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
 
-public class ShinyModel extends Model {
+public final class ShinyModel extends Model {
     private Map<String, ShinyStatType> shinyStatTypes = new HashMap<>();
 
     public ShinyModel() {

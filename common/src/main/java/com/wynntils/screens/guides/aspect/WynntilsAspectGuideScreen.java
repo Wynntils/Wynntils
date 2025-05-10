@@ -5,10 +5,19 @@
 package com.wynntils.screens.guides.aspect;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.screens.guides.widgets.filters.ClassTypeFilterWidget;
+import com.wynntils.screens.guides.widgets.filters.FavoriteFilterWidget;
+import com.wynntils.screens.guides.widgets.filters.RarityFilterWidget;
+import com.wynntils.screens.guides.widgets.sorts.GuideSortButton;
+import com.wynntils.screens.guides.widgets.sorts.GuideSortWidget;
+import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
@@ -43,17 +52,31 @@ public final class WynntilsAspectGuideScreen
     }
 
     @Override
+    protected void doInit() {
+        super.doInit();
+
+        if (searchWidget instanceof ItemSearchWidget itemSearchWidget) {
+            guideFilterWidgets.add(this.addRenderableWidget(
+                    new ClassTypeFilterWidget(13 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
+            guideFilterWidgets.add(this.addRenderableWidget(
+                    new RarityFilterWidget(29 + offsetX, 101 + offsetY, this, itemSearchWidget.getSearchQuery())));
+
+            guideSortWidget.setPrimarySortButton(
+                    new GuideSortButton(itemSearchWidget.getSearchQuery(), this, TierStatProvider.class));
+            guideSortWidget.setSecondarySortButton(
+                    new GuideSortButton(itemSearchWidget.getSearchQuery(), this, RarityStatProvider.class));
+        } else {
+            WynntilsMod.error("WynntilsAspectGuideScreen's SearchWidget is not an ItemSearchWidget");
+        }
+    }
+
+    @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
         renderBackgroundTexture(poseStack);
 
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.aspectGuide.name"));
-
-        renderDescription(
-                poseStack,
-                I18n.get("screens.wynntils.wynntilsGuides.guideDescription"),
-                I18n.get("screens.wynntils.wynntilsGuides.filterHelper"));
 
         renderVersion(poseStack);
 
@@ -89,6 +112,24 @@ public final class WynntilsAspectGuideScreen
                         TextShadow.NONE);
     }
 
+    // Aspects don't have levels so we don't want that sort widget
+    @Override
+    protected void addDefaultWidgets() {
+        if (searchWidget instanceof ItemSearchWidget itemSearchWidget) {
+            guideFilterWidgets.clear();
+
+            guideFilterWidgets.add(this.addRenderableWidget(new FavoriteFilterWidget(
+                    (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 24) + offsetX,
+                    61 + offsetY,
+                    this,
+                    itemSearchWidget.getSearchQuery())));
+
+            guideSortWidget = this.addRenderableWidget(new GuideSortWidget(13 + offsetX, 171 + offsetY));
+        } else {
+            WynntilsMod.error("WynntilsAspectGuideScreen's SearchWidget is not an ItemSearchWidget");
+        }
+    }
+
     @Override
     protected GuideAspectItemStackButton getButtonFromElement(int i) {
         int xOffset = (i % ELEMENTS_COLUMNS) * 20;
@@ -105,6 +146,10 @@ public final class WynntilsAspectGuideScreen
 
     protected void reloadElementsList(ItemSearchQuery searchQuery) {
         elements.addAll(Services.ItemFilter.filterAndSort(searchQuery, getAllAspectItems()));
+
+        guideFilterWidgets.forEach(filter -> filter.updateFromQuery(searchQuery));
+        if (guideSortWidget == null) return;
+        guideSortWidget.updateFromQuery(searchQuery);
     }
 
     private List<GuideAspectItemStack> getAllAspectItems() {

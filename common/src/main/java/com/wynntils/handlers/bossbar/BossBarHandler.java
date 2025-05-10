@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.bossbar;
@@ -25,7 +25,7 @@ import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.world.BossEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class BossBarHandler extends Handler {
+public final class BossBarHandler extends Handler {
     private final Map<UUID, TrackedBar> presentBars = new HashMap<>();
     private final List<TrackedBar> knownBars = new ArrayList<>();
 
@@ -58,12 +58,7 @@ public class BossBarHandler extends Handler {
                 boolean darkenScreen,
                 boolean playMusic,
                 boolean createWorldFog) {
-            Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = knownBars.stream()
-                    .flatMap(trackedBar -> trackedBar.patterns.stream().map(pattern -> new Pair<>(trackedBar, pattern)))
-                    .map(pair ->
-                            new Pair<>(pair.a(), StyledText.fromComponent(name).getMatcher(pair.b())))
-                    .filter(pair -> pair.b().matches())
-                    .findFirst();
+            Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = matchBar(name);
             if (trackedBarOpt.isEmpty()) return;
 
             TrackedBar trackedBar = trackedBarOpt.get().a();
@@ -102,6 +97,15 @@ public class BossBarHandler extends Handler {
             }
         }
 
+        private Optional<Pair<TrackedBar, Matcher>> matchBar(Component name) {
+            return knownBars.stream()
+                    .flatMap(trackedBar -> trackedBar.patterns.stream().map(pattern -> new Pair<>(trackedBar, pattern)))
+                    .map(pair ->
+                            new Pair<>(pair.a(), StyledText.fromComponent(name).getMatcher(pair.b())))
+                    .filter(pair -> pair.b().matches())
+                    .findFirst();
+        }
+
         @Override
         public void remove(UUID id) {
             handleBarUpdate(id, trackedBar -> {
@@ -120,6 +124,12 @@ public class BossBarHandler extends Handler {
 
         @Override
         public void updateName(UUID id, Component name) {
+            // Some bars like the skip cutscene bar start out as an empty component and set the name later
+            if (!presentBars.containsKey(id)) {
+                Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = matchBar(name);
+                trackedBarOpt.ifPresent(trackedBarMatcherPair -> presentBars.put(id, trackedBarMatcherPair.a()));
+            }
+
             handleBarUpdate(id, trackedBar -> {
                 StyledText nameText = StyledText.fromComponent(name);
 
