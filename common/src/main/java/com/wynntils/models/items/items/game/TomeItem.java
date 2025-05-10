@@ -10,6 +10,7 @@ import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.RerollableItemProperty;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
@@ -25,6 +26,7 @@ public class TomeItem extends GameItem
         implements GearTierItemProperty,
                 GearTypeItemProperty,
                 RerollableItemProperty,
+                LeveledItemProperty,
                 IdentifiableItemProperty<TomeInfo, TomeInstance> {
     private final TomeInfo tomeInfo;
     private final TomeInstance tomeInstance;
@@ -73,6 +75,11 @@ public class TomeItem extends GameItem
     @Override
     public List<StatType> getVariableStats() {
         return tomeInfo.variableStats().stream().map(Pair::a).toList();
+    }
+
+    @Override
+    public int getLevel() {
+        return tomeInfo.requirements().level();
     }
 
     @Override
