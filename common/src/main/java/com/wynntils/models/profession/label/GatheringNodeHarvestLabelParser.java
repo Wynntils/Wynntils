@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.profession.label;
@@ -26,6 +26,8 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
     @Override
     public GatheringNodeHarvestLabelInfo getInfo(StyledText label, Location location, Entity entity) {
         StyledText[] lines = label.split("\n");
+
+        if (lines.length == 0) return null;
 
         Matcher experienceMatcher = lines[0].getMatcher(EXPERIENCE_PATTERN);
 
