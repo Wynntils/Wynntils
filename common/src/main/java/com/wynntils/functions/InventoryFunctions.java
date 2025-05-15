@@ -322,4 +322,18 @@ public class InventoryFunctions {
             return List.of("held_cooldown", "held_cd");
         }
     }
+
+    public static class AmountOfItemsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String name = arguments.getArgument("name").getStringValue();
+            return Models.Inventory.getAmountInInventory(name);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("name", String.class, "")));
+        }
+    }
 }

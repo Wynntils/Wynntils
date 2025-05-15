@@ -494,6 +494,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
 
+        registerFunction(new InventoryFunctions.AmountOfItemsFunction());
         registerFunction(new InventoryFunctions.AccessoryDurabilityFunction());
         registerFunction(new InventoryFunctions.AllShinyStatsFunction());
         registerFunction(new InventoryFunctions.ArmorDurabilityFunction());
