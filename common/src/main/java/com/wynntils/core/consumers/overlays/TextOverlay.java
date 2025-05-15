@@ -132,11 +132,14 @@ public abstract class TextOverlay extends DynamicOverlay {
     public final boolean isRendered() {
         // If the enabled template is empty,
         // the overlay is rendered when the player is in the world.
-        if (enabledTemplate.get().isEmpty()) return isRenderedDefault();
+        String template = enabledTemplate.get();
+        if (template.isEmpty()) return isRenderedDefault();
 
         // If the enabled template is not empty,
         // the overlay is rendered when the template is true.
-        ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
+        String formattedTemplate =
+                StyledText.join("", Managers.Function.doFormatLines(template)).getString();
+        ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(formattedTemplate, Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
     }
 
