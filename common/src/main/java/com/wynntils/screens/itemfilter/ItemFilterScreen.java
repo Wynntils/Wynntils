@@ -816,7 +816,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
             tooltip = ComponentUtils.wrapTooltips(tooltip, 200);
 
             presetButtons.add(new PresetButton(
-                    Texture.ITEM_FILTER_BACKGROUND.width() - 4,
+                    Texture.ITEM_FILTER_BACKGROUND.width() - 4 + offsetX,
                     yPos,
                     StyledText.fromString(presetName),
                     (b) -> clickPreset(b, presetIndex),
