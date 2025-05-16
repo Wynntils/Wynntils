@@ -163,8 +163,6 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
             renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-            renderTooltips(guiGraphics, mouseX, mouseY);
-
             if (selectedOverlay != null) {
                 String textToRender = selectedOverlay.getTranslatedName();
 
@@ -212,6 +210,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                     && selectedOverlay.getVisibleConfigOptions().size() > CONFIGS_PER_PAGE) {
                 renderConfigScroll(poseStack);
             }
+
+            renderTooltips(guiGraphics, mouseX, mouseY);
         } else {
             renderOverlaysCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
             exitPreviewButton.render(guiGraphics, mouseX, mouseY, partialTick);
