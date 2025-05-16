@@ -155,6 +155,10 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         return Managers.Overlay.getOverlayParent(this).isEnabled();
     }
 
+    public final String getParentTranslatedName() {
+        return Managers.Overlay.getOverlayParent(this).getTranslatedName();
+    }
+
     public float getWidth() {
         return this.size.get().getWidth();
     }
