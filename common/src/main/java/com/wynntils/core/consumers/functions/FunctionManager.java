@@ -299,7 +299,8 @@ public final class FunctionManager extends Manager {
                 }
             }
         }
-        return sb.toString();
+
+        return sb.toString().replaceAll("&(#[0-9A-Fa-f]{8})", "§$1");
     }
 
     private String doEscapeFormat(char escaped) {
