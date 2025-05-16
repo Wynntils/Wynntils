@@ -285,7 +285,7 @@ public final class FunctionManager extends Manager {
     private String parseColorCodes(String toProcess) {
         // For every & symbol, check if the next symbol is a color code and if so, replace it with §
         // But don't do it if a \ precedes the &
-        String validColors = "0123456789abcdefklmnor";
+        String validColors = "0123456789abcdefklmnor#";
         StringBuilder sb = new StringBuilder(toProcess);
         for (int i = 0; i < sb.length(); i++) {
             if (sb.charAt(i) == '&') { // char == &
