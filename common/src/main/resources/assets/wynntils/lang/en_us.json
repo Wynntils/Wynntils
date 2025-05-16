@@ -2581,6 +2581,7 @@
   "screens.wynntils.overlaySelection.freeMove": "Free Move",
   "screens.wynntils.overlaySelection.freeMoveTooltip": "Freely move all of the available overlays",
   "screens.wynntils.overlaySelection.name": "Overlay Selection Screen",
+  "screens.wynntils.overlaySelection.parentDisabled": "Parent feature %s is disabled, enable it from the Wynntils settings screen to enable this overlay.",
   "screens.wynntils.overlaySelection.preview": "Preview",
   "screens.wynntils.overlaySelection.previewTooltip": "Show a preview of selected overlay",
   "screens.wynntils.overlaySelection.save": "Save",
