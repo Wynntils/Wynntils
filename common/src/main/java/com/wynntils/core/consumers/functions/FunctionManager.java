@@ -494,7 +494,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
 
-        registerFunction(new InventoryFunctions.AmountOfItemsFunction());
         registerFunction(new InventoryFunctions.AccessoryDurabilityFunction());
         registerFunction(new InventoryFunctions.AllShinyStatsFunction());
         registerFunction(new InventoryFunctions.ArmorDurabilityFunction());
@@ -504,16 +503,17 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.EmeraldBlockFunction());
         registerFunction(new InventoryFunctions.EmeraldStringFunction());
         registerFunction(new InventoryFunctions.EmeraldsFunction());
+        registerFunction(new InventoryFunctions.HeldItemCooldownFunction());
         registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
         registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
         registerFunction(new InventoryFunctions.HeldItemNameFunction());
         registerFunction(new InventoryFunctions.HeldItemShinyStatFunction());
         registerFunction(new InventoryFunctions.HeldItemTypeFunction());
-        registerFunction(new InventoryFunctions.HeldItemCooldownFunction());
         registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
         registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());
         registerFunction(new InventoryFunctions.InventoryFreeFunction());
         registerFunction(new InventoryFunctions.InventoryUsedFunction());
+        registerFunction(new InventoryFunctions.ItemCountFunction());
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
 

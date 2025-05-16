@@ -323,7 +323,7 @@ public class InventoryFunctions {
         }
     }
 
-    public static class AmountOfItemsFunction extends Function<Integer> {
+    public static class ItemCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             String name = arguments.getArgument("name").getStringValue();
@@ -334,6 +334,11 @@ public class InventoryFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("name", String.class, "")));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("item_amount");
         }
     }
 }
