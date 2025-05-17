@@ -25,7 +25,7 @@ public class LootrunBeaconCountOverlay extends TextOverlay {
             §aGreen: ";string(lootrun_beacon_count("GREEN"));"
             §cRed: ";string(lootrun_beacon_count("RED"));" (";string(lootrun_red_beacon_challenge_count);")";"
             §fWhite: ";string(lootrun_beacon_count("WHITE"));"/1";"
-            §#00f000ffRainbow: §f";string(lootrun_beacon_count("RAINBOW"));" (";string(lootrun_rainbow_beacon_count);")")}
+            §#00f000ffRainbow: ";string(lootrun_beacon_count("RAINBOW"));" (";string(lootrun_rainbow_beacon_count);")")}
             """;
 
     private static final String PREVIEW_TEMPLATE =
