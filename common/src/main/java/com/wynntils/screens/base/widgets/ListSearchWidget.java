@@ -1,19 +1,18 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.activities.widgets;
+package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
-import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 
-public class QuestBookSearchWidget extends SearchWidget {
-    public QuestBookSearchWidget(
+public class ListSearchWidget extends SearchWidget {
+    public ListSearchWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
         super(x, y, width, height, onUpdateConsumer, textboxScreen);
     }
@@ -22,14 +21,14 @@ public class QuestBookSearchWidget extends SearchWidget {
     protected void renderBackground(PoseStack poseStack) {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.CONTENT_BOOK_SEARCH.resource(),
+                Texture.LIST_SEARCH.resource(),
                 this.getX(),
                 this.getY(),
                 0,
                 this.width,
                 this.height,
-                Texture.CONTENT_BOOK_SEARCH.width(),
-                Texture.CONTENT_BOOK_SEARCH.height());
+                Texture.LIST_SEARCH.width(),
+                Texture.LIST_SEARCH.height());
     }
 
     @Override

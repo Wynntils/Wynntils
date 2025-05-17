@@ -138,6 +138,17 @@ public final class CombatXpModel extends Model {
         return new CappedValue((int) getCurrentXpAsFloat(), getXpPointsNeededToLevelUp());
     }
 
+    public int getXpPointsNeededToLevelUp() {
+        int levelIndex = Models.CharacterStats.getLevel() - 1;
+        if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
+            return Integer.MAX_VALUE;
+        }
+        if (levelIndex < 0) {
+            return 0;
+        }
+        return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
+    }
+
     private float getCurrentXpAsFloat() {
         // We calculate our level in points by seeing how far we've progress towards our
         // current XP level's max
@@ -154,17 +165,6 @@ public final class CombatXpModel extends Model {
         }
 
         return correctedProgress * this.getXpPointsNeededToLevelUp();
-    }
-
-    private int getXpPointsNeededToLevelUp() {
-        int levelIndex = Models.CharacterStats.getLevel() - 1;
-        if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
-            return Integer.MAX_VALUE;
-        }
-        if (levelIndex < 0) {
-            return 0;
-        }
-        return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
     }
 
     public TimedSet<Float> getRawXpGainInLastMinute() {
