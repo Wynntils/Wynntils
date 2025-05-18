@@ -63,7 +63,7 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
             poseStack.translate(0.0F, -0.053125F, 0.06875F);
         }
 
-        VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entitySolid(texture));
+        VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutout(texture));
         this.getParentModel().copyPropertiesTo(this.model);
         this.model.setupAnim(playerRenderState);
         this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY);
