@@ -273,9 +273,10 @@ public final class FunctionManager extends Manager {
 
         String calculatedString = doFormat(escapedTemplate);
 
-        // Turn escaped {} (`\[\` and `\]\`) back into real {}
+        // Turn escaped {}& (`\[\`, `\]\` `\&\`) back into real {}&
         calculatedString = calculatedString.replace("\\[\\", "{");
         calculatedString = calculatedString.replace("\\]\\", "}");
+        calculatedString = calculatedString.replace("\\&\\", "&");
 
         return Arrays.stream(calculatedString.split("\n"))
                 .map(StyledText::fromString)
@@ -283,23 +284,14 @@ public final class FunctionManager extends Manager {
     }
 
     private String parseColorCodes(String toProcess) {
-        // For every & symbol, check if the next symbol is a color code and if so, replace it with §
-        // But don't do it if a \ precedes the &
-        String validColors = "0123456789abcdefklmnor";
-        StringBuilder sb = new StringBuilder(toProcess);
-        for (int i = 0; i < sb.length(); i++) {
-            if (sb.charAt(i) == '&') { // char == &
-                if (i + 1 < sb.length()
-                        && validColors.contains(String.valueOf(sb.charAt(i + 1)))) { // char after is valid color
-                    if (i - 1 < 0 || sb.charAt(i - 1) != '\\') { // & is first char || char before is not \
-                        sb.setCharAt(i, '§');
-                    } else if (sb.charAt(i - 1) == '\\') { // & is preceded by \, just remove the \
-                        sb.deleteCharAt(i - 1);
-                    }
-                }
-            }
-        }
-        return sb.toString();
+        // Replace &<code> with §<code> if not escaped (e.g., &a → §a, but \&\a stays unchanged)
+        // doEscapeFormat preprocesses the string and replaces \& with \&\ so that it doesn't get replaced
+        String processed = toProcess.replaceAll("&(?<!\\\\)([0-9a-fA-Fk-oK-OrR])", "§$1");
+
+        // Replace &#AARRGGBB with §#AARRGGBB for hex colors
+        processed = processed.replaceAll("&(?<!\\\\)(#[0-9A-Fa-f]{8})", "§$1");
+
+        return processed;
     }
 
     private String doEscapeFormat(char escaped) {
@@ -313,7 +305,8 @@ public final class FunctionManager extends Manager {
             case 'L' -> EmeraldUnits.LIQUID_EMERALD.getSymbol();
             case 'M' -> "✺";
             case 'H' -> "❤";
-            default -> String.valueOf(escaped);
+            case '&' -> "\\&\\";
+            default -> '\\' + String.valueOf(escaped);
         };
     }
 

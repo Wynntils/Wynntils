@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -99,8 +99,8 @@ public class FunctionCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        () -> Component.literal(
-                                "Template calculated: \"%s\" -> [%s]".formatted(template, resultString.getString())),
+                        () -> Component.literal("Template calculated: \"%s§r\" -> [%s§r]"
+                                .formatted(template, resultString.getString())),
                         false);
 
         return 1;
