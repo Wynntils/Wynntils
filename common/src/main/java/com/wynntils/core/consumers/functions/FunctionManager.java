@@ -273,9 +273,10 @@ public final class FunctionManager extends Manager {
 
         String calculatedString = doFormat(escapedTemplate);
 
-        // Turn escaped {} (`\[\` and `\]\`) back into real {}
+        // Turn escaped {}& (`\[\`, `\]\` `\&\`) back into real {}&
         calculatedString = calculatedString.replace("\\[\\", "{");
         calculatedString = calculatedString.replace("\\]\\", "}");
+        calculatedString = calculatedString.replace("\\&\\", "&");
 
         return Arrays.stream(calculatedString.split("\n"))
                 .map(StyledText::fromString)
@@ -283,14 +284,14 @@ public final class FunctionManager extends Manager {
     }
 
     private String parseColorCodes(String toProcess) {
-        // Replace &<code> with §<code> if not preceded by a backslash (e.g., &a → §a, but \&a stays unchanged)
-        String processed = toProcess.replaceAll("(?<!\\\\)&([0-9a-fA-Fk-oK-OrR])", "§$1");
+        // Replace &<code> with §<code> if not escaped (e.g., &a → §a, but \&\a stays unchanged)
+        // doEscapeFormat preprocesses the string and replaces \& with \&\ so that it doesn't get replaced
+        String processed = toProcess.replaceAll("&(?<!\\\\)([0-9a-fA-Fk-oK-OrR])", "§$1");
 
         // Replace &#AARRGGBB with §#AARRGGBB for hex colors
-        processed = processed.replaceAll("&(#[0-9A-Fa-f]{8})", "§$1");
+        processed = processed.replaceAll("&(?<!\\\\)(#[0-9A-Fa-f]{8})", "§$1");
 
-        // Replace escaped ampersands (e.g., \&a → &a) by removing the escape
-        return processed.replaceAll("\\\\&", "&");
+        return processed;
     }
 
     private String doEscapeFormat(char escaped) {
@@ -304,7 +305,8 @@ public final class FunctionManager extends Manager {
             case 'L' -> EmeraldUnits.LIQUID_EMERALD.getSymbol();
             case 'M' -> "✺";
             case 'H' -> "❤";
-            default -> String.valueOf(escaped);
+            case '&' -> "\\&\\";
+            default -> '\\' + String.valueOf(escaped);
         };
     }
 
