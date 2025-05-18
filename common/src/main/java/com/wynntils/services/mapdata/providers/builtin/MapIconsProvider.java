@@ -41,6 +41,7 @@ public class MapIconsProvider extends BuiltInProvider {
             new BuiltInIcon("wynntils:icon:service:housing-balloon", Texture.HOUSING_BALLOON),
             new BuiltInIcon("wynntils:icon:service:identifier", Texture.ITEM_IDENTIFIER),
             new BuiltInIcon("wynntils:icon:service:merchant:armor", Texture.ARMOR_MERCHANT),
+            new BuiltInIcon("wynntils:icon:service:merchant:dungeon", Texture.DUNGEON_MERCHANT),
             new BuiltInIcon("wynntils:icon:service:merchant:dungeon-scroll", Texture.DUNGEON_SCROLL_MERCHANT),
             new BuiltInIcon("wynntils:icon:service:merchant:emerald", Texture.EMERALD_MERCHANT),
             new BuiltInIcon("wynntils:icon:service:merchant:liquid-emerald", Texture.LIQUID_MERCHANT),

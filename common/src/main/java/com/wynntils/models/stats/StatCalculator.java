@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
@@ -203,7 +203,7 @@ public final class StatCalculator {
     public static double getPerfectChance(StatPossibleValues possibleValues) {
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
-        boolean treatAsNegative = possibleValues.statType().treatAsInverted();
+        boolean treatAsNegative = possibleValues.statType().treatAsInverted() ^ possibleValues.baseValue() < 0;
 
         int allCases =
                 statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
@@ -226,7 +226,7 @@ public final class StatCalculator {
 
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
-        boolean treatAsNegative = possibleValues.statType().treatAsInverted();
+        boolean treatAsNegative = possibleValues.statType().treatAsInverted() ^ possibleValues.baseValue() < 0;
 
         // This code finds the lowest possible and highest possible rolls that achieve the correct
         // result (inclusive). Then, it calculates the chance where we can get a lower roll
@@ -246,7 +246,7 @@ public final class StatCalculator {
 
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
-        boolean treatAsNegative = possibleValues.statType().treatAsInverted();
+        boolean treatAsNegative = possibleValues.statType().treatAsInverted() ^ possibleValues.baseValue() < 0;
 
         // This code finds the lowest possible and highest possible rolls that achieve the correct
         // result (inclusive). Then, it calculates the chance where we can get a higher roll

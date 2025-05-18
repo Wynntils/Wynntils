@@ -1,13 +1,15 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.AspectItem;
@@ -51,6 +53,13 @@ public class AspectAnnotator implements GameItemAnnotator {
             return null;
         }
 
+        ItemAnnotation aspectAnnotation = Models.Aspect.fromNameAndClass(name, classType, tier);
+
+        if (aspectAnnotation != null) {
+            return aspectAnnotation;
+        }
+
+        // Unknown aspects
         char colorChar = matcher.group(1).charAt(0);
         GearTier gearTier = GearTier.fromChatFormatting(ChatFormatting.getByCode(colorChar));
 
@@ -59,6 +68,7 @@ public class AspectAnnotator implements GameItemAnnotator {
             return null;
         }
 
-        return new AspectItem(classType, gearTier, tier);
+        WynntilsMod.warn("Unknown aspect " + name.getStringWithoutFormatting());
+        return new AspectItem(new AspectInfo(name.getStringWithoutFormatting(), gearTier, classType, null, null), tier);
     }
 }

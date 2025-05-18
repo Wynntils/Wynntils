@@ -458,14 +458,16 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
         registerFunction(new CombatFunctions.BlocksAboveGroundFunction());
+        registerFunction(new CombatFunctions.FocusedMobHealthFunction());
+        registerFunction(new CombatFunctions.FocusedMobHealthPercentFunction());
+        registerFunction(new CombatFunctions.FocusedMobNameFunction());
         registerFunction(new CombatFunctions.KillsPerMinuteFunction());
         registerFunction(new CombatFunctions.LastSpellNameFunction());
         registerFunction(new CombatFunctions.LastSpellRepeatCountFunction());
         registerFunction(new CombatFunctions.TicksSinceLastSpellFunction());
-        registerFunction(new CombatFunctions.FocusedMobNameFunction());
-        registerFunction(new CombatFunctions.FocusedMobHealthFunction());
-        registerFunction(new CombatFunctions.FocusedMobHealthPercentFunction());
         registerFunction(new CombatFunctions.TimeSinceLastDamageDealtFunction());
+        registerFunction(new CombatFunctions.TimeSinceLastKillFunction());
+        registerFunction(new CombatFunctions.TotalAreaDamageFunction());
 
         registerFunction(new CombatXpFunctions.CappedLevelFunction());
         registerFunction(new CombatXpFunctions.CappedXpFunction());
@@ -501,16 +503,17 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.EmeraldBlockFunction());
         registerFunction(new InventoryFunctions.EmeraldStringFunction());
         registerFunction(new InventoryFunctions.EmeraldsFunction());
+        registerFunction(new InventoryFunctions.HeldItemCooldownFunction());
         registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
         registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
         registerFunction(new InventoryFunctions.HeldItemNameFunction());
         registerFunction(new InventoryFunctions.HeldItemShinyStatFunction());
         registerFunction(new InventoryFunctions.HeldItemTypeFunction());
-        registerFunction(new InventoryFunctions.HeldItemCooldownFunction());
         registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
         registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());
         registerFunction(new InventoryFunctions.InventoryFreeFunction());
         registerFunction(new InventoryFunctions.InventoryUsedFunction());
+        registerFunction(new InventoryFunctions.ItemCountFunction());
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
 
@@ -574,7 +577,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
 
         registerFunction(new RaidFunctions.CurrentRaidFunction());
-        registerFunction(new RaidFunctions.CurrentRaidRoomFunction());
+        registerFunction(new RaidFunctions.CurrentRaidBossCountFunction());
+        registerFunction(new RaidFunctions.CurrentRaidChallengeCountFunction());
+        registerFunction(new RaidFunctions.CurrentRaidRoomNameFunction());
         registerFunction(new RaidFunctions.CurrentRaidRoomTimeFunction());
         registerFunction(new RaidFunctions.CurrentRaidRoomDamageFunction());
         registerFunction(new RaidFunctions.CurrentRaidTimeFunction());
@@ -584,9 +589,12 @@ public final class FunctionManager extends Manager {
         registerFunction(new RaidFunctions.DryRaidsTomesFunction());
         registerFunction(new RaidFunctions.DryRaidsAspectsFunction());
         registerFunction(new RaidFunctions.RaidChallengesFunction());
+        registerFunction(new RaidFunctions.RaidHasRoomFunction());
         registerFunction(new RaidFunctions.RaidIntermissionTimeFunction());
-        registerFunction(new RaidFunctions.RaidRoomTimeFunction());
+        registerFunction(new RaidFunctions.RaidIsBossRoomFunction());
         registerFunction(new RaidFunctions.RaidRoomDamageFunction());
+        registerFunction(new RaidFunctions.RaidRoomNameFunction());
+        registerFunction(new RaidFunctions.RaidRoomTimeFunction());
         registerFunction(new RaidFunctions.RaidPersonalBestTimeFunction());
         registerFunction(new RaidFunctions.RaidTimeRemainingFunction());
 
@@ -595,12 +603,14 @@ public final class FunctionManager extends Manager {
         registerFunction(new RangedFunctions.RangedFunction());
 
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
+        registerFunction(new SpellFunctions.GuardianAngelsCountFunction());
         registerFunction(new SpellFunctions.MantleShieldCountFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
         registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
         registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
         registerFunction(new SpellFunctions.ShamanTotemStateFunction());
         registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
+        registerFunction(new SpellFunctions.ShieldTypeNameFunction());
 
         registerFunction(new SocialFunctions.FriendsFunction());
         registerFunction(new SocialFunctions.PartyMembersFunction());

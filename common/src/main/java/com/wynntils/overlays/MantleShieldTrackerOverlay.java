@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -18,7 +18,7 @@ public class MantleShieldTrackerOverlay extends TextOverlay {
     private static final String MANTLE_SYMBOL = " ⯃"; // leading space is on purpose
 
     private static final String TEMPLATE =
-            "{IF_STRING(GT(MANTLE_SHIELD_COUNT; 0); CONCAT(\"Mantle Shield: \"; REPEAT(\"%s\"; MANTLE_SHIELD_COUNT)); \"\")}"
+            "{IF_STRING(AND(GT(MANTLE_SHIELD_COUNT; 0); EQ_STR(SHIELD_TYPE;\"Mantle\")); CONCAT(\"Mantle Shield: \"; REPEAT(\"%s\"; MANTLE_SHIELD_COUNT)); \"\")}"
                     .formatted(MANTLE_SYMBOL);
 
     @Persisted

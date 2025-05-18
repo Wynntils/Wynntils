@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.LightmapEvent;
+import com.wynntils.mc.event.DimensionAmbientLightEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -25,8 +25,8 @@ public class GammabrightFeature extends Feature {
             new KeyBind("Gammabright", GLFW.GLFW_KEY_G, true, this::toggleGammaBright);
 
     @SubscribeEvent
-    public void onLightmapUpdate(LightmapEvent lightmapEvent) {
-        lightmapEvent.setCanceled(gammabrightEnabled.get());
+    public void onGetDimensionAmbientLight(DimensionAmbientLightEvent event) {
+        event.setCanceled(gammabrightEnabled.get());
     }
 
     private void toggleGammaBright() {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -11,7 +11,15 @@ import net.minecraft.network.chat.Component;
 
 public class SettingsPageTabButton extends GeneralSettingsTabButton {
     public SettingsPageTabButton(
-            int x, int y, int width, int height, Consumer<Integer> onClick, List<Component> tooltip, boolean nextPage) {
+            int x,
+            int y,
+            int width,
+            int height,
+            Consumer<Integer> onClick,
+            List<Component> tooltip,
+            boolean nextPage,
+            int offsetX,
+            int offsetY) {
         super(
                 x,
                 y,
@@ -21,6 +29,8 @@ public class SettingsPageTabButton extends GeneralSettingsTabButton {
                 tooltip,
                 Texture.TAG_RED,
                 nextPage ? Texture.NEXT : Texture.PREVIOUS,
-                OffsetDirection.UP);
+                OffsetDirection.UP,
+                offsetX,
+                offsetY);
     }
 }

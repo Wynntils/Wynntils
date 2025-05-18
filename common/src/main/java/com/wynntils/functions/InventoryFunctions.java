@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -88,7 +88,7 @@ public class InventoryFunctions {
     public static class CappedIngredientPouchSlotsFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Inventory.getIngredientPouchSlots();
+            return Models.IngredientPouch.getIngredientPouchSlots();
         }
     }
 
@@ -196,7 +196,7 @@ public class InventoryFunctions {
     public static class IngredientPouchOpenSlotsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Inventory.getIngredientPouchSlots().getRemaining();
+            return Models.IngredientPouch.getIngredientPouchSlots().getRemaining();
         }
 
         @Override
@@ -208,7 +208,7 @@ public class InventoryFunctions {
     public static class IngredientPouchUsedSlotsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Inventory.getIngredientPouchSlots().current();
+            return Models.IngredientPouch.getIngredientPouchSlots().current();
         }
 
         @Override
@@ -314,13 +314,31 @@ public class InventoryFunctions {
     public static class HeldItemCooldownFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getItemCooldownTicks(
-                    InventoryUtils.getItemInHand().getItem());
+            return Models.CharacterStats.getItemCooldownTicks(InventoryUtils.getItemInHand());
         }
 
         @Override
         protected List<String> getAliases() {
             return List.of("held_cooldown", "held_cd");
+        }
+    }
+
+    public static class ItemCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String name = arguments.getArgument("name").getStringValue();
+            return Models.Inventory.getAmountInInventory(name);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("name", String.class, "")));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("item_amount");
         }
     }
 }

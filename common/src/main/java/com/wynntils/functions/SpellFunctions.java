@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.type.ShamanTotem;
+import com.wynntils.models.abilities.type.ShieldType;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
@@ -31,6 +32,20 @@ public class SpellFunctions {
         }
     }
 
+    public static class GuardianAngelsCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            if (Models.Character.getClassType() != ClassType.ARCHER) return 0;
+
+            return Models.Shield.getShieldCharge();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("guardian_angels");
+        }
+    }
+
     public static class MantleShieldCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
@@ -42,6 +57,22 @@ public class SpellFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("mantle_shield");
+        }
+    }
+
+    public static class ShieldTypeNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            ShieldType shieldType = Models.Shield.getActiveShieldType();
+
+            if (shieldType == null) return "";
+
+            return shieldType.getName();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("shield_type");
         }
     }
 

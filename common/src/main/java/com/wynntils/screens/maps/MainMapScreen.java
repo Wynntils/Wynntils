@@ -210,11 +210,14 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
 
-        renderMap(poseStack);
+        renderMap(guiGraphics);
 
         RenderUtils.enableScissor(
-                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
-                        mapHeight);
+                guiGraphics,
+                (int) (renderX + renderedBorderXOffset),
+                (int) (renderY + renderedBorderYOffset),
+                (int) mapWidth,
+                (int) mapHeight);
 
         renderMapFeatures(poseStack, mouseX, mouseY);
 
@@ -253,7 +256,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                     CommonColors.BLACK.asInt());
         }
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
 
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 

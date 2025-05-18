@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.events;
@@ -20,7 +20,7 @@ public @interface EventThread {
 
     enum Type {
         RENDER, // The main thread a.k.a the Render thread
-        IO, // Any Netty Client IO thread
+        IO, // Any Netty Epoll Client IO thread
         WORKER, // A worker thread, from a Minecraft or Wynntils thread pool
         ANY // Any thread at all
     }

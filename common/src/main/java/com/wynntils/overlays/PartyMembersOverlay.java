@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -36,6 +36,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.EventPriority;
@@ -181,7 +182,8 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
 
         @Override
         public void render(
-                PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+                GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+            PoseStack poseStack = guiGraphics.pose();
             poseStack.pushPose();
 
             ResourceLocation skin = SkinUtils.getSkin(hadesUser.getUuid());
@@ -235,6 +237,22 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
                     81,
                     healthTexture.getTextureY2(),
                     (float) healthProgress);
+
+            if (healthProgress > 1) {
+                BufferedRenderUtils.drawProgressBar(
+                        poseStack,
+                        bufferSource,
+                        Texture.HEALTH_BAR_OVERFLOW,
+                        0,
+                        0,
+                        81 * 0.85f,
+                        healthTexture.getHeight() * 0.85f,
+                        0,
+                        healthTexture.getTextureY1(),
+                        81,
+                        healthTexture.getTextureY2(),
+                        (float) healthProgress - 1f);
+            }
 
             poseStack.translate(0, healthTexture.getHeight() * 0.85f, 0);
 

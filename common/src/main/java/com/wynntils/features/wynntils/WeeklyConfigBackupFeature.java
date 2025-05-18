@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.FileUtils;
+import com.wynntils.utils.StringUtils;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -33,6 +34,10 @@ public class WeeklyConfigBackupFeature extends Feature {
         if (currentTime - lastBackupTime >= TimeUnit.DAYS.toMillis(BACKUP_INTERVAL_DAYS)) {
             FileUtils.mkdir(BACKUPS_DIR);
 
+            File newBackupDir = WynntilsMod.getModStorageDir(
+                    "backups/" + StringUtils.formatDateTime(currentTime).replace(":", ""));
+            FileUtils.mkdir(newBackupDir);
+
             File userConfigFile = Managers.Config.getUserConfigFile();
 
             if (userConfigFile == null) {
@@ -40,8 +45,7 @@ public class WeeklyConfigBackupFeature extends Feature {
                 return;
             }
 
-            File configBackupFile =
-                    new File(BACKUPS_DIR, userConfigFile.getName() + "-backup-" + currentTime + ".json");
+            File configBackupFile = new File(newBackupDir, userConfigFile.getName());
 
             try {
                 FileUtils.copyFile(userConfigFile, configBackupFile);
@@ -59,8 +63,7 @@ public class WeeklyConfigBackupFeature extends Feature {
                 return;
             }
 
-            File storageBackupFile =
-                    new File(BACKUPS_DIR, userStorageFile.getName() + "-backup-" + currentTime + ".json");
+            File storageBackupFile = new File(newBackupDir, userStorageFile.getName());
 
             try {
                 FileUtils.copyFile(userStorageFile, storageBackupFile);

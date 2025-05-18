@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.combat;
@@ -55,6 +55,8 @@ public final class CombatModel extends Model {
     private long focusedMobExpiryTime = -1L;
 
     private long lastDamageDealtTimestamp;
+    private long lastSharedKillTimestamp;
+    private long lastSelfKillTimestamp;
 
     public CombatModel() {
         super(List.of());
@@ -62,10 +64,6 @@ public final class CombatModel extends Model {
         Handlers.BossBar.registerBar(damageBar);
         Handlers.Label.registerParser(new DamageLabelParser());
         Handlers.Label.registerParser(new KillLabelParser());
-    }
-
-    public long getLastDamageDealtTimestamp() {
-        return lastDamageDealtTimestamp;
     }
 
     @SubscribeEvent
@@ -103,6 +101,12 @@ public final class CombatModel extends Model {
             lastDamageDealtTimestamp = System.currentTimeMillis();
         } else if (event.getLabelInfo() instanceof KillLabelInfo killLabelInfo) {
             killSet.put(killLabelInfo.getKillCredit());
+
+            if (killLabelInfo.getKillCredit() == KillCreditType.SELF) {
+                lastSelfKillTimestamp = System.currentTimeMillis();
+            } else if (killLabelInfo.getKillCredit() == KillCreditType.SHARED) {
+                lastSharedKillTimestamp = System.currentTimeMillis();
+            }
         }
     }
 
@@ -123,6 +127,14 @@ public final class CombatModel extends Model {
         focusedMobExpiryTime = -1L;
         lastDamageDealtTimestamp = 0L;
         liveDamageInfo.clear();
+    }
+
+    public long getLastDamageDealtTimestamp() {
+        return lastDamageDealtTimestamp;
+    }
+
+    public long getLastKillTimestamp(boolean includeShared) {
+        return includeShared ? Math.max(lastSelfKillTimestamp, lastSharedKillTimestamp) : lastSelfKillTimestamp;
     }
 
     public String getFocusedMobName() {
@@ -160,6 +172,13 @@ public final class CombatModel extends Model {
                         .mapToLong(TimedSet.TimedEntry::getEntry)
                         .sum()
                 / (double) seconds;
+    }
+
+    public double getTotalAreaDamageOverSeconds(int seconds) {
+        return areaDamageSet.getEntries().stream()
+                .filter(timedEntry -> (System.currentTimeMillis() - timedEntry.getCreation()) <= seconds * 1000L)
+                .mapToLong(TimedSet.TimedEntry::getEntry)
+                .sum();
     }
 
     public int getKillsPerMinute(boolean includeShared) {

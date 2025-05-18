@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.trademarket;
@@ -18,11 +18,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
-import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.models.containers.containers.TradeMarketContainer;
+import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,10 +49,6 @@ public class TradeMarketQuickSearchFeature extends Feature {
             true,
             null,
             this::tryQuickSearch);
-
-    // Test in TradeMarketQuickSearchFeature_TYPE_TO_CHAT_PATTERN
-    private static final Pattern TYPE_TO_CHAT_PATTERN =
-            Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the .* or type 'cancel' to cancel:");
 
     // The TM is very peculiar...
     // 'Emerald Pouch' results in all Tiers of Pouches, to find a specific tier one needs to search only the tier.
@@ -85,31 +79,16 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     private static final int SEARCH_SLOT = 47;
     private String searchQuery;
-    private boolean inTradeMarket = false;
-    private boolean inSearchChat = false;
     private boolean openChatWhenContainerClosed = false;
     private boolean quickSearching = false;
     private boolean instantSearching = false;
 
     @SubscribeEvent
-    public void onScreenOpen(ScreenOpenedEvent.Post event) {
-        openChatWhenContainerClosed = false;
-        inTradeMarket = (Models.Container.getCurrentContainer() instanceof TradeMarketContainer);
-        if (!inTradeMarket) return;
-
-        quickSearching = false;
-        inSearchChat = false;
-    }
-
-    @SubscribeEvent
     public void onScreenClosed(ScreenClosedEvent event) {
-        if (!inSearchChat && !openChatWhenContainerClosed) return;
-
-        if (inSearchChat && event.getScreen() instanceof ChatScreen) {
+        if (Models.TradeMarket.inChatInput() && event.getScreen() instanceof ChatScreen) {
             if (autoCancel.get() && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 McUtils.sendChat("cancel");
             }
-            inSearchChat = false;
         } else if (openChatWhenContainerClosed) {
             if (quickSearching) {
                 McUtils.mc().setScreen(new ChatScreen(searchQuery));
@@ -118,32 +97,26 @@ public class TradeMarketQuickSearchFeature extends Feature {
                 McUtils.mc().setScreen(new ChatScreen(""));
             }
             openChatWhenContainerClosed = false;
-            inSearchChat = true;
         }
     }
 
     // EventPriority.HIGH so that InventoryEmeraldCountFeature does not render.
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onMenuClosed(MenuClosedEvent event) {
-        if (!inTradeMarket) return;
+        if (!Models.TradeMarket.inTradeMarket()) return;
 
-        inTradeMarket = false;
         if (instantSearching) {
             event.setCanceled(true);
             instantSearching = false;
         }
     }
 
-    // Lower priority so features such as TradeMarketPriceConversionFeature won't have the messaged be cancelled
-    @SubscribeEvent(priority = EventPriority.LOW)
+    @SubscribeEvent
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!Models.WorldState.onWorld()) return;
+        if (!Models.TradeMarket.inChatInput()) return;
 
-        StyledText styledText =
-                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
-        if (!styledText.matches(TYPE_TO_CHAT_PATTERN)) return;
-
-        if (instantSearching) {
+        if (Models.TradeMarket.getTradeMarketState() == TradeMarketState.SEARCH_CHAT_INPUT && instantSearching) {
             event.setCanceled(true);
             McUtils.sendChat(searchQuery);
             return;
@@ -156,7 +129,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
     }
 
     private void tryQuickSearch(Slot hoveredSlot) {
-        if (!inTradeMarket || hoveredSlot == null || !hoveredSlot.hasItem()) return;
+        if (!Models.TradeMarket.inTradeMarket() || hoveredSlot == null || !hoveredSlot.hasItem()) return;
 
         if (instantSearch.get() != KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             instantSearching = true;

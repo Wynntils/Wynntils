@@ -286,11 +286,14 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
 
-        renderMap(poseStack);
+        renderMap(guiGraphics);
 
         RenderUtils.enableScissor(
-                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
-                        mapHeight);
+                guiGraphics,
+                (int) (renderX + renderedBorderXOffset),
+                (int) (renderY + renderedBorderYOffset),
+                (int) mapWidth,
+                (int) mapHeight);
 
         renderTerritoryAreaPaths(poseStack);
 
@@ -310,7 +313,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         .pointerType
                         .get());
 
-        RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
 
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -511,12 +514,14 @@ public final class GuildMapScreen extends AbstractMapScreen {
         if (!(hoveredFeature instanceof TerritoryArea territoryArea)) return;
 
         poseStack.pushPose();
-        poseStack.translate(width - SCREEN_SIDE_OFFSET - 250, SCREEN_SIDE_OFFSET + 40, 101);
+        poseStack.translate(0, 0, 101);
+        int xOffset = (int) (width - SCREEN_SIDE_OFFSET - 250);
+        int yOffset = (int) (SCREEN_SIDE_OFFSET + 40);
 
         if (hybridMode && territoryArea.isTerritoryProfileOutdated()) {
-            renderTerritoryTooltipWithFakeInfo(poseStack, territoryArea);
+            renderTerritoryTooltipWithFakeInfo(poseStack, xOffset, yOffset, territoryArea);
         } else {
-            renderTerritoryTooltip(poseStack, territoryArea);
+            renderTerritoryTooltip(poseStack, xOffset, yOffset, territoryArea);
         }
 
         poseStack.popPose();
@@ -563,7 +568,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
         };
     }
 
-    private static void renderTerritoryTooltip(PoseStack poseStack, TerritoryArea territoryArea) {
+    private static void renderTerritoryTooltip(
+            PoseStack poseStack, int xOffset, int yOffset, TerritoryArea territoryArea) {
         Optional<TerritoryInfo> territoryInfoOpt = territoryArea.getTerritoryInfo();
 
         if (territoryInfoOpt.isEmpty()) {
@@ -583,18 +589,21 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         * 10
                 + (territoryInfo.isHeadquarters() ? 20 : 0);
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
-                0,
-                Texture.MAP_INFO_TOOLTIP_TOP.height(),
+                xOffset,
+                Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
                 textureWidth,
                 centerHeight,
                 textureWidth,
                 Texture.MAP_INFO_TOOLTIP_CENTER.height());
         RenderUtils.drawTexturedRect(
-                poseStack, Texture.MAP_INFO_NAME_BOX, 0, Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight);
+                poseStack,
+                Texture.MAP_INFO_NAME_BOX,
+                xOffset,
+                Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset);
 
         // guild
         FontRenderer.getInstance()
@@ -602,14 +611,14 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         poseStack,
                         StyledText.fromString(
                                 "%s [%s]".formatted(territoryInfo.getGuildName(), territoryInfo.getGuildPrefix())),
-                        10,
-                        10,
+                        10 + xOffset,
+                        10 + yOffset,
                         CommonColors.MAGENTA,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
 
-        float renderYOffset = 20;
+        float renderYOffset = 20 + yOffset;
 
         for (GuildResource value : GuildResource.values()) {
             int generation = territoryInfo.getGeneration(value);
@@ -623,7 +632,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         .renderText(
                                 poseStack,
                                 formattedGenerated,
-                                10,
+                                10 + xOffset,
                                 10 + renderYOffset,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
@@ -640,7 +649,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         .renderText(
                                 poseStack,
                                 formattedStored,
-                                10,
+                                10 + xOffset,
                                 10 + renderYOffset,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
@@ -665,7 +674,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 .renderText(
                         poseStack,
                         treasury,
-                        10,
+                        10 + xOffset,
                         10 + renderYOffset,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -676,7 +685,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 .renderText(
                         poseStack,
                         defences,
-                        10,
+                        10 + xOffset,
                         10 + renderYOffset,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -689,7 +698,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromString("Guild Headquarters"),
-                            10,
+                            10 + xOffset,
                             10 + renderYOffset,
                             CommonColors.RED,
                             HorizontalAlignment.LEFT,
@@ -706,7 +715,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 .renderText(
                         poseStack,
                         StyledText.fromString(ChatFormatting.GRAY + "Time Held: " + timeHeldString),
-                        10,
+                        10 + xOffset,
                         10 + renderYOffset,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -718,10 +727,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(territoryProfile.getName()),
-                        7,
-                        textureWidth,
-                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight,
-                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + Texture.MAP_INFO_NAME_BOX.height(),
+                        7 + xOffset,
+                        textureWidth + xOffset,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height()
+                                + centerHeight
+                                + Texture.MAP_INFO_NAME_BOX.height()
+                                + yOffset,
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -729,25 +741,29 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         TextShadow.OUTLINE);
     }
 
-    private static void renderTerritoryTooltipWithFakeInfo(PoseStack poseStack, TerritoryArea territoryArea) {
+    private static void renderTerritoryTooltipWithFakeInfo(
+            PoseStack poseStack, int xOffset, int yOffset, TerritoryArea territoryArea) {
         final TerritoryProfile territoryProfile = territoryArea.getTerritoryProfile();
 
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
         final float centerHeight = 35;
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
-                0,
-                Texture.MAP_INFO_TOOLTIP_TOP.height(),
+                xOffset,
+                Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
                 textureWidth,
                 centerHeight,
                 textureWidth,
                 Texture.MAP_INFO_TOOLTIP_CENTER.height());
         RenderUtils.drawTexturedRect(
-                poseStack, Texture.MAP_INFO_NAME_BOX, 0, Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight);
+                poseStack,
+                Texture.MAP_INFO_NAME_BOX,
+                xOffset,
+                Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset);
 
         // guild
         FontRenderer.getInstance()
@@ -755,8 +771,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         poseStack,
                         StyledText.fromString(
                                 "%s [%s]".formatted(territoryProfile.getGuild(), territoryProfile.getGuildPrefix())),
-                        10,
-                        10,
+                        10 + xOffset,
+                        10 + yOffset,
                         CommonColors.MAGENTA,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -767,8 +783,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         poseStack,
                         StyledText.fromComponent(
                                 Component.translatable("screens.wynntils.guildMap.hybridMode.noAdvancementData")),
-                        10,
-                        30,
+                        10 + xOffset,
+                        30 + yOffset,
                         CommonColors.LIGHT_GRAY,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -779,10 +795,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(territoryProfile.getName()),
-                        7,
-                        textureWidth,
-                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight,
-                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + Texture.MAP_INFO_NAME_BOX.height(),
+                        7 + xOffset,
+                        textureWidth + xOffset,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height()
+                                + centerHeight
+                                + Texture.MAP_INFO_NAME_BOX.height()
+                                + yOffset,
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
