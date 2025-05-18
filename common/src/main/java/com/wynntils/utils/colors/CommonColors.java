@@ -27,8 +27,10 @@ public final class CommonColors {
     public static final CustomColor WHITE = CustomColor.fromInt(0xffffff);
 
     // Wynncraft's custom effects done via resourcepack shaders
-    public static final CustomColor RAINBOW = CustomColor.fromInt(0x00f000);
-    public static final CustomColor GRADIENT = CustomColor.fromInt(0x00f004);
-    public static final CustomColor FADE = CustomColor.fromInt(0x00f008);
-    public static final CustomColor BLINK = CustomColor.fromInt(0x00f00c);
+    public static final CustomColor RAINBOW = CustomColor.fromInt(0x00f000); // Animated rainbow
+    public static final CustomColor GRADIENT =
+            CustomColor.fromInt(0x00f004); // Animated gradient from #f56217 to #0b486b
+    public static final CustomColor FADE = CustomColor.fromInt(0x00f008); // Smooth animated fade from #5af082 to black
+    public static final CustomColor BLINK =
+            CustomColor.fromInt(0x00f00c); // Animated blinking between #e63232 and black
 }
