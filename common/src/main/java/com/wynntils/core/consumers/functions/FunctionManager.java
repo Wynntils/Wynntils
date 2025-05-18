@@ -283,24 +283,14 @@ public final class FunctionManager extends Manager {
     }
 
     private String parseColorCodes(String toProcess) {
-        // For every & symbol, check if the next symbol is a color code and if so, replace it with §
-        // But don't do it if a \ precedes the &
-        String validColors = "0123456789abcdefklmnor";
-        StringBuilder sb = new StringBuilder(toProcess);
-        for (int i = 0; i < sb.length(); i++) {
-            if (sb.charAt(i) == '&') { // char == &
-                if (i + 1 < sb.length()
-                        && validColors.contains(String.valueOf(sb.charAt(i + 1)))) { // char after is valid color
-                    if (i - 1 < 0 || sb.charAt(i - 1) != '\\') { // & is first char || char before is not \
-                        sb.setCharAt(i, '§');
-                    } else if (sb.charAt(i - 1) == '\\') { // & is preceded by \, just remove the \
-                        sb.deleteCharAt(i - 1);
-                    }
-                }
-            }
-        }
+        // Replace &<code> with §<code> if not preceded by a backslash (e.g., &a → §a, but \&a stays unchanged)
+        String processed = toProcess.replaceAll("(?<!\\\\)&([0-9a-fA-Fk-oK-OrR])", "§$1");
 
-        return sb.toString().replaceAll("&(#[0-9A-Fa-f]{8})", "§$1");
+        // Replace &#AARRGGBB with §#AARRGGBB for hex colors
+        processed = processed.replaceAll("&(#[0-9A-Fa-f]{8})", "§$1");
+
+        // Replace escaped ampersands (e.g., \&a → &a) by removing the escape
+        return processed.replaceAll("\\\\&", "&");
     }
 
     private String doEscapeFormat(char escaped) {
