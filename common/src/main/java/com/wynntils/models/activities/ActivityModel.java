@@ -41,7 +41,6 @@ import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
@@ -139,16 +138,6 @@ public final class ActivityModel extends Model {
                 // but a change in the config will only have effect on newly placed beacons.
                 ((EntityExtension) event.getEntity()).setRendered(false);
             }
-            if (feature.autoTrackCoordinates.get()) {
-                Location spawn = new Location(McUtils.mc().level.getSharedSpawnPos());
-                ACTIVITY_MARKER_PROVIDER.setSpawnLocation(activityBeaconMarker.getActivityType(), spawn);
-
-                Location trackedLocation = getTrackedLocation();
-                if (getTrackedLocation() != null && !spawn.equals(trackedLocation)) {
-                    ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(
-                            activityBeaconMarker.getActivityType(), getTrackedLocation());
-                }
-            }
         }
     }
 
@@ -157,8 +146,8 @@ public final class ActivityModel extends Model {
         BeaconMarker beaconMarker = event.getBeaconMarker();
         if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind)) return;
 
-        ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null, null);
-        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(null, null);
+        ACTIVITY_PROVIDER.setSpawnLocation(null);
+        ACTIVITY_PROVIDER.setTrackedActivityLocation(null, null);
     }
 
     @SubscribeEvent

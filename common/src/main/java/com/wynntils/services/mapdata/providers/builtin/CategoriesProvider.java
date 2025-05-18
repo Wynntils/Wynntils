@@ -196,7 +196,7 @@ public class CategoriesProvider extends BuiltInProvider {
                                 case 2 -> TIER_2_VISIBILITY;
                                 case 3 -> TIER_3_VISIBILITY;
                                 case 4 -> TIER_4_VISIBILITY;
-                                    // This should never happen
+                                // This should never happen
                                 default -> DefaultMapAttributes.ICON_ALWAYS;
                             });
                 }

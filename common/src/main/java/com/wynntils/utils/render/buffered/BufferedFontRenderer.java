@@ -80,28 +80,30 @@ public final class BufferedFontRenderer {
         poseStack.scale(textScale, textScale, 0);
 
         switch (shadow) {
-            case NONE -> font.drawInBatch(
-                    text.getComponent(),
-                    0,
-                    0,
-                    customColor.asInt(),
-                    false,
-                    poseStack.last().pose(),
-                    bufferSource,
-                    displayMode,
-                    0,
-                    0xF000F0);
-            case NORMAL -> font.drawInBatch(
-                    text.getComponent(),
-                    0,
-                    0,
-                    customColor.asInt(),
-                    true,
-                    poseStack.last().pose(),
-                    bufferSource,
-                    displayMode,
-                    0,
-                    0xF000F0);
+            case NONE ->
+                font.drawInBatch(
+                        text.getComponent(),
+                        0,
+                        0,
+                        customColor.asInt(),
+                        false,
+                        poseStack.last().pose(),
+                        bufferSource,
+                        displayMode,
+                        0,
+                        0xF000F0);
+            case NORMAL ->
+                font.drawInBatch(
+                        text.getComponent(),
+                        0,
+                        0,
+                        customColor.asInt(),
+                        true,
+                        poseStack.last().pose(),
+                        bufferSource,
+                        displayMode,
+                        0,
+                        0xF000F0);
             case OUTLINE -> {
                 int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
                 Component strippedComponent = text.iterate((part, changes) -> {

@@ -437,9 +437,10 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         } else {
-            RenderUtils.enableScissor((int) (getTranslationX() + 12), (int) (getTranslationY() + 15), 320, 181);
+            // FIXME
+            // RenderUtils.enableScissor((int) (getTranslationX() + 12), (int) (getTranslationY() + 15), 320, 181);
             waypointManagerWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
-            RenderUtils.disableScissor();
+            // RenderUtils.disableScissor();
         }
 
         iconButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
@@ -701,28 +702,38 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     private void sortWaypoints() {
         // Sort waypoints, ignore case
         switch (sortOrder) {
-            case ICON_ASC -> waypoints.sort(Comparator.comparing(
-                    waypoint -> waypoint.getAttributes().get().getIconId().orElse(MapIcon.NO_ICON_ID)));
-            case ICON_DESC -> waypoints.sort(Comparator.comparing(
-                    waypoint -> waypoint.getAttributes().get().getIconId().orElse(MapIcon.NO_ICON_ID),
-                    Comparator.reverseOrder()));
-            case NAME_ASC -> waypoints.sort(Comparator.comparing(
-                    waypoint -> waypoint.getAttributes().get().getLabel().get(), String.CASE_INSENSITIVE_ORDER));
-            case NAME_DESC -> waypoints.sort(Comparator.comparing(
-                    waypoint -> waypoint.getAttributes().get().getLabel().get(),
-                    String.CASE_INSENSITIVE_ORDER.reversed()));
-            case X_ASC -> waypoints.sort(
-                    Comparator.comparing(waypoint -> waypoint.getLocation().x()));
-            case X_DESC -> waypoints.sort(
-                    Comparator.comparing(waypoint -> waypoint.getLocation().x(), Comparator.reverseOrder()));
-            case Y_ASC -> waypoints.sort(
-                    Comparator.comparing(waypoint -> waypoint.getLocation().y()));
-            case Y_DESC -> waypoints.sort(
-                    Comparator.comparing(waypoint -> waypoint.getLocation().y(), Comparator.reverseOrder()));
-            case Z_ASC -> waypoints.sort(
-                    Comparator.comparing(waypoint -> waypoint.getLocation().z()));
-            case Z_DESC -> waypoints.sort(
-                    Comparator.comparing(waypoint -> waypoint.getLocation().z(), Comparator.reverseOrder()));
+            case ICON_ASC ->
+                waypoints.sort(Comparator.comparing(
+                        waypoint -> waypoint.getAttributes().get().getIconId().orElse(MapIcon.NO_ICON_ID)));
+            case ICON_DESC ->
+                waypoints.sort(Comparator.comparing(
+                        waypoint -> waypoint.getAttributes().get().getIconId().orElse(MapIcon.NO_ICON_ID),
+                        Comparator.reverseOrder()));
+            case NAME_ASC ->
+                waypoints.sort(Comparator.comparing(
+                        waypoint -> waypoint.getAttributes().get().getLabel().get(), String.CASE_INSENSITIVE_ORDER));
+            case NAME_DESC ->
+                waypoints.sort(Comparator.comparing(
+                        waypoint -> waypoint.getAttributes().get().getLabel().get(),
+                        String.CASE_INSENSITIVE_ORDER.reversed()));
+            case X_ASC ->
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().x()));
+            case X_DESC ->
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().x(), Comparator.reverseOrder()));
+            case Y_ASC ->
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().y()));
+            case Y_DESC ->
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().y(), Comparator.reverseOrder()));
+            case Z_ASC ->
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().z()));
+            case Z_DESC ->
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().z(), Comparator.reverseOrder()));
         }
     }
 
