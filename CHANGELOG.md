@@ -1,3 +1,28 @@
+## [3.0.20](https://github.com/Wynntils/Wynntils/compare/v3.0.19...v3.0.20) (2025-05-18)
+
+
+### New Features
+
+* Add item_count function [skip ci] ([#3235](https://github.com/Wynntils/Wynntils/issues/3235)) ([89671f6](https://github.com/Wynntils/Wynntils/commit/89671f607e10889fa8a32df1b420fa9f939e9bee))
+* Make Rainbow beacons rainbow in overlays [skip ci] ([#3243](https://github.com/Wynntils/Wynntils/issues/3243)) ([ddbb90c](https://github.com/Wynntils/Wynntils/commit/ddbb90ca77ba2a2716434a3717ae9e4016ff110e))
+* Support hex color codes in functions and escaping fixes ([#3239](https://github.com/Wynntils/Wynntils/issues/3239)) ([8790031](https://github.com/Wynntils/Wynntils/commit/8790031ba8b6b0c476157a5a8f782b55d063cc0e))
+
+
+### Bug Fixes
+
+* Fix and unify Enabled Templates [skip ci] ([#3236](https://github.com/Wynntils/Wynntils/issues/3236)) ([8c4828e](https://github.com/Wynntils/Wynntils/commit/8c4828ea15583ef04ca61c17d64be8c72ae20449))
+* Fix EventThread.IO message filtering [skip ci] ([#3248](https://github.com/Wynntils/Wynntils/issues/3248)) ([242450d](https://github.com/Wynntils/Wynntils/commit/242450d47ad93c74f4ed426dd0c7706c2085e6ec))
+* Fix tooltip rendering under text on overlay selection screen [skip ci] ([#3241](https://github.com/Wynntils/Wynntils/issues/3241)) ([33b7c1b](https://github.com/Wynntils/Wynntils/commit/33b7c1be1ceef398e3188915a9b47982288049c3))
+* Fix transparent cape rendering [skip ci] ([#3227](https://github.com/Wynntils/Wynntils/issues/3227)) ([66a8115](https://github.com/Wynntils/Wynntils/commit/66a811579379080219efadb10e6727d7c88f0fae))
+* Fix x position of filter buttons on item filter screen [skip ci] ([#3226](https://github.com/Wynntils/Wynntils/issues/3226)) ([5038e03](https://github.com/Wynntils/Wynntils/commit/5038e03de0b764658840a2ea904339b1e1643c08))
+* Return early if no lines in gathering node label parser [skip ci] ([#3228](https://github.com/Wynntils/Wynntils/issues/3228)) ([4739d6c](https://github.com/Wynntils/Wynntils/commit/4739d6c35fe76132f5fe36627d790d9a1e5ba5b9))
+* Revert rainbow beacon rendering change, fix task overlay not using rainbow text with name displayed [skip ci] ([#3249](https://github.com/Wynntils/Wynntils/issues/3249)) ([ef8a1e6](https://github.com/Wynntils/Wynntils/commit/ef8a1e622b61a20614a8d230fda230bd2f46cc6d))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3242](https://github.com/Wynntils/Wynntils/issues/3242)) ([b1242bc](https://github.com/Wynntils/Wynntils/commit/b1242bc70a8ba3d8db0beb1208afe02759b01f08))
+
 ## [3.0.19](https://github.com/Wynntils/Wynntils/compare/v3.0.18...v3.0.19) (2025-05-10)
 
 
@@ -18,6 +43,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#3222](https://github.com/Wynntils/Wynntils/issues/3222)) ([914a1f4](https://github.com/Wynntils/Wynntils/commit/914a1f443008fee5d1d1aed20429946e15bd94b1))
+* **release:** v3.0.19 [skip ci] ([07c0985](https://github.com/Wynntils/Wynntils/commit/07c0985bd2d02751af7a9f7cc5b23d9880b657d8))
 
 
 ### Code Refactoring
@@ -72,21 +98,4 @@
 
 * Add getters for inBuffRoom and inIntermissionRoom to RaidModel [skip ci] ([#3206](https://github.com/Wynntils/Wynntils/issues/3206)) ([52d3d92](https://github.com/Wynntils/Wynntils/commit/52d3d922274a757f253457624832bb644b41e485))
 * **release:** v3.0.16 [skip ci] ([ee0dce2](https://github.com/Wynntils/Wynntils/commit/ee0dce23cb4c7ee22e09f9fd1335f3374055ebfa))
-
-## [3.0.15](https://github.com/Wynntils/Wynntils/compare/v3.0.14...v3.0.15) (2025-04-21)
-
-
-### New Features
-
-* Add Aspect Guide [skip ci] ([#3158](https://github.com/Wynntils/Wynntils/issues/3158)) ([4802a84](https://github.com/Wynntils/Wynntils/commit/4802a849b5a7e675d2d63ba8b407a436a209137d))
-* Add Guardian Angels tracker overlay [skip ci] ([#3204](https://github.com/Wynntils/Wynntils/issues/3204)) ([f2d034e](https://github.com/Wynntils/Wynntils/commit/f2d034e125a0236d330fc05225a4e5b46c345dfa))
-* Improve WeeklyConfigBackupFeature [skip ci] ([#3205](https://github.com/Wynntils/Wynntils/issues/3205)) ([2b1fddc](https://github.com/Wynntils/Wynntils/commit/2b1fddcc91df7a1e594d77ef203f138d69bb5ca7))
-* Rework raid tracking to track specific rooms ([#3199](https://github.com/Wynntils/Wynntils/issues/3199)) ([9192d69](https://github.com/Wynntils/Wynntils/commit/9192d69c3e2f471e06c2019327e30033d1790aed))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3200](https://github.com/Wynntils/Wynntils/issues/3200)) ([8c24548](https://github.com/Wynntils/Wynntils/commit/8c245485c66772b8e292acb5e0efe42c37c4b5ce))
-* [auto-generated] Update urls.json [ci skip] ([#3201](https://github.com/Wynntils/Wynntils/issues/3201)) ([d7c9d0b](https://github.com/Wynntils/Wynntils/commit/d7c9d0b4d6c904d5d2683f525bfd85eb9e7c749c))
-* **release:** v3.0.15 [skip ci] ([1a49f22](https://github.com/Wynntils/Wynntils/commit/1a49f22dcc714f722b9d673202511edb956e1798))
 
