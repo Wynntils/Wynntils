@@ -101,7 +101,9 @@ public final class UpdateService extends Service {
                         return;
                     }
 
-                    if (!Objects.equals(updateInfo.supportedMcVersion(), SharedConstants.VERSION_STRING)) {
+                    if (!Objects.equals(
+                            updateInfo.supportedMcVersion(),
+                            SharedConstants.getCurrentVersion().getName())) {
                         future.complete(UpdateResult.INCORRECT_VERSION_RECEIVED);
                         return;
                     }
