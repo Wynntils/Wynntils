@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.events;
@@ -64,7 +64,9 @@ public class EventBusWrapper extends EventBus {
                 boolean threadOk =
                         switch (threadAnnotation.value()) {
                             case RENDER -> threadName.equals("Render thread");
-                            case IO -> threadName.startsWith("Netty Client IO #");
+                            case IO ->
+                                threadName.startsWith("Netty Epoll Client IO #")
+                                        || threadName.startsWith("Netty Client IO #");
                             case WORKER -> threadName.toLowerCase(Locale.ROOT).contains("pool");
                             case ANY -> true;
                         };
