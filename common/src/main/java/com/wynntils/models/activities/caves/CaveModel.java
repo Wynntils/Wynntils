@@ -106,7 +106,7 @@ public final class CaveModel extends Model {
                 .caves());
     }
 
-    private CaveInfo getCaveInfoFromActivity(ActivityInfo activity) {
+    public CaveInfo getCaveInfoFromActivity(ActivityInfo activity) {
         return new CaveInfo(
                 activity.name(),
                 activity.status(),

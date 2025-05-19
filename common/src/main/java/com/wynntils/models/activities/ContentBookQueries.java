@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities;
@@ -66,7 +66,6 @@ public class ContentBookQueries {
     protected void queryContentBook(
             ActivityType activityType,
             BiConsumer<List<ActivityInfo>, List<StyledText>> processResult,
-            boolean showUpdates,
             boolean firstPageOnly) {
         List<ActivityInfo> newActivity = new ArrayList<>();
         List<StyledText> progress = new ArrayList<>();
@@ -75,7 +74,7 @@ public class ContentBookQueries {
                         "Content Book Query for " + activityType.getDisplayName())
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book: " + msg);
-                    if (showUpdates && stateMessageContainer != null) {
+                    if (stateMessageContainer != null) {
                         Managers.Notification.editMessage(
                                 stateMessageContainer,
                                 StyledText.fromComponent(Component.literal(
@@ -84,11 +83,9 @@ public class ContentBookQueries {
                     }
                 })
                 .execute(() -> {
-                    if (showUpdates) {
-                        stateMessageContainer = Managers.Notification.queueMessage(
-                                Component.literal("Loading " + activityType.getGroupName() + " from content book...")
-                                        .withStyle(ChatFormatting.YELLOW));
-                    }
+                    stateMessageContainer = Managers.Notification.queueMessage(
+                            Component.literal("Loading " + activityType.getGroupName() + " from content book...")
+                                    .withStyle(ChatFormatting.YELLOW));
                 })
 
                 // Open content book
@@ -182,13 +179,11 @@ public class ContentBookQueries {
                 // Finally signal we're done
                 .execute(() -> processResult.accept(newActivity, progress))
                 .execute(() -> {
-                    if (showUpdates) {
-                        Managers.Notification.editMessage(
-                                stateMessageContainer,
-                                StyledText.fromComponent(Component.literal(
-                                                "Loaded " + activityType.getGroupName() + " from content book")
-                                        .withStyle(ChatFormatting.GREEN)));
-                    }
+                    Managers.Notification.editMessage(
+                            stateMessageContainer,
+                            StyledText.fromComponent(
+                                    Component.literal("Loaded " + activityType.getGroupName() + " from content book")
+                                            .withStyle(ChatFormatting.GREEN)));
                 })
                 .build();
 

@@ -73,8 +73,6 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
                         this.getY(),
                         this.getY() + this.height,
                         this.width - 2,
-                        offsetX,
-                        offsetY,
                         getTextColor(),
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
