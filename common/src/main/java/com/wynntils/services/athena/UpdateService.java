@@ -57,7 +57,6 @@ public final class UpdateService extends Service {
     }
 
     private String getStream() {
-        // TODO: Replace with config option for the user to select their preferred stream.
         String version = WynntilsMod.getVersion();
         // Format: v0.0.3-pre-alpha.103+MC-1.19.4 -> pre-alpha
         // Format: v0.0.3-alpha.103+MC-1.19.4 -> alpha
