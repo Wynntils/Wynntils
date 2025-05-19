@@ -28,9 +28,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public final class UpdateService extends Service {
-    private static final String WYNTILLS_UPDATE_FOLDER = "updates";
+    private static final String WYNNTILS_UPDATE_FOLDER = "updates";
     private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
-    private static final File UPDATES_FOLDER = WynntilsMod.getModStorageDir(WYNTILLS_UPDATE_FOLDER);
+    private static final File UPDATES_FOLDER = WynntilsMod.getModStorageDir(WYNNTILS_UPDATE_FOLDER);
 
     public UpdateService() {
         super(List.of());
