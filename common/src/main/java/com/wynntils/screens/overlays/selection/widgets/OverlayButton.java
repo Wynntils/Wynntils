@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection.widgets;
@@ -130,17 +130,31 @@ public class OverlayButton extends WynntilsButton {
             isHovered = false;
         }
 
-        // Display tooltip, if ID is not -1 then it should be an info box/custom bar
-        if (isHovered && overlayId != -1) {
-            if (editInput.visible) {
+        // Display tooltip, if the parent feature is disabled then display that.
+        // Otherwise, if ID is not -1 then it should be an info box/custom bar
+        if (isHovered) {
+            if (!overlay.isParentEnabled()) {
                 McUtils.mc()
                         .screen
-                        .setTooltipForNextRenderPass(Lists.transform(SAVE_NAME_TOOLTIP, Component::getVisualOrderText));
-            } else {
-                McUtils.mc()
-                        .screen
-                        .setTooltipForNextRenderPass(
-                                Lists.transform(descriptionTooltip, Component::getVisualOrderText));
+                        .setTooltipForNextRenderPass(Lists.transform(
+                                ComponentUtils.wrapTooltips(
+                                        List.of(Component.translatable(
+                                                "screens.wynntils.overlaySelection.parentDisabled",
+                                                overlay.getParentTranslatedName())),
+                                        200),
+                                Component::getVisualOrderText));
+            } else if (overlayId != -1) {
+                if (editInput.visible) {
+                    McUtils.mc()
+                            .screen
+                            .setTooltipForNextRenderPass(
+                                    Lists.transform(SAVE_NAME_TOOLTIP, Component::getVisualOrderText));
+                } else {
+                    McUtils.mc()
+                            .screen
+                            .setTooltipForNextRenderPass(
+                                    Lists.transform(descriptionTooltip, Component::getVisualOrderText));
+                }
             }
         }
     }
