@@ -375,6 +375,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         if (McUtils.mc().level == null) {
             renderPanorama(guiGraphics, partialTick);
         }
+
+        // Don't render the blurred background
     }
 
     @Override
