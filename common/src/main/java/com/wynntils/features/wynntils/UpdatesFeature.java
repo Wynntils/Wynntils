@@ -13,12 +13,10 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.services.athena.UpdateService;
+import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.mc.McUtils;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
-import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -35,27 +33,20 @@ public class UpdatesFeature extends Feature {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (!event.isFirstJoinWorld()) return;
+        if (Services.Update.hasPromptedUpdate()
+                || Services.Update.ignoredUpdate
+                        .get()
+                        .equals(Services.Update.getModUpdateInfo().version())) return;
 
         CompletableFuture.runAsync(() -> Services.Update.getLatestBuild()
                 .whenCompleteAsync((updateInfo, throwable) -> Managers.TickScheduler.scheduleNextTick(() -> {
-                    if (updateInfo.version() == null) {
+                    if (updateInfo == null) {
                         WynntilsMod.info(
                                 "Couldn't fetch latest version, not attempting update reminder or auto-update.");
                         return;
                     }
 
-                    if (Objects.equals(updateInfo.version(), WynntilsMod.getVersion())) {
-                        WynntilsMod.info("Mod is on latest version, not attempting update reminder or auto-update.");
-                        return;
-                    }
-
-                    if (!Objects.equals(
-                            updateInfo.supportedMcVersion(),
-                            SharedConstants.getCurrentVersion().getName())) {
-                        WynntilsMod.info(
-                                "Athena sent an update for a different MC version, not attempting update reminder or auto-update.");
-                        return;
-                    }
+                    Services.Update.setHasPromptedUpdate(true);
 
                     if (updateReminder.get()) {
                         if (WynntilsMod.isDevelopmentEnvironment()) {
@@ -77,7 +68,7 @@ public class UpdatesFeature extends Feature {
                         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.updates.updating")
                                 .withStyle(ChatFormatting.YELLOW));
 
-                        CompletableFuture<UpdateService.UpdateResult> completableFuture = Services.Update.tryUpdate();
+                        CompletableFuture<UpdateResult> completableFuture = Services.Update.tryUpdate();
 
                         completableFuture.whenCompleteAsync(
                                 (result, t) -> McUtils.sendMessageToClient(result.getMessage()));
