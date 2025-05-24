@@ -475,7 +475,13 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         scrollOverlays(overlayScrollOffset);
     }
 
-    public void setSelectedOverlay(Overlay selectedOverlay) {
+    public void selectOverlay(Overlay selectedOverlay) {
+        configScrollOffset = 0;
+
+        setSelectedOverlay(selectedOverlay);
+    }
+
+    private void setSelectedOverlay(Overlay selectedOverlay) {
         if (this.selectedOverlay != null) {
             for (OverlayButton overlayButton : overlays) {
                 if (overlayButton.getOverlay() == this.selectedOverlay) {
@@ -486,8 +492,6 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         }
 
         this.selectedOverlay = selectedOverlay;
-
-        configScrollOffset = 0;
 
         populateConfigs();
         addOptionButtons();
