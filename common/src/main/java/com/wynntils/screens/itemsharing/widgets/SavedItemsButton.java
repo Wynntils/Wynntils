@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemsharing.widgets;
@@ -8,8 +8,8 @@ import com.google.common.collect.Lists;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,8 +29,8 @@ public class SavedItemsButton extends WynntilsButton {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawHoverableTexturedRect(
-                guiGraphics.pose(), buttonTexture, this.getX(), this.getY(), this.isHovered);
+        BufferedRenderUtils.drawHoverableTexturedRect(
+                guiGraphics.pose(), guiGraphics.bufferSource, buttonTexture, this.getX(), this.getY(), this.isHovered);
 
         if (this.isHovered) {
             McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
