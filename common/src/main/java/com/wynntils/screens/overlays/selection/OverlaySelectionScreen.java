@@ -475,7 +475,13 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         scrollOverlays(overlayScrollOffset);
     }
 
-    public void setSelectedOverlay(Overlay selectedOverlay) {
+    public void selectOverlay(Overlay selectedOverlay) {
+        configScrollOffset = 0;
+
+        setSelectedOverlay(selectedOverlay);
+    }
+
+    private void setSelectedOverlay(Overlay selectedOverlay) {
         if (this.selectedOverlay != null) {
             for (OverlayButton overlayButton : overlays) {
                 if (overlayButton.getOverlay() == this.selectedOverlay) {
@@ -486,8 +492,6 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         }
 
         this.selectedOverlay = selectedOverlay;
-
-        configScrollOffset = 0;
 
         populateConfigs();
         addOptionButtons();
@@ -582,6 +586,15 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             renderY += 43;
         }
 
+        int overlayPositionRenderY = renderY;
+        selectedOverlay.getConfigOptionFromString("position").ifPresent(config -> {
+            configs.add(new ConfigTile(148 + offsetX, overlayPositionRenderY, 188, 41, this, config, selectedOverlay));
+        });
+        int overlaySizeRenderY = overlayPositionRenderY + 43;
+        selectedOverlay.getConfigOptionFromString("size").ifPresent(config -> {
+            configs.add(new ConfigTile(148 + offsetX, overlaySizeRenderY, 188, 41, this, config, selectedOverlay));
+        });
+
         scrollConfigs(configScrollOffset);
     }
 
@@ -635,7 +648,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     private int getMaxConfigScrollOffset() {
-        return (selectedOverlay.getVisibleConfigOptions().size() - CONFIGS_PER_PAGE) * 43 + 6;
+        return (configs.size() - CONFIGS_PER_PAGE) * 43 + 6;
     }
 
     private void addInfoBox() {
