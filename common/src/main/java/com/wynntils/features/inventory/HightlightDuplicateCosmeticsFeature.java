@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.inventory;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -93,7 +94,7 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Pre e) {
+    public void onRenderSlot(SlotRenderEvent.CountPre e) {
         if (scrapMenu == null) return;
 
         // Don't highlight the cosmetics in the selected slots
@@ -106,7 +107,9 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
             if ((isSelected && condition != HighlightCondition.HOVER)
                     || (isHovered && condition != HighlightCondition.SELECTED)) {
                 CustomColor color = isSelected ? selectedHighlightColor.get() : hoveredHighlightColor.get();
-                RenderUtils.drawArc(e.getPoseStack(), color, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
+                RenderSystem.enableDepthTest();
+                RenderUtils.drawArc(e.getPoseStack(), color, e.getSlot().x, e.getSlot().y, 100, 1f, 6, 8);
+                RenderSystem.disableDepthTest();
             }
         }
     }
