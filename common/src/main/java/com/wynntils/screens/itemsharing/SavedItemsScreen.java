@@ -23,6 +23,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -164,9 +165,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawTexturedRect(poseStack, Texture.ITEM_RECORD, this.leftPos, this.topPos);
+        BufferedRenderUtils.drawTexturedRect(
+                guiGraphics.pose(), guiGraphics.bufferSource, Texture.ITEM_RECORD, this.leftPos, this.topPos);
     }
 
     @Override
@@ -223,14 +223,15 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         }
 
         for (int selectedSlot : selectedSlots) {
-            RenderUtils.drawRectBorders(
+            BufferedRenderUtils.drawRectBorders(
                     poseStack,
+                    guiGraphics.bufferSource,
                     CommonColors.WHITE,
                     this.leftPos + this.getMenu().getSlot(selectedSlot).x,
                     this.topPos + this.getMenu().getSlot(selectedSlot).y,
                     this.leftPos + this.getMenu().getSlot(selectedSlot).x + 16,
                     this.topPos + this.getMenu().getSlot(selectedSlot).y + 16,
-                    0,
+                    200,
                     1);
         }
 
