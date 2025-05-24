@@ -10,6 +10,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
@@ -492,7 +493,14 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
             SavedItem savedItem = savedItems.get(i);
 
-            ItemStack itemStack = savedItem.itemStack();
+            ItemStack itemStack;
+            // We can get an accurate itemstack for gear items as their info is in the API
+            if (savedItem.wynnItem() instanceof GearItem gearItem) {
+                itemStack = gearItem.getItemInfo().metaInfo().material().itemStack();
+            } else {
+                // Anything else we have to rely on what was stored
+                itemStack = savedItem.itemStack();
+            }
 
             itemStack = new FakeItemStack(
                     savedItem.wynnItem(), itemStack, "From " + McUtils.playerName() + "'s Item Record");

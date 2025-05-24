@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemrecord.type;
@@ -20,9 +20,12 @@ import java.lang.reflect.Type;
 import java.util.Set;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Unbreakable;
@@ -82,14 +85,22 @@ public record SavedItem(String base64, Set<String> categories, ItemStack itemSta
             ItemStackInfo itemStackInfo = context.deserialize(jsonObject.get("itemStackInfo"), ItemStackInfo.class);
 
             // Create itemStack from itemStackInfo
-            ItemStack itemStack = new ItemStack(Item.byId(itemStackInfo.itemId), 1);
+            ItemStack itemStack;
+            // Older items did not save with the item registry name.
+            if (itemStackInfo.registeredItemName() != null) {
+                itemStack = new ItemStack(
+                        BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(itemStackInfo.registeredItemName())), 1);
+            } else {
+                itemStack = new ItemStack(Item.byId(itemStackInfo.itemId()), 1);
+            }
             DataComponentMap.Builder componentsBuilder = DataComponentMap.builder()
-                    .set(DataComponents.DAMAGE, itemStackInfo.damage)
+                    .set(DataComponents.CUSTOM_MODEL_DATA, itemStackInfo.customModelData())
+                    .set(DataComponents.DAMAGE, itemStackInfo.damage())
                     .set(DataComponents.UNBREAKABLE, new Unbreakable(false))
                     .set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
 
-            if (itemStackInfo.color != -1) {
-                componentsBuilder.set(DataComponents.DYED_COLOR, new DyedItemColor(itemStackInfo.color, false));
+            if (itemStackInfo.color() != -1) {
+                componentsBuilder.set(DataComponents.DYED_COLOR, new DyedItemColor(itemStackInfo.color(), false));
             }
 
             itemStack.applyComponents(componentsBuilder.build());
@@ -123,12 +134,15 @@ public record SavedItem(String base64, Set<String> categories, ItemStack itemSta
                     .getOrDefault(DataComponents.DYED_COLOR, new DyedItemColor(-1, false))
                     .rgb();
 
+            // Normal gear uses custom model data
+            CustomModelData customModelData =
+                    components.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.EMPTY);
+            // Crafteds use damage
             int damage = components.getOrDefault(DataComponents.DAMAGE, 0);
-            boolean unbreakable = components.has(DataComponents.UNBREAKABLE);
 
             // Note: HideFlags is kept as a boolean for compatibility with the old system
-            ItemStackInfo itemStackInfo =
-                    new ItemStackInfo(Item.getId(itemStack.getItem()), damage, unbreakable, color);
+            ItemStackInfo itemStackInfo = new ItemStackInfo(
+                    itemStack.getItem().toString(), customModelData, Item.getId(itemStack.getItem()), damage, color);
 
             // Add itemStackInfo to jsonObject
             jsonObject.add("itemStackInfo", context.serialize(itemStackInfo));
@@ -137,5 +151,6 @@ public record SavedItem(String base64, Set<String> categories, ItemStack itemSta
         }
     }
 
-    private record ItemStackInfo(int itemId, int damage, boolean unbreakable, int color) {}
+    private record ItemStackInfo(
+            String registeredItemName, CustomModelData customModelData, int itemId, int damage, int color) {}
 }
