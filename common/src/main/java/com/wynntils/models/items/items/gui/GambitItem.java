@@ -6,8 +6,6 @@ package com.wynntils.models.items.items.gui;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CustomColor;
-
-import java.awt.Color;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
