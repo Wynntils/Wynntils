@@ -5,6 +5,8 @@
 package com.wynntils.models.items.items.gui;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.colors.CustomColor;
+
 import java.awt.Color;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -12,12 +14,12 @@ import java.util.List;
 
 public class GambitItem extends GuiItem {
     private final String name;
-    private final Color color;
+    private final CustomColor color;
     private final List<StyledText> description;
     private final int aspectPulls;
     private final int rewardPulls;
 
-    public GambitItem(String name, Color color, List<StyledText> description, int aspectPulls, int rewardPulls) {
+    public GambitItem(String name, CustomColor color, List<StyledText> description, int aspectPulls, int rewardPulls) {
         this.name = name;
         this.color = color;
         this.description = new LinkedList<>(description);
@@ -29,7 +31,7 @@ public class GambitItem extends GuiItem {
         return name;
     }
 
-    public Color getColor() {
+    public CustomColor getColor() {
         return color;
     }
 

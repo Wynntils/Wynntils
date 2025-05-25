@@ -8,8 +8,10 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.gui.GambitItem;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +28,7 @@ public final class GambitAnnotator implements GuiItemAnnotator {
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher matcher = name.getMatcher(NAME_PATTERN);
         if (!matcher.matches()) return null;
-        Color color = Color.decode(matcher.group(1));
+        CustomColor color = CustomColor.fromHexString(matcher.group(1));
         String itemName = matcher.group(2);
 
         Optional<Integer> startIndex = getRewardTitleStartLine(LoreUtils.getLore(itemStack));
@@ -61,31 +63,24 @@ public final class GambitAnnotator implements GuiItemAnnotator {
     }
 
     private List<StyledText> extractDescriptionLines(List<StyledText> lines) {
-        int start = -1;
-        for (int i = 0; i < lines.size(); i++) {
-            if (lines.get(i).trim().isEmpty()) {
-                start = i + 1; // description begins _after_ first empty line
-                break;
+        List<StyledText> description = new ArrayList<>();
+
+        boolean reachedDescription = false;
+        for (StyledText line : lines) {
+            if (line.trim().isEmpty()) {
+                if (!reachedDescription) {
+                    reachedDescription = true;
+                    continue;
+                } else {
+                    break;
+                }
+            }
+
+            if (reachedDescription) {
+                description.add(line);
             }
         }
 
-        if (start < 0 || start >= lines.size()) {
-            return Collections.emptyList();
-        }
-
-        Optional<Integer> rewardTitleIndex = getRewardTitleStartLine(lines);
-        if (rewardTitleIndex.isEmpty()) return Collections.emptyList();
-
-        int end = rewardTitleIndex.get();
-
-        if (lines.get(end - 1).trim().isEmpty()) {
-            end--; // remove preceding empty line if present
-        }
-
-        if (start >= end) {
-            return Collections.emptyList();
-        }
-
-        return lines.subList(start, end);
+        return description;
     }
 }
