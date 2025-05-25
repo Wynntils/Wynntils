@@ -581,19 +581,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         int renderY = 31 + offsetY;
 
         for (Config<?> config : configsOptions) {
-            configs.add(new ConfigTile(148 + offsetX, renderY, 188, 41, this, config));
+            configs.add(new ConfigTile(148 + offsetX, renderY, 188, 41, this, config, selectedOverlay));
 
             renderY += 43;
         }
-
-        int overlayPositionRenderY = renderY;
-        selectedOverlay.getConfigOptionFromString("position").ifPresent(config -> {
-            configs.add(new ConfigTile(148 + offsetX, overlayPositionRenderY, 188, 41, this, config, selectedOverlay));
-        });
-        int overlaySizeRenderY = overlayPositionRenderY + 43;
-        selectedOverlay.getConfigOptionFromString("size").ifPresent(config -> {
-            configs.add(new ConfigTile(148 + offsetX, overlaySizeRenderY, 188, 41, this, config, selectedOverlay));
-        });
 
         scrollConfigs(configScrollOffset);
     }

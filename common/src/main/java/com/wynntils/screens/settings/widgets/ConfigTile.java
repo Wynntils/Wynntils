@@ -156,6 +156,18 @@ public class ConfigTile extends WynntilsButton {
     }
 
     private <E extends Enum<E>> AbstractWidget getWidgetFromConfig(Config<?> configOption) {
+        // Prioritise overlay configs so that the allignment enum configs use the screen instead
+        // of the normal enum widget
+        if (overlay != null && screen != null) {
+            if (configOption.getType().equals(OverlayPosition.class)
+                    || configOption.getType().equals(OverlaySize.class)
+                    || configOption.getType().equals(HorizontalAlignment.class)
+                    || configOption.getType().equals(VerticalAlignment.class)) {
+                return new OverlaySettingsWidget(
+                        getRenderX(), getRenderY(), configOption, screen, maskTopY, maskBottomY, overlay);
+            }
+        }
+
         if (configOption.getType().equals(Boolean.class)) {
             return new BooleanSettingsButton(
                     getRenderX(), getRenderY(), (Config<Boolean>) configOption, maskTopY, maskBottomY);
@@ -170,14 +182,6 @@ public class ConfigTile extends WynntilsButton {
                     (TextboxScreen) screen,
                     maskTopY,
                     maskBottomY);
-        } else if (overlay != null && screen != null) {
-            if (configOption.getType().equals(OverlayPosition.class)) {
-                return new OverlaySettingsWidget(
-                        getRenderX(), getRenderY(), configOption, screen, maskTopY, maskBottomY, overlay);
-            } else if (configOption.getType().equals(OverlaySize.class)) {
-                return new OverlaySettingsWidget(
-                        getRenderX(), getRenderY(), configOption, screen, maskTopY, maskBottomY, overlay);
-            }
         }
 
         return new TextInputBoxSettingsWidget<>(
