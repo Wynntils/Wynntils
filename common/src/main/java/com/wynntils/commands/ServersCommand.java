@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -7,6 +7,7 @@ package com.wynntils.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.commands.Command;
@@ -19,6 +20,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -26,6 +28,9 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class ServersCommand extends Command {
     private static final int UPDATE_TIME_OUT_MS = 3000;
+
+    private static final SuggestionProvider<CommandSourceStack> SERVERS_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(Models.ServerList.getServers(), builder);
 
     @Override
     public String getCommandName() {
@@ -46,12 +51,16 @@ public class ServersCommand extends Command {
                 .build();
 
         LiteralCommandNode<CommandSourceStack> infoBuilder = Commands.literal("info")
-                .then(Commands.argument("server", StringArgumentType.word()).executes(this::serverInfo))
+                .then(Commands.argument("server", StringArgumentType.word())
+                        .suggests(SERVERS_SUGGESTION_PROVIDER)
+                        .executes(this::serverInfo))
                 .executes(this::serverInfo)
                 .build();
 
         LiteralArgumentBuilder<CommandSourceStack> infoAliasBuilder = Commands.literal("i")
-                .then(Commands.argument("server", StringArgumentType.word()).executes(this::serverInfo))
+                .then(Commands.argument("server", StringArgumentType.word())
+                        .suggests(SERVERS_SUGGESTION_PROVIDER)
+                        .executes(this::serverInfo))
                 .executes(this::serverInfo);
 
         return base.then(listBuilder)
