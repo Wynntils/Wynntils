@@ -129,6 +129,8 @@
   "feature.wynntils.bombBellOverlay.name": "Bomb Bell",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.fontScale.description": "How large should the bomb bell text be?",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.fontScale.name": "Font Scale",
+  "feature.wynntils.bombBellOverlay.overlay.bombBell.maxBombs.description": "How many bombs should be displayed at most? Oldest bombs are prioritised",
+  "feature.wynntils.bombBellOverlay.overlay.bombBell.maxBombs.name": "Max Bombs",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.name": "Bomb Bell Overlay",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.showCombatBombs.description": "Should Combat XP bombs be shown on the overlay?",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.showCombatBombs.name": "Show Combat XP Bombs",

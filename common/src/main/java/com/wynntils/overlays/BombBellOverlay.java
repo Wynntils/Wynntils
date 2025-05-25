@@ -36,6 +36,9 @@ public class BombBellOverlay extends Overlay {
     public final Config<Float> fontScale = new Config<>(1.0f);
 
     @Persisted
+    public final Config<Integer> maxBombs = new Config<>(10);
+
+    @Persisted
     public final Config<Boolean> showCombatBombs = new Config<>(true);
 
     @Persisted
@@ -89,6 +92,7 @@ public class BombBellOverlay extends Overlay {
                                     Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
                                     return bombTypeSupplier != null && bombTypeSupplier.get();
                                 })
+                                .limit(maxBombs.get())
                                 .map(bombInfo -> new TextRenderTask(bombInfo.asString(), textRenderSetting))
                                 .toList(),
                         this.getWidth(),
