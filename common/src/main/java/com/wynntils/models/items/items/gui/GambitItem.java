@@ -14,15 +14,11 @@ public class GambitItem extends GuiItem {
     private final String name;
     private final CustomColor color;
     private final List<StyledText> description;
-    private final int aspectPulls;
-    private final int rewardPulls;
 
-    public GambitItem(String name, CustomColor color, List<StyledText> description, int aspectPulls, int rewardPulls) {
+    public GambitItem(String name, CustomColor color, List<StyledText> description) {
         this.name = name;
         this.color = color;
         this.description = new LinkedList<>(description);
-        this.aspectPulls = aspectPulls;
-        this.rewardPulls = rewardPulls;
     }
 
     public String getName() {
@@ -35,13 +31,5 @@ public class GambitItem extends GuiItem {
 
     public List<StyledText> getDescription() {
         return Collections.unmodifiableList(description);
-    }
-
-    public int getAspectPulls() {
-        return aspectPulls;
-    }
-
-    public int getRewardPulls() {
-        return rewardPulls;
     }
 }
