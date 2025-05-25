@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -43,8 +43,8 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
             return "Loot From Lv. Content";
         } else {
             return switch (statType.getUnit()) {
-                case PERCENT, PER_3_S, PER_5_S -> statType.getDisplayName() + "("
-                        + statType.getUnit().getDisplayName() + ")";
+                case PERCENT, PER_3_S, PER_5_S ->
+                    statType.getDisplayName() + "(" + statType.getUnit().getDisplayName() + ")";
                 default -> statType.getDisplayName();
             };
         }
@@ -111,5 +111,17 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
         }
 
         return Optional.of(new StatValue(possibleValues, actualValue));
+    }
+
+    @Override
+    public List<String> getAliases() {
+        // Add "defense" as an alias for all defence stat types
+        if (statType.getApiName().contains("defence")) {
+            return List.of(statType.getApiName().replace("defence", "defense"));
+        } else if (statType.getApiName().contains("Defence")) {
+            return List.of(statType.getApiName().replace("Defence", "Defense"));
+        }
+
+        return super.getAliases();
     }
 }
