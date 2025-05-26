@@ -27,35 +27,35 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 
 public final class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScreen {
     private final String changelog;
+    private final Screen previousScreen;
+
     private List<List<TextRenderTask>> changelogTasks;
     private int currentPage = 0;
     private int offsetX;
     private int offsetY;
 
-    private ChangelogScreen(String changelog) {
+    private ChangelogScreen(String changelog, Screen previousScreen) {
         super(Component.translatable("screens.wynntils.changelog.name"));
 
         this.changelog = changelog;
+        this.previousScreen = previousScreen;
     }
 
-    @Override
-    public void onClose() {
-        super.onClose();
-
-        // Send this to the server to request a re-sent class menu
-        McUtils.sendPacket(new ServerboundContainerClosePacket(0));
+    public static Screen create(String changelog, Screen previousScreen) {
+        return new ChangelogScreen(changelog, previousScreen);
     }
 
     public static Screen create(String changelog) {
-        return new ChangelogScreen(changelog);
+        return new ChangelogScreen(changelog, null);
     }
 
     @Override
     protected void doInit() {
+        super.doInit();
+
         offsetX = (int) ((this.width - Texture.SCROLL_BACKGROUND.width()) / 2f);
         offsetY = (int) ((this.height - Texture.SCROLL_BACKGROUND.height()) / 2f);
 
@@ -80,7 +80,18 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     }
 
     @Override
+    public void onClose() {
+        super.onClose();
+
+        if (previousScreen != null) {
+            McUtils.mc().setScreen(previousScreen);
+        }
+    }
+
+    @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+
         PoseStack poseStack = guiGraphics.pose();
 
         RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
