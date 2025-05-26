@@ -22,7 +22,7 @@ public final class GambitAnnotator implements GuiItemAnnotator {
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher matcher = name.getMatcher(NAME_PATTERN);
         if (!matcher.matches()) return null;
-        
+
         CustomColor color = CustomColor.fromHexString(matcher.group(1));
         String itemName = matcher.group(2);
         List<StyledText> lore = LoreUtils.getLore(itemStack);
