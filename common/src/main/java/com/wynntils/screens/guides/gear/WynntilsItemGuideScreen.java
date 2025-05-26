@@ -51,9 +51,9 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
 
         if (searchWidget instanceof ItemSearchWidget itemSearchWidget) {
             guideFilterWidgets.add(this.addRenderableWidget(
-                    new GearTypeFilterWidget(13 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
+                    new GearTypeFilterWidget(19 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
             guideFilterWidgets.add(this.addRenderableWidget(
-                    new RarityFilterWidget(29 + offsetX, 121 + offsetY, this, itemSearchWidget.getSearchQuery())));
+                    new RarityFilterWidget(19 + offsetX, 121 + offsetY, this, itemSearchWidget.getSearchQuery())));
 
             guideSortWidget.setSecondarySortButton(
                     new GuideSortButton(itemSearchWidget.getSearchQuery(), this, RarityStatProvider.class));
