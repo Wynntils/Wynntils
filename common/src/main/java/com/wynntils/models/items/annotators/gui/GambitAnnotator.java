@@ -10,7 +10,6 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.gui.GambitItem;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,24 +32,10 @@ public final class GambitAnnotator implements GuiItemAnnotator {
     }
 
     private List<StyledText> extractDescriptionLines(List<StyledText> lines) {
-        List<StyledText> description = new ArrayList<>();
-
-        boolean reachedDescription = false;
-        for (StyledText line : lines) {
-            if (line.trim().isEmpty()) {
-                if (!reachedDescription) {
-                    reachedDescription = true;
-                    continue;
-                } else {
-                    break;
-                }
-            }
-
-            if (reachedDescription) {
-                description.add(line);
-            }
-        }
-
-        return description;
+        return lines.stream()
+                .dropWhile(line -> !line.trim().isEmpty())
+                .skip(1)
+                .takeWhile(line -> !line.trim().isEmpty())
+                .toList();
     }
 }
