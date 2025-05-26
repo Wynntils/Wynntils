@@ -175,7 +175,7 @@ public class OverlayButton extends WynntilsButton {
                 editInput.visible = true;
                 selectionScreen.setFocusedTextInput(editInput);
             } else {
-                selectionScreen.setSelectedOverlay(overlay);
+                selectionScreen.selectOverlay(overlay);
             }
         }
 
