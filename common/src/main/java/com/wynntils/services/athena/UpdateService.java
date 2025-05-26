@@ -181,8 +181,10 @@ public final class UpdateService extends Service {
         return future;
     }
 
-    public boolean hasPromptedUpdate() {
-        return promptedUpdate;
+    public boolean shouldPromptUpdate() {
+        return !promptedUpdate
+                && modUpdateInfo != null
+                && !modUpdateInfo.version().equals(ignoredUpdate.get());
     }
 
     public void setHasPromptedUpdate(boolean promptedUpdate) {

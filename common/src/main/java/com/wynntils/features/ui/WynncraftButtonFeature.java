@@ -89,7 +89,7 @@ public class WynncraftButtonFeature extends Feature {
             if (Managers.Download.graphState().error() && cancelAutoJoin.get() && !ignoreFailedDownloads.get()) {
                 WynntilsMod.warn("Downloads have failed, auto join is cancelled.");
                 return;
-            } else if (!Services.Update.hasPromptedUpdate() && Services.Update.getModUpdateInfo() != null) {
+            } else if (Services.Update.shouldPromptUpdate()) {
                 WynntilsMod.info("Cancelling auto join, update available");
                 return;
             }
@@ -109,9 +109,7 @@ public class WynncraftButtonFeature extends Feature {
 
         if (Managers.Download.graphState().error()) {
             warningType = WarningType.DOWNLOADS;
-        } else if (!Services.Update.hasPromptedUpdate()
-                && Services.Update.getModUpdateInfo() != null
-                && !Services.Update.getModUpdateInfo().version().equals(Services.Update.ignoredUpdate.get())) {
+        } else if (Services.Update.shouldPromptUpdate()) {
             warningType = WarningType.UPDATE;
         }
 

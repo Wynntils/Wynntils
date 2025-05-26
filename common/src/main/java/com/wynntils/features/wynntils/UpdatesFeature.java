@@ -33,11 +33,7 @@ public class UpdatesFeature extends Feature {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (!event.isFirstJoinWorld()) return;
-        if (Services.Update.hasPromptedUpdate()
-                || (Services.Update.getModUpdateInfo() != null
-                        && Services.Update.ignoredUpdate
-                                .get()
-                                .equals(Services.Update.getModUpdateInfo().version()))) return;
+        if (!Services.Update.shouldPromptUpdate()) return;
 
         CompletableFuture.runAsync(() -> Services.Update.getLatestBuild()
                 .whenCompleteAsync((updateInfo, throwable) -> Managers.TickScheduler.scheduleNextTick(() -> {
