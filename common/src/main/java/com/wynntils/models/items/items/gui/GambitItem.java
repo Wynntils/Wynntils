@@ -18,7 +18,7 @@ public class GambitItem extends GuiItem {
     public GambitItem(String name, CustomColor color, List<StyledText> description) {
         this.name = name;
         this.color = color;
-        this.description = new LinkedList<>(description);
+        this.description = description;
     }
 
     public String getName() {
