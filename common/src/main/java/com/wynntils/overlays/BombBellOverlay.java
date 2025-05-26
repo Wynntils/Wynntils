@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -34,6 +35,15 @@ public class BombBellOverlay extends Overlay {
 
     @Persisted
     public final Config<Float> fontScale = new Config<>(1.0f);
+
+    @Persisted
+    public final Config<Boolean> groupBombs = new Config<>(true);
+
+    @Persisted
+    public final Config<Integer> maxBombs = new Config<>(5);
+
+    @Persisted
+    public final Config<SortOrder> sortOrder = new Config<>(SortOrder.NEWEST);
 
     @Persisted
     public final Config<Boolean> showCombatBombs = new Config<>(true);
@@ -57,6 +67,7 @@ public class BombBellOverlay extends Overlay {
             Map.entry(BombType.PROFESSION_XP, showProfessionXpBombs::get),
             Map.entry(BombType.PROFESSION_SPEED, showProfessionSpeedBombs::get));
 
+    private Comparator<BombInfo> comparator;
     private TextRenderSetting textRenderSetting;
 
     public BombBellOverlay() {
@@ -75,22 +86,37 @@ public class BombBellOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        List<TextRenderTask> renderTasks = groupBombs.get()
+                ? Models.Bomb.getBombBells().stream()
+                        .filter(bombInfo -> {
+                            BombType bombType = bombInfo.bomb();
+                            Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
+                            return bombTypeSupplier != null && bombTypeSupplier.get();
+                        })
+                        .collect(Collectors.groupingBy(BombInfo::bomb))
+                        .values()
+                        .stream()
+                        .flatMap(list -> list.stream().sorted(comparator).limit(maxBombs.get()))
+                        .map(bombInfo -> new TextRenderTask(bombInfo.asString(), textRenderSetting))
+                        .toList()
+                : Models.Bomb.getBombBells().stream()
+                        .filter(bombInfo -> {
+                            BombType bombType = bombInfo.bomb();
+                            Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
+                            return bombTypeSupplier != null && bombTypeSupplier.get();
+                        })
+                        .sorted(comparator)
+                        .limit(maxBombs.get())
+                        .map(bombInfo -> new TextRenderTask(bombInfo.asString(), textRenderSetting))
+                        .toList();
+
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
                         guiGraphics.pose(),
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),
-                        Models.Bomb.getBombBells().stream()
-                                .sorted(Comparator.comparing(BombInfo::getRemainingLong)
-                                        .reversed())
-                                .filter(bombInfo -> {
-                                    BombType bombType = bombInfo.bomb();
-                                    Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
-                                    return bombTypeSupplier != null && bombTypeSupplier.get();
-                                })
-                                .map(bombInfo -> new TextRenderTask(bombInfo.asString(), textRenderSetting))
-                                .toList(),
+                        renderTasks,
                         this.getWidth(),
                         this.getHeight(),
                         this.getRenderHorizontalAlignment(),
@@ -123,6 +149,9 @@ public class BombBellOverlay extends Overlay {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
+        comparator = sortOrder.get() == SortOrder.NEWEST
+                ? Comparator.comparing(BombInfo::getRemainingLong).reversed()
+                : Comparator.comparing(BombInfo::getRemainingLong);
         updateTextRenderSetting();
     }
 
@@ -131,5 +160,10 @@ public class BombBellOverlay extends Overlay {
                 .withMaxWidth(this.getWidth())
                 .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                 .withTextShadow(textShadow.get());
+    }
+
+    private enum SortOrder {
+        NEWEST,
+        OLDEST
     }
 }
