@@ -53,9 +53,9 @@ public final class WynntilsIngredientGuideScreen
 
         if (searchWidget instanceof ItemSearchWidget itemSearchWidget) {
             guideFilterWidgets.add(this.addRenderableWidget(new ProfessionTypeFilterWidget(
-                    29 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
+                    47 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
             guideFilterWidgets.add(this.addRenderableWidget(
-                    new QualityTierFilterWidget(29 + offsetX, 131 + offsetY, this, itemSearchWidget.getSearchQuery())));
+                    new QualityTierFilterWidget(47 + offsetX, 121 + offsetY, this, itemSearchWidget.getSearchQuery())));
 
             guideSortWidget.setSecondarySortButton(
                     new GuideSortButton(itemSearchWidget.getSearchQuery(), this, QualityTierStatProvider.class));

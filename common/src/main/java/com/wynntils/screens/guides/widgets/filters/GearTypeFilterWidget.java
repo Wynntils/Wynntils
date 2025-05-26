@@ -24,21 +24,25 @@ public class GearTypeFilterWidget extends GuideFilterWidget {
     private GearTypeStatProvider provider;
 
     public GearTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
-        super(x, y, 144, 36, guideScreen);
+        super(x, y, 136, 36, guideScreen);
 
-        gearTypeButtons.add(new GearTypeButton(x + 16, y, GearType.HELMET, Texture.HELMET_FILTER_ICON, searchQuery));
+        gearTypeButtons.add(new GearTypeButton(x, y, GearType.HELMET, Texture.HELMET_FILTER_ICON, searchQuery));
         gearTypeButtons.add(
-                new GearTypeButton(x + 48, y, GearType.CHESTPLATE, Texture.CHESTPLATE_FILTER_ICON, searchQuery));
+                new GearTypeButton(x + 20, y, GearType.CHESTPLATE, Texture.CHESTPLATE_FILTER_ICON, searchQuery));
         gearTypeButtons.add(
-                new GearTypeButton(x + 80, y, GearType.LEGGINGS, Texture.LEGGINGS_FILTER_ICON, searchQuery));
-        gearTypeButtons.add(new GearTypeButton(x + 112, y, GearType.BOOTS, Texture.BOOTS_FILTER_ICON, searchQuery));
+                new GearTypeButton(x + 40, y, GearType.LEGGINGS, Texture.LEGGINGS_FILTER_ICON, searchQuery));
+        gearTypeButtons.add(new GearTypeButton(x + 60, y, GearType.BOOTS, Texture.BOOTS_FILTER_ICON, searchQuery));
+        gearTypeButtons.add(new GearTypeButton(x + 80, y, GearType.RING, Texture.RING_FILTER_ICON, searchQuery));
+        gearTypeButtons.add(
+                new GearTypeButton(x + 100, y, GearType.BRACELET, Texture.BRACELET_FILTER_ICON, searchQuery));
+        gearTypeButtons.add(
+                new GearTypeButton(x + 120, y, GearType.NECKLACE, Texture.NECKLACE_FILTER_ICON, searchQuery));
         gearTypeButtons.add(new GearTypeButton(x, y + 20, GearType.SPEAR, Texture.SPEAR_FILTER_ICON, searchQuery));
-        gearTypeButtons.add(new GearTypeButton(x + 32, y + 20, GearType.WAND, Texture.WAND_FILTER_ICON, searchQuery));
+        gearTypeButtons.add(new GearTypeButton(x + 20, y + 20, GearType.WAND, Texture.WAND_FILTER_ICON, searchQuery));
         gearTypeButtons.add(
-                new GearTypeButton(x + 64, y + 20, GearType.DAGGER, Texture.DAGGER_FILTER_ICON, searchQuery));
-        gearTypeButtons.add(new GearTypeButton(x + 96, y + 20, GearType.BOW, Texture.BOW_FILTER_ICON, searchQuery));
-        gearTypeButtons.add(
-                new GearTypeButton(x + 128, y + 20, GearType.RELIK, Texture.RELIK_FILTER_ICON, searchQuery));
+                new GearTypeButton(x + 40, y + 20, GearType.DAGGER, Texture.DAGGER_FILTER_ICON, searchQuery));
+        gearTypeButtons.add(new GearTypeButton(x + 60, y + 20, GearType.BOW, Texture.BOW_FILTER_ICON, searchQuery));
+        gearTypeButtons.add(new GearTypeButton(x + 80, y + 20, GearType.RELIK, Texture.RELIK_FILTER_ICON, searchQuery));
     }
 
     @Override
