@@ -13,7 +13,6 @@ import com.wynntils.core.consumers.features.AbstractConfigurable;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
@@ -24,10 +23,10 @@ import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Comparable<Overlay> {
     @Persisted(i18nKey = "overlay.wynntils.overlay.position")
-    protected final HiddenConfig<OverlayPosition> position = new HiddenConfig<>(null);
+    protected final Config<OverlayPosition> position = new Config<>(null);
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.size")
-    protected final HiddenConfig<OverlaySize> size = new HiddenConfig<>(null);
+    protected final Config<OverlaySize> size = new Config<>(null);
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.userEnabled")
     protected final Config<Boolean> userEnabled = new Config<>(true);
@@ -38,10 +37,10 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
     @Persisted(i18nKey = "overlay.wynntils.overlay.horizontalAlignmentOverride")
-    protected final HiddenConfig<HorizontalAlignment> horizontalAlignmentOverride = new HiddenConfig<>(null);
+    protected final Config<HorizontalAlignment> horizontalAlignmentOverride = new Config<>(null);
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.verticalAlignmentOverride")
-    protected final HiddenConfig<VerticalAlignment> verticalAlignmentOverride = new HiddenConfig<>(null);
+    protected final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
 
     protected Overlay(OverlayPosition position, float width, float height) {
         this.position.store(position);

@@ -25,8 +25,6 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
     public static final CustomColor HOVER_BACKGROUND_COLOR = new CustomColor(158, 52, 16);
     private final int maskTopY;
     private final int maskBottomY;
-    private final float offsetX;
-    private final float offsetY;
     private final List<Component> tooltip;
 
     protected GeneralSettingsButton(
@@ -37,15 +35,11 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
             Component title,
             List<Component> tooltip,
             int maskTopY,
-            int maskBottomY,
-            float offsetX,
-            float offsetY) {
+            int maskBottomY) {
         super(x, y, width, height, title);
         this.tooltip = tooltip;
         this.maskTopY = maskTopY;
         this.maskBottomY = maskBottomY;
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
     }
 
     @Override

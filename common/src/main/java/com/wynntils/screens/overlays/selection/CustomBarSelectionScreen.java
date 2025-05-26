@@ -226,7 +226,7 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
         previousScreen.populateOverlays();
 
         // Set the new custom bar as selected for easier editing access
-        previousScreen.setSelectedOverlay(barGroup.getOverlays().getLast());
+        previousScreen.selectOverlay(barGroup.getOverlays().getLast());
 
         McUtils.sendMessageToClient(Component.translatable(
                         "screens.wynntils.overlaySelection.createdOverlay",

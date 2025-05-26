@@ -17,8 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 public class BooleanSettingsButton extends GeneralSettingsButton {
     private final Config<Boolean> config;
 
-    public BooleanSettingsButton(
-            int x, int y, Config<Boolean> config, int maskTopY, int maskBottomY, float offsetX, float offsetY) {
+    public BooleanSettingsButton(int x, int y, Config<Boolean> config, int maskTopY, int maskBottomY) {
         super(
                 x,
                 y,
@@ -27,9 +26,7 @@ public class BooleanSettingsButton extends GeneralSettingsButton {
                 getTitle(config),
                 ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150),
                 maskTopY,
-                maskBottomY,
-                offsetX,
-                offsetY);
+                maskBottomY);
         this.config = config;
     }
 
