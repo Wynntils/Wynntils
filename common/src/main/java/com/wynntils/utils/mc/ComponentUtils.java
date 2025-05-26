@@ -115,8 +115,8 @@ public final class ComponentUtils {
         return split;
     }
 
-    public static MutableComponent makeRainbowStyle(String name, boolean useRainbowEffect) {
-        if (useRainbowEffect) {
+    public static MutableComponent makeRainbowStyle(String name, boolean useShader) {
+        if (useShader) {
             return Component.literal(name)
                     .withColor(CommonColors.RAINBOW.asInt())
                     .withStyle(ChatFormatting.BOLD);
