@@ -15,6 +15,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.activities.beacons.ActivityBeaconKind;
 import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
@@ -36,6 +37,7 @@ import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
+import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -84,6 +86,7 @@ public final class ActivityModel extends Model {
     private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^\uDB00\uDC0E§dRewards:$");
     private static final Pattern REWARD_PATTERN = Pattern.compile("^§d\uDB00\uDC04(- )?§7\\+?(?<reward>.+)$");
     private static final Pattern TRACKING_PATTERN = Pattern.compile("^.*§(?:#.{8}|.)§lCLICK TO (UN)?TRACK$");
+    private static final Pattern OVERALL_PROGRESS_PATTERN = Pattern.compile("^\\S*§7(\\d+) of (\\d+) completed$");
     private static final Pattern WIKI_REDIRECT_PATTERN = Pattern.compile("#REDIRECT \\[\\[(?<redirectname>.+)\\]\\]");
 
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
@@ -94,6 +97,7 @@ public final class ActivityModel extends Model {
     private TrackedActivity trackedActivity;
     private List<List<StyledText>> dialogueHistory = List.of();
     private CappedValue overallProgress = CappedValue.EMPTY;
+    private boolean overallProgressOutdated = true;
 
     public ActivityModel(MarkerModel markerModel) {
         super(List.of(markerModel));
@@ -160,6 +164,26 @@ public final class ActivityModel extends Model {
 
         ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null, null);
         ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(null, null);
+    }
+
+    @SubscribeEvent
+    public void onScreenClosed(ScreenClosedEvent event) {
+        // The progress cannot be outdated if we are in the content book
+        // This speeds up navigation in the content book
+        overallProgressOutdated = true;
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onWorldStateChanged(WorldStateEvent e) {
+        resetTracker();
+        // We need to rescan the overall progress when the world state changes
+        overallProgressOutdated = true;
+    }
+
+    @SubscribeEvent
+    public void onCharacterUpdated(CharacterUpdateEvent event) {
+        // First thing to do when we just loaded a class
+        scanOverallProgress();
     }
 
     public ActivityInfo parseItem(String name, ActivityType type, ItemStack itemStack) {
@@ -469,11 +493,6 @@ public final class ActivityModel extends Model {
         return colorCodeMatcher.group(1).charAt(0) == ChatFormatting.GREEN.getChar();
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onWorldStateChanged(WorldStateEvent e) {
-        resetTracker();
-    }
-
     public CappedValue getOverallProgress() {
         return overallProgress;
     }
@@ -522,7 +541,7 @@ public final class ActivityModel extends Model {
 
     public void scanContentBook(
             ActivityType activityType, BiConsumer<List<ActivityInfo>, List<StyledText>> processResult) {
-        CONTAINER_QUERIES.queryContentBook(activityType, processResult, false);
+        CONTAINER_QUERIES.queryContentBook(activityType, processResult, true, false);
     }
 
     public void startTracking(String name, ActivityType activityType) {
@@ -543,6 +562,27 @@ public final class ActivityModel extends Model {
 
     public void rescanDialogueHistory() {
         DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
+    }
+
+    public void scanOverallProgress() {
+        if (!overallProgressOutdated) return;
+
+        overallProgressOutdated = false;
+        CONTAINER_QUERIES.queryContentBook(
+                ActivityType.RECOMMENDED,
+                (ignored, progress) -> {
+                    for (StyledText line : progress) {
+                        Matcher m = line.getMatcher(OVERALL_PROGRESS_PATTERN);
+                        if (m.matches()) {
+                            int completed = Integer.parseInt(m.group(1));
+                            int total = Integer.parseInt(m.group(2));
+                            overallProgress = new CappedValue(completed, total);
+                            return;
+                        }
+                    }
+                },
+                false,
+                true);
     }
 
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {

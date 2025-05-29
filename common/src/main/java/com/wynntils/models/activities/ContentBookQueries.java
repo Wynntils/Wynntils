@@ -66,6 +66,7 @@ public class ContentBookQueries {
     protected void queryContentBook(
             ActivityType activityType,
             BiConsumer<List<ActivityInfo>, List<StyledText>> processResult,
+            boolean showUpdates,
             boolean firstPageOnly) {
         List<ActivityInfo> newActivity = new ArrayList<>();
         List<StyledText> progress = new ArrayList<>();
@@ -74,7 +75,7 @@ public class ContentBookQueries {
                         "Content Book Query for " + activityType.getDisplayName())
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book: " + msg);
-                    if (stateMessageContainer != null) {
+                    if (showUpdates && stateMessageContainer != null) {
                         Managers.Notification.editMessage(
                                 stateMessageContainer,
                                 StyledText.fromComponent(Component.literal(
@@ -83,9 +84,11 @@ public class ContentBookQueries {
                     }
                 })
                 .execute(() -> {
-                    stateMessageContainer = Managers.Notification.queueMessage(
-                            Component.literal("Loading " + activityType.getGroupName() + " from content book...")
-                                    .withStyle(ChatFormatting.YELLOW));
+                    if (showUpdates) {
+                        stateMessageContainer = Managers.Notification.queueMessage(
+                                Component.literal("Loading " + activityType.getGroupName() + " from content book...")
+                                        .withStyle(ChatFormatting.YELLOW));
+                    }
                 })
 
                 // Open content book
@@ -179,11 +182,13 @@ public class ContentBookQueries {
                 // Finally signal we're done
                 .execute(() -> processResult.accept(newActivity, progress))
                 .execute(() -> {
-                    Managers.Notification.editMessage(
-                            stateMessageContainer,
-                            StyledText.fromComponent(
-                                    Component.literal("Loaded " + activityType.getGroupName() + " from content book")
-                                            .withStyle(ChatFormatting.GREEN)));
+                    if (showUpdates) {
+                        Managers.Notification.editMessage(
+                                stateMessageContainer,
+                                StyledText.fromComponent(Component.literal(
+                                                "Loaded " + activityType.getGroupName() + " from content book")
+                                        .withStyle(ChatFormatting.GREEN)));
+                    }
                 })
                 .build();
 

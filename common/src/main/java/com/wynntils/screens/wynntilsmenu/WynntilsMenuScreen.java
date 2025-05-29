@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
@@ -32,6 +33,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
@@ -68,6 +70,14 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     @Override
     protected void doInit() {
         super.doInit();
+
+        if (firstInit) {
+            if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                    .displayOverallProgress
+                    .get()) {
+                Models.Activity.scanOverallProgress();
+            }
+        }
 
         firstInit = false;
         setup();
@@ -431,6 +441,25 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         CommonColors.PURPLE,
                         HorizontalAlignment.CENTER,
                         TextShadow.NONE);
+
+        if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .displayOverallProgress
+                .get()) {
+            CappedValue progress = Models.Activity.getOverallProgress();
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(ChatFormatting.BLACK + "Progress: " + ChatFormatting.DARK_AQUA
+                                    + progress.getPercentageInt() + "%" + ChatFormatting.BLACK + " ["
+                                    + ChatFormatting.DARK_AQUA + progress + ChatFormatting.BLACK + "]"),
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                            160 + offsetY,
+                            0,
+                            CommonColors.BLACK,
+                            HorizontalAlignment.CENTER,
+                            TextShadow.NONE);
+        }
 
         String currentSplash = Services.Splash.getCurrentSplash() == null ? "" : Services.Splash.getCurrentSplash();
         StyledText[] wrappedSplash = RenderedStringUtils.wrapTextBySize(

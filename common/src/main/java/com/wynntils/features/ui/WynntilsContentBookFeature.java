@@ -94,6 +94,9 @@ public class WynntilsContentBookFeature extends Feature {
     @Persisted
     private final Config<ShiftBehavior> shiftBehaviorConfig = new Config<>(ShiftBehavior.DISABLED_IF_SHIFT_HELD);
 
+    @Persisted
+    public final Config<Boolean> displayOverallProgress = new Config<>(true);
+
     private boolean shiftClickedBookItem = false;
 
     @SubscribeEvent
