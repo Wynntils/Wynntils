@@ -29,6 +29,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -41,6 +42,8 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
     private final Integer slot;
     private final List<Component> tooltip;
     private final boolean searchMatch;
+
+    private Style nameStyle = Style.EMPTY;
 
     public ContentBookWidget(
             int x,
@@ -73,6 +76,10 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
         this.tooltip.add(Component.translatable("screens.wynntils.contentBook.rightClickToOpenWiki")
                 .withStyle(ChatFormatting.BOLD)
                 .withStyle(ChatFormatting.GOLD));
+
+        if (activityInfo.trackingState() == ActivityTrackingState.TRACKED) {
+            nameStyle = nameStyle.withBold(true).withUnderlined(true);
+        }
     }
 
     @Override
@@ -91,10 +98,15 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                 gradientColor.withAlpha(0));
         guiGraphics.renderItem(itemStack, getX(), getY());
 
+        if (this.isHovered) {
+            nameStyle = nameStyle.withBold(true);
+        }
+
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics.pose(),
-                        StyledText.fromString(activityInfo.name()),
+                        StyledText.fromComponent(
+                                Component.literal(activityInfo.name()).withStyle(nameStyle)),
                         getX() + 18,
                         getY() + 8,
                         width - 18,
@@ -106,7 +118,7 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
         if (holder.inTutorial || activityInfo.trackingState() == ActivityTrackingState.TRACKED) {
             RenderUtils.drawRotatingBorderSegment(
                     guiGraphics.pose(),
-                    holder.inTutorial ? CommonColors.RED : CommonColors.MAGENTA,
+                    holder.inTutorial ? CommonColors.RED : CommonColors.BLUE,
                     getX(),
                     getY(),
                     getX() + width,
