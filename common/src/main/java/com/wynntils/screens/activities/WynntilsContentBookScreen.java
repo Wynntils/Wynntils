@@ -371,7 +371,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
 
     public void setPlayerProgressItem(ItemStack item, int slot) {
         contentBookActionWidgets.put(
-                slot, new ContentBookActionWidget(offsetX + 333, offsetY + 8, item, (b) -> holder.pressSlot(slot, b)));
+                slot, new ContentBookActionWidget(offsetX + 381, offsetY + 8, item, (b) -> holder.pressSlot(slot, b)));
     }
 
     public void setScrollDownItem(ItemStack item) {
