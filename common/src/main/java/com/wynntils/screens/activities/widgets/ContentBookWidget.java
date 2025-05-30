@@ -98,9 +98,7 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                 gradientColor.withAlpha(0));
         guiGraphics.renderItem(itemStack, getX(), getY());
 
-        if (this.isHovered) {
-            nameStyle = nameStyle.withBold(true);
-        }
+        nameStyle = nameStyle.withBold(this.isHovered || activityInfo.trackingState() == ActivityTrackingState.TRACKED);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
