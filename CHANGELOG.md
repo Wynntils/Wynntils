@@ -1,3 +1,21 @@
+## [3.0.21](https://github.com/Wynntils/Wynntils/compare/v3.0.20...v3.0.21) (2025-05-31)
+
+
+### New Features
+
+* Implemented GambitItem and GambitAnnotator [skip ci] ([#3261](https://github.com/Wynntils/Wynntils/issues/3261)) ([7e52e50](https://github.com/Wynntils/Wynntils/commit/7e52e50fadcb442188dea92327c24f1f0fcc50a3))
+
+
+### Bug Fixes
+
+* Value Template no longer shows error when empty [skip ci] ([#3267](https://github.com/Wynntils/Wynntils/issues/3267)) ([1b22ae6](https://github.com/Wynntils/Wynntils/commit/1b22ae641a1c9a89eae1582e5a6e841e9d92930c))
+
+
+### Miscellaneous Chores
+
+* Do not use js reserved keyword for function dumps [skip ci] ([#3266](https://github.com/Wynntils/Wynntils/issues/3266)) ([a713f00](https://github.com/Wynntils/Wynntils/commit/a713f00c24babaa18925dec5531778b75a3bb4e4))
+* Update setup-gradle to v4 ([#3268](https://github.com/Wynntils/Wynntils/issues/3268)) ([5980308](https://github.com/Wynntils/Wynntils/commit/5980308b55cb0f26bf814232ffeb5334ec9df7c2))
+
 ## [3.0.20](https://github.com/Wynntils/Wynntils/compare/v3.0.19...v3.0.20) (2025-05-18)
 
 
@@ -22,6 +40,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#3242](https://github.com/Wynntils/Wynntils/issues/3242)) ([b1242bc](https://github.com/Wynntils/Wynntils/commit/b1242bc70a8ba3d8db0beb1208afe02759b01f08))
+* **release:** v3.0.20 [skip ci] ([23f43fd](https://github.com/Wynntils/Wynntils/commit/23f43fd60127d7295cda65a1d7fdf7e735d88102))
 
 ## [3.0.19](https://github.com/Wynntils/Wynntils/compare/v3.0.18...v3.0.19) (2025-05-10)
 
@@ -85,17 +104,4 @@
 
 * Store lootrun details as a separate class [skip ci] ([#3213](https://github.com/Wynntils/Wynntils/issues/3213)) ([353cdbc](https://github.com/Wynntils/Wynntils/commit/353cdbc5cc83efe49b0cbf74da7bea2aa1e71c18))
 * Use guiGraphics for scissors in RenderUtils [skip ci] ([#3203](https://github.com/Wynntils/Wynntils/issues/3203)) ([07e3495](https://github.com/Wynntils/Wynntils/commit/07e34952ba2d3883077e635a2d8ffb00a13ddc22))
-
-## [3.0.16](https://github.com/Wynntils/Wynntils/compare/v3.0.15...v3.0.16) (2025-04-23)
-
-
-### Bug Fixes
-
-* Reset time left, challenges and party raid buffs on raid finish ([#3207](https://github.com/Wynntils/Wynntils/issues/3207)) ([ad05877](https://github.com/Wynntils/Wynntils/commit/ad05877fbdea7459ed2325fc0dd7d91b378dd67e))
-
-
-### Miscellaneous Chores
-
-* Add getters for inBuffRoom and inIntermissionRoom to RaidModel [skip ci] ([#3206](https://github.com/Wynntils/Wynntils/issues/3206)) ([52d3d92](https://github.com/Wynntils/Wynntils/commit/52d3d922274a757f253457624832bb644b41e485))
-* **release:** v3.0.16 [skip ci] ([ee0dce2](https://github.com/Wynntils/Wynntils/commit/ee0dce23cb4c7ee22e09f9fd1335f3374055ebfa))
 
