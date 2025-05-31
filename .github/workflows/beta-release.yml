@@ -77,10 +77,11 @@ jobs:
           java-version: 21
           cache: "gradle"
 
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
       - name: Build with Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: buildDependents -x spotlessCheck -x test
+        run: ./gradlew buildDependents -x spotlessCheck -x test
 
       - name: Upload build
         uses: actions/upload-artifact@v4
