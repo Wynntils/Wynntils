@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable;
@@ -24,9 +24,14 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     private final IdentifiableItemProperty<T, U> itemInfo;
 
     private IdentifiableTooltipBuilder(
-            IdentifiableItemProperty<T, U> itemInfo, List<Component> header, List<Component> footer) {
-        super(header, footer);
+            IdentifiableItemProperty<T, U> itemInfo, List<Component> header, List<Component> footer, String source) {
+        super(header, footer, source);
         this.itemInfo = itemInfo;
+    }
+
+    private IdentifiableTooltipBuilder(
+            IdentifiableItemProperty<T, U> itemInfo, List<Component> header, List<Component> footer) {
+        this(itemInfo, header, footer, "");
     }
 
     /**
@@ -36,13 +41,14 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             IdentifiableItemProperty<T, U> identifiableItem,
             IdentifiableTooltipComponent<T, U> tooltipComponent,
             boolean hideUnidentified,
-            boolean showItemType) {
+            boolean showItemType,
+            String source) {
         T itemInfo = identifiableItem.getItemInfo();
         U itemInstance = identifiableItem.getItemInstance().orElse(null);
 
         List<Component> header = tooltipComponent.buildHeaderTooltip(itemInfo, itemInstance, hideUnidentified);
         List<Component> footer = tooltipComponent.buildFooterTooltip(itemInfo, itemInstance, showItemType);
-        return new IdentifiableTooltipBuilder(identifiableItem, header, footer);
+        return new IdentifiableTooltipBuilder(identifiableItem, header, footer, source);
     }
 
     /**
