@@ -24,21 +24,21 @@ public class TomeTypeFilterWidget extends GuideFilterWidget {
     private TomeTypeStatProvider provider;
 
     public TomeTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
-        super(x, y, 112, 36, guideScreen);
+        super(x, y, 136, 16, guideScreen);
 
         tomeTypeButtons.add(new TomeTypeButton(x, y, TomeType.GUILD_TOME, Texture.GUILD_TOME_FILTER_ICON, searchQuery));
         tomeTypeButtons.add(
-                new TomeTypeButton(x + 32, y, TomeType.WEAPON_TOME, Texture.WEAPON_TOME_FILTER_ICON, searchQuery));
+                new TomeTypeButton(x + 20, y, TomeType.WEAPON_TOME, Texture.WEAPON_TOME_FILTER_ICON, searchQuery));
         tomeTypeButtons.add(
-                new TomeTypeButton(x + 64, y, TomeType.ARMOUR_TOME, Texture.ARMOR_TOME_FILTER_ICON, searchQuery));
+                new TomeTypeButton(x + 40, y, TomeType.ARMOUR_TOME, Texture.ARMOR_TOME_FILTER_ICON, searchQuery));
         tomeTypeButtons.add(new TomeTypeButton(
-                x + 96, y, TomeType.MYSTICISM_TOME, Texture.MYSTICISM_TOME_FILTER_ICON, searchQuery));
+                x + 60, y, TomeType.MYSTICISM_TOME, Texture.MYSTICISM_TOME_FILTER_ICON, searchQuery));
+        tomeTypeButtons.add(
+                new TomeTypeButton(x + 80, y, TomeType.MARATHON_TOME, Texture.MARATHON_TOME_FILTER_ICON, searchQuery));
+        tomeTypeButtons.add(
+                new TomeTypeButton(x + 100, y, TomeType.LOOTRUN_TOME, Texture.LOOTRUN_TOME_FILTER_ICON, searchQuery));
         tomeTypeButtons.add(new TomeTypeButton(
-                x + 16, y + 20, TomeType.MARATHON_TOME, Texture.MARATHON_TOME_FILTER_ICON, searchQuery));
-        tomeTypeButtons.add(new TomeTypeButton(
-                x + 48, y + 20, TomeType.LOOTRUN_TOME, Texture.LOOTRUN_TOME_FILTER_ICON, searchQuery));
-        tomeTypeButtons.add(new TomeTypeButton(
-                x + 80, y + 20, TomeType.EXPERTISE_TOME, Texture.EXPERTISE_TOME_FILTER_ICON, searchQuery));
+                x + 120, y, TomeType.EXPERTISE_TOME, Texture.EXPERTISE_TOME_FILTER_ICON, searchQuery));
     }
 
     @Override

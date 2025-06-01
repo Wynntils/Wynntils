@@ -57,9 +57,9 @@ public final class WynntilsAspectGuideScreen
 
         if (searchWidget instanceof ItemSearchWidget itemSearchWidget) {
             guideFilterWidgets.add(this.addRenderableWidget(
-                    new ClassTypeFilterWidget(13 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
+                    new ClassTypeFilterWidget(19 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
             guideFilterWidgets.add(this.addRenderableWidget(
-                    new RarityFilterWidget(29 + offsetX, 101 + offsetY, this, itemSearchWidget.getSearchQuery())));
+                    new RarityFilterWidget(19 + offsetX, 101 + offsetY, this, itemSearchWidget.getSearchQuery())));
 
             guideSortWidget.setPrimarySortButton(
                     new GuideSortButton(itemSearchWidget.getSearchQuery(), this, TierStatProvider.class));
