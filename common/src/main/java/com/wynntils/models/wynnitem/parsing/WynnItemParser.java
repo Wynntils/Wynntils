@@ -556,10 +556,7 @@ public final class WynnItemParser {
         }
         int value = StatCalculator.calculateStatValue(internalRoll, possibleValue);
 
-        // Negative values can never show stars
-        int stars = (value > 0)
-                ? StatCalculator.calculateStarsFromInternalRoll(statType, possibleValue.baseValue(), internalRoll)
-                : 0;
+        int stars = StatCalculator.calculateStarsFromInternalRoll(statType, possibleValue.baseValue(), internalRoll);
 
         // In this case, we actually know the exact internal roll
         return new StatActualValue(statType, value, stars, RangedValue.of(internalRoll, internalRoll));
