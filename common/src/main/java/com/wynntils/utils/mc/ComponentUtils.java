@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -7,6 +7,7 @@ package com.wynntils.utils.mc;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -114,7 +115,13 @@ public final class ComponentUtils {
         return split;
     }
 
-    public static MutableComponent makeRainbowStyle(String name) {
+    public static MutableComponent makeRainbowStyle(String name, boolean useShader) {
+        if (useShader) {
+            return Component.literal(name)
+                    .withColor(CommonColors.RAINBOW.asInt())
+                    .withStyle(ChatFormatting.BOLD);
+        }
+
         MutableComponent newName = Component.literal("").withStyle(ChatFormatting.BOLD);
 
         // This math was originally based off Avaritia code.
