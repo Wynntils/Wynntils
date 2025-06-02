@@ -20,11 +20,13 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -70,6 +72,8 @@ public class BombBellOverlay extends Overlay {
     private Comparator<BombInfo> comparator;
     private TextRenderSetting textRenderSetting;
 
+    List<TextRenderTask> renderTasks = new ArrayList<>();
+
     public BombBellOverlay() {
         super(
                 new OverlayPosition(
@@ -86,30 +90,6 @@ public class BombBellOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        List<TextRenderTask> renderTasks = groupBombs.get()
-                ? Models.Bomb.getBombBells().stream()
-                        .filter(bombInfo -> {
-                            BombType bombType = bombInfo.bomb();
-                            Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
-                            return bombTypeSupplier != null && bombTypeSupplier.get();
-                        })
-                        .collect(Collectors.groupingBy(BombInfo::bomb))
-                        .values()
-                        .stream()
-                        .flatMap(list -> list.stream().sorted(comparator).limit(maxBombs.get()))
-                        .map(bombInfo -> new TextRenderTask(bombInfo.asString(), textRenderSetting))
-                        .toList()
-                : Models.Bomb.getBombBells().stream()
-                        .filter(bombInfo -> {
-                            BombType bombType = bombInfo.bomb();
-                            Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
-                            return bombTypeSupplier != null && bombTypeSupplier.get();
-                        })
-                        .sorted(comparator)
-                        .limit(maxBombs.get())
-                        .map(bombInfo -> new TextRenderTask(bombInfo.asString(), textRenderSetting))
-                        .toList();
-
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
                         guiGraphics.pose(),
@@ -153,6 +133,24 @@ public class BombBellOverlay extends Overlay {
                 ? Comparator.comparing(BombInfo::getRemainingLong).reversed()
                 : Comparator.comparing(BombInfo::getRemainingLong);
         updateTextRenderSetting();
+    }
+
+    @Override
+    public void tick() {
+        Stream<BombInfo> filteredBombs = Models.Bomb.getBombBells().stream().filter(bombInfo -> {
+            BombType bombType = bombInfo.bomb();
+            Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
+            return bombTypeSupplier != null && bombTypeSupplier.get();
+        });
+
+        Stream<BombInfo> processedBombs = groupBombs.get()
+                ? filteredBombs.collect(Collectors.groupingBy(BombInfo::bomb)).values().stream()
+                        .flatMap(list -> list.stream().sorted(comparator).limit(maxBombs.get()))
+                : filteredBombs.sorted(comparator).limit(maxBombs.get());
+
+        renderTasks = processedBombs
+                .map(bombInfo -> new TextRenderTask(bombInfo.asString(), textRenderSetting))
+                .toList();
     }
 
     private void updateTextRenderSetting() {
