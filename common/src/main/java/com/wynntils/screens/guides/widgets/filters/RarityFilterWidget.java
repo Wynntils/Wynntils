@@ -23,15 +23,15 @@ public class RarityFilterWidget extends GuideFilterWidget {
     private RarityStatProvider provider;
 
     public RarityFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
-        super(x, y, 112, 36, guideScreen);
+        super(x, y, 136, 16, guideScreen);
 
         rarityButtons.add(new RarityButton(x, y, GearTier.MYTHIC, Texture.MYTHIC_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 32, y, GearTier.FABLED, Texture.FABLED_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 64, y, GearTier.LEGENDARY, Texture.LEGENDARY_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 96, y, GearTier.SET, Texture.SET_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 16, y + 20, GearTier.RARE, Texture.RARE_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 48, y + 20, GearTier.UNIQUE, Texture.UNIQUE_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 80, y + 20, GearTier.NORMAL, Texture.NORMAL_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 20, y, GearTier.FABLED, Texture.FABLED_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 40, y, GearTier.LEGENDARY, Texture.LEGENDARY_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 60, y, GearTier.SET, Texture.SET_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 80, y, GearTier.RARE, Texture.RARE_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 100, y, GearTier.UNIQUE, Texture.UNIQUE_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 120, y, GearTier.NORMAL, Texture.NORMAL_FILTER_ICON, searchQuery));
     }
 
     @Override

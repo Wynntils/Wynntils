@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public abstract class TooltipBuilder {
@@ -23,6 +24,7 @@ public abstract class TooltipBuilder {
             new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, true);
     protected final List<Component> header;
     protected final List<Component> footer;
+    protected final String source;
 
     // The identificationsCache is only valid if the cached dependencies matchs
     protected ClassType cachedCurrentClass;
@@ -30,9 +32,10 @@ public abstract class TooltipBuilder {
     protected TooltipIdentificationDecorator cachedDecorator;
     protected List<Component> identificationsCache;
 
-    protected TooltipBuilder(List<Component> header, List<Component> footer) {
+    protected TooltipBuilder(List<Component> header, List<Component> footer, String source) {
         this.header = header;
         this.footer = footer;
+        this.source = source;
     }
 
     public List<Component> getTooltipLines(ClassType currentClass) {
@@ -65,6 +68,14 @@ public abstract class TooltipBuilder {
         tooltip.addAll(identifications);
 
         tooltip.addAll(footer);
+
+        if (!source.isEmpty()) {
+            tooltip.add(
+                    1,
+                    Component.literal(source)
+                            .withStyle(ChatFormatting.DARK_GRAY)
+                            .withStyle(ChatFormatting.ITALIC));
+        }
 
         return tooltip;
     }

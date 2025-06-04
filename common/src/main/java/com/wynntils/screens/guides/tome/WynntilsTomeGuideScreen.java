@@ -51,9 +51,9 @@ public final class WynntilsTomeGuideScreen extends WynntilsGuideScreen<GuideTome
 
         if (searchWidget instanceof ItemSearchWidget itemSearchWidget) {
             guideFilterWidgets.add(this.addRenderableWidget(
-                    new TomeTypeFilterWidget(29 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
+                    new TomeTypeFilterWidget(19 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
             guideFilterWidgets.add(this.addRenderableWidget(
-                    new RarityFilterWidget(29 + offsetX, 121 + offsetY, this, itemSearchWidget.getSearchQuery())));
+                    new RarityFilterWidget(19 + offsetX, 101 + offsetY, this, itemSearchWidget.getSearchQuery())));
 
             guideSortWidget.setSecondarySortButton(
                     new GuideSortButton(itemSearchWidget.getSearchQuery(), this, RarityStatProvider.class));

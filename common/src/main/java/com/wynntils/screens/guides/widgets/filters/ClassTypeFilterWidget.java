@@ -24,14 +24,14 @@ public class ClassTypeFilterWidget extends GuideFilterWidget {
     private ClassStatProvider provider;
 
     public ClassTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
-        super(x, y, 144, 36, guideScreen);
+        super(x, y, 96, 16, guideScreen);
 
         classTypeButtons.add(new ClassTypeButton(x, y, ClassType.WARRIOR, Texture.SPEAR_FILTER_ICON, searchQuery));
-        classTypeButtons.add(new ClassTypeButton(x + 32, y, ClassType.MAGE, Texture.WAND_FILTER_ICON, searchQuery));
+        classTypeButtons.add(new ClassTypeButton(x + 20, y, ClassType.MAGE, Texture.WAND_FILTER_ICON, searchQuery));
         classTypeButtons.add(
-                new ClassTypeButton(x + 64, y, ClassType.ASSASSIN, Texture.DAGGER_FILTER_ICON, searchQuery));
-        classTypeButtons.add(new ClassTypeButton(x + 96, y, ClassType.ARCHER, Texture.BOW_FILTER_ICON, searchQuery));
-        classTypeButtons.add(new ClassTypeButton(x + 128, y, ClassType.SHAMAN, Texture.RELIK_FILTER_ICON, searchQuery));
+                new ClassTypeButton(x + 40, y, ClassType.ASSASSIN, Texture.DAGGER_FILTER_ICON, searchQuery));
+        classTypeButtons.add(new ClassTypeButton(x + 60, y, ClassType.ARCHER, Texture.BOW_FILTER_ICON, searchQuery));
+        classTypeButtons.add(new ClassTypeButton(x + 80, y, ClassType.SHAMAN, Texture.RELIK_FILTER_ICON, searchQuery));
     }
 
     @Override
