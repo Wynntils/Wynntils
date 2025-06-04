@@ -17,10 +17,13 @@ import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.screens.activities.WynntilsContentBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
+import com.wynntils.screens.guides.aspect.WynntilsAspectGuideScreen;
+import com.wynntils.screens.guides.charm.WynntilsCharmGuideScreen;
 import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
 import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
+import com.wynntils.screens.guides.tome.WynntilsTomeGuideScreen;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
@@ -76,6 +79,27 @@ public class WynntilsContentBookFeature extends Feature {
             GLFW.GLFW_KEY_UNKNOWN,
             true,
             () -> WynntilsMenuScreenBase.openBook(WynntilsIngredientGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openCharmGuide = new KeyBind(
+            "Open Charm Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsCharmGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openTomeGuide = new KeyBind(
+            "Open Tome Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsTomeGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openAspectGuide = new KeyBind(
+            "Open Aspect Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsAspectGuideScreen.create()));
 
     @RegisterKeyBind
     private final KeyBind openEmeraldPouchGuide = new KeyBind(

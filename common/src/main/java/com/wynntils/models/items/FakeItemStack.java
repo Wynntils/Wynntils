@@ -13,7 +13,6 @@ import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -55,20 +54,18 @@ public class FakeItemStack extends ItemStack {
         if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
             tooltipBuilder = wynnItem.getData()
                     .getOrCalculate(
-                            WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(identifiableItem, false, true));
+                            WynnItemData.TOOLTIP_KEY,
+                            () -> Handlers.Tooltip.buildNew(identifiableItem, false, true, source));
 
         } else if (wynnItem instanceof CraftedItemProperty craftedItemProperty) {
             tooltipBuilder = wynnItem.getData()
-                    .getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(craftedItemProperty));
+                    .getOrCalculate(
+                            WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(craftedItemProperty, source));
         }
 
         if (tooltipBuilder == null) return List.of();
 
         // 2. Now that the tooltip builder is cached, generate the tooltip
-        List<Component> tooltip = TooltipUtils.getWynnItemTooltip(this, wynnItem);
-        // Add a line describing the source of this fake stack
-        tooltip.add(
-                1, Component.literal(source).withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
-        return tooltip;
+        return TooltipUtils.getWynnItemTooltip(this, wynnItem);
     }
 }

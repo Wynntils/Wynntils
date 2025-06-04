@@ -23,6 +23,7 @@ import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
+import com.wynntils.models.items.annotators.gui.GambitAnnotator;
 import com.wynntils.models.items.annotators.gui.LeaderboardSeasonAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
@@ -999,5 +1000,12 @@ public class TestRegex {
         PatternTester p = new PatternTester(WorldStateModel.class, "HOUSING_NAME");
         p.shouldMatch("§f  §lChiefs Of Corkus' HQ");
         p.shouldMatch("§f  §lShadow's Home");
+    }
+
+    @Test
+    public void GambitAnnotator_GAMBIT_NAME() {
+        PatternTester p = new PatternTester(GambitAnnotator.class, "NAME_PATTERN");
+        p.shouldMatch("§#54fffcff§lIngenuous Mage's Gambit");
+        p.shouldMatch("§#ac2c01ff§lArcane Incontinent's Gambit");
     }
 }
