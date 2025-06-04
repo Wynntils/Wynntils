@@ -76,8 +76,6 @@ public class PresetButton extends BasicTexturedButton {
                         getY() + 10,
                         getY() + getHeight() - 10,
                         getWidth() - 8,
-                        offsetX,
-                        offsetY,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,

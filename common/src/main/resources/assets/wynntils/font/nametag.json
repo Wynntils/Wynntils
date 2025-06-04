@@ -1,0 +1,13 @@
+{
+  "providers": [
+    {
+      "ascent": 8,
+      "chars": [
+        "\uE100"
+      ],
+      "file": "wynntils:font/nametag_logo.png",
+      "height": 8,
+      "type": "bitmap"
+    }
+  ]
+}
