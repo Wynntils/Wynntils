@@ -518,8 +518,6 @@ public final class FontRenderer {
             float y1,
             float y2,
             float renderWidth,
-            float offsetX,
-            float offsetY,
             CustomColor customColor,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,

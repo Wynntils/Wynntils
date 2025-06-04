@@ -661,6 +661,8 @@
   "feature.wynntils.hightlightDuplicateCosmetics.highlightCondition.name": "Highlight Condition",
   "feature.wynntils.hightlightDuplicateCosmetics.hoveredHighlightColor.description": "What color should the highlight circles be for duplicate hovered cosmetics?",
   "feature.wynntils.hightlightDuplicateCosmetics.hoveredHighlightColor.name": "Hovered Highlight color",
+  "feature.wynntils.hightlightDuplicateCosmetics.moveTooltips.description": "Should tooltips for hovered cosmetic items been rendered over the inventory instead?",
+  "feature.wynntils.hightlightDuplicateCosmetics.moveTooltips.name": "Move Tooltips",
   "feature.wynntils.hightlightDuplicateCosmetics.name": "Highlight Duplicate Cosmetics",
   "feature.wynntils.hightlightDuplicateCosmetics.selectedHighlightColor.description": "What color should the highlight circles be for duplicate selected cosmetics?",
   "feature.wynntils.hightlightDuplicateCosmetics.selectedHighlightColor.name": "Selected Highlight color",

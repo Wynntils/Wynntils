@@ -122,7 +122,7 @@ public final class TooltipUtils {
         ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
 
         if (isif.perfect.get() && itemInfo.isPerfect()) {
-            name = ComponentUtils.makeRainbowStyle("Perfect " + itemInfo.getName());
+            name = ComponentUtils.makeRainbowStyle("Perfect " + itemInfo.getName(), true);
         } else if (isif.defective.get() && itemInfo.isDefective()) {
             name = ComponentUtils.makeObfuscated(
                     "Defective " + itemInfo.getName(),

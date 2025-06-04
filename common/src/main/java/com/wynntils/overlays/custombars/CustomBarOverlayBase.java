@@ -48,6 +48,9 @@ public abstract class CustomBarOverlayBase extends BarOverlay implements CustomN
 
     @Override
     public final boolean isRendered() {
+        // If the value template is empty, the overlay is not rendered.
+        if (valueTemplate.get().isEmpty()) return false;
+
         // If the enabled template is empty,
         // the overlay is rendered when the player is in the world.
         String template = enabledTemplate.get();
