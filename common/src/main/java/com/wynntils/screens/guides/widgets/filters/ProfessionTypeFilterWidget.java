@@ -33,24 +33,24 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
     private Map<ProfessionType, ProfessionStatProvider> professionProviderMap;
 
     public ProfessionTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
-        super(x, y, 160, 36, guideScreen);
+        super(x, y, 76, 36, guideScreen);
 
         professionTypeButtons.add(
                 new ProfessionTypeButton(x, y, ProfessionType.ALCHEMISM, Texture.ALCHEMISM_FILTER_ICON, searchQuery));
         professionTypeButtons.add(new ProfessionTypeButton(
-                x + 32, y, ProfessionType.ARMOURING, Texture.ARMOURING_FILTER_ICON, searchQuery));
+                x + 20, y, ProfessionType.ARMOURING, Texture.ARMOURING_FILTER_ICON, searchQuery));
         professionTypeButtons.add(
-                new ProfessionTypeButton(x + 64, y, ProfessionType.COOKING, Texture.COOKING_FILTER_ICON, searchQuery));
+                new ProfessionTypeButton(x + 40, y, ProfessionType.COOKING, Texture.COOKING_FILTER_ICON, searchQuery));
         professionTypeButtons.add(new ProfessionTypeButton(
-                x + 96, y, ProfessionType.JEWELING, Texture.JEWELING_FILTER_ICON, searchQuery));
+                x + 60, y, ProfessionType.JEWELING, Texture.JEWELING_FILTER_ICON, searchQuery));
         professionTypeButtons.add(new ProfessionTypeButton(
                 x, y + 20, ProfessionType.SCRIBING, Texture.SCRIBING_FILTER_ICON, searchQuery));
         professionTypeButtons.add(new ProfessionTypeButton(
-                x + 32, y + 20, ProfessionType.TAILORING, Texture.TAILORING_FILTER_ICON, searchQuery));
+                x + 20, y + 20, ProfessionType.TAILORING, Texture.TAILORING_FILTER_ICON, searchQuery));
         professionTypeButtons.add(new ProfessionTypeButton(
-                x + 64, y + 20, ProfessionType.WEAPONSMITHING, Texture.WEAPONSMITHING_FILTER_ICON, searchQuery));
+                x + 40, y + 20, ProfessionType.WEAPONSMITHING, Texture.WEAPONSMITHING_FILTER_ICON, searchQuery));
         professionTypeButtons.add(new ProfessionTypeButton(
-                x + 96, y + 20, ProfessionType.WOODWORKING, Texture.WOODWORKING_FILTER_ICON, searchQuery));
+                x + 60, y + 20, ProfessionType.WOODWORKING, Texture.WOODWORKING_FILTER_ICON, searchQuery));
     }
 
     @Override
