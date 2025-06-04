@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.mojang.serialization.JsonOps;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -20,12 +21,9 @@ import java.lang.reflect.Type;
 import java.util.Set;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Unbreakable;
@@ -81,36 +79,40 @@ public record SavedItem(String base64, Set<String> categories, ItemStack itemSta
             // Get categories from jsonObject
             Set<String> categories = context.deserialize(jsonObject.get("categories"), Set.class);
 
-            // Get itemStackInfo from jsonObject
-            ItemStackInfo itemStackInfo = context.deserialize(jsonObject.get("itemStackInfo"), ItemStackInfo.class);
-
-            // Create itemStack from itemStackInfo
             ItemStack itemStack;
-            // Older items did not save with the item registry name.
-            if (itemStackInfo.registeredItemName() != null) {
-                itemStack = new ItemStack(
-                        BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(itemStackInfo.registeredItemName())), 1);
+            if (jsonObject.has("itemStack")) {
+                // For newer items we can use the itemstack codec to deserialize the item
+                JsonElement itemStackJson = jsonObject.get("itemStack");
+                itemStack = ItemStack.CODEC
+                        .parse(JsonOps.INSTANCE, itemStackJson)
+                        .result()
+                        .orElseThrow(() -> new JsonParseException("Failed to decode ItemStack"));
+            } else if (jsonObject.has("itemStackInfo")) {
+                // Old items did not use the codec so will rely on the previously stored itemstackinfo
+                ItemStackInfo info = context.deserialize(jsonObject.get("itemStackInfo"), ItemStackInfo.class);
+
+                itemStack = new ItemStack(Item.byId(info.itemId()), 1);
+
+                DataComponentMap.Builder componentsBuilder = DataComponentMap.builder()
+                        .set(DataComponents.DAMAGE, info.damage())
+                        .set(DataComponents.UNBREAKABLE, new Unbreakable(false))
+                        .set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
+
+                if (info.color() != -1) {
+                    componentsBuilder.set(DataComponents.DYED_COLOR, new DyedItemColor(info.color(), false));
+                }
+
+                itemStack.applyComponents(componentsBuilder.build());
+
+                // Also hide the attribute modifiers tooltip
+                itemStack.set(
+                        DataComponents.ATTRIBUTE_MODIFIERS,
+                        itemStack
+                                .getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY)
+                                .withTooltip(false));
             } else {
-                itemStack = new ItemStack(Item.byId(itemStackInfo.itemId()), 1);
+                throw new JsonParseException("SavedItem has no itemStack or itemStackInfo");
             }
-            DataComponentMap.Builder componentsBuilder = DataComponentMap.builder()
-                    .set(DataComponents.CUSTOM_MODEL_DATA, itemStackInfo.customModelData())
-                    .set(DataComponents.DAMAGE, itemStackInfo.damage())
-                    .set(DataComponents.UNBREAKABLE, new Unbreakable(false))
-                    .set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
-
-            if (itemStackInfo.color() != -1) {
-                componentsBuilder.set(DataComponents.DYED_COLOR, new DyedItemColor(itemStackInfo.color(), false));
-            }
-
-            itemStack.applyComponents(componentsBuilder.build());
-
-            // Also hide the attribute modifiers tooltip
-            itemStack.set(
-                    DataComponents.ATTRIBUTE_MODIFIERS,
-                    itemStack
-                            .getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY)
-                            .withTooltip(false));
 
             return new SavedItem(base64, categories, itemStack);
         }
@@ -125,32 +127,17 @@ public record SavedItem(String base64, Set<String> categories, ItemStack itemSta
             // Add categories to jsonObject
             jsonObject.add("categories", context.serialize(src.categories()));
 
-            ItemStack itemStack = src.itemStack();
+            // Use the itemstack codec to serialize the item
+            JsonElement itemStackJson = ItemStack.CODEC
+                    .encodeStart(JsonOps.INSTANCE, src.itemStack())
+                    .result()
+                    .orElseThrow(() -> new JsonParseException("Failed to encode ItemStack"));
 
-            DataComponentMap components = itemStack.getComponents();
-
-            // Leather armor can be dyed, we need to store the color
-            int color = components
-                    .getOrDefault(DataComponents.DYED_COLOR, new DyedItemColor(-1, false))
-                    .rgb();
-
-            // Normal gear uses custom model data
-            CustomModelData customModelData =
-                    components.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.EMPTY);
-            // Crafteds use damage
-            int damage = components.getOrDefault(DataComponents.DAMAGE, 0);
-
-            // Note: HideFlags is kept as a boolean for compatibility with the old system
-            ItemStackInfo itemStackInfo = new ItemStackInfo(
-                    itemStack.getItem().toString(), customModelData, Item.getId(itemStack.getItem()), damage, color);
-
-            // Add itemStackInfo to jsonObject
-            jsonObject.add("itemStackInfo", context.serialize(itemStackInfo));
+            jsonObject.add("itemStack", itemStackJson);
 
             return jsonObject;
         }
     }
 
-    private record ItemStackInfo(
-            String registeredItemName, CustomModelData customModelData, int itemId, int damage, int color) {}
+    private record ItemStackInfo(int itemId, int damage, int color) {}
 }
