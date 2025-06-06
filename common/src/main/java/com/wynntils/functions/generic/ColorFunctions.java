@@ -13,9 +13,9 @@ public final class ColorFunctions {
     public static class FromRgbFunction extends GenericFunction<CustomColor> {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
-            int r = Math.max(Math.min(arguments.getArgument("r").getIntegerValue(), 255), 0);
-            int g = Math.max(Math.min(arguments.getArgument("g").getIntegerValue(), 255), 0);
-            int b = Math.max(Math.min(arguments.getArgument("b").getIntegerValue(), 255), 0);
+            int r = arguments.getArgument("r").getIntegerValue();
+            int g = arguments.getArgument("g").getIntegerValue();
+            int b = arguments.getArgument("b").getIntegerValue();
             return new CustomColor(r, g, b);
         }
 
@@ -31,12 +31,9 @@ public final class ColorFunctions {
     public static class FromRgbPercentFunction extends GenericFunction<CustomColor> {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
-            float r = Math.max(
-                    Math.min(arguments.getArgument("r").getDoubleValue().floatValue(), 1), 0);
-            float g = Math.max(
-                    Math.min(arguments.getArgument("g").getDoubleValue().floatValue(), 1), 0);
-            float b = Math.max(
-                    Math.min(arguments.getArgument("b").getDoubleValue().floatValue(), 1), 0);
+            float r = arguments.getArgument("r").getDoubleValue().floatValue();
+            float g = arguments.getArgument("g").getDoubleValue().floatValue();
+            float b = arguments.getArgument("b").getDoubleValue().floatValue();
             return new CustomColor(r, g, b);
         }
 
