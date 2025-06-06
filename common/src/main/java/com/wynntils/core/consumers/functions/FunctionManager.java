@@ -33,6 +33,7 @@ import com.wynntils.functions.WorldEventFunctions;
 import com.wynntils.functions.WorldFunctions;
 import com.wynntils.functions.WynnAlphabetFunctions;
 import com.wynntils.functions.generic.CappedFunctions;
+import com.wynntils.functions.generic.ColorFunctions;
 import com.wynntils.functions.generic.ConditionalFunctions;
 import com.wynntils.functions.generic.LocationFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
@@ -41,6 +42,7 @@ import com.wynntils.functions.generic.NamedFunctions;
 import com.wynntils.functions.generic.RangedFunctions;
 import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.ErrorOr;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -199,6 +201,8 @@ public final class FunctionManager extends Manager {
                 DecimalFormat decimalFormat = new DecimalFormat("0." + "0".repeat(decimals));
                 return decimalFormat.format(number);
             }
+        } else if (value instanceof CustomColor color) {
+            return "§" + color.toHexString();
         }
 
         return value.toString();
@@ -346,6 +350,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new CappedFunctions.CurrentFunction());
         registerFunction(new CappedFunctions.PercentageFunction());
         registerFunction(new CappedFunctions.RemainingFunction());
+
+        registerFunction(new ColorFunctions.FromRgbFunction());
+        registerFunction(new ColorFunctions.FromRgbPercentFunction());
+        registerFunction(new ColorFunctions.ToHexStringFunction());
 
         registerFunction(new ConditionalFunctions.IfCappedValueFunction());
         registerFunction(new ConditionalFunctions.IfNumberFunction());
