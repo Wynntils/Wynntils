@@ -363,6 +363,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ColorFunctions.ToHexStringFunction());
 
         registerFunction(new ConditionalFunctions.IfCappedValueFunction());
+        registerFunction(new ConditionalFunctions.IfCustomColorFunction());
         registerFunction(new ConditionalFunctions.IfNumberFunction());
         registerFunction(new ConditionalFunctions.IfStringFunction());
 

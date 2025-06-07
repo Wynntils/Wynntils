@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
@@ -64,6 +64,21 @@ public class ConditionalFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("if_capped", "if_cap");
+        }
+    }
+
+    public static class IfCustomColorFunction extends IfFunctionBase<CappedValue> {
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("condition", Boolean.class, null),
+                    new FunctionArguments.Argument<>("ifTrue", CappedValue.class, null),
+                    new FunctionArguments.Argument<>("ifFalse", CappedValue.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("if_color", "if_customcolor");
         }
     }
 }
