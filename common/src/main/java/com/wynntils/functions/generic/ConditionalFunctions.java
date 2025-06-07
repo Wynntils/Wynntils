@@ -73,8 +73,8 @@ public class ConditionalFunctions {
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("condition", Boolean.class, null),
-                    new FunctionArguments.Argument<>("ifTrue", CappedValue.class, null),
-                    new FunctionArguments.Argument<>("ifFalse", CappedValue.class, null)));
+                    new FunctionArguments.Argument<>("ifTrue", CustomColor.class, null),
+                    new FunctionArguments.Argument<>("ifFalse", CustomColor.class, null)));
         }
 
         @Override
