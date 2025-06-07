@@ -207,7 +207,7 @@ public class CustomColor {
 
     public CustomColor brightnessShift(float degree) {
         float[] hsb = this.asHsb();
-        float brightness = hsb[0] + degree;
+        float brightness = hsb[2] + degree;
         return fromHSV(hsb[0], hsb[1], brightness, this.a);
     }
 
