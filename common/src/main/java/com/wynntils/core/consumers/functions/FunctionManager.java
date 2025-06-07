@@ -351,8 +351,15 @@ public final class FunctionManager extends Manager {
         registerFunction(new CappedFunctions.PercentageFunction());
         registerFunction(new CappedFunctions.RemainingFunction());
 
+        registerFunction(new ColorFunctions.BlinkShaderFunction());
+        registerFunction(new ColorFunctions.BrightnessShiftFunction());
+        registerFunction(new ColorFunctions.FadeShaderFunction());
         registerFunction(new ColorFunctions.FromRgbFunction());
         registerFunction(new ColorFunctions.FromRgbPercentFunction());
+        registerFunction(new ColorFunctions.GradientShaderFunction());
+        registerFunction(new ColorFunctions.HueShiftFunction());
+        registerFunction(new ColorFunctions.RainbowShaderFunction());
+        registerFunction(new ColorFunctions.SaturationShiftFunction());
         registerFunction(new ColorFunctions.ToHexStringFunction());
 
         registerFunction(new ConditionalFunctions.IfCappedValueFunction());

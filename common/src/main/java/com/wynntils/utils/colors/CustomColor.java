@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.colors;
@@ -11,6 +11,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.wynntils.utils.MathUtils;
+import java.awt.Color;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -33,6 +34,11 @@ public class CustomColor {
     public final int g;
     public final int b;
     public final int a;
+
+    private float[] asHsb() {
+        return Color.RGBtoHSB(this.r, this.g, this.b, null);
+    }
+    ;
 
     public CustomColor(int r, int g, int b) {
         this(r, g, b, 255);
@@ -234,5 +240,23 @@ public class CustomColor {
         public JsonElement serialize(CustomColor src, Type typeOfSrc, JsonSerializationContext context) {
             return context.serialize(src.toString());
         }
+    }
+
+    public CustomColor hueShift(float degree) {
+        float[] hsb = this.asHsb();
+        float hue = hsb[0] + degree;
+        return fromHSV(hue, hsb[1], hsb[2], this.a);
+    }
+
+    public CustomColor saturationShift(float degree) {
+        float[] hsb = this.asHsb();
+        float saturation = hsb[1] + degree;
+        return fromHSV(hsb[0], saturation, hsb[2], this.a);
+    }
+
+    public CustomColor brightnessShift(float degree) {
+        float[] hsb = this.asHsb();
+        float brightness = hsb[0] + degree;
+        return fromHSV(hsb[0], hsb[1], brightness, this.a);
     }
 }
