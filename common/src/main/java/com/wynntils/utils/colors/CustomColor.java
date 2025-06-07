@@ -38,7 +38,6 @@ public class CustomColor {
     private float[] asHsb() {
         return Color.RGBtoHSB(this.r, this.g, this.b, null);
     }
-    ;
 
     public CustomColor(int r, int g, int b) {
         this(r, g, b, 255);
