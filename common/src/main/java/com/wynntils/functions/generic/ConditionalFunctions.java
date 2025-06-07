@@ -6,6 +6,7 @@ package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class ConditionalFunctions {
         }
     }
 
-    public static class IfCustomColorFunction extends IfFunctionBase<CappedValue> {
+    public static class IfCustomColorFunction extends IfFunctionBase<CustomColor> {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
