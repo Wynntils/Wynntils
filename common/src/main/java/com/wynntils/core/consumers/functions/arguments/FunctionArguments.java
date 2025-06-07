@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.arguments;
 
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
@@ -134,6 +135,7 @@ public final class FunctionArguments {
                 Long.class,
                 Double.class,
                 Number.class,
+                CustomColor.class,
                 CappedValue.class,
                 RangedValue.class,
                 NamedValue.class,
@@ -206,6 +208,10 @@ public final class FunctionArguments {
 
         public CappedValue getCappedValue() {
             return (CappedValue) this.getValue();
+        }
+
+        public CustomColor getColorValue() {
+            return (CustomColor) this.getValue();
         }
 
         public RangedValue getRangedValue() {
