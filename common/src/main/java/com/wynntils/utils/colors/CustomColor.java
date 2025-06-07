@@ -193,6 +193,24 @@ public class CustomColor {
         return new CustomColor(this, (int) (a * 255));
     }
 
+    public CustomColor hueShift(float degree) {
+        float[] hsb = this.asHsb();
+        float hue = hsb[0] + degree;
+        return fromHSV(hue, hsb[1], hsb[2], this.a);
+    }
+
+    public CustomColor saturationShift(float degree) {
+        float[] hsb = this.asHsb();
+        float saturation = hsb[1] + degree;
+        return fromHSV(hsb[0], saturation, hsb[2], this.a);
+    }
+
+    public CustomColor brightnessShift(float degree) {
+        float[] hsb = this.asHsb();
+        float brightness = hsb[0] + degree;
+        return fromHSV(hsb[0], hsb[1], brightness, this.a);
+    }
+
     /** 0xAARRGGBB format */
     public int asInt() {
         int a = Math.min(this.a, 255);
@@ -239,23 +257,5 @@ public class CustomColor {
         public JsonElement serialize(CustomColor src, Type typeOfSrc, JsonSerializationContext context) {
             return context.serialize(src.toString());
         }
-    }
-
-    public CustomColor hueShift(float degree) {
-        float[] hsb = this.asHsb();
-        float hue = hsb[0] + degree;
-        return fromHSV(hue, hsb[1], hsb[2], this.a);
-    }
-
-    public CustomColor saturationShift(float degree) {
-        float[] hsb = this.asHsb();
-        float saturation = hsb[1] + degree;
-        return fromHSV(hsb[0], saturation, hsb[2], this.a);
-    }
-
-    public CustomColor brightnessShift(float degree) {
-        float[] hsb = this.asHsb();
-        float brightness = hsb[0] + degree;
-        return fromHSV(hsb[0], hsb[1], brightness, this.a);
     }
 }
