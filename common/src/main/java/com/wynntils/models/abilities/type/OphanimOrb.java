@@ -13,7 +13,7 @@ public class OphanimOrb {
         this.healthState = healthState;
     }
 
-    public Integer getHealtState() {
+    public int getHealtState() {
         return switch (healthState) {
             case HEALTHY -> 3;
             case DAMAGED -> 2;

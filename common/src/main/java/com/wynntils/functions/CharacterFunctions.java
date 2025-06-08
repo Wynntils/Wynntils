@@ -219,13 +219,9 @@ public class CharacterFunctions {
     public static class OphanimOrb extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return arguments.getArgument("orbNumber").getIntegerValue()
-                                    < Models.Ability.ophanimBar.getOrbs().size()
-                            && arguments.getArgument("orbNumber").getIntegerValue() >= 0
-                    ? Models.Ability.ophanimBar
-                            .getOrbs()
-                            .get(arguments.getArgument("orbNumber").getIntegerValue())
-                            .getHealtState()
+            int orbNumber = arguments.getArgument("orbNumber").getIntegerValue();
+            return orbNumber < Models.Ability.ophanimBar.getOrbs().size() && orbNumber >= 0
+                    ? Models.Ability.ophanimBar.getOrbs().get(orbNumber).getHealtState()
                     : -1;
         }
 
