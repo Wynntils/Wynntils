@@ -16,11 +16,8 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.athena.type.ModUpdateInfo;
 import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.FileUtils;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -259,27 +256,8 @@ public final class UpdateService extends Service {
         try {
             URL downloadUrl = URI.create(updateInfo.url()).toURL();
             URLConnection connection = downloadUrl.openConnection();
-            int fileSize = connection.getContentLength();
 
-            FileUtils.createNewFile(newJar);
-
-            InputStream inputStream = new BufferedInputStream(connection.getInputStream());
-            FileOutputStream outputStream = new FileOutputStream(newJar);
-
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            long totalBytesRead = 0;
-
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-                totalBytesRead += bytesRead;
-
-                if (fileSize > 0) {
-                    updateProgress = (float) totalBytesRead / fileSize;
-                }
-            }
-
-            outputStream.close();
+            FileUtils.downloadFileWithProgress(connection, newJar, progress -> updateProgress = progress);
 
             updateProgress = -1f;
             String downloadedUpdateFileMd5 = FileUtils.getMd5(newJar);
@@ -298,9 +276,7 @@ public final class UpdateService extends Service {
             addShutdownHook(oldJar, newJar);
         } catch (IOException exception) {
             updateProgress = -1f;
-            newJar.delete();
             future.complete(UpdateResult.ERROR);
-            WynntilsMod.error("Exception when trying to download update!", exception);
         }
     }
 
