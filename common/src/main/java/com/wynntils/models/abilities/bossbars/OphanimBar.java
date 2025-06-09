@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.bossbars;
@@ -34,6 +34,13 @@ public class OphanimBar extends TrackedBar {
 
     public List<OphanimOrb> getOrbs() {
         return Collections.unmodifiableList(orbs);
+    }
+
+    @Override
+    protected void reset() {
+        super.reset();
+
+        orbs.clear();
     }
 
     @Override

@@ -36,10 +36,18 @@ public final class TooltipHandler extends Handler {
     }
 
     /**
-     * Creates a tooltip builder that provides a synthetic header and footer
+     * Creates a tooltip builder that provides a synthetic header and footer with no source
      */
     public IdentifiableTooltipBuilder buildNew(
             IdentifiableItemProperty identifiableItem, boolean hideUnidentified, boolean showItemType) {
+        return buildNew(identifiableItem, hideUnidentified, showItemType, "");
+    }
+
+    /**
+     * Creates a tooltip builder that provides a synthetic header and footer with the given source
+     */
+    public IdentifiableTooltipBuilder buildNew(
+            IdentifiableItemProperty identifiableItem, boolean hideUnidentified, boolean showItemType, String source) {
         IdentifiableTooltipComponent tooltipComponent = identifiableTooltipComponents.get(identifiableItem.getClass());
         if (tooltipComponent == null) {
             throw new IllegalArgumentException("No tooltip component registered for "
@@ -47,20 +55,20 @@ public final class TooltipHandler extends Handler {
         }
 
         return IdentifiableTooltipBuilder.buildNewItem(
-                identifiableItem, tooltipComponent, hideUnidentified, showItemType);
+                identifiableItem, tooltipComponent, hideUnidentified, showItemType, source);
     }
 
     /**
-     * Creates a tooltip builder that provides a synthetic header and footer
+     * Creates a tooltip builder that provides a synthetic header and footer with the given source
      */
-    public CraftedTooltipBuilder buildNew(CraftedItemProperty craftedItemProperty) {
+    public CraftedTooltipBuilder buildNew(CraftedItemProperty craftedItemProperty, String source) {
         CraftedTooltipComponent tooltipComponent = craftedTooltipComponents.get(craftedItemProperty.getClass());
         if (tooltipComponent == null) {
             throw new IllegalArgumentException("No tooltip component registered for "
                     + craftedItemProperty.getClass().getName());
         }
 
-        return CraftedTooltipBuilder.buildNewItem(craftedItemProperty, tooltipComponent);
+        return CraftedTooltipBuilder.buildNewItem(craftedItemProperty, tooltipComponent, source);
     }
 
     /**
