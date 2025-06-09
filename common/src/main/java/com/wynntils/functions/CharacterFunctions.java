@@ -216,6 +216,29 @@ public class CharacterFunctions {
         }
     }
 
+    public static class OphanimOrb extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int orbNumber = arguments.getArgument("orbNumber").getIntegerValue();
+            return orbNumber < Models.Ability.ophanimBar.getOrbs().size() && orbNumber >= 0
+                    ? Models.Ability.ophanimBar.getOrbs().get(orbNumber).getHealthState()
+                    : -1;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("orbNumber", Integer.class, null)));
+        }
+    }
+
+    public static class OphanimActive extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Ability.ophanimBar.isActive();
+        }
+    }
+
     public static class CappedHolyPowerFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {

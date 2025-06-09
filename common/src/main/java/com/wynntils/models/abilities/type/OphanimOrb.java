@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.type;
@@ -11,6 +11,15 @@ public class OphanimOrb {
 
     public OphanimOrb(HealthState healthState) {
         this.healthState = healthState;
+    }
+
+    public int getHealthState() {
+        return switch (healthState) {
+            case HEALTHY -> 3;
+            case DAMAGED -> 2;
+            case DYING -> 1;
+            case DEAD -> 0;
+        };
     }
 
     public String getString() {
