@@ -188,16 +188,6 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (McUtils.mc().level == null) {
-            renderPanorama(guiGraphics, partialTick);
-        }
-
-        this.renderBlurredBackground();
-        this.renderMenuBackground(guiGraphics);
-    }
-
-    @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         if (!draggingScroll) {
             if (MathUtils.isInside(
