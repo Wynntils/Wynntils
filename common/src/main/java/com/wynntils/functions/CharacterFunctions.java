@@ -221,7 +221,7 @@ public class CharacterFunctions {
         public Integer getValue(FunctionArguments arguments) {
             int orbNumber = arguments.getArgument("orbNumber").getIntegerValue();
             return orbNumber < Models.Ability.ophanimBar.getOrbs().size() && orbNumber >= 0
-                    ? Models.Ability.ophanimBar.getOrbs().get(orbNumber).getHealtState()
+                    ? Models.Ability.ophanimBar.getOrbs().get(orbNumber).getHealthState()
                     : -1;
         }
 
