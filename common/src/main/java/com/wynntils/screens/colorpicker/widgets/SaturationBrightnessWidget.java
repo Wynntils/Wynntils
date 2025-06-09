@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.colorpicker.widgets;
@@ -8,7 +8,6 @@ import com.wynntils.screens.colorpicker.ColorPickerScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
-import java.awt.Color;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -29,7 +28,7 @@ public class SaturationBrightnessWidget extends AbstractWidget {
 
         this.colorPickerScreen = colorPickerScreen;
 
-        float[] hsbColor = Color.RGBtoHSB(baseColor.r, baseColor.g, baseColor.b, null);
+        float[] hsbColor = baseColor.asHSB();
 
         color = CustomColor.fromHSV(hsbColor[0], 1.0f, 1.0f, 1.0f);
 

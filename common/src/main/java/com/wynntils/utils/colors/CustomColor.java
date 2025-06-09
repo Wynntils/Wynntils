@@ -35,10 +35,6 @@ public class CustomColor {
     public final int b;
     public final int a;
 
-    private float[] asHsb() {
-        return Color.RGBtoHSB(this.r, this.g, this.b, null);
-    }
-
     public CustomColor(int r, int g, int b) {
         this(r, g, b, 255);
     }
@@ -193,20 +189,24 @@ public class CustomColor {
         return new CustomColor(this, (int) (a * 255));
     }
 
+    public float[] asHSB() {
+        return Color.RGBtoHSB(this.r, this.g, this.b, null);
+    }
+
     public CustomColor hueShift(float degree) {
-        float[] hsb = this.asHsb();
+        float[] hsb = this.asHSB();
         float hue = hsb[0] + degree;
         return fromHSV(hue, hsb[1], hsb[2], this.a);
     }
 
     public CustomColor saturationShift(float degree) {
-        float[] hsb = this.asHsb();
+        float[] hsb = this.asHSB();
         float saturation = hsb[1] + degree;
         return fromHSV(hsb[0], saturation, hsb[2], this.a);
     }
 
     public CustomColor brightnessShift(float degree) {
-        float[] hsb = this.asHsb();
+        float[] hsb = this.asHSB();
         float brightness = hsb[2] + degree;
         return fromHSV(hsb[0], hsb[1], brightness, this.a);
     }
