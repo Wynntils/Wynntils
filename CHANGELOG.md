@@ -1,3 +1,22 @@
+## [3.0.22](https://github.com/Wynntils/Wynntils/compare/v3.0.21...v3.0.22) (2025-06-09)
+
+
+### New Features
+
+* Color Functions [skip ci] ([#3271](https://github.com/Wynntils/Wynntils/issues/3271)) ([7040068](https://github.com/Wynntils/Wynntils/commit/704006802c51ec258722df1fb28ee905f763e5eb))
+* Handle negative stats with stars when calculating internal rolls [skip ci] ([#3269](https://github.com/Wynntils/Wynntils/issues/3269)) ([23e71a4](https://github.com/Wynntils/Wynntils/commit/23e71a448598e8cc97b1c0e947841cbe6a8e7ccc))
+* Ophanim per orb access from custom info boxes ([#3273](https://github.com/Wynntils/Wynntils/issues/3273)) ([8cb1a9b](https://github.com/Wynntils/Wynntils/commit/8cb1a9b78f8f9bc4f95f93a95f326c7709451e69))
+
+
+### Bug Fixes
+
+* Display item source on fake items [skip ci] ([#3270](https://github.com/Wynntils/Wynntils/issues/3270)) ([f4bbbc4](https://github.com/Wynntils/Wynntils/commit/f4bbbc4746079a0851bade83c501d36440af3c8f))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#3272](https://github.com/Wynntils/Wynntils/issues/3272)) ([676ff88](https://github.com/Wynntils/Wynntils/commit/676ff88b490770d77e669e5f7096f1d5615c44a1))
+
 ## [3.0.21](https://github.com/Wynntils/Wynntils/compare/v3.0.20...v3.0.21) (2025-05-31)
 
 
@@ -14,6 +33,7 @@
 ### Miscellaneous Chores
 
 * Do not use js reserved keyword for function dumps [skip ci] ([#3266](https://github.com/Wynntils/Wynntils/issues/3266)) ([a713f00](https://github.com/Wynntils/Wynntils/commit/a713f00c24babaa18925dec5531778b75a3bb4e4))
+* **release:** v3.0.21 [skip ci] ([285bd0d](https://github.com/Wynntils/Wynntils/commit/285bd0df81f0a5d5e91ca37dec8a2fc548f99c29))
 * Update setup-gradle to v4 ([#3268](https://github.com/Wynntils/Wynntils/issues/3268)) ([5980308](https://github.com/Wynntils/Wynntils/commit/5980308b55cb0f26bf814232ffeb5334ec9df7c2))
 
 ## [3.0.20](https://github.com/Wynntils/Wynntils/compare/v3.0.19...v3.0.20) (2025-05-18)
@@ -82,26 +102,4 @@
 ### Miscellaneous Chores
 
 * **release:** v3.0.18 [skip ci] ([c152818](https://github.com/Wynntils/Wynntils/commit/c152818ad1ec4dde404ed5dd2d2b052336ea2fd0))
-
-## [3.0.17](https://github.com/Wynntils/Wynntils/compare/v3.0.16...v3.0.17) (2025-04-26)
-
-
-### Bug Fixes
-
-* Account for scale in TextOverlays when rendering new lines [skip ci] ([#3214](https://github.com/Wynntils/Wynntils/issues/3214)) ([7afb47f](https://github.com/Wynntils/Wynntils/commit/7afb47f204acd29d48a23a23745867149945f2e4))
-* Display non cumulative threshold on aspects in guide [skip ci] ([#3209](https://github.com/Wynntils/Wynntils/issues/3209)) ([6cd89dd](https://github.com/Wynntils/Wynntils/commit/6cd89dd4f7680cef74c3f042e2f4eb1993a12faa))
-* Dumped statistic arg descriptions do not resolve properly [skip ci] ([#3212](https://github.com/Wynntils/Wynntils/issues/3212)) ([9cb2a86](https://github.com/Wynntils/Wynntils/commit/9cb2a86b087980d99499fb6a8833fef8d2a9ffa3))
-* Fix orange and rainbow beacons not incrementing effect counts ([#3211](https://github.com/Wynntils/Wynntils/issues/3211)) ([c4eda45](https://github.com/Wynntils/Wynntils/commit/c4eda456aa1937bb89d6ac6f9e581eecce12fe1f))
-
-
-### Miscellaneous Chores
-
-* Post event on raid start [skip ci] ([#3208](https://github.com/Wynntils/Wynntils/issues/3208)) ([34346ee](https://github.com/Wynntils/Wynntils/commit/34346eecd4832bbf619509ef5141b801a937258d))
-* **release:** v3.0.17 [skip ci] ([fa6b0f2](https://github.com/Wynntils/Wynntils/commit/fa6b0f20365fa8ea98423457f1ef73e14393c5d8))
-
-
-### Code Refactoring
-
-* Store lootrun details as a separate class [skip ci] ([#3213](https://github.com/Wynntils/Wynntils/issues/3213)) ([353cdbc](https://github.com/Wynntils/Wynntils/commit/353cdbc5cc83efe49b0cbf74da7bea2aa1e71c18))
-* Use guiGraphics for scissors in RenderUtils [skip ci] ([#3203](https://github.com/Wynntils/Wynntils/issues/3203)) ([07e3495](https://github.com/Wynntils/Wynntils/commit/07e34952ba2d3883077e635a2d8ffb00a13ddc22))
 
