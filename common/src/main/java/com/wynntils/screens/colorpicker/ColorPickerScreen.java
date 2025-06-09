@@ -15,7 +15,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import java.awt.Color;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -84,7 +83,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
         saturationBrightnessWidget = new SaturationBrightnessWidget(offsetX + 109, offsetY + 15, 322, 82, this, color);
         this.addRenderableWidget(saturationBrightnessWidget);
 
-        float[] hsbValues = Color.RGBtoHSB(color.r, color.g, color.b, null);
+        float[] hsbValues = color.asHSB();
         hue = hsbValues[0];
         saturation = hsbValues[1];
         brightness = hsbValues[2];
@@ -173,7 +172,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
     public void setHue(float hue) {
         this.hue = hue;
 
-        float[] hsbColor = Color.RGBtoHSB(color.r, color.g, color.b, null);
+        float[] hsbColor = color.asHSB();
 
         color = CustomColor.fromHSV(hue, hsbColor[1], hsbColor[2], color.a / 255f);
 
@@ -193,7 +192,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
 
         colorInput.setTextBoxInput(color.toHexString());
 
-        float[] hsbColor = Color.RGBtoHSB(color.r, color.g, color.b, null);
+        float[] hsbColor = color.asHSB();
 
         hue = hsbColor[0];
         saturation = hsbColor[1];
