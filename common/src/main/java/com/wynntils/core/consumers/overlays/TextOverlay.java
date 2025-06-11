@@ -85,22 +85,7 @@ public abstract class TextOverlay extends DynamicOverlay {
     private void renderTemplate(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
-        float renderY =
-                switch (this.getRenderVerticalAlignment()) {
-                    case TOP -> getRenderY();
-                    case MIDDLE ->
-                        getRenderY()
-                                - (lines.length - 1)
-                                        * FontRenderer.getInstance().getFont().lineHeight
-                                        * textScale
-                                        / 2;
-                    case BOTTOM ->
-                        getRenderY()
-                                - (lines.length - 1)
-                                        * FontRenderer.getInstance().getFont().lineHeight
-                                        * textScale;
-                };
-
+        float renderY = getModifiedRenderY(lines.length, textScale);
         for (StyledText line : lines) {
             BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -120,6 +105,23 @@ public abstract class TextOverlay extends DynamicOverlay {
 
             renderY += FontRenderer.getInstance().getFont().lineHeight * textScale;
         }
+    }
+
+    private float getModifiedRenderY(int lines, float textScale) {
+        final float calculatedTextHeight =
+                (lines - 1) * FontRenderer.getInstance().getFont().lineHeight * textScale;
+        switch (this.getRenderVerticalAlignment()) {
+            case TOP -> {
+                return getRenderY();
+            }
+            case MIDDLE -> {
+                return getRenderY() - calculatedTextHeight / 2;
+            }
+            case BOTTOM -> {
+                return getRenderY() - calculatedTextHeight;
+            }
+        }
+        return 0;
     }
 
     @Override
