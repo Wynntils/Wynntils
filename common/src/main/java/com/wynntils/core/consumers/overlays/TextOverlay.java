@@ -110,18 +110,13 @@ public abstract class TextOverlay extends DynamicOverlay {
     private float getModifiedRenderY(int lines, float textScale) {
         final float calculatedTextHeight =
                 (lines - 1) * FontRenderer.getInstance().getFont().lineHeight * textScale;
-        switch (this.getRenderVerticalAlignment()) {
-            case TOP -> {
-                return getRenderY();
-            }
-            case MIDDLE -> {
-                return getRenderY() - calculatedTextHeight / 2;
-            }
-            case BOTTOM -> {
-                return getRenderY() - calculatedTextHeight;
-            }
-        }
-        return 0;
+        return switch (this.getRenderVerticalAlignment()) {
+            case TOP -> getRenderY();
+
+            case MIDDLE -> getRenderY() - calculatedTextHeight / 2;
+
+            case BOTTOM -> getRenderY() - calculatedTextHeight;
+        };
     }
 
     @Override
