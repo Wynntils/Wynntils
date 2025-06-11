@@ -85,7 +85,22 @@ public abstract class TextOverlay extends DynamicOverlay {
     private void renderTemplate(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
-        float renderY = this.getRenderY();
+        float renderY =
+                switch (this.getRenderVerticalAlignment()) {
+                    case TOP -> getRenderY();
+                    case MIDDLE ->
+                        getRenderY()
+                                - (lines.length - 1)
+                                        * FontRenderer.getInstance().getFont().lineHeight
+                                        * textScale
+                                        / 2;
+                    case BOTTOM ->
+                        getRenderY()
+                                - (lines.length - 1)
+                                        * FontRenderer.getInstance().getFont().lineHeight
+                                        * textScale;
+                };
+
         for (StyledText line : lines) {
             BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
