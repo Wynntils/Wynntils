@@ -85,38 +85,23 @@ public abstract class TextOverlay extends DynamicOverlay {
     private void renderTemplate(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
-        float renderY = getModifiedRenderY(lines.length, textScale);
-        for (StyledText line : lines) {
-            BufferedFontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            guiGraphics.pose(),
-                            bufferSource,
-                            line,
-                            renderX,
-                            renderX + this.getWidth(),
-                            renderY,
-                            renderY + this.getHeight(),
-                            0,
-                            this.getRenderColor(),
-                            this.getRenderHorizontalAlignment(),
-                            this.getRenderVerticalAlignment(),
-                            this.textShadow.get(),
-                            textScale);
-
-            renderY += FontRenderer.getInstance().getFont().lineHeight * textScale;
-        }
-    }
-
-    private float getModifiedRenderY(int lines, float textScale) {
-        final float calculatedTextHeight =
-                (lines - 1) * FontRenderer.getInstance().getFont().lineHeight * textScale;
-        return switch (this.getRenderVerticalAlignment()) {
-            case TOP -> getRenderY();
-
-            case MIDDLE -> getRenderY() - calculatedTextHeight / 2;
-
-            case BOTTOM -> getRenderY() - calculatedTextHeight;
-        };
+        float renderY = this.getRenderY();
+        BufferedFontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        guiGraphics.pose(),
+                        bufferSource,
+                        lines,
+                        renderX,
+                        renderX + this.getWidth(),
+                        renderY,
+                        renderY + this.getHeight(),
+                        0,
+                        this.getRenderColor(),
+                        this.getRenderHorizontalAlignment(),
+                        this.getRenderVerticalAlignment(),
+                        this.textShadow.get(),
+                        textScale,
+                        FontRenderer.getInstance().getFont().lineHeight);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render.buffered;
@@ -80,28 +80,30 @@ public final class BufferedFontRenderer {
         poseStack.scale(textScale, textScale, 0);
 
         switch (shadow) {
-            case NONE -> font.drawInBatch(
-                    text.getComponent(),
-                    0,
-                    0,
-                    customColor.asInt(),
-                    false,
-                    poseStack.last().pose(),
-                    bufferSource,
-                    displayMode,
-                    0,
-                    0xF000F0);
-            case NORMAL -> font.drawInBatch(
-                    text.getComponent(),
-                    0,
-                    0,
-                    customColor.asInt(),
-                    true,
-                    poseStack.last().pose(),
-                    bufferSource,
-                    displayMode,
-                    0,
-                    0xF000F0);
+            case NONE ->
+                font.drawInBatch(
+                        text.getComponent(),
+                        0,
+                        0,
+                        customColor.asInt(),
+                        false,
+                        poseStack.last().pose(),
+                        bufferSource,
+                        displayMode,
+                        0,
+                        0xF000F0);
+            case NORMAL ->
+                font.drawInBatch(
+                        text.getComponent(),
+                        0,
+                        0,
+                        customColor.asInt(),
+                        true,
+                        poseStack.last().pose(),
+                        bufferSource,
+                        displayMode,
+                        0,
+                        0xF000F0);
             case OUTLINE -> {
                 int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
                 Component strippedComponent = text.iterate((part, changes) -> {
@@ -321,6 +323,48 @@ public final class BufferedFontRenderer {
                 verticalAlignment,
                 textShadow,
                 1f);
+    }
+
+    public void renderAlignedTextInBox(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            StyledText[] lines,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow textShadow,
+            float textScale,
+            int lineHeight) {
+        float calculatedTextHeight = (lines.length - 1) * lineHeight * textScale;
+        float renderYOffset =
+                switch (verticalAlignment) {
+                    case TOP -> 0;
+                    case MIDDLE -> calculatedTextHeight / 2;
+                    case BOTTOM -> calculatedTextHeight;
+                };
+        float lineOffset = 0;
+        for (StyledText line : lines) {
+            renderAlignedTextInBox(
+                    poseStack,
+                    bufferSource,
+                    line,
+                    x1,
+                    x2,
+                    y1 - renderYOffset + lineOffset,
+                    y2 - renderYOffset + lineOffset,
+                    maxWidth,
+                    customColor,
+                    horizontalAlignment,
+                    verticalAlignment,
+                    textShadow,
+                    textScale);
+            lineOffset += lineHeight * textScale;
+        }
     }
 
     public void renderText(
