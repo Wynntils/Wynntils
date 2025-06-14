@@ -22,12 +22,12 @@ public class QualityTierFilterWidget extends GuideFilterWidget {
     private QualityTierStatProvider provider;
 
     public QualityTierFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
-        super(x, y, 160, 16, guideScreen);
+        super(x, y, 76, 16, guideScreen);
 
         qualityTierButtons.add(new QualityTierButton(x, y, 0, Texture.TIER_0_FILTER_ICON, searchQuery));
-        qualityTierButtons.add(new QualityTierButton(x + 32, y, 1, Texture.TIER_1_FILTER_ICON, searchQuery));
-        qualityTierButtons.add(new QualityTierButton(x + 64, y, 2, Texture.TIER_2_FILTER_ICON, searchQuery));
-        qualityTierButtons.add(new QualityTierButton(x + 96, y, 3, Texture.TIER_3_FILTER_ICON, searchQuery));
+        qualityTierButtons.add(new QualityTierButton(x + 20, y, 1, Texture.TIER_1_FILTER_ICON, searchQuery));
+        qualityTierButtons.add(new QualityTierButton(x + 40, y, 2, Texture.TIER_2_FILTER_ICON, searchQuery));
+        qualityTierButtons.add(new QualityTierButton(x + 60, y, 3, Texture.TIER_3_FILTER_ICON, searchQuery));
     }
 
     @Override

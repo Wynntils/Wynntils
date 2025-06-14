@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -51,5 +51,14 @@ public class SkillStatProvider extends ItemStatProvider<Integer> {
     public List<ItemProviderType> getFilterTypes() {
         // Skill stats are either fixed in gear
         return List.of(ItemProviderType.GEAR);
+    }
+
+    @Override
+    public List<String> getAliases() {
+        if (skill == Skill.DEFENCE) {
+            return List.of("defense");
+        }
+
+        return super.getAliases();
     }
 }

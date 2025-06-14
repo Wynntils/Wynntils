@@ -24,6 +24,7 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.UniversalTexture;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.wynn.ItemUtils;
 import net.minecraft.client.DeltaTracker;
@@ -36,6 +37,9 @@ public class PowderSpecialBarOverlay extends Overlay {
 
     @Persisted
     public final Config<Boolean> flip = new Config<>(false);
+
+    @Persisted
+    public final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
 
     @Persisted
     public final Config<Boolean> onlyIfWeaponHeld = new Config<>(true);
@@ -85,7 +89,7 @@ public class PowderSpecialBarOverlay extends Overlay {
             PoseStack poseStack, MultiBufferSource bufferSource, float powderSpecialCharge, Powder powderSpecialType) {
         Texture universalBarTexture = Texture.UNIVERSAL_BAR;
 
-        final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
+        final float renderedHeight = barTexture.get().getHeight() * (this.getWidth() / 81);
 
         float renderY =
                 switch (this.getRenderVerticalAlignment()) {
@@ -128,9 +132,9 @@ public class PowderSpecialBarOverlay extends Overlay {
                 this.getRenderX() + this.getWidth(),
                 renderY + 10 + renderedHeight,
                 0,
-                0,
-                universalBarTexture.width(),
-                universalBarTexture.height(),
+                barTexture.get().getTextureY1(),
+                Texture.UNIVERSAL_BAR.width(),
+                barTexture.get().getTextureY2(),
                 (this.flip.get() ? -1f : 1f) * powderSpecialCharge / 100f);
     }
 }

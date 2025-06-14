@@ -5,6 +5,9 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.OverlayPosition;
+import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
@@ -22,17 +25,19 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public class ConfigTile extends WynntilsButton {
-    private final TextboxScreen screen;
+    private final Screen screen;
     private final int maskTopY;
     private final int maskBottomY;
     private final GeneralSettingsButton resetButton;
     private final StyledText displayName;
+    private final Overlay overlay;
     private AbstractWidget configOptionElement;
 
-    public ConfigTile(int x, int y, int width, int height, TextboxScreen screen, Config<?> config) {
+    public ConfigTile(int x, int y, int width, int height, Screen screen, Config<?> config, Overlay overlay) {
         super(x, y, width, height, Component.literal(config.getJsonName()));
         this.screen = screen;
 
@@ -54,6 +59,7 @@ public class ConfigTile extends WynntilsButton {
             displayName = StyledText.fromString(config.getDisplayName());
         }
 
+        this.overlay = overlay;
         this.configOptionElement = getWidgetFromConfig(config);
         this.resetButton = new ResetButton(
                 config,
@@ -62,6 +68,10 @@ public class ConfigTile extends WynntilsButton {
                 getRenderY(),
                 maskTopY,
                 maskBottomY);
+    }
+
+    public ConfigTile(int x, int y, int width, int height, Screen screen, Config<?> config) {
+        this(x, y, width, height, screen, config, null);
     }
 
     @Override
@@ -146,18 +156,35 @@ public class ConfigTile extends WynntilsButton {
     }
 
     private <E extends Enum<E>> AbstractWidget getWidgetFromConfig(Config<?> configOption) {
+        // Prioritise overlay configs so that the allignment enum configs use the screen instead
+        // of the normal enum widget
+        if (overlay != null && screen != null) {
+            if (configOption.getType().equals(OverlayPosition.class)
+                    || configOption.getType().equals(OverlaySize.class)
+                    || configOption.getType().equals(HorizontalAlignment.class)
+                    || configOption.getType().equals(VerticalAlignment.class)) {
+                return new OverlaySettingsWidget(
+                        getRenderX(), getRenderY(), configOption, screen, maskTopY, maskBottomY, overlay);
+            }
+        }
+
         if (configOption.getType().equals(Boolean.class)) {
             return new BooleanSettingsButton(
-                    getRenderX(), getRenderY(), (Config<Boolean>) configOption, maskTopY, maskBottomY, 0, 0);
+                    getRenderX(), getRenderY(), (Config<Boolean>) configOption, maskTopY, maskBottomY);
         } else if (configOption.isEnum()) {
             return new EnumSettingsButton<>(
-                    getRenderX(), getRenderY(), (Config<E>) configOption, maskTopY, maskBottomY, 0, 0);
+                    getRenderX(), getRenderY(), (Config<E>) configOption, maskTopY, maskBottomY);
         } else if (configOption.getType().equals(CustomColor.class)) {
             return new CustomColorSettingsButton(
-                    getRenderX(), getRenderY(), (Config<CustomColor>) configOption, screen, maskTopY, maskBottomY);
-        } else {
-            return new TextInputBoxSettingsWidget<>(
-                    getRenderX(), getRenderY(), configOption, screen, maskTopY, maskBottomY);
+                    getRenderX(),
+                    getRenderY(),
+                    (Config<CustomColor>) configOption,
+                    (TextboxScreen) screen,
+                    maskTopY,
+                    maskBottomY);
         }
+
+        return new TextInputBoxSettingsWidget<>(
+                getRenderX(), getRenderY(), configOption, (TextboxScreen) screen, maskTopY, maskBottomY);
     }
 }

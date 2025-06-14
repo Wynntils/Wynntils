@@ -181,8 +181,14 @@ public class UnidentifiedItemIconFeature extends Feature {
 
     public enum UnidentifiedItemIconLocation {
         TOP_LEFT(HorizontalAlignment.LEFT, VerticalAlignment.TOP),
+        TOP_CENTER(HorizontalAlignment.CENTER, VerticalAlignment.TOP),
+        TOP_RIGHT(HorizontalAlignment.RIGHT, VerticalAlignment.TOP),
+        CENTER_LEFT(HorizontalAlignment.LEFT, VerticalAlignment.MIDDLE),
+        CENTER(HorizontalAlignment.CENTER, VerticalAlignment.MIDDLE),
+        CENTER_RIGHT(HorizontalAlignment.RIGHT, VerticalAlignment.MIDDLE),
         BOTTOM_LEFT(HorizontalAlignment.LEFT, VerticalAlignment.BOTTOM),
-        CENTER(HorizontalAlignment.CENTER, VerticalAlignment.MIDDLE);
+        BOTTOM_CENTER(HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM),
+        BOTTOM_RIGHT(HorizontalAlignment.RIGHT, VerticalAlignment.BOTTOM);
 
         private final IconRenderer iconRenderer;
 
