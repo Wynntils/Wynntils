@@ -17,6 +17,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.IterationDecision;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -203,6 +204,71 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
+            StyledText[] lines,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow textShadow,
+            float textScale,
+            int lineHeight) {
+        List<StyledText> adjustedLines = new ArrayList<>();
+        for (StyledText line : lines) {
+            if (maxWidth == 0 || font.width(line.getComponent()) < maxWidth / textScale) {
+                adjustedLines.add(line);
+            } else {
+                List<FormattedText> parts =
+                        font.getSplitter().splitLines(line.getComponent(), (int) (maxWidth / textScale), Style.EMPTY);
+                StyledText lastPart = StyledText.EMPTY;
+                for (FormattedText part : parts) {
+                    Style lastStyle = ComponentUtils.getLastPartCodes(lastPart);
+                    StyledText text = StyledText.fromComponent(
+                                    Component.literal("").withStyle(lastStyle))
+                            .append(StyledText.fromComponent(ComponentUtils.formattedTextToComponent(part)));
+                    lastPart = text;
+                    adjustedLines.add(text);
+                }
+            }
+        }
+
+        float calculatedTextHeight = (adjustedLines.size() - 1) * lineHeight * textScale;
+
+        float renderX =
+                switch (horizontalAlignment) {
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
+                };
+        float renderY =
+                switch (verticalAlignment) {
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f - calculatedTextHeight / 2f;
+                    case BOTTOM -> y2 - calculatedTextHeight;
+                };
+        float lineOffset = 0;
+        for (StyledText text : adjustedLines) {
+            renderText(
+                    poseStack,
+                    bufferSource,
+                    text,
+                    renderX,
+                    renderY + lineOffset,
+                    customColor,
+                    horizontalAlignment,
+                    verticalAlignment,
+                    textShadow,
+                    textScale);
+            lineOffset += lineHeight * textScale;
+        }
+    }
+
+    public void renderAlignedTextInBox(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
             StyledText text,
             float x1,
             float x2,
@@ -214,32 +280,21 @@ public final class BufferedFontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-        float renderX =
-                switch (horizontalAlignment) {
-                    case LEFT -> x1;
-                    case CENTER -> (x1 + x2) / 2f;
-                    case RIGHT -> x2;
-                };
-
-        float renderY =
-                switch (verticalAlignment) {
-                    case TOP -> y1;
-                    case MIDDLE -> (y1 + y2) / 2f;
-                    case BOTTOM -> y2;
-                };
-
-        renderText(
+        renderAlignedTextInBox(
                 poseStack,
                 bufferSource,
-                text,
-                renderX,
-                renderY,
+                new StyledText[] {text},
+                x1,
+                x2,
+                y1,
+                y2,
                 maxWidth,
                 customColor,
                 horizontalAlignment,
                 verticalAlignment,
                 textShadow,
-                textScale);
+                textScale,
+                font.lineHeight);
     }
 
     public void renderAlignedTextInBox(
@@ -323,48 +378,6 @@ public final class BufferedFontRenderer {
                 verticalAlignment,
                 textShadow,
                 1f);
-    }
-
-    public void renderAlignedTextInBox(
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
-            StyledText[] lines,
-            float x1,
-            float x2,
-            float y1,
-            float y2,
-            float maxWidth,
-            CustomColor customColor,
-            HorizontalAlignment horizontalAlignment,
-            VerticalAlignment verticalAlignment,
-            TextShadow textShadow,
-            float textScale,
-            int lineHeight) {
-        float calculatedTextHeight = (lines.length - 1) * lineHeight * textScale;
-        float renderYOffset =
-                switch (verticalAlignment) {
-                    case TOP -> 0;
-                    case MIDDLE -> calculatedTextHeight / 2;
-                    case BOTTOM -> calculatedTextHeight;
-                };
-        float lineOffset = 0;
-        for (StyledText line : lines) {
-            renderAlignedTextInBox(
-                    poseStack,
-                    bufferSource,
-                    line,
-                    x1,
-                    x2,
-                    y1 - renderYOffset + lineOffset,
-                    y2 - renderYOffset + lineOffset,
-                    maxWidth,
-                    customColor,
-                    horizontalAlignment,
-                    verticalAlignment,
-                    textShadow,
-                    textScale);
-            lineOffset += lineHeight * textScale;
-        }
     }
 
     public void renderText(
