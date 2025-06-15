@@ -11,8 +11,10 @@ import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,21 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        RenderUtils.drawTexturedRectWithColor(
+                guiGraphics.pose(),
+                Texture.INFO.resource(),
+                isHovered ? CommonColors.AQUA : CommonColors.WHITE,
+                this.getX(),
+                this.getY(),
+                0,
+                getWidth(),
+                getHeight(),
+                0,
+                0,
+                Texture.INFO.width(),
+                Texture.INFO.height(),
+                Texture.INFO.width(),
+                Texture.INFO.height());
 
         if (isHovered) {
             McUtils.mc()
