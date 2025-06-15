@@ -113,17 +113,9 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        if (holder.inTutorial || activityInfo.trackingState() == ActivityTrackingState.TRACKED) {
+        if (holder.inTutorial) {
             RenderUtils.drawRotatingBorderSegment(
-                    guiGraphics.pose(),
-                    holder.inTutorial ? CommonColors.RED : CommonColors.BLUE,
-                    getX(),
-                    getY(),
-                    getX() + width,
-                    getY() + height,
-                    1,
-                    1,
-                    0.1f);
+                    guiGraphics.pose(), CommonColors.RED, getX(), getY(), getX() + width, getY() + height, 1, 2, 0.25f);
         }
 
         if (searchMatch) return;
