@@ -352,7 +352,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.TOP,
-                            TextShadow.NORMAL);
+                            TextShadow.NORMAL,
+                            1.25f);
         }
 
         if (configurables.size() > CONFIGURABLES_PER_PAGE) {

@@ -85,7 +85,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private Edge selectedEdge = null;
 
     private boolean buttonsAtBottom = true;
-    private boolean renderAllOverlays = true;
+    private boolean renderAllOverlays;
     private boolean showPreview = true;
 
     private boolean snappingEnabled = true;
@@ -102,6 +102,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         this.previousScreen = previousScreen;
         selectedOverlay = overlay;
         fixedSelection = true;
+        renderAllOverlays = false;
         animationLengthRemaining = ANIMATION_LENGTH;
     }
 
@@ -110,6 +111,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         this.previousScreen = previousScreen;
         selectedOverlay = null;
         fixedSelection = false;
+        renderAllOverlays = true;
         animationLengthRemaining = 0;
     }
 

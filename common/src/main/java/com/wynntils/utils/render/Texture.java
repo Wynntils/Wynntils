@@ -181,6 +181,7 @@ public enum Texture {
     FORWARD_ARROW_OFFSET("icons/generic_offset/forward_arrow_icon_offset.png", 36, 10),
     RELOAD_ICON_OFFSET("icons/generic_offset/reload_icon_offset.png", 40, 20),
     REMOVE_ICON_OFFSET("icons/generic_offset/remove_icon_offset.png", 14, 28),
+    SHARE_ICON_OFFSET("icons/generic_offset/share_icon_offset.png", 16, 28),
     SORT_ALPHABETICALLY_OFFSET("icons/generic_offset/sort_alphabetical_icon_offset.png", 23, 46),
     SORT_DISTANCE_OFFSET("icons/generic_offset/sort_distance_icon_offset.png", 23, 46),
     SORT_LEVEL_OFFSET("icons/generic_offset/sort_level_icon_offset.png", 23, 46),

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.widgets;
@@ -32,7 +32,7 @@ public class ImportButton extends WynntilsButton implements TooltipProvider {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
-        Texture addButton = Texture.ADD_ICON;
+        Texture addButton = Texture.ADD_ICON_OFFSET;
         RenderUtils.drawTexturedRect(
                 poseStack,
                 addButton.resource(),
@@ -42,9 +42,9 @@ public class ImportButton extends WynntilsButton implements TooltipProvider {
                 this.width,
                 this.height,
                 0,
-                0,
+                isHovered ? addButton.height() / 2 : 0,
                 addButton.width(),
-                addButton.height(),
+                addButton.height() / 2,
                 addButton.width(),
                 addButton.height());
     }
