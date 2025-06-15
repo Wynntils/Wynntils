@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.colors;
@@ -11,6 +11,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.wynntils.utils.MathUtils;
+import java.awt.Color;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -186,6 +187,28 @@ public class CustomColor {
 
     public CustomColor withAlpha(float a) {
         return new CustomColor(this, (int) (a * 255));
+    }
+
+    public float[] asHSB() {
+        return Color.RGBtoHSB(this.r, this.g, this.b, null);
+    }
+
+    public CustomColor hueShift(float degree) {
+        float[] hsb = this.asHSB();
+        float hue = hsb[0] + degree;
+        return fromHSV(hue, hsb[1], hsb[2], this.a);
+    }
+
+    public CustomColor saturationShift(float degree) {
+        float[] hsb = this.asHSB();
+        float saturation = hsb[1] + degree;
+        return fromHSV(hsb[0], saturation, hsb[2], this.a);
+    }
+
+    public CustomColor brightnessShift(float degree) {
+        float[] hsb = this.asHSB();
+        float brightness = hsb[2] + degree;
+        return fromHSV(hsb[0], hsb[1], brightness, this.a);
     }
 
     /** 0xAARRGGBB format */
