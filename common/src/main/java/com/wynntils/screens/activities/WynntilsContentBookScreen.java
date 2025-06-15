@@ -331,7 +331,17 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
             trackedActivity = newTrackedActivity;
 
             if (trackedActivity.description().isPresent()) {
-                trackedDescription = trackedActivity.description().get();
+                trackedDescription = trackedActivity.description().get().map(part -> {
+                    if (part.getPartStyle().getColor().equals(CustomColor.fromChatFormatting(ChatFormatting.GRAY))) {
+                        return part.withStyle(partStyle -> partStyle.withColor(CommonColors.WHITE));
+                    } else if (part.getPartStyle()
+                            .getColor()
+                            .equals(CustomColor.fromChatFormatting(ChatFormatting.WHITE))) {
+                        return part.withStyle(partStyle -> partStyle.withColor(CommonColors.AQUA));
+                    } else {
+                        return part;
+                    }
+                });
             }
 
             if (!trackedActivity.rewards().isEmpty()) {
