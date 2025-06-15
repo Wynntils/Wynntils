@@ -384,6 +384,8 @@ public class ItemHighlightFeature extends Feature {
     public enum HighlightTexture {
         CIRCLE_TRANSPARENT,
         CIRCLE_OPAQUE,
+        CIRCLE_OUTLINE_LARGE,
+        CIRCLE_OUTLINE_SMALL,
         BOX_TRANSPARENT,
         BOX_OPAQUE,
         BOX_GRADIENT_1,

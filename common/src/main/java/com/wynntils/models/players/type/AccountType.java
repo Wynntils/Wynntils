@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players.type;
@@ -31,7 +31,7 @@ public enum AccountType {
 
     public MutableComponent getComponent() {
         if (this == DONATOR) {
-            return ComponentUtils.makeRainbowStyle(component.getString());
+            return ComponentUtils.makeRainbowStyle(component.getString(), false);
         }
 
         // FIXME: Remove when Athena account types are properly implemented

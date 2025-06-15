@@ -30,6 +30,7 @@ import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMo
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
+import com.wynntils.core.persisted.upfixers.storage.UpdateChangelogToModelUpfixer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -67,6 +68,7 @@ public class UpfixerManager extends Manager {
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
+        registerStorageUpfixer(new UpdateChangelogToModelUpfixer());
     }
 
     private void registerConfigUpfixer(Upfixer upfixer) {

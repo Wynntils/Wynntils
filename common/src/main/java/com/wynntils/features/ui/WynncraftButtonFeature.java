@@ -10,6 +10,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -21,6 +22,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.screens.downloads.DownloadScreen;
+import com.wynntils.screens.update.UpdateScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -87,6 +89,9 @@ public class WynncraftButtonFeature extends Feature {
             if (Managers.Download.graphState().error() && cancelAutoJoin.get() && !ignoreFailedDownloads.get()) {
                 WynntilsMod.warn("Downloads have failed, auto join is cancelled.");
                 return;
+            } else if (Services.Update.shouldPromptUpdate()) {
+                WynntilsMod.info("Cancelling auto join, update available");
+                return;
             }
             ServerData wynncraftServer = getWynncraftServer();
             connectToServer(wynncraftServer);
@@ -100,13 +105,20 @@ public class WynncraftButtonFeature extends Feature {
         if (titleScreen.children.stream().anyMatch(child -> child instanceof WynncraftButton)) return;
 
         ServerData wynncraftServer = getWynncraftServer();
+        WarningType warningType = WarningType.NONE;
+
+        if (Managers.Download.graphState().error()) {
+            warningType = WarningType.DOWNLOADS;
+        } else if (Services.Update.shouldPromptUpdate()) {
+            warningType = WarningType.UPDATE;
+        }
 
         WynncraftButton wynncraftButton = new WynncraftButton(
                 titleScreen,
                 wynncraftServer,
                 titleScreen.width / 2 + 104,
                 titleScreen.height / 4 + 48 + 24,
-                Managers.Download.graphState().error(),
+                warningType,
                 ignoreFailedDownloads.get());
         titleScreen.addRenderableWidget(wynncraftButton);
     }
@@ -134,25 +146,38 @@ public class WynncraftButtonFeature extends Feature {
         private static final List<Component> DOWNLOAD_TOOLTIP = List.of(
                 Component.translatable("feature.wynntils.wynncraftButton.download1"),
                 Component.translatable("feature.wynntils.wynncraftButton.download2"));
+        private static final List<Component> UPDATE_TOOLTIP =
+                List.of(Component.translatable("feature.wynntils.wynncraftButton.update"));
+        private final Screen titleScreen;
         private final ServerData serverData;
         private final ServerIcon serverIcon;
-        private final boolean showWarning;
+        private final WarningType warningType;
         private final boolean ignoreFailedDownloads;
+        private final List<Component> tooltip;
 
         WynncraftButton(
-                Screen backScreen,
+                Screen titleScreen,
                 ServerData serverData,
                 int x,
                 int y,
-                boolean showWarning,
+                WarningType warningType,
                 boolean ignoreFailedDownloads) {
             super(x, y, 20, 20, Component.literal(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
             this.serverData = serverData;
+            this.titleScreen = titleScreen;
 
             this.serverIcon = new ServerIcon(serverData);
             this.serverIcon.loadResource(false);
-            this.showWarning = showWarning;
+            this.warningType = warningType;
             this.ignoreFailedDownloads = ignoreFailedDownloads;
+
+            if (warningType == WarningType.DOWNLOADS) {
+                tooltip = DOWNLOAD_TOOLTIP;
+            } else if (warningType == WarningType.UPDATE) {
+                tooltip = UPDATE_TOOLTIP;
+            } else {
+                tooltip = CONNECT_TOOLTIP;
+            }
         }
 
         @Override
@@ -176,7 +201,7 @@ public class WynncraftButtonFeature extends Feature {
                     64,
                     64);
 
-            if (showWarning) {
+            if (warningType == WarningType.DOWNLOADS) {
                 FontRenderer.getInstance()
                         .renderText(
                                 guiGraphics.pose(),
@@ -187,13 +212,24 @@ public class WynncraftButtonFeature extends Feature {
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.MIDDLE,
                                 TextShadow.OUTLINE);
+            } else if (warningType == WarningType.UPDATE) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics.pose(),
+                                StyledText.fromString("⟳"),
+                                this.getX() + 2,
+                                this.getY(),
+                                CommonColors.YELLOW,
+                                HorizontalAlignment.CENTER,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.OUTLINE,
+                                1.5f);
             }
 
             if (isHovered) {
                 McUtils.mc()
                         .screen
-                        .setTooltipForNextRenderPass(Lists.transform(
-                                showWarning ? DOWNLOAD_TOOLTIP : CONNECT_TOOLTIP, Component::getVisualOrderText));
+                        .setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
             }
         }
 
@@ -201,7 +237,9 @@ public class WynncraftButtonFeature extends Feature {
             if (!(button instanceof WynncraftButton wynncraftButton)) return;
             if (!Managers.Download.graphState().finished()) return;
 
-            if (wynncraftButton.showWarning && !wynncraftButton.ignoreFailedDownloads) {
+            if (wynncraftButton.warningType == WarningType.UPDATE) {
+                McUtils.mc().setScreen(UpdateScreen.create(wynncraftButton.serverData, wynncraftButton.titleScreen));
+            } else if (wynncraftButton.warningType == WarningType.DOWNLOADS && !wynncraftButton.ignoreFailedDownloads) {
                 McUtils.mc().setScreen(DownloadScreen.create(McUtils.mc().screen, wynncraftButton.serverData));
             } else {
                 connectToServer(wynncraftButton.serverData);
@@ -327,5 +365,11 @@ public class WynncraftButtonFeature extends Feature {
         ServerType(String serverAddressPrefix) {
             this.serverAddressPrefix = serverAddressPrefix;
         }
+    }
+
+    private enum WarningType {
+        NONE,
+        DOWNLOADS,
+        UPDATE
     }
 }

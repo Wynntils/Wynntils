@@ -1,17 +1,21 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
 
 import com.wynntils.core.WynntilsMod;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.nio.file.FileSystemException;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public final class FileUtils {
     /**
@@ -114,5 +118,36 @@ public final class FileUtils {
 
         MD5Verification verification = new MD5Verification(file);
         return verification.getMd5();
+    }
+
+    public static void downloadFileWithProgress(
+            URLConnection connection, File fileDestination, Consumer<Float> progressCallback) {
+        try {
+            int fileSize = connection.getContentLength();
+
+            createNewFile(fileDestination);
+
+            InputStream inputStream = new BufferedInputStream(connection.getInputStream());
+            FileOutputStream outputStream = new FileOutputStream(fileDestination);
+
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            long totalBytesRead = 0;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+                totalBytesRead += bytesRead;
+
+                if (fileSize > 0) {
+                    float progress = (float) totalBytesRead / fileSize;
+                    progressCallback.accept(progress);
+                }
+            }
+
+            outputStream.close();
+        } catch (IOException exception) {
+            fileDestination.delete();
+            WynntilsMod.error("Exception whilst downloading file", exception);
+        }
     }
 }
