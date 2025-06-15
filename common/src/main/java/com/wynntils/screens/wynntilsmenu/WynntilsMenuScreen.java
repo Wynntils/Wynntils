@@ -11,10 +11,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
-import com.wynntils.screens.activities.WynntilsCaveScreen;
-import com.wynntils.screens.activities.WynntilsDialogueHistoryScreen;
-import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
-import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
@@ -99,14 +95,14 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         int y = (BUTTON_SIZE + 5) + offsetY + 15;
 
         // region Row 1: Content / Activities
-        buttons.getFirst()
+        buttons.get(0)
                 .add(new WynntilsMenuButton(
                         x,
                         y,
                         BUTTON_SIZE,
                         Texture.QUEST_BOOK_ICON,
                         true,
-                        WynntilsQuestBookScreen.create(),
+                        () -> ContainerUtils.openInventory(InventoryUtils.CONTENT_BOOK_SLOT_NUM),
                         List.of(
                                 Component.literal("[>] ")
                                         .withStyle(ChatFormatting.GOLD)
@@ -118,67 +114,6 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                         .withStyle(ChatFormatting.GREEN))));
-        x += (BUTTON_SIZE + 5);
-        buttons.getFirst()
-                .add(new WynntilsMenuButton(
-                        x,
-                        y,
-                        BUTTON_SIZE,
-                        Texture.DISCOVERIES_ICON,
-                        true,
-                        WynntilsDiscoveriesScreen.create(),
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.name")
-                                                .withStyle(ChatFormatting.BOLD)
-                                                .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.wynntilsDiscoveries.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.literal(""),
-                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
-                                        .withStyle(ChatFormatting.GREEN))));
-        x += (BUTTON_SIZE + 5);
-        buttons.get(0)
-                .add(new WynntilsMenuButton(
-                        x,
-                        y,
-                        BUTTON_SIZE,
-                        Texture.CAVE,
-                        false,
-                        WynntilsCaveScreen.create(),
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable("screens.wynntils.wynntilsCaves.name")
-                                                .withStyle(ChatFormatting.BOLD)
-                                                .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.wynntilsCaves.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.literal(""),
-                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
-                                        .withStyle(ChatFormatting.GREEN))));
-        x += (BUTTON_SIZE + 5);
-        buttons.get(0)
-                .add(new WynntilsMenuButton(
-                        x,
-                        y,
-                        BUTTON_SIZE,
-                        Texture.ADD_ICON,
-                        false,
-                        () -> ContainerUtils.openInventory(InventoryUtils.CONTENT_BOOK_SLOT_NUM),
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable("screens.wynntils.additionalContent.name")
-                                                .withStyle(ChatFormatting.BOLD)
-                                                .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.additionalContent.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.literal(""),
-                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
-                                        .withStyle(ChatFormatting.GREEN))));
-
         // endregion
 
         // region Row 2: Map
@@ -267,27 +202,6 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                                 .withStyle(ChatFormatting.BOLD)
                                                 .withStyle(ChatFormatting.GOLD)),
                                 Component.translatable("screens.wynntils.wynntilsGuides.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.literal(""),
-                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
-                                        .withStyle(ChatFormatting.GREEN))));
-        x += (BUTTON_SIZE + 5);
-        buttons.get(2)
-                .add(new WynntilsMenuButton(
-                        x,
-                        y,
-                        BUTTON_SIZE,
-                        Texture.DIALOGUE_ICON,
-                        false,
-                        WynntilsDialogueHistoryScreen.create(),
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable(
-                                                        "screens.wynntils.wynntilsQuestBook.dialogueHistory.name")
-                                                .withStyle(ChatFormatting.BOLD)
-                                                .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
                                         .withStyle(ChatFormatting.GRAY),
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
@@ -527,6 +441,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         CommonColors.PURPLE,
                         HorizontalAlignment.CENTER,
                         TextShadow.NONE);
+
         if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
                 .displayOverallProgress
                 .get()) {

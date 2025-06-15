@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.discoveries;
@@ -16,7 +16,6 @@ import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.activities.type.DiscoveryType;
-import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -37,41 +36,6 @@ public final class DiscoveryModel extends Model {
 
     public DiscoveryModel() {
         super(List.of());
-    }
-
-    public void openDiscoveryOnMap(DiscoveryInfo discoveryInfo) {
-        if (discoveryInfo.type() != DiscoveryType.TERRITORY) {
-            locateDiscovery(discoveryInfo.name(), DiscoveryOpenAction.MAP);
-            return;
-        }
-
-        TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.name());
-        if (guildTerritory != null) {
-            int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
-            int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
-
-            McUtils.mc().setScreen(MainMapScreen.create(centerX, centerZ));
-        }
-    }
-
-    public void setDiscoveryCompass(DiscoveryInfo discoveryInfo) {
-        if (discoveryInfo.type() != DiscoveryType.TERRITORY) {
-            locateDiscovery(discoveryInfo.name(), DiscoveryOpenAction.COMPASS);
-            return;
-        }
-
-        TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.name());
-        if (guildTerritory != null) {
-            int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
-            int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
-
-            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                    new Location(centerX, 0, centerZ), guildTerritory.getName());
-        }
-    }
-
-    public void openDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.name()));
     }
 
     private void queryDiscoveries(
@@ -184,12 +148,14 @@ public final class DiscoveryModel extends Model {
         }
 
         return switch (sortOrder) {
-            case LEVEL -> baseStream.sorted(Comparator.comparing(DiscoveryInfo::discovered)
-                    .thenComparing(DiscoveryInfo::minLevel)
-                    .thenComparing(DiscoveryInfo::name));
-            case ALPHABETIC -> baseStream.sorted(Comparator.comparing(DiscoveryInfo::discovered)
-                    .thenComparing(DiscoveryInfo::name)
-                    .thenComparing(DiscoveryInfo::minLevel));
+            case LEVEL ->
+                baseStream.sorted(Comparator.comparing(DiscoveryInfo::discovered)
+                        .thenComparing(DiscoveryInfo::minLevel)
+                        .thenComparing(DiscoveryInfo::name));
+            case ALPHABETIC ->
+                baseStream.sorted(Comparator.comparing(DiscoveryInfo::discovered)
+                        .thenComparing(DiscoveryInfo::name)
+                        .thenComparing(DiscoveryInfo::minLevel));
             case DISTANCE -> null;
         };
     }
@@ -248,9 +214,9 @@ public final class DiscoveryModel extends Model {
             }
 
             switch (action) {
-                    // We can't run this is on request thread
-                case MAP -> Managers.TickScheduler.scheduleNextTick(
-                        () -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
+                // We can't run this is on request thread
+                case MAP ->
+                    Managers.TickScheduler.scheduleNextTick(() -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
                 case COMPASS -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z), name);
             }
         });
