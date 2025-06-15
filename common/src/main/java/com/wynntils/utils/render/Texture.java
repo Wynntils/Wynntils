@@ -304,7 +304,7 @@ public enum Texture {
     HEALTH_BAR_OVERFLOW("overlays/bars/bars_health_overflow.png", 81, 164),
     MANA_BAR("overlays/bars/bars_mana.png", 81, 180),
     MANA_BAR_OVERFLOW("overlays/bars/bars_mana_overflow.png", 81, 180),
-    UNIVERSAL_BAR("overlays/bars/universal_bar.png", 81, 16),
+    UNIVERSAL_BAR("overlays/bars/universal_bars.png", 81, 338),
     // endregion
 
     // region Players
