@@ -139,7 +139,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
                 List.of(Component.literal("Scroll Down")));
         this.addRenderableWidget(scrollDownButton);
 
-        this.addRenderableWidget(new WynntilsMenuTag(offsetX + 261, offsetY + 144, (b) -> {
+        this.addRenderableWidget(new WynntilsMenuTag(offsetX + 333, offsetY + 151, (b) -> {
             McUtils.player().closeContainer();
             McUtils.mc().setScreen(WynntilsMenuScreen.create());
         }));

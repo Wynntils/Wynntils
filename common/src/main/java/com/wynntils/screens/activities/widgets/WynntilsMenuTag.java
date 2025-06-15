@@ -25,7 +25,7 @@ public class WynntilsMenuTag extends WynntilsButton {
     private int offset = 0;
 
     public WynntilsMenuTag(int x, int y, Consumer<Integer> onClick) {
-        super(x, y, Texture.CONTENT_BOOK_TAG.width(), 33, Component.literal("Wynntils Menu Button"));
+        super(x, y, Texture.CONTENT_BOOK_TAG.width(), 22, Component.literal("Wynntils Menu Button"));
 
         this.onClick = onClick;
     }
@@ -47,11 +47,11 @@ public class WynntilsMenuTag extends WynntilsButton {
                 getY(),
                 0,
                 Texture.CONTENT_BOOK_TAG.width(),
-                33,
+                height,
                 0,
-                33 * offset,
+                height * offset,
                 Texture.CONTENT_BOOK_TAG.width(),
-                33,
+                height,
                 Texture.CONTENT_BOOK_TAG.width(),
                 Texture.CONTENT_BOOK_TAG.height());
         FontRenderer.getInstance()
@@ -63,8 +63,7 @@ public class WynntilsMenuTag extends WynntilsButton {
                         isHovered ? CommonColors.YELLOW : CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL,
-                        1.5f);
+                        TextShadow.NORMAL);
     }
 
     @Override

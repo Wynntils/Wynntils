@@ -14,7 +14,7 @@ public enum Texture {
     CONFIG_BOOK_SCROLL_AREA("content_book/config_book_scroll_area.png", 168, 175),
     CONFIG_BOOK_SCROLL_BUTTON("content_book/config_book_scroll_button.png", 5, 18),
     CONTENT_BOOK_BACKGROUND("content_book/content_book.png", 339, 220),
-    CONTENT_BOOK_TAG("content_book/content_book_tag.png", 171, 99),
+    CONTENT_BOOK_TAG("content_book/content_book_tag.png", 99, 66),
     CONTENT_BOOK_TITLE("content_book/content_book_title.png", 168, 33),
     CUSTOM_CONTENT_BOOK_BACKGROUND("content_book/custom_content_book.png", 432, 263),
     TAG_BLUE("content_book/tag_blue.png", 44, 22),
