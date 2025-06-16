@@ -12,7 +12,6 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -100,8 +99,7 @@ public abstract class TextOverlay extends DynamicOverlay {
                         this.getRenderHorizontalAlignment(),
                         this.getRenderVerticalAlignment(),
                         this.textShadow.get(),
-                        textScale,
-                        FontRenderer.getInstance().getFont().lineHeight);
+                        textScale);
     }
 
     @Override

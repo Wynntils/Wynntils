@@ -214,8 +214,8 @@ public final class BufferedFontRenderer {
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
-            float textScale,
-            int lineHeight) {
+            float textScale) {
+        int lineHeight = font.lineHeight;
         List<StyledText> adjustedLines = new ArrayList<>();
         for (StyledText line : lines) {
             if (maxWidth == 0 || font.width(line.getComponent()) < maxWidth / textScale) {
@@ -293,8 +293,7 @@ public final class BufferedFontRenderer {
                 horizontalAlignment,
                 verticalAlignment,
                 textShadow,
-                textScale,
-                font.lineHeight);
+                textScale);
     }
 
     public void renderAlignedTextInBox(
