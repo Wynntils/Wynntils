@@ -221,5 +221,4 @@ public final class ProfessionModel extends Model {
         int maxXP = getXpPointsNeededToLevelUp(type);
         return CappedValue.fromProgress((float) (getProgress(type) / 100), maxXP);
     }
-    ;
 }
