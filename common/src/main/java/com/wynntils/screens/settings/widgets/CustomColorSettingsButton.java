@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -24,7 +24,7 @@ public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<Custom
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
-        colorPickerWidget.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        colorPickerWidget.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

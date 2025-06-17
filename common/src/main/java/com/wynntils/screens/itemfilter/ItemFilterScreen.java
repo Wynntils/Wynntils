@@ -274,7 +274,9 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 (button) -> setSelectedFilter(FilterType.ALL),
                 List.of(Component.translatable("screens.wynntils.itemFilter.allFilterTooltip")),
                 Texture.BUTTON_LEFT,
-                filterType == FilterType.ALL);
+                filterType == FilterType.ALL,
+                offsetX,
+                offsetY);
 
         usedButton = new FilterOptionsButton(
                 -(Texture.BUTTON_LEFT.width()) + 4 + offsetX,
@@ -285,7 +287,9 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 (button) -> setSelectedFilter(FilterType.USED),
                 List.of(Component.translatable("screens.wynntils.itemFilter.usedFilterTooltip")),
                 Texture.BUTTON_LEFT,
-                filterType == FilterType.USED);
+                filterType == FilterType.USED,
+                offsetX,
+                offsetY);
 
         unusedButton = new FilterOptionsButton(
                 -(Texture.BUTTON_LEFT.width()) + 4 + offsetX,
@@ -296,7 +300,9 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 (button) -> setSelectedFilter(FilterType.UNUSED),
                 List.of(Component.translatable("screens.wynntils.itemFilter.unusedFilterTooltip")),
                 Texture.BUTTON_LEFT,
-                filterType == FilterType.UNUSED);
+                filterType == FilterType.UNUSED,
+                offsetX,
+                offsetY);
 
         switch (filterType) {
             case USED -> selectedFilterButton = usedButton;
