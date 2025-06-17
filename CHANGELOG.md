@@ -1,3 +1,16 @@
+## [3.0.23](https://github.com/Wynntils/Wynntils/compare/v3.0.22...v3.0.23) (2025-06-17)
+
+
+### New Features
+
+* Handle the new HUD parts in Wynncraft 2.1.2_5 ([#3280](https://github.com/Wynntils/Wynntils/issues/3280)) ([8b3c4eb](https://github.com/Wynntils/Wynntils/commit/8b3c4eb6150e5674eee9c0824549307cd2bbde99))
+
+
+### Bug Fixes
+
+* Fix two small athena reports [skip ci] ([#3278](https://github.com/Wynntils/Wynntils/issues/3278)) ([e25ac1f](https://github.com/Wynntils/Wynntils/commit/e25ac1f4e4fc036fc312ff0c96d9fbf5744f382a))
+* Make features handle is character bar is not parsed [skip ci] ([#3279](https://github.com/Wynntils/Wynntils/issues/3279)) ([c3c243d](https://github.com/Wynntils/Wynntils/commit/c3c243df2e434a772c243e72f029fedfc6926407))
+
 ## [3.0.22](https://github.com/Wynntils/Wynntils/compare/v3.0.21...v3.0.22) (2025-06-09)
 
 
@@ -16,6 +29,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#3272](https://github.com/Wynntils/Wynntils/issues/3272)) ([676ff88](https://github.com/Wynntils/Wynntils/commit/676ff88b490770d77e669e5f7096f1d5615c44a1))
+* **release:** v3.0.22 [skip ci] ([a23ce19](https://github.com/Wynntils/Wynntils/commit/a23ce197ebc32d0ea6b1b584512df3f0bb7393ee))
 
 ## [3.0.21](https://github.com/Wynntils/Wynntils/compare/v3.0.20...v3.0.21) (2025-05-31)
 
@@ -88,18 +102,4 @@
 ### Code Refactoring
 
 * Model cleanups [skip ci] ([#3202](https://github.com/Wynntils/Wynntils/issues/3202)) ([1a48816](https://github.com/Wynntils/Wynntils/commit/1a48816e3dbbed54d5be876521f5c95a50e09ccf))
-
-## [3.0.18](https://github.com/Wynntils/Wynntils/compare/v3.0.17...v3.0.18) (2025-04-29)
-
-
-### Bug Fixes
-
-* Fix guardian angels not being detected when using All-Seeing Panoptes ability [skip ci] ([#3216](https://github.com/Wynntils/Wynntils/issues/3216)) ([b0c1fdc](https://github.com/Wynntils/Wynntils/commit/b0c1fdcf3275f6e87ddcb18afb6c0d4509cca801))
-* Fix orange and rainbow beacon effects not counting again ([#3215](https://github.com/Wynntils/Wynntils/issues/3215)) ([411259b](https://github.com/Wynntils/Wynntils/commit/411259b8e7d959ed91ee36f14d8171cc6a676924))
-* Minor fixes to overlay selection screen [skip ci] ([#3217](https://github.com/Wynntils/Wynntils/issues/3217)) ([cb32994](https://github.com/Wynntils/Wynntils/commit/cb329947767692a1d6b64dafa9daf44298e0a7d0))
-
-
-### Miscellaneous Chores
-
-* **release:** v3.0.18 [skip ci] ([c152818](https://github.com/Wynntils/Wynntils/commit/c152818ad1ec4dde404ed5dd2d2b052336ea2fd0))
 
