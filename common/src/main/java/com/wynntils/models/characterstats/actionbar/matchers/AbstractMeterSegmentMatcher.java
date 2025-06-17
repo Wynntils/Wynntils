@@ -21,7 +21,7 @@ public abstract class AbstractMeterSegmentMatcher implements ActionBarSegmentMat
 
     private final Pattern segmentMatcher = Pattern.compile(SEGMENT_START
             + (isMultipleSegments()
-                    ? "(?<value>[" + String.join("", getCharacterRange()) + "]+)"
+                    ? "(?<value>[" + String.join("", getCharacterRange()) + "])+"
                     : "(?<value>[" + String.join("", getCharacterRange()) + "])")
             + SEGMENT_END);
 
