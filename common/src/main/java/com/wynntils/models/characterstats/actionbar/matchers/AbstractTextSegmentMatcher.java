@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
@@ -22,8 +22,11 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
     protected static final char POSITIVE_SPACE_HIGH_SURROGATE = '\uDB00';
     protected static final char NEGATIVE_SPACE_HIGH_SURROGATE = '\uDAFF';
 
+    // The separator between all display characters in the segment text (unless either character is a "/")
+    private static final String CHAR_SEPARATOR = "\uDAFF\uDFFF";
+
     // The separator between the display characters, usually before and after the "/" in the mana/health text
-    private static final String SEPARATOR = "\uDB00\uDC02";
+    private static final String SLASH_SEPARATOR = "\uDB00\uDC02";
 
     // Possible display character range, extracted from the resource pack/font
     private static final char DISPLAY_CHARACTER_START = '\uE010';
@@ -53,8 +56,8 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
     protected abstract ActionBarSegment createSegment(String segmentText, CappedValue value);
 
     // There is a spacing character before and after actual display characters
-    private final Pattern segmentPattern =
-            Pattern.compile(".(?<value>[" + DISPLAY_CHARACTER_START + "-" + DISPLAY_CHARACTER_END + SEPARATOR + "]+).");
+    private final Pattern segmentPattern = Pattern.compile(".(?<value>[" + DISPLAY_CHARACTER_START + "-"
+            + DISPLAY_CHARACTER_END + CHAR_SEPARATOR + SLASH_SEPARATOR + "]+).");
 
     @Override
     public ActionBarSegment parse(String actionBar) {
@@ -93,7 +96,8 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
 
     private CappedValue valueFromDisplayCharacters(String displayCharacters) {
         // Remove all the separators
-        displayCharacters = displayCharacters.replace(SEPARATOR, "");
+        displayCharacters = displayCharacters.replace(CHAR_SEPARATOR, "");
+        displayCharacters = displayCharacters.replace(SLASH_SEPARATOR, "");
 
         StringBuilder valueBuilder = new StringBuilder();
         for (char current : displayCharacters.toCharArray()) {
