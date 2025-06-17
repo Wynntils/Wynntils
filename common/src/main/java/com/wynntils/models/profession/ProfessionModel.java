@@ -21,6 +21,7 @@ import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,6 +48,18 @@ public final class ProfessionModel extends Model {
             Pattern.compile("§6- §7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§8 \\[([\\d.]+)%\\]");
 
     private static final int MAX_HARVEST_LABEL_AGE = 4000;
+
+    private static final int[] LEVEL_UP_XP_REQUIREMENTS = {
+        30, 35, 42, 48, 56, 64, 74, 84, 96, 109, 123, 140, 158, 178, 200, 225, 253, 284, 319, 358, 401, 449, 502, 562,
+        629, 703, 786, 878, 981, 1096, 1224, 1367, 1526, 1704, 1901, 2122, 2368, 2643, 2948, 3289, 3670, 4094, 4567,
+        5094, 5682, 6337, 7068, 7882, 8791, 9804, 10933, 12193, 13597, 15162, 16908, 18855, 21025, 23445, 26143, 29151,
+        32506, 36246, 40416, 45066, 50250, 56031, 62477, 69664, 77677, 86612, 96574, 107682, 120068, 133877, 149275,
+        166444, 185587, 206932, 230731, 257267, 286855, 319845, 356629, 397643, 443374, 494364, 551218, 614610, 685292,
+        764103, 851977, 949956, 1059203, 1181014, 1316832, 1468270, 1637123, 1825394, 2035317, 2269380, 2530361,
+        2821354, 3145812, 3507582, 3910956, 4360718, 4862203, 5421358, 6044816, 6739972, 7515071, 8379306, 9342928,
+        10417367, 11615366, 12951135, 14440517, 16101179, 17952817, 20017392, 22319395, 24886127, 27748034, 30939059,
+        34497053, 38464216, 42887603, 47819680, 53318945, 59450625, 66287449, 642697533
+    };
 
     @Persisted
     private final Storage<Integer> professionDryStreak = new Storage<>(0);
@@ -192,4 +205,21 @@ public final class ProfessionModel extends Model {
     public int getProfessionDryStreak() {
         return professionDryStreak.get();
     }
+
+    public int getXpPointsNeededToLevelUp(ProfessionType type) {
+        int levelIndex = getLevel(type) - 1;
+        if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
+            return Integer.MAX_VALUE;
+        }
+        if (levelIndex < 0) {
+            return 0;
+        }
+        return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
+    }
+
+    public CappedValue getXP(ProfessionType type) {
+        int maxXP = getXpPointsNeededToLevelUp(type);
+        return CappedValue.fromProgress((float) (getProgress(type) / 100), maxXP);
+    }
+    ;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -10,10 +10,27 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Optional;
 
 public class ProfessionFunctions {
+    public static class ProfessionXpFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            ProfessionType professionType = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (professionType == null) return CappedValue.EMPTY;
+            return Models.Profession.getXP(professionType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
+        }
+    }
+
     public static class ProfessionLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
