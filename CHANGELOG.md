@@ -1,3 +1,10 @@
+## [3.0.24](https://github.com/Wynntils/Wynntils/compare/v3.0.23...v3.0.24) (2025-06-17)
+
+
+### Bug Fixes
+
+* Handle shadow colour in PartStyle correctly ([#3281](https://github.com/Wynntils/Wynntils/issues/3281)) ([19cfac9](https://github.com/Wynntils/Wynntils/commit/19cfac9676378ae7cd06d2c35f01c684eb5232ad))
+
 ## [3.0.23](https://github.com/Wynntils/Wynntils/compare/v3.0.22...v3.0.23) (2025-06-17)
 
 
@@ -10,6 +17,11 @@
 
 * Fix two small athena reports [skip ci] ([#3278](https://github.com/Wynntils/Wynntils/issues/3278)) ([e25ac1f](https://github.com/Wynntils/Wynntils/commit/e25ac1f4e4fc036fc312ff0c96d9fbf5744f382a))
 * Make features handle is character bar is not parsed [skip ci] ([#3279](https://github.com/Wynntils/Wynntils/issues/3279)) ([c3c243d](https://github.com/Wynntils/Wynntils/commit/c3c243df2e434a772c243e72f029fedfc6926407))
+
+
+### Miscellaneous Chores
+
+* **release:** v3.0.23 [skip ci] ([a11419f](https://github.com/Wynntils/Wynntils/commit/a11419f6dbb94df304f5dfaef95047b2ddf28ae5))
 
 ## [3.0.22](https://github.com/Wynntils/Wynntils/compare/v3.0.21...v3.0.22) (2025-06-09)
 
@@ -75,31 +87,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#3242](https://github.com/Wynntils/Wynntils/issues/3242)) ([b1242bc](https://github.com/Wynntils/Wynntils/commit/b1242bc70a8ba3d8db0beb1208afe02759b01f08))
 * **release:** v3.0.20 [skip ci] ([23f43fd](https://github.com/Wynntils/Wynntils/commit/23f43fd60127d7295cda65a1d7fdf7e735d88102))
-
-## [3.0.19](https://github.com/Wynntils/Wynntils/compare/v3.0.18...v3.0.19) (2025-05-10)
-
-
-### New Features
-
-* Add auto skip cutscenes feature [skip ci] ([#3223](https://github.com/Wynntils/Wynntils/issues/3223)) ([f27fe28](https://github.com/Wynntils/Wynntils/commit/f27fe280a6b94494d5d7602c213128f961b42d75))
-* Add quick filters to guides ([#3219](https://github.com/Wynntils/Wynntils/issues/3219)) ([5848a49](https://github.com/Wynntils/Wynntils/commit/5848a490bb11513516c15425f6063fb9b11be8e5))
-* Add unique icons for tracked content markers [skip ci] ([#3210](https://github.com/Wynntils/Wynntils/issues/3210)) ([527ae00](https://github.com/Wynntils/Wynntils/commit/527ae00db83a0785bbe7d5e222aa6fd613328430))
-* Render overhealth for PartyMemberOverlay [skip ci] ([#3224](https://github.com/Wynntils/Wynntils/issues/3224)) ([cc3b1ab](https://github.com/Wynntils/Wynntils/commit/cc3b1ab2e7d37fed92357603a49d4e6e9cea1a9a))
-
-
-### Bug Fixes
-
-* Chat pattern for private messages with moderators [skip ci] ([#3218](https://github.com/Wynntils/Wynntils/issues/3218)) ([aa596e6](https://github.com/Wynntils/Wynntils/commit/aa596e6d39ee03d30eebfa95c339e414795b85f3))
-* Fix mythic find data not being saved if unknown chest position [skip ci] ([#3221](https://github.com/Wynntils/Wynntils/issues/3221)) ([ae56c90](https://github.com/Wynntils/Wynntils/commit/ae56c9038a2791278393de24afe94e54887ee407))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#3222](https://github.com/Wynntils/Wynntils/issues/3222)) ([914a1f4](https://github.com/Wynntils/Wynntils/commit/914a1f443008fee5d1d1aed20429946e15bd94b1))
-* **release:** v3.0.19 [skip ci] ([07c0985](https://github.com/Wynntils/Wynntils/commit/07c0985bd2d02751af7a9f7cc5b23d9880b657d8))
-
-
-### Code Refactoring
-
-* Model cleanups [skip ci] ([#3202](https://github.com/Wynntils/Wynntils/issues/3202)) ([1a48816](https://github.com/Wynntils/Wynntils/commit/1a48816e3dbbed54d5be876521f5c95a50e09ccf))
 
