@@ -5,13 +5,16 @@
 package com.wynntils.models.characterstats;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.mc.event.SetXpEvent;
+import com.wynntils.models.characterstats.actionbar.matchers.CombatExperienceSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.segments.CombatExperienceSegment;
 import com.wynntils.models.characterstats.event.CombatXpGainEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
 import java.util.List;
@@ -20,7 +23,8 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CombatXpModel extends Model {
-    /* These values were provided by HeyZeer0 in #artemis-dev
+    /*
+     * These values were provided by HeyZeer0 in #artemis-dev
      * Note that the last value is the sum of all preceding values
      */
     private static final int[] LEVEL_UP_XP_REQUIREMENTS = {
@@ -37,6 +41,7 @@ public final class CombatXpModel extends Model {
 
     private float lastTickXp = 0;
     private int trackedLevel = 0;
+    private float currentLevelProgress = 0;
 
     private boolean firstJoinHappened = false;
 
@@ -45,6 +50,14 @@ public final class CombatXpModel extends Model {
 
     public CombatXpModel() {
         super(List.of());
+
+        // Register relevant action bar segments
+        Handlers.ActionBar.registerSegment(new CombatExperienceSegmentMatcher());
+    }
+
+    @SubscribeEvent
+    public void onActionBarUpdate(ActionBarUpdatedEvent event) {
+        event.runIfPresent(CombatExperienceSegment.class, this::updateCombatExperience);
     }
 
     @SubscribeEvent
@@ -70,12 +83,12 @@ public final class CombatXpModel extends Model {
         // On first world join, we get all our current XP points (the currently gained amount for the next level), but
         // we only care about actual gains
         if (!firstJoinHappened) {
-            lastTickXp = getCurrentXpAsFloat();
+            lastTickXp = getXp().current();
             firstJoinHappened = true;
             return;
         }
 
-        float newTickXp = getCurrentXpAsFloat();
+        float newTickXp = getXp().current();
 
         if (newTickXp == lastTickXp) return;
 
@@ -135,25 +148,7 @@ public final class CombatXpModel extends Model {
     }
 
     public CappedValue getXp() {
-        return new CappedValue((int) getCurrentXpAsFloat(), getXpPointsNeededToLevelUp());
-    }
-
-    private float getCurrentXpAsFloat() {
-        // We calculate our level in points by seeing how far we've progress towards our
-        // current XP level's max
-        float progress = McUtils.player().experienceProgress;
-
-        float correctedProgress;
-        // The experience bar skips the middle part where it overlaps with the level number,
-        // so it needs to be corrected in order to calculate accurate experience points.
-        // One segment takes 0.428 of the xp bar, and the remaining 0.435 after skipping 0.565
-        if (progress < 0.5f) {
-            correctedProgress = progress / 0.856f;
-        } else {
-            correctedProgress = (0.5f * progress - 0.065f) / 0.435f;
-        }
-
-        return correctedProgress * this.getXpPointsNeededToLevelUp();
+        return CappedValue.fromProgress(currentLevelProgress, getXpPointsNeededToLevelUp());
     }
 
     private int getXpPointsNeededToLevelUp() {
@@ -177,5 +172,16 @@ public final class CombatXpModel extends Model {
 
     public long getLastXpGainTimestamp() {
         return rawXpGainInLastMinute.getLastAddedTimestamp();
+    }
+
+    private void updateCombatExperience(CombatExperienceSegment combatExperienceSegment) {
+        // We calculate prograss from the segment, as we can get a somewhat precise value from it.
+        float progress = (float) combatExperienceSegment.getProgress().getProgress();
+
+        // Note: There used to be progress correction here.
+        //       It was removed with 2.1.2_5 as the calculation was not correct anymore.
+        //       The progress is a off by a percentage usually, but currently there is no way to correct it.
+
+        currentLevelProgress = progress;
     }
 }

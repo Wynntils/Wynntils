@@ -42,7 +42,14 @@ public class AspectInfoRegistry {
     }
 
     public AspectInfo getFromClassAndDisplayName(ClassType classType, String aspectName) {
-        return aspectInfoLookup.get(classType).get(aspectName);
+        Map<String, AspectInfo> aspectInfoMap = aspectInfoLookup.get(classType);
+
+        if (aspectInfoMap == null) {
+            WynntilsMod.warn("No aspect info found for class type: " + classType);
+            return null;
+        }
+
+        return aspectInfoMap.get(aspectName);
     }
 
     public AspectInfo getFromDisplayName(String aspectName) {
