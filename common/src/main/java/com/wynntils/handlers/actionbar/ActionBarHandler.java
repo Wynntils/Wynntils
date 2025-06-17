@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.actionbar;
@@ -54,14 +54,6 @@ public final class ActionBarHandler extends Handler {
                 return IterationDecision.CONTINUE;
             });
 
-            StyledText coordinatesText = packetText.iterate((part, changes) -> {
-                if (!COORDINATES_FONT.equals(part.getPartStyle().getFont())) {
-                    changes.remove(part);
-                }
-
-                return IterationDecision.CONTINUE;
-            });
-
             if (actionBarText.isEmpty()) {
                 WynntilsMod.warn("Failed to find action bar text in packet: " + packetText.getString());
                 return;
@@ -97,7 +89,15 @@ public final class ActionBarHandler extends Handler {
 
             // Append coordinates if needed
             if (actionBarRenderEvent.shouldRenderCoordinates()) {
-                renderedText = actionBarText.append(coordinatesText);
+                StyledText coordinatesText = packetText.iterate((part, changes) -> {
+                    if (!COORDINATES_FONT.equals(part.getPartStyle().getFont())) {
+                        changes.remove(part);
+                    }
+
+                    return IterationDecision.CONTINUE;
+                });
+
+                renderedText = renderedText.append(coordinatesText);
             }
 
             event.setMessage(renderedText.getComponent());

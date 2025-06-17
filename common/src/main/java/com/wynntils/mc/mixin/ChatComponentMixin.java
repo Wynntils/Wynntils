@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -13,6 +13,7 @@ import com.wynntils.mc.event.AddGuiMessageLineEvent;
 import com.wynntils.mc.event.ChatComponentRenderEvent;
 import com.wynntils.mc.extension.ChatComponentExtension;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -30,19 +31,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ChatComponent.class)
 public abstract class ChatComponentMixin implements ChatComponentExtension {
     @Shadow
-    @Final
     private List<GuiMessage> allMessages;
 
     @Shadow
     private void refreshTrimmedMessages() {}
 
     @Shadow
-    @Final
     private List<GuiMessage.Line> trimmedMessages;
 
     @Shadow
     @Final
     private Minecraft minecraft;
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void onInit(CallbackInfo ci) {
+        allMessages = new CopyOnWriteArrayList<>();
+        trimmedMessages = new CopyOnWriteArrayList<>();
+    }
 
     @WrapOperation(
             method = "addMessageToDisplayQueue(Lnet/minecraft/client/GuiMessage;)V",

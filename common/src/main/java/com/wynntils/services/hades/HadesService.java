@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -28,6 +28,7 @@ import com.wynntils.services.athena.event.AthenaLoginEvent;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.type.PlayerStatus;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -214,8 +215,12 @@ public final class HadesService extends Service {
             float pY = (float) player.getY();
             float pZ = (float) player.getZ();
 
-            PlayerStatus newStatus =
-                    new PlayerStatus(pX, pY, pZ, Models.CharacterStats.getHealth(), Models.CharacterStats.getMana());
+            PlayerStatus newStatus = new PlayerStatus(
+                    pX,
+                    pY,
+                    pZ,
+                    Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY),
+                    Models.CharacterStats.getMana().orElse(CappedValue.EMPTY));
 
             if (newStatus.equals(lastSentStatus)) {
                 tickCountUntilUpdate = 1;
