@@ -17,21 +17,21 @@ public class CharacterFunctions {
     public static class CappedManaFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getMana();
+            return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY);
         }
     }
 
     public static class CappedHealthFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getHealth();
+            return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY);
         }
     }
 
     public static class SprintFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getSprint();
+            return Models.CharacterStats.getSprint().orElse(CappedValue.EMPTY);
         }
     }
 
@@ -116,42 +116,42 @@ public class CharacterFunctions {
     public static class ManaFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getMana().current();
+            return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY).current();
         }
     }
 
     public static class ManaMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getMana().max();
+            return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY).max();
         }
     }
 
     public static class HealthFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getHealth().current();
+            return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY).current();
         }
     }
 
     public static class HealthMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getHealth().max();
+            return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY).max();
         }
     }
 
     public static class HealthPctFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getHealth().getPercentage();
+            return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY).getPercentage();
         }
     }
 
     public static class ManaPctFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getMana().getPercentage();
+            return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY).getPercentage();
         }
     }
 
@@ -264,7 +264,7 @@ public class CharacterFunctions {
     public static class CommanderActivatedFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Ability.commanderBar.isActive() ? Models.Ability.commanderBar.isActivated() : false;
+            return Models.Ability.commanderBar.isActive() && Models.Ability.commanderBar.isActivated();
         }
     }
 }

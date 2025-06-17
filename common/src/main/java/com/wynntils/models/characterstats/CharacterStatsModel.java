@@ -173,20 +173,24 @@ public final class CharacterStatsModel extends Model {
         return level;
     }
 
-    public CappedValue getHealth() {
-        return health;
+    public Optional<CappedValue> getHealth() {
+        if (health == CappedValue.EMPTY) return Optional.empty();
+        return Optional.of(health);
     }
 
-    public CappedValue getMana() {
-        return mana;
+    public Optional<CappedValue> getMana() {
+        if (mana == CappedValue.EMPTY) return Optional.empty();
+        return Optional.of(mana);
     }
 
-    public CappedValue getSprint() {
-        return sprint;
+    public Optional<CappedValue> getSprint() {
+        if (sprint == CappedValue.EMPTY) return Optional.empty();
+        return Optional.of(sprint);
     }
 
-    public PowderSpecialInfo getPowderSpecialInfo() {
-        return powderSpecialInfo;
+    public Optional<PowderSpecialInfo> getPowderSpecialInfo() {
+        if (powderSpecialInfo == PowderSpecialInfo.EMPTY) return Optional.empty();
+        return Optional.of(powderSpecialInfo);
     }
 
     public void setHideHealth(boolean shouldHide) {

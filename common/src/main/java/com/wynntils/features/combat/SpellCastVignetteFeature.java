@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -17,6 +17,7 @@ import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.CappedValue;
+import java.util.Optional;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
@@ -43,7 +44,8 @@ public class SpellCastVignetteFeature extends Feature {
 
     @SubscribeEvent
     public void onSpellCast(SpellEvent.Cast event) {
-        if (Models.CharacterStats.getMana() == CappedValue.EMPTY) {
+        Optional<CappedValue> manaOpt = Models.CharacterStats.getMana();
+        if (manaOpt.isEmpty()) {
             WynntilsMod.warn("Mana is empty, cannot calculate relative cost of spell cast");
             return;
         }
@@ -52,7 +54,7 @@ public class SpellCastVignetteFeature extends Feature {
         if (event.getManaCost() == 0) return;
 
         // Make sure the current mana is never 0 so the whole screen won't be covered in solid blue
-        int currentMana = Math.max(1, Models.CharacterStats.getMana().current());
+        int currentMana = Math.max(1, manaOpt.get().current());
 
         // An relativeCost of 1.0 means we just used all mana we have left
         float relativeCost = Math.min((float) event.getManaCost() / currentMana, maxItensityPercent.get() / 100);
