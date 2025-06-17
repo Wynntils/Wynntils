@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
@@ -46,7 +46,7 @@ public class ManaBarOverlay extends OverflowableBarOverlay {
 
     @Override
     public BossBarProgress progress() {
-        CappedValue mana = Models.CharacterStats.getMana();
+        CappedValue mana = Models.CharacterStats.getMana().orElse(CappedValue.EMPTY);
         return new BossBarProgress(mana, (float) mana.getProgress());
     }
 
@@ -62,7 +62,7 @@ public class ManaBarOverlay extends OverflowableBarOverlay {
 
     @Override
     public boolean isActive() {
-        return Models.CharacterStats.getMana() != CappedValue.EMPTY;
+        return Models.CharacterStats.getMana().isPresent();
     }
 
     @Override
