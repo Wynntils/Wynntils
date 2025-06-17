@@ -29,6 +29,11 @@ public class ProfessionFunctions {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
         }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("prof_xp");
+        }
     }
 
     public static class ProfessionLevelFunction extends Function<Integer> {
