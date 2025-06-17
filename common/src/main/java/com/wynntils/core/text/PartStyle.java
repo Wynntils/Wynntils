@@ -95,7 +95,7 @@ public final class PartStyle {
                         : CustomColor.fromInt(inheritedStyle.getColor().getValue() | 0xFF000000),
                 inheritedStyle.getShadowColor() == null
                         ? CustomColor.NONE
-                        : CustomColor.fromInt(inheritedStyle.getShadowColor()),
+                        : CustomColor.fromInt(inheritedStyle.getShadowColor() | 0xFF000000),
                 inheritedStyle.isObfuscated(),
                 inheritedStyle.isBold(),
                 inheritedStyle.isStrikethrough(),
@@ -200,7 +200,7 @@ public final class PartStyle {
         // Optimization: Use raw Style constructor, instead of the builder.
         // Mask the color int to be 0xRRGGBB instead of 0xAARRGGBB (as TextColor doesn't expect alpha).
         TextColor textColor = color == CustomColor.NONE ? null : TextColor.fromRgb(color.asInt() & 0x00FFFFFF);
-        Integer shadowColorInt = shadowColor == CustomColor.NONE ? null : shadowColor.asInt();
+        Integer shadowColorInt = shadowColor == CustomColor.NONE ? null : shadowColor.asInt() & 0x00FFFFFF;
         return new Style(
                 textColor,
                 shadowColorInt,

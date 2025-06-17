@@ -27,6 +27,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.wynn.ItemUtils;
+import java.util.Optional;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -64,12 +65,15 @@ public class PowderSpecialBarOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PowderSpecialInfo powderSpecialInfo = Models.CharacterStats.getPowderSpecialInfo();
-        if (this.onlyIfWeaponHeld.get()
-                && !ItemUtils.isWeapon(McUtils.inventory().getSelected())) return;
-        if (this.hideIfNoCharge.get()
-                && (powderSpecialInfo == PowderSpecialInfo.EMPTY || powderSpecialInfo.charge() == 0f)) return;
+        Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
+        if (this.hideIfNoCharge.get() && powderSpecialInfoOpt.isEmpty()) return;
 
+        if (this.onlyIfWeaponHeld.get()
+                && !ItemUtils.isWeapon(McUtils.inventory().getSelected())) {
+            return;
+        }
+
+        PowderSpecialInfo powderSpecialInfo = powderSpecialInfoOpt.get();
         renderWithSpecificSpecial(
                 guiGraphics.pose(), bufferSource, powderSpecialInfo.charge() * 100f, powderSpecialInfo.powder());
     }
