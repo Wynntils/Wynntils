@@ -212,7 +212,7 @@ public final class ProfessionModel extends Model {
 
     public int getXpPointsNeededToLevelUp(ProfessionType type) {
         int levelIndex = getLevel(type) - 1;
-        if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
+        if (levelIndex > LEVEL_UP_XP_REQUIREMENTS.length) {
             return Integer.MAX_VALUE;
         }
         if (levelIndex < 0) {
