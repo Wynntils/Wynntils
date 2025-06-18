@@ -49,6 +49,10 @@ public final class ProfessionModel extends Model {
 
     private static final int MAX_HARVEST_LABEL_AGE = 4000;
 
+    /*
+     * These values were taken from a community made spreadsheet that claims these values were provided by Salted at 1/30/2023
+     * https://docs.google.com/spreadsheets/d/1ubp52M-3kJCkaKcs3VLtVWQTVfea2Aflg3tUNuyDEtw/edit?gid=1950989180#gid=1950989180
+     */
     private static final int[] LEVEL_UP_XP_REQUIREMENTS = {
         30, 35, 42, 48, 56, 64, 74, 84, 96, 109, 123, 140, 158, 178, 200, 225, 253, 284, 319, 358, 401, 449, 502, 562,
         629, 703, 786, 878, 981, 1096, 1224, 1367, 1526, 1704, 1901, 2122, 2368, 2643, 2948, 3289, 3670, 4094, 4567,
