@@ -15,7 +15,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
-public class WynntilsInfoMessagesFeature extends Feature {
+public class WynntilsHintMessagesFeature extends Feature {
     @Persisted
     private final Config<Boolean> firstJoinOnly = new Config<>(true);
 
