@@ -28,6 +28,7 @@ import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.ShiftBehavior;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -164,11 +165,5 @@ public class WynntilsContentBookFeature extends Feature {
             event.setOpenScreen(true);
             shiftClickedBookItem = false;
         }
-    }
-
-    private enum ShiftBehavior {
-        NONE,
-        ENABLED_IF_SHIFT_HELD,
-        DISABLED_IF_SHIFT_HELD
     }
 }
