@@ -15,6 +15,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.activities.beacons.ActivityBeaconKind;
@@ -38,6 +39,7 @@ import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.containers.containers.ContentBookContainer;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -74,6 +76,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class ActivityModel extends Model {
     public static final String CONTENT_BOOK_TITLE = "\uDAFF\uDFEE\uE004";
     private static final String WIKI_APOSTROPHE = "&#039;";
+    private static final String PLAYER_PROGRESS_ITEM_NAME = "All Player Progress";
 
     private static final Pattern LEVEL_REQ_PATTERN =
             Pattern.compile("^§(.).À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
@@ -164,6 +167,17 @@ public final class ActivityModel extends Model {
 
         ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null, null);
         ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(null, null);
+    }
+
+    @SubscribeEvent
+    public void onContainerItemsSet(ContainerSetContentEvent.Pre event) {
+        if (!(Models.Container.getCurrentContainer() instanceof ContentBookContainer)) return;
+
+        for (ItemStack itemStack : event.getItems()) {
+            if (itemStack.getHoverName().getString().equals(PLAYER_PROGRESS_ITEM_NAME)) {
+                if (parseOverallProgress(LoreUtils.getLore(itemStack))) return;
+            }
+        }
     }
 
     @SubscribeEvent
@@ -564,25 +578,33 @@ public final class ActivityModel extends Model {
         DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
     }
 
-    public void scanOverallProgress() {
+    private void scanOverallProgress() {
         if (!overallProgressOutdated) return;
 
         overallProgressOutdated = false;
         CONTAINER_QUERIES.queryContentBook(
                 ActivityType.RECOMMENDED,
                 (ignored, progress) -> {
-                    for (StyledText line : progress) {
-                        Matcher m = line.getMatcher(OVERALL_PROGRESS_PATTERN);
-                        if (m.matches()) {
-                            int completed = Integer.parseInt(m.group(1));
-                            int total = Integer.parseInt(m.group(2));
-                            overallProgress = new CappedValue(completed, total);
-                            return;
-                        }
+                    if (parseOverallProgress(progress)) {
+                        return;
                     }
                 },
                 false,
                 true);
+    }
+
+    private boolean parseOverallProgress(List<StyledText> progress) {
+        for (StyledText line : progress) {
+            Matcher m = line.getMatcher(OVERALL_PROGRESS_PATTERN);
+            if (m.matches()) {
+                int completed = Integer.parseInt(m.group(1));
+                int total = Integer.parseInt(m.group(2));
+                overallProgress = new CappedValue(completed, total);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {

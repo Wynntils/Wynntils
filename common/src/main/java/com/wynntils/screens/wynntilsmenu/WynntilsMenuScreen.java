@@ -52,8 +52,6 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private final List<List<WynntilsMenuButton>> buttons = new ArrayList<>();
     private WynntilsMenuButton hovered = null;
 
-    private boolean firstInit = true;
-
     // This makes sure we "save" our status on the settings & overlay screen, and we reopen it in the same state
     private static final Screen overlayScreenInstance = OverlaySelectionScreen.create();
     private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create(null);
@@ -70,15 +68,6 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     protected void doInit() {
         super.doInit();
 
-        if (firstInit) {
-            if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
-                    .displayOverallProgress
-                    .get()) {
-                Models.Activity.scanOverallProgress();
-            }
-        }
-
-        firstInit = false;
         setup();
     }
 
