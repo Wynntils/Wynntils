@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -12,6 +12,7 @@ import com.wynntils.services.destination.DestinationService;
 import com.wynntils.services.discord.DiscordService;
 import com.wynntils.services.favorites.FavoritesService;
 import com.wynntils.services.hades.HadesService;
+import com.wynntils.services.hint.HintService;
 import com.wynntils.services.itemfilter.ItemFilterService;
 import com.wynntils.services.itemrecord.ItemRecordService;
 import com.wynntils.services.leaderboard.LeaderboardService;
@@ -33,6 +34,7 @@ public final class Services {
     public static final DiscordService Discord = new DiscordService();
     public static final FavoritesService Favorites = new FavoritesService();
     public static final HadesService Hades = new HadesService();
+    public static final HintService Hint = new HintService();
     public static final ItemFilterService ItemFilter = new ItemFilterService();
     public static final ItemRecordService ItemRecord = new ItemRecordService();
     public static final LeaderboardService Leaderboard = new LeaderboardService();
