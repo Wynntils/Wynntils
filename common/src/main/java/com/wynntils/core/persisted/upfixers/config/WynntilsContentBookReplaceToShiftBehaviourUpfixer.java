@@ -8,6 +8,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.Upfixer;
+import com.wynntils.utils.EnumUtils;
+import com.wynntils.utils.type.ShiftBehavior;
 import java.util.Set;
 
 public class WynntilsContentBookReplaceToShiftBehaviourUpfixer implements Upfixer {
@@ -25,9 +27,11 @@ public class WynntilsContentBookReplaceToShiftBehaviourUpfixer implements Upfixe
             boolean configValueBoolean = configValue.getAsBoolean();
 
             if (configValueBoolean) {
-                configObject.addProperty(CONTENT_BOOK_SHIFT_OBJECT_NAME, "disabledIfShiftHeld");
+                configObject.addProperty(
+                        CONTENT_BOOK_SHIFT_OBJECT_NAME, EnumUtils.toJsonFormat(ShiftBehavior.DISABLED_IF_SHIFT_HELD));
             } else {
-                configObject.addProperty(CONTENT_BOOK_SHIFT_OBJECT_NAME, "enabledIfShiftHeld");
+                configObject.addProperty(
+                        CONTENT_BOOK_SHIFT_OBJECT_NAME, EnumUtils.toJsonFormat(ShiftBehavior.ENABLED_IF_SHIFT_HELD));
             }
         }
 
