@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -27,7 +28,7 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class HintService extends Service {
     private static final String DEFAULT_LANGUAGE = "en_us";
-    private static final String UNBOUND_KEY_NAME = "Not Bound";
+    private static final String UNBOUND_KEY = "key.keyboard.unknown";
     private static final Random RANDOM = new Random();
 
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\{(?<action>[^:}]+):(?<value>[^}]+)\\}");
@@ -109,7 +110,7 @@ public class HintService extends Service {
                                 String keyMappingName =
                                         keyMapping.getTranslatedKeyMessage().getString();
 
-                                if (keyMappingName.equals(UNBOUND_KEY_NAME)) {
+                                if (keyMappingName.equals(I18n.get(UNBOUND_KEY))) {
                                     WynntilsMod.info("Skipping hint due to unbound key");
                                     return Component.empty();
                                 }
