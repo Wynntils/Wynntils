@@ -16,28 +16,34 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.CustomModelData;
 
 public enum ActivityBeaconKind implements BeaconKind {
-    QUEST(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x29CC96)),
-    STORYLINE_QUEST(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x33B33B)),
-    MINI_QUEST(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xB38FAD)),
-    WORLD_EVENT(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x00BDBF)),
-    DISCOVERY(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xA1C3E6)),
-    CAVE(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF8C19)),
-    DUNGEON(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xCC6677)),
-    RAID(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xD6401E)),
-    BOSS_ALTAR(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xF2D349)),
-    LOOTRUN_CAMP(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x3399CC));
+    QUEST(CustomColor.fromInt(0x29CC96)),
+    STORYLINE_QUEST(CustomColor.fromInt(0x33B33B)),
+    MINI_QUEST(CustomColor.fromInt(0xB38FAD)),
+    WORLD_EVENT(CustomColor.fromInt(0x00BDBF)),
+    DISCOVERY(CustomColor.fromInt(0xA1C3E6)),
+    CAVE(CustomColor.fromInt(0xFF8C19)),
+    DUNGEON(CustomColor.fromInt(0xCC6677)),
+    RAID(CustomColor.fromInt(0xD6401E)),
+    BOSS_ALTAR(CustomColor.fromInt(0xF2D349)),
+    LOOTRUN_CAMP(CustomColor.fromInt(0x3399CC));
 
     private final float customModelData;
     private final CustomColor customColor;
 
-    ActivityBeaconKind(float customModelData, CustomColor customColor) {
-        this.customModelData = customModelData;
+    ActivityBeaconKind(CustomColor customColor) {
+        this.customModelData =
+                Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA_SUPPLIER.get().orElse(-1f);
         this.customColor = customColor;
+
+        if (customModelData == -1) {
+            throw new IllegalStateException("Custom model data not found for beacon kind: " + this);
+        }
     }
 
     @Override
     public boolean matches(ItemStack itemStack) {
         if (itemStack.getItem() != Items.POTION) return false;
+        if (customModelData == -1) return false;
 
         PotionContents potionContents = itemStack.get(DataComponents.POTION_CONTENTS);
         if (potionContents == null) return false;
