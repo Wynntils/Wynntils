@@ -1618,7 +1618,7 @@
   "feature.wynntils.wynntilsCosmetics.renderOwnCape.description": "Should your custom Wynntils cape/elytra be shown on your own screen?",
   "feature.wynntils.wynntilsCosmetics.renderOwnCape.name": "Show Own Cape",
   "feature.wynntils.wynntilsHintMessages.description": "Display messages in chat on world join with hints relating to Wynntils.",
-  "feature.wynntils.wynntilsHintMessages.firstJoinOnly.description": "Should info messages be sent on every world join or only the first world join?",
+  "feature.wynntils.wynntilsHintMessages.firstJoinOnly.description": "Should hint messages be sent on every world join or only the first world join?",
   "feature.wynntils.wynntilsHintMessages.firstJoinOnly.name": "First Join Only",
   "feature.wynntils.wynntilsHintMessages.name": "Wynntils Hint Messages",
   "feature.wynntils.xpGainMessage.combat.description": "Shows combat XP gain messages as a game update notification.",
