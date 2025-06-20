@@ -12,6 +12,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.mojang.serialization.JsonOps;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -111,7 +112,8 @@ public record SavedItem(String base64, Set<String> categories, ItemStack itemSta
                                 .getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY)
                                 .withTooltip(false));
             } else {
-                throw new JsonParseException("SavedItem has no itemStack or itemStackInfo");
+                WynntilsMod.error("SavedItem has no itemStack or itemStackInfo");
+                itemStack = ItemStack.EMPTY;
             }
 
             return new SavedItem(base64, categories, itemStack);
