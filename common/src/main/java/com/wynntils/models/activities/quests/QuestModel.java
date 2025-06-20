@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.quests;
@@ -94,24 +94,27 @@ public final class QuestModel extends Model {
         Comparator<QuestInfo> baseComparator =
                 Comparator.comparing(questInfo -> !questInfo.name().equals(trackedQuestName));
         return switch (sortOrder) {
-            case LEVEL -> questList.stream()
-                    .sorted(baseComparator
-                            .thenComparing(QuestInfo::status)
-                            .thenComparing(QuestInfo::sortLevel)
-                            .thenComparing(QuestInfo::name))
-                    .toList();
-            case DISTANCE -> questList.stream()
-                    .sorted(baseComparator
-                            .thenComparing(QuestInfo::status)
-                            .thenComparing(new LocationComparator())
-                            .thenComparing(QuestInfo::name))
-                    .toList();
-            case ALPHABETIC -> questList.stream()
-                    .sorted(baseComparator
-                            .thenComparing(QuestInfo::status)
-                            .thenComparing(QuestInfo::name)
-                            .thenComparing(QuestInfo::sortLevel))
-                    .toList();
+            case LEVEL ->
+                questList.stream()
+                        .sorted(baseComparator
+                                .thenComparing(QuestInfo::status)
+                                .thenComparing(QuestInfo::sortLevel)
+                                .thenComparing(QuestInfo::name))
+                        .toList();
+            case DISTANCE ->
+                questList.stream()
+                        .sorted(baseComparator
+                                .thenComparing(QuestInfo::status)
+                                .thenComparing(new LocationComparator())
+                                .thenComparing(QuestInfo::name))
+                        .toList();
+            case ALPHABETIC ->
+                questList.stream()
+                        .sorted(baseComparator
+                                .thenComparing(QuestInfo::status)
+                                .thenComparing(QuestInfo::name)
+                                .thenComparing(QuestInfo::sortLevel))
+                        .toList();
         };
     }
 
@@ -192,7 +195,7 @@ public final class QuestModel extends Model {
         WynntilsMod.info("Updated mini-quests from query, got " + newMiniQuests.size() + " mini-quests.");
     }
 
-    private static QuestInfo getQuestInfoFromActivity(ActivityInfo activity) {
+    public static QuestInfo getQuestInfoFromActivity(ActivityInfo activity) {
         // We should always have a length, but if not, better fake one than crashing
 
         return new QuestInfo(

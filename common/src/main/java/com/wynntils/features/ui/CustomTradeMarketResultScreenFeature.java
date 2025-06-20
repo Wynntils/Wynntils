@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -17,6 +17,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.screens.trademarket.TradeMarketSearchResultScreen;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.ShiftBehavior;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -86,21 +87,15 @@ public class CustomTradeMarketResultScreenFeature extends Feature {
         MutableComponent component =
                 switch (shiftBehaviorConfig.get()) {
                     case NONE -> Component.empty();
-                    case ENABLED_IF_SHIFT_HELD -> (Component.translatable(
-                            "feature.wynntils.customTradeMarketResultScreen.shiftToEnable"));
-                    case DISABLED_IF_SHIFT_HELD -> (Component.translatable(
-                            "feature.wynntils.customTradeMarketResultScreen.shiftToDisable"));
+                    case ENABLED_IF_SHIFT_HELD ->
+                        (Component.translatable("feature.wynntils.customTradeMarketResultScreen.shiftToEnable"));
+                    case DISABLED_IF_SHIFT_HELD ->
+                        (Component.translatable("feature.wynntils.customTradeMarketResultScreen.shiftToDisable"));
                 };
 
         tooltips.add(Component.empty());
         tooltips.add(component.withStyle(ChatFormatting.GREEN));
 
         event.setTooltips(tooltips);
-    }
-
-    private enum ShiftBehavior {
-        NONE,
-        ENABLED_IF_SHIFT_HELD,
-        DISABLED_IF_SHIFT_HELD
     }
 }

@@ -16,6 +16,7 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.models.containers.containers.GuildManagementContainer;
 import com.wynntils.screens.guildlog.GuildLogScreen;
 import com.wynntils.utils.mc.KeyboardUtils;
+import com.wynntils.utils.type.ShiftBehavior;
 import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -61,11 +62,5 @@ public class CustomGuildLogScreenFeature extends Feature {
         if (!StyledText.fromComponent(event.getItemStack().getHoverName()).matches(GUILD_LOG_ITEM_PATTERN)) return;
 
         shiftClickedLogItem = KeyboardUtils.isShiftDown();
-    }
-
-    private enum ShiftBehavior {
-        NONE,
-        ENABLED_IF_SHIFT_HELD,
-        DISABLED_IF_SHIFT_HELD
     }
 }
