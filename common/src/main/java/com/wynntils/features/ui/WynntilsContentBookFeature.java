@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.wrappedscreen.event.WrappedScreenOpenEvent;
+import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.screens.activities.WynntilsContentBookScreen;
@@ -123,6 +124,11 @@ public class WynntilsContentBookFeature extends Feature {
     public final Config<Boolean> displayOverallProgress = new Config<>(true);
 
     private boolean shiftClickedBookItem = false;
+
+    @SubscribeEvent
+    public void onSwing(ArmSwingEvent event) {
+        shiftClickedBookItem = McUtils.player().isShiftKeyDown();
+    }
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
