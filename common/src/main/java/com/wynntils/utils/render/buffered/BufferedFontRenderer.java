@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render.buffered;
@@ -17,6 +17,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.IterationDecision;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -80,28 +81,30 @@ public final class BufferedFontRenderer {
         poseStack.scale(textScale, textScale, 0);
 
         switch (shadow) {
-            case NONE -> font.drawInBatch(
-                    text.getComponent(),
-                    0,
-                    0,
-                    customColor.asInt(),
-                    false,
-                    poseStack.last().pose(),
-                    bufferSource,
-                    displayMode,
-                    0,
-                    0xF000F0);
-            case NORMAL -> font.drawInBatch(
-                    text.getComponent(),
-                    0,
-                    0,
-                    customColor.asInt(),
-                    true,
-                    poseStack.last().pose(),
-                    bufferSource,
-                    displayMode,
-                    0,
-                    0xF000F0);
+            case NONE ->
+                font.drawInBatch(
+                        text.getComponent(),
+                        0,
+                        0,
+                        customColor.asInt(),
+                        false,
+                        poseStack.last().pose(),
+                        bufferSource,
+                        displayMode,
+                        0,
+                        0xF000F0);
+            case NORMAL ->
+                font.drawInBatch(
+                        text.getComponent(),
+                        0,
+                        0,
+                        customColor.asInt(),
+                        true,
+                        poseStack.last().pose(),
+                        bufferSource,
+                        displayMode,
+                        0,
+                        0xF000F0);
             case OUTLINE -> {
                 int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
                 Component strippedComponent = text.iterate((part, changes) -> {
@@ -201,6 +204,71 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
+            StyledText[] lines,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow textShadow,
+            float textScale) {
+        int lineHeight = font.lineHeight;
+        List<StyledText> adjustedLines = new ArrayList<>();
+        for (StyledText line : lines) {
+            if (maxWidth == 0 || font.width(line.getComponent()) < maxWidth / textScale) {
+                adjustedLines.add(line);
+            } else {
+                List<FormattedText> parts =
+                        font.getSplitter().splitLines(line.getComponent(), (int) (maxWidth / textScale), Style.EMPTY);
+                StyledText lastPart = StyledText.EMPTY;
+                for (FormattedText part : parts) {
+                    Style lastStyle = ComponentUtils.getLastPartCodes(lastPart);
+                    StyledText text = StyledText.fromComponent(
+                                    Component.literal("").withStyle(lastStyle))
+                            .append(StyledText.fromComponent(ComponentUtils.formattedTextToComponent(part)));
+                    lastPart = text;
+                    adjustedLines.add(text);
+                }
+            }
+        }
+
+        float calculatedTextHeight = (adjustedLines.size() - 1) * lineHeight * textScale;
+
+        float renderX =
+                switch (horizontalAlignment) {
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
+                };
+        float renderY =
+                switch (verticalAlignment) {
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f - calculatedTextHeight / 2f;
+                    case BOTTOM -> y2 - calculatedTextHeight;
+                };
+        float lineOffset = 0;
+        for (StyledText text : adjustedLines) {
+            renderText(
+                    poseStack,
+                    bufferSource,
+                    text,
+                    renderX,
+                    renderY + lineOffset,
+                    customColor,
+                    horizontalAlignment,
+                    verticalAlignment,
+                    textShadow,
+                    textScale);
+            lineOffset += lineHeight * textScale;
+        }
+    }
+
+    public void renderAlignedTextInBox(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
             StyledText text,
             float x1,
             float x2,
@@ -212,26 +280,14 @@ public final class BufferedFontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-        float renderX =
-                switch (horizontalAlignment) {
-                    case LEFT -> x1;
-                    case CENTER -> (x1 + x2) / 2f;
-                    case RIGHT -> x2;
-                };
-
-        float renderY =
-                switch (verticalAlignment) {
-                    case TOP -> y1;
-                    case MIDDLE -> (y1 + y2) / 2f;
-                    case BOTTOM -> y2;
-                };
-
-        renderText(
+        renderAlignedTextInBox(
                 poseStack,
                 bufferSource,
-                text,
-                renderX,
-                renderY,
+                new StyledText[] {text},
+                x1,
+                x2,
+                y1,
+                y2,
                 maxWidth,
                 customColor,
                 horizontalAlignment,
