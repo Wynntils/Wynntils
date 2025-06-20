@@ -49,6 +49,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
@@ -140,7 +141,10 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         this.addRenderableWidget(scrollDownButton);
 
         this.addRenderableWidget(new WynntilsMenuTag(offsetX + 333, offsetY + 151, (b) -> {
-            McUtils.player().closeContainer();
+            // We should call McUtils.player().closeContainer() here but that will cause the mouse to recenter as that
+            // will close the screen before opening the new one which is a bit disorienting
+            McUtils.sendPacket(new ServerboundContainerClosePacket(wrappedScreenInfo.containerId()));
+            McUtils.player().containerMenu = McUtils.player().inventoryMenu;
             McUtils.mc().setScreen(WynntilsMenuScreen.create());
         }));
 
