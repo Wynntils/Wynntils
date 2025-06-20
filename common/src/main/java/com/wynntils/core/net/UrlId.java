@@ -36,6 +36,7 @@ public enum UrlId {
     DATA_STATIC_COMBAT_LOCATIONS("dataStaticCombatLocations"),
     DATA_STATIC_DESTINATIONS("dataStaticDestinations"),
     DATA_STATIC_GEAR("dataStaticGear"),
+    DATA_STATIC_HINTS("dataStaticHints"),
     DATA_STATIC_IDENTIFICATION_KEYS("dataStaticIdentificationKeys"),
     DATA_STATIC_INGREDIENTS("dataStaticIngredients"),
     DATA_STATIC_ITEM_OBTAIN("dataStaticItemObtain"),
