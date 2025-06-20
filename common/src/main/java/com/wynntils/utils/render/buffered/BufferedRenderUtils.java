@@ -285,6 +285,25 @@ public final class BufferedRenderUtils {
                 texture.height());
     }
 
+    public static void drawHoverableTexturedRect(
+            PoseStack poseStack, MultiBufferSource bufferSource, Texture texture, float x, float y, boolean hovered) {
+        drawTexturedRect(
+                poseStack,
+                bufferSource,
+                texture.resource(),
+                x,
+                y,
+                0,
+                texture.width(),
+                texture.height() / 2f,
+                0,
+                hovered ? texture.height() / 2 : 0,
+                texture.width(),
+                texture.height() / 2,
+                texture.width(),
+                texture.height());
+    }
+
     public static void drawTexturedRect(
             PoseStack poseStack,
             MultiBufferSource bufferSource,

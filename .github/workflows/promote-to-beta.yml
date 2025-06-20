@@ -1,0 +1,27 @@
+name: Promote to Beta
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches:
+      - development
+
+jobs:
+  promote-beta:
+    if: |
+      github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'release')
+    name: Promote development to beta
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Merge development into beta
+        uses: mtanzi/action-automerge@v1
+        id: merge
+        with:
+          github_token: ${{ secrets.PRIVATE_TOKEN }}
+          source: 'development'
+          target: 'beta'

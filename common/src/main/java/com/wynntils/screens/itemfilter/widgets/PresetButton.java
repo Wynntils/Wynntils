@@ -21,8 +21,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class PresetButton extends BasicTexturedButton {
-    private final float offsetX;
-    private final float offsetY;
+    private final int offsetX;
+    private final int offsetY;
     private final StyledText message;
 
     public PresetButton(
@@ -31,8 +31,8 @@ public class PresetButton extends BasicTexturedButton {
             StyledText message,
             Consumer<Integer> onClick,
             List<Component> tooltip,
-            float offsetX,
-            float offsetY) {
+            int offsetX,
+            int offsetY) {
         super(
                 x,
                 y,
@@ -57,9 +57,9 @@ public class PresetButton extends BasicTexturedButton {
                 && MathUtils.isInside(
                         mouseX,
                         mouseY,
-                        0,
+                        offsetX,
                         Texture.ITEM_FILTER_BACKGROUND.width(),
-                        0,
+                        offsetY,
                         Texture.ITEM_FILTER_BACKGROUND.height())) {
             isHovered = false;
         }
@@ -76,8 +76,6 @@ public class PresetButton extends BasicTexturedButton {
                         getY() + 10,
                         getY() + getHeight() - 10,
                         getWidth() - 8,
-                        offsetX,
-                        offsetY,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,

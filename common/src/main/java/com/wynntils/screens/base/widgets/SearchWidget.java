@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -45,7 +45,7 @@ public class SearchWidget extends TextInputBoxWidget {
             int firstWidth,
             int highlightedWidth,
             int lastWidth) {
-        boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
+        boolean defaultText = Objects.equals(textBoxInput, "");
 
         renderBackground(poseStack);
 
@@ -87,33 +87,33 @@ public class SearchWidget extends TextInputBoxWidget {
                         HorizontalAlignment.LEFT,
                         TextShadow.NORMAL);
 
-        if (defaultText) return;
+        if (!defaultText) {
+            FontRenderer.getInstance()
+                    .renderAlignedHighlightedTextInBox(
+                            poseStack,
+                            StyledText.fromString(highlightedPortion),
+                            this.getX() + textPadding + firstWidth,
+                            this.getX() + this.width - textPadding - lastWidth,
+                            this.getY() + VERTICAL_OFFSET,
+                            this.getY() + VERTICAL_OFFSET,
+                            0,
+                            CommonColors.BLUE,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP);
 
-        FontRenderer.getInstance()
-                .renderAlignedHighlightedTextInBox(
-                        poseStack,
-                        StyledText.fromString(highlightedPortion),
-                        this.getX() + textPadding + firstWidth,
-                        this.getX() + this.width - textPadding - lastWidth,
-                        this.getY() + VERTICAL_OFFSET,
-                        this.getY() + VERTICAL_OFFSET,
-                        0,
-                        CommonColors.BLUE,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP);
-
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        StyledText.fromString(lastPortion),
-                        this.getX() + textPadding + firstWidth + highlightedWidth,
-                        this.getX() + this.width - textPadding,
-                        this.getY() + VERTICAL_OFFSET,
-                        0,
-                        defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(lastPortion),
+                            this.getX() + textPadding + firstWidth + highlightedWidth,
+                            this.getX() + this.width - textPadding,
+                            this.getY() + VERTICAL_OFFSET,
+                            0,
+                            defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            TextShadow.NORMAL);
+        }
 
         drawCursor(
                 poseStack,
@@ -130,7 +130,7 @@ public class SearchWidget extends TextInputBoxWidget {
         RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.getX(), this.getY(), 0, this.width, this.height);
         RenderUtils.drawRectBorders(
                 poseStack,
-                CommonColors.GRAY,
+                isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
                 this.getX(),
                 this.getY(),
                 this.getX() + this.width,

@@ -42,7 +42,6 @@ import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -518,8 +517,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(
-                                Models.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
-                                        + Models.CombatXp.getCombatLevel().current()),
+                                "Level " + Models.CombatXp.getCombatLevel().current() + " "
+                                        + Models.Character.getClassType().getName()),
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
                         Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
                         145 + offsetY,

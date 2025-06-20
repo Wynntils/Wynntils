@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -27,9 +27,7 @@ public class ResetButton extends GeneralSettingsButton {
                 Component.translatable("screens.wynntils.settingsScreen.reset.name"),
                 List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description")),
                 maskTopY,
-                maskBottomY,
-                0,
-                0);
+                maskBottomY);
         this.config = config;
         this.onClick = onClick;
     }

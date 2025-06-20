@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -37,6 +37,7 @@ public class ConfigurableButton extends WynntilsButton {
     private final int maskBottomY;
     private final int matchingConfigs;
     private final List<Component> descriptionTooltip;
+    private final List<Component> toggleTooltip;
     private final WynntilsBookSettingsScreen settingsScreen;
 
     public ConfigurableButton(
@@ -54,8 +55,16 @@ public class ConfigurableButton extends WynntilsButton {
         if (configurable instanceof Feature feature) {
             descriptionTooltip =
                     ComponentUtils.wrapTooltips(List.of(Component.literal(feature.getTranslatedDescription())), 150);
+            toggleTooltip = ComponentUtils.wrapTooltips(
+                    List.of(Component.translatable(
+                            "screens.wynntils.settingsScreen.toggleFeature", configurable.getTranslatedName())),
+                    150);
         } else {
             descriptionTooltip = List.of();
+            toggleTooltip = ComponentUtils.wrapTooltips(
+                    List.of(Component.translatable(
+                            "screens.wynntils.settingsScreen.toggleOverlay", configurable.getTranslatedName())),
+                    150);
         }
 
         boolean enabled = false;
@@ -118,10 +127,17 @@ public class ConfigurableButton extends WynntilsButton {
 
         enabledCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        if (isHovered && configurable instanceof Feature) {
-            McUtils.mc()
-                    .screen
-                    .setTooltipForNextRenderPass(Lists.transform(descriptionTooltip, Component::getVisualOrderText));
+        if (isHovered) {
+            if (enabledCheckbox.isHovered()) {
+                McUtils.mc()
+                        .screen
+                        .setTooltipForNextRenderPass(Lists.transform(toggleTooltip, Component::getVisualOrderText));
+            } else if (configurable instanceof Feature) {
+                McUtils.mc()
+                        .screen
+                        .setTooltipForNextRenderPass(
+                                Lists.transform(descriptionTooltip, Component::getVisualOrderText));
+            }
         }
     }
 

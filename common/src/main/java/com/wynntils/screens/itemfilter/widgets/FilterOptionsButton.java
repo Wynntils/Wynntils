@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets;
@@ -21,6 +21,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class FilterOptionsButton extends BasicTexturedButton {
+    private final int offsetX;
+    private final int offsetY;
     private final StyledText message;
     private final Texture texture;
 
@@ -35,12 +37,16 @@ public class FilterOptionsButton extends BasicTexturedButton {
             Consumer<Integer> onClick,
             List<Component> tooltip,
             Texture texture,
-            boolean isSelected) {
+            boolean isSelected,
+            int offsetX,
+            int offsetY) {
         super(x, y, width, height, texture, onClick, tooltip);
 
         this.message = message;
         this.texture = texture;
         this.isSelected = isSelected;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
     @Override
@@ -53,9 +59,9 @@ public class FilterOptionsButton extends BasicTexturedButton {
                 && MathUtils.isInside(
                         mouseX,
                         mouseY,
-                        0,
+                        offsetX,
                         Texture.ITEM_FILTER_BACKGROUND.width(),
-                        0,
+                        offsetY,
                         Texture.ITEM_FILTER_BACKGROUND.height())) {
             isHovered = false;
         }

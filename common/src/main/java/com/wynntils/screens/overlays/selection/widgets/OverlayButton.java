@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection.widgets;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Streams;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
@@ -30,19 +31,27 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class OverlayButton extends WynntilsButton {
-    private static final CustomColor ENABLED_COLOR = new CustomColor(0, 116, 0, 255);
-    private static final CustomColor DISABLED_COLOR = new CustomColor(60, 60, 60, 255);
-    private static final CustomColor DISABLED_FEATURE_COLOR = new CustomColor(120, 0, 0, 255);
-    private static final CustomColor ENABLED_COLOR_BORDER = new CustomColor(0, 220, 0, 255);
-    private static final CustomColor DISABLED_COLOR_BORDER = new CustomColor(0, 0, 0, 255);
-    private static final CustomColor DISABLED_FEATURE_COLOR_BORDER = new CustomColor(255, 0, 0, 255);
+    private static final CustomColor ENABLED_COLOR = new CustomColor(0, 220, 0, 255);
+    private static final CustomColor ENABLED_COLOR_BORDER = new CustomColor(0, 116, 0, 255);
+    private static final CustomColor ENABLED_COLOR_BORDER_HOVERED = new CustomColor(0, 66, 0, 255);
+
+    private static final CustomColor DISABLED_COLOR = new CustomColor(0, 0, 0, 255);
+    private static final CustomColor DISABLED_COLOR_BORDER = new CustomColor(60, 60, 60, 255);
+    private static final CustomColor DISABLED_COLOR_BORDER_HOVERED = new CustomColor(10, 10, 10, 255);
+
+    private static final CustomColor DISABLED_FEATURE_COLOR = new CustomColor(255, 0, 0, 255);
+    private static final CustomColor DISABLED_FEATURE_COLOR_BORDER = new CustomColor(120, 0, 0, 255);
+    private static final CustomColor DISABLED_FEATURE_COLOR_BORDER_HOVERED = new CustomColor(70, 0, 0, 255);
+
     private static final List<Component> EDIT_NAME_TOOLTIP =
             List.of(Component.translatable("screens.wynntils.overlaySelection.editName"));
 
     private static final List<Component> SAVE_NAME_TOOLTIP =
             List.of(Component.translatable("screens.wynntils.overlaySelection.stopEdit"));
 
-    private final int overlayId;
+    private static final List<Component> VIEW_TOOLTIP =
+            List.of(Component.translatable("screens.wynntils.overlaySelection.viewTooltip"));
+
     private final List<Component> descriptionTooltip;
     private final Overlay overlay;
     private final OverlaySelectionScreen selectionScreen;
@@ -68,18 +77,18 @@ public class OverlayButton extends WynntilsButton {
         }
 
         // Display a tooltip with delete instructions for info boxes and custom bars.
-        // Also get the ID to be used when deleting
-        if (overlay instanceof InfoBoxOverlay infoBoxOverlay) {
-            descriptionTooltip = ComponentUtils.wrapTooltips(EDIT_NAME_TOOLTIP, 150);
-
-            overlayId = infoBoxOverlay.getId();
-        } else if (overlay instanceof CustomBarOverlayBase customBarOverlayBase) {
-            descriptionTooltip = ComponentUtils.wrapTooltips(EDIT_NAME_TOOLTIP, 150);
-
-            overlayId = customBarOverlayBase.getId();
+        if (overlay instanceof InfoBoxOverlay) {
+            descriptionTooltip = ComponentUtils.wrapTooltips(
+                    Streams.concat(VIEW_TOOLTIP.stream(), EDIT_NAME_TOOLTIP.stream())
+                            .toList(),
+                    150);
+        } else if (overlay instanceof CustomBarOverlayBase) {
+            descriptionTooltip = ComponentUtils.wrapTooltips(
+                    Streams.concat(VIEW_TOOLTIP.stream(), EDIT_NAME_TOOLTIP.stream())
+                            .toList(),
+                    150);
         } else {
-            descriptionTooltip = List.of();
-            overlayId = -1;
+            descriptionTooltip = ComponentUtils.wrapTooltips(VIEW_TOOLTIP, 150);
         }
 
         if (overlay instanceof CustomNameProperty customNameOverlay) {
@@ -101,10 +110,10 @@ public class OverlayButton extends WynntilsButton {
         PoseStack poseStack = guiGraphics.pose();
         boolean enabled = Managers.Overlay.isEnabled(overlay);
 
-        RenderUtils.drawRect(poseStack, getBorderColor(enabled).withAlpha(100), getX(), getY(), 0, width, height);
+        RenderUtils.drawRect(poseStack, getRectColor(enabled).withAlpha(100), getX(), getY(), 0, width, height);
 
         RenderUtils.drawRectBorders(
-                poseStack, getRectColor(enabled), getX(), getY(), getX() + width, getY() + height, 1, 2);
+                poseStack, getBorderColor(enabled), getX(), getY(), getX() + width, getY() + height, 1, 2);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
@@ -130,17 +139,26 @@ public class OverlayButton extends WynntilsButton {
             isHovered = false;
         }
 
-        // Display tooltip, if ID is not -1 then it should be an info box/custom bar
-        if (isHovered && overlayId != -1) {
-            if (editInput.visible) {
+        // Display tooltip, if the parent feature is disabled then display that.
+        // Otherwise, display the description/save tooltip depending on if info box/custom bar
+        // name is being edited
+        if (isHovered) {
+            if (!overlay.isParentEnabled()) {
                 McUtils.mc()
                         .screen
-                        .setTooltipForNextRenderPass(Lists.transform(SAVE_NAME_TOOLTIP, Component::getVisualOrderText));
+                        .setTooltipForNextRenderPass(Lists.transform(
+                                ComponentUtils.wrapTooltips(
+                                        List.of(Component.translatable(
+                                                "screens.wynntils.overlaySelection.parentDisabled",
+                                                overlay.getParentTranslatedName())),
+                                        200),
+                                Component::getVisualOrderText));
             } else {
                 McUtils.mc()
                         .screen
-                        .setTooltipForNextRenderPass(
-                                Lists.transform(descriptionTooltip, Component::getVisualOrderText));
+                        .setTooltipForNextRenderPass(Lists.transform(
+                                (editInput != null && editInput.visible) ? SAVE_NAME_TOOLTIP : descriptionTooltip,
+                                Component::getVisualOrderText));
             }
         }
     }
@@ -161,7 +179,7 @@ public class OverlayButton extends WynntilsButton {
                 editInput.visible = true;
                 selectionScreen.setFocusedTextInput(editInput);
             } else {
-                selectionScreen.setSelectedOverlay(overlay);
+                selectionScreen.selectOverlay(overlay);
             }
         }
 
@@ -225,24 +243,28 @@ public class OverlayButton extends WynntilsButton {
         }
     }
 
-    private CustomColor getBorderColor(boolean enabled) {
-        if (isSelected()) {
-            return CommonColors.GRAY;
-        }
-
-        if (!overlay.isParentEnabled()) return DISABLED_FEATURE_COLOR_BORDER;
-
-        return enabled ? ENABLED_COLOR_BORDER : DISABLED_COLOR_BORDER;
-    }
-
     private CustomColor getRectColor(boolean enabled) {
         if (isSelected()) {
-            return CommonColors.WHITE;
+            return CommonColors.GRAY;
         }
 
         if (!overlay.isParentEnabled()) return DISABLED_FEATURE_COLOR;
 
         return enabled ? ENABLED_COLOR : DISABLED_COLOR;
+    }
+
+    private CustomColor getBorderColor(boolean enabled) {
+        if (isSelected()) {
+            return isHovered ? CommonColors.LIGHT_GRAY : CommonColors.WHITE;
+        }
+
+        if (!overlay.isParentEnabled()) {
+            return isHovered ? DISABLED_FEATURE_COLOR_BORDER_HOVERED : DISABLED_FEATURE_COLOR_BORDER;
+        }
+
+        return enabled
+                ? (isHovered ? ENABLED_COLOR_BORDER_HOVERED : ENABLED_COLOR_BORDER)
+                : (isHovered ? DISABLED_COLOR_BORDER_HOVERED : DISABLED_COLOR_BORDER);
     }
 
     private boolean isSelected() {

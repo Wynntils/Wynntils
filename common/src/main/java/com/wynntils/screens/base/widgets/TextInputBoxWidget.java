@@ -19,6 +19,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
@@ -33,6 +34,9 @@ import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 
 public class TextInputBoxWidget extends AbstractWidget {
+    protected static final Component DEFAULT_TEXT =
+            Component.translatable("screens.wynntils.textInputWidget.defaultText");
+
     private static final int CURSOR_PADDING = 3;
     private static final int CURSOR_TICK = 350;
 
@@ -138,49 +142,61 @@ public class TextInputBoxWidget extends AbstractWidget {
         poseStack.translate(this.getX(), this.getY(), 0);
 
         RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
-        RenderUtils.drawRectBorders(poseStack, CommonColors.GRAY, 0, 0, this.width, this.height, 1, 2);
+        RenderUtils.drawRectBorders(
+                poseStack,
+                isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
+                0,
+                0,
+                this.width,
+                this.height,
+                1,
+                2);
+
+        boolean defaultText = Objects.equals(textBoxInput, "");
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString(firstPortion),
+                        StyledText.fromString(defaultText ? DEFAULT_TEXT.getString() : firstPortion),
                         textPadding,
                         this.width - lastWidth - highlightedWidth,
                         textPadding,
                         this.height - textPadding,
                         0,
-                        renderColor,
+                        defaultText ? CommonColors.LIGHT_GRAY : renderColor,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        FontRenderer.getInstance()
-                .renderAlignedHighlightedTextInBox(
-                        poseStack,
-                        StyledText.fromString(highlightedPortion),
-                        textPadding + firstWidth,
-                        this.width - lastWidth,
-                        textPadding,
-                        this.height - textPadding,
-                        0,
-                        CommonColors.BLUE,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE);
+        if (!defaultText) {
+            FontRenderer.getInstance()
+                    .renderAlignedHighlightedTextInBox(
+                            poseStack,
+                            StyledText.fromString(highlightedPortion),
+                            textPadding + firstWidth,
+                            this.width - lastWidth,
+                            textPadding,
+                            this.height - textPadding,
+                            0,
+                            CommonColors.BLUE,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE);
 
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        StyledText.fromString(lastPortion),
-                        textPadding + firstWidth + highlightedWidth,
-                        this.width,
-                        textPadding,
-                        this.height - textPadding,
-                        0,
-                        renderColor,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(lastPortion),
+                            textPadding + firstWidth + highlightedWidth,
+                            this.width,
+                            textPadding,
+                            this.height - textPadding,
+                            0,
+                            renderColor,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+        }
 
         drawCursor(
                 poseStack,

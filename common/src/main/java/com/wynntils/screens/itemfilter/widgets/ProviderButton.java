@@ -31,11 +31,15 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class ProviderButton extends WynntilsButton {
-    private static final CustomColor DISABLED_COLOR = new CustomColor(120, 0, 0, 255);
-    private static final CustomColor DISABLED_COLOR_BORDER = new CustomColor(255, 0, 0, 255);
-    private static final CustomColor ENABLED_COLOR = new CustomColor(0, 116, 0, 255);
-    private static final CustomColor ENABLED_COLOR_BORDER = new CustomColor(0, 220, 0, 255);
-    private static final Map<Class<?>, AnyStatFilters.AbstractAnyStatFilter> anyMap = Map.of(
+    private static final CustomColor ENABLED_COLOR = new CustomColor(0, 220, 0, 255);
+    private static final CustomColor ENABLED_COLOR_BORDER = new CustomColor(0, 116, 0, 255);
+    private static final CustomColor ENABLED_COLOR_BORDER_HOVERED = new CustomColor(0, 66, 0, 255);
+
+    private static final CustomColor DISABLED_COLOR = new CustomColor(255, 0, 0, 255);
+    private static final CustomColor DISABLED_COLOR_BORDER = new CustomColor(120, 0, 0, 255);
+    private static final CustomColor DISABLED_COLOR_BORDER_HOVERED = new CustomColor(70, 0, 0, 255);
+
+    private static final Map<Class<?>, AnyStatFilters.AbstractAnyStatFilter> ANY_MAP = Map.of(
             String.class,
             new AnyStatFilters.AnyStringStatFilter(),
             Integer.class,
@@ -120,7 +124,7 @@ public class ProviderButton extends WynntilsButton {
             } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 filterScreen.setFiltersForProvider(provider, null);
             } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-                AnyStatFilters.AbstractAnyStatFilter anyFilter = anyMap.getOrDefault(provider.getType(), null);
+                AnyStatFilters.AbstractAnyStatFilter anyFilter = ANY_MAP.getOrDefault(provider.getType(), null);
 
                 if (anyFilter != null) {
                     filterScreen.setFiltersForProvider(
@@ -144,16 +148,18 @@ public class ProviderButton extends WynntilsButton {
             }
         }
 
-        return filterScreen.isProviderInUse(provider) ? ENABLED_COLOR_BORDER : DISABLED_COLOR_BORDER;
+        return filterScreen.isProviderInUse(provider) ? ENABLED_COLOR : DISABLED_COLOR;
     }
 
     private CustomColor getBorderColor() {
         if (McUtils.mc().screen instanceof ItemFilterScreen itemFilterScreen) {
             if (itemFilterScreen.getSelectedProvider() == provider) {
-                return CommonColors.WHITE;
+                return isHovered ? CommonColors.LIGHT_GRAY : CommonColors.WHITE;
             }
         }
 
-        return filterScreen.isProviderInUse(provider) ? ENABLED_COLOR : DISABLED_COLOR;
+        return filterScreen.isProviderInUse(provider)
+                ? (isHovered ? ENABLED_COLOR_BORDER_HOVERED : ENABLED_COLOR_BORDER)
+                : (isHovered ? DISABLED_COLOR_BORDER_HOVERED : DISABLED_COLOR_BORDER);
     }
 }
