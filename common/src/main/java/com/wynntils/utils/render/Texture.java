@@ -17,6 +17,7 @@ public enum Texture {
     CONTENT_BOOK_TAG("content_book/content_book_tag.png", 99, 66),
     CONTENT_BOOK_TITLE("content_book/content_book_title.png", 168, 33),
     CUSTOM_CONTENT_BOOK_BACKGROUND("content_book/custom_content_book.png", 432, 263),
+    CONTENT_BOOK_SEARCH("content_book/content_book_search.png", 250, 20),
     TAG_BLUE("content_book/tag_blue.png", 44, 22),
     TAG_RED("content_book/tag_red.png", 22, 44),
     TAG_RED_SELECTED("content_book/tag_red_selected.png", 22, 44),

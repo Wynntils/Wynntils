@@ -102,7 +102,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         offsetY = (int) ((this.height - Texture.CUSTOM_CONTENT_BOOK_BACKGROUND.height()) / 2f);
 
         searchWidget = new ContentBookSearchWidget(
-                offsetX + 16, offsetY + 6, 250, 20, (s) -> reloadContentBookWidgets(false), this);
+                offsetX + 29, offsetY + 6, 235, 20, (s) -> reloadContentBookWidgets(false), this);
         this.addRenderableWidget(searchWidget);
 
         scrollUpButton = new ContentBookScrollButton(
