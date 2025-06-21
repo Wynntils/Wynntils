@@ -25,8 +25,6 @@ public final class ActionBarHandler extends Handler {
             ResourceLocation.withDefaultNamespace("hud/gameplay/default/bottom_middle");
     private static final ResourceLocation COORDINATES_FONT =
             ResourceLocation.withDefaultNamespace("hud/gameplay/default/top_right");
-    private static final ResourceLocation CHARACTER_SELECTION_NAVIGATION_FONT =
-            ResourceLocation.withDefaultNamespace("hud/selector/default/bottom_middle");
 
     private static final FallBackSegmentMatcher FALLBACK_SEGMENT_MATCHER = new FallBackSegmentMatcher();
 
@@ -59,24 +57,7 @@ public final class ActionBarHandler extends Handler {
                 return;
             }
 
-            List<ActionBarSegment> matchedSegments;
-
-            // Skip parsing if the action bar text is the same as the last parsed one
-            if (lastParsedActionBarText.equals(packetText)) {
-                matchedSegments = lastMatchedSegments;
-            } else {
-                matchedSegments = parseActionBarSegments(actionBarText);
-
-                lastParsedActionBarText = packetText;
-                lastMatchedSegments = matchedSegments;
-
-                if (WynntilsMod.isDevelopmentBuild() || WynntilsMod.isDevelopmentEnvironment()) {
-                    debugChecks(matchedSegments, actionBarText);
-                }
-
-                WynntilsMod.postEvent(new ActionBarUpdatedEvent(matchedSegments));
-            }
-
+            List<ActionBarSegment> matchedSegments = matchSegments(actionBarText, packetText);
             ActionBarRenderEvent actionBarRenderEvent = new ActionBarRenderEvent(matchedSegments);
             WynntilsMod.postEvent(actionBarRenderEvent);
 
@@ -104,24 +85,35 @@ public final class ActionBarHandler extends Handler {
         } else if (Models.WorldState.getCurrentState() == WorldState.INTERIM) {
             StyledText packetText = StyledText.fromComponent(event.getMessage());
 
-            StyledText characterSelectionNavigationText = packetText.iterate((part, changes) -> {
-                if (!CHARACTER_SELECTION_NAVIGATION_FONT.equals(
-                        part.getPartStyle().getFont())) {
-                    changes.remove(part);
-                }
+            // We can't do any filtering by font here as whilst the navigation text font is always the same, the version
+            // is not
 
-                return IterationDecision.CONTINUE;
-            });
+            // We're only expecting to be on the character selection screen here so we don't need to do anything with
+            // matched segments
+            matchSegments(packetText, packetText);
+        }
+    }
 
-            // Likely we aren't on the character selection screen yet
-            if (characterSelectionNavigationText.isEmpty()) {
-                WynntilsMod.warn(
-                        "Failed to find character selection navigation text in packet: " + packetText.getString());
-                return;
+    private List<ActionBarSegment> matchSegments(StyledText actionBarText, StyledText packetText) {
+        List<ActionBarSegment> matchedSegments;
+
+        // Skip parsing if the action bar text is the same as the last parsed one
+        if (lastParsedActionBarText.equals(packetText)) {
+            matchedSegments = lastMatchedSegments;
+        } else {
+            matchedSegments = parseActionBarSegments(actionBarText);
+
+            lastParsedActionBarText = packetText;
+            lastMatchedSegments = matchedSegments;
+
+            if (WynntilsMod.isDevelopmentBuild() || WynntilsMod.isDevelopmentEnvironment()) {
+                debugChecks(matchedSegments, actionBarText);
             }
 
-            Models.WorldState.onCharacterSelection();
+            WynntilsMod.postEvent(new ActionBarUpdatedEvent(matchedSegments));
         }
+
+        return matchedSegments;
     }
 
     @SubscribeEvent
