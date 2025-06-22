@@ -21,6 +21,7 @@ public enum UrlId {
     API_ATHENA_AUTH_RESPONSE("apiAthenaAuthResponse"),
     API_ATHENA_TELEMETRY_CRASH("apiAthenaTelemetryCrash"),
     API_ATHENA_UPDATE_CHANGELOG("apiAthenaUpdateChangelog"),
+    API_ATHENA_UPDATE_CHANGELOG_V2("apiAthenaUpdateChangelogV2"),
     API_ATHENA_UPDATE_CHECK("apiAthenaUpdateCheck"),
     API_ATHENA_USER_INFO("apiAthenaUserInfo"),
     API_GOOGLE_TRANSLATION("apiGoogleTranslation"),

@@ -4,6 +4,8 @@
  */
 package com.wynntils.services.athena;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
@@ -21,6 +23,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -154,24 +159,36 @@ public final class UpdateService extends Service {
         return future;
     }
 
-    public CompletableFuture<String> getChangelog(boolean saveLastShown) {
+    public CompletableFuture<Map<String, String>> getChangelog(boolean saveLastShown) {
         return getChangelog(lastShownChangelogVersion.get(), WynntilsMod.getVersion(), saveLastShown);
     }
 
-    public CompletableFuture<String> getChangelog(String oldVersion, String newVersion, boolean saveLastShown) {
-        CompletableFuture<String> future = new CompletableFuture<>();
+    public CompletableFuture<Map<String, String>> getChangelog(
+            String oldVersion, String newVersion, boolean saveLastShown) {
+        CompletableFuture<Map<String, String>> future = new CompletableFuture<>();
 
         ApiResponse response = Services.WynntilsAccount.callApi(
-                UrlId.API_ATHENA_UPDATE_CHANGELOG, Map.of("old_version", oldVersion, "new_version", newVersion));
+                UrlId.API_ATHENA_UPDATE_CHANGELOG_V2, Map.of("old_version", oldVersion, "new_version", newVersion));
 
         response.handleJsonObject(
                 jsonObject -> {
-                    if (!jsonObject.has("changelog")) return;
+                    if (!jsonObject.has("changelogs")) return;
 
                     if (saveLastShown) {
                         lastShownChangelogVersion.store(WynntilsMod.getVersion());
                     }
-                    future.complete(jsonObject.get("changelog").getAsString());
+
+                    JsonObject changelogs = jsonObject.getAsJsonObject("changelogs");
+                    Map<String, String> changelogMap = new LinkedHashMap<>();
+
+                    List<Map.Entry<String, JsonElement>> entries = new ArrayList<>(changelogs.entrySet());
+                    // We want to display newest changelog first
+                    Collections.reverse(entries);
+
+                    entries.forEach(entry ->
+                            changelogMap.put(entry.getKey(), entry.getValue().getAsString()));
+
+                    future.complete(changelogMap);
                 },
                 throwable -> WynntilsMod.warn("Could not get update changelog: ", throwable));
 
