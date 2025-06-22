@@ -48,6 +48,19 @@ public final class ColorFunctions {
         }
     }
 
+    public static class FromHexFunction extends GenericFunction<CustomColor> {
+        @Override
+        public CustomColor getValue(FunctionArguments arguments) {
+            return CustomColor.fromHexString(arguments.getArgument("hex").getStringValue());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("hex", String.class, null)));
+        }
+    }
+
     public static class HueShiftFunction extends GenericFunction<CustomColor> {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
