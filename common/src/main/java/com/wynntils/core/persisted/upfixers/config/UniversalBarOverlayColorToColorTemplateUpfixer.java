@@ -11,23 +11,30 @@ import com.wynntils.core.persisted.upfixers.Upfixer;
 import java.util.Set;
 
 public class UniversalBarOverlayColorToColorTemplateUpfixer implements Upfixer {
+    private static final String OVERLAY_GROUPS_KEY = "overlayGroups";
+    private static final String UNIVERSAL_BAR_IDS_KEY =
+            "customBarsOverlayFeature.groupedOverlay.customUniversalBarOverlays.ids";
+    private static final String UNIVERSAL_BAR_COLOR_KEY =
+            "customBarsOverlayFeature.universalTexturedCustomBarOverlay%s.color";
+    private static final String UNIVERSAL_BAR_COLOR_TEMPLATE_KEY =
+            "customBarsOverlayFeature.universalTexturedCustomBarOverlay%s.colorTemplate";
+
     @Override
     public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
-        if (configObject.has("overlayGroups")) {
-            JsonObject overlayGroups = configObject.getAsJsonObject("overlayGroups");
+        if (configObject.has(OVERLAY_GROUPS_KEY)) {
+            JsonObject overlayGroups = configObject.getAsJsonObject(OVERLAY_GROUPS_KEY);
             // Get the universal bar ids from the overlay groups
-            if (overlayGroups.has("customBarsOverlayFeature.groupedOverlay.customUniversalBarOverlays.ids")) {
-                JsonArray ids = overlayGroups.getAsJsonArray(
-                        "customBarsOverlayFeature.groupedOverlay.customUniversalBarOverlays.ids");
+            if (overlayGroups.has(UNIVERSAL_BAR_IDS_KEY)) {
+                JsonArray ids = overlayGroups.getAsJsonArray(UNIVERSAL_BAR_IDS_KEY);
 
                 // Replace each "color" config with the "colorTemplate" config that uses the "from_hex" function on the
                 // original "color" value
                 ids.forEach(id -> {
-                    String barName =
-                            "customBarsOverlayFeature.universalTexturedCustomBarOverlay" + id.getAsString() + ".color";
-                    if (configObject.has(barName)) {
-                        String value = configObject.get(barName).getAsString();
-                        configObject.addProperty(barName + "Template", "from_hex(\"" + value + "\")");
+                    String barColorKey = String.format(UNIVERSAL_BAR_COLOR_KEY, id.getAsString());
+                    if (configObject.has(barColorKey)) {
+                        String value = configObject.get(barColorKey).getAsString();
+                        String barColorTemplateKey = String.format(UNIVERSAL_BAR_COLOR_TEMPLATE_KEY, id.getAsString());
+                        configObject.addProperty(barColorTemplateKey, "from_hex(\"" + value + "\")");
                     }
                 });
             }
