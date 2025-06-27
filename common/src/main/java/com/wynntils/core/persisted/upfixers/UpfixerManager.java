@@ -29,6 +29,7 @@ import com.wynntils.core.persisted.upfixers.config.SacredSurgeToHolyPowerUpfixer
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
+import com.wynntils.core.persisted.upfixers.config.UniversalBarOverlayColorToColorTemplateUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WynntilsContentBookReplaceToShiftBehaviourUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.UpdateChangelogToModelUpfixer;
@@ -66,6 +67,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new ProfessionBadgesToLeaderboardBadgesUpfixer());
         registerConfigUpfixer(new TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer());
         registerConfigUpfixer(new SacredSurgeToHolyPowerUpfixer());
+        registerConfigUpfixer(new UniversalBarOverlayColorToColorTemplateUpfixer());
         registerConfigUpfixer(new WynntilsContentBookReplaceToShiftBehaviourUpfixer());
 
         // Register storage upfixers here, in order of run priority
