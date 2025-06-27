@@ -6,7 +6,7 @@ package com.wynntils.screens.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.activities.widgets.QuestBookSearchWidget;
+import com.wynntils.screens.base.widgets.ListSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -57,11 +57,11 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         super(component);
 
         // Do not lose search info on re-init
-        this.searchWidget = new QuestBookSearchWidget(
+        this.searchWidget = new ListSearchWidget(
                 originalSearchWidgetX,
                 0,
-                Texture.CONTENT_BOOK_SEARCH.width(),
-                Texture.CONTENT_BOOK_SEARCH.height(),
+                Texture.LIST_SEARCH.width(),
+                Texture.LIST_SEARCH.height(),
                 s -> reloadElements(),
                 this);
     }
