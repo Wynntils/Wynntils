@@ -521,7 +521,8 @@ public final class FontRenderer {
             CustomColor customColor,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
-            TextShadow textShadow) {
+            TextShadow textShadow,
+            float textScale) {
         float renderX =
                 switch (horizontalAlignment) {
                     case LEFT -> x1;
@@ -541,6 +542,33 @@ public final class FontRenderer {
                 text,
                 renderX,
                 renderY,
+                renderWidth,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                textShadow,
+                textScale);
+    }
+
+    public void renderScrollingAlignedTextInBox(
+            PoseStack poseStack,
+            StyledText text,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float renderWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow textShadow) {
+        renderScrollingAlignedTextInBox(
+                poseStack,
+                text,
+                x1,
+                x2,
+                y1,
+                y2,
                 renderWidth,
                 customColor,
                 horizontalAlignment,
