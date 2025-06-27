@@ -25,3 +25,32 @@ jobs:
           github_token: ${{ secrets.PRIVATE_TOKEN }}
           source: 'main'
           target: 'release'
+
+  clear-changelog:
+    needs: promote-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: release
+
+      - name: Clear Changelog File
+        run: echo "" > CHANGELOG.md
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          commit-message: "chore: Clear changelog"
+          title: "chore: Set changelog for new release"
+          body: |
+            This PR resets the `CHANGELOG.md` file to prepare a new release.
+            Edit the file with the relevant release notes for the release.
+            
+            It is automatically generated and targets the `release` branch.
+          branch: set-changelog
+          base: release
+          labels: auto-generated
+          committer: WynntilsBot <admin@wynntils.com>
