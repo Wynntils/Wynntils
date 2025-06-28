@@ -15,6 +15,7 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
@@ -111,6 +112,70 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
+            StyledText[] lines,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow textShadow,
+            float textScale) {
+        int lineHeight = font.lineHeight;
+        List<StyledText> adjustedLines = new ArrayList<>();
+        for (StyledText line : lines) {
+            if (maxWidth == 0 || font.width(line.getComponent()) < maxWidth / textScale) {
+                adjustedLines.add(line);
+            } else {
+                List<FormattedText> parts =
+                        font.getSplitter().splitLines(line.getComponent(), (int) (maxWidth / textScale), Style.EMPTY);
+                StyledText lastPart = StyledText.EMPTY;
+                for (FormattedText part : parts) {
+                    Style lastStyle = ComponentUtils.getLastPartCodes(lastPart);
+                    StyledText text = StyledText.fromComponent(
+                                    Component.literal("").withStyle(lastStyle))
+                            .append(StyledText.fromComponent(ComponentUtils.formattedTextToComponent(part)));
+                    lastPart = text;
+                    adjustedLines.add(text);
+                }
+            }
+        }
+
+        float calculatedTextHeight = (adjustedLines.size() - 1) * lineHeight * textScale;
+        float renderX =
+                switch (horizontalAlignment) {
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
+                };
+
+        float renderY =
+                switch (verticalAlignment) {
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f - calculatedTextHeight / 2f;
+                    case BOTTOM -> y2 - calculatedTextHeight;
+                };
+
+        float lineOffset = 0;
+        for (StyledText text : adjustedLines) {
+            renderText(
+                    poseStack,
+                    text,
+                    renderX,
+                    renderY + lineOffset,
+                    customColor,
+                    horizontalAlignment,
+                    verticalAlignment,
+                    textShadow,
+                    textScale);
+            lineOffset += lineHeight * textScale;
+        }
+    }
+
+    public void renderAlignedTextInBox(
+            PoseStack poseStack,
             StyledText text,
             float x1,
             float x2,
@@ -122,25 +187,13 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-        float renderX =
-                switch (horizontalAlignment) {
-                    case LEFT -> x1;
-                    case CENTER -> (x1 + x2) / 2f;
-                    case RIGHT -> x2;
-                };
-
-        float renderY =
-                switch (verticalAlignment) {
-                    case TOP -> y1;
-                    case MIDDLE -> (y1 + y2) / 2f;
-                    case BOTTOM -> y2;
-                };
-
-        renderText(
+        renderAlignedTextInBox(
                 poseStack,
-                text,
-                renderX,
-                renderY,
+                new StyledText[] {text},
+                x1,
+                x2,
+                y1,
+                y2,
                 maxWidth,
                 customColor,
                 horizontalAlignment,
@@ -163,7 +216,7 @@ public final class FontRenderer {
             TextShadow textShadow) {
         renderAlignedTextInBox(
                 poseStack,
-                text,
+                new StyledText[] {text},
                 x1,
                 x2,
                 y1,
@@ -220,7 +273,7 @@ public final class FontRenderer {
 
         renderAlignedTextInBox(
                 poseStack,
-                text,
+                new StyledText[] {text},
                 x1,
                 x2,
                 y1,
@@ -245,7 +298,7 @@ public final class FontRenderer {
             TextShadow textShadow) {
         renderAlignedTextInBox(
                 poseStack,
-                text,
+                new StyledText[] {text},
                 x1,
                 x2,
                 y,
@@ -270,7 +323,7 @@ public final class FontRenderer {
             TextShadow textShadow) {
         renderAlignedTextInBox(
                 poseStack,
-                text,
+                new StyledText[] {text},
                 x,
                 x,
                 y1,

@@ -520,9 +520,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         Managers.Overlay.removeIdFromOverlayGroup(overlayGroupHolder, overlayId);
 
         // Reload config
-        Managers.Config.loadConfigOptions(true, false);
+        Managers.Config.reloadConfiguration(false);
         Managers.Config.saveConfig();
-        Managers.Config.reloadConfiguration();
+        Managers.Config.reloadConfiguration(true);
 
         selectedOverlay = null;
         populateConfigs();
@@ -643,6 +643,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     private void addInfoBox() {
+        // Save any changes made to other overlays first
+        Managers.Config.saveConfig();
+
         // Get the info box feature
         Feature infoBoxFeature = Managers.Feature.getFeatureInstance(InfoBoxFeature.class);
 
@@ -654,9 +657,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 int id = Managers.Overlay.extendOverlayGroup(group);
 
                 // Reload config
-                Managers.Config.loadConfigOptions(true, false);
+                Managers.Config.reloadConfiguration(false);
                 Managers.Config.saveConfig();
-                Managers.Config.reloadConfiguration();
+                Managers.Config.reloadConfiguration(true);
 
                 // Repopulate overlay list
                 populateOverlays();
