@@ -25,3 +25,32 @@ jobs:
           github_token: ${{ secrets.PRIVATE_TOKEN }}
           source: 'development'
           target: 'beta'
+
+  clear-changelog:
+    needs: promote-beta
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout beta branch
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: beta
+
+      - name: Clear Changelog File
+        run: echo "" > CHANGELOG.md
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          commit-message: "chore: Clear changelog"
+          title: "chore: Set changelog for new beta release"
+          body: |
+            This PR resets the `CHANGELOG.md` file to prepare a new beta release.
+            Edit the file with the relevant release notes for the beta release.
+            
+            It is automatically generated and targets the `beta` branch.
+          branch: set-beta-changelog
+          base: beta
+          labels: auto-generated
+          committer: WynntilsBot <admin@wynntils.com>
