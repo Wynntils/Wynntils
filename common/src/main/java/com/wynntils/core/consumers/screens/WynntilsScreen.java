@@ -133,7 +133,15 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
             }
         }
 
-        return (getFocusedTextInput() != null && getFocusedTextInput().keyPressed(keyCode, scanCode, modifiers))
-                || super.keyPressed(keyCode, scanCode, modifiers);
+        if (getFocusedTextInput() != null) {
+            return getFocusedTextInput().keyPressed(keyCode, scanCode, modifiers);
+        }
+        
+        if (keyCode == GLFW.GLFW_KEY_E) {
+            this.onClose();
+            return true;
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 }
