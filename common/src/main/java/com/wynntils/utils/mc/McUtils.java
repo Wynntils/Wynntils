@@ -110,6 +110,10 @@ public final class McUtils {
         mc().getChatListener().handleSystemMessage(component, false);
     }
 
+    public static void sendMessageToClientWithPillHeader(Component component) {
+        sendMessageToClient(ComponentUtils.addWynntilsPillHeader(component));
+    }
+
     public static void removeMessageFromChat(Component component) {
         ((ChatComponentExtension) mc().gui.getChat()).deleteMessage(component);
     }
