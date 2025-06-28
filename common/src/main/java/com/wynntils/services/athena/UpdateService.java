@@ -4,36 +4,59 @@
  */
 package com.wynntils.services.athena;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.net.event.DownloadEvent;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.services.athena.type.ChangelogMap;
 import com.wynntils.services.athena.type.ModUpdateInfo;
+import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import net.minecraft.ChatFormatting;
+import java.util.concurrent.Executors;
 import net.minecraft.SharedConstants;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class UpdateService extends Service {
-    private static final String WYNTILLS_UPDATE_FOLDER = "updates";
+    private static final String WYNNTILS_UPDATE_FOLDER = "updates";
     private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
-    private static final File UPDATES_FOLDER = WynntilsMod.getModStorageDir(WYNTILLS_UPDATE_FOLDER);
+    private static final File UPDATES_FOLDER = WynntilsMod.getModStorageDir(WYNNTILS_UPDATE_FOLDER);
+
+    // If we don't know the last version, assume we just downloaded the mod, so don't show the changelog
+    @Persisted
+    public final Storage<String> lastShownChangelogVersion = new Storage<>(WynntilsMod.getVersion());
+
+    @Persisted
+    public final Storage<String> ignoredUpdate = new Storage<>("");
+
+    private boolean promptedUpdate = false;
+    private float updateProgress = -1f;
+    private ModUpdateInfo modUpdateInfo;
 
     public UpdateService() {
         super(List.of());
+    }
+
+    @SubscribeEvent
+    public void onDownloadsFinished(DownloadEvent.Completed event) {
+        getLatestBuild().thenAccept(updateInfo -> modUpdateInfo = updateInfo);
     }
 
     public CompletableFuture<ModUpdateInfo> getLatestBuild() {
@@ -47,7 +70,13 @@ public final class UpdateService extends Service {
         apiResponse.handleJsonObject(
                 json -> {
                     ModUpdateInfo version = Managers.Json.GSON.fromJson(json, ModUpdateInfo.class);
-                    future.complete(version);
+
+                    if (checkUpdateIsValid(version)) {
+                        modUpdateInfo = version;
+                        future.complete(version);
+                    } else {
+                        future.complete(null);
+                    }
                 },
                 onError -> {
                     WynntilsMod.error("Exception while trying to fetch update.");
@@ -56,8 +85,145 @@ public final class UpdateService extends Service {
         return future;
     }
 
+    public CompletableFuture<UpdateResult> tryUpdate() {
+        CompletableFuture<UpdateResult> future = new CompletableFuture<>();
+
+        if (modUpdateInfo == null) {
+            String stream = getStream();
+            WynntilsMod.info("Attempting to download update for stream " + stream + ".");
+
+            ApiResponse apiResponse =
+                    Services.WynntilsAccount.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", stream));
+            apiResponse.handleJsonObject(
+                    json -> {
+                        ModUpdateInfo updateInfo = Managers.Json.GSON.fromJson(json, ModUpdateInfo.class);
+
+                        if (updateInfo.md5() == null) {
+                            future.complete(UpdateResult.ERROR);
+                            return;
+                        }
+
+                        String currentMd5 = FileUtils.getMd5(WynntilsMod.getModJar());
+                        if (Objects.equals(currentMd5, updateInfo.md5())) {
+                            future.complete(UpdateResult.ALREADY_ON_LATEST);
+                            return;
+                        }
+
+                        if (!Objects.equals(
+                                updateInfo.supportedMcVersion(),
+                                SharedConstants.getCurrentVersion().getName())) {
+                            future.complete(UpdateResult.INCORRECT_VERSION_RECEIVED);
+                            return;
+                        }
+
+                        File localUpdateFile = getUpdateFile();
+                        if (localUpdateFile.exists()) {
+                            String localUpdateMd5 = FileUtils.getMd5(localUpdateFile);
+
+                            // If the local update file is the same as the latest update, we can just use that.
+                            if (Objects.equals(localUpdateMd5, updateInfo.md5())) {
+                                future.complete(UpdateResult.UPDATE_PENDING);
+                                return;
+                            } else {
+                                // Otherwise, we need to delete the old file.
+                                FileUtils.deleteFile(localUpdateFile);
+                            }
+                        }
+
+                        tryFetchNewUpdate(updateInfo, future);
+                    },
+                    onError -> {
+                        WynntilsMod.error("Exception while trying to load new update.");
+                        future.complete(UpdateResult.ERROR);
+                    });
+        } else {
+            File localUpdateFile = getUpdateFile();
+            if (localUpdateFile.exists()) {
+                String localUpdateMd5 = FileUtils.getMd5(localUpdateFile);
+
+                // If the local update file is the same as the latest update, we can just use that.
+                if (Objects.equals(localUpdateMd5, modUpdateInfo.md5())) {
+                    future.complete(UpdateResult.UPDATE_PENDING);
+                    return future;
+                } else {
+                    // Otherwise, we need to delete the old file.
+                    FileUtils.deleteFile(localUpdateFile);
+                }
+            }
+
+            Executors.newSingleThreadExecutor().submit(() -> {
+                tryFetchNewUpdate(modUpdateInfo, future);
+            });
+        }
+
+        return future;
+    }
+
+    public CompletableFuture<ChangelogMap> getChangelog(boolean saveLastShown) {
+        return getChangelog(lastShownChangelogVersion.get(), WynntilsMod.getVersion(), saveLastShown);
+    }
+
+    public CompletableFuture<ChangelogMap> getChangelog(String oldVersion, String newVersion, boolean saveLastShown) {
+        CompletableFuture<ChangelogMap> future = new CompletableFuture<>();
+
+        ApiResponse response = Services.WynntilsAccount.callApi(
+                UrlId.API_ATHENA_UPDATE_CHANGELOG_V2, Map.of("old_version", oldVersion, "new_version", newVersion));
+
+        response.handleJsonObject(
+                jsonObject -> {
+                    if (!jsonObject.has("changelogs")) return;
+
+                    if (saveLastShown) {
+                        lastShownChangelogVersion.store(WynntilsMod.getVersion());
+                    }
+
+                    JsonObject changelogs = jsonObject.getAsJsonObject("changelogs");
+                    Map<String, String> changelogMap = new LinkedHashMap<>();
+
+                    List<Map.Entry<String, JsonElement>> entries = new ArrayList<>(changelogs.entrySet());
+                    // Iterated backwards to get latest changelog first
+                    for (int i = entries.size() - 1; i >= 0; i--) {
+                        Map.Entry<String, JsonElement> versionEntry = entries.get(i);
+                        changelogMap.put(
+                                versionEntry.getKey(), versionEntry.getValue().getAsString());
+                    }
+
+                    future.complete(new ChangelogMap(changelogMap));
+                },
+                throwable -> WynntilsMod.warn("Could not get update changelog: ", throwable));
+
+        return future;
+    }
+
+    public boolean shouldPromptUpdate() {
+        return !promptedUpdate
+                && modUpdateInfo != null
+                && !modUpdateInfo.version().equals(ignoredUpdate.get());
+    }
+
+    public void setHasPromptedUpdate(boolean promptedUpdate) {
+        this.promptedUpdate = promptedUpdate;
+    }
+
+    public float getUpdateProgress() {
+        return updateProgress;
+    }
+
+    public ModUpdateInfo getModUpdateInfo() {
+        return modUpdateInfo;
+    }
+
+    public File getUpdatesFolder() {
+        return UPDATES_FOLDER;
+    }
+
+    private File getUpdateFile() {
+        File updatesDir = new File(UPDATES_FOLDER.toURI());
+        FileUtils.mkdir(updatesDir);
+        return new File(updatesDir, WYNNTILS_UPDATE_FILE_NAME);
+    }
+
     private String getStream() {
-        // TODO: Replace with config option for the user to select their preferred stream.
         String version = WynntilsMod.getVersion();
         // Format: v0.0.3-pre-alpha.103+MC-1.19.4 -> pre-alpha
         // Format: v0.0.3-alpha.103+MC-1.19.4 -> alpha
@@ -78,66 +244,26 @@ public final class UpdateService extends Service {
         return stream;
     }
 
-    public CompletableFuture<UpdateResult> tryUpdate() {
-        CompletableFuture<UpdateResult> future = new CompletableFuture<>();
+    private boolean checkUpdateIsValid(ModUpdateInfo updateInfo) {
+        if (updateInfo.version() == null) {
+            WynntilsMod.info("Couldn't fetch latest version, not attempting update reminder or auto-update.");
+            return false;
+        }
 
-        String stream = getStream();
-        WynntilsMod.info("Attempting to download update for stream " + stream + ".");
+        if (Objects.equals(updateInfo.version(), WynntilsMod.getVersion())) {
+            WynntilsMod.info("Mod is on latest version, not attempting update reminder or auto-update.");
+            return false;
+        }
 
-        ApiResponse apiResponse =
-                Services.WynntilsAccount.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", stream));
-        apiResponse.handleJsonObject(
-                json -> {
-                    ModUpdateInfo updateInfo = Managers.Json.GSON.fromJson(json, ModUpdateInfo.class);
+        if (!Objects.equals(
+                updateInfo.supportedMcVersion(),
+                SharedConstants.getCurrentVersion().getName())) {
+            WynntilsMod.info(
+                    "Athena sent an update for a different MC version, not attempting update reminder or auto-update.");
+            return false;
+        }
 
-                    if (updateInfo.md5() == null) {
-                        future.complete(UpdateResult.ERROR);
-                        return;
-                    }
-
-                    String currentMd5 = FileUtils.getMd5(WynntilsMod.getModJar());
-                    if (Objects.equals(currentMd5, updateInfo.md5())) {
-                        future.complete(UpdateResult.ALREADY_ON_LATEST);
-                        return;
-                    }
-
-                    if (!Objects.equals(updateInfo.supportedMcVersion(), SharedConstants.VERSION_STRING)) {
-                        future.complete(UpdateResult.INCORRECT_VERSION_RECEIVED);
-                        return;
-                    }
-
-                    File localUpdateFile = getUpdateFile();
-                    if (localUpdateFile.exists()) {
-                        String localUpdateMd5 = FileUtils.getMd5(localUpdateFile);
-
-                        // If the local update file is the same as the latest update, we can just use that.
-                        if (Objects.equals(localUpdateMd5, updateInfo.md5())) {
-                            future.complete(UpdateResult.UPDATE_PENDING);
-                            return;
-                        } else {
-                            // Otherwise, we need to delete the old file.
-                            FileUtils.deleteFile(localUpdateFile);
-                        }
-                    }
-
-                    tryFetchNewUpdate(updateInfo, future);
-                },
-                onError -> {
-                    WynntilsMod.error("Exception while trying to load new update.");
-                    future.complete(UpdateResult.ERROR);
-                });
-
-        return future;
-    }
-
-    public File getUpdatesFolder() {
-        return UPDATES_FOLDER;
-    }
-
-    private File getUpdateFile() {
-        File updatesDir = new File(UPDATES_FOLDER.toURI());
-        FileUtils.mkdir(updatesDir);
-        return new File(updatesDir, WYNNTILS_UPDATE_FILE_NAME);
+        return true;
     }
 
     private void tryFetchNewUpdate(ModUpdateInfo updateInfo, CompletableFuture<UpdateResult> future) {
@@ -145,13 +271,12 @@ public final class UpdateService extends Service {
         File newJar = getUpdateFile();
 
         try {
-            URL downloadUrl = new URL(updateInfo.url());
-            InputStream in = downloadUrl.openStream();
+            URL downloadUrl = URI.create(updateInfo.url()).toURL();
+            URLConnection connection = downloadUrl.openConnection();
 
-            FileUtils.createNewFile(newJar);
+            FileUtils.downloadFileWithProgress(connection, newJar, progress -> updateProgress = progress);
 
-            Files.copy(in, newJar.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
+            updateProgress = -1f;
             String downloadedUpdateFileMd5 = FileUtils.getMd5(newJar);
 
             if (!Objects.equals(downloadedUpdateFileMd5, updateInfo.md5())) {
@@ -167,9 +292,8 @@ public final class UpdateService extends Service {
 
             addShutdownHook(oldJar, newJar);
         } catch (IOException exception) {
-            newJar.delete();
+            updateProgress = -1f;
             future.complete(UpdateResult.ERROR);
-            WynntilsMod.error("Exception when trying to download update!", exception);
         }
     }
 
@@ -189,27 +313,5 @@ public final class UpdateService extends Service {
                 WynntilsMod.error("Cannot apply update!", e);
             }
         }));
-    }
-
-    public enum UpdateResult {
-        SUCCESSFUL(Component.translatable("service.wynntils.updates.result.successful")
-                .withStyle(ChatFormatting.DARK_GREEN)),
-        ALREADY_ON_LATEST(
-                Component.translatable("service.wynntils.updates.result.latest").withStyle(ChatFormatting.YELLOW)),
-        UPDATE_PENDING(Component.translatable("service.wynntils.updates.result.pending")
-                .withStyle(ChatFormatting.YELLOW)),
-        INCORRECT_VERSION_RECEIVED(Component.translatable("service.wynntils.updates.result.incorrect")
-                .withStyle(ChatFormatting.YELLOW)),
-        ERROR(Component.translatable("service.wynntils.updates.result.error").withStyle(ChatFormatting.DARK_RED));
-
-        private final MutableComponent message;
-
-        UpdateResult(MutableComponent message) {
-            this.message = message;
-        }
-
-        public MutableComponent getMessage() {
-            return message;
-        }
     }
 }

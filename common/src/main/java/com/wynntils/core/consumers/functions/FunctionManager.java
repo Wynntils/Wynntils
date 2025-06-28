@@ -354,6 +354,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ColorFunctions.BlinkShaderFunction());
         registerFunction(new ColorFunctions.BrightnessShiftFunction());
         registerFunction(new ColorFunctions.FadeShaderFunction());
+        registerFunction(new ColorFunctions.FromHexFunction());
         registerFunction(new ColorFunctions.FromRgbFunction());
         registerFunction(new ColorFunctions.FromRgbPercentFunction());
         registerFunction(new ColorFunctions.GradientShaderFunction());
@@ -584,6 +585,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.MaterialDryStreak());
         registerFunction(new ProfessionFunctions.ProfessionLevelFunction());
         registerFunction(new ProfessionFunctions.ProfessionPercentageFunction());
+        registerFunction(new ProfessionFunctions.ProfessionXpFunction());
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
 

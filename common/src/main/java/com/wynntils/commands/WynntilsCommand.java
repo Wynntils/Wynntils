@@ -17,7 +17,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
-import com.wynntils.services.athena.UpdateService;
+import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.BufferedReader;
@@ -363,7 +363,7 @@ public class WynntilsCommand extends Command {
 
         CompletableFuture.runAsync(() -> {
             WynntilsMod.info("Attempting to fetch Wynntils update.");
-            CompletableFuture<UpdateService.UpdateResult> completableFuture = Services.Update.tryUpdate();
+            CompletableFuture<UpdateResult> completableFuture = Services.Update.tryUpdate();
 
             completableFuture.whenComplete((result, throwable) -> McUtils.sendMessageToClient(result.getMessage()));
         });

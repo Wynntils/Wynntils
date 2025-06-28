@@ -352,7 +352,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.TOP,
-                            TextShadow.NORMAL);
+                            TextShadow.NORMAL,
+                            1.25f);
         }
 
         if (configurables.size() > CONFIGURABLES_PER_PAGE) {
@@ -375,6 +376,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         if (McUtils.mc().level == null) {
             renderPanorama(guiGraphics, partialTick);
         }
+
+        // Don't render the blurred background
     }
 
     @Override
@@ -385,7 +388,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
-        Managers.Config.reloadConfiguration();
+        Managers.Config.reloadConfiguration(true);
 
         if (previousScreen != null) {
             McUtils.mc().setScreen(previousScreen);
@@ -626,8 +629,22 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         int renderY = 21 + offsetY;
 
         for (Config<?> config : configsOptions) {
-            ConfigTile configTile = new ConfigTile(
-                    Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10 + offsetX, renderY, 160, 45, this, config);
+            ConfigTile configTile;
+
+            if (selectedConfigurable instanceof Overlay overlay) {
+                configTile = new ConfigTile(
+                        Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10 + offsetX,
+                        renderY,
+                        160,
+                        45,
+                        this,
+                        config,
+                        overlay);
+            } else {
+                configTile = new ConfigTile(
+                        Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10 + offsetX, renderY, 160, 45, this, config);
+            }
+
             configTile.visible = renderY >= (21 + offsetY - 46) && renderY <= (21 + offsetY + CONFIGS_PER_PAGE * 45);
 
             configs.add(configTile);

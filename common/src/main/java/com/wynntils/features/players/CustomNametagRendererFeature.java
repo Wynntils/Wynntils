@@ -37,6 +37,8 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +51,9 @@ public class CustomNametagRendererFeature extends Feature {
     private static final float NAMETAG_HEIGHT = 0.25875f;
     private static final float BADGE_MARGIN = 2;
     private static final int BADGE_SCROLL_SPEED = 40;
-    private static final String WYNNTILS_LOGO = "⛨"; // Well, at least it's a shield...
+    private static final ResourceLocation WYNNTILS_NAMETAG_LOGO_FONT =
+            ResourceLocation.fromNamespaceAndPath("wynntils", "nametag");
+    private static final String WYNNTILS_NAMETAG_LOGO = "\uE100";
 
     @Persisted
     public final Config<Boolean> hideAllNametags = new Config<>(false);
@@ -203,12 +207,19 @@ public class CustomNametagRendererFeature extends Feature {
         if (showWynntilsMarker.get()) {
             StyledText styledText = StyledText.fromComponent(realName);
             if (styledText.getString(PartStyle.StyleType.NONE).startsWith("[")) {
-                vanillaNametag = Component.literal(WYNNTILS_LOGO)
-                        .withStyle(ChatFormatting.DARK_GRAY)
+                vanillaNametag = Component.empty()
+                        .append(Component.literal(WYNNTILS_NAMETAG_LOGO)
+                                .withStyle(Style.EMPTY
+                                        .withFont(WYNNTILS_NAMETAG_LOGO_FONT)
+                                        .withColor(ChatFormatting.DARK_GRAY)))
                         .append(realName);
             } else {
-                vanillaNametag = Component.literal(WYNNTILS_LOGO + " ")
-                        .withStyle(ChatFormatting.GRAY)
+                vanillaNametag = Component.empty()
+                        .append(Component.literal(WYNNTILS_NAMETAG_LOGO)
+                                .withStyle(Style.EMPTY
+                                        .withFont(WYNNTILS_NAMETAG_LOGO_FONT)
+                                        .withColor(ChatFormatting.GRAY)))
+                        .append(" ")
                         .append(realName);
             }
         }

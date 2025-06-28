@@ -14,8 +14,10 @@ public enum Texture {
     CONFIG_BOOK_SCROLL_AREA("content_book/config_book_scroll_area.png", 168, 175),
     CONFIG_BOOK_SCROLL_BUTTON("content_book/config_book_scroll_button.png", 5, 18),
     CONTENT_BOOK_BACKGROUND("content_book/content_book.png", 339, 220),
-    CONTENT_BOOK_SEARCH("content_book/content_book_search.png", 133, 23),
+    CONTENT_BOOK_TAG("content_book/content_book_tag.png", 99, 66),
     CONTENT_BOOK_TITLE("content_book/content_book_title.png", 168, 33),
+    CUSTOM_CONTENT_BOOK_BACKGROUND("content_book/custom_content_book.png", 432, 263),
+    CONTENT_BOOK_SEARCH("content_book/content_book_search.png", 250, 20),
     TAG_BLUE("content_book/tag_blue.png", 44, 22),
     TAG_RED("content_book/tag_red.png", 22, 44),
     TAG_RED_SELECTED("content_book/tag_red_selected.png", 22, 44),
@@ -77,15 +79,19 @@ public enum Texture {
     IMPORT_SETTINGS_ICON("icons/config_categories/import_settings_icon.png", 16, 16),
 
     // Content Book
+    ACCESS_REWARD("icons/content_book/access_reward.png", 10, 10),
     DIALOGUE_ICON("icons/content_book/dialogue_icon.png", 14, 11),
     DISCOVERIES_ICON("icons/content_book/discoveries_icon.png", 16, 32),
+    EMERALD_REWARD("icons/content_book/emerald_reward.png", 10, 10),
     GUIDES_ICON("icons/content_book/guides_icon.png", 18, 34),
+    ITEM_REWARD("icons/content_book/item_reward.png", 10, 10),
     LOOTRUN_ICON("icons/content_book/lootrun_icon.png", 16, 28),
     MAP_ICON("icons/content_book/map_icon.png", 21, 38),
     OVERLAYS_ICON("icons/content_book/overlays_icon.png", 19, 38),
     QUEST_BOOK_ICON("icons/content_book/quests_icon.png", 24, 34),
     SECRET_DISCOVERIES_ICON("icons/content_book/secret_discoveries_icon.png", 16, 26),
     SETTINGS_ICON("icons/content_book/settings_icon.png", 17, 34),
+    XP_REWARD("icons/content_book/xp_reward.png", 10, 10),
 
     // Discoveries
     DISCOVERED_SECRET("icons/discoveries/discovered_secret.png", 19, 36),
@@ -156,6 +162,7 @@ public enum Texture {
     CHECKMARK_YELLOW("icons/generic/check_yellow.png", 16, 16),
     CLOSE("icons/generic/close.png", 16, 16),
     DEFENSE_FILTER_ICON("icons/generic/defense_filter_icon.png", 16, 16),
+    DOWN_COLORED_ICON("icons/generic/down_colored.png", 16, 16),
     EDIT_ICON("icons/generic/edit_icon.png", 6, 16),
     EDIT_NAME_ICON("icons/generic/edit_name_icon.png", 16, 16),
     FAVORITE_ICON("icons/generic/favorite_icon.png", 18, 18),
@@ -171,6 +178,7 @@ public enum Texture {
     SHARE_ICON("icons/generic/share_icon.png", 16, 14),
     SIGN_ICON("icons/generic/sign_icon.png", 17, 18),
     SMALL_ADD_ICON("icons/generic/small_add_icon.png", 16, 16),
+    UP_COLORED_ICON("icons/generic/up_colored.png", 16, 16),
     WAYPOINT_FOCUS_ICON("icons/generic/waypoint_focus_icon.png", 12, 16),
     WAYPOINT_MANAGER_ICON("icons/generic/waypoint_manager_icon.png", 12, 16),
 
@@ -181,6 +189,7 @@ public enum Texture {
     FORWARD_ARROW_OFFSET("icons/generic_offset/forward_arrow_icon_offset.png", 36, 10),
     RELOAD_ICON_OFFSET("icons/generic_offset/reload_icon_offset.png", 40, 20),
     REMOVE_ICON_OFFSET("icons/generic_offset/remove_icon_offset.png", 14, 28),
+    SHARE_ICON_OFFSET("icons/generic_offset/share_icon_offset.png", 16, 28),
     SORT_ALPHABETICALLY_OFFSET("icons/generic_offset/sort_alphabetical_icon_offset.png", 23, 46),
     SORT_DISTANCE_OFFSET("icons/generic_offset/sort_distance_icon_offset.png", 23, 46),
     SORT_LEVEL_OFFSET("icons/generic_offset/sort_level_icon_offset.png", 23, 46),
@@ -297,7 +306,7 @@ public enum Texture {
     HEALTH_BAR_OVERFLOW("overlays/bars/bars_health_overflow.png", 81, 164),
     MANA_BAR("overlays/bars/bars_mana.png", 81, 180),
     MANA_BAR_OVERFLOW("overlays/bars/bars_mana_overflow.png", 81, 180),
-    UNIVERSAL_BAR("overlays/bars/universal_bar.png", 81, 16),
+    UNIVERSAL_BAR("overlays/bars/universal_bars.png", 81, 338),
     // endregion
 
     // region Players
@@ -330,10 +339,12 @@ public enum Texture {
     COSMETIC_VIEWER_BACKGROUND("ui_components/cosmetics_viewer_background.png", 72, 92),
     CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
+    EXIT_FLAG("ui_components/exit_flag.png", 73, 62),
     GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
+    LIST_SEARCH("ui_components/list_search.png", 133, 23),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
     PLAYER_VIEWER_BACKGROUND("ui_components/player_viewer_background.png", 103, 92),
     QUICK_JUMP_BUTTON("ui_components/quick_jump_button.png", 16, 32),

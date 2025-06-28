@@ -170,6 +170,7 @@ import com.wynntils.features.wynntils.FixPacketBugsFeature;
 import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.features.wynntils.WeeklyConfigBackupFeature;
+import com.wynntils.features.wynntils.WynntilsHintMessagesFeature;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -403,6 +404,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new TelemetryFeature());
         registerFeature(new UpdatesFeature());
         registerFeature(new WeeklyConfigBackupFeature());
+        registerFeature(new WynntilsHintMessagesFeature());
         // endregion
 
         // region uncategorized

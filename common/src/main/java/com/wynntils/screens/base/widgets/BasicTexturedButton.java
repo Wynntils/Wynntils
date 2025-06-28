@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -20,7 +20,7 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
 
     private final Texture texture;
 
-    private final Consumer<Integer> onClick;
+    protected final Consumer<Integer> onClick;
     private List<Component> tooltip;
 
     private final boolean scaleTexture;

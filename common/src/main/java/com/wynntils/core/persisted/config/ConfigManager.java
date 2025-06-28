@@ -69,7 +69,7 @@ public final class ConfigManager extends Manager {
         // Finish off the config init process
 
         // Load configs for all features
-        Managers.Config.reloadConfiguration();
+        Managers.Config.reloadConfiguration(true);
 
         // Save config file after loading all configurables' options
         Managers.Config.saveConfig();
@@ -99,9 +99,9 @@ public final class ConfigManager extends Manager {
         CONFIGS.addAll(configs);
     }
 
-    public void reloadConfiguration() {
+    public void reloadConfiguration(boolean initOverlayGroups) {
         configObject = Managers.Json.loadPreciousJson(userConfigFile);
-        loadConfigOptions(true, true);
+        loadConfigOptions(true, initOverlayGroups);
     }
 
     // Info: The purpose of initOverlayGroups is to use the config system in a way that is really "hacky".
