@@ -235,6 +235,13 @@ jobs:
         with:
           name: build
 
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: release
+
       - name: Read raw changelog
         id: changelog
         run: |
