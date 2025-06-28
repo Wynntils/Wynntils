@@ -218,9 +218,9 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
         // Add the new custom bar
         int id = Managers.Overlay.extendOverlayGroup(barGroup);
 
-        Managers.Config.loadConfigOptions(true, false);
+        Managers.Config.reloadConfiguration(false);
         Managers.Config.saveConfig();
-        Managers.Config.reloadConfiguration();
+        Managers.Config.reloadConfiguration(true);
 
         // Repopulate the overlays on selection screen
         previousScreen.populateOverlays();
