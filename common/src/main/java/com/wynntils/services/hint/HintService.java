@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.services.hint.type.HintAction;
 import com.wynntils.utils.mc.McUtils;
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -100,11 +101,17 @@ public class HintService extends Service {
             Matcher variableMatcher = VARIABLE_PATTERN.matcher(part);
 
             if (variableMatcher.matches()) {
-                String action = variableMatcher.group("action");
+                String actionStr = variableMatcher.group("action");
+                HintAction hintAction = HintAction.fromString(actionStr);
+                if (hintAction == null) {
+                    WynntilsMod.warn("Unknown hint action " + actionStr);
+                    return Component.empty();
+                }
+
                 String value = variableMatcher.group("value");
 
-                switch (action) {
-                    case "keybind" -> {
+                switch (hintAction) {
+                    case KEYBIND -> {
                         for (KeyMapping keyMapping : McUtils.options().keyMappings) {
                             if (keyMapping.getName().equals(value)) {
                                 String keyMappingName =
@@ -120,12 +127,9 @@ public class HintService extends Service {
                             }
                         }
                     }
-                    case "toggle_command", "wynntils_command" -> {
-                        component.append(createCommandPart(action.substring(0, action.indexOf("_command")), value));
-                    }
-                    default -> {
-                        WynntilsMod.warn("Unknown hint action " + action);
-                        return Component.empty();
+                    case TOGGLE_COMMAND, WYNNTILS_COMMAND -> {
+                        component.append(
+                                createCommandPart(actionStr.substring(0, actionStr.indexOf("_command")), value));
                     }
                 }
             } else {
