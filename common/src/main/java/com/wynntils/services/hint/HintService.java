@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.services.hint.type.HintAction;
 import com.wynntils.utils.mc.McUtils;
 import java.io.Reader;
@@ -79,14 +80,15 @@ public class HintService extends Service {
     }
 
     private MutableComponent formatHint(String hint) {
-        MutableComponent component = Component.empty();
+        StyledText styledText = StyledText.EMPTY;
 
         Matcher matcher = VARIABLE_PATTERN.matcher(hint);
         int lastEnd = 0;
 
         while (matcher.find()) {
             if (matcher.start() > lastEnd) {
-                component.append(Component.literal(hint.substring(lastEnd, matcher.start())));
+                styledText = styledText.append(
+                        StyledText.fromComponent(Component.literal(hint.substring(lastEnd, matcher.start()))));
             }
 
             String actionStr = matcher.group("action");
@@ -109,15 +111,15 @@ public class HintService extends Service {
                 return Component.empty();
             }
 
-            component.append(actionComponent);
+            styledText = styledText.append(StyledText.fromComponent(actionComponent));
             lastEnd = matcher.end();
         }
 
         if (lastEnd < hint.length()) {
-            component.append(Component.literal(hint.substring(lastEnd)));
+            styledText = styledText.append(StyledText.fromComponent(Component.literal(hint.substring(lastEnd))));
         }
 
-        return component.withStyle(ChatFormatting.LIGHT_PURPLE);
+        return styledText.getComponent().withStyle(ChatFormatting.LIGHT_PURPLE);
     }
 
     private MutableComponent createKeybindPart(String keybindName) {
