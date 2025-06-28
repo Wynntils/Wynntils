@@ -137,7 +137,7 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
             return getFocusedTextInput().keyPressed(keyCode, scanCode, modifiers);
         }
 
-        if (keyCode == GLFW.GLFW_KEY_E) {
+        if (this.minecraft.options.keyInventory.matches(keyCode, scanCode)) {
             this.onClose();
             return true;
         }
