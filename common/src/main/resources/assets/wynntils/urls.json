@@ -34,6 +34,14 @@
   },
   {
     "arguments": [
+      "old_version",
+      "new_version"
+    ],
+    "id": "apiAthenaUpdateChangelogV2",
+    "url": "https://athena.wynntils.com/v2/version/changelog/%{old_version}/%{new_version}"
+  },
+  {
+    "arguments": [
       "stream"
     ],
     "id": "apiAthenaUpdateCheck",
