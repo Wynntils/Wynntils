@@ -15,6 +15,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.event.DownloadEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.services.athena.type.ChangelogMap;
 import com.wynntils.services.athena.type.ModUpdateInfo;
 import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.FileUtils;
@@ -24,7 +25,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,13 +159,12 @@ public final class UpdateService extends Service {
         return future;
     }
 
-    public CompletableFuture<Map<String, String>> getChangelog(boolean saveLastShown) {
+    public CompletableFuture<ChangelogMap> getChangelog(boolean saveLastShown) {
         return getChangelog(lastShownChangelogVersion.get(), WynntilsMod.getVersion(), saveLastShown);
     }
 
-    public CompletableFuture<Map<String, String>> getChangelog(
-            String oldVersion, String newVersion, boolean saveLastShown) {
-        CompletableFuture<Map<String, String>> future = new CompletableFuture<>();
+    public CompletableFuture<ChangelogMap> getChangelog(String oldVersion, String newVersion, boolean saveLastShown) {
+        CompletableFuture<ChangelogMap> future = new CompletableFuture<>();
 
         ApiResponse response = Services.WynntilsAccount.callApi(
                 UrlId.API_ATHENA_UPDATE_CHANGELOG_V2, Map.of("old_version", oldVersion, "new_version", newVersion));
@@ -182,13 +181,13 @@ public final class UpdateService extends Service {
                     Map<String, String> changelogMap = new LinkedHashMap<>();
 
                     List<Map.Entry<String, JsonElement>> entries = new ArrayList<>(changelogs.entrySet());
-                    // We want to display newest changelog first
-                    Collections.reverse(entries);
+                    // Iterated backwards to get latest changelog first
+                    for (int i = entries.size() - 1; i >= 0; i--) {
+                        Map.Entry<String, JsonElement> versionEntry = entries.get(i);
+                        changelogMap.put(versionEntry.getKey(), versionEntry.getValue().getAsString());
+                    }
 
-                    entries.forEach(entry ->
-                            changelogMap.put(entry.getKey(), entry.getValue().getAsString()));
-
-                    future.complete(changelogMap);
+                    future.complete(new ChangelogMap(changelogMap));
                 },
                 throwable -> WynntilsMod.warn("Could not get update changelog: ", throwable));
 

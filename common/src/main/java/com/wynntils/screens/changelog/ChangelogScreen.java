@@ -10,6 +10,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsPagedScreen;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.changelog.widgets.ExitFlagButton;
+import com.wynntils.services.athena.type.ChangelogMap;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -23,7 +24,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
@@ -37,7 +37,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     private static final int SCROLLBAR_HEIGHT = 20;
     private static final int SCROLLBAR_WIDTH = 6;
 
-    private final Map<String, String> changelog;
+    private final ChangelogMap changelog;
     private final Screen previousScreen;
 
     private List<List<TextRenderTask>> changelogTasks;
@@ -48,18 +48,18 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     private int scrollOffset = 0;
     private int scrollRenderY;
 
-    private ChangelogScreen(Map<String, String> changelog, Screen previousScreen) {
+    private ChangelogScreen(ChangelogMap changelog, Screen previousScreen) {
         super(Component.translatable("screens.wynntils.changelog.name"));
 
         this.changelog = changelog;
         this.previousScreen = previousScreen;
     }
 
-    public static Screen create(Map<String, String> changelog, Screen previousScreen) {
+    public static Screen create(ChangelogMap changelog, Screen previousScreen) {
         return new ChangelogScreen(changelog, previousScreen);
     }
 
-    public static Screen create(Map<String, String> changelog) {
+    public static Screen create(ChangelogMap changelog) {
         return new ChangelogScreen(changelog, null);
     }
 
@@ -239,7 +239,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
                 .withCustomColor(CommonColors.WHITE)
                 .withTextShadow(TextShadow.OUTLINE);
 
-        this.changelogTasks = changelog.values().stream()
+        this.changelogTasks = changelog.allChangelogs().stream()
                 .map(content -> Arrays.stream(content.split("\n"))
                         .map(StringUtils::convertMarkdownToColorCode)
                         .map(s -> new TextRenderTask(s, setting))
