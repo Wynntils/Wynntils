@@ -184,7 +184,8 @@ public final class UpdateService extends Service {
                     // Iterated backwards to get latest changelog first
                     for (int i = entries.size() - 1; i >= 0; i--) {
                         Map.Entry<String, JsonElement> versionEntry = entries.get(i);
-                        changelogMap.put(versionEntry.getKey(), versionEntry.getValue().getAsString());
+                        changelogMap.put(
+                                versionEntry.getKey(), versionEntry.getValue().getAsString());
                     }
 
                     future.complete(new ChangelogMap(changelogMap));
