@@ -15,6 +15,7 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -81,63 +82,60 @@ public class HintService extends Service {
         MutableComponent component = Component.empty();
 
         Matcher matcher = VARIABLE_PATTERN.matcher(hint);
-        List<String> parts = new ArrayList<>();
         int lastEnd = 0;
 
         while (matcher.find()) {
             if (matcher.start() > lastEnd) {
-                parts.add(hint.substring(lastEnd, matcher.start()));
+                String text = hint.substring(lastEnd, matcher.start());
+                component.append(Component.literal(text).withStyle(ChatFormatting.LIGHT_PURPLE));
             }
 
-            parts.add(matcher.group());
+            String actionStr = matcher.group("action");
+            HintAction hintAction = HintAction.fromString(actionStr);
+            if (hintAction == null) {
+                WynntilsMod.warn("Unknown hint action " + actionStr);
+                return Component.empty();
+            }
+
+            String value = matcher.group("value");
+            Component actionComponent =
+                    switch (hintAction) {
+                        case KEYBIND -> createKeybindPart(value);
+                        case TOGGLE_COMMAND, WYNNTILS_COMMAND ->
+                            createCommandPart(
+                                    hintAction.name().toLowerCase(Locale.ROOT).replace("_command", ""), value);
+                    };
+
+            if (actionComponent.equals(Component.empty())) {
+                return Component.empty();
+            }
+
+            component.append(actionComponent);
             lastEnd = matcher.end();
         }
 
         if (lastEnd < hint.length()) {
-            parts.add(hint.substring(lastEnd));
-        }
-
-        for (String part : parts) {
-            Matcher variableMatcher = VARIABLE_PATTERN.matcher(part);
-
-            if (variableMatcher.matches()) {
-                String actionStr = variableMatcher.group("action");
-                HintAction hintAction = HintAction.fromString(actionStr);
-                if (hintAction == null) {
-                    WynntilsMod.warn("Unknown hint action " + actionStr);
-                    return Component.empty();
-                }
-
-                String value = variableMatcher.group("value");
-
-                switch (hintAction) {
-                    case KEYBIND -> {
-                        for (KeyMapping keyMapping : McUtils.options().keyMappings) {
-                            if (keyMapping.getName().equals(value)) {
-                                String keyMappingName =
-                                        keyMapping.getTranslatedKeyMessage().getString();
-
-                                if (keyMappingName.equals(I18n.get(UNBOUND_KEY))) {
-                                    WynntilsMod.info("Skipping hint due to unbound key");
-                                    return Component.empty();
-                                }
-                                component.append(
-                                        Component.literal(keyMappingName).withStyle(ChatFormatting.YELLOW));
-                                break;
-                            }
-                        }
-                    }
-                    case TOGGLE_COMMAND, WYNNTILS_COMMAND -> {
-                        component.append(
-                                createCommandPart(actionStr.substring(0, actionStr.indexOf("_command")), value));
-                    }
-                }
-            } else {
-                component.append(Component.literal(part).withStyle(ChatFormatting.LIGHT_PURPLE));
-            }
+            component.append(Component.literal(hint.substring(lastEnd)).withStyle(ChatFormatting.LIGHT_PURPLE));
         }
 
         return component;
+    }
+
+    private MutableComponent createKeybindPart(String keybindName) {
+        for (KeyMapping keyMapping : McUtils.options().keyMappings) {
+            if (keyMapping.getName().equals(keybindName)) {
+                String translated = keyMapping.getTranslatedKeyMessage().getString();
+                if (translated.equals(I18n.get(UNBOUND_KEY))) {
+                    WynntilsMod.info("Skipping hint due to unbound key");
+                    return Component.empty();
+                }
+
+                return Component.literal(translated).withStyle(ChatFormatting.YELLOW);
+            }
+        }
+
+        WynntilsMod.info("Skipping hint due to unknown keybind " + keybindName);
+        return Component.empty();
     }
 
     private MutableComponent createCommandPart(String command, String argument) {
