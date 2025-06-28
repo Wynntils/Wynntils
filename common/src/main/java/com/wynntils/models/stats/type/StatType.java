@@ -14,17 +14,11 @@ import java.util.Optional;
 // The "internalRollName" is what is used in the json lore of other player's items
 public abstract class StatType {
     // These ranges are used everywhere, except charms
-    private static final List<RangedValue> POSITIVE_STAR_INTERNAL_ROLL_RANGES = List.of(
+    private static final List<RangedValue> STAR_INTERNAL_ROLL_RANGES = List.of(
             RangedValue.of(30, 100), // 0 stars
             RangedValue.of(101, 124), // 1 star
             RangedValue.of(125, 129), // 2 stars
             RangedValue.of(130, 130) // 3 stars
-            );
-    private static final List<RangedValue> NEGATIVE_STAR_INTERNAL_ROLL_RANGES = List.of(
-            RangedValue.of(100, 130), // 0 stars
-            RangedValue.of(75, 99), // 1 star
-            RangedValue.of(71, 74), // 2 stars
-            RangedValue.of(70, 70) // 3 stars
             );
 
     private final String key;
@@ -88,13 +82,13 @@ public abstract class StatType {
                         calculateAsInverted() ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP,
                         Optional.of(1),
                         Optional.empty(),
-                        treatAsInverted() ? List.of() : POSITIVE_STAR_INTERNAL_ROLL_RANGES)
+                        treatAsInverted() ? List.of() : STAR_INTERNAL_ROLL_RANGES)
                 : new StatCalculationInfo(
                         RangedValue.of(70, 130),
                         calculateAsInverted() ? RoundingMode.HALF_UP : RoundingMode.HALF_DOWN,
                         Optional.empty(),
                         Optional.of(-1),
-                        treatAsInverted() ? POSITIVE_STAR_INTERNAL_ROLL_RANGES : NEGATIVE_STAR_INTERNAL_ROLL_RANGES);
+                        List.of());
     }
 
     /**
