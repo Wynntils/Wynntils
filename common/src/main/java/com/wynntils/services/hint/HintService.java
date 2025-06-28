@@ -86,8 +86,7 @@ public class HintService extends Service {
 
         while (matcher.find()) {
             if (matcher.start() > lastEnd) {
-                String text = hint.substring(lastEnd, matcher.start());
-                component.append(Component.literal(text).withStyle(ChatFormatting.LIGHT_PURPLE));
+                component.append(Component.literal(hint.substring(lastEnd, matcher.start())));
             }
 
             String actionStr = matcher.group("action");
@@ -115,10 +114,10 @@ public class HintService extends Service {
         }
 
         if (lastEnd < hint.length()) {
-            component.append(Component.literal(hint.substring(lastEnd)).withStyle(ChatFormatting.LIGHT_PURPLE));
+            component.append(Component.literal(hint.substring(lastEnd)));
         }
 
-        return component;
+        return component.withStyle(ChatFormatting.LIGHT_PURPLE);
     }
 
     private MutableComponent createKeybindPart(String keybindName) {
