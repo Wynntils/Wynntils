@@ -51,7 +51,7 @@ public final class WynntilsCharmGuideScreen
 
         if (searchWidget instanceof ItemSearchWidget itemSearchWidget) {
             guideFilterWidgets.add(this.addRenderableWidget(
-                    new RarityFilterWidget(29 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
+                    new RarityFilterWidget(19 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
 
             guideSortWidget.setSecondarySortButton(
                     new GuideSortButton(itemSearchWidget.getSearchQuery(), this, RarityStatProvider.class));

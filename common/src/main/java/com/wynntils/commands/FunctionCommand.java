@@ -4,6 +4,7 @@
  */
 package com.wynntils.commands;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -56,6 +57,8 @@ public class FunctionCommand extends Command {
                             .toList(),
                     builder);
 
+    private static final Integer LIST_PAGE_LIMIT = 15;
+
     @Override
     public String getCommandName() {
         return "function";
@@ -66,9 +69,13 @@ public class FunctionCommand extends Command {
             LiteralArgumentBuilder<CommandSourceStack> base, CommandBuildContext context) {
         return base.then(Commands.literal("list")
                         .executes(this::listFunctions)
+                        .then(Commands.argument("page", IntegerArgumentType.integer(1))
+                                .executes(this::listFunctions))
                         .then(Commands.argument("type", StringArgumentType.word())
                                 .suggests(FUNCTION_LIST_TYPES_SUGGESTION_PROVIDER)
-                                .executes(this::listFunctions)))
+                                .executes(this::listFunctions)
+                                .then(Commands.argument("page", IntegerArgumentType.integer(1))
+                                        .executes(this::listFunctions))))
                 .then(Commands.literal("enable")
                         .then(Commands.argument("function", StringArgumentType.word())
                                 .suggests(CRASHED_FUNCTION_SUGGESTION_PROVIDER)
@@ -115,6 +122,14 @@ public class FunctionCommand extends Command {
             type = "all";
         }
 
+        int page;
+
+        try {
+            page = context.getArgument("page", Integer.class);
+        } catch (Exception e) {
+            page = 1;
+        }
+
         boolean all = type.equalsIgnoreCase("all");
         boolean onlyGeneric = type.equalsIgnoreCase("generic");
         boolean onlyNormal = type.equalsIgnoreCase("normal");
@@ -127,11 +142,25 @@ public class FunctionCommand extends Command {
                         .thenComparing(o -> ((Function<?>) o).getName()))
                 .toList();
 
+        int totalPages = (int) Math.ceil((double) functions.size() / LIST_PAGE_LIMIT);
+        if (page > totalPages) {
+            page = totalPages;
+        }
+
+        List<Function<?>> paginatedFunctions;
+        int fromIndex = (page - 1) * LIST_PAGE_LIMIT;
+
+        if (functions.size() <= fromIndex) {
+            paginatedFunctions = functions;
+        } else {
+            paginatedFunctions = functions.subList(fromIndex, Math.min(fromIndex + LIST_PAGE_LIMIT, functions.size()));
+        }
+
         MutableComponent response = Component.literal(
                         onlyGeneric ? "Available generic functions: " : "Available functions:")
                 .withStyle(ChatFormatting.AQUA);
 
-        for (Function<?> function : functions) {
+        for (Function<?> function : paginatedFunctions) {
             MutableComponent functionComponent = Component.literal("\n - ").withStyle(ChatFormatting.GRAY);
 
             functionComponent
@@ -156,6 +185,28 @@ public class FunctionCommand extends Command {
 
             response.append(functionComponent);
         }
+
+        int previousPage = page == 1 ? totalPages : page - 1;
+        int nextPage = page == totalPages ? 1 : page + 1;
+        String previousPageCommand = "/function list " + type + " " + previousPage;
+        String nextPageCommand = "/function list " + type + " " + nextPage;
+
+        MutableComponent pageComponent = Component.literal("\n")
+                .append(Component.literal("< Previous")
+                        .withStyle(ChatFormatting.DARK_AQUA)
+                        .withStyle(style -> style.withClickEvent(
+                                new ClickEvent(ClickEvent.Action.RUN_COMMAND, previousPageCommand)))
+                        .withStyle(style -> style.withHoverEvent(
+                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Go to previous page")))))
+                .append(Component.literal(" (" + page + "/" + totalPages + ") ").withStyle(ChatFormatting.AQUA))
+                .append(Component.literal("Next >")
+                        .withStyle(ChatFormatting.DARK_AQUA)
+                        .withStyle(style ->
+                                style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, nextPageCommand)))
+                        .withStyle(style -> style.withHoverEvent(
+                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Go to next page")))));
+
+        response.append(pageComponent);
 
         context.getSource().sendSuccess(() -> response, false);
 

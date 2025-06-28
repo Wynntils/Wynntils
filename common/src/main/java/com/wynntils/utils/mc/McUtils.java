@@ -71,17 +71,29 @@ public final class McUtils {
         mc().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F, volume));
     }
 
+    public static void playSoundMaster(SoundEvent sound) {
+        playSoundMaster(sound, 1.0F, 1.0F);
+    }
+
+    public static void playSoundMaster(SoundEvent sound, float volume, float pitch) {
+        playSound(sound, SoundSource.MASTER, volume, pitch);
+    }
+
     public static void playSoundAmbient(SoundEvent sound) {
         playSoundAmbient(sound, 1.0F, 1.0F);
     }
 
     public static void playSoundAmbient(SoundEvent sound, float volume, float pitch) {
+        playSound(sound, SoundSource.AMBIENT, volume, pitch);
+    }
+
+    private static void playSound(SoundEvent sound, SoundSource soundSource, float volume, float pitch) {
         // Pitch and volume are switched in the convenience method for creating this instance,
         // so use the fully qualified method with the correct order
         mc().getSoundManager()
                 .play(new SimpleSoundInstance(
                         sound.location(),
-                        SoundSource.AMBIENT,
+                        soundSource,
                         volume,
                         pitch,
                         SoundInstance.createUnseededRandom(),
@@ -96,6 +108,10 @@ public final class McUtils {
 
     public static void sendMessageToClient(Component component) {
         mc().getChatListener().handleSystemMessage(component, false);
+    }
+
+    public static void sendMessageToClientWithPillHeader(Component component) {
+        sendMessageToClient(ComponentUtils.addWynntilsPillHeader(component));
     }
 
     public static void removeMessageFromChat(Component component) {
