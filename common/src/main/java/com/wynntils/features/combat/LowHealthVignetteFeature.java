@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -15,6 +15,8 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.type.CappedValue;
+import java.util.Optional;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -48,9 +50,13 @@ public class LowHealthVignetteFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        float healthProgress = (float) Models.CharacterStats.getHealth().getProgress();
-        float threshold = lowHealthPercentage.get() / 100f;
         shouldRender = false;
+
+        Optional<CappedValue> healthOpt = Models.CharacterStats.getHealth();
+        if (healthOpt.isEmpty()) return;
+
+        float healthProgress = (float) healthOpt.get().getProgress();
+        float threshold = lowHealthPercentage.get() / 100f;
 
         if (healthProgress > threshold) return;
         shouldRender = true;

@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -63,7 +64,13 @@ public class HealthPotionBlockerFeature extends Feature {
         ItemStack itemStack = McUtils.inventory().getSelected();
         if (!isHealingPotion(itemStack)) return false;
 
-        CappedValue health = Models.CharacterStats.getHealth();
+        Optional<CappedValue> healthOpt = Models.CharacterStats.getHealth();
+        if (healthOpt.isEmpty()) {
+            WynntilsMod.warn("No health information available for health potion blocker check.");
+            return false;
+        }
+
+        CappedValue health = healthOpt.get();
         int percentage = health.getPercentageInt();
 
         if (percentage >= threshold.get()) {
