@@ -34,6 +34,14 @@
   },
   {
     "arguments": [
+      "old_version",
+      "new_version"
+    ],
+    "id": "apiAthenaUpdateChangelogV2",
+    "url": "https://athena.wynntils.com/v2/version/changelog/%{old_version}/%{new_version}"
+  },
+  {
+    "arguments": [
       "stream"
     ],
     "id": "apiAthenaUpdateCheck",
@@ -127,6 +135,11 @@
     "id": "dataStaticGearAdvanced",
     "md5": "7cc0f3d523b1423e11f5fcb7a508c2d9",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_gear.json"
+  },
+  {
+    "id": "dataStaticHints",
+    "md5": "5d29ab63c764be61f0292466c26daa92",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/hint_messages.json"
   },
   {
     "id": "dataStaticIdentificationKeys",
