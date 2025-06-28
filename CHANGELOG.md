@@ -1,2 +1,2 @@
 Fixes
-- Fix publishing to Modrinth & CurseForge
+- Hopefully fix publishing to Modrinth & CurseForge
