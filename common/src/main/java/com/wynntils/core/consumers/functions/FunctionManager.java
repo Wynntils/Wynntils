@@ -32,6 +32,7 @@ import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldEventFunctions;
 import com.wynntils.functions.WorldFunctions;
 import com.wynntils.functions.WynnAlphabetFunctions;
+import com.wynntils.functions.WynnFontFunctions;
 import com.wynntils.functions.generic.CappedFunctions;
 import com.wynntils.functions.generic.ColorFunctions;
 import com.wynntils.functions.generic.ConditionalFunctions;
@@ -662,5 +663,8 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new WynnAlphabetFunctions.TranscribeGavellianFunction());
         registerFunction(new WynnAlphabetFunctions.TranscribeWynnicFunction());
+
+        registerFunction(new WynnFontFunctions.toBackgroundTextFunction());
+        registerFunction(new WynnFontFunctions.toFancyTextFunction());
     }
 }
