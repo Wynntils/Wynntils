@@ -2467,7 +2467,7 @@
   "screens.wynntils.contentBook.rewards": "보상: ",
   "screens.wynntils.contentBook.rightClickToOpenWiki": "오른쪽 클릭하여 위키 열기",
   "screens.wynntils.contentBook.selectToTrack": "상단의 버튼을 사용하여 필터 및 정렬하고 목록에서 추적할 콘텐츠를 선택하세요!",
-  "screens.wynntils.contentBook.xpToLevelUp": "%d 레벨까지 %s XP",
+  "screens.wynntils.contentBook.xpToLevelUp": "%2$s레벨까지 %1$s XP",
   "screens.wynntils.customBarSelection.cancel": "취소",
   "screens.wynntils.customBarSelection.select": "선택",
   "screens.wynntils.customBarSelection.textureTooltip": "이 바 유형에 대한 가능한 텍스처를 순환합니다. 기본 텍스처는 생성 시 사용되며, 구성 화면에서 변경할 수 있습니다.",
