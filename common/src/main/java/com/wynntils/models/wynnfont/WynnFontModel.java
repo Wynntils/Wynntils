@@ -12,6 +12,9 @@ import java.util.Locale;
 import java.util.Map;
 
 public class WynnFontModel extends Model {
+    private static final char NEGATIVE_SPACE = '\uE012';
+    private static final char NEGATIVE_SPACE_EDGE = '\u2064';
+    private static final char BACKGROUND = '\uE00F';
     private static final List<Character> normalCharacters = List.of(
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
             'v', 'w', 'x', 'y', 'z', '?', '[', ']', '\\', '%', '&', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
@@ -21,9 +24,6 @@ public class WynnFontModel extends Model {
             '\uE054', '\uE055', '\uE056', '\uE057', '\uE058', '\uE059', '\uE05A', '\uE05B', '\uE05C', '\uE05D',
             '\uE05E', '\uE05F', '\uE060', '\uE061', '\uE062', '\uE063', '\uE064', '\uE065', '\uE066', '\uE067',
             '\uE068', '\uE069');
-    private static final char NEGATIVE_SPACE = '\uE012';
-    private static final char NEGATIVE_SPACE_BACKGROUND = '\u2064';
-    private static final char BACKGROUND = '\uE00F';
     private static final Map<Character, Character> normalToFancy = new HashMap<>();
 
     private void createFontMaps() {
@@ -47,9 +47,17 @@ public class WynnFontModel extends Model {
             sb.append("§");
             sb.append(backgroundColor.toHexString());
             sb.append(left.getLeft());
-            sb.append(NEGATIVE_SPACE_BACKGROUND);
+            sb.append(NEGATIVE_SPACE_EDGE);
         }
         for (char c : text.toLowerCase(Locale.ROOT).toCharArray()) {
+            if (c == ' ') {
+                sb.append("§");
+                sb.append(backgroundColor.toHexString());
+                sb.append(BACKGROUND);
+                sb.append(NEGATIVE_SPACE);
+                sb.append(' ');
+                continue;
+            }
             Character fancy = normalToFancy.get(c);
             if (fancy == null) continue;
             sb.append("§");
