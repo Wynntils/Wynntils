@@ -11,11 +11,11 @@ import com.wynntils.utils.colors.CustomColor;
 import java.util.List;
 
 public class WynnFontFunctions {
-    public static class toFancyTextFunction extends Function<String> {
+    public static class toFiveTextFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
             String text = arguments.getArgument("text").getStringValue();
-            return Models.WynnFont.toFancyFont(text);
+            return Models.WynnFont.toFiveFont(text);
         }
 
         @Override

@@ -665,6 +665,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new WynnAlphabetFunctions.TranscribeWynnicFunction());
 
         registerFunction(new WynnFontFunctions.toBackgroundTextFunction());
-        registerFunction(new WynnFontFunctions.toFancyTextFunction());
+        registerFunction(new WynnFontFunctions.toFiveTextFunction());
     }
 }
