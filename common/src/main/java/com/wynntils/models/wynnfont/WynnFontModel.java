@@ -103,6 +103,10 @@ public class WynnFontModel extends Model {
     public String toFancyFont(String text) {
         StringBuilder sb = new StringBuilder();
         for (char c : text.toLowerCase(Locale.ROOT).toCharArray()) {
+            if (c == ' ') {
+                sb.append(' ');
+                continue;
+            }
             Character fancy = normalToFancy.get(c);
             if (fancy == null) continue;
             sb.append(fancy);
