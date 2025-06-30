@@ -536,6 +536,8 @@
   "feature.wynntils.durabilityArc.renderDurabilityArcHotbar.name": "Render Durability Arc (Hotbar)",
   "feature.wynntils.durabilityArc.renderDurabilityArcInventories.description": "Should a durability arc be added to breakable items in inventories?",
   "feature.wynntils.durabilityArc.renderDurabilityArcInventories.name": "Render Durability Arc (Inventories)",
+  "feature.wynntils.durabilityArc.durabilityRenderMode.description": "Should the overlay be an arc or a bar?",
+  "feature.wynntils.durabilityArc.durabilityRenderMode.name": "Durability Render Mode",
   "feature.wynntils.emeraldPouchFillArc.description": "Adds a fill arc to the emerald pouch.",
   "feature.wynntils.emeraldPouchFillArc.name": "Emerald Pouch Fill Arc",
   "feature.wynntils.emeraldPouchFillArc.renderFillArcHotbar.description": "Should an amount filled arc be added to emerald pouches in your hotbar?",
