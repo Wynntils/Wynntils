@@ -6,7 +6,6 @@ package com.wynntils.models.wynnfont;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.utils.colors.CustomColor;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,27 +14,52 @@ public class WynnFontModel extends Model {
     private static final char NEGATIVE_SPACE = '\uE012';
     private static final char NEGATIVE_SPACE_EDGE = '\u2064';
     private static final char BACKGROUND = '\uE00F';
-    private static final List<Character> normalCharacters = List.of(
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
-            'v', 'w', 'x', 'y', 'z', '?', '[', ']', '\\', '%', '&', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-    private static final List<Character> fancyCharacters = List.of(
-            '\uE040', '\uE041', '\uE042', '\uE043', '\uE044', '\uE045', '\uE046', '\uE047', '\uE048', '\uE049',
-            '\uE04A', '\uE04B', '\uE04C', '\uE04D', '\uE04E', '\uE04F', '\uE050', '\uE051', '\uE052', '\uE053',
-            '\uE054', '\uE055', '\uE056', '\uE057', '\uE058', '\uE059', '\uE05A', '\uE05B', '\uE05C', '\uE05D',
-            '\uE05E', '\uE05F', '\uE060', '\uE061', '\uE062', '\uE063', '\uE064', '\uE065', '\uE066', '\uE067',
-            '\uE068', '\uE069');
-    private static final Map<Character, Character> normalToFancy = new HashMap<>();
-
-    private void createFontMaps() {
-        for (int i = 0; i < normalCharacters.size(); i++) {
-            normalToFancy.put(normalCharacters.get(i), fancyCharacters.get(i));
-        }
-    }
+    private static final Map<Character, Character> normalToFancy = Map.ofEntries(
+            Map.entry('a', '\uE040'),
+            Map.entry('b', '\uE041'),
+            Map.entry('c', '\uE042'),
+            Map.entry('d', '\uE043'),
+            Map.entry('e', '\uE044'),
+            Map.entry('f', '\uE045'),
+            Map.entry('g', '\uE046'),
+            Map.entry('h', '\uE047'),
+            Map.entry('i', '\uE048'),
+            Map.entry('j', '\uE049'),
+            Map.entry('k', '\uE04A'),
+            Map.entry('l', '\uE04B'),
+            Map.entry('m', '\uE04C'),
+            Map.entry('n', '\uE04D'),
+            Map.entry('o', '\uE04E'),
+            Map.entry('p', '\uE04F'),
+            Map.entry('q', '\uE050'),
+            Map.entry('r', '\uE051'),
+            Map.entry('s', '\uE052'),
+            Map.entry('t', '\uE053'),
+            Map.entry('u', '\uE054'),
+            Map.entry('v', '\uE055'),
+            Map.entry('w', '\uE056'),
+            Map.entry('x', '\uE057'),
+            Map.entry('y', '\uE058'),
+            Map.entry('z', '\uE059'),
+            Map.entry('?', '\uE05A'),
+            Map.entry('[', '\uE05B'),
+            Map.entry(']', '\uE05C'),
+            Map.entry('\\', '\uE05D'),
+            Map.entry('%', '\uE05E'),
+            Map.entry('&', '\uE05F'),
+            Map.entry('0', '\uE060'),
+            Map.entry('1', '\uE061'),
+            Map.entry('2', '\uE062'),
+            Map.entry('3', '\uE063'),
+            Map.entry('4', '\uE064'),
+            Map.entry('5', '\uE065'),
+            Map.entry('6', '\uE066'),
+            Map.entry('7', '\uE067'),
+            Map.entry('8', '\uE068'),
+            Map.entry('9', '\uE069'));
 
     public WynnFontModel() {
         super(List.of());
-
-        createFontMaps();
     }
 
     public String toBackgroundFont(
