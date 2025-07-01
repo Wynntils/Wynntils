@@ -110,4 +110,13 @@ public final class StatusEffectModel extends Model {
         statusEffects = newStatusEffects;
         WynntilsMod.postEvent(new StatusEffectsChangedEvent());
     }
+
+    public StatusEffect searchStatusEffectByName(String query) {
+        for (StatusEffect effect : statusEffects) {
+            if (effect.getName().getStringWithoutFormatting().contains(query)) {
+                return effect;
+            }
+        }
+        return null;
+    }
 }

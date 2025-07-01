@@ -1,20 +1,33 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.statuseffects.type;
 
 import com.google.common.collect.ComparisonChain;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StatusEffect implements Comparable<StatusEffect> {
+    private static final Pattern TIME_PATTERN = Pattern.compile("\\((\\d+):(\\d+)\\)");
     private final StyledText fullName;
     private final StyledText name; // The name of the consumable (also used to identify it)
     private final StyledText modifier; // The modifier of the consumable (+100, 23 etc.)
     private final StyledText modifierSuffix; // The suffix of the modifier (/3s, %)
     private final Double modifierValue;
+    private final int duration;
     private StyledText displayedTime; // The displayed time remaining. Allows for xx:xx for infinite time effects.
     private StyledText prefix; // The prefix to display before the name. Not included in identifying name.
+
+    private int setDuration() {
+        Matcher timeMatcher = getDisplayedTime().getMatcher(TIME_PATTERN, PartStyle.StyleType.NONE);
+        if (timeMatcher.matches()) {
+            return Integer.parseInt(timeMatcher.group(1)) * 60 + Integer.parseInt(timeMatcher.group(2));
+        }
+        return -1;
+    }
 
     public StatusEffect(
             StyledText name,
@@ -27,6 +40,7 @@ public class StatusEffect implements Comparable<StatusEffect> {
         this.prefix = prefix;
         this.modifier = modifier;
         this.modifierSuffix = modifierSuffix;
+        this.duration = setDuration();
 
         this.fullName = StyledText.concat(
                 prefix,
@@ -97,6 +111,13 @@ public class StatusEffect implements Comparable<StatusEffect> {
 
     public double getModifierValue() {
         return this.modifierValue;
+    }
+
+    /**
+     * @return Time in seconds, -1 for infinite
+     */
+    public int getDuration() {
+        return duration;
     }
 
     @Override
