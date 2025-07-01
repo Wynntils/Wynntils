@@ -113,7 +113,7 @@ public final class StatusEffectModel extends Model {
 
     public StatusEffect searchStatusEffectByName(String query) {
         for (StatusEffect effect : statusEffects) {
-            if (effect.getName().getStringWithoutFormatting().contains(query)) {
+            if (effect.getName().getStringWithoutFormatting().startsWith(query)) {
                 return effect;
             }
         }
