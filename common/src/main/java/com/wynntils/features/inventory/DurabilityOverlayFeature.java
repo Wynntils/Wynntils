@@ -24,26 +24,26 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
-public class DurabilityArcFeature extends Feature {
+public class DurabilityOverlayFeature extends Feature {
     @Persisted
-    public final Config<Boolean> renderDurabilityArcInventories = new Config<>(true);
+    public final Config<Boolean> renderDurabilityOverlayInventories = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> renderDurabilityArcHotbar = new Config<>(true);
+    public final Config<Boolean> renderDurabilityOverlayHotbar = new Config<>(true);
 
     @Persisted
     private final Config<DurabilityRenderMode> durabilityRenderMode = new Config<>(DurabilityRenderMode.ARC);
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.CountPre e) {
-        if (!renderDurabilityArcHotbar.get()) return;
+        if (!renderDurabilityOverlayHotbar.get()) return;
         if (!durabilityRenderMode.get().isArc()) return;
         drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
     }
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.CountPre e) {
-        if (!renderDurabilityArcInventories.get()) return;
+        if (!renderDurabilityOverlayInventories.get()) return;
         if (!durabilityRenderMode.get().isArc()) return;
         drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
     }

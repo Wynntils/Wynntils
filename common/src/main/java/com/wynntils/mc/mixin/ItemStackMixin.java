@@ -9,7 +9,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.inventory.DurabilityArcFeature;
+import com.wynntils.features.inventory.DurabilityOverlayFeature;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
@@ -66,20 +66,20 @@ public abstract class ItemStackMixin implements ItemStackExtension {
     @ModifyReturnValue(method = "isBarVisible", at = @At("RETURN"))
     private boolean isDurabilityBarVisible(boolean original) {
         return original
-                || Managers.Feature.getFeatureInstance(DurabilityArcFeature.class)
+                || Managers.Feature.getFeatureInstance(DurabilityOverlayFeature.class)
                         .isBarVisible((ItemStack) (Object) this);
     }
 
     @ModifyReturnValue(method = "getBarWidth", at = @At("RETURN"))
     private int getDurabilityBarWidth(int original) {
-        return Managers.Feature.getFeatureInstance(DurabilityArcFeature.class)
+        return Managers.Feature.getFeatureInstance(DurabilityOverlayFeature.class)
                 .getBarWidth((ItemStack) (Object) this)
                 .orElse(original);
     }
 
     @ModifyReturnValue(method = "getBarColor", at = @At("RETURN"))
     private int getDurabilityBarColor(int original) {
-        return Managers.Feature.getFeatureInstance(DurabilityArcFeature.class)
+        return Managers.Feature.getFeatureInstance(DurabilityOverlayFeature.class)
                 .getBarColor((ItemStack) (Object) this)
                 .orElse(original);
     }
