@@ -1356,6 +1356,7 @@
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.stackingBehaviour.name": "Stacking Behaviour",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.textShadow.name": "Text Shadow",
+  "feature.wynntils.statusEffectsOverlay.overlay.statusIcons.name": "Status Icons",
   "feature.wynntils.stopwatch.description": "Adds the ability to add stopwatches to the screen as overlays.",
   "feature.wynntils.stopwatch.name": "Stopwatch",
   "feature.wynntils.stopwatch.overlay.stopwatch.name": "Stopwatch Overlay",
