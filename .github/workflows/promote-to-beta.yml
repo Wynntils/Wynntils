@@ -10,8 +10,9 @@ on:
 jobs:
   promote-beta:
     if: |
-      github.event.pull_request.merged == true &&
-      contains(github.event.pull_request.labels.*.name, 'release')
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'release'))
     name: Promote development to beta
     runs-on: ubuntu-latest
     steps:
