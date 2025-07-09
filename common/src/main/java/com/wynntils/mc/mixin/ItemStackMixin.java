@@ -63,22 +63,22 @@ public abstract class ItemStackMixin implements ItemStackExtension {
         return event.getFlags();
     }
 
-    @ModifyReturnValue(method = "isBarVisible", at = @At("RETURN"))
-    private boolean isDurabilityBarVisible(boolean original) {
+    @ModifyReturnValue(method = "isBarVisible()Z", at = @At("RETURN"))
+    private boolean isBarVisible(boolean original) {
         return original
                 || Managers.Feature.getFeatureInstance(DurabilityOverlayFeature.class)
                         .isBarVisible((ItemStack) (Object) this);
     }
 
-    @ModifyReturnValue(method = "getBarWidth", at = @At("RETURN"))
-    private int getDurabilityBarWidth(int original) {
+    @ModifyReturnValue(method = "getBarWidth()I", at = @At("RETURN"))
+    private int getBarWidth(int original) {
         return Managers.Feature.getFeatureInstance(DurabilityOverlayFeature.class)
                 .getBarWidth((ItemStack) (Object) this)
                 .orElse(original);
     }
 
-    @ModifyReturnValue(method = "getBarColor", at = @At("RETURN"))
-    private int getDurabilityBarColor(int original) {
+    @ModifyReturnValue(method = "getBarColor()I", at = @At("RETURN"))
+    private int getBarColor(int original) {
         return Managers.Feature.getFeatureInstance(DurabilityOverlayFeature.class)
                 .getBarColor((ItemStack) (Object) this)
                 .orElse(original);
