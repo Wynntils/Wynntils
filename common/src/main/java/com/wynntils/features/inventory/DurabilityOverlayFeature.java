@@ -37,19 +37,19 @@ public class DurabilityOverlayFeature extends Feature {
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.CountPre e) {
         if (!renderDurabilityOverlayHotbar.get()) return;
-        if (!durabilityRenderMode.get().isArc()) return;
+        if (durabilityRenderMode.get() != DurabilityRenderMode.ARC) return;
         drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
     }
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.CountPre e) {
         if (!renderDurabilityOverlayInventories.get()) return;
-        if (!durabilityRenderMode.get().isArc()) return;
+        if (durabilityRenderMode.get() != DurabilityRenderMode.ARC) return;
         drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
     }
 
     public boolean isBarVisible(ItemStack stack) {
-        if (!(durabilityRenderMode.get().isBar())) return false;
+        if ((durabilityRenderMode.get() != DurabilityRenderMode.BAR)) return false;
 
         Optional<DurableItemProperty> durableItemProperty =
                 Models.Item.asWynnItemProperty(stack, DurableItemProperty.class);
@@ -101,13 +101,5 @@ public class DurabilityOverlayFeature extends Feature {
     private enum DurabilityRenderMode {
         ARC,
         BAR;
-
-        public boolean isArc() {
-            return this == ARC;
-        }
-
-        public boolean isBar() {
-            return this == BAR;
-        }
     }
 }
