@@ -228,6 +228,61 @@ public final class RenderUtils {
         }
     }
 
+    public static void drawRectBorderProgress(
+            PoseStack poseStack,
+            CustomColor color,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            float z,
+            float lineWidth,
+            float progress) {
+        if (x2 < x1) {
+            float tmp = x1;
+            x1 = x2;
+            x2 = tmp;
+        }
+        if (y2 < y1) {
+            float tmp = y1;
+            y1 = y2;
+            y2 = tmp;
+        }
+
+        float[][] points = {
+            {x1, y1, x1, y2},
+            {x1, y2, x2, y2},
+            {x2, y2, x2, y1},
+            {x2, y1, x1, y1}
+        };
+
+        float remainingProgress = MathUtils.clamp(progress, 0f, 1f) * 4;
+        int edgeIndex = 0;
+
+        while (remainingProgress > 0f) {
+            float[] edge = points[edgeIndex];
+            // If there is more than 25% of progress, draw full line and continue
+            if (remainingProgress >= 1f) {
+                drawLine(poseStack, color, edge[0], edge[1], edge[2], edge[3], z, lineWidth);
+                remainingProgress -= 1f;
+                edgeIndex++;
+                continue;
+            }
+
+            float width = (x2 - x1) * (1 - remainingProgress);
+            float height = (y2 - y1) * (1 - remainingProgress);
+
+            switch (edgeIndex) {
+                case 0 -> drawLine(poseStack, color, edge[0], edge[1], edge[2], edge[3] - height, z, lineWidth);
+                case 1 -> drawLine(poseStack, color, edge[0], edge[1], edge[2] - width, edge[3], z, lineWidth);
+                case 2 -> drawLine(poseStack, color, edge[0], edge[1], edge[2], edge[3] + height, z, lineWidth);
+                case 3 -> drawLine(poseStack, color, edge[0], edge[1], edge[2] + width, edge[3], z, lineWidth);
+            }
+
+            break;
+        }
+    }
+
     public static void drawRect(
             PoseStack poseStack, CustomColor color, float x, float y, float z, float width, float height) {
         Matrix4f matrix = poseStack.last().pose();

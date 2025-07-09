@@ -353,7 +353,11 @@ public enum Texture {
     WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 400, 256),
     SCROLLBAR_BACKGROUND("ui_components/generic_container_scrollbar.png", 25, 136),
     SCROLLBAR_BUTTON("ui_components/scroll_button_container.png", 12, 15),
-    VIGNETTE("ui_components/vignette.png", 512, 512);
+    VIGNETTE("ui_components/vignette.png", 512, 512),
+    // endregion
+
+    // region EFFECT ICONS
+    STATUS_ICON_PLACEHOLDER("effect_icons/placeholder.png", 18, 18);
     // endregion
 
     private final ResourceLocation resource;
