@@ -73,7 +73,7 @@ public class PowderSpecialBarOverlay extends Overlay {
             return;
         }
 
-        PowderSpecialInfo powderSpecialInfo = powderSpecialInfoOpt.get();
+        PowderSpecialInfo powderSpecialInfo = powderSpecialInfoOpt.orElse(PowderSpecialInfo.EMPTY);
         renderWithSpecificSpecial(
                 guiGraphics.pose(), bufferSource, powderSpecialInfo.charge() * 100f, powderSpecialInfo.powder());
     }
