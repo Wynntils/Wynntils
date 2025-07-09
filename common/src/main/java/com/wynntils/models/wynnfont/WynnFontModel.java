@@ -14,7 +14,7 @@ public class WynnFontModel extends Model {
     private static final char NEGATIVE_SPACE = '\uE012';
     private static final char NEGATIVE_SPACE_EDGE = '\u2064';
     private static final char BACKGROUND = '\uE00F';
-    private static final Map<Character, Character> normalToFive = Map.ofEntries(
+    private static final Map<Character, Character> normalToFancy = Map.ofEntries(
             Map.entry('a', '\uE040'),
             Map.entry('b', '\uE041'),
             Map.entry('c', '\uE042'),
@@ -82,7 +82,7 @@ public class WynnFontModel extends Model {
                 sb.append(' ');
                 continue;
             }
-            Character fancy = normalToFive.get(c);
+            Character fancy = normalToFancy.get(c);
             if (fancy == null) continue;
             sb.append("§");
             sb.append(backgroundColor.toHexString());
@@ -100,14 +100,14 @@ public class WynnFontModel extends Model {
         return sb.toString();
     }
 
-    public String toFiveFont(String text) {
+    public String toFancyFont(String text) {
         StringBuilder sb = new StringBuilder();
         for (char c : text.toLowerCase(Locale.ROOT).toCharArray()) {
             if (c == ' ') {
                 sb.append(' ');
                 continue;
             }
-            Character fancy = normalToFive.get(c);
+            Character fancy = normalToFancy.get(c);
             if (fancy == null) continue;
             sb.append(fancy);
         }
