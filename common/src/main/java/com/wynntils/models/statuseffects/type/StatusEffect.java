@@ -21,14 +21,6 @@ public class StatusEffect implements Comparable<StatusEffect> {
     private StyledText displayedTime; // The displayed time remaining. Allows for xx:xx for infinite time effects.
     private StyledText prefix; // The prefix to display before the name. Not included in identifying name.
 
-    private int setDuration() {
-        Matcher timeMatcher = getDisplayedTime().getMatcher(TIME_PATTERN, PartStyle.StyleType.NONE);
-        if (timeMatcher.matches()) {
-            return Integer.parseInt(timeMatcher.group(1)) * 60 + Integer.parseInt(timeMatcher.group(2));
-        }
-        return -1;
-    }
-
     public StatusEffect(
             StyledText name,
             StyledText modifier,
@@ -40,7 +32,6 @@ public class StatusEffect implements Comparable<StatusEffect> {
         this.prefix = prefix;
         this.modifier = modifier;
         this.modifierSuffix = modifierSuffix;
-        this.duration = setDuration();
 
         this.fullName = StyledText.concat(
                 prefix,
@@ -53,6 +44,11 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 displayedTime);
         this.modifierValue =
                 modifier != StyledText.EMPTY ? Double.parseDouble(modifier.getStringWithoutFormatting()) : null;
+
+        Matcher timeMatcher = getDisplayedTime().getMatcher(TIME_PATTERN, PartStyle.StyleType.NONE);
+        this.duration = timeMatcher.matches()
+                ? Integer.parseInt(timeMatcher.group(1)) * 60 + Integer.parseInt(timeMatcher.group(2))
+                : -1;
     }
 
     /**
