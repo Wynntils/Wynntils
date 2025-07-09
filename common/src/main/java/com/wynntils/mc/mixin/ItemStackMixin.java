@@ -6,11 +6,12 @@ package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.inventory.DurabilityOverlayFeature;
 import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.mc.event.GetDurabilityBarColorEvent;
+import com.wynntils.mc.event.GetDurabilityBarVisibilityEvent;
+import com.wynntils.mc.event.GetDurabilityBarWidthEvent;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
 import net.minecraft.world.item.ItemStack;
@@ -64,24 +65,28 @@ public abstract class ItemStackMixin implements ItemStackExtension {
     }
 
     @ModifyReturnValue(method = "isBarVisible()Z", at = @At("RETURN"))
-    private boolean isBarVisible(boolean original) {
-        return original
-                || Managers.Feature.getFeatureInstance(DurabilityOverlayFeature.class)
-                        .isBarVisible((ItemStack) (Object) this);
+    private boolean isBarVisible(boolean visible) {
+        GetDurabilityBarVisibilityEvent visibilityEvent =
+                new GetDurabilityBarVisibilityEvent((ItemStack) (Object) this, visible);
+        MixinHelper.post(visibilityEvent);
+
+        return visibilityEvent.isVisible();
     }
 
     @ModifyReturnValue(method = "getBarWidth()I", at = @At("RETURN"))
-    private int getBarWidth(int original) {
-        return Managers.Feature.getFeatureInstance(DurabilityOverlayFeature.class)
-                .getBarWidth((ItemStack) (Object) this)
-                .orElse(original);
+    private int getBarWidth(int width) {
+        GetDurabilityBarWidthEvent widthEvent = new GetDurabilityBarWidthEvent((ItemStack) (Object) this, width);
+        MixinHelper.post(widthEvent);
+
+        return widthEvent.getWidth();
     }
 
     @ModifyReturnValue(method = "getBarColor()I", at = @At("RETURN"))
     private int getBarColor(int original) {
-        return Managers.Feature.getFeatureInstance(DurabilityOverlayFeature.class)
-                .getBarColor((ItemStack) (Object) this)
-                .orElse(original);
+        GetDurabilityBarColorEvent colorEvent = new GetDurabilityBarColorEvent((ItemStack) (Object) this, original);
+        MixinHelper.post(colorEvent);
+
+        return colorEvent.getColor();
     }
 
     @Override

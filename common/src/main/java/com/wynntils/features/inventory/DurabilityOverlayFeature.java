@@ -12,6 +12,9 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.mc.event.GetDurabilityBarColorEvent;
+import com.wynntils.mc.event.GetDurabilityBarVisibilityEvent;
+import com.wynntils.mc.event.GetDurabilityBarWidthEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.properties.DurableItemProperty;
@@ -48,36 +51,45 @@ public class DurabilityOverlayFeature extends Feature {
         drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
     }
 
-    public boolean isBarVisible(ItemStack stack) {
-        if ((durabilityRenderMode.get() != DurabilityRenderMode.BAR)) return false;
+    @SubscribeEvent
+    public void onGetDurabilityBarVisibility(GetDurabilityBarVisibilityEvent event) {
+        boolean shouldBeVisible = false;
 
-        Optional<DurableItemProperty> durableItemProperty =
-                Models.Item.asWynnItemProperty(stack, DurableItemProperty.class);
-        if (durableItemProperty.isEmpty()) return false;
+        if ((durabilityRenderMode.get() == DurabilityRenderMode.BAR)) {
+            Optional<DurableItemProperty> durableItemProperty =
+                    Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class);
+            if (durableItemProperty.isPresent()) {
+                int currentDurability =
+                        durableItemProperty.get().getDurability().current();
+                int maxDurability = durableItemProperty.get().getDurability().max();
+                shouldBeVisible = currentDurability < maxDurability;
+            }
+        }
 
-        int currentDurability = durableItemProperty.get().getDurability().current();
-        int maxDurability = durableItemProperty.get().getDurability().max();
-
-        return currentDurability < maxDurability;
+        event.setVisible(event.isVisible() || shouldBeVisible);
     }
 
-    public Optional<Integer> getBarWidth(ItemStack stack) {
-        return Models.Item.asWynnItemProperty(stack, DurableItemProperty.class).map(durableItemProperty -> {
-            int currentDurability = durableItemProperty.getDurability().current();
-            int maxDurability = durableItemProperty.getDurability().max();
-            return Mth.clamp(Math.round(13.0F * (float) currentDurability / (float) maxDurability), 0, 13);
-        });
+    @SubscribeEvent
+    public void onGetDurabilityBarWidth(GetDurabilityBarWidthEvent event) {
+        event.setWidth(Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class)
+                .map(durableItemProperty -> {
+                    int currentDurability = durableItemProperty.getDurability().current();
+                    int maxDurability = durableItemProperty.getDurability().max();
+                    return Mth.clamp(Math.round(13.0F * (float) currentDurability / (float) maxDurability), 0, 13);
+                })
+                .orElse(event.getWidth()));
     }
 
-    public Optional<Integer> getBarColor(ItemStack stack) {
-        return Models.Item.asWynnItemProperty(stack, DurableItemProperty.class).map(durableItemProperty -> {
-            int currentDurability = durableItemProperty.getDurability().current();
-            int maxDurability = durableItemProperty.getDurability().max();
-            // This is Wynntils' way of calculating the color
-            //      I had considered using Mojang's way, hence the comment
-            float hueWynntils = Math.max(0.0F, (float) currentDurability / maxDurability) / 3.0F;
-            return Mth.hsvToRgb(hueWynntils, 1.0F, 1.0F);
-        });
+    @SubscribeEvent
+    public void onGetDurabilityBarColor(GetDurabilityBarColorEvent event) {
+        event.setColor(Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class)
+                .map(durableItemProperty -> {
+                    int currentDurability = durableItemProperty.getDurability().current();
+                    int maxDurability = durableItemProperty.getDurability().max();
+                    float hueWynntils = Math.max(0.0F, (float) currentDurability / maxDurability) / 3.0F;
+                    return Mth.hsvToRgb(hueWynntils, 1.0F, 1.0F);
+                })
+                .orElse(event.getColor()));
     }
 
     private void drawDurabilityArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
