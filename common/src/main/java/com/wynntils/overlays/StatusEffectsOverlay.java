@@ -148,20 +148,21 @@ public class StatusEffectsOverlay extends Overlay {
     }
 
     private Stream<RenderedStatusEffect> stackEffects(List<StatusEffect> effects) {
-        Map<String, RenderedStatusEffect> effectsToRender = new LinkedHashMap<>();
-        List<StatusEffect> filteredEffects;
+        List<StatusEffect> filteredEffects = effects;
+
         if (!ignoreEffects.get().isEmpty()) {
             String[] splitFilters = ignoreEffects.get().split(",");
+
             String[] trimmedFilters =
                     Arrays.stream(splitFilters).map(String::trim).toArray(String[]::new);
+
             filteredEffects = effects.stream()
                     .filter(effect -> Arrays.stream(trimmedFilters)
                             .noneMatch(effect.getName().getStringWithoutFormatting()::startsWith))
                     .toList();
-
-        } else {
-            filteredEffects = effects;
         }
+
+        Map<String, RenderedStatusEffect> effectsToRender = new LinkedHashMap<>();
 
         for (StatusEffect effect : filteredEffects) {
             String key = getEffectsKey(effect);
