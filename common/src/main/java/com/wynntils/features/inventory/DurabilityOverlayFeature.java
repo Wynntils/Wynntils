@@ -53,43 +53,37 @@ public class DurabilityOverlayFeature extends Feature {
 
     @SubscribeEvent
     public void onGetDurabilityBarVisibility(GetDurabilityBarVisibilityEvent event) {
-        boolean shouldBeVisible = false;
-
-        if ((durabilityRenderMode.get() == DurabilityRenderMode.BAR)) {
-            Optional<DurableItemProperty> durableItemProperty =
-                    Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class);
-            if (durableItemProperty.isPresent()) {
-                int currentDurability =
-                        durableItemProperty.get().getDurability().current();
-                int maxDurability = durableItemProperty.get().getDurability().max();
-                shouldBeVisible = currentDurability < maxDurability;
-            }
-        }
-
-        event.setVisible(event.isVisible() || shouldBeVisible);
+        if (durabilityRenderMode.get() != DurabilityRenderMode.BAR) return;
+        Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class)
+                .ifPresent(property -> {
+                    if (!property.getDurability().isAtCap()) {
+                        event.setVisible(true);
+                    }
+                });
     }
 
     @SubscribeEvent
     public void onGetDurabilityBarWidth(GetDurabilityBarWidthEvent event) {
-        event.setWidth(Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class)
-                .map(durableItemProperty -> {
+        if (durabilityRenderMode.get() != DurabilityRenderMode.BAR) return;
+        Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class)
+                .ifPresent(durableItemProperty -> {
                     int currentDurability = durableItemProperty.getDurability().current();
                     int maxDurability = durableItemProperty.getDurability().max();
-                    return Mth.clamp(Math.round(13.0F * (float) currentDurability / (float) maxDurability), 0, 13);
-                })
-                .orElse(event.getWidth()));
+                    event.setWidth(
+                            Mth.clamp(Math.round(13.0F * (float) currentDurability / (float) maxDurability), 0, 13));
+                });
     }
 
     @SubscribeEvent
     public void onGetDurabilityBarColor(GetDurabilityBarColorEvent event) {
-        event.setColor(Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class)
-                .map(durableItemProperty -> {
+        if (durabilityRenderMode.get() != DurabilityRenderMode.BAR) return;
+        Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class)
+                .ifPresent(durableItemProperty -> {
                     int currentDurability = durableItemProperty.getDurability().current();
                     int maxDurability = durableItemProperty.getDurability().max();
                     float hueWynntils = Math.max(0.0F, (float) currentDurability / maxDurability) / 3.0F;
-                    return Mth.hsvToRgb(hueWynntils, 1.0F, 1.0F);
-                })
-                .orElse(event.getColor()));
+                    event.setColor(Mth.hsvToRgb(hueWynntils, 1.0F, 1.0F));
+                });
     }
 
     private void drawDurabilityArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
@@ -112,6 +106,6 @@ public class DurabilityOverlayFeature extends Feature {
 
     private enum DurabilityRenderMode {
         ARC,
-        BAR;
+        BAR
     }
 }
