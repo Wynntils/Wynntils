@@ -4,12 +4,12 @@
  */
 package com.wynntils.core.persisted.upfixers.config;
 
-import com.wynntils.core.persisted.upfixers.RenamedPrefixesUpfixer;
+import com.wynntils.core.persisted.upfixers.RenamedKeysUpfixer;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 
-public class DurabilityArcToDurabilityOverlayUpfixer extends RenamedPrefixesUpfixer {
-    private static final List<Pair<String, String>> RENAMED_PREFIXES = List.of(
+public class DurabilityArcToDurabilityOverlayUpfixer extends RenamedKeysUpfixer {
+    private static final List<Pair<String, String>> RENAMED_KEYS = List.of(
             Pair.of(
                     "durabilityArcFeature.renderDurabilityArcHotbar",
                     "durabilityOverlayFeature.renderDurabilityOverlayHotbar"),
@@ -18,7 +18,7 @@ public class DurabilityArcToDurabilityOverlayUpfixer extends RenamedPrefixesUpfi
                     "durabilityOverlayFeature.renderDurabilityOverlayInventory"));
 
     @Override
-    protected List<Pair<String, String>> getRenamedPrefixes() {
-        return RENAMED_PREFIXES;
+    protected List<Pair<String, String>> getRenamedKeys() {
+        return RENAMED_KEYS;
     }
 }
