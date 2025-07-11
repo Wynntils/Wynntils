@@ -95,7 +95,7 @@ public class CharacterFunctions {
         public NamedValue getValue(FunctionArguments arguments) {
             String query = arguments.getArgument("query").getStringValue();
             StatusEffect effect = Models.StatusEffect.searchStatusEffectByName(query);
-            if (effect == null) return new NamedValue("", 0);
+            if (effect == null) return NamedValue.EMPTY;
             return new NamedValue(effect.getName().getString(), effect.getDuration());
         }
 
