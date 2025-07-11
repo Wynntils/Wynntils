@@ -21,6 +21,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,6 +45,9 @@ public class StatusEffectsOverlay extends Overlay {
 
     @Persisted
     public final Config<Boolean> sortEffects = new Config<>(true);
+
+    @Persisted
+    public final Config<String> ignoredEffects = new Config<>("");
 
     private List<TextRenderTask> renderCache = List.of();
     private TextRenderSetting textRenderSetting;
@@ -144,9 +148,23 @@ public class StatusEffectsOverlay extends Overlay {
     }
 
     private Stream<RenderedStatusEffect> stackEffects(List<StatusEffect> effects) {
+        List<StatusEffect> filteredEffects = effects;
+
+        if (!ignoredEffects.get().isEmpty()) {
+            String[] splitFilters = ignoredEffects.get().split(",");
+
+            String[] trimmedFilters =
+                    Arrays.stream(splitFilters).map(String::trim).toArray(String[]::new);
+
+            filteredEffects = effects.stream()
+                    .filter(effect -> Arrays.stream(trimmedFilters)
+                            .noneMatch(effect.getName().getStringWithoutFormatting()::startsWith))
+                    .toList();
+        }
+
         Map<String, RenderedStatusEffect> effectsToRender = new LinkedHashMap<>();
 
-        for (StatusEffect effect : effects) {
+        for (StatusEffect effect : filteredEffects) {
             String key = getEffectsKey(effect);
             RenderedStatusEffect entry = effectsToRender.get(key);
 
