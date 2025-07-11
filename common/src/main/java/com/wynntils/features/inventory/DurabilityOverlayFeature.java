@@ -37,15 +37,19 @@ public class DurabilityOverlayFeature extends Feature {
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.CountPre e) {
         if (!renderDurabilityOverlayHotbar.get()) return;
-        if (durabilityRenderMode.get() != DurabilityRenderMode.ARC) return;
-        drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+        switch (durabilityRenderMode.get()) {
+            case ARC -> drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+            case BAR -> drawDurabilityBar(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+        }
     }
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.CountPre e) {
         if (!renderDurabilityOverlayInventories.get()) return;
-        if (durabilityRenderMode.get() != DurabilityRenderMode.ARC) return;
-        drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+        switch (durabilityRenderMode.get()) {
+            case ARC -> drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+            case BAR -> drawDurabilityBar(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+        }
     }
 
     private void drawDurabilityArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
@@ -64,6 +68,26 @@ public class DurabilityOverlayFeature extends Feature {
         RenderSystem.enableDepthTest();
         RenderUtils.drawArc(poseStack, color, slotX, slotY, 100, durabilityFraction, 6, 8);
         RenderSystem.disableDepthTest();
+    }
+
+    private void drawDurabilityBar(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
+        Optional<DurableItemProperty> durableItemProperty =
+                Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
+        if (durableItemProperty.isEmpty()) return;
+
+        CappedValue durability = durableItemProperty.get().getDurability();
+
+        if (durability.isAtCap()) return;
+
+        // calculate width and hue
+        int width = Mth.clamp(Math.round(13.0f * (float) durability.getProgress()), 0, 13);
+        float hue = Math.max(0.0F, (float) durability.getProgress()) / 3.0F;
+
+        // draw
+        int i = slotX + 2;
+        int j = slotY + 13;
+        RenderUtils.drawRect(poseStack, CustomColor.fromInt(-16777216), i, j, 200, 13, 2);
+        RenderUtils.drawRect(poseStack, CustomColor.fromHSV(hue, 1.0f, 1.0f, 1.0f), i, j, 200, width, 1);
     }
 
     private enum DurabilityRenderMode {
