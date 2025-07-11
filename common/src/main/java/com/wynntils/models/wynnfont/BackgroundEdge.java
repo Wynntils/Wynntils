@@ -5,7 +5,6 @@
 package com.wynntils.models.wynnfont;
 
 import com.wynntils.utils.type.Pair;
-import java.util.Locale;
 
 public enum BackgroundEdge {
     NONE("NONE", null),
@@ -20,11 +19,10 @@ public enum BackgroundEdge {
     }
 
     public static BackgroundEdge fromString(String type) {
-        try {
-            return valueOf(type.toUpperCase(Locale.ROOT));
-        } catch (IllegalArgumentException e) {
-            return null;
+        for (BackgroundEdge edge : values()) {
+            if (edge.edgeType.equalsIgnoreCase(type)) return edge;
         }
+        return NONE;
     }
 
     public Character getLeft() {
