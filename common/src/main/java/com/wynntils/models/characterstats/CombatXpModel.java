@@ -9,7 +9,6 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
-import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.models.characterstats.actionbar.matchers.CombatExperienceSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.segments.CombatExperienceSegment;
 import com.wynntils.models.characterstats.event.CombatXpGainEvent;
@@ -19,7 +18,6 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CombatXpModel extends Model {
@@ -73,12 +71,50 @@ public final class CombatXpModel extends Model {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onXpChange(SetXpEvent event) {
-        if (!Models.WorldState.onWorld()) return;
+    public CappedValue getCombatLevel() {
+        return new CappedValue(Models.CharacterStats.getLevel(), MAX_LEVEL);
+    }
 
-        // We don't want to track XP before we've even got a packet to set our level
-        if (Models.CharacterStats.getLevel() == 0) return;
+    public CappedValue getXp() {
+        return CappedValue.fromProgress(currentLevelProgress, getTotalXpPointsNeededToLevelUp());
+    }
+
+    public int getXpPointsNeededToLevelUp() {
+        return getTotalXpPointsNeededToLevelUp() - getXp().current();
+    }
+
+    public int getTotalXpPointsNeededToLevelUp() {
+        int levelIndex = Models.CharacterStats.getLevel() - 1;
+        if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
+            return Integer.MAX_VALUE;
+        }
+        if (levelIndex < 0) {
+            return 0;
+        }
+        return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
+    }
+
+    public TimedSet<Float> getRawXpGainInLastMinute() {
+        return rawXpGainInLastMinute;
+    }
+
+    public TimedSet<Float> getPercentageXpGainInLastMinute() {
+        return percentageXpGainInLastMinute;
+    }
+
+    public long getLastXpGainTimestamp() {
+        return rawXpGainInLastMinute.getLastAddedTimestamp();
+    }
+
+    private void updateCombatExperience(CombatExperienceSegment combatExperienceSegment) {
+        // We calculate prograss from the segment, as we can get a somewhat precise value from it.
+        float progress = (float) combatExperienceSegment.getProgress().getProgress();
+
+        // Note: There used to be progress correction here.
+        //       It was removed with 2.1.2_5 as the calculation was not correct anymore.
+        //       The progress is a off by a percentage usually, but currently there is no way to correct it.
+
+        currentLevelProgress = progress;
 
         // On first world join, we get all our current XP points (the currently gained amount for the next level), but
         // we only care about actual gains
@@ -104,7 +140,7 @@ public final class CombatXpModel extends Model {
             lastTickXp = 0;
         }
 
-        int neededXp = getXpPointsNeededToLevelUp();
+        int neededXp = getTotalXpPointsNeededToLevelUp();
 
         // Something went wrong, or you're at the level cap.
         if (neededXp == 0) return;
@@ -141,47 +177,5 @@ public final class CombatXpModel extends Model {
         lastTickXp = newTickXp;
 
         WynntilsMod.postEvent(new CombatXpGainEvent(gainedXP, percentChange));
-    }
-
-    public CappedValue getCombatLevel() {
-        return new CappedValue(Models.CharacterStats.getLevel(), MAX_LEVEL);
-    }
-
-    public CappedValue getXp() {
-        return CappedValue.fromProgress(currentLevelProgress, getXpPointsNeededToLevelUp());
-    }
-
-    public int getXpPointsNeededToLevelUp() {
-        int levelIndex = Models.CharacterStats.getLevel() - 1;
-        if (levelIndex >= LEVEL_UP_XP_REQUIREMENTS.length) {
-            return Integer.MAX_VALUE;
-        }
-        if (levelIndex < 0) {
-            return 0;
-        }
-        return LEVEL_UP_XP_REQUIREMENTS[levelIndex];
-    }
-
-    public TimedSet<Float> getRawXpGainInLastMinute() {
-        return rawXpGainInLastMinute;
-    }
-
-    public TimedSet<Float> getPercentageXpGainInLastMinute() {
-        return percentageXpGainInLastMinute;
-    }
-
-    public long getLastXpGainTimestamp() {
-        return rawXpGainInLastMinute.getLastAddedTimestamp();
-    }
-
-    private void updateCombatExperience(CombatExperienceSegment combatExperienceSegment) {
-        // We calculate prograss from the segment, as we can get a somewhat precise value from it.
-        float progress = (float) combatExperienceSegment.getProgress().getProgress();
-
-        // Note: There used to be progress correction here.
-        //       It was removed with 2.1.2_5 as the calculation was not correct anymore.
-        //       The progress is a off by a percentage usually, but currently there is no way to correct it.
-
-        currentLevelProgress = progress;
     }
 }

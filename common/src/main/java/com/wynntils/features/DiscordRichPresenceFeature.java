@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
@@ -13,9 +13,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ConnectionEvent;
-import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.characterstats.event.CombatXpGainEvent;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -54,7 +54,7 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onXpChange(SetXpEvent event) {
+    public void onXpChange(CombatXpGainEvent event) {
         if (!Services.Discord.isReady()) return;
         if (!Models.WorldState.onWorld()) return;
 
