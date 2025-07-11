@@ -17,21 +17,16 @@ public final class WynnFontModel extends Model {
     private static final char BACKGROUND = '\uE00F';
     public static final List<Character> normalCharacters = List.of(
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
-            'v', 'w', 'x', 'y', 'z', '?', '[', ']', '\\', '%', '&', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-            '!', '(', ')', '<', '=', '>');
+            'v', 'w', 'x', 'y', 'z', '?', '[', ']', '\\', '%', '&', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+    public static final List<Character> normalSpecialCharacters = List.of('!', '(', ')', '<', '=', '>');
     private static final List<Character> fancyCharacters = List.of(
             '\uE040', '\uE041', '\uE042', '\uE043', '\uE044', '\uE045', '\uE046', '\uE047', '\uE048', '\uE049',
             '\uE04A', '\uE04B', '\uE04C', '\uE04D', '\uE04E', '\uE04F', '\uE050', '\uE051', '\uE052', '\uE053',
             '\uE054', '\uE055', '\uE056', '\uE057', '\uE058', '\uE059', '\uE05A', '\uE05B', '\uE05C', '\uE05D',
             '\uE05E', '\uE05F', '\uE060', '\uE061', '\uE062', '\uE063', '\uE064', '\uE065', '\uE066', '\uE067',
-            '\uE068', '\uE069', '\uE06A', '\uE06B', '\uE06C', '\uE06D', '\uE06E', '\uE06F');
-
-    private static final List<Character> backgroundCharacters = List.of(
-            '\uE040', '\uE041', '\uE042', '\uE043', '\uE044', '\uE045', '\uE046', '\uE047', '\uE048', '\uE049',
-            '\uE04A', '\uE04B', '\uE04C', '\uE04D', '\uE04E', '\uE04F', '\uE050', '\uE051', '\uE052', '\uE053',
-            '\uE054', '\uE055', '\uE056', '\uE057', '\uE058', '\uE059', '\uE05A', '\uE05B', '\uE05C', '\uE05D',
-            '\uE05E', '\uE05F', '\uE060', '\uE061', '\uE062', '\uE063', '\uE064', '\uE065', '\uE066', '\uE067',
             '\uE068', '\uE069');
+    public static final List<Character> fancySpecialCharacters =
+            List.of('\uE06A', '\uE06B', '\uE06C', '\uE06D', '\uE06E', '\uE06F');
     private static final Map<Character, Character> normalToFancy = new HashMap<>();
     private static final Map<Character, Character> normalToBackground = new HashMap<>();
 
@@ -96,9 +91,10 @@ public final class WynnFontModel extends Model {
     private void createFontMaps() {
         for (int i = 0; i < fancyCharacters.size(); i++) {
             normalToFancy.put(normalCharacters.get(i), fancyCharacters.get(i));
+            normalToBackground.put(normalCharacters.get(i), fancyCharacters.get(i));
         }
-        for (int i = 0; i < backgroundCharacters.size(); i++) {
-            normalToBackground.put(normalCharacters.get(i), backgroundCharacters.get(i));
+        for (int i = 0; i < fancySpecialCharacters.size(); i++) {
+            normalToFancy.put(normalSpecialCharacters.get(i), fancySpecialCharacters.get(i));
         }
     }
 }
