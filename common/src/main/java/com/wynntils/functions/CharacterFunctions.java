@@ -7,8 +7,10 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.NamedValue;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.player.LocalPlayer;
@@ -79,6 +81,22 @@ public class CharacterFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("contains_effect");
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("query", String.class, null)));
+        }
+    }
+
+    public static class StatusEffectDurationFunction extends Function<NamedValue> {
+        @Override
+        public NamedValue getValue(FunctionArguments arguments) {
+            String query = arguments.getArgument("query").getStringValue();
+            StatusEffect effect = Models.StatusEffect.searchStatusEffectByName(query);
+            if (effect == null) return NamedValue.EMPTY;
+            return new NamedValue(effect.getName().getString(), effect.getDuration());
         }
 
         @Override
