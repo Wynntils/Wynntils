@@ -1605,6 +1605,8 @@
   "feature.wynntils.wynntilsContentBook.displayOverallProgress.description": "Disabling this stops the mod from parsing the content book when opening the Wynntils menu.",
   "feature.wynntils.wynntilsContentBook.displayOverallProgress.name": "Display Overall Progress",
   "feature.wynntils.wynntilsContentBook.name": "Wynntils Content Book",
+  "feature.wynntils.wynntilsContentBook.openWynntilsMenuInstead.description": "Should the Wynntils menu be opened instead of the Content Book?",
+  "feature.wynntils.wynntilsContentBook.openWynntilsMenuInstead.name": "Open Wynntils Menu Instead",
   "feature.wynntils.wynntilsContentBook.shiftBehaviorConfig.description": "What should happen when you open the content book while holding shift?",
   "feature.wynntils.wynntilsContentBook.shiftBehaviorConfig.name": "Shift Behavior on Content Book",
   "feature.wynntils.wynntilsCosmetics.description": "Adds the ability to see Wynntils cosmetics.",
