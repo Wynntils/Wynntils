@@ -116,7 +116,7 @@ public final class WynnFontModel extends Model {
         StringBuilder sb = new StringBuilder();
         BackgroundEdge left = BackgroundEdge.fromString(leftEdge);
         BackgroundEdge right = BackgroundEdge.fromString(rightEdge);
-        if (left != null) {
+        if (left != BackgroundEdge.NONE) {
             sb.append("§");
             sb.append(backgroundColor.toHexString());
             sb.append(left.getLeft());
@@ -141,7 +141,7 @@ public final class WynnFontModel extends Model {
             sb.append(textColor.toHexString());
             sb.append(fancy);
         }
-        if (right != null) {
+        if (right != BackgroundEdge.NONE) {
             sb.append("§");
             sb.append(backgroundColor.toHexString());
             sb.append(right.getRight());
