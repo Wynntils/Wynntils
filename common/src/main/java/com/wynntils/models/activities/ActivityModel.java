@@ -411,6 +411,7 @@ public final class ActivityModel extends Model {
         QuestInfo questInfo = Models.Quest.getQuestInfoFromActivity(activityInfo);
 
         if (questInfo.nextLocation().isPresent()) {
+            McUtils.player().closeContainer();
             McUtils.mc()
                     .setScreen(MainMapScreen.create(
                             questInfo.nextLocation().get().x(),
@@ -422,6 +423,7 @@ public final class ActivityModel extends Model {
         CaveInfo caveInfo = Models.Cave.getCaveInfoFromActivity(activityInfo);
 
         if (caveInfo.getNextLocation().isPresent()) {
+            McUtils.player().closeContainer();
             McUtils.mc()
                     .setScreen(MainMapScreen.create(
                             caveInfo.getNextLocation().get().x(),
@@ -494,7 +496,10 @@ public final class ActivityModel extends Model {
         switch (openAction) {
             // We can't run this is on request thread
             case MAP ->
-                Managers.TickScheduler.scheduleNextTick(() -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
+                Managers.TickScheduler.scheduleNextTick(() -> {
+                    McUtils.player().closeContainer();
+                    McUtils.mc().setScreen(MainMapScreen.create(x, z));
+                });
             case COMPASS -> {
                 McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z), activityInfo.name());
