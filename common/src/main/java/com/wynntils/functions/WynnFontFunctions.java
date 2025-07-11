@@ -11,7 +11,7 @@ import com.wynntils.utils.colors.CustomColor;
 import java.util.List;
 
 public class WynnFontFunctions {
-    public static class toFancyTextFunction extends Function<String> {
+    public static class ToFancyTextFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
             String text = arguments.getArgument("text").getStringValue();
@@ -25,7 +25,7 @@ public class WynnFontFunctions {
         }
     }
 
-    public static class toBackgroundTextFunction extends Function<String> {
+    public static class ToBackgroundTextFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
             String text = arguments.getArgument("text").getStringValue();
