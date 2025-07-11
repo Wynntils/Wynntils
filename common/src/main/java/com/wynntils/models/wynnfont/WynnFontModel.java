@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class WynnFontModel extends Model {
+public final class WynnFontModel extends Model {
     private static final char NEGATIVE_SPACE = '\uE012';
     private static final char NEGATIVE_SPACE_EDGE = '\u2064';
     private static final char BACKGROUND = '\uE00F';
