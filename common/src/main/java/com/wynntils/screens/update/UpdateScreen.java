@@ -19,6 +19,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.UniversalTexture;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -167,13 +168,13 @@ public class UpdateScreen extends WynntilsScreen {
                     Texture.UNIVERSAL_BAR,
                     CommonColors.LIGHT_GREEN,
                     this.width / 2f - Texture.UNIVERSAL_BAR.width(),
-                    this.height / 2f - Texture.UNIVERSAL_BAR.height() / 2f,
+                    this.height / 2f - UniversalTexture.A.getHeight(),
                     this.width / 2f + Texture.UNIVERSAL_BAR.width(),
-                    this.height / 2f + Texture.UNIVERSAL_BAR.height() / 2f,
+                    this.height / 2f + UniversalTexture.A.getHeight(),
                     0,
-                    0,
+                    UniversalTexture.A.getTextureY1(),
                     Texture.UNIVERSAL_BAR.width(),
-                    Texture.UNIVERSAL_BAR.height(),
+                    UniversalTexture.A.getTextureY2(),
                     Services.Update.getUpdateProgress());
             return;
         }
