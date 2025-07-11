@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.wrappedscreen.event.WrappedScreenOpenEvent;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
@@ -32,11 +33,16 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ShiftBehavior;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
 public class WynntilsContentBookFeature extends Feature {
+    private static final StyledText CONTENT_BOOK_NAME = StyledText.fromString("§dContent Book");
+
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(
             "Open Quest Book",
@@ -121,28 +127,31 @@ public class WynntilsContentBookFeature extends Feature {
     private final Config<ShiftBehavior> shiftBehaviorConfig = new Config<>(ShiftBehavior.DISABLED_IF_SHIFT_HELD);
 
     @Persisted
+    private final Config<Boolean> openWynntilsMenuInstead = new Config<>(false);
+
+    @Persisted
     public final Config<Boolean> displayOverallProgress = new Config<>(true);
 
     private boolean shiftClickedBookItem = false;
 
     @SubscribeEvent
     public void onSwing(ArmSwingEvent event) {
-        shiftClickedBookItem = McUtils.player().isShiftKeyDown();
+        handleClick(event);
     }
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
-        shiftClickedBookItem = McUtils.player().isShiftKeyDown();
+        handleClick(event);
     }
 
     @SubscribeEvent
     public void onUseItemOn(PlayerInteractEvent.RightClickBlock event) {
-        shiftClickedBookItem = McUtils.player().isShiftKeyDown();
+        handleClick(event);
     }
 
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.Interact event) {
-        shiftClickedBookItem = McUtils.player().isShiftKeyDown();
+        handleClick(event);
     }
 
     @SubscribeEvent
@@ -170,6 +179,16 @@ public class WynntilsContentBookFeature extends Feature {
         if (shouldOpen) {
             event.setOpenScreen(true);
             shiftClickedBookItem = false;
+        }
+    }
+
+    private void handleClick(ICancellableEvent cancellableEvent) {
+        shiftClickedBookItem = McUtils.player().isShiftKeyDown();
+
+        ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+        if (openWynntilsMenuInstead.get() && StyledText.fromComponent(itemInHand.getHoverName()).equals(CONTENT_BOOK_NAME)) {
+            cancellableEvent.setCanceled(true);
+            WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create());
         }
     }
 }
