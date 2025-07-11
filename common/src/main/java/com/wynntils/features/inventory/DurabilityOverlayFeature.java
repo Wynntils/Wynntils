@@ -12,9 +12,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.GetDurabilityBarColorEvent;
-import com.wynntils.mc.event.GetDurabilityBarVisibilityEvent;
-import com.wynntils.mc.event.GetDurabilityBarWidthEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.properties.DurableItemProperty;
@@ -49,41 +46,6 @@ public class DurabilityOverlayFeature extends Feature {
         if (!renderDurabilityOverlayInventories.get()) return;
         if (durabilityRenderMode.get() != DurabilityRenderMode.ARC) return;
         drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
-    }
-
-    @SubscribeEvent
-    public void onGetDurabilityBarVisibility(GetDurabilityBarVisibilityEvent event) {
-        if (durabilityRenderMode.get() != DurabilityRenderMode.BAR) return;
-        Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class)
-                .ifPresent(property -> {
-                    if (!property.getDurability().isAtCap()) {
-                        event.setVisible(true);
-                    }
-                });
-    }
-
-    @SubscribeEvent
-    public void onGetDurabilityBarWidth(GetDurabilityBarWidthEvent event) {
-        if (durabilityRenderMode.get() != DurabilityRenderMode.BAR) return;
-        Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class)
-                .ifPresent(durableItemProperty -> {
-                    int currentDurability = durableItemProperty.getDurability().current();
-                    int maxDurability = durableItemProperty.getDurability().max();
-                    event.setWidth(
-                            Mth.clamp(Math.round(13.0F * (float) currentDurability / (float) maxDurability), 0, 13));
-                });
-    }
-
-    @SubscribeEvent
-    public void onGetDurabilityBarColor(GetDurabilityBarColorEvent event) {
-        if (durabilityRenderMode.get() != DurabilityRenderMode.BAR) return;
-        Models.Item.asWynnItemProperty(event.getStack(), DurableItemProperty.class)
-                .ifPresent(durableItemProperty -> {
-                    int currentDurability = durableItemProperty.getDurability().current();
-                    int maxDurability = durableItemProperty.getDurability().max();
-                    float hueWynntils = Math.max(0.0F, (float) currentDurability / maxDurability) / 3.0F;
-                    event.setColor(Mth.hsvToRgb(hueWynntils, 1.0F, 1.0F));
-                });
     }
 
     private void drawDurabilityArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
