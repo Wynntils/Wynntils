@@ -9,11 +9,16 @@ import com.wynntils.utils.type.Pair;
 import java.util.List;
 
 public class DurabilityArcToDurabilityOverlayUpfixer extends RenamedPrefixesUpfixer {
-    private static final List<Pair<String, String>> PREFIXES =
-            List.of(Pair.of("durabilityArcFeature.", "durabilityOverlayFeature."));
+    private static final List<Pair<String, String>> RENAMED_PREFIXES = List.of(
+            Pair.of(
+                    "durabilityArcFeature.renderDurabilityArcHotbar",
+                    "durabilityOverlayFeature.renderDurabilityOverlayHotbar"),
+            Pair.of(
+                    "durabilityArcFeature.renderDurabilityArcInventories",
+                    "durabilityOverlayFeature.renderDurabilityOverlayInventory"));
 
     @Override
     protected List<Pair<String, String>> getRenamedPrefixes() {
-        return PREFIXES;
+        return RENAMED_PREFIXES;
     }
 }
