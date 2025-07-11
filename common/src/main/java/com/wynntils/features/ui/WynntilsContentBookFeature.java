@@ -186,7 +186,8 @@ public class WynntilsContentBookFeature extends Feature {
         shiftClickedBookItem = McUtils.player().isShiftKeyDown();
 
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
-        if (openWynntilsMenuInstead.get() && StyledText.fromComponent(itemInHand.getHoverName()).equals(CONTENT_BOOK_NAME)) {
+        if (openWynntilsMenuInstead.get()
+                && StyledText.fromComponent(itemInHand.getHoverName()).equals(CONTENT_BOOK_NAME)) {
             cancellableEvent.setCanceled(true);
             WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create());
         }
