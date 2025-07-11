@@ -56,6 +56,55 @@ public final class WynnFontModel extends Model {
             Map.entry('6', '\uE066'),
             Map.entry('7', '\uE067'),
             Map.entry('8', '\uE068'),
+            Map.entry('9', '\uE069'),
+            Map.entry('!', '\uE06A'),
+            Map.entry('(', '\uE06B'),
+            Map.entry(')', '\uE06C'),
+            Map.entry('<', '\uE06D'),
+            Map.entry('=', '\uE06E'),
+            Map.entry('>', '\uE06F'));
+    private static final Map<Character, Character> normalToBackground = Map.ofEntries(
+            Map.entry('a', '\uE040'),
+            Map.entry('b', '\uE041'),
+            Map.entry('c', '\uE042'),
+            Map.entry('d', '\uE043'),
+            Map.entry('e', '\uE044'),
+            Map.entry('f', '\uE045'),
+            Map.entry('g', '\uE046'),
+            Map.entry('h', '\uE047'),
+            Map.entry('i', '\uE048'),
+            Map.entry('j', '\uE049'),
+            Map.entry('k', '\uE04A'),
+            Map.entry('l', '\uE04B'),
+            Map.entry('m', '\uE04C'),
+            Map.entry('n', '\uE04D'),
+            Map.entry('o', '\uE04E'),
+            Map.entry('p', '\uE04F'),
+            Map.entry('q', '\uE050'),
+            Map.entry('r', '\uE051'),
+            Map.entry('s', '\uE052'),
+            Map.entry('t', '\uE053'),
+            Map.entry('u', '\uE054'),
+            Map.entry('v', '\uE055'),
+            Map.entry('w', '\uE056'),
+            Map.entry('x', '\uE057'),
+            Map.entry('y', '\uE058'),
+            Map.entry('z', '\uE059'),
+            Map.entry('?', '\uE05A'),
+            Map.entry('[', '\uE05B'),
+            Map.entry(']', '\uE05C'),
+            Map.entry('\\', '\uE05D'),
+            Map.entry('%', '\uE05E'),
+            Map.entry('&', '\uE05F'),
+            Map.entry('0', '\uE060'),
+            Map.entry('1', '\uE061'),
+            Map.entry('2', '\uE062'),
+            Map.entry('3', '\uE063'),
+            Map.entry('4', '\uE064'),
+            Map.entry('5', '\uE065'),
+            Map.entry('6', '\uE066'),
+            Map.entry('7', '\uE067'),
+            Map.entry('8', '\uE068'),
             Map.entry('9', '\uE069'));
 
     public WynnFontModel() {
@@ -82,7 +131,7 @@ public final class WynnFontModel extends Model {
                 sb.append(' ');
                 continue;
             }
-            Character fancy = normalToFancy.get(c);
+            Character fancy = normalToBackground.get(c);
             if (fancy == null) continue;
             sb.append("§");
             sb.append(backgroundColor.toHexString());
