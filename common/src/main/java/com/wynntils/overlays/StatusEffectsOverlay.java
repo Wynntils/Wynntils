@@ -47,7 +47,7 @@ public class StatusEffectsOverlay extends Overlay {
     public final Config<Boolean> sortEffects = new Config<>(true);
 
     @Persisted
-    public final Config<String> ignoreEffects = new Config<>("");
+    public final Config<String> ignoredEffects = new Config<>("");
 
     private List<TextRenderTask> renderCache = List.of();
     private TextRenderSetting textRenderSetting;
@@ -150,8 +150,8 @@ public class StatusEffectsOverlay extends Overlay {
     private Stream<RenderedStatusEffect> stackEffects(List<StatusEffect> effects) {
         List<StatusEffect> filteredEffects = effects;
 
-        if (!ignoreEffects.get().isEmpty()) {
-            String[] splitFilters = ignoreEffects.get().split(",");
+        if (!ignoredEffects.get().isEmpty()) {
+            String[] splitFilters = ignoredEffects.get().split(",");
 
             String[] trimmedFilters =
                     Arrays.stream(splitFilters).map(String::trim).toArray(String[]::new);
