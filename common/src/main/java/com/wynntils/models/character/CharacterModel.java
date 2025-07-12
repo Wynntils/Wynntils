@@ -13,7 +13,6 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.ContainerModel;
@@ -46,7 +45,6 @@ public final class CharacterModel extends Model {
     private static final int PROFESSION_INFO_SLOT = 17;
     public static final int GUILD_MENU_SLOT = 26;
 
-    private boolean inCharacterSelection;
     private boolean hasCharacter;
 
     private ClassType classType;
@@ -98,22 +96,11 @@ public final class CharacterModel extends Model {
         return false;
     }
 
-    @SubscribeEvent
-    public void onMenuClosed(MenuClosedEvent e) {
-        inCharacterSelection = false;
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onWorldStateChanged(WorldStateEvent e) {
         // Whenever we're leaving a world, clear the current character
         if (e.getOldState() == WorldState.WORLD) {
             hasCharacter = false;
-            // This should not be needed, but have it as a safeguard
-            inCharacterSelection = false;
-        }
-
-        if (e.getNewState() == WorldState.CHARACTER_SELECTION) {
-            inCharacterSelection = true;
         }
 
         if (e.getNewState() == WorldState.WORLD) {
@@ -127,7 +114,7 @@ public final class CharacterModel extends Model {
 
     @SubscribeEvent
     public void onContainerClick(ContainerClickEvent e) {
-        if (inCharacterSelection) {
+        if (Models.WorldState.getCurrentState() == WorldState.CHARACTER_SELECTION) {
             handleSelectedCharacter(e.getItemStack());
         }
     }
