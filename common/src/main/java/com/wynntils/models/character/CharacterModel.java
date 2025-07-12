@@ -57,6 +57,8 @@ public final class CharacterModel extends Model {
     // full character uuid, as presented by Wynncraft in the tooltip.
     private String id = "-";
 
+    private String previousScanId = "";
+
     public CharacterModel() {
         super(List.of());
     }
@@ -143,6 +145,11 @@ public final class CharacterModel extends Model {
     }
 
     public void scanCharacterInfo() {
+        if (id.equals(previousScanId)) {
+            hasCharacter = true;
+            return;
+        }
+
         WynntilsMod.info("Scheduling character info query");
         QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Character Info Query");
         queryBuilder.onError(msg -> WynntilsMod.warn("Error querying Character Info: " + msg));
@@ -156,6 +163,8 @@ public final class CharacterModel extends Model {
         Models.Guild.addGuildContainerQuerySteps(queryBuilder);
 
         queryBuilder.build().executeQuery();
+
+        previousScanId = id;
     }
 
     private void parseCharacterContainer(ContainerContent container) {
