@@ -133,7 +133,12 @@ public final class CharacterModel extends Model {
     public void handleSelectedCharacter(ItemStack itemStack) {
         if (!parseCharacter(itemStack)) return;
         hasCharacter = true;
-        WynntilsMod.postEvent(new CharacterUpdateEvent());
+        WynntilsMod.info("Selected character " + getCharacterString());
+    }
+
+    public void setSelectedCharacterFromCharacterSelection(ClassType classType, boolean isReskinned, int level) {
+        hasCharacter = true;
+        updateCharacterInfo(classType, isReskinned, level);
         WynntilsMod.info("Selected character " + getCharacterString());
     }
 
