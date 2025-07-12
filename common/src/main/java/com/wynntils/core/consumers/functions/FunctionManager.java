@@ -569,6 +569,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
         registerFunction(new LootrunFunctions.LootrunTimeFunction());
         registerFunction(new LootrunFunctions.LootrunBeaconVibrantFunction());
+        registerFunction(new LootrunFunctions.LootrunSacrificesFunction());
+        registerFunction(new LootrunFunctions.LootrunRerollsFunction());
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
