@@ -130,11 +130,12 @@ public final class LootrunModel extends Model {
             Pattern.compile(".+§7(?:.+?)?for (?:§b)?(\\d+)(?:§r)? Challenges");
     private static final Pattern RAINBOW_AMOUNT_PATTERN =
             Pattern.compile(".+§7(?:.+?)?next (?:§b)?(\\d+)(§(r|7))? Challenges");
-    private static final Pattern MISSION_COMPLETED_PATTERN = Pattern.compile("[À\\s]*§b§lMission Completed");
+    private static final Pattern MISSION_COMPLETED_PATTERN =
+            Pattern.compile("(?:[^\u0000-\u007F]+)?§b§lMission Completed");
 
     // Some missions don't have a mission completed message, so we also look for "active" missions
     // (missions that apply effects on challenge completion)
-    private static final Pattern COMPLETED_MISSION_PATTERN = Pattern.compile("[À\\s]*?§.(?<mission>"
+    private static final Pattern COMPLETED_MISSION_PATTERN = Pattern.compile("(?:[^\\u0000-\\u007F]+)?§.(?<mission>"
             + MissionType.missionTypes().stream().map(MissionType::getName).collect(Collectors.joining("|")) + ")");
     private static final Pattern ACTIVE_MISSION_PATTERN = Pattern.compile("[À\\s]*?§b§l(?<mission>"
             + MissionType.missionTypes().stream().map(MissionType::getName).collect(Collectors.joining("|")) + ")");
