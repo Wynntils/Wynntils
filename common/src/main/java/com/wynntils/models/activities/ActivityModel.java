@@ -16,7 +16,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.mc.event.ContainerSetContentEvent;
-import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.activities.beacons.ActivityBeaconKind;
 import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
@@ -101,6 +100,7 @@ public final class ActivityModel extends Model {
     private List<List<StyledText>> dialogueHistory = List.of();
     private CappedValue overallProgress = CappedValue.EMPTY;
     private boolean overallProgressOutdated = true;
+    private String currentProgressCharacter = "";
 
     public ActivityModel(MarkerModel markerModel) {
         super(List.of(markerModel));
@@ -180,13 +180,6 @@ public final class ActivityModel extends Model {
         }
     }
 
-    @SubscribeEvent
-    public void onScreenClosed(ScreenClosedEvent event) {
-        // The progress cannot be outdated if we are in the content book
-        // This speeds up navigation in the content book
-        overallProgressOutdated = true;
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldStateChanged(WorldStateEvent e) {
         resetTracker();
@@ -196,6 +189,11 @@ public final class ActivityModel extends Model {
 
     @SubscribeEvent
     public void onCharacterUpdated(CharacterUpdateEvent event) {
+        // Same character, no need to scan again
+        if (Models.Character.getId().equals(currentProgressCharacter)) {
+            overallProgressOutdated = false;
+            return;
+        }
         // First thing to do when we just loaded a class
         scanOverallProgress();
     }
@@ -600,6 +598,7 @@ public final class ActivityModel extends Model {
                 int completed = Integer.parseInt(m.group(1));
                 int total = Integer.parseInt(m.group(2));
                 overallProgress = new CappedValue(completed, total);
+                currentProgressCharacter = Models.Character.getId();
                 return true;
             }
         }
