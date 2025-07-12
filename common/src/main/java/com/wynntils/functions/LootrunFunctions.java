@@ -282,7 +282,7 @@ public class LootrunFunctions {
     public static class LootrunSacrificesFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getSecrifices();
+            return Models.Lootrun.getSacrifices();
         }
     }
 

@@ -751,7 +751,7 @@ public final class LootrunModel extends Model {
         return getCurrentLootrunDetails().getOrangeBeaconCounts().size();
     }
 
-    public int getSecrifices() {
+    public int getSacrifices() {
         return getCurrentLootrunDetails().getSacrifices();
     }
 
@@ -837,12 +837,14 @@ public final class LootrunModel extends Model {
         }
 
         int rerolls = getRerollsFromMission(mission);
-        if (rerolls > 0)
+        if (rerolls > 0) {
             getCurrentLootrunDetails().setRerolls(getCurrentLootrunDetails().getRerolls() + rerolls);
+        }
 
         int sacrifices = getSacrificesFromMission(mission);
-        if (sacrifices > 0)
+        if (sacrifices > 0) {
             getCurrentLootrunDetails().setSacrifices(getCurrentLootrunDetails().getSacrifices() + sacrifices);
+        }
 
         lootrunDetailsStorage.touched();
         expectMissionComplete = false;
