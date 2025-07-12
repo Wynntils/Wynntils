@@ -15,7 +15,8 @@ public class DurabilityArcToDurabilityOverlayUpfixer extends RenamedKeysUpfixer 
                     "durabilityOverlayFeature.renderDurabilityOverlayHotbar"),
             Pair.of(
                     "durabilityArcFeature.renderDurabilityArcInventories",
-                    "durabilityOverlayFeature.renderDurabilityOverlayInventories"));
+                    "durabilityOverlayFeature.renderDurabilityOverlayInventories"),
+            Pair.of("durabilityArcFeature.userEnabled", "durabilityOverlayFeature.userEnabled"));
 
     @Override
     protected List<Pair<String, String>> getRenamedKeys() {
