@@ -824,6 +824,8 @@ public final class RenderUtils {
     }
 
     public static void disableScissor(GuiGraphics guiGraphics) {
+        if (guiGraphics.scissorStack.stack.isEmpty()) return;
+
         guiGraphics.disableScissor();
     }
 
