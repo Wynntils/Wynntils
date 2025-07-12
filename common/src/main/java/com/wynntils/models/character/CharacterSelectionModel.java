@@ -47,6 +47,8 @@ public final class CharacterSelectionModel extends Model {
     public void playWithCharacter(int slot) {
         if (!(Models.Container.getCurrentContainer() instanceof CharacterSelectionContainer characterContainer)) return;
 
+        // ContainerClickEvent will get the air item and not parse the character properly so pass it the correct item
+        Models.Character.handleSelectedCharacter(selectionScreenItems.get(slot));
         ContainerUtils.clickOnSlot(
                 slot, characterContainer.getContainerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, selectionScreenItems);
     }

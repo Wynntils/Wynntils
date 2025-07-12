@@ -126,11 +126,15 @@ public final class CharacterModel extends Model {
     @SubscribeEvent
     public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
-            if (!parseCharacter(e.getItemStack())) return;
-            hasCharacter = true;
-            WynntilsMod.postEvent(new CharacterUpdateEvent());
-            WynntilsMod.info("Selected character " + getCharacterString());
+            handleSelectedCharacter(e.getItemStack());
         }
+    }
+
+    public void handleSelectedCharacter(ItemStack itemStack) {
+        if (!parseCharacter(itemStack)) return;
+        hasCharacter = true;
+        WynntilsMod.postEvent(new CharacterUpdateEvent());
+        WynntilsMod.info("Selected character " + getCharacterString());
     }
 
     public void scanCharacterInfo() {
