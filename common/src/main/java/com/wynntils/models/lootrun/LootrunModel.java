@@ -836,12 +836,12 @@ public final class LootrunModel extends Model {
             getCurrentLootrunDetails().addMission(mission);
         }
 
-        int rerolls = getRerollsFromMission(mission);
+        int rerolls = mission.getRerolls();
         if (rerolls > 0) {
             getCurrentLootrunDetails().setRerolls(getCurrentLootrunDetails().getRerolls() + rerolls);
         }
 
-        int sacrifices = getSacrificesFromMission(mission);
+        int sacrifices = mission.getSacrifices();
         if (sacrifices > 0) {
             getCurrentLootrunDetails().setSacrifices(getCurrentLootrunDetails().getSacrifices() + sacrifices);
         }
@@ -1232,19 +1232,5 @@ public final class LootrunModel extends Model {
 
     private LootrunDetails getCurrentLootrunDetails() {
         return lootrunDetailsStorage.get().getOrDefault(Models.Character.getId(), new LootrunDetails());
-    }
-
-    private int getRerollsFromMission(MissionType mission) {
-        return switch (mission) {
-            case HIGH_ROLLER, ULTIMATE_SACRIFICE, SAFETY_SEEKER -> 2;
-            default -> 0;
-        };
-    }
-
-    private int getSacrificesFromMission(MissionType mission) {
-        return switch (mission) {
-            case REDEMPTION, ULTIMATE_SACRIFICE, SAFETY_SEEKER -> 1;
-            default -> 0;
-        };
     }
 }
