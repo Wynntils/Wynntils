@@ -5,13 +5,9 @@
 package com.wynntils.models.statuseffects.type;
 
 import com.google.common.collect.ComparisonChain;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class StatusEffect implements Comparable<StatusEffect> {
-    private static final Pattern TIME_PATTERN = Pattern.compile("\\((\\d+):(\\d+)\\)");
     private final StyledText fullName;
     private final StyledText name; // The name of the consumable (also used to identify it)
     private final StyledText modifier; // The modifier of the consumable (+100, 23 etc.)
@@ -26,7 +22,8 @@ public class StatusEffect implements Comparable<StatusEffect> {
             StyledText modifier,
             StyledText modifierSuffix,
             StyledText displayedTime,
-            StyledText prefix) {
+            StyledText prefix,
+            int duration) {
         this.name = name;
         this.displayedTime = displayedTime;
         this.prefix = prefix;
@@ -44,11 +41,7 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 displayedTime);
         this.modifierValue =
                 modifier != StyledText.EMPTY ? Double.parseDouble(modifier.getStringWithoutFormatting()) : null;
-
-        Matcher timeMatcher = getDisplayedTime().getMatcher(TIME_PATTERN, PartStyle.StyleType.NONE);
-        this.duration = timeMatcher.matches()
-                ? Integer.parseInt(timeMatcher.group(1)) * 60 + Integer.parseInt(timeMatcher.group(2))
-                : -1;
+        this.duration = duration;
     }
 
     /**
