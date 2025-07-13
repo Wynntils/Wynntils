@@ -151,10 +151,12 @@ public final class ActivityModel extends Model {
                 Location spawn = new Location(McUtils.mc().level.getSharedSpawnPos());
                 ACTIVITY_MARKER_PROVIDER.setSpawnLocation(activityBeaconMarker.getActivityType(), spawn);
 
+                if (trackedActivity == null) return;
+
                 Location trackedLocation = getTrackedLocation();
-                if (getTrackedLocation() != null && !spawn.equals(trackedLocation)) {
+                if (trackedLocation != null && !spawn.equals(trackedLocation)) {
                     ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(
-                            activityBeaconMarker.getActivityType(), getTrackedLocation());
+                            activityBeaconMarker.getActivityType(), trackedLocation);
                 }
             }
         }
