@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Tracks persistent metadata about the player's selected character, such as
@@ -114,7 +115,8 @@ public final class CharacterModel extends Model {
 
     @SubscribeEvent
     public void onContainerClick(ContainerClickEvent e) {
-        if (Models.WorldState.getCurrentState() == WorldState.CHARACTER_SELECTION) {
+        if (Models.WorldState.getCurrentState() == WorldState.CHARACTER_SELECTION
+                && e.getMouseButton() != GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             handleSelectedCharacter(e.getItemStack());
         }
     }
