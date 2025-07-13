@@ -24,6 +24,8 @@ public class LootrunDetails {
     private int rainbowBeaconCount = 0;
     private int rainbowAmount = -1;
     private List<MissionType> missions = new ArrayList<>();
+    private int sacrifices = 0;
+    private int rerolls = 0;
     private Map<LootrunLocation, Integer> latestRewardPulls = new TreeMap<>();
     private Map<LootrunLocation, Integer> sacrificedPulls = new TreeMap<>();
 
@@ -137,5 +139,21 @@ public class LootrunDetails {
 
     public void setSacrificedPulls(LootrunLocation location, int pulls) {
         this.sacrificedPulls.put(location, pulls);
+    }
+
+    public int getSacrifices() {
+        return sacrifices;
+    }
+
+    public void setSacrifices(int sacrifices) {
+        this.sacrifices = sacrifices;
+    }
+
+    public int getRerolls() {
+        return rerolls;
+    }
+
+    public void setRerolls(int rerolls) {
+        this.rerolls = rerolls;
     }
 }

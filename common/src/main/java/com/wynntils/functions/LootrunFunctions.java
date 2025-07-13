@@ -285,4 +285,18 @@ public class LootrunFunctions {
             return Models.Lootrun.getSacrificedPulls();
         }
     }
+
+    public static class LootrunSacrificesFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getSacrifices();
+        }
+    }
+
+    public static class LootrunRerollsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getRerolls();
+        }
+    }
 }
