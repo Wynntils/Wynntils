@@ -11,14 +11,16 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.models.character.actionbar.matchers.CharacterCreationSegmentMatcher;
 import com.wynntils.models.character.actionbar.matchers.CharacterSelectionClassSegmentMatcher;
 import com.wynntils.models.character.actionbar.matchers.CharacterSelectionLevelSegmentMatcher;
+import com.wynntils.models.character.actionbar.matchers.CharacterSelectionSegmentMatcher;
+import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionClassSegment;
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionLevelSegment;
+import com.wynntils.models.character.actionbar.segments.CharacterSelectionSegment;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.containers.CharacterSelectionContainer;
-import com.wynntils.models.worlds.actionbar.segments.CharacterCreationSegment;
-import com.wynntils.models.worlds.actionbar.segments.CharacterSelectionSegment;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -42,6 +44,8 @@ public final class CharacterSelectionModel extends Model {
     public CharacterSelectionModel() {
         super(List.of());
 
+        Handlers.ActionBar.registerSegment(new CharacterCreationSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new CharacterSelectionSegmentMatcher());
         Handlers.ActionBar.registerSegment(new CharacterSelectionClassSegmentMatcher());
         Handlers.ActionBar.registerSegment(new CharacterSelectionLevelSegmentMatcher());
     }
