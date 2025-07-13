@@ -21,7 +21,9 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.particle.event.ParticleVerifiedEvent;
 import com.wynntils.handlers.particle.type.ParticleType;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
+import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.event.BeaconMarkerEvent;
@@ -77,6 +79,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
@@ -487,6 +492,9 @@ public final class LootrunModel extends Model {
     public void onLootrunCompleted(LootrunFinishedEvent.Completed event) {
         dryPulls.store(dryPulls.get() + event.getRewardPulls());
         checkedItemEntities.clear();
+
+        getCurrentLootrunDetails().setLatestRewardPulls(getCurrentLootrunLocation(), event.getRewardPulls());
+        lootrunDetailsStorage.touched();
     }
 
     @SubscribeEvent
@@ -738,6 +746,10 @@ public final class LootrunModel extends Model {
 
     public int getActiveRainbowBeacons() {
         return getCurrentLootrunDetails().getRainbowBeaconCount();
+    }
+
+    public int getSacrificedPulls() {
+        return getCurrentLootrunDetails().getSacrificedPulls(getCurrentLootrunLocation());
     }
 
     private void setLastTaskBeaconColor(LootrunBeaconKind lootrunBeaconKind) {
@@ -1178,5 +1190,51 @@ public final class LootrunModel extends Model {
 
     private LootrunDetails getCurrentLootrunDetails() {
         return lootrunDetailsStorage.get().getOrDefault(Models.Character.getId(), new LootrunDetails());
+    }
+
+    @SubscribeEvent
+    public void onConfirmationClick(ContainerClickEvent event) {
+        Component itemName = event.getItemStack().getOrDefault(DataComponents.CUSTOM_NAME, null);
+        LootrunLocation location = getCurrentLootrunLocation();
+
+        // TODO: Add extra checks to ensure this is the correct confirmation item. Probably by changing these checks to
+        // regex patterns
+        if (itemName.getString().contains("Confirm Sacrifice")) {
+            int sacrificedPulls = getSacrificedPullsCalc(
+                    getCurrentLootrunDetails().getLatestRewardPulls(location),
+                    getCurrentLootrunDetails().getSacrificedPulls(location));
+
+            getCurrentLootrunDetails().setSacrificedPulls(location, sacrificedPulls);
+            lootrunDetailsStorage.touched();
+        } else if (itemName.getString().contains("Confirm Rewards")) {
+            getCurrentLootrunDetails().setSacrificedPulls(location, 0);
+            lootrunDetailsStorage.touched();
+        }
+    }
+
+    @SubscribeEvent
+    public void onLootrunStart(TitleSetTextEvent event) {
+        String text = event.getComponent().getString();
+
+        // TODO: Look into maybe moving this to a regex pattern
+        if (text.contains("Prepare to Lootrun")) getCurrentLootrunDetails().setLocation(getCurrentLootrunLocation());
+    }
+
+    public LootrunLocation getCurrentLootrunLocation() {
+        if (getCurrentLootrunDetails().getLocation() != LootrunLocation.UNKNOWN) {
+            return getCurrentLootrunDetails().getLocation();
+        }
+
+        BlockPos pos = McUtils.player().blockPosition();
+        Location location = new Location(pos.getX(), pos.getY(), pos.getZ());
+
+        return LootrunLocation.getNearest(location);
+    }
+
+    private int getSacrificedPullsCalc(int pulls, int sacrifices) {
+        if (sacrifices <= 0) return 0;
+
+        int savedPulls = (int) Math.ceil(pulls * (1 - Math.pow(0.5, sacrifices)));
+        return Math.max(0, savedPulls);
     }
 }

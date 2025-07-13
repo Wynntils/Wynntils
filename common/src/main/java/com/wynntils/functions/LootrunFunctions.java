@@ -278,4 +278,11 @@ public class LootrunFunctions {
             return Models.Lootrun.getActiveRainbowBeacons();
         }
     }
+
+    public static class LootrunSacrificedPullsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getSacrificedPulls();
+        }
+    }
 }

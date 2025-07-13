@@ -2152,6 +2152,8 @@
   "function.wynntils.lootrunRainbowBeaconCount.name": "Lootrun Rainbow Beacon Count",
   "function.wynntils.lootrunRedBeaconChallengeCount.description": "The number of red beacon challenges you have remaining in your lootrun",
   "function.wynntils.lootrunRedBeaconChallengeCount.name": "Lootrun Red Beacon Challenges",
+  "function.wynntils.lootrunSacrificedPulls.description": "The number of sacrificed pulls from previous lootruns that have been added to your current lootrun",
+  "function.wynntils.lootrunSacrificedPulls.name": "Lootrun Sacrificed Pulls",
   "function.wynntils.lootrunState.description": "The current state of the lootrun you are in. One of NOT_RUNNING, CHOOSING_BEACON, IN_TASK",
   "function.wynntils.lootrunState.name": "Lootrun State",
   "function.wynntils.lootrunTaskLocation.argument.color": "The color of the beacon",
