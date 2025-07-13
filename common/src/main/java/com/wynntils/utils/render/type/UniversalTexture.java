@@ -23,6 +23,7 @@ public enum UniversalTexture implements BarTexture {
     RUNE_A(246, 262, 8),
     RUNE_B(262, 278, 8),
     EXPERIENCE_A(278, 288, 5),
+    EXPERIENCE_B(288, 298, 5),
     EXPERIENCE_C(298, 308, 5),
     EXPERIENCE_D(308, 318, 5),
     EXPERIENCE_LIQUID(318, 328, 5),
