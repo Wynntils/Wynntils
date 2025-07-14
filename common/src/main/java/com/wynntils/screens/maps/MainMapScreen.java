@@ -11,9 +11,12 @@ import com.wynntils.core.components.Services;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
+import com.wynntils.screens.maps.widgets.FilterHolderWidget;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
+import com.wynntils.services.mapdata.features.builtin.CombatLocation;
+import com.wynntils.services.mapdata.features.builtin.ServiceLocation;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.features.type.MapArea;
@@ -38,6 +41,7 @@ import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public final class MainMapScreen extends AbstractMapScreen {
+    private FilterHolderWidget filterHolderWidget;
     private MapLocation focusedMarker = null;
 
     private MainMapScreen() {
@@ -180,6 +184,17 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(Component.translatable("screens.wynntils.map.help.description10")))));
 
+        double scaleFactor = (double) mapWidth / Texture.MAP_FILTER_BACKGROUND.width();
+        int filterHolderHeight = (int) (Texture.MAP_FILTER_BACKGROUND.height() * scaleFactor);
+
+        filterHolderWidget = new FilterHolderWidget(
+                (int) (renderX + renderedBorderXOffset),
+                (int) (renderY + renderedBorderYOffset) - filterHolderHeight,
+                (int) mapWidth,
+                filterHolderHeight,
+                scaleFactor,
+                filterHolderWidget != null && filterHolderWidget.isOpen());
+
         if (firstInit) {
             // When in an unmapped area, center to the middle of the map if the feature is enabled
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
@@ -256,6 +271,8 @@ public final class MainMapScreen extends AbstractMapScreen {
                     CommonColors.BLACK.asInt());
         }
 
+        filterHolderWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+
         RenderUtils.disableScissor(guiGraphics);
 
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
@@ -280,6 +297,13 @@ public final class MainMapScreen extends AbstractMapScreen {
             mapFeatures = mapFeatures.filter(feature -> !(feature instanceof TerritoryArea));
         }
 
+        mapFeatures = mapFeatures.filter(feature -> {
+            if (feature instanceof CombatLocation || feature instanceof ServiceLocation) {
+                return Services.MapData.isCategoryFilteredOnMap(feature.getCategoryId());
+            } else {
+                return true;
+            }
+        });
         mapFeatures = mapFeatures.filter(feature -> !(feature instanceof SeaskipperDestinationArea));
 
         // FIXME: Add back the pois that are still not converted to MapData
@@ -325,6 +349,10 @@ public final class MainMapScreen extends AbstractMapScreen {
                 child.mouseClicked(mouseX, mouseY, button);
                 return true;
             }
+        }
+
+        if (filterHolderWidget.isMouseOver(mouseX, mouseY)) {
+            return filterHolderWidget.mouseClicked(mouseX, mouseY, button);
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
@@ -400,6 +428,13 @@ public final class MainMapScreen extends AbstractMapScreen {
         }
 
         return super.doMouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (filterHolderWidget.isMouseOver(mouseX, mouseY)) return false;
+
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     private void focusNextMarkedLocation() {
