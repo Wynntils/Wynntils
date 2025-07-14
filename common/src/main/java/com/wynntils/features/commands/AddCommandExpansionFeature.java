@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.commands;
@@ -44,6 +44,9 @@ public class AddCommandExpansionFeature extends Feature {
     private static final SuggestionProvider<CommandSourceStack> PARTY_NAME_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     Models.Party.getPartyMembers().stream().filter(p -> !p.equals(McUtils.playerName())), builder);
+
+    private static final SuggestionProvider<CommandSourceStack> SERVERS_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(Models.ServerList.getServers(), builder);
 
     @Persisted
     public final Config<Boolean> includeDeprecatedCommands = new Config<>(false);
@@ -345,7 +348,7 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(
                 root,
                 literal("switch")
-                        .then(argument("world", StringArgumentType.string()))
+                        .then(argument("world", StringArgumentType.string()).suggests(SERVERS_SUGGESTION_PROVIDER))
                         .build());
 
         addNode(

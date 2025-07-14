@@ -24,8 +24,10 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.UniversalTexture;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.wynn.ItemUtils;
+import java.util.Optional;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -36,6 +38,9 @@ public class PowderSpecialBarOverlay extends Overlay {
 
     @Persisted
     public final Config<Boolean> flip = new Config<>(false);
+
+    @Persisted
+    public final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
 
     @Persisted
     public final Config<Boolean> onlyIfWeaponHeld = new Config<>(true);
@@ -60,12 +65,15 @@ public class PowderSpecialBarOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PowderSpecialInfo powderSpecialInfo = Models.CharacterStats.getPowderSpecialInfo();
-        if (this.onlyIfWeaponHeld.get()
-                && !ItemUtils.isWeapon(McUtils.inventory().getSelected())) return;
-        if (this.hideIfNoCharge.get()
-                && (powderSpecialInfo == PowderSpecialInfo.EMPTY || powderSpecialInfo.charge() == 0f)) return;
+        Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
+        if (this.hideIfNoCharge.get() && powderSpecialInfoOpt.isEmpty()) return;
 
+        if (this.onlyIfWeaponHeld.get()
+                && !ItemUtils.isWeapon(McUtils.inventory().getSelected())) {
+            return;
+        }
+
+        PowderSpecialInfo powderSpecialInfo = powderSpecialInfoOpt.orElse(PowderSpecialInfo.EMPTY);
         renderWithSpecificSpecial(
                 guiGraphics.pose(), bufferSource, powderSpecialInfo.charge() * 100f, powderSpecialInfo.powder());
     }
@@ -85,7 +93,7 @@ public class PowderSpecialBarOverlay extends Overlay {
             PoseStack poseStack, MultiBufferSource bufferSource, float powderSpecialCharge, Powder powderSpecialType) {
         Texture universalBarTexture = Texture.UNIVERSAL_BAR;
 
-        final float renderedHeight = universalBarTexture.height() / 2f * (this.getWidth() / 81);
+        final float renderedHeight = barTexture.get().getHeight() * (this.getWidth() / 81);
 
         float renderY =
                 switch (this.getRenderVerticalAlignment()) {
@@ -128,9 +136,9 @@ public class PowderSpecialBarOverlay extends Overlay {
                 this.getRenderX() + this.getWidth(),
                 renderY + 10 + renderedHeight,
                 0,
-                0,
-                universalBarTexture.width(),
-                universalBarTexture.height(),
+                barTexture.get().getTextureY1(),
+                Texture.UNIVERSAL_BAR.width(),
+                barTexture.get().getTextureY2(),
                 (this.flip.get() ? -1f : 1f) * powderSpecialCharge / 100f);
     }
 }

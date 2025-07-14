@@ -17,6 +17,7 @@ import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomCommandKeybindSlashStartUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiIconEnumBugUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiVisbilityUpfixer;
+import com.wynntils.core.persisted.upfixers.config.DurabilityArcToDurabilityOverlayUpfixer;
 import com.wynntils.core.persisted.upfixers.config.EnumNamingUpfixer;
 import com.wynntils.core.persisted.upfixers.config.GameBarOverlayMoveUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
@@ -30,10 +31,13 @@ import com.wynntils.core.persisted.upfixers.config.SacredSurgeToHolyPowerUpfixer
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
+import com.wynntils.core.persisted.upfixers.config.UniversalBarOverlayColorToColorTemplateUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WorldMarkersDistanceConfigRenameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WorldMarkersFeatureRenamesUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WorldMarkersRenameUpfixer;
+import com.wynntils.core.persisted.upfixers.config.WynntilsContentBookReplaceToShiftBehaviourUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
+import com.wynntils.core.persisted.upfixers.storage.UpdateChangelogToModelUpfixer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -68,6 +72,9 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new ProfessionBadgesToLeaderboardBadgesUpfixer());
         registerConfigUpfixer(new TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer());
         registerConfigUpfixer(new SacredSurgeToHolyPowerUpfixer());
+        registerConfigUpfixer(new UniversalBarOverlayColorToColorTemplateUpfixer());
+        registerConfigUpfixer(new WynntilsContentBookReplaceToShiftBehaviourUpfixer());
+        registerConfigUpfixer(new DurabilityArcToDurabilityOverlayUpfixer());
         registerConfigUpfixer(new WorldMarkersRenameUpfixer());
         registerConfigUpfixer(new WorldMarkersDistanceConfigRenameUpfixer());
         registerConfigUpfixer(new BeaconBeamToWorldMarkersUpfixer());
@@ -75,6 +82,7 @@ public class UpfixerManager extends Manager {
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
+        registerStorageUpfixer(new UpdateChangelogToModelUpfixer());
     }
 
     private void registerConfigUpfixer(Upfixer upfixer) {

@@ -34,6 +34,14 @@
   },
   {
     "arguments": [
+      "old_version",
+      "new_version"
+    ],
+    "id": "apiAthenaUpdateChangelogV2",
+    "url": "https://athena.wynntils.com/v2/version/changelog/%{old_version}/%{new_version}"
+  },
+  {
+    "arguments": [
       "stream"
     ],
     "id": "apiAthenaUpdateCheck",
@@ -105,7 +113,7 @@
   },
   {
     "id": "dataStaticCombatLocations",
-    "md5": "f8d2b16d8cd33181b6a3857fa5e390a9",
+    "md5": "5217e28bf1e91686a2258418ed7f27c3",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/combat_locations.json"
   },
   {
@@ -127,6 +135,11 @@
     "id": "dataStaticGearAdvanced",
     "md5": "7cc0f3d523b1423e11f5fcb7a508c2d9",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_gear.json"
+  },
+  {
+    "id": "dataStaticHints",
+    "md5": "f99494beeea2b60453dfb840606247ec",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/hint_messages.json"
   },
   {
     "id": "dataStaticIdentificationKeys",
@@ -175,7 +188,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "868e6cbc3ac5b6e549b2b98f845e3318",
+    "md5": "9af4cc0fed470aedc25be31f8fbf8b9b",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/maps.json"
   },
   {

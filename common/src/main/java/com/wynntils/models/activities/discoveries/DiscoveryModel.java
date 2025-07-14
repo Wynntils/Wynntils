@@ -17,7 +17,6 @@ import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.activities.type.DiscoveryType;
-import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -38,40 +37,6 @@ public final class DiscoveryModel extends Model {
 
     public DiscoveryModel() {
         super(List.of());
-    }
-
-    public void openDiscoveryOnMap(DiscoveryInfo discoveryInfo) {
-        if (discoveryInfo.type() != DiscoveryType.TERRITORY) {
-            locateDiscovery(discoveryInfo.name(), DiscoveryOpenAction.MAP);
-            return;
-        }
-
-        TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.name());
-        if (guildTerritory != null) {
-            int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
-            int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
-
-            McUtils.mc().setScreen(MainMapScreen.create(centerX, centerZ));
-        }
-    }
-
-    public void setDiscoveryCompass(DiscoveryInfo discoveryInfo) {
-        if (discoveryInfo.type() != DiscoveryType.TERRITORY) {
-            locateDiscovery(discoveryInfo.name(), DiscoveryOpenAction.COMPASS);
-            return;
-        }
-
-        TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.name());
-        if (guildTerritory != null) {
-            int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
-            int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
-
-            Services.UserMarker.addMarkerAtLocation(new Location(centerX, 0, centerZ), guildTerritory.getName());
-        }
-    }
-
-    public void openDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.name()));
     }
 
     private void queryDiscoveries(

@@ -1,0 +1,57 @@
+name: Promote to Release
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  promote-release:
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'release'))
+    name: Promote main to release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Merge main into release
+        uses: mtanzi/action-automerge@v1
+        id: merge
+        with:
+          github_token: ${{ secrets.PRIVATE_TOKEN }}
+          source: 'main'
+          target: 'release'
+
+  clear-changelog:
+    needs: promote-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: release
+
+      - name: Clear Changelog File
+        run: echo "" > CHANGELOG.md
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          commit-message: "chore: Clear changelog"
+          title: "chore: Set changelog for new release"
+          body: |
+            This PR resets the `CHANGELOG.md` file to prepare a new release.
+            Edit the file with the relevant release notes for the release.
+            
+            It is automatically generated and targets the `release` branch.
+          branch: set-changelog
+          base: release
+          labels: auto-generated
+          committer: WynntilsBot <admin@wynntils.com>

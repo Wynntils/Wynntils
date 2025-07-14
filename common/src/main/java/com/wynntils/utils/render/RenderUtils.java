@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -137,6 +138,94 @@ public final class RenderUtils {
         drawLine(poseStack, color, x2, y1, x2, y2, z, lineWidth);
         drawLine(poseStack, color, x2, y2, x1, y2, z, lineWidth);
         drawLine(poseStack, color, x1, y2, x1, y1, z, lineWidth);
+    }
+
+    public static void drawRotatingBorderSegment(
+            PoseStack poseStack,
+            CustomColor color,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            float z,
+            float lineWidth,
+            float segmentFraction) {
+        segmentFraction = MathUtils.clamp(segmentFraction, 0.0f, 1.0f);
+
+        if (x2 < x1) {
+            float tmp = x1;
+            x1 = x2;
+            x2 = tmp;
+        }
+        if (y2 < y1) {
+            float tmp = y1;
+            y1 = y2;
+            y2 = tmp;
+        }
+
+        float width = x2 - x1;
+        float height = y2 - y1;
+        float perimeter = 2 * (width + height);
+
+        float progress = (McUtils.player().tickCount % 100) / 100f;
+        float segmentLength = segmentFraction * perimeter;
+        float offset = (progress % 1.0f) * perimeter;
+
+        float[][] points = {
+            {x1, y1, x2, y1},
+            {x2, y1, x2, y2},
+            {x2, y2, x1, y2},
+            {x1, y2, x1, y1}
+        };
+
+        float remainingLength = segmentLength;
+        float accumulatedLength = 0f;
+
+        for (int i = 0; i < points.length; i++) {
+            float[] edge = points[i];
+            float edgeX1 = edge[0];
+            float edgeY1 = edge[1];
+            float edgeX2 = edge[2];
+            float edgeY2 = edge[3];
+            float edgeLength = (float) Math.hypot(edgeX2 - edgeX1, edgeY2 - edgeY1);
+
+            if (offset < accumulatedLength + edgeLength) {
+                float localOffset = offset - accumulatedLength;
+                float segmentEdgeStart = localOffset / edgeLength;
+                float startX = edgeX1 + (edgeX2 - edgeX1) * segmentEdgeStart;
+                float startY = edgeY1 + (edgeY2 - edgeY1) * segmentEdgeStart;
+
+                while (remainingLength > 0) {
+                    float segmentEdgeEnd = Math.min(1f, segmentEdgeStart + (remainingLength / edgeLength));
+                    float endX = edgeX1 + (edgeX2 - edgeX1) * segmentEdgeEnd;
+                    float endY = edgeY1 + (edgeY2 - edgeY1) * segmentEdgeEnd;
+
+                    drawLine(poseStack, color, startX, startY, endX, endY, z, lineWidth);
+
+                    remainingLength -= (segmentEdgeEnd - segmentEdgeStart) * edgeLength;
+
+                    if (segmentEdgeEnd >= 1f) {
+                        i = (i + 1) % points.length;
+                        edge = points[i];
+                        edgeX1 = edge[0];
+                        edgeY1 = edge[1];
+                        edgeX2 = edge[2];
+                        edgeY2 = edge[3];
+
+                        edgeLength = (float) Math.hypot(edgeX2 - edgeX1, edgeY2 - edgeY1);
+                        segmentEdgeStart = 0f;
+
+                        startX = edgeX1;
+                        startY = edgeY1;
+                    } else {
+                        break;
+                    }
+                }
+                break;
+            }
+
+            accumulatedLength += edgeLength;
+        }
     }
 
     public static void drawRect(
@@ -763,6 +852,8 @@ public final class RenderUtils {
     }
 
     public static void disableScissor(GuiGraphics guiGraphics) {
+        if (guiGraphics.scissorStack.stack.isEmpty()) return;
+
         guiGraphics.disableScissor();
     }
 

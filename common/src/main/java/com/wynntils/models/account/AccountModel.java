@@ -100,6 +100,7 @@ public final class AccountModel extends Model {
         } else {
             WynntilsMod.info("Skipping silverbull subscription query ("
                     + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
+            return;
         }
 
         queryBuilder.build().executeQuery();

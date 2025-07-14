@@ -33,6 +33,9 @@ import net.minecraft.network.chat.Component;
 @StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class FunctionDumpFeature extends Feature {
+    // names are used for tablenames, which cascades to function/argument cross referencing & any ORM types generated
+    private static final String FUNCTION_NAME = "wynntilsFunction";
+    private static final String ARGUMENT_NAME = "wynntilsArgument";
     private static final Map<String, String> FUNCTION_MAP = new LinkedHashMap<>();
     private static final Map<String, String> ARGUMENT_MAP = new LinkedHashMap<>();
 
@@ -49,7 +52,7 @@ public class FunctionDumpFeature extends Feature {
                 ARGUMENT_MAP.put("name", "VARCHAR(255) NOT NULL");
                 ARGUMENT_MAP.put("description", "TEXT NOT NULL");
                 ARGUMENT_MAP.put("required", "BOOLEAN NOT NULL");
-                ARGUMENT_MAP.put("functionid", "INTEGER REFERENCES functions(id)");
+                ARGUMENT_MAP.put("functionid", "INTEGER REFERENCES " + FUNCTION_NAME + "(id)");
                 ARGUMENT_MAP.put("type", "type NOT NULL");
                 ARGUMENT_MAP.put("defaultvalue", "VARCHAR(255)");
 
@@ -76,7 +79,7 @@ public class FunctionDumpFeature extends Feature {
             dataLines.add(dataLine);
         }
 
-        writeToCSV(dataLines, "functions");
+        writeToCSV(dataLines, FUNCTION_NAME);
     }
 
     private void dumpArgumentsToCSV() {
@@ -100,7 +103,7 @@ public class FunctionDumpFeature extends Feature {
             }
         }
 
-        writeToCSV(dataLines, "arguments");
+        writeToCSV(dataLines, ARGUMENT_NAME);
     }
 
     private void writeToCSV(List<String[]> dataLines, String name) {
@@ -136,13 +139,13 @@ public class FunctionDumpFeature extends Feature {
                 + typeNames.stream().map(name -> "'" + name + "'").collect(Collectors.joining(",")) + ");";
 
         // order-preserving
-        String makeFunctionTable = "CREATE TABLE functions ("
+        String makeFunctionTable = "CREATE TABLE " + FUNCTION_NAME + " ("
                 + FUNCTION_MAP.entrySet().stream()
                         .map(entry -> entry.getKey() + " " + entry.getValue())
                         .collect(Collectors.joining(","))
                 + ");";
 
-        String makeArgumentTable = "CREATE TABLE arguments ("
+        String makeArgumentTable = "CREATE TABLE " + ARGUMENT_NAME + " ("
                 + ARGUMENT_MAP.entrySet().stream()
                         .map(entry -> entry.getKey() + " " + entry.getValue())
                         .collect(Collectors.joining(","))

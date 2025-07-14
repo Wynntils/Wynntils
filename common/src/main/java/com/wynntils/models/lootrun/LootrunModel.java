@@ -131,14 +131,21 @@ public final class LootrunModel extends Model {
             Pattern.compile(".+§7(?:.+?)?for (?:§b)?(\\d+)(?:§r)? Challenges");
     private static final Pattern RAINBOW_AMOUNT_PATTERN =
             Pattern.compile(".+§7(?:.+?)?next (?:§b)?(\\d+)(§(r|7))? Challenges");
-    private static final Pattern MISSION_COMPLETED_PATTERN = Pattern.compile("[À\\s]*§b§lMission Completed");
+    private static final Pattern MISSION_COMPLETED_PATTERN =
+            Pattern.compile("(?:[^\u0000-\u007F]+)?§b§lMission Completed");
 
     // Some missions don't have a mission completed message, so we also look for "active" missions
     // (missions that apply effects on challenge completion)
-    private static final Pattern COMPLETED_MISSION_PATTERN = Pattern.compile("[À\\s]*?§.(?<mission>"
+    private static final Pattern COMPLETED_MISSION_PATTERN = Pattern.compile("(?:[^\\u0000-\\u007F]+)?§.(?<mission>"
             + MissionType.missionTypes().stream().map(MissionType::getName).collect(Collectors.joining("|")) + ")");
     private static final Pattern ACTIVE_MISSION_PATTERN = Pattern.compile("[À\\s]*?§b§l(?<mission>"
             + MissionType.missionTypes().stream().map(MissionType::getName).collect(Collectors.joining("|")) + ")");
+
+    // These patterns detect when rerolls/sacrifices are gained after completing a challenge.
+    // (Gambling Beast, Warmth Devourer)
+    private static final Pattern CHALLENGE_GET_SACRIFICE_PATTERN =
+            Pattern.compile("\\[\\+(\\d+) Reward Sacrifices?\\]");
+    private static final Pattern CHALLENGE_GET_REROLL_PATTERN = Pattern.compile("\\[\\+(\\d+) Reward Rerolls?\\]");
 
     private static final float BEACON_REMOVAL_RADIUS = 25f;
 
@@ -329,6 +336,24 @@ public final class LootrunModel extends Model {
         if (matcher.find()) {
             MissionType mission = MissionType.fromName(matcher.group("mission"));
             addMission(mission);
+            return;
+        }
+
+        matcher = CHALLENGE_GET_SACRIFICE_PATTERN.matcher(styledText.getString());
+        if (matcher.find()) {
+            int amount = Integer.parseInt(matcher.group(1));
+            LootrunDetails details = getCurrentLootrunDetails();
+            details.setSacrifices(details.getSacrifices() + amount);
+            lootrunDetailsStorage.touched();
+            return;
+        }
+
+        matcher = CHALLENGE_GET_REROLL_PATTERN.matcher(styledText.getString());
+        if (matcher.find()) {
+            int amount = Integer.parseInt(matcher.group(1));
+            LootrunDetails details = getCurrentLootrunDetails();
+            details.setRerolls(details.getRerolls() + amount);
+            lootrunDetailsStorage.touched();
             return;
         }
 
@@ -728,6 +753,14 @@ public final class LootrunModel extends Model {
         return getCurrentLootrunDetails().getOrangeBeaconCounts().size();
     }
 
+    public int getSacrifices() {
+        return getCurrentLootrunDetails().getSacrifices();
+    }
+
+    public int getRerolls() {
+        return getCurrentLootrunDetails().getRerolls();
+    }
+
     public int getChallengesTillNextOrangeExpires() {
         List<Integer> orangeBeaconCounts = getCurrentLootrunDetails().getOrangeBeaconCounts();
 
@@ -755,6 +788,16 @@ public final class LootrunModel extends Model {
 
     private void resetBeaconStorage() {
         getCurrentLootrunDetails().setSelectedBeacons(new TreeMap<>());
+        lootrunDetailsStorage.touched();
+    }
+
+    private void resetSacrifices() {
+        getCurrentLootrunDetails().setSacrifices(0);
+        lootrunDetailsStorage.touched();
+    }
+
+    private void resetRerolls() {
+        getCurrentLootrunDetails().setRerolls(0);
         lootrunDetailsStorage.touched();
     }
 
@@ -795,8 +838,17 @@ public final class LootrunModel extends Model {
             getCurrentLootrunDetails().addMission(mission);
         }
 
-        lootrunDetailsStorage.touched();
+        int rerolls = mission.getRerolls();
+        if (rerolls > 0) {
+            getCurrentLootrunDetails().setRerolls(getCurrentLootrunDetails().getRerolls() + rerolls);
+        }
 
+        int sacrifices = mission.getSacrifices();
+        if (sacrifices > 0) {
+            getCurrentLootrunDetails().setSacrifices(getCurrentLootrunDetails().getSacrifices() + sacrifices);
+        }
+
+        lootrunDetailsStorage.touched();
         expectMissionComplete = false;
     }
 
@@ -830,6 +882,8 @@ public final class LootrunModel extends Model {
             setClosestBeacon(null);
             setLastTaskBeaconColor(null);
             resetBeaconCounts();
+            resetSacrifices();
+            resetRerolls();
 
             possibleTaskLocations = new HashSet<>();
 

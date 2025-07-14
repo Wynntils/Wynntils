@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.placement;
@@ -18,7 +18,6 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
-import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -86,7 +85,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private Edge selectedEdge = null;
 
     private boolean buttonsAtBottom = true;
-    private boolean renderAllOverlays = true;
+    private boolean renderAllOverlays;
     private boolean showPreview = true;
 
     private boolean snappingEnabled = true;
@@ -96,29 +95,31 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private double snapOffsetX;
     private double snapOffsetY;
 
-    private final OverlaySelectionScreen previousScreen;
+    private final Screen previousScreen;
 
-    private OverlayManagementScreen(OverlaySelectionScreen previousScreen, Overlay overlay) {
+    private OverlayManagementScreen(Screen previousScreen, Overlay overlay) {
         super(Component.translatable("screens.wynntils.overlayManagement.name"));
         this.previousScreen = previousScreen;
         selectedOverlay = overlay;
         fixedSelection = true;
+        renderAllOverlays = false;
         animationLengthRemaining = ANIMATION_LENGTH;
     }
 
-    private OverlayManagementScreen(OverlaySelectionScreen previousScreen) {
+    private OverlayManagementScreen(Screen previousScreen) {
         super(Component.translatable("screens.wynntils.overlayManagement.name"));
         this.previousScreen = previousScreen;
         selectedOverlay = null;
         fixedSelection = false;
+        renderAllOverlays = true;
         animationLengthRemaining = 0;
     }
 
-    public static Screen create(OverlaySelectionScreen previousScreen) {
+    public static Screen create(Screen previousScreen) {
         return new OverlayManagementScreen(previousScreen);
     }
 
-    public static Screen create(OverlaySelectionScreen previousScreen, Overlay overlay) {
+    public static Screen create(Screen previousScreen, Overlay overlay) {
         return new OverlayManagementScreen(previousScreen, overlay);
     }
 
@@ -527,7 +528,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void reloadConfigForOverlay() {
-        Managers.Config.reloadConfiguration();
+        Managers.Config.reloadConfiguration(true);
     }
 
     private void handleOverlayEdgeDrag(double dragX, double dragY) {

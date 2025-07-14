@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -47,7 +47,7 @@ public class PageSelectorButton extends WynntilsButton {
 
         Texture arrowTexture = this.forward ? Texture.FORWARD_ARROW_OFFSET : Texture.BACKWARD_ARROW_OFFSET;
 
-        if (isValid()) {
+        if (isValid() && !isHovered) {
             drawTexture(poseStack, arrowTexture, arrowTexture.width() / 2);
         } else {
             drawTexture(poseStack, arrowTexture, 0);

@@ -213,6 +213,11 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
             renderTooltips(guiGraphics, mouseX, mouseY);
         } else {
+            if (selectedOverlay == null) {
+                renderPreview = false;
+                return;
+            }
+
             renderOverlaysCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
             exitPreviewButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -475,7 +480,13 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         scrollOverlays(overlayScrollOffset);
     }
 
-    public void setSelectedOverlay(Overlay selectedOverlay) {
+    public void selectOverlay(Overlay selectedOverlay) {
+        configScrollOffset = 0;
+
+        setSelectedOverlay(selectedOverlay);
+    }
+
+    private void setSelectedOverlay(Overlay selectedOverlay) {
         if (this.selectedOverlay != null) {
             for (OverlayButton overlayButton : overlays) {
                 if (overlayButton.getOverlay() == this.selectedOverlay) {
@@ -486,8 +497,6 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         }
 
         this.selectedOverlay = selectedOverlay;
-
-        configScrollOffset = 0;
 
         populateConfigs();
         addOptionButtons();
@@ -516,9 +525,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         Managers.Overlay.removeIdFromOverlayGroup(overlayGroupHolder, overlayId);
 
         // Reload config
-        Managers.Config.loadConfigOptions(true, false);
+        Managers.Config.reloadConfiguration(false);
         Managers.Config.saveConfig();
-        Managers.Config.reloadConfiguration();
+        Managers.Config.reloadConfiguration(true);
 
         selectedOverlay = null;
         populateConfigs();
@@ -577,7 +586,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         int renderY = 31 + offsetY;
 
         for (Config<?> config : configsOptions) {
-            configs.add(new ConfigTile(148 + offsetX, renderY, 188, 41, this, config));
+            configs.add(new ConfigTile(148 + offsetX, renderY, 188, 41, this, config, selectedOverlay));
 
             renderY += 43;
         }
@@ -635,10 +644,13 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     private int getMaxConfigScrollOffset() {
-        return (selectedOverlay.getVisibleConfigOptions().size() - CONFIGS_PER_PAGE) * 43 + 6;
+        return (configs.size() - CONFIGS_PER_PAGE) * 43 + 6;
     }
 
     private void addInfoBox() {
+        // Save any changes made to other overlays first
+        Managers.Config.saveConfig();
+
         // Get the info box feature
         Feature infoBoxFeature = Managers.Feature.getFeatureInstance(InfoBoxFeature.class);
 
@@ -650,9 +662,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 int id = Managers.Overlay.extendOverlayGroup(group);
 
                 // Reload config
-                Managers.Config.loadConfigOptions(true, false);
+                Managers.Config.reloadConfiguration(false);
                 Managers.Config.saveConfig();
-                Managers.Config.reloadConfiguration();
+                Managers.Config.reloadConfiguration(true);
 
                 // Repopulate overlay list
                 populateOverlays();

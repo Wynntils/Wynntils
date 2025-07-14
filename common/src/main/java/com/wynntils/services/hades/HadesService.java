@@ -30,6 +30,7 @@ import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.providers.PlayerProvider;
 import com.wynntils.services.hades.type.PlayerStatus;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -223,8 +224,12 @@ public final class HadesService extends Service {
             float pY = (float) player.getY();
             float pZ = (float) player.getZ();
 
-            PlayerStatus newStatus =
-                    new PlayerStatus(pX, pY, pZ, Models.CharacterStats.getHealth(), Models.CharacterStats.getMana());
+            PlayerStatus newStatus = new PlayerStatus(
+                    pX,
+                    pY,
+                    pZ,
+                    Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY),
+                    Models.CharacterStats.getMana().orElse(CappedValue.EMPTY));
 
             if (newStatus.equals(lastSentStatus)) {
                 tickCountUntilUpdate = 1;

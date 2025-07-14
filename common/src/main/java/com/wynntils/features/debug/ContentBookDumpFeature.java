@@ -21,6 +21,7 @@ import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityLength;
 import com.wynntils.models.activities.type.ActivityRequirements;
+import com.wynntils.models.activities.type.ActivityRewardType;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.services.mapdata.features.type.MapLocation;
@@ -252,7 +253,7 @@ public class ContentBookDumpFeature extends Feature {
             String lengthInfo,
             ActivityDifficulty difficulty,
             DumpableActivityRequirements requirements,
-            List<String> rewards,
+            Map<ActivityRewardType, List<String>> rewards,
             Location location) {
         private static DumpableActivityInfo fromActivityInfo(ActivityInfo activityInfo) {
             return new DumpableActivityInfo(
@@ -264,7 +265,10 @@ public class ContentBookDumpFeature extends Feature {
                     activityInfo.lengthInfo().orElse(""),
                     activityInfo.difficulty().orElse(null),
                     DumpableActivityRequirements.fromActivityRequirements(activityInfo.requirements()),
-                    activityInfo.rewards(),
+                    activityInfo.rewards().entrySet().stream()
+                            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream()
+                                    .map(StyledText::getString)
+                                    .toList())),
                     StyledTextUtils.extractLocation(activityInfo.description().orElse(StyledText.EMPTY))
                             .orElse(null));
         }

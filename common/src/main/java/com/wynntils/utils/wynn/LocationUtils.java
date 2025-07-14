@@ -39,15 +39,14 @@ public final class LocationUtils {
     }
 
     public static void shareLocation(String target) {
-        String locationString = "My location is at [" + (int) McUtils.player().position().x + ", "
-                + (int) McUtils.player().position().y + ", "
-                + (int) McUtils.player().position().z + "]";
+        String locationString =
+                "My location is at " + new Location(McUtils.player().blockPosition());
 
         LocationUtils.sendShareMessage(target, locationString);
     }
 
     public static void shareCompass(String target, Location compass) {
-        String locationString = "My compass is at [" + compass.x + ", " + compass.y + ", " + compass.z + "]";
+        String locationString = "My compass is at " + compass;
 
         LocationUtils.sendShareMessage(target, locationString);
     }

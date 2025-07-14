@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.statuseffects.type;
@@ -13,6 +13,7 @@ public class StatusEffect implements Comparable<StatusEffect> {
     private final StyledText modifier; // The modifier of the consumable (+100, 23 etc.)
     private final StyledText modifierSuffix; // The suffix of the modifier (/3s, %)
     private final Double modifierValue;
+    private final int duration;
     private StyledText displayedTime; // The displayed time remaining. Allows for xx:xx for infinite time effects.
     private StyledText prefix; // The prefix to display before the name. Not included in identifying name.
 
@@ -21,7 +22,8 @@ public class StatusEffect implements Comparable<StatusEffect> {
             StyledText modifier,
             StyledText modifierSuffix,
             StyledText displayedTime,
-            StyledText prefix) {
+            StyledText prefix,
+            int duration) {
         this.name = name;
         this.displayedTime = displayedTime;
         this.prefix = prefix;
@@ -39,6 +41,7 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 displayedTime);
         this.modifierValue =
                 modifier != StyledText.EMPTY ? Double.parseDouble(modifier.getStringWithoutFormatting()) : null;
+        this.duration = duration;
     }
 
     /**
@@ -97,6 +100,13 @@ public class StatusEffect implements Comparable<StatusEffect> {
 
     public double getModifierValue() {
         return this.modifierValue;
+    }
+
+    /**
+     * @return Time in seconds, -1 for infinite
+     */
+    public int getDuration() {
+        return duration;
     }
 
     @Override

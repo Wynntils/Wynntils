@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
@@ -19,16 +19,27 @@ public abstract class AbstractMeterSegmentMatcher implements ActionBarSegmentMat
     // The end of a meter segment, a spacer
     private static final String SEGMENT_END = "\uDAFF\uDFF3";
 
-    private final Pattern meterRegex =
-            Pattern.compile(SEGMENT_START + "(?<value>[" + String.join("", getCharacterRange()) + "])" + SEGMENT_END);
+    private final Pattern segmentMatcher = Pattern.compile(SEGMENT_START
+            + (isMultipleSegments()
+                    ? "(?<value>[" + String.join("", getCharacterRange()) + "])+"
+                    : "(?<value>[" + String.join("", getCharacterRange()) + "])")
+            + SEGMENT_END);
 
     protected abstract List<String> getCharacterRange();
+
+    /**
+     * Override this method if the segment matcher should match multiple characters in the range for this segment.
+     * @return true if the matcher can match multiple characters, false if it should only match a single character.
+     */
+    protected boolean isMultipleSegments() {
+        return false;
+    }
 
     protected abstract ActionBarSegment createSegment(String segmentText, String segmentValue);
 
     @Override
     public ActionBarSegment parse(String actionBar) {
-        Matcher matcher = meterRegex.matcher(actionBar);
+        Matcher matcher = this.segmentMatcher.matcher(actionBar);
         if (!matcher.find()) return null;
         return createSegment(matcher.group(), matcher.group("value"));
     }

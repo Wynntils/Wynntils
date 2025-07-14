@@ -23,6 +23,8 @@ public class LootrunDetails {
     private int rainbowBeaconCount = 0;
     private int rainbowAmount = -1;
     private List<MissionType> missions = new ArrayList<>();
+    private int sacrifices = 0;
+    private int rerolls = 0;
 
     public Map<LootrunBeaconKind, Integer> getSelectedBeacons() {
         return Collections.unmodifiableMap(selectedBeacons);
@@ -110,5 +112,21 @@ public class LootrunDetails {
 
     public void addMission(MissionType newMission) {
         missions.add(newMission);
+    }
+
+    public int getSacrifices() {
+        return sacrifices;
+    }
+
+    public void setSacrifices(int sacrifices) {
+        this.sacrifices = sacrifices;
+    }
+
+    public int getRerolls() {
+        return rerolls;
+    }
+
+    public void setRerolls(int rerolls) {
+        this.rerolls = rerolls;
     }
 }

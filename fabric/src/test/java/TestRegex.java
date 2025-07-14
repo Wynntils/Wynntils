@@ -23,6 +23,7 @@ import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
+import com.wynntils.models.items.annotators.gui.GambitAnnotator;
 import com.wynntils.models.items.annotators.gui.LeaderboardSeasonAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
@@ -954,12 +955,30 @@ public class TestRegex {
     }
 
     @Test
-    public void CharacterAnnotator_CLASS_MENU_CLASS_PATTERN() {
-        PatternTester p = new PatternTester(CharacterAnnotator.class, "CLASS_MENU_CLASS_PATTERN");
+    public void CharacterAnnotator_CHARACTER_MENU_CLASS_PATTERN() {
+        PatternTester p = new PatternTester(CharacterAnnotator.class, "CHARACTER_MENU_CLASS_PATTERN");
 
-        p.shouldMatch("§e- §7Class: §6\uE029§5\uE028§r §fAssassin");
-        p.shouldMatch("§e- §7Class: §c\uE027§b\uE083§3\uE026§r §fKnight");
-        p.shouldMatch("§e- §7Class: §fWarrior");
+        p.shouldMatch("§6- §7Class: §fMage'"); // Mage
+        p.shouldMatch("§6- §7Class: §fHunter"); // Hunter
+        p.shouldMatch("§6- §7Class: §fSkyseer"); // Skyseer
+        p.shouldMatch("§6- §7Class: §fKnight"); // Knight
+        p.shouldMatch("§6- §7Class: §fNinja"); // Ninja
+        p.shouldMatch("§6- §7Class: §b\uE083§7 §fArcher"); // Ultimate Ironman Archer
+        p.shouldMatch("§6- §7Class: §5\uE028§7 §fDark Wizard"); // Hunted Dark Wizard
+        p.shouldMatch("§6- §7Class: §6\uE029§7 §fShaman"); // Ironman Shaman
+        p.shouldMatch("§6- §7Class: §c\uE027§7 §fAssassin"); // Hardcore Assassin
+        p.shouldMatch("§6- §7Class: §3\uE026§7 §fWarrior"); // Craftsman Warrior
+        p.shouldMatch("§6- §7Class: §c\uE027§b\uE083§3\uE026§5\uE028§7 §fArcher"); // HUICH Archer
+    }
+
+    @Test
+    public void CharacterAnnotator_CHARACTER_MENU_LEVEL_PATTERN() {
+        PatternTester p = new PatternTester(CharacterAnnotator.class, "CHARACTER_MENU_LEVEL_PATTERN");
+
+        p.shouldMatch("§6- §7Level: §f106§7 §8(0%)");
+        p.shouldMatch("§6- §7Level: §f105§7 §8(3.14%)");
+        p.shouldMatch("§6- §7Level: §f12§7 §8(40.54%)");
+        p.shouldMatch("§6- §7Level: §f1§7 §8(0.67%)");
     }
 
     @Test
@@ -999,5 +1018,12 @@ public class TestRegex {
         PatternTester p = new PatternTester(WorldStateModel.class, "HOUSING_NAME");
         p.shouldMatch("§f  §lChiefs Of Corkus' HQ");
         p.shouldMatch("§f  §lShadow's Home");
+    }
+
+    @Test
+    public void GambitAnnotator_GAMBIT_NAME() {
+        PatternTester p = new PatternTester(GambitAnnotator.class, "NAME_PATTERN");
+        p.shouldMatch("§#54fffcff§lIngenuous Mage's Gambit");
+        p.shouldMatch("§#ac2c01ff§lArcane Incontinent's Gambit");
     }
 }

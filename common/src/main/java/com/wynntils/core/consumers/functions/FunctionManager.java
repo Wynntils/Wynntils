@@ -32,7 +32,9 @@ import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldEventFunctions;
 import com.wynntils.functions.WorldFunctions;
 import com.wynntils.functions.WynnAlphabetFunctions;
+import com.wynntils.functions.WynnFontFunctions;
 import com.wynntils.functions.generic.CappedFunctions;
+import com.wynntils.functions.generic.ColorFunctions;
 import com.wynntils.functions.generic.ConditionalFunctions;
 import com.wynntils.functions.generic.LocationFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
@@ -41,6 +43,7 @@ import com.wynntils.functions.generic.NamedFunctions;
 import com.wynntils.functions.generic.RangedFunctions;
 import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.ErrorOr;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -199,6 +202,8 @@ public final class FunctionManager extends Manager {
                 DecimalFormat decimalFormat = new DecimalFormat("0." + "0".repeat(decimals));
                 return decimalFormat.format(number);
             }
+        } else if (value instanceof CustomColor color) {
+            return "§" + color.toHexString();
         }
 
         return value.toString();
@@ -273,9 +278,10 @@ public final class FunctionManager extends Manager {
 
         String calculatedString = doFormat(escapedTemplate);
 
-        // Turn escaped {} (`\[\` and `\]\`) back into real {}
+        // Turn escaped {}& (`\[\`, `\]\` `\&\`) back into real {}&
         calculatedString = calculatedString.replace("\\[\\", "{");
         calculatedString = calculatedString.replace("\\]\\", "}");
+        calculatedString = calculatedString.replace("\\&\\", "&");
 
         return Arrays.stream(calculatedString.split("\n"))
                 .map(StyledText::fromString)
@@ -283,23 +289,14 @@ public final class FunctionManager extends Manager {
     }
 
     private String parseColorCodes(String toProcess) {
-        // For every & symbol, check if the next symbol is a color code and if so, replace it with §
-        // But don't do it if a \ precedes the &
-        String validColors = "0123456789abcdefklmnor";
-        StringBuilder sb = new StringBuilder(toProcess);
-        for (int i = 0; i < sb.length(); i++) {
-            if (sb.charAt(i) == '&') { // char == &
-                if (i + 1 < sb.length()
-                        && validColors.contains(String.valueOf(sb.charAt(i + 1)))) { // char after is valid color
-                    if (i - 1 < 0 || sb.charAt(i - 1) != '\\') { // & is first char || char before is not \
-                        sb.setCharAt(i, '§');
-                    } else if (sb.charAt(i - 1) == '\\') { // & is preceded by \, just remove the \
-                        sb.deleteCharAt(i - 1);
-                    }
-                }
-            }
-        }
-        return sb.toString();
+        // Replace &<code> with §<code> if not escaped (e.g., &a → §a, but \&\a stays unchanged)
+        // doEscapeFormat preprocesses the string and replaces \& with \&\ so that it doesn't get replaced
+        String processed = toProcess.replaceAll("&(?<!\\\\)([0-9a-fA-Fk-oK-OrR])", "§$1");
+
+        // Replace &#AARRGGBB with §#AARRGGBB for hex colors
+        processed = processed.replaceAll("&(?<!\\\\)(#[0-9A-Fa-f]{8})", "§$1");
+
+        return processed;
     }
 
     private String doEscapeFormat(char escaped) {
@@ -313,7 +310,8 @@ public final class FunctionManager extends Manager {
             case 'L' -> EmeraldUnits.LIQUID_EMERALD.getSymbol();
             case 'M' -> "✺";
             case 'H' -> "❤";
-            default -> String.valueOf(escaped);
+            case '&' -> "\\&\\";
+            default -> '\\' + String.valueOf(escaped);
         };
     }
 
@@ -354,7 +352,20 @@ public final class FunctionManager extends Manager {
         registerFunction(new CappedFunctions.PercentageFunction());
         registerFunction(new CappedFunctions.RemainingFunction());
 
+        registerFunction(new ColorFunctions.BlinkShaderFunction());
+        registerFunction(new ColorFunctions.BrightnessShiftFunction());
+        registerFunction(new ColorFunctions.FadeShaderFunction());
+        registerFunction(new ColorFunctions.FromHexFunction());
+        registerFunction(new ColorFunctions.FromRgbFunction());
+        registerFunction(new ColorFunctions.FromRgbPercentFunction());
+        registerFunction(new ColorFunctions.GradientShaderFunction());
+        registerFunction(new ColorFunctions.HueShiftFunction());
+        registerFunction(new ColorFunctions.RainbowShaderFunction());
+        registerFunction(new ColorFunctions.SaturationShiftFunction());
+        registerFunction(new ColorFunctions.ToHexStringFunction());
+
         registerFunction(new ConditionalFunctions.IfCappedValueFunction());
+        registerFunction(new ConditionalFunctions.IfCustomColorFunction());
         registerFunction(new ConditionalFunctions.IfNumberFunction());
         registerFunction(new ConditionalFunctions.IfStringFunction());
 
@@ -451,8 +462,11 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
+        registerFunction(new CharacterFunctions.OphanimActive());
+        registerFunction(new CharacterFunctions.OphanimOrb());
         registerFunction(new CharacterFunctions.SprintFunction());
         registerFunction(new CharacterFunctions.StatusEffectActiveFunction());
+        registerFunction(new CharacterFunctions.StatusEffectDurationFunction());
         registerFunction(new CharacterFunctions.StatusEffectsFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
@@ -557,6 +571,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
         registerFunction(new LootrunFunctions.LootrunTimeFunction());
         registerFunction(new LootrunFunctions.LootrunBeaconVibrantFunction());
+        registerFunction(new LootrunFunctions.LootrunSacrificesFunction());
+        registerFunction(new LootrunFunctions.LootrunRerollsFunction());
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
@@ -573,6 +589,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.MaterialDryStreak());
         registerFunction(new ProfessionFunctions.ProfessionLevelFunction());
         registerFunction(new ProfessionFunctions.ProfessionPercentageFunction());
+        registerFunction(new ProfessionFunctions.ProfessionXpFunction());
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
 
@@ -649,5 +666,8 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new WynnAlphabetFunctions.TranscribeGavellianFunction());
         registerFunction(new WynnAlphabetFunctions.TranscribeWynnicFunction());
+
+        registerFunction(new WynnFontFunctions.ToBackgroundTextFunction());
+        registerFunction(new WynnFontFunctions.ToFancyTextFunction());
     }
 }
