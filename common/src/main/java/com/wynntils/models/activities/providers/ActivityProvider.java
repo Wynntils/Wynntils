@@ -13,7 +13,6 @@ import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.utils.MapDataUtils;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,20 +24,20 @@ public class ActivityProvider extends BuiltInProvider {
     private ActivityLocation spawnLocation;
     private ActivityLocation trackedActivityLocation;
 
-    public void setSpawnLocation(Location spawnLocation) {
+    public void setSpawnLocation(ActivityType activityType, Location spawnLocation) {
         if (spawnLocation == null) {
             this.spawnLocation = null;
         } else {
-            this.spawnLocation = new ActivityLocation(ACTIVITY_LOCATION_NAME, ActivityType.QUEST, spawnLocation);
+            this.spawnLocation = new ActivityLocation(ACTIVITY_LOCATION_NAME, activityType, spawnLocation);
         }
     }
 
-    public void setTrackedActivityLocation(Location trackedActivityLocation, CustomColor activityColor) {
-        if (trackedActivityLocation == null || activityColor == null) {
+    public void setTrackedActivityLocation(ActivityType activityType, Location trackedActivityLocation) {
+        if (trackedActivityLocation == null) {
             this.trackedActivityLocation = null;
         } else {
-            this.trackedActivityLocation = new ActivityLocation(
-                    Models.Activity.getTrackedName(), Models.Activity.getTrackedType(), trackedActivityLocation);
+            this.trackedActivityLocation =
+                    new ActivityLocation(Models.Activity.getTrackedName(), activityType, trackedActivityLocation);
         }
     }
 
