@@ -8,21 +8,27 @@ import com.wynntils.utils.mc.type.Location;
 import net.minecraft.core.Position;
 
 public enum LootrunLocation {
-    SILENT_EXPANSE(new Location(0, 0, 0)),
-    CORKUS(new Location(0, 0, 0)),
-    MOLTEN_HEIGHTS_HIKE(new Location(0, 0, 0)),
-    SKY_ISLANDS_EXPLORATION(new Location(0, 0, 0)),
-    CANYON_OF_THE_LOST_EXCURSION(new Location(0, 0, 0)),
-    UNKNOWN(null);
+    SILENT_EXPANSE(new Location(990, 77, -785), "\uDAFF\uDFF2\uE00A\uDAFF\uDF6F\uF00A"),
+    CORKUS(new Location(-1560, 97, -2675), "\uDAFF\uDFF2\uE00A\uDAFF\uDF6F\uF007"),
+    MOLTEN_HEIGHTS_HIKE(new Location(1270, 10, -5130), "\uDAFF\uDFF2\uE00A\uDAFF\uDF6F\uF008"),
+    SKY_ISLANDS_EXPLORATION(new Location(1035, 135, -4420), "\uDAFF\uDFF2\uE00A\uDAFF\uDF6F\uF009"),
+    CANYON_OF_THE_LOST_EXCURSION(new Location(580, 78, -5021), "\uDAFF\uDFF2\uE00A\uDAFF\uDF6F\uF006"),
+    UNKNOWN(null, null);
 
     private final Location location;
+    private final String containerTitle;
 
-    LootrunLocation(Location location) {
+    LootrunLocation(Location location, String containerTitle) {
         this.location = location;
+        this.containerTitle = containerTitle;
     }
 
     public Location getLocation() {
         return location;
+    }
+
+    public String getContainerTitle() {
+        return containerTitle;
     }
 
     public static LootrunLocation getNearest(Location location) {
@@ -59,5 +65,15 @@ public enum LootrunLocation {
         }
 
         return nearest != null ? nearest : UNKNOWN;
+    }
+
+    public static LootrunLocation fromContainerTitle(String title) {
+        for (LootrunLocation location : values()) {
+            if (location.getContainerTitle() != null
+                    && location.getContainerTitle().equals(title)) {
+                return location;
+            }
+        }
+        return UNKNOWN;
     }
 }

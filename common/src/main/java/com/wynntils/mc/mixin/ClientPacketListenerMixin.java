@@ -18,6 +18,7 @@ import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChunkReceivedEvent;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
+import com.wynntils.mc.event.ContainerOpenEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.EntityPositionSyncEvent;
@@ -91,6 +92,7 @@ import net.minecraft.network.protocol.ping.ClientboundPongResponsePacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -113,6 +115,12 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     @Shadow
     @Final
     private FeatureFlagSet enabledFeatures;
+
+    @Unique
+    private MenuType<?> pendingContainerMenuType = null;
+
+    @Unique
+    private Component pendingContainerTitle = null;
 
     @Shadow
     protected abstract ParseResults<SharedSuggestionProvider> parseCommand(String command);
@@ -256,6 +264,12 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         MenuEvent.MenuOpenedEvent event =
                 new MenuEvent.MenuOpenedEvent.Post(packet.getType(), packet.getTitle(), packet.getContainerId());
         MixinHelper.post(event);
+
+        // Store container info for when content arrives (only for actual containers, not player inventory)
+        if (packet.getContainerId() != 0) {
+            pendingContainerMenuType = packet.getType();
+            pendingContainerTitle = packet.getTitle();
+        }
     }
 
     @Inject(
@@ -311,6 +325,16 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 
         MixinHelper.post(new ContainerSetContentEvent.Post(
                 packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
+
+        // Fire ContainerOpenEvent when we get the first content for a newly opened container
+        if (packet.getContainerId() != 0 && pendingContainerMenuType != null && pendingContainerTitle != null) {
+            MixinHelper.post(new ContainerOpenEvent(
+                    pendingContainerMenuType, pendingContainerTitle, McUtils.containerMenu(), packet.getItems()));
+
+            // Clear pending data
+            pendingContainerMenuType = null;
+            pendingContainerTitle = null;
+        }
     }
 
     @Inject(

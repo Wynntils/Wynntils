@@ -22,6 +22,7 @@ import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.particle.event.ParticleVerifiedEvent;
 import com.wynntils.handlers.particle.type.ParticleType;
 import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.ContainerOpenEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.extension.EntityExtension;
@@ -30,6 +31,7 @@ import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.containers.containers.reward.LootrunRewardContainer;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearItem;
@@ -80,7 +82,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Display;
@@ -104,6 +105,7 @@ public final class LootrunModel extends Model {
     //    ÀÀÀ§f260§7 Lootrun Experience§r       ÀÀ§7Challenges Completed: §f13
 
     private static final Pattern LOOTRUN_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC61§6§lLootrun Completed!");
+    private static final Pattern LOOTRUN_STARTED_PATTERN = Pattern.compile("§7Prepare to Lootrun");
 
     // Rewards
     private static final Pattern REWARD_PULLS_PATTERN = Pattern.compile("§.(\\d+)§7 Reward Pulls§r");
@@ -518,7 +520,14 @@ public final class LootrunModel extends Model {
         dryPulls.store(dryPulls.get() + event.getRewardPulls());
         checkedItemEntities.clear();
 
-        getCurrentLootrunDetails().setLatestRewardPulls(getCurrentLootrunLocation(), event.getRewardPulls());
+        int totalPulls = event.getRewardPulls() + getSacrificedPulls(getCurrentLootrunLocation());
+        getCurrentLootrunDetails().setLatestRewardPulls(getCurrentLootrunLocation(), totalPulls);
+        lootrunDetailsStorage.touched();
+    }
+
+    @SubscribeEvent
+    public void onLootrunFailed(LootrunFinishedEvent.Failed event) {
+        getCurrentLootrunDetails().setSacrificedPulls(getCurrentLootrunLocation(), 0);
         lootrunDetailsStorage.touched();
     }
 
@@ -781,8 +790,8 @@ public final class LootrunModel extends Model {
         return getCurrentLootrunDetails().getRainbowBeaconCount();
     }
 
-    public int getSacrificedPulls() {
-        return getCurrentLootrunDetails().getSacrificedPulls(getCurrentLootrunLocation());
+    public int getSacrificedPulls(LootrunLocation location) {
+        return getCurrentLootrunDetails().getSacrificedPulls(location);
     }
 
     private void setLastTaskBeaconColor(LootrunBeaconKind lootrunBeaconKind) {
@@ -808,6 +817,11 @@ public final class LootrunModel extends Model {
 
     private void resetRerolls() {
         getCurrentLootrunDetails().setRerolls(0);
+        lootrunDetailsStorage.touched();
+    }
+
+    private void resetLocation() {
+        getCurrentLootrunDetails().setLocation(LootrunLocation.UNKNOWN);
         lootrunDetailsStorage.touched();
     }
 
@@ -892,7 +906,6 @@ public final class LootrunModel extends Model {
             setClosestBeacon(null);
             setLastTaskBeaconColor(null);
             resetBeaconCounts();
-            resetSacrifices();
             resetRerolls();
 
             possibleTaskLocations = new HashSet<>();
@@ -1248,19 +1261,24 @@ public final class LootrunModel extends Model {
 
     @SubscribeEvent
     public void onConfirmationClick(ContainerClickEvent event) {
-        Component itemName = event.getItemStack().getOrDefault(DataComponents.CUSTOM_NAME, null);
+        if (!(Models.Container.getCurrentContainer() instanceof LootrunRewardContainer container)) return;
+
+        Component itemName = event.getItemStack().getCustomName();
         LootrunLocation location = getCurrentLootrunLocation();
 
-        // TODO: Add extra checks to ensure this is the correct confirmation item. Probably by changing these checks to
-        // regex patterns
-        if (itemName.getString().contains("Confirm Sacrifice")) {
+        if (itemName == null) return;
+
+        if (container.getConfirmSacrificePattern().matcher(itemName.getString()).find()) {
             int sacrificedPulls = getSacrificedPullsCalc(
                     getCurrentLootrunDetails().getLatestRewardPulls(location),
-                    getCurrentLootrunDetails().getSacrificedPulls(location));
+                    getCurrentLootrunDetails().getSacrifices());
 
             getCurrentLootrunDetails().setSacrificedPulls(location, sacrificedPulls);
             lootrunDetailsStorage.touched();
-        } else if (itemName.getString().contains("Confirm Rewards")) {
+        } else if (container
+                .getConfirmRewardsPattern()
+                .matcher(itemName.getString())
+                .find()) {
             getCurrentLootrunDetails().setSacrificedPulls(location, 0);
             lootrunDetailsStorage.touched();
         }
@@ -1269,9 +1287,29 @@ public final class LootrunModel extends Model {
     @SubscribeEvent
     public void onLootrunStart(TitleSetTextEvent event) {
         String text = event.getComponent().getString();
+        if(!LOOTRUN_STARTED_PATTERN.matcher(text).matches()) return;
 
-        // TODO: Look into maybe moving this to a regex pattern
-        if (text.contains("Prepare to Lootrun")) getCurrentLootrunDetails().setLocation(getCurrentLootrunLocation());
+        resetLocation();
+        getCurrentLootrunDetails().setLocation(getCurrentLootrunLocation());
+
+        // Sacrifices are reset here as opposed to at the end of the run, as they are needed to calculate the sacrificed
+        // pulls.
+        resetSacrifices();
+    }
+
+    @SubscribeEvent
+    public void onContainerOpen(ContainerOpenEvent event) {
+        if (!(Models.Container.getCurrentContainer() instanceof LootrunRewardContainer container)) return;
+
+        event.getItems().forEach(itemStack -> {
+            if (itemStack.isEmpty()) return;
+
+            Component itemName = itemStack.getCustomName();
+            if (container.getCloseChestPattern().matcher(itemName.getString()).find()) {
+                getCurrentLootrunDetails().setSacrificedPulls(getCurrentLootrunLocation(), 0);
+                lootrunDetailsStorage.touched();
+            }
+        });
     }
 
     public LootrunLocation getCurrentLootrunLocation() {

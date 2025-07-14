@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
+import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -282,7 +283,8 @@ public class LootrunFunctions {
     public static class LootrunSacrificedPullsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getSacrificedPulls();
+            LootrunLocation location = Models.Lootrun.getCurrentLootrunLocation();
+            return Models.Lootrun.getSacrificedPulls(location);
         }
     }
 
