@@ -1329,18 +1329,4 @@ public final class LootrunModel extends Model {
         int savedPulls = (int) Math.ceil(pulls * (1 - Math.pow(0.5, sacrifices)));
         return Math.max(0, savedPulls);
     }
-
-    private int getRerollsFromMission(MissionType mission) {
-        return switch (mission) {
-            case HIGH_ROLLER, ULTIMATE_SACRIFICE, SAFETY_SEEKER -> 2;
-            default -> 0;
-        };
-    }
-
-    private int getSacrificesFromMission(MissionType mission) {
-        return switch (mission) {
-            case REDEMPTION, ULTIMATE_SACRIFICE, SAFETY_SEEKER -> 1;
-            default -> 0;
-        };
-    }
 }
