@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.type;
@@ -13,7 +13,7 @@ public enum MissionType {
     FAILED("Failed", ChatFormatting.DARK_RED),
 
     CLEANSING_GREED("Cleansing Greed", ChatFormatting.YELLOW),
-    HIGH_ROLLER("High Roller", ChatFormatting.YELLOW),
+    HIGH_ROLLER("High Roller", ChatFormatting.YELLOW, 0, 2),
     HOARDER("Hoarder", ChatFormatting.YELLOW),
     MATERIALISM("Materialism", ChatFormatting.YELLOW),
     TREASURE_HUNTING("Treasure Hunting", ChatFormatting.YELLOW),
@@ -28,18 +28,29 @@ public enum MissionType {
     JESTERS_TRICK("Jester's Trick", ChatFormatting.DARK_PURPLE),
     BACKUP_BEAT("Backup Beat", ChatFormatting.GREEN),
     STASIS("Stasis", ChatFormatting.GREEN),
-    SAFETY_SEEKER("Safety Seeker", ChatFormatting.GREEN),
+    SAFETY_SEEKER("Safety Seeker", ChatFormatting.GREEN, 1, 2),
     GAMBLING_BEAST("Gambling Beast", ChatFormatting.RED),
-    REDEMPTION("Redemption", ChatFormatting.RED),
-    ULTIMATE_SACRIFICE("Ultimate Sacrifice", ChatFormatting.RED),
+    REDEMPTION("Redemption", ChatFormatting.RED, 1, 0),
+    ULTIMATE_SACRIFICE("Ultimate Sacrifice", ChatFormatting.RED, 1, 2),
     WARMTH_DEVOURER("Warmth Devourer", ChatFormatting.RED);
 
     private final String name;
     private final ChatFormatting color;
+    private final int sacrifices;
+    private final int rerolls;
 
     MissionType(String name, ChatFormatting color) {
         this.name = name;
         this.color = color;
+        this.sacrifices = 0;
+        this.rerolls = 0;
+    }
+
+    MissionType(String name, ChatFormatting color, int sacrifices, int rerolls) {
+        this.name = name;
+        this.color = color;
+        this.sacrifices = sacrifices;
+        this.rerolls = rerolls;
     }
 
     public String getName() {
@@ -52,6 +63,14 @@ public enum MissionType {
 
     public ChatFormatting getColor() {
         return color;
+    }
+
+    public int getSacrifices() {
+        return sacrifices;
+    }
+
+    public int getRerolls() {
+        return rerolls;
     }
 
     public static MissionType fromName(String name) {
