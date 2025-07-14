@@ -1287,7 +1287,7 @@ public final class LootrunModel extends Model {
     @SubscribeEvent
     public void onLootrunStart(TitleSetTextEvent event) {
         String text = event.getComponent().getString();
-        if(!LOOTRUN_STARTED_PATTERN.matcher(text).matches()) return;
+        if (!LOOTRUN_STARTED_PATTERN.matcher(text).matches()) return;
 
         resetLocation();
         getCurrentLootrunDetails().setLocation(getCurrentLootrunLocation());
