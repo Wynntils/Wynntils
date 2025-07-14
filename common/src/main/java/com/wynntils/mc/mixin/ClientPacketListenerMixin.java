@@ -38,7 +38,6 @@ import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
-import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
@@ -76,7 +75,6 @@ import net.minecraft.network.protocol.game.ClientboundResetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
-import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -376,16 +374,6 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (event.isCanceled()) {
             ci.cancel();
         }
-    }
-
-    @Inject(
-            method = "handleSetExperience(Lnet/minecraft/network/protocol/game/ClientboundSetExperiencePacket;)V",
-            at = @At("RETURN"))
-    private void handleSetExperiencePost(ClientboundSetExperiencePacket packet, CallbackInfo ci) {
-        if (!isRenderThread()) return;
-
-        MixinHelper.post(new SetXpEvent(
-                packet.getExperienceProgress(), packet.getTotalExperience(), packet.getExperienceLevel()));
     }
 
     @Inject(

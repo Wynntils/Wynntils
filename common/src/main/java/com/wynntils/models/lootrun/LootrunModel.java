@@ -147,8 +147,8 @@ public final class LootrunModel extends Model {
     private static final Pattern ACTIVE_MISSION_PATTERN = Pattern.compile("[À\\s]*?§b§l(?<mission>"
             + MissionType.missionTypes().stream().map(MissionType::getName).collect(Collectors.joining("|")) + ")");
 
-    // These patterns detect when rerolls/sacrifices are gained after completing a challenge. (Gambling Beast, Warmth
-    // Devourer)
+    // These patterns detect when rerolls/sacrifices are gained after completing a challenge.
+    // (Gambling Beast, Warmth Devourer)
     private static final Pattern CHALLENGE_GET_SACRIFICE_PATTERN =
             Pattern.compile("\\[\\+(\\d+) Reward Sacrifices?\\]");
     private static final Pattern CHALLENGE_GET_REROLL_PATTERN = Pattern.compile("\\[\\+(\\d+) Reward Rerolls?\\]");
@@ -862,12 +862,12 @@ public final class LootrunModel extends Model {
             getCurrentLootrunDetails().addMission(mission);
         }
 
-        int rerolls = getRerollsFromMission(mission);
+        int rerolls = mission.getRerolls();
         if (rerolls > 0) {
             getCurrentLootrunDetails().setRerolls(getCurrentLootrunDetails().getRerolls() + rerolls);
         }
 
-        int sacrifices = getSacrificesFromMission(mission);
+        int sacrifices = mission.getSacrifices();
         if (sacrifices > 0) {
             getCurrentLootrunDetails().setSacrifices(getCurrentLootrunDetails().getSacrifices() + sacrifices);
         }

@@ -64,7 +64,7 @@ import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
 import com.wynntils.features.inventory.DisableRecipeBookFeature;
-import com.wynntils.features.inventory.DurabilityArcFeature;
+import com.wynntils.features.inventory.DurabilityOverlayFeature;
 import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.inventory.ExtendedItemCountFeature;
@@ -272,7 +272,7 @@ public final class FeatureManager extends Manager {
         // region inventory
         registerFeature(new ContainerSearchFeature());
         registerFeature(new DisableRecipeBookFeature());
-        registerFeature(new DurabilityArcFeature());
+        registerFeature(new DurabilityOverlayFeature());
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new ExtendedItemCountFeature());
