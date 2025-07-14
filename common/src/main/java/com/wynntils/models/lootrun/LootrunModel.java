@@ -1308,6 +1308,7 @@ public final class LootrunModel extends Model {
             if (container.getCloseChestPattern().matcher(itemName.getString()).find()) {
                 getCurrentLootrunDetails().setSacrificedPulls(getCurrentLootrunLocation(), 0);
                 lootrunDetailsStorage.touched();
+                return;
             }
         });
     }
