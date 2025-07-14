@@ -15,11 +15,9 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
-import com.wynntils.models.worlds.actionbar.matchers.CharacterCreationSegmentMatcher;
-import com.wynntils.models.worlds.actionbar.matchers.CharacterSelectionSegmentMatcher;
+import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
+import com.wynntils.models.character.actionbar.segments.CharacterSelectionSegment;
 import com.wynntils.models.worlds.actionbar.matchers.WynncraftVersionSegmentMatcher;
-import com.wynntils.models.worlds.actionbar.segments.CharacterCreationSegment;
-import com.wynntils.models.worlds.actionbar.segments.CharacterSelectionSegment;
 import com.wynntils.models.worlds.actionbar.segments.WynncraftVersionSegment;
 import com.wynntils.models.worlds.bossbars.SkipCutsceneBar;
 import com.wynntils.models.worlds.event.CutsceneStartedEvent;
@@ -68,8 +66,6 @@ public final class WorldStateModel extends Model {
     public WorldStateModel() {
         super(List.of());
 
-        Handlers.ActionBar.registerSegment(new CharacterCreationSegmentMatcher());
-        Handlers.ActionBar.registerSegment(new CharacterSelectionSegmentMatcher());
         Handlers.ActionBar.registerSegment(new WynncraftVersionSegmentMatcher());
         Handlers.BossBar.registerBar(skipCutsceneBar);
     }

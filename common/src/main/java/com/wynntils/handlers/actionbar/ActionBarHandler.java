@@ -40,7 +40,8 @@ public final class ActionBarHandler extends Handler {
     @SubscribeEvent
     public void onActionBarUpdate(ChatPacketReceivedEvent.GameInfo event) {
         // FIXME: Reverse dependency!
-        if (Models.WorldState.onWorld()) {
+        WorldState currentState = Models.WorldState.getCurrentState();
+        if (currentState == WorldState.WORLD) {
             StyledText packetText = StyledText.fromComponent(event.getMessage());
 
             // Separate the action bar text from the coordinates
@@ -82,7 +83,7 @@ public final class ActionBarHandler extends Handler {
             }
 
             event.setMessage(renderedText.getComponent());
-        } else if (Models.WorldState.getCurrentState() == WorldState.INTERIM) {
+        } else if (currentState == WorldState.INTERIM || currentState == WorldState.CHARACTER_SELECTION) {
             StyledText packetText = StyledText.fromComponent(event.getMessage());
 
             // We can't do any filtering by font here as whilst the navigation text font is always the same, the version

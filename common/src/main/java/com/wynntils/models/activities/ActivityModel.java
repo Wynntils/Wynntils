@@ -16,7 +16,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.mc.event.ContainerSetContentEvent;
-import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.activities.beacons.ActivityBeaconKind;
 import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
@@ -101,6 +100,7 @@ public final class ActivityModel extends Model {
     private List<List<StyledText>> dialogueHistory = List.of();
     private CappedValue overallProgress = CappedValue.EMPTY;
     private boolean overallProgressOutdated = true;
+    private String currentProgressCharacter = "";
 
     public ActivityModel(MarkerModel markerModel) {
         super(List.of(markerModel));
@@ -151,10 +151,12 @@ public final class ActivityModel extends Model {
                 Location spawn = new Location(McUtils.mc().level.getSharedSpawnPos());
                 ACTIVITY_MARKER_PROVIDER.setSpawnLocation(activityBeaconMarker.getActivityType(), spawn);
 
+                if (trackedActivity == null) return;
+
                 Location trackedLocation = getTrackedLocation();
-                if (getTrackedLocation() != null && !spawn.equals(trackedLocation)) {
+                if (trackedLocation != null && !spawn.equals(trackedLocation)) {
                     ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(
-                            activityBeaconMarker.getActivityType(), getTrackedLocation());
+                            activityBeaconMarker.getActivityType(), trackedLocation);
                 }
             }
         }
@@ -180,13 +182,6 @@ public final class ActivityModel extends Model {
         }
     }
 
-    @SubscribeEvent
-    public void onScreenClosed(ScreenClosedEvent event) {
-        // The progress cannot be outdated if we are in the content book
-        // This speeds up navigation in the content book
-        overallProgressOutdated = true;
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldStateChanged(WorldStateEvent e) {
         resetTracker();
@@ -196,6 +191,11 @@ public final class ActivityModel extends Model {
 
     @SubscribeEvent
     public void onCharacterUpdated(CharacterUpdateEvent event) {
+        // Same character, no need to scan again
+        if (Models.Character.getId().equals(currentProgressCharacter)) {
+            overallProgressOutdated = false;
+            return;
+        }
         // First thing to do when we just loaded a class
         scanOverallProgress();
     }
@@ -411,6 +411,7 @@ public final class ActivityModel extends Model {
         QuestInfo questInfo = Models.Quest.getQuestInfoFromActivity(activityInfo);
 
         if (questInfo.nextLocation().isPresent()) {
+            McUtils.player().closeContainer();
             McUtils.mc()
                     .setScreen(MainMapScreen.create(
                             questInfo.nextLocation().get().x(),
@@ -422,6 +423,7 @@ public final class ActivityModel extends Model {
         CaveInfo caveInfo = Models.Cave.getCaveInfoFromActivity(activityInfo);
 
         if (caveInfo.getNextLocation().isPresent()) {
+            McUtils.player().closeContainer();
             McUtils.mc()
                     .setScreen(MainMapScreen.create(
                             caveInfo.getNextLocation().get().x(),
@@ -494,7 +496,10 @@ public final class ActivityModel extends Model {
         switch (openAction) {
             // We can't run this is on request thread
             case MAP ->
-                Managers.TickScheduler.scheduleNextTick(() -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
+                Managers.TickScheduler.scheduleNextTick(() -> {
+                    McUtils.player().closeContainer();
+                    McUtils.mc().setScreen(MainMapScreen.create(x, z));
+                });
             case COMPASS -> {
                 McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z), activityInfo.name());
@@ -600,6 +605,7 @@ public final class ActivityModel extends Model {
                 int completed = Integer.parseInt(m.group(1));
                 int total = Integer.parseInt(m.group(2));
                 overallProgress = new CappedValue(completed, total);
+                currentProgressCharacter = Models.Character.getId();
                 return true;
             }
         }

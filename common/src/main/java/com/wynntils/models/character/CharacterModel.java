@@ -13,7 +13,6 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.ContainerModel;
@@ -30,6 +29,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Tracks persistent metadata about the player's selected character, such as
@@ -46,7 +46,6 @@ public final class CharacterModel extends Model {
     private static final int PROFESSION_INFO_SLOT = 17;
     public static final int GUILD_MENU_SLOT = 26;
 
-    private boolean inCharacterSelection;
     private boolean hasCharacter;
 
     private ClassType classType;
@@ -56,6 +55,8 @@ public final class CharacterModel extends Model {
     // A hopefully unique string for each character ("class"). This is part of the
     // full character uuid, as presented by Wynncraft in the tooltip.
     private String id = "-";
+
+    private String previousScanId = "";
 
     public CharacterModel() {
         super(List.of());
@@ -96,22 +97,11 @@ public final class CharacterModel extends Model {
         return false;
     }
 
-    @SubscribeEvent
-    public void onMenuClosed(MenuClosedEvent e) {
-        inCharacterSelection = false;
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onWorldStateChanged(WorldStateEvent e) {
         // Whenever we're leaving a world, clear the current character
         if (e.getOldState() == WorldState.WORLD) {
             hasCharacter = false;
-            // This should not be needed, but have it as a safeguard
-            inCharacterSelection = false;
-        }
-
-        if (e.getNewState() == WorldState.CHARACTER_SELECTION) {
-            inCharacterSelection = true;
         }
 
         if (e.getNewState() == WorldState.WORLD) {
@@ -125,15 +115,30 @@ public final class CharacterModel extends Model {
 
     @SubscribeEvent
     public void onContainerClick(ContainerClickEvent e) {
-        if (inCharacterSelection) {
-            if (!parseCharacter(e.getItemStack())) return;
-            hasCharacter = true;
-            WynntilsMod.postEvent(new CharacterUpdateEvent());
-            WynntilsMod.info("Selected character " + getCharacterString());
+        if (Models.WorldState.getCurrentState() == WorldState.CHARACTER_SELECTION
+                && e.getMouseButton() != GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            handleSelectedCharacter(e.getItemStack());
         }
     }
 
+    public void handleSelectedCharacter(ItemStack itemStack) {
+        if (!parseCharacter(itemStack)) return;
+        hasCharacter = true;
+        WynntilsMod.info("Selected character " + getCharacterString());
+    }
+
+    public void setSelectedCharacterFromCharacterSelection(ClassType classType, boolean isReskinned, int level) {
+        hasCharacter = true;
+        updateCharacterInfo(classType, isReskinned, level);
+        WynntilsMod.info("Selected character " + getCharacterString());
+    }
+
     public void scanCharacterInfo() {
+        if (id.equals(previousScanId)) {
+            hasCharacter = true;
+            return;
+        }
+
         WynntilsMod.info("Scheduling character info query");
         QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Character Info Query");
         queryBuilder.onError(msg -> WynntilsMod.warn("Error querying Character Info: " + msg));
@@ -147,6 +152,8 @@ public final class CharacterModel extends Model {
         Models.Guild.addGuildContainerQuerySteps(queryBuilder);
 
         queryBuilder.build().executeQuery();
+
+        previousScanId = id;
     }
 
     private void parseCharacterContainer(ContainerContent container) {

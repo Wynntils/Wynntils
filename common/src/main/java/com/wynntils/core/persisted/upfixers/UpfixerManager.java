@@ -16,6 +16,7 @@ import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomCommandKeybindSlashStartUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiIconEnumBugUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiVisbilityUpfixer;
+import com.wynntils.core.persisted.upfixers.config.DurabilityArcToDurabilityOverlayUpfixer;
 import com.wynntils.core.persisted.upfixers.config.EnumNamingUpfixer;
 import com.wynntils.core.persisted.upfixers.config.GameBarOverlayMoveUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
@@ -69,6 +70,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new SacredSurgeToHolyPowerUpfixer());
         registerConfigUpfixer(new UniversalBarOverlayColorToColorTemplateUpfixer());
         registerConfigUpfixer(new WynntilsContentBookReplaceToShiftBehaviourUpfixer());
+        registerConfigUpfixer(new DurabilityArcToDurabilityOverlayUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());

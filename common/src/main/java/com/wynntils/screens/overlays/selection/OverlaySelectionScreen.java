@@ -213,6 +213,11 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
             renderTooltips(guiGraphics, mouseX, mouseY);
         } else {
+            if (selectedOverlay == null) {
+                renderPreview = false;
+                return;
+            }
+
             renderOverlaysCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
             exitPreviewButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
