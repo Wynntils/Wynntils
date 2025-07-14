@@ -31,6 +31,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -557,12 +558,12 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
         renderMap(guiGraphics);
-
-        // FIXME
-        //        RenderUtils.enableScissor(
-        //                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int)
-        // mapWidth, (int)
-        //                        mapHeight);
+        RenderUtils.enableScissor(
+                guiGraphics,
+                (int) (renderX + renderedBorderXOffset),
+                (int) (renderY + renderedBorderYOffset),
+                (int) mapWidth,
+                (int) mapHeight);
 
         if (waypoint != null) {
             renderMapFeatures(poseStack, mouseX, mouseY);
@@ -578,7 +579,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                         .pointerType
                         .get());
 
-        // RenderUtils.disableScissor();
+        RenderUtils.disableScissor(guiGraphics);
 
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);

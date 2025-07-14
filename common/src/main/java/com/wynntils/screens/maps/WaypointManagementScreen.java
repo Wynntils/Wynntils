@@ -437,10 +437,10 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         } else {
-            // FIXME
-            // RenderUtils.enableScissor((int) (getTranslationX() + 12), (int) (getTranslationY() + 15), 320, 181);
+            RenderUtils.enableScissor(
+                    guiGraphics, (int) (getTranslationX() + 12), (int) (getTranslationY() + 15), 320, 181);
             waypointManagerWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
-            // RenderUtils.disableScissor();
+            RenderUtils.disableScissor(guiGraphics);
         }
 
         iconButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
