@@ -21,6 +21,7 @@ import com.wynntils.models.character.actionbar.segments.CharacterSelectionLevelS
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionSegment;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.containers.CharacterSelectionContainer;
+import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -80,6 +81,7 @@ public final class CharacterSelectionModel extends Model {
         if (isCreatingCharacter) return;
         if (McUtils.mc().screen != null) return;
         if (e.getHand() != InteractionHand.MAIN_HAND) return;
+        if (Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 
         Models.Character.setSelectedCharacterFromCharacterSelection(
                 currentCharacterClass, isReskinned, currentCharacterLevel);
