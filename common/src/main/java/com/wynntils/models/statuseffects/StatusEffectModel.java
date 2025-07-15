@@ -45,7 +45,7 @@ public final class StatusEffectModel extends Model {
 
     // Test in StatusEffectModel_STATUS_EFFECT_PATTERN
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
-            "(?<prefix>.+?)§7\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d]+))?(?<modifierSuffix>((\\/\\d+s)|%)?)?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s§[84a]\\((?<minutes>(\\d{2}|\\*{2})):(?<seconds>(\\d{2}|\\*{2}))\\)");
+            "(?<prefix>.+?)§7\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d]+))?(?<modifierSuffix>((\\/\\d+s)|%)?)?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((?<minutes>(\\d{2}|\\*{2})):(?<seconds>(\\d{2}|\\*{2}))\\))");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 
@@ -95,7 +95,7 @@ public final class StatusEffectModel extends Model {
             StyledText name = StyledText.fromString(color + m.group("name").trim());
             StyledText minutes = StyledText.fromString(m.group("minutes")).trim();
             StyledText seconds = StyledText.fromString(m.group("seconds")).trim();
-            StyledText displayedTime = StyledText.concat(minutes, StyledText.fromString(":"), seconds);
+            StyledText displayedTime = StyledText.fromString(m.group("timer"));
             int duration = -1;
 
             try {
