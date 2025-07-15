@@ -131,8 +131,9 @@ public class InventoryEmeraldCountFeature extends Feature {
             int y = containerScreen.topPos + containerScreen.imageHeight;
             switch (emeraldCountType.get()) {
                 case TEXT -> renderTextCount(event.getPoseStack(), textX, y + 11, bottomEmeralds);
-                case TEXTURE -> renderTexturedCount(
-                        event.getGuiGraphics(), bottomTextureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
+                case TEXTURE ->
+                    renderTexturedCount(
+                            event.getGuiGraphics(), bottomTextureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
             }
         }
     }

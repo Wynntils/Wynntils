@@ -755,20 +755,24 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
             case ICON_ASC -> pois.sort(Comparator.comparing(CustomPoi::getIcon));
             case ICON_DESC -> pois.sort(Comparator.comparing(CustomPoi::getIcon).reversed());
             case NAME_ASC -> pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
-            case NAME_DESC -> pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
-                    .reversed());
-            case X_ASC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getX()));
-            case X_DESC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
-            case Y_ASC -> pois.sort(Comparator.comparing(
-                    poi -> poi.getLocation().getY().orElse(null), Comparator.nullsFirst(Comparator.naturalOrder())));
-            case Y_DESC -> pois.sort(Comparator.comparing(
-                    poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
-            case Z_ASC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getZ()));
-            case Z_DESC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
+            case NAME_DESC ->
+                pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
+                        .reversed());
+            case X_ASC ->
+                pois.sort(Comparator.comparing(poi -> poi.getLocation().getX()));
+            case X_DESC ->
+                pois.sort(Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
+            case Y_ASC ->
+                pois.sort(Comparator.comparing(
+                        poi -> poi.getLocation().getY().orElse(null),
+                        Comparator.nullsFirst(Comparator.naturalOrder())));
+            case Y_DESC ->
+                pois.sort(Comparator.comparing(
+                        poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
+            case Z_ASC ->
+                pois.sort(Comparator.comparing(poi -> poi.getLocation().getZ()));
+            case Z_DESC ->
+                pois.sort(Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
         }
     }
 
