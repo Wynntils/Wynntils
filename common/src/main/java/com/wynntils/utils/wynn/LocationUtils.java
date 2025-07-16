@@ -7,6 +7,7 @@ package com.wynntils.utils.wynn;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,6 +49,25 @@ public final class LocationUtils {
         String locationString = "My compass is at " + compass;
 
         LocationUtils.sendShareMessage(target, locationString);
+    }
+
+    public static void shareCompass(String target, List<Location> compasses) {
+        StringBuilder locationString = new StringBuilder("My compasses are at ");
+        for (Location compass : compasses) {
+            locationString
+                    .append("[")
+                    .append(compass.x)
+                    .append(", ")
+                    .append(compass.y)
+                    .append(", ")
+                    .append(compass.z)
+                    .append("] ");
+        }
+
+        // Remove the last comma and space
+        locationString.setCharAt(locationString.length() - 1, '.');
+
+        LocationUtils.sendShareMessage(target, locationString.toString());
     }
 
     private static void sendShareMessage(String target, String locationString) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc.type;
@@ -11,6 +11,7 @@ import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector2f;
 
 public class Location implements Comparable<Location> {
     // Compare first x, then z, and finally y
@@ -44,6 +45,10 @@ public class Location implements Comparable<Location> {
 
     public static Location containing(double x, double y, double z) {
         return new Location(MathUtils.floor(x), MathUtils.floor(y), MathUtils.floor(z));
+    }
+
+    public static Location containing(Vector2f position) {
+        return new Location(MathUtils.floor(position.x()), 0, MathUtils.floor(position.y()));
     }
 
     public int x() {
