@@ -5,7 +5,7 @@
 package com.wynntils.models.lootrun.type;
 
 import com.wynntils.utils.mc.type.Location;
-import net.minecraft.core.Position;
+import net.minecraft.world.phys.Vec3;
 
 public enum LootrunLocation {
     SILENT_EXPANSE(new Location(990, 77, -785), "\uDAFF\uDFF2\uE00A\uDAFF\uDF6F\uF00A"),
@@ -40,23 +40,7 @@ public enum LootrunLocation {
         for (LootrunLocation lootrunLocation : values()) {
             if (lootrunLocation.getLocation() == null) continue;
 
-            Position position = new Position() {
-                @Override
-                public double x() {
-                    return location.x;
-                }
-
-                @Override
-                public double y() {
-                    return location.y;
-                }
-
-                @Override
-                public double z() {
-                    return location.z;
-                }
-            };
-
+            Vec3 position = lootrunLocation.getLocation().toVec3();
             double distance = lootrunLocation.getLocation().distanceToSqr(position);
             if (distance < minDistance) {
                 minDistance = distance;

@@ -6,22 +6,16 @@ package com.wynntils.models.containers.containers;
 
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.lootrun.type.LootrunLocation;
-import java.util.Arrays;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class LootrunChestContainer extends Container {
-    private static final Pattern TITLE_PATTERN = createTitlePattern();
+    private static final String TITLE_PATTERN = "^%s$";
 
-    public LootrunChestContainer() {
-        super(TITLE_PATTERN);
-    }
+    private final LootrunLocation location;
 
-    private static Pattern createTitlePattern() {
-        String patternString = Arrays.stream(LootrunLocation.values())
-                .filter(location -> location.getContainerTitle() != null)
-                .map(location -> Pattern.quote(location.getContainerTitle()))
-                .collect(Collectors.joining("|", "^(", ")$"));
-        return Pattern.compile(patternString);
+    public LootrunChestContainer(LootrunLocation location) {
+        super(Pattern.compile(String.format(TITLE_PATTERN, Pattern.quote(location.getContainerTitle()))));
+
+        this.location = location;
     }
 }
