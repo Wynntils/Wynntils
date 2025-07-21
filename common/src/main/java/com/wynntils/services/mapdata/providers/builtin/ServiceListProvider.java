@@ -33,7 +33,7 @@ public class ServiceListProvider extends BuiltInProvider {
     }
 
     private void loadServices() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_SERVICE_CROWDSOURCED_MAPFEATURES);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_SERVICE_MAPFEATURES);
         dl.handleReader(reader -> {
             TypeToken<List<ServiceLocation>> type = new TypeToken<>() {};
             List<ServiceLocation> services = Managers.Json.GSON.fromJson(reader, type.getType());

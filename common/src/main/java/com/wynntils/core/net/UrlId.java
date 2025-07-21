@@ -47,7 +47,6 @@ public enum UrlId {
     DATA_STATIC_PLACE_MAPFEATURES("dataStaticPlaceMapFeatures"),
     DATA_STATIC_SEASKIPPER_DESTINATIONS("dataStaticSeaskipperDestinations"),
     DATA_STATIC_SERVICE_MAPFEATURES("dataStaticServiceMapFeatures"),
-    DATA_STATIC_SERVICE_CROWDSOURCED_MAPFEATURES("dataStaticServiceMapFeaturesCrowdsourced"),
     DATA_STATIC_SERVICES_CROWDSOURCED("dataStaticServicesCrowdsourced"),
     DATA_STATIC_SHINY_STATS("dataStaticShinyStats"),
     DATA_STATIC_SPLASHES("dataStaticSplashes"),
