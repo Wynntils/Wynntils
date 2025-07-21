@@ -5,13 +5,31 @@
 package com.wynntils.screens.maps.widgets;
 
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class MapButton extends BasicTexturedButton {
     public MapButton(Texture texture, Consumer<Integer> onClick, List<Component> tooltip) {
         super(0, 0, texture.width(), texture.height(), texture, onClick, tooltip);
+    }
+
+    @Override
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawTexturedRectWithColor(
+                guiGraphics.pose(),
+                texture.resource(),
+                isHovered ? CommonColors.GRAY : CommonColors.WHITE,
+                getX(),
+                getY(),
+                0,
+                texture.width(),
+                texture.height(),
+                texture.width(),
+                texture.height());
     }
 }
