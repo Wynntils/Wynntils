@@ -44,7 +44,6 @@ public final class NotificationManager extends Manager {
     public MessageContainer queueMessage(TextRenderTask message) {
         if (!Managers.Connection.onServer()) return null;
 
-        WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
         StyledText messageText = message.getText();
 
