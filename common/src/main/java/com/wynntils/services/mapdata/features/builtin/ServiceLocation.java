@@ -23,6 +23,7 @@ public final class ServiceLocation extends MapLocationImpl {
         BLACKSMITH("Blacksmith", Texture.BLACKSMITH, "blacksmith"),
         BOOTH_SHOP("Booth Shop", Texture.BOOTH_SHOP, "booth-shop"),
         COOKING_STATION("Cooking Station", Texture.COOKING_STATION, "profession:cooking"),
+        DUNGEON_MERCHANT("Dungeon Merchant", Texture.DUNGEON_MERCHANT, "merchant:dungeon"),
         DUNGEON_SCROLL_MERCHANT("Dungeon Scroll Merchant", Texture.DUNGEON_SCROLL_MERCHANT, "merchant:dungeon-scroll"),
         EMERALD_MERCHANT("Emerald Merchant", Texture.EMERALD_MERCHANT, "merchant:emerald"),
         FAST_TRAVEL("Fast Travel", Texture.FAST_TRAVEL, "fast-travel"),
