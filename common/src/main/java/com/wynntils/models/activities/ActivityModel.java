@@ -155,13 +155,14 @@ public final class ActivityModel extends Model {
             }
 
             Location spawn = new Location(McUtils.mc().level.getSharedSpawnPos());
-            ACTIVITY_PROVIDER.setSpawnLocation(activityBeaconMarker.getActivityType(), spawn);
+            ACTIVITY_PROVIDER.setSpawnLocation(activityBeaconMarker.getActivityType(), spawn, getTrackedName());
 
             if (trackedActivity == null) return;
 
             Location trackedLocation = getTrackedLocation();
             if (trackedLocation != null && !spawn.equals(trackedLocation)) {
-                ACTIVITY_PROVIDER.setTrackedActivityLocation(activityBeaconMarker.getActivityType(), trackedLocation);
+                ACTIVITY_PROVIDER.setTrackedActivityLocation(
+                        activityBeaconMarker.getActivityType(), trackedLocation, getTrackedName());
             }
         }
     }
@@ -171,8 +172,8 @@ public final class ActivityModel extends Model {
         BeaconMarker beaconMarker = event.getBeaconMarker();
         if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind)) return;
 
-        ACTIVITY_PROVIDER.setSpawnLocation(null, null);
-        ACTIVITY_PROVIDER.setTrackedActivityLocation(null, null);
+        ACTIVITY_PROVIDER.setSpawnLocation(null, null, "");
+        ACTIVITY_PROVIDER.setTrackedActivityLocation(null, null, "");
     }
 
     @SubscribeEvent
@@ -558,7 +559,7 @@ public final class ActivityModel extends Model {
 
     void resetTracker() {
         trackedActivity = null;
-        ACTIVITY_PROVIDER.setTrackedActivityLocation(null, null);
+        ACTIVITY_PROVIDER.setTrackedActivityLocation(null, null, "");
     }
 
     public void scanContentBook(
