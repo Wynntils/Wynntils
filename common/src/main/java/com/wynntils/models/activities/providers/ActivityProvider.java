@@ -5,39 +5,40 @@
 package com.wynntils.models.activities.providers;
 
 import com.google.common.base.CaseFormat;
-import com.wynntils.core.components.Models;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.services.mapdata.attributes.MapMarkerOptionsBuilder;
 import com.wynntils.services.mapdata.attributes.impl.AbstractMapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.features.impl.MapLocationImpl;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
+import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.utils.MapDataUtils;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ActivityProvider extends BuiltInProvider {
-    private static final String ACTIVITY_LOCATION_NAME = "Activity Location";
-
     private ActivityLocation spawnLocation;
     private ActivityLocation trackedActivityLocation;
 
-    public void setSpawnLocation(ActivityType activityType, Location spawnLocation) {
+    public void setSpawnLocation(ActivityType activityType, Location spawnLocation, String activityName) {
         if (spawnLocation == null) {
             this.spawnLocation = null;
         } else {
-            this.spawnLocation = new ActivityLocation(ACTIVITY_LOCATION_NAME, activityType, spawnLocation);
+            this.spawnLocation = new ActivityLocation(activityName, activityType, spawnLocation);
         }
     }
 
-    public void setTrackedActivityLocation(ActivityType activityType, Location trackedActivityLocation) {
+    public void setTrackedActivityLocation(
+            ActivityType activityType, Location trackedActivityLocation, String activityName) {
         if (trackedActivityLocation == null) {
             this.trackedActivityLocation = null;
         } else {
-            this.trackedActivityLocation =
-                    new ActivityLocation(Models.Activity.getTrackedName(), activityType, trackedActivityLocation);
+            this.trackedActivityLocation = new ActivityLocation(activityName, activityType, trackedActivityLocation);
         }
     }
 
@@ -55,14 +56,12 @@ public class ActivityProvider extends BuiltInProvider {
     public Stream<MapFeature> getFeatures() {
         Stream.Builder<MapFeature> features = Stream.builder();
 
-        if (trackedActivityLocation != null) {
-            features.add(trackedActivityLocation);
+        if (spawnLocation != null) {
+            features.add(spawnLocation);
         }
 
-        if (spawnLocation != null
-                && (trackedActivityLocation != null
-                        && !spawnLocation.getLocation().equals(trackedActivityLocation.getLocation()))) {
-            features.add(spawnLocation);
+        if (trackedActivityLocation != null) {
+            features.add(trackedActivityLocation);
         }
 
         return features.build().filter(Objects::nonNull);
@@ -87,7 +86,22 @@ public class ActivityProvider extends BuiltInProvider {
             return Optional.of(new AbstractMapLocationAttributes() {
                 @Override
                 public Optional<String> getLabel() {
-                    return ACTIVITY_LOCATION_NAME.equals(name) ? Optional.empty() : Optional.of(name);
+                    return Optional.of(name);
+                }
+
+                @Override
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(activityType.getColor());
+                }
+
+                @Override
+                public Optional<String> getIconId() {
+                    return Optional.of(MapIconsProvider.getIconIdFromTexture(activityType.getTexture()));
+                }
+
+                @Override
+                public Optional<MapMarkerOptions> getMarkerOptions() {
+                    return Optional.of(new MapMarkerOptionsBuilder().withBeaconColor(activityType.getColor()));
                 }
             });
         }
