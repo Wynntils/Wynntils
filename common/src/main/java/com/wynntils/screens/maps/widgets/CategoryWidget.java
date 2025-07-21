@@ -4,94 +4,25 @@
  */
 package com.wynntils.screens.maps.widgets;
 
-import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.widgets.SideListWidget;
 import com.wynntils.screens.maps.WaypointCategoryScreen;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.render.type.TextShadow;
-import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.Component;
 
-public class CategoryWidget extends AbstractWidget {
-    private final boolean rootCategory;
-    private final String category;
-
+public class CategoryWidget extends SideListWidget {
     public CategoryWidget(int y, int width, int height, String category, boolean rootCategory) {
-        super(0, y, width, height, Component.literal(category));
-
-        this.category = category;
-        this.rootCategory = rootCategory;
-    }
-
-    @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawRect(
-                guiGraphics.pose(),
-                CommonColors.BROWN.withAlpha(isHovered ? 150 : 100),
-                this.getX(),
-                this.getY(),
-                0,
-                width,
-                height);
-
-        if (rootCategory) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics.pose(),
-                            StyledText.fromString("⏎"),
-                            getX() + 10,
-                            getY() + getHeight() / 2f,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-
-            FontRenderer.getInstance()
-                    .renderScrollingText(
-                            guiGraphics.pose(),
-                            StyledText.fromString(category),
-                            getX() + 20,
-                            getY() + getHeight() / 2f,
-                            getWidth() - 30,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-        } else {
-            FontRenderer.getInstance()
-                    .renderScrollingText(
-                            guiGraphics.pose(),
-                            StyledText.fromString(category),
-                            getX() + 10,
-                            getY() + getHeight() / 2f,
-                            getWidth() - 20,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL,
-                            1);
-        }
+        super(y, width, height, category, rootCategory);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (McUtils.mc().screen instanceof WaypointCategoryScreen categoryScreen) {
-            if (rootCategory) {
+            if (root) {
                 categoryScreen.selectPreviousCategory();
             } else {
-                categoryScreen.selectCategory(category);
+                categoryScreen.selectCategory(name);
             }
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
     }
-
-    @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

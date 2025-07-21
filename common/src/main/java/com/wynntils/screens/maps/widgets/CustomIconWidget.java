@@ -6,6 +6,7 @@ package com.wynntils.screens.maps.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.widgets.SideListWidget;
 import com.wynntils.screens.maps.CustomWaypointIconScreen;
 import com.wynntils.services.mapdata.impl.MapIconImpl;
 import com.wynntils.utils.colors.CommonColors;
@@ -15,12 +16,10 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class CustomIconWidget extends AbstractWidget {
+public class CustomIconWidget extends SideListWidget {
     private static final String ICON_ID_PREFIX = "wynntils:icon:personal:";
 
     private final CustomWaypointIconScreen waypointIconScreen;
@@ -34,7 +33,7 @@ public class CustomIconWidget extends AbstractWidget {
 
     public CustomIconWidget(
             int y, int width, int height, MapIconImpl customIcon, CustomWaypointIconScreen waypointIconScreen) {
-        super(0, y, width, height, Component.literal("Custom Icon Widget"));
+        super(y, width, height, customIcon.getIconId().substring(ICON_ID_PREFIX.length()), false);
 
         this.customIcon = customIcon;
         this.waypointIconScreen = waypointIconScreen;
@@ -59,14 +58,7 @@ public class CustomIconWidget extends AbstractWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRect(
-                poseStack,
-                CommonColors.BROWN.withAlpha(isHovered ? 150 : 100),
-                this.getX(),
-                this.getY(),
-                0,
-                width,
-                height);
+        renderBackground(poseStack);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
@@ -113,7 +105,4 @@ public class CustomIconWidget extends AbstractWidget {
         removeButton.setY(y);
         iconRenderY = (y + height / 2f) - iconHeight / 2f;
     }
-
-    @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }
