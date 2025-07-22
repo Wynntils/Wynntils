@@ -55,8 +55,7 @@ public abstract class AbstractSideListScreen extends WynntilsGridLayoutScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromComponent(
-                                    Component.translatable("screens.wynntils.waypointCategory.noCategories")),
+                            getEmptyListText(),
                             dividedWidth * 2,
                             dividedHeight * 32,
                             CommonColors.WHITE,
