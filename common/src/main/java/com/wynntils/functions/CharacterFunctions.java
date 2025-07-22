@@ -111,7 +111,7 @@ public class CharacterFunctions {
         public NamedValue getValue(FunctionArguments arguments) {
             String query = arguments.getArgument("query").getStringValue();
             StatusEffect effect = Models.StatusEffect.searchStatusEffectByName(query);
-            if (effect == null) return NamedValue.EMPTY;
+            if (effect == null || !effect.hasModifierValue()) return NamedValue.EMPTY;
             return new NamedValue(effect.getModifierSuffix().getString(), effect.getModifierValue());
         }
 
