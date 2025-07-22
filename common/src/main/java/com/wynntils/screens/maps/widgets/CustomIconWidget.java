@@ -22,21 +22,23 @@ import net.minecraft.network.chat.Component;
 public class CustomIconWidget extends SideListWidget {
     private static final String ICON_ID_PREFIX = "wynntils:icon:personal:";
 
+    private final Button removeButton;
     private final CustomWaypointIconScreen waypointIconScreen;
     private final float iconRenderX;
     private final float iconWidth;
     private final float iconHeight;
     private final MapIconImpl customIcon;
+    private final String iconId;
 
-    private Button removeButton;
     private float iconRenderY;
 
     public CustomIconWidget(
             int y, int width, int height, MapIconImpl customIcon, CustomWaypointIconScreen waypointIconScreen) {
-        super(y, width, height, customIcon.getIconId().substring(ICON_ID_PREFIX.length()), false);
+        super(y, width, height);
 
         this.customIcon = customIcon;
         this.waypointIconScreen = waypointIconScreen;
+        this.iconId = customIcon.getIconId().substring(ICON_ID_PREFIX.length());
 
         // Scale the icon to fill 80% of the widget height
         float scaleFactor = 0.8f * height / Math.max(customIcon.getWidth(), customIcon.getHeight());
@@ -56,14 +58,13 @@ public class CustomIconWidget extends SideListWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         PoseStack poseStack = guiGraphics.pose();
-
-        renderBackground(poseStack);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(customIcon.getIconId().substring(ICON_ID_PREFIX.length())),
+                        StyledText.fromString(iconId),
                         getX() + 15 + iconWidth,
                         getY() + getHeight() / 2f,
                         getWidth() - 40 - iconWidth,
