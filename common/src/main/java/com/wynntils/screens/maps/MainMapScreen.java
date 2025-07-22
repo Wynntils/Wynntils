@@ -84,8 +84,13 @@ public final class MainMapScreen extends AbstractMapScreen {
         addMapButton(new MapButton(
                 Texture.WAYPOINT_FOCUS_ICON,
                 (b) -> {
-                    if (KeyboardUtils.isShiftDown()) {
+                    if (KeyboardUtils.isShiftDown() && b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                         centerMapAroundPlayer();
+                        return;
+                    }
+
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                        updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
                         return;
                     }
 
@@ -100,7 +105,10 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.focus.description1")),
                         Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.map.focus.description2")))));
+                                .append(Component.translatable("screens.wynntils.map.focus.description2")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.map.focus.description3")))));
 
         addMapButton(new MapButton(
                 Texture.SHARE_ICON,
