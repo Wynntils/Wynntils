@@ -34,10 +34,12 @@ import com.wynntils.utils.mc.type.Location;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -62,6 +64,13 @@ public class MapDataService extends Service {
     // Storage for json providers
     @Persisted
     private final Storage<Map<JsonProviderInfo, Boolean>> jsonProviderInfos = new Storage<>(new LinkedHashMap<>());
+
+    // FIXME: These should be a HiddenConfig when configs are supported here
+    @Persisted
+    private final Storage<Set<String>> filteredMapCategories = new Storage<>(new HashSet<>());
+
+    @Persisted
+    private final Storage<Set<String>> filteredMinimapCategories = new Storage<>(new HashSet<>());
 
     public MapDataService() {
         super(List.of());
@@ -341,6 +350,34 @@ public class MapDataService extends Service {
         return allProviders.values().stream();
     }
 
+    // endregion
+
+    // region map filtering
+    public void filterMapCategory(String category) {
+        if (!isCategoryFilteredOnMap(category)) {
+            filteredMapCategories.get().remove(category);
+        } else {
+            filteredMapCategories.get().add(category);
+        }
+        filteredMapCategories.touched();
+    }
+
+    public boolean isCategoryFilteredOnMap(String category) {
+        return !filteredMapCategories.get().contains(category);
+    }
+
+    public void filterMinimapCategory(String category) {
+        if (!isCategoryFilteredOnMinimap(category)) {
+            filteredMinimapCategories.get().remove(category);
+        } else {
+            filteredMinimapCategories.get().add(category);
+        }
+        filteredMinimapCategories.touched();
+    }
+
+    public boolean isCategoryFilteredOnMinimap(String category) {
+        return !filteredMinimapCategories.get().contains(category);
+    }
     // endregion
 
     /**
