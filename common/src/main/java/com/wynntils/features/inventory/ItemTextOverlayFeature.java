@@ -71,7 +71,7 @@ public class ItemTextOverlayFeature extends Feature {
     public final Config<Boolean> emeraldPouchTierEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(true);
+    public final Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(false);
 
     @Persisted
     public final Config<TextShadow> emeraldPouchTierShadow = new Config<>(TextShadow.OUTLINE);
@@ -321,7 +321,9 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier(), emeraldPouchTierRomanNumerals.get());
+            String text = emeraldPouchTierRomanNumerals.get()
+                    ? MathUtils.toRoman(item.getTier())
+                    : String.valueOf(item.getTier());
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(HIGHLIGHT_COLOR)
                     .withTextShadow(emeraldPouchTierShadow.get());

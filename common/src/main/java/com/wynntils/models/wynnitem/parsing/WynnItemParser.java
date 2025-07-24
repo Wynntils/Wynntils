@@ -66,7 +66,7 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_TIER_AND_REROLL_PATTERN
     private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(
-            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) ([A-Za-z\\d _]+)(?:§8)?(?: \\[(\\d+)(?:\\/(\\d+) Durability)?\\])?$");
+            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) ([A-Za-z\\d _]+) (?:§8)?(?:\\[(\\d+)(?:\\/(\\d+) Durability)?\\])?$");
 
     // Test in WynnItemParser_POWDER_PATTERN
     private static final Pattern POWDER_PATTERN =
@@ -76,21 +76,21 @@ public final class WynnItemParser {
     private static final Pattern EFFECT_LINE_PATTERN = Pattern.compile("^§(.)- §7(.*): §f([+-]?\\d+)(?:§.§.)? ?(.*)$");
 
     // Test in WynnItemParser_MIN_LEVEL_PATTERN
-    private static final Pattern MIN_LEVEL_PATTERN = Pattern.compile("^§(c✖|a✔)§7 Combat Lv. Min: (?<level>\\d+)$");
+    private static final Pattern MIN_LEVEL_PATTERN = Pattern.compile("^§(c✖|a✔) §7Combat Lv. Min: §f(?<level>\\d+)$");
 
     // Test in WynnItemParser_CLASS_REQ_PATTERN
     private static final Pattern CLASS_REQ_PATTERN =
-            Pattern.compile("^§(c✖|a✔)§7 Class Req: (?<name>.+)\\/(?<skinned>.+)$");
+            Pattern.compile("^§(c✖|a✔) §7Class Req: §f(?<name>.+)\\/(?<skinned>.+)$");
 
     // Test in WynnItemParser_SKILL_REQ_PATTERN
     private static final Pattern SKILL_REQ_PATTERN =
-            Pattern.compile("^§(c✖|a✔)§7 (?<skill>[a-zA-Z]+) Min: (?<value>-?\\d+)$");
+            Pattern.compile("^§(c✖|a✔) §7(?<skill>[a-zA-Z]+) Min: §f(?<value>-?\\d+)$");
 
     // Test in WynnItemParser_QUEST_REQ_PATTERN
-    private static final Pattern QUEST_REQ_PATTERN = Pattern.compile("^§(c✖|a✔)§7 Quest Req: (.+)$");
+    private static final Pattern QUEST_REQ_PATTERN = Pattern.compile("^§(c✖|a✔) §7Quest Req: (.+)$");
 
     // Test in WynnItemParser_MISC_REQ_PATTERN
-    private static final Pattern MISC_REQ_PATTERN = Pattern.compile("^§(c✖|a✔)§7 (.+)$");
+    private static final Pattern MISC_REQ_PATTERN = Pattern.compile("^§(c✖|a✔) §7(.+)$");
 
     private static final Pattern EFFECT_HEADER_PATTERN = Pattern.compile("^§(.)Effect:$");
 
@@ -112,7 +112,7 @@ public final class WynnItemParser {
     // Crafted items
     // Test in WynnItemParser_CRAFTED_ITEM_NAME_PATTERN
     public static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile(
-            "^§3(?:§o)?(?<name>.+)§b(?:§o)? \\[(((?<effectStrength>\\d+)%)|((?<currentUses>\\d+)\\/(?<maxUses>\\d+)))\\]À*$");
+            "^§3(?:§o)?(?<name>.+) §b(?:§o)?\\[(((?<effectStrength>\\d+)%)|((?<currentUses>\\d+)\\/(?<maxUses>\\d+)))\\]À*$");
 
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
