@@ -358,10 +358,12 @@ public final class FunctionManager extends Manager {
         registerFunction(new ColorFunctions.FromHexFunction());
         registerFunction(new ColorFunctions.FromRgbFunction());
         registerFunction(new ColorFunctions.FromRgbPercentFunction());
+        registerFunction(new ColorFunctions.GradientTwoShaderFunction());
         registerFunction(new ColorFunctions.GradientShaderFunction());
         registerFunction(new ColorFunctions.HueShiftFunction());
         registerFunction(new ColorFunctions.RainbowShaderFunction());
         registerFunction(new ColorFunctions.SaturationShiftFunction());
+        registerFunction(new ColorFunctions.ShineShaderFunction());
         registerFunction(new ColorFunctions.ToHexStringFunction());
 
         registerFunction(new ConditionalFunctions.IfCappedValueFunction());

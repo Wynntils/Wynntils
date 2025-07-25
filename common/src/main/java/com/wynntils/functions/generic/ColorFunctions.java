@@ -137,6 +137,20 @@ public final class ColorFunctions {
         }
     }
 
+    public static class GradientTwoShaderFunction extends Function<CustomColor> {
+        @Override
+        public CustomColor getValue(FunctionArguments arguments) {
+            return CommonColors.GRADIENT2;
+        }
+    }
+
+    public static class ShineShaderFunction extends Function<CustomColor> {
+        @Override
+        public CustomColor getValue(FunctionArguments arguments) {
+            return CommonColors.SHINE;
+        }
+    }
+
     public static class ToHexStringFunction extends GenericFunction<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
