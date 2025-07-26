@@ -38,7 +38,7 @@ import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class BeaconModel extends Model {
+public final class BeaconModel extends Model {
     private static final ResourceLocation MARKER_FONT = ResourceLocation.withDefaultNamespace("marker");
     private static final List<BeaconKind> beaconRegistry = new ArrayList<>();
     private static final List<BeaconMarkerKind> beaconMarkerRegistry = new ArrayList<>();

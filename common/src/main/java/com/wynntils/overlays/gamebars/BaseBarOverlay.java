@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
@@ -24,7 +24,9 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.UniversalTexture;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public abstract class BaseBarOverlay extends Overlay {
@@ -33,6 +35,9 @@ public abstract class BaseBarOverlay extends Overlay {
 
     @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.flip")
     public final Config<Boolean> flip = new Config<>(false);
+
+    @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.barTexture")
+    public final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
 
     @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime")
     public final Config<Float> animationTime = new Config<>(2f);
@@ -53,7 +58,7 @@ public abstract class BaseBarOverlay extends Overlay {
     }
 
     protected float textureHeight() {
-        return Texture.UNIVERSAL_BAR.height() / 2f;
+        return barTexture.get().getHeight();
     }
 
     protected abstract BossBarProgress progress();
@@ -86,8 +91,11 @@ public abstract class BaseBarOverlay extends Overlay {
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         if (!Models.WorldState.onWorld() || !isActive()) return;
+
+        PoseStack poseStack = guiGraphics.pose();
 
         float barHeight = textureHeight() * (this.getWidth() / 81);
         float renderY = getModifiedRenderY(barHeight + 10);
@@ -119,21 +127,19 @@ public abstract class BaseBarOverlay extends Overlay {
 
     protected void renderBar(
             PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
-        Texture universalBarTexture = Texture.UNIVERSAL_BAR;
-
         BufferedRenderUtils.drawColoredProgressBar(
                 poseStack,
                 bufferSource,
-                universalBarTexture,
+                Texture.UNIVERSAL_BAR,
                 this.textColor.get(),
-                this.getRenderX(),
+                getRenderX(),
                 renderY,
-                this.getRenderX() + this.getWidth(),
+                getRenderX() + getWidth(),
                 renderY + renderHeight,
                 0,
-                0,
-                universalBarTexture.width(),
-                universalBarTexture.height(),
+                barTexture.get().getTextureY1(),
+                Texture.UNIVERSAL_BAR.width(),
+                barTexture.get().getTextureY2(),
                 progress);
     }
 

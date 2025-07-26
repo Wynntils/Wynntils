@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
@@ -74,9 +74,9 @@ public class CommanderBarOverlay extends BaseBarOverlay {
                 this.getRenderX() + this.getWidth(),
                 renderY + renderHeight,
                 0,
-                0,
+                barTexture.get().getTextureY1(),
                 universalBarTexture.width(),
-                universalBarTexture.height(),
+                barTexture.get().getTextureY2(),
                 progress);
     }
 

@@ -199,4 +199,24 @@ public class CombatFunctions {
             return List.of("last_dam_ms");
         }
     }
+
+    public static class TimeSinceLastKillFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            return System.currentTimeMillis()
+                    - Models.Combat.getLastKillTimestamp(
+                            arguments.getArgument("includeShared").getBooleanValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("includeShared", Boolean.class, false)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("last_kill_ms");
+        }
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
@@ -24,20 +24,20 @@ public class PowderSpecialSegmentMatcher implements ActionBarSegmentMatcher {
     private static final String SEGMENT_END = "\uDAFF\uDFEF";
 
     // Empty powder special character
-    private static final String EMPTY_POWDER_SPECIAL = "\uE110";
+    private static final String EMPTY_POWDER_SPECIAL = "\uE190";
 
     // Characters for powder specials, by type, each having a 10 character range, a character being 10% of the bar
     private static final Map<Powder, Pair<Character, Character>> POWDER_SPECIAL_MAP = Map.of(
             Powder.AIR,
-            Pair.of('\uE120', '\uE129'),
+            Pair.of('\uE1A0', '\uE1A9'),
             Powder.EARTH,
-            Pair.of('\uE130', '\uE139'),
+            Pair.of('\uE1B0', '\uE1B9'),
             Powder.FIRE,
-            Pair.of('\uE140', '\uE149'),
+            Pair.of('\uE1C0', '\uE1C9'),
             Powder.THUNDER,
-            Pair.of('\uE150', '\uE159'),
+            Pair.of('\uE1D0', '\uE1D9'),
             Powder.WATER,
-            Pair.of('\uE160', '\uE169'));
+            Pair.of('\uE1E0', '\uE1E9'));
 
     private static final Pattern POWDER_SPECIAL_REGEX = Pattern.compile(SEGMENT_START + "(?<powder>["
             + String.join(

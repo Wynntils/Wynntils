@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -12,11 +13,13 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
+import com.wynntils.models.items.items.gui.CosmeticItem;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
@@ -27,7 +30,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
@@ -41,17 +43,19 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
     @Persisted
     public final Config<CustomColor> selectedHighlightColor = new Config<>(CommonColors.ORANGE);
 
+    @Persisted
+    public final Config<Boolean> moveTooltips = new Config<>(true);
+
     private static final Component ADD_REWARD_TEXT = Component.literal("§7Click on a reward to add it");
-    // The colored glass panes on the new reward screen
-    private static final Component DECORATIVE_ITEM_NAMES = Component.literal("§f");
     private static final Component RETURN_TEXT = Component.literal("§7Return to Scrap Menu");
-    private static final int FINAL_SLOT = 53;
     private static final int RETURN_SLOT = 18;
     private static final List<Integer> SELECTED_COSMETIC_SLOTS = List.of(1, 2, 3, 4, 5);
 
     private Component hoveredCosmetic;
     private Set<Component> selectedCosmetics = new HashSet<>();
     private SearchableContainerProperty scrapMenu = null;
+    private int tooltipX;
+    private int tooltipY;
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent.Pre event) {
@@ -78,22 +82,24 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
         if (highlightCondition.get() == HighlightCondition.SELECTED) return;
 
         Slot hoveredSlot = event.getHoveredSlot();
-        Component finalItem =
-                event.getScreen().getMenu().slots.get(FINAL_SLOT).getItem().getHoverName();
+        if (hoveredSlot == null) {
+            hoveredCosmetic = null;
+            return;
+        }
 
         // If not hovering a cosmetic item
-        if (hoveredSlot == null
-                || hoveredSlot.getItem().getItem() == Items.AIR
-                || finalItem.equals(DECORATIVE_ITEM_NAMES)) {
+        if (Models.Item.asWynnItem(hoveredSlot.getItem(), CosmeticItem.class).isEmpty()) {
             hoveredCosmetic = null;
             return;
         }
 
         hoveredCosmetic = hoveredSlot.getItem().getHoverName();
+        tooltipX = event.getScreen().leftPos;
+        tooltipY = event.getScreen().topPos + 144;
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Pre e) {
+    public void onRenderSlot(SlotRenderEvent.CountPre e) {
         if (scrapMenu == null) return;
 
         // Don't highlight the cosmetics in the selected slots
@@ -106,7 +112,9 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
             if ((isSelected && condition != HighlightCondition.HOVER)
                     || (isHovered && condition != HighlightCondition.SELECTED)) {
                 CustomColor color = isSelected ? selectedHighlightColor.get() : hoveredHighlightColor.get();
-                RenderUtils.drawArc(e.getPoseStack(), color, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
+                RenderSystem.enableDepthTest();
+                RenderUtils.drawArc(e.getPoseStack(), color, e.getSlot().x, e.getSlot().y, 100, 1f, 6, 8);
+                RenderSystem.disableDepthTest();
             }
         }
     }
@@ -116,7 +124,7 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
         if (scrapMenu == null) return;
 
         // Silverbull subscribers have the first 2 slots filled automatically
-        List<Integer> selectedSlots = Models.Character.isSilverbullSubscriber()
+        List<Integer> selectedSlots = Models.Account.isSilverbullSubscriber()
                 ? SELECTED_COSMETIC_SLOTS.subList(2, 5)
                 : SELECTED_COSMETIC_SLOTS;
 
@@ -142,6 +150,15 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
 
             selectedCosmetics.add(selectedCosmetic);
         }
+    }
+
+    @SubscribeEvent
+    public void onTooltipRenderEvent(ItemTooltipRenderEvent.Pre event) {
+        if (hoveredCosmetic == null) return;
+        if (!moveTooltips.get()) return;
+
+        event.setMouseX(tooltipX);
+        event.setMouseY(tooltipY);
     }
 
     private enum HighlightCondition {

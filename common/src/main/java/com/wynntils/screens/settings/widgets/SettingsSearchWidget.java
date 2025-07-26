@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -19,6 +19,6 @@ public class SettingsSearchWidget extends SearchWidget {
 
     @Override
     protected void renderBackground(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.TAG_SEARCH, 30, Texture.CONFIG_BOOK_BACKGROUND.height() - 3);
+        RenderUtils.drawTexturedRect(poseStack, Texture.TAG_SEARCH, getX() - 25, getY() - 9);
     }
 }

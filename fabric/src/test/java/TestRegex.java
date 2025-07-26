@@ -6,14 +6,12 @@ import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
-import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
-import com.wynntils.features.trademarket.TradeMarketQuickSearchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
-import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.combat.CombatModel;
 import com.wynntils.models.combat.label.DamageLabelParser;
 import com.wynntils.models.combat.label.KillLabelParser;
@@ -25,6 +23,7 @@ import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
+import com.wynntils.models.items.annotators.gui.GambitAnnotator;
 import com.wynntils.models.items.annotators.gui.LeaderboardSeasonAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
@@ -111,6 +110,35 @@ public class TestRegex {
     }
 
     @Test
+    public void AccountModel_SILVERBULL_PATTERN() {
+        PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_PATTERN");
+        p.shouldMatch("§7Subscription: §c✖ Inactive");
+        p.shouldMatch("§7Subscription: §a✔ Active");
+    }
+
+    @Test
+    public void AccountModel_SILVERBULL_DURATION_PATTERN() {
+        PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_DURATION_PATTERN");
+        p.shouldMatch("§7Expiration: §f1 week 5 days");
+        p.shouldMatch("§7Expiration: §f5 days");
+        p.shouldMatch("§7Expiration: §f1 week");
+        p.shouldMatch("§7Expiration: §f2 days 12 hours");
+    }
+
+    @Test
+    public void AccountModel_VETERAN_PATTERN() {
+        PatternTester p = new PatternTester(AccountModel.class, "VETERAN_PATTERN");
+        // Champion
+        p.shouldMatch("§7Rank: §6Vet");
+        // Hero
+        p.shouldMatch("§7Rank: §dVet");
+        // VIP+
+        p.shouldMatch("§7Rank: §bVet");
+        // VIP
+        p.shouldMatch("§7Rank: §aVet");
+    }
+
+    @Test
     public void ArchetypeAbilitiesAnnotator_ARCHETYPE_NAME() {
         PatternTester p = new PatternTester(ArchetypeAbilitiesAnnotator.class, "ARCHETYPE_NAME");
         p.shouldMatch("§#eb3dfeff§lSharpshooter Archetype");
@@ -159,35 +187,6 @@ public class TestRegex {
         p.shouldMatch("§6 - §a✔ §f24§7²");
         p.shouldMatch("§6 - §a✔ §f648§7²");
         p.shouldMatch("§6 - §c✖ §f24§7²");
-    }
-
-    @Test
-    public void CharacterModel_SILVERBULL_PATTERN() {
-        PatternTester p = new PatternTester(CharacterModel.class, "SILVERBULL_PATTERN");
-        p.shouldMatch("§7Subscription: §c✖ Inactive");
-        p.shouldMatch("§7Subscription: §a✔ Active");
-    }
-
-    @Test
-    public void CharacterModel_SILVERBULL_DURATION_PATTERN() {
-        PatternTester p = new PatternTester(CharacterModel.class, "SILVERBULL_DURATION_PATTERN");
-        p.shouldMatch("§7Expiration: §f1 week 5 days");
-        p.shouldMatch("§7Expiration: §f5 days");
-        p.shouldMatch("§7Expiration: §f1 week");
-        p.shouldMatch("§7Expiration: §f2 days 12 hours");
-    }
-
-    @Test
-    public void CharacterModel_VETERAN_PATTERN() {
-        PatternTester p = new PatternTester(CharacterModel.class, "VETERAN_PATTERN");
-        // Champion
-        p.shouldMatch("§7Rank: §6Vet");
-        // Hero
-        p.shouldMatch("§7Rank: §dVet");
-        // VIP+
-        p.shouldMatch("§7Rank: §bVet");
-        // VIP
-        p.shouldMatch("§7Rank: §aVet");
     }
 
     @Test
@@ -695,6 +694,7 @@ public class TestRegex {
     @Test
     public void RecipientType_PRIVATE_foregroundpattern() {
         PatternTester p = new PatternTester(RecipientType.PRIVATE, "foregroundPattern");
+        p.shouldMatch("§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE 42nao \uE003 Soulbound: §ftest");
         p.shouldMatch(
                 "§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §#ffe600ff§obol§6 \uE003 §#ffe600ff§obol§r§#ffe600ff:§6 §ftest");
         p.shouldMatch(
@@ -721,8 +721,14 @@ public class TestRegex {
     @Test
     public void ShamanTotemModel_SHAMAN_TOTEM_TIMER_PATTERN() {
         PatternTester p = new PatternTester(ShamanTotemModel.class, "SHAMAN_TOTEM_TIMER");
+        // Timer only
         p.shouldMatch("§bShadowCat117's §7Totem\n§d\uE01F §77s");
-        p.shouldMatch("§bShadowCat117's §7Totem\n§c+822❤§7/s §d\uE01F §753s");
+        // Timer + regen
+        p.shouldMatch("§bShadowCat117's §7Totem\n§c+1644❤§7/s §d\uE01F §753s");
+        // Timer + summons attack speed
+        p.shouldMatch("§bShadowCat117's §7Totem\n§e\uE013 §71s §d\uE01F §749s");
+        // Timer + regen + summons attack speed
+        p.shouldMatch("§bShadowCat117's §7Totem\n§c+986❤§7/s §e\uE013 §71s §d\uE01F §750s");
     }
 
     @Test
@@ -769,6 +775,18 @@ public class TestRegex {
     }
 
     @Test
+    public void TradeMarketModel_PRICE_CHECK_BID_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_CHECK_BID_PATTERN");
+        p.shouldMatch("§7Highest Buy Offer: §f806 §8(12²½ 38²)");
+    }
+
+    @Test
+    public void TradeMarketModel_PRICE_CHECK_ASK_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_CHECK_ASK_PATTERN");
+        p.shouldMatch("§7Cheapest Sell Offer: §f806 §8(12²½ 38²)");
+    }
+
+    @Test
     public void TradeMarketModel_PRICE_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_PATTERN");
         p.shouldMatch("§7 - §f525§7² §8(8²½ 13²)");
@@ -776,18 +794,6 @@ public class TestRegex {
         p.shouldMatch("§7 - §f8 §7x §f127§7² §8(1²½ 63²)");
         p.shouldMatch("§7 - §f308 §7x §f§m16§7§m²§b ✮ 15§3² §8(15²)");
         p.shouldMatch("§7 - §f308 §7x §f§m16§7§m²§b ✮ 15§3² §8(15²)");
-    }
-
-    @Test
-    public void TradeMarketPriceMatchFeature_HIGHEST_BUY_PATTERN() {
-        PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "HIGHEST_BUY_PATTERN");
-        p.shouldMatch("§7Highest Buy Offer: §f806 §8(12²½ 38²)");
-    }
-
-    @Test
-    public void TradeMarketPriceMatchFeature_LOWEST_SELL_PATTERN() {
-        PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "LOWEST_SELL_PATTERN");
-        p.shouldMatch("§7Cheapest Sell Offer: §f806 §8(12²½ 38²)");
     }
 
     @Test
@@ -949,12 +955,30 @@ public class TestRegex {
     }
 
     @Test
-    public void CharacterAnnotator_CLASS_MENU_CLASS_PATTERN() {
-        PatternTester p = new PatternTester(CharacterAnnotator.class, "CLASS_MENU_CLASS_PATTERN");
+    public void CharacterAnnotator_CHARACTER_MENU_CLASS_PATTERN() {
+        PatternTester p = new PatternTester(CharacterAnnotator.class, "CHARACTER_MENU_CLASS_PATTERN");
 
-        p.shouldMatch("§e- §7Class: §6\uE029§5\uE028§r §fAssassin");
-        p.shouldMatch("§e- §7Class: §c\uE027§b\uE083§3\uE026§r §fKnight");
-        p.shouldMatch("§e- §7Class: §fWarrior");
+        p.shouldMatch("§6- §7Class: §fMage'"); // Mage
+        p.shouldMatch("§6- §7Class: §fHunter"); // Hunter
+        p.shouldMatch("§6- §7Class: §fSkyseer"); // Skyseer
+        p.shouldMatch("§6- §7Class: §fKnight"); // Knight
+        p.shouldMatch("§6- §7Class: §fNinja"); // Ninja
+        p.shouldMatch("§6- §7Class: §b\uE083§7 §fArcher"); // Ultimate Ironman Archer
+        p.shouldMatch("§6- §7Class: §5\uE028§7 §fDark Wizard"); // Hunted Dark Wizard
+        p.shouldMatch("§6- §7Class: §6\uE029§7 §fShaman"); // Ironman Shaman
+        p.shouldMatch("§6- §7Class: §c\uE027§7 §fAssassin"); // Hardcore Assassin
+        p.shouldMatch("§6- §7Class: §3\uE026§7 §fWarrior"); // Craftsman Warrior
+        p.shouldMatch("§6- §7Class: §c\uE027§b\uE083§3\uE026§5\uE028§7 §fArcher"); // HUICH Archer
+    }
+
+    @Test
+    public void CharacterAnnotator_CHARACTER_MENU_LEVEL_PATTERN() {
+        PatternTester p = new PatternTester(CharacterAnnotator.class, "CHARACTER_MENU_LEVEL_PATTERN");
+
+        p.shouldMatch("§6- §7Level: §f106§7 §8(0%)");
+        p.shouldMatch("§6- §7Level: §f105§7 §8(3.14%)");
+        p.shouldMatch("§6- §7Level: §f12§7 §8(40.54%)");
+        p.shouldMatch("§6- §7Level: §f1§7 §8(0.67%)");
     }
 
     @Test
@@ -983,17 +1007,6 @@ public class TestRegex {
     }
 
     @Test
-    public void TradeMarketQuickSearchFeature_TYPE_TO_CHAT_PATTERN() {
-        PatternTester p = new PatternTester(TradeMarketQuickSearchFeature.class, "TYPE_TO_CHAT_PATTERN");
-
-        p.shouldMatch(
-                "§5\uE00A\uE002 Type the price in emeralds or formatted (e.g '10eb', '10stx 5eb') or type 'cancel' to cancel:");
-        p.shouldMatch("§5\uE001 Type the amount you wish to sell or type 'cancel' to cancel:");
-        p.shouldMatch("§5\uE001 Type the item name or type 'cancel' to cancel:");
-        p.shouldMatch("§5\uE00A\uE002 Type the amount you wish to buy or type 'cancel' to cancel:");
-    }
-
-    @Test
     public void PartyModel_PARTY_LIST_ALL() {
         PatternTester p = new PatternTester(PartyModel.class, "PARTY_LIST_ALL");
         p.shouldMatch(
@@ -1005,5 +1018,12 @@ public class TestRegex {
         PatternTester p = new PatternTester(WorldStateModel.class, "HOUSING_NAME");
         p.shouldMatch("§f  §lChiefs Of Corkus' HQ");
         p.shouldMatch("§f  §lShadow's Home");
+    }
+
+    @Test
+    public void GambitAnnotator_GAMBIT_NAME() {
+        PatternTester p = new PatternTester(GambitAnnotator.class, "NAME_PATTERN");
+        p.shouldMatch("§#54fffcff§lIngenuous Mage's Gambit");
+        p.shouldMatch("§#ac2c01ff§lArcane Incontinent's Gambit");
     }
 }

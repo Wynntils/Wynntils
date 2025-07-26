@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
+import com.wynntils.mc.event.GetCameraEntityEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
@@ -31,10 +32,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -47,10 +51,15 @@ public class CustomNametagRendererFeature extends Feature {
     private static final float NAMETAG_HEIGHT = 0.25875f;
     private static final float BADGE_MARGIN = 2;
     private static final int BADGE_SCROLL_SPEED = 40;
-    private static final String WYNNTILS_LOGO = "⛨"; // Well, at least it's a shield...
+    private static final ResourceLocation WYNNTILS_NAMETAG_LOGO_FONT =
+            ResourceLocation.fromNamespaceAndPath("wynntils", "nametag");
+    private static final String WYNNTILS_NAMETAG_LOGO = "\uE100";
 
     @Persisted
     public final Config<Boolean> hideAllNametags = new Config<>(false);
+
+    @Persisted
+    public final Config<Boolean> showOwnNametag = new Config<>(false);
 
     @Persisted
     public final Config<Boolean> hidePlayerNametags = new Config<>(false);
@@ -122,6 +131,17 @@ public class CustomNametagRendererFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onCameraCheck(GetCameraEntityEvent e) {
+        if (!showOwnNametag.get()) return;
+        // Only render when a screen is not open or in the chat screen
+        if (McUtils.mc().screen != null && !(McUtils.mc().screen instanceof ChatScreen)) return;
+
+        // We don't need to check if the entity is the local player as that is already done in
+        // LivingEntityRenderer.shouldShowName
+        e.setEntity(null);
+    }
+
+    @SubscribeEvent
     public void onRenderLevel(RenderLevelEvent.Pre event) {
         Optional<Player> hitPlayer = RaycastUtils.getHoveredPlayer();
         hitPlayerCache = hitPlayer.orElse(null);
@@ -187,12 +207,19 @@ public class CustomNametagRendererFeature extends Feature {
         if (showWynntilsMarker.get()) {
             StyledText styledText = StyledText.fromComponent(realName);
             if (styledText.getString(PartStyle.StyleType.NONE).startsWith("[")) {
-                vanillaNametag = Component.literal(WYNNTILS_LOGO)
-                        .withStyle(ChatFormatting.DARK_GRAY)
+                vanillaNametag = Component.empty()
+                        .append(Component.literal(WYNNTILS_NAMETAG_LOGO)
+                                .withStyle(Style.EMPTY
+                                        .withFont(WYNNTILS_NAMETAG_LOGO_FONT)
+                                        .withColor(ChatFormatting.DARK_GRAY)))
                         .append(realName);
             } else {
-                vanillaNametag = Component.literal(WYNNTILS_LOGO + " ")
-                        .withStyle(ChatFormatting.GRAY)
+                vanillaNametag = Component.empty()
+                        .append(Component.literal(WYNNTILS_NAMETAG_LOGO)
+                                .withStyle(Style.EMPTY
+                                        .withFont(WYNNTILS_NAMETAG_LOGO_FONT)
+                                        .withColor(ChatFormatting.GRAY)))
+                        .append(" ")
                         .append(realName);
             }
         }

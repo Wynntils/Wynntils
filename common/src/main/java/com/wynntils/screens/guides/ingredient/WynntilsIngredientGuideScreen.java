@@ -1,14 +1,20 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.ingredient;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.screens.guides.widgets.filters.ProfessionTypeFilterWidget;
+import com.wynntils.screens.guides.widgets.filters.QualityTierFilterWidget;
+import com.wynntils.screens.guides.widgets.sorts.GuideSortButton;
+import com.wynntils.services.itemfilter.statproviders.QualityTierStatProvider;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
@@ -42,23 +48,29 @@ public final class WynntilsIngredientGuideScreen
     }
 
     @Override
+    protected void doInit() {
+        super.doInit();
+
+        if (searchWidget instanceof ItemSearchWidget itemSearchWidget) {
+            guideFilterWidgets.add(this.addRenderableWidget(new ProfessionTypeFilterWidget(
+                    47 + offsetX, 81 + offsetY, this, itemSearchWidget.getSearchQuery())));
+            guideFilterWidgets.add(this.addRenderableWidget(
+                    new QualityTierFilterWidget(47 + offsetX, 121 + offsetY, this, itemSearchWidget.getSearchQuery())));
+
+            guideSortWidget.setSecondarySortButton(
+                    new GuideSortButton(itemSearchWidget.getSearchQuery(), this, QualityTierStatProvider.class));
+        } else {
+            WynntilsMod.error("WynntilsIngredientGuideScreen's SearchWidget is not an ItemSearchWidget");
+        }
+    }
+
+    @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
         renderBackgroundTexture(poseStack);
 
-        // Make 0, 0 the top left corner of the rendered quest book background
-        poseStack.pushPose();
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-        poseStack.translate(translationX, translationY, 1f);
-
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
-
-        renderDescription(
-                poseStack,
-                I18n.get("screens.wynntils.wynntilsGuides.guideDescription"),
-                I18n.get("screens.wynntils.wynntilsGuides.filterHelper"));
 
         renderVersion(poseStack);
 
@@ -68,8 +80,6 @@ public final class WynntilsIngredientGuideScreen
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
-        poseStack.popPose();
-
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
@@ -78,22 +88,27 @@ public final class WynntilsIngredientGuideScreen
         int txWidth = Texture.CONTENT_BOOK_TITLE.width();
         int txHeight = Texture.CONTENT_BOOK_TITLE.height();
         RenderUtils.drawScalingTexturedRect(
-                poseStack, Texture.CONTENT_BOOK_TITLE.resource(), 0, 30, 0, txWidth, txHeight, txWidth, txHeight);
+                poseStack,
+                Texture.CONTENT_BOOK_TITLE.resource(),
+                offsetX,
+                30 + offsetY,
+                0,
+                txWidth,
+                txHeight,
+                txWidth,
+                txHeight);
 
-        poseStack.pushPose();
-        poseStack.translate(10, 36, 0);
-        poseStack.scale(1.8f, 1.8f, 0f);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(titleString),
-                        0,
-                        0,
+                        10 + offsetX,
+                        36 + offsetY,
                         CommonColors.YELLOW,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NORMAL);
-        poseStack.popPose();
+                        TextShadow.NORMAL,
+                        1.8f);
     }
 
     @Override
@@ -111,8 +126,8 @@ public final class WynntilsIngredientGuideScreen
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f,
-                        30,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + offsetX,
+                        30 + offsetY,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -125,8 +140,8 @@ public final class WynntilsIngredientGuideScreen
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
         return new GuideIngredientItemStackButton(
-                xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 13,
-                yOffset + 43,
+                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
+                yOffset + 43 + offsetY,
                 18,
                 18,
                 elements.get(i),
@@ -135,6 +150,10 @@ public final class WynntilsIngredientGuideScreen
 
     protected void reloadElementsList(ItemSearchQuery searchQuery) {
         elements.addAll(Services.ItemFilter.filterAndSort(searchQuery, getAllIngredientItems()));
+
+        guideFilterWidgets.forEach(filter -> filter.updateFromQuery(searchQuery));
+        if (guideSortWidget == null) return;
+        guideSortWidget.updateFromQuery(searchQuery);
     }
 
     private List<GuideIngredientItemStack> getAllIngredientItems() {

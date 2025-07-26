@@ -33,9 +33,6 @@ import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RatingRewardsContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
-import com.wynntils.models.containers.containers.TradeMarketContainer;
-import com.wynntils.models.containers.containers.TradeMarketFiltersContainer;
-import com.wynntils.models.containers.containers.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.cosmetics.HelmetCosmeticsMenuContainer;
 import com.wynntils.models.containers.containers.cosmetics.PetMenuContainer;
 import com.wynntils.models.containers.containers.cosmetics.PlayerEffectsMenuContainer;
@@ -52,6 +49,12 @@ import com.wynntils.models.containers.containers.reward.EventContainer;
 import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.ObjectiveRewardContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketBuyContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketFiltersContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.guild.type.GuildLogType;
 import com.wynntils.models.profession.type.ProfessionType;
 import java.util.ArrayList;
@@ -145,9 +148,12 @@ public final class ContainerModel extends Model {
         registerContainer(new RatingRewardsContainer());
         registerContainer(new ScrapMenuContainer());
         registerContainer(new SeaskipperContainer());
-        registerContainer(new TradeMarketFiltersContainer());
+        registerContainer(new TradeMarketBuyContainer());
         registerContainer(new TradeMarketContainer());
+        registerContainer(new TradeMarketFiltersContainer());
+        registerContainer(new TradeMarketOrderContainer());
         registerContainer(new TradeMarketSellContainer());
+        registerContainer(new TradeMarketTradesContainer());
         registerContainer(new WeaponCosmeticsMenuContainer());
 
         for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {

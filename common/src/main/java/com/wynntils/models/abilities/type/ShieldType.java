@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.type;
@@ -12,10 +12,16 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 public abstract class ShieldType {
     private final ClassType validClass;
     private final SpellType validSpell;
+    private final String name;
 
-    protected ShieldType(ClassType classType, SpellType spellType) {
+    protected ShieldType(ClassType classType, SpellType spellType, String name) {
         this.validClass = classType;
         this.validSpell = spellType;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean validClass() {

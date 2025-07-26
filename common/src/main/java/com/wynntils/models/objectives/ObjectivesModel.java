@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.objectives;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class ObjectivesModel extends Model {
+public final class ObjectivesModel extends Model {
     private static final ScoreboardPart DAILY_OBJECTIVES_SCOREBOARD_PART = new DailyObjectiveScoreboardPart();
     private static final ScoreboardPart GUILD_OBJECTIVES_SCOREBOARD_PART = new GuildObjectiveScoreboardPart();
 

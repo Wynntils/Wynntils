@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -7,6 +7,7 @@ package com.wynntils.utils.mc;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -19,11 +20,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 
 public final class ComponentUtils {
     private static final Pattern COLOR_CODE_PATTERN = Pattern.compile("(§[1-9a-f])+");
     private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
+
+    private static final ResourceLocation PILL_FONT = ResourceLocation.withDefaultNamespace("banner/pill");
+    private static final Style BACKGROUND_STYLE =
+            Style.EMPTY.withFont(PILL_FONT).withColor(ChatFormatting.AQUA);
+    private static final Style FOREGROUND_STYLE =
+            Style.EMPTY.withFont(PILL_FONT).withColor(ChatFormatting.BLACK);
+    private static final Component WYNNTILS_BACKGROUND_PILL = Component.literal(
+                    "\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE062\uDAFF\uDFD0")
+            .withStyle(BACKGROUND_STYLE);
+    private static final Component WYNNTILS_FOREGROUND_PILL = Component.literal(
+                    "\uE016\uE018\uE00D\uE00D\uE013\uE008\uE00B\uE012\uDB00\uDC02 ")
+            .withStyle(FOREGROUND_STYLE);
 
     public static List<Component> stripDuplicateBlank(List<Component> lore) {
         List<Component> newLore = new ArrayList<>(); // Used to remove duplicate blank lines
@@ -114,7 +128,13 @@ public final class ComponentUtils {
         return split;
     }
 
-    public static MutableComponent makeRainbowStyle(String name) {
+    public static MutableComponent makeRainbowStyle(String name, boolean useShader) {
+        if (useShader) {
+            return Component.literal(name)
+                    .withColor(CommonColors.RAINBOW.asInt())
+                    .withStyle(ChatFormatting.BOLD);
+        }
+
         MutableComponent newName = Component.literal("").withStyle(ChatFormatting.BOLD);
 
         // This math was originally based off Avaritia code.
@@ -167,5 +187,12 @@ public final class ComponentUtils {
             newName.append(Component.literal(current.toString()));
         }
         return newName;
+    }
+
+    public static MutableComponent addWynntilsPillHeader(Component component) {
+        return Component.empty()
+                .append(WYNNTILS_BACKGROUND_PILL)
+                .append(WYNNTILS_FOREGROUND_PILL)
+                .append(component);
     }
 }

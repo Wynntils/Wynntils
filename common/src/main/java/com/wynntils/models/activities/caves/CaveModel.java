@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.caves;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class CaveModel extends Model {
+public final class CaveModel extends Model {
     private final Map<String, CaveStorage> caveStorage = new HashMap<>();
 
     public CaveModel() {
@@ -70,24 +70,27 @@ public class CaveModel extends Model {
         Comparator<CaveInfo> baseComparator =
                 Comparator.comparing(caveInfo -> !caveInfo.name().equals(trackedCaveName));
         return switch (sortOrder) {
-            case LEVEL -> caveList.stream()
-                    .sorted(baseComparator
-                            .thenComparing(CaveInfo::status)
-                            .thenComparing(CaveInfo::recommendedLevel)
-                            .thenComparing(CaveInfo::name))
-                    .toList();
-            case DISTANCE -> caveList.stream()
-                    .sorted(baseComparator
-                            .thenComparing(CaveInfo::status)
-                            .thenComparing(CaveInfo::distance)
-                            .thenComparing(CaveInfo::name))
-                    .toList();
-            case ALPHABETIC -> caveList.stream()
-                    .sorted(baseComparator
-                            .thenComparing(CaveInfo::status)
-                            .thenComparing(CaveInfo::name)
-                            .thenComparing(CaveInfo::recommendedLevel))
-                    .toList();
+            case LEVEL ->
+                caveList.stream()
+                        .sorted(baseComparator
+                                .thenComparing(CaveInfo::status)
+                                .thenComparing(CaveInfo::recommendedLevel)
+                                .thenComparing(CaveInfo::name))
+                        .toList();
+            case DISTANCE ->
+                caveList.stream()
+                        .sorted(baseComparator
+                                .thenComparing(CaveInfo::status)
+                                .thenComparing(CaveInfo::distance)
+                                .thenComparing(CaveInfo::name))
+                        .toList();
+            case ALPHABETIC ->
+                caveList.stream()
+                        .sorted(baseComparator
+                                .thenComparing(CaveInfo::status)
+                                .thenComparing(CaveInfo::name)
+                                .thenComparing(CaveInfo::recommendedLevel))
+                        .toList();
         };
     }
 
@@ -103,7 +106,7 @@ public class CaveModel extends Model {
                 .caves());
     }
 
-    private CaveInfo getCaveInfoFromActivity(ActivityInfo activity) {
+    public CaveInfo getCaveInfoFromActivity(ActivityInfo activity) {
         return new CaveInfo(
                 activity.name(),
                 activity.status(),

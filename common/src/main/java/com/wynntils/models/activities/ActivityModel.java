@@ -4,17 +4,18 @@
  */
 package com.wynntils.models.activities;
 
+import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.net.ApiResponse;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
-import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
-import com.wynntils.mc.event.ScreenClosedEvent;
-import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.activities.beacons.ActivityBeaconKind;
 import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
@@ -28,6 +29,7 @@ import com.wynntils.models.activities.type.ActivityDistance;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityLength;
 import com.wynntils.models.activities.type.ActivityRequirements;
+import com.wynntils.models.activities.type.ActivityRewardType;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
@@ -36,9 +38,12 @@ import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.containers.containers.ContentBookContainer;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.screens.activities.ContentBookHolder;
+import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -48,11 +53,14 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -66,9 +74,8 @@ import net.neoforged.bus.api.SubscribeEvent;
  */
 public final class ActivityModel extends Model {
     public static final String CONTENT_BOOK_TITLE = "\uDAFF\uDFEE\uE004";
-
-    private static final Location WORLD_SPAWN = new Location(-1572, 41, -1668);
-    private static final Location HUB_SPAWN = new Location(295, 34, 321);
+    private static final String WIKI_APOSTROPHE = "&#039;";
+    private static final String PLAYER_PROGRESS_ITEM_NAME = "All Player Progress";
 
     private static final Pattern LEVEL_REQ_PATTERN =
             Pattern.compile("^§(.).À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
@@ -79,9 +86,10 @@ public final class ActivityModel extends Model {
     private static final Pattern LENGTH_PATTERN = Pattern.compile("^\uDB00\uDC0E§7Length: (\\w*)(?:§8 \\((.+)\\))?$");
     private static final Pattern DIFFICULTY_PATTERN = Pattern.compile("^\uDB00\uDC0E§7Difficulty: (\\w*)$");
     private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^\uDB00\uDC0E§dRewards:$");
-    private static final Pattern REWARD_PATTERN = Pattern.compile("^§d\uDB00\uDC04(?<newline>- )?§7\\+?(?<reward>.+)$");
+    private static final Pattern REWARD_PATTERN = Pattern.compile("^§d\uDB00\uDC04(- )?§7\\+?(?<reward>.+)$");
     private static final Pattern TRACKING_PATTERN = Pattern.compile("^.*§(?:#.{8}|.)§lCLICK TO (UN)?TRACK$");
     private static final Pattern OVERALL_PROGRESS_PATTERN = Pattern.compile("^\\S*§7(\\d+) of (\\d+) completed$");
+    private static final Pattern WIKI_REDIRECT_PATTERN = Pattern.compile("#REDIRECT \\[\\[(?<redirectname>.+)\\]\\]");
 
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
@@ -92,12 +100,14 @@ public final class ActivityModel extends Model {
     private List<List<StyledText>> dialogueHistory = List.of();
     private CappedValue overallProgress = CappedValue.EMPTY;
     private boolean overallProgressOutdated = true;
+    private String currentProgressCharacter = "";
 
     public ActivityModel(MarkerModel markerModel) {
         super(List.of(markerModel));
 
         Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
         Models.Marker.registerMarkerProvider(ACTIVITY_MARKER_PROVIDER);
+        Handlers.WrappedScreen.registerWrappedScreen(new ContentBookHolder());
 
         for (ActivityBeaconKind beaconKind : ActivityBeaconKind.values()) {
             Models.Beacon.registerBeacon(beaconKind);
@@ -106,26 +116,6 @@ public final class ActivityModel extends Model {
         for (ActivityBeaconMarkerKind beaconMarkerKind : ActivityBeaconMarkerKind.values()) {
             Models.Beacon.registerBeaconMarker(beaconMarkerKind);
         }
-    }
-
-    @SubscribeEvent
-    public void onSetSpawn(SetSpawnEvent e) {
-        Location spawn = new Location(e.getSpawnPos());
-        if (spawn.equals(WORLD_SPAWN) || spawn.equals(HUB_SPAWN)) {
-            ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null);
-            return;
-        }
-
-        Location player = Location.containing(McUtils.player().position());
-        if (spawn.equals(player)) {
-            // Wynncraft "resets" tracking by setting the compass to your current
-            // location. In theory, this can fail if you happen to be standing on
-            // the spot that is the target of the activity you start tracking...
-            ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null);
-            return;
-        }
-
-        ACTIVITY_MARKER_PROVIDER.setSpawnLocation(spawn);
     }
 
     @SubscribeEvent
@@ -146,29 +136,68 @@ public final class ActivityModel extends Model {
     @SubscribeEvent
     public void onBeaconMarkerAdded(BeaconMarkerEvent.Added event) {
         BeaconMarker beaconMarker = event.getBeaconMarker();
-        if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind)) return;
+        if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind activityBeaconMarker)) return;
 
         // FIXME: Feature-model dependency
         ContentTrackerFeature feature = Managers.Feature.getFeatureInstance(ContentTrackerFeature.class);
-        if (feature.hideOriginalMarker.get() && feature.isEnabled()) {
-            // Only set this once they are added.
-            // This is cleaner than posting an event on render,
-            // but a change in the config will only have effect on newly placed beacons.
-            ((EntityExtension) event.getEntity()).setRendered(false);
+        if (feature.isEnabled()) {
+            if (feature.hideOriginalMarker.get()) {
+                // Only set this once they are added.
+                // This is cleaner than posting an event on render,
+                // but a change in the config will only have effect on newly placed beacons.
+                ((EntityExtension) event.getEntity()).setRendered(false);
+            }
+            if (feature.autoTrackCoordinates.get()) {
+                Location spawn = new Location(McUtils.mc().level.getSharedSpawnPos());
+                ACTIVITY_MARKER_PROVIDER.setSpawnLocation(activityBeaconMarker.getActivityType(), spawn);
+
+                if (trackedActivity == null) return;
+
+                Location trackedLocation = getTrackedLocation();
+                if (trackedLocation != null && !spawn.equals(trackedLocation)) {
+                    ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(
+                            activityBeaconMarker.getActivityType(), trackedLocation);
+                }
+            }
         }
     }
 
     @SubscribeEvent
-    public void onScreenClosed(ScreenClosedEvent event) {
-        // The progress cannot be outdated if we are in the content book
-        // This speeds up navigation in the content book
+    public void onBeaconMarkerRemoved(BeaconMarkerEvent.Removed event) {
+        BeaconMarker beaconMarker = event.getBeaconMarker();
+        if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind)) return;
+
+        ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null, null);
+        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(null, null);
+    }
+
+    @SubscribeEvent
+    public void onContainerItemsSet(ContainerSetContentEvent.Pre event) {
+        if (!(Models.Container.getCurrentContainer() instanceof ContentBookContainer)) return;
+
+        for (ItemStack itemStack : event.getItems()) {
+            if (itemStack.getHoverName().getString().equals(PLAYER_PROGRESS_ITEM_NAME)) {
+                if (parseOverallProgress(LoreUtils.getLore(itemStack))) return;
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onWorldStateChanged(WorldStateEvent e) {
+        resetTracker();
+        // We need to rescan the overall progress when the world state changes
         overallProgressOutdated = true;
     }
 
     @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent event) {
-        // We need to rescan the overall progress when the world state changes
-        overallProgressOutdated = true;
+    public void onCharacterUpdated(CharacterUpdateEvent event) {
+        // Same character, no need to scan again
+        if (Models.Character.getId().equals(currentProgressCharacter)) {
+            overallProgressOutdated = false;
+            return;
+        }
+        // First thing to do when we just loaded a class
+        scanOverallProgress();
     }
 
     public ActivityInfo parseItem(String name, ActivityType type, ItemStack itemStack) {
@@ -217,9 +246,10 @@ public final class ActivityModel extends Model {
         ActivityTrackingState trackingState = ActivityTrackingState.UNTRACKABLE;
         List<Pair<Pair<ProfessionType, Integer>, Boolean>> professionLevels = new ArrayList<>();
         List<Pair<String, Boolean>> quests = new ArrayList<>();
-        List<String> rewards = new ArrayList<>();
+        Map<ActivityRewardType, List<StyledText>> rewards = new TreeMap<>();
         List<StyledText> descriptionLines = new ArrayList<>();
 
+        ActivityRewardType previousRewardType = null;
         for (StyledText line : lore) {
             // Must be tested before profession requirement pattern
             Matcher levelReqMatcher = line.getMatcher(LEVEL_REQ_PATTERN);
@@ -275,12 +305,13 @@ public final class ActivityModel extends Model {
 
             Matcher rewardMatcher = line.getMatcher(REWARD_PATTERN);
             if (rewardMatcher.matches()) {
-                boolean extendLastLine = rewardMatcher.group("newline") == null;
-                if (extendLastLine && !rewards.isEmpty()) {
-                    rewards.set(rewards.size() - 1, rewards.getLast() + " " + rewardMatcher.group("reward"));
-                } else {
-                    rewards.add(rewardMatcher.group("reward"));
-                }
+                ActivityRewardType rewardType = ActivityRewardType.matchRewardType(rewardMatcher.group("reward"));
+                List<StyledText> existingRewards = rewards.getOrDefault(rewardType, new ArrayList<>());
+                existingRewards.add(
+                        StyledText.fromString(rewardMatcher.group("reward").trim() + ChatFormatting.RESET));
+
+                rewards.put(rewardType, existingRewards);
+                previousRewardType = rewardType;
                 continue;
             }
 
@@ -292,7 +323,19 @@ public final class ActivityModel extends Model {
                 continue;
             }
 
-            if (line.isEmpty()) continue;
+            if (line.trim().isEmpty()) {
+                previousRewardType = null;
+                continue;
+            }
+
+            if (previousRewardType != null) {
+                StyledText existingReward = rewards.get(previousRewardType).getLast();
+                existingReward = existingReward.append(
+                        " " + line.getStringWithoutFormatting().trim() + ChatFormatting.RESET);
+                rewards.get(previousRewardType)
+                        .set(rewards.get(previousRewardType).size() - 1, existingReward);
+                continue;
+            }
 
             // For all other lines, append it to the description
             descriptionLines.add(line);
@@ -320,20 +363,153 @@ public final class ActivityModel extends Model {
                 trackingState);
     }
 
+    public void openActivityOnWiki(ActivityInfo activityInfo) {
+        switch (activityInfo.type()) {
+            case QUEST, STORYLINE_QUEST -> openQuestOnWiki(activityInfo);
+            case MINI_QUEST -> openMiniQuestOnWiki(activityInfo);
+            default -> {
+                Managers.Net.openLink(
+                        UrlId.LINK_WIKI_LOOKUP,
+                        Map.of("title", activityInfo.name().replace(" ", "_")));
+            }
+        }
+    }
+
+    private void openQuestOnWiki(ActivityInfo activityInfo) {
+        ApiResponse apiResponse =
+                Managers.Net.callApi(UrlId.API_WIKI_QUEST_PAGE_QUERY, Map.of("name", activityInfo.name()));
+        apiResponse.handleJsonArray(json -> {
+            String pageTitle = json.get(0)
+                    .getAsJsonObject()
+                    .get("_pageTitle")
+                    .getAsString()
+                    .replace(WIKI_APOSTROPHE, "'");
+            Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
+        });
+    }
+
+    private void openMiniQuestOnWiki(ActivityInfo activityInfo) {
+        String type = activityInfo.name().split(" ")[0];
+
+        String wikiName = "Quests#" + type + "ing_Posts";
+
+        Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", wikiName));
+    }
+
+    public void openMapOnActivity(ActivityInfo activityInfo) {
+        switch (activityInfo.type()) {
+            case QUEST, STORYLINE_QUEST, MINI_QUEST -> openMapOnQuest(activityInfo);
+            case CAVE -> openMapOnCave(activityInfo);
+            case WORLD_EVENT -> {
+                return;
+            }
+            default -> locateActivity(activityInfo, ActivityOpenAction.MAP);
+        }
+    }
+
+    private void openMapOnQuest(ActivityInfo activityInfo) {
+        QuestInfo questInfo = Models.Quest.getQuestInfoFromActivity(activityInfo);
+
+        if (questInfo.nextLocation().isPresent()) {
+            McUtils.player().closeContainer();
+            McUtils.mc()
+                    .setScreen(MainMapScreen.create(
+                            questInfo.nextLocation().get().x(),
+                            questInfo.nextLocation().get().z()));
+        }
+    }
+
+    private void openMapOnCave(ActivityInfo activityInfo) {
+        CaveInfo caveInfo = Models.Cave.getCaveInfoFromActivity(activityInfo);
+
+        if (caveInfo.getNextLocation().isPresent()) {
+            McUtils.player().closeContainer();
+            McUtils.mc()
+                    .setScreen(MainMapScreen.create(
+                            caveInfo.getNextLocation().get().x(),
+                            caveInfo.getNextLocation().get().z()));
+        }
+    }
+
+    public void placeCompassOnActivity(ActivityInfo activityInfo) {
+        switch (activityInfo.type()) {
+            case QUEST, STORYLINE_QUEST, MINI_QUEST, WORLD_EVENT -> {
+                return;
+            }
+            default -> locateActivity(activityInfo, ActivityOpenAction.COMPASS);
+        }
+    }
+
+    private void locateActivity(ActivityInfo activityInfo, ActivityOpenAction openAction) {
+        checkWikiForActivity(activityInfo.name(), activityInfo, openAction);
+    }
+
+    private void checkWikiForActivity(String activityName, ActivityInfo activityInfo, ActivityOpenAction openAction) {
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", activityName));
+
+        apiResponse.handleJsonObject(json -> handleActivityJsonResponse(json, activityInfo, openAction));
+    }
+
+    private void handleActivityJsonResponse(JsonObject json, ActivityInfo activityInfo, ActivityOpenAction openAction) {
+        if (json.has("error")) {
+            McUtils.sendErrorToClient("Unable to find activity coordinates. (Wiki page not found)");
+            return;
+        }
+
+        String wikiText = json.get("parse")
+                .getAsJsonObject()
+                .get("wikitext")
+                .getAsJsonObject()
+                .get("*")
+                .getAsString();
+
+        Matcher redirectMatcher = WIKI_REDIRECT_PATTERN.matcher(wikiText);
+        if (redirectMatcher.matches()) {
+            checkWikiForActivity(redirectMatcher.group("redirectname"), activityInfo, openAction);
+            return;
+        }
+
+        wikiText = wikiText.replace(" ", "").replace("\n", "");
+
+        String xLocation = wikiText.substring(wikiText.indexOf("xcoordinate="));
+        String zLocation = wikiText.substring(wikiText.indexOf("zcoordinate="));
+
+        int xEnd = Math.min(xLocation.indexOf('|'), xLocation.indexOf("}}"));
+        int zEnd = Math.min(zLocation.indexOf('|'), zLocation.indexOf("}}"));
+
+        int x;
+        int z;
+
+        try {
+            x = Integer.parseInt(xLocation.substring(12, xEnd));
+            z = Integer.parseInt(zLocation.substring(12, zEnd));
+        } catch (NumberFormatException e) {
+            McUtils.sendErrorToClient("Unable to find discovery coordinates. (Wiki template not located)");
+            return;
+        }
+
+        if (x == 0 && z == 0) {
+            McUtils.sendErrorToClient("Unable to find discovery coordinates. (Wiki coordinates not located)");
+            return;
+        }
+
+        switch (openAction) {
+            // We can't run this is on request thread
+            case MAP ->
+                Managers.TickScheduler.scheduleNextTick(() -> {
+                    McUtils.player().closeContainer();
+                    McUtils.mc().setScreen(MainMapScreen.create(x, z));
+                });
+            case COMPASS -> {
+                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
+                Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z), activityInfo.name());
+            }
+        }
+    }
+
     private boolean isFulfilled(Matcher colorCodeMatcher) {
         // Check if the requirement is colored green
         return colorCodeMatcher.group(1).charAt(0) == ChatFormatting.GREEN.getChar();
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onWorldStateChanged(WorldStateEvent e) {
-        resetTracker();
-    }
-
-    @SubscribeEvent
-    public void onCharacterUpdated(CharacterUpdateEvent event) {
-        // First thing to do when we just loaded a class
-        scanOverallProgress();
     }
 
     public CappedValue getOverallProgress() {
@@ -372,7 +548,6 @@ public final class ActivityModel extends Model {
     void updateTracker(String name, String type, StyledText nextTask) {
         ActivityType trackedType = ActivityType.from(type);
         trackedActivity = new TrackedActivity(name, trackedType, nextTask);
-        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(getTrackedLocation(), trackedType.getColor());
 
         WynntilsMod.postEvent(new ActivityTrackerUpdatedEvent(
                 trackedActivity.trackedType(), trackedActivity.trackedName(), trackedActivity.trackedTask()));
@@ -385,11 +560,7 @@ public final class ActivityModel extends Model {
 
     public void scanContentBook(
             ActivityType activityType, BiConsumer<List<ActivityInfo>, List<StyledText>> processResult) {
-        // Feature dependency until Model configs
-        boolean showUpdates = Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
-                .showContentBookLoadingUpdates
-                .get();
-        CONTAINER_QUERIES.queryContentBook(activityType, processResult, showUpdates, false);
+        CONTAINER_QUERIES.queryContentBook(activityType, processResult, true, false);
     }
 
     public void startTracking(String name, ActivityType activityType) {
@@ -412,25 +583,34 @@ public final class ActivityModel extends Model {
         DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
     }
 
-    public void scanOverallProgress() {
+    private void scanOverallProgress() {
         if (!overallProgressOutdated) return;
 
         overallProgressOutdated = false;
         CONTAINER_QUERIES.queryContentBook(
                 ActivityType.RECOMMENDED,
                 (ignored, progress) -> {
-                    for (StyledText line : progress) {
-                        Matcher m = line.getMatcher(OVERALL_PROGRESS_PATTERN);
-                        if (m.matches()) {
-                            int completed = Integer.parseInt(m.group(1));
-                            int total = Integer.parseInt(m.group(2));
-                            overallProgress = new CappedValue(completed, total);
-                            return;
-                        }
+                    if (parseOverallProgress(progress)) {
+                        return;
                     }
                 },
                 false,
                 true);
+    }
+
+    private boolean parseOverallProgress(List<StyledText> progress) {
+        for (StyledText line : progress) {
+            Matcher m = line.getMatcher(OVERALL_PROGRESS_PATTERN);
+            if (m.matches()) {
+                int completed = Integer.parseInt(m.group(1));
+                int total = Integer.parseInt(m.group(2));
+                overallProgress = new CappedValue(completed, total);
+                currentProgressCharacter = Models.Character.getId();
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {
@@ -443,4 +623,9 @@ public final class ActivityModel extends Model {
     }
 
     private record TrackedActivity(String trackedName, ActivityType trackedType, StyledText trackedTask) {}
+
+    public enum ActivityOpenAction {
+        MAP,
+        COMPASS
+    }
 }

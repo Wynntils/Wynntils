@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -7,27 +7,26 @@ package com.wynntils.core.consumers.overlays;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ComparisonChain;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.AbstractConfigurable;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Comparable<Overlay> {
     @Persisted(i18nKey = "overlay.wynntils.overlay.position")
-    protected final HiddenConfig<OverlayPosition> position = new HiddenConfig<>(null);
+    protected final Config<OverlayPosition> position = new Config<>(null);
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.size")
-    protected final HiddenConfig<OverlaySize> size = new HiddenConfig<>(null);
+    protected final Config<OverlaySize> size = new Config<>(null);
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.userEnabled")
     protected final Config<Boolean> userEnabled = new Config<>(true);
@@ -38,10 +37,10 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
     @Persisted(i18nKey = "overlay.wynntils.overlay.horizontalAlignmentOverride")
-    protected final HiddenConfig<HorizontalAlignment> horizontalAlignmentOverride = new HiddenConfig<>(null);
+    protected final Config<HorizontalAlignment> horizontalAlignmentOverride = new Config<>(null);
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.verticalAlignmentOverride")
-    protected final HiddenConfig<VerticalAlignment> verticalAlignmentOverride = new HiddenConfig<>(null);
+    protected final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
 
     protected Overlay(OverlayPosition position, float width, float height) {
         this.position.store(position);
@@ -70,11 +69,11 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     }
 
     public abstract void render(
-            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window);
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window);
 
     public void renderPreview(
-            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        this.render(poseStack, bufferSource, deltaTracker, window);
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        this.render(guiGraphics, bufferSource, deltaTracker, window);
     }
 
     public void tick() {}
@@ -153,6 +152,10 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     public final boolean isParentEnabled() {
         return Managers.Overlay.getOverlayParent(this).isEnabled();
+    }
+
+    public final String getParentTranslatedName() {
+        return Managers.Overlay.getOverlayParent(this).getTranslatedName();
     }
 
     public float getWidth() {

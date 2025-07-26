@@ -98,9 +98,11 @@ public class WynntilsCheckbox extends AbstractButton {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         ResourceLocation resourceLocation;
         if (this.selected) {
-            resourceLocation = this.isFocused() ? CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE : CHECKBOX_SELECTED_SPRITE;
+            resourceLocation = this.isFocused() || this.isHovered()
+                    ? CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE
+                    : CHECKBOX_SELECTED_SPRITE;
         } else {
-            resourceLocation = this.isFocused() ? CHECKBOX_HIGHLIGHTED_SPRITE : CHECKBOX_SPRITE;
+            resourceLocation = this.isFocused() || this.isHovered() ? CHECKBOX_HIGHLIGHTED_SPRITE : CHECKBOX_SPRITE;
         }
 
         RenderUtils.drawScalingTexturedRect(

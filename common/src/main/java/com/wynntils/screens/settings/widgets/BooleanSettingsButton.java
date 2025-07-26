@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -17,14 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 public class BooleanSettingsButton extends GeneralSettingsButton {
     private final Config<Boolean> config;
 
-    public BooleanSettingsButton(
-            int x,
-            int y,
-            Config<Boolean> config,
-            int maskTopY,
-            int maskBottomY,
-            float translationX,
-            float translationY) {
+    public BooleanSettingsButton(int x, int y, Config<Boolean> config, int maskTopY, int maskBottomY) {
         super(
                 x,
                 y,
@@ -33,9 +26,7 @@ public class BooleanSettingsButton extends GeneralSettingsButton {
                 getTitle(config),
                 ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150),
                 maskTopY,
-                maskBottomY,
-                translationX,
-                translationY);
+                maskBottomY);
         this.config = config;
     }
 

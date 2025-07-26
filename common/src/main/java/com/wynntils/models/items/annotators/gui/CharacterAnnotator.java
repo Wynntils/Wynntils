@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
@@ -15,34 +15,35 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public class CharacterAnnotator implements GuiItemAnnotator {
-    // (?:§l)? is trying to account for the fact that seemingly Wynn is trying to bold the text,
-    // but Wynn adds a color after the bold, resetting the bold effect.
-    private static final Pattern CLASS_MENU_NAME_PATTERN =
-            Pattern.compile("(?:§l)?§6(?:§l)?\\[>\\] Select ((.+)|This Character)");
+    private static final Pattern CHARACTER_MENU_NAME_PATTERN =
+            Pattern.compile("[\uDB00\uDC0B-\uDB00\uDC46]§6(§o)?(?<name>[A-Za-z0-9_ ]{1,20})");
 
-    // Test in CharacterAnnotator_CLASS_MENU_CLASS_PATTERN
-    private static final Pattern CLASS_MENU_CLASS_PATTERN =
-            Pattern.compile("§e- §7Class:(?: (?<gamemodes>§.[\uE027\uE083\uE026\uE029\uE028])+§r)? §f(?<class>.+)");
-    private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
+    // Test in CharacterAnnotator_CHARACTER_MENU_CLASS_PATTERN
+    private static final Pattern CHARACTER_MENU_CLASS_PATTERN =
+            Pattern.compile("§6- §7Class:(?: (?<gamemodes>§.[\uE027\uE083\uE026\uE029\uE028])+§7)? §f(?<class>.+)");
+
+    // Test in CharacterAnnotator_CHARACTER_MENU_LEVEL_PATTERN
+    private static final Pattern CHARACTER_MENU_LEVEL_PATTERN =
+            Pattern.compile("§6- §7Level: §f(?<level>\\d+)§7 §8\\(\\d+(?:\\.\\d+)?%\\)");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = StyledText.fromComponent(itemStack.getHoverName()).getMatcher(CLASS_MENU_NAME_PATTERN);
+        Matcher matcher = StyledText.fromComponent(itemStack.getHoverName()).getMatcher(CHARACTER_MENU_NAME_PATTERN);
         if (!matcher.matches()) return null;
 
-        String className = matcher.group(1);
+        String className = matcher.group("name");
         int level = 0;
         ClassType classType = null;
         boolean reskinned = false;
 
         for (StyledText lore : LoreUtils.getLore(itemStack)) {
-            Matcher classMatcher = lore.getMatcher(CLASS_MENU_CLASS_PATTERN);
+            Matcher classMatcher = lore.getMatcher(CHARACTER_MENU_CLASS_PATTERN);
             if (classMatcher.matches()) {
                 classType = ClassType.fromName(classMatcher.group("class"));
                 reskinned = ClassType.isReskinned(classMatcher.group("class"));
             }
 
-            Matcher levelMatcher = lore.getMatcher(CLASS_MENU_LEVEL_PATTERN);
+            Matcher levelMatcher = lore.getMatcher(CHARACTER_MENU_LEVEL_PATTERN);
             if (levelMatcher.matches()) {
                 level = Integer.parseInt(levelMatcher.group(1));
             }

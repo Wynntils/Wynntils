@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.statuseffects;
@@ -31,7 +31,7 @@ public final class StatusEffectModel extends Model {
      * This is because the 17% in Frenzy (and certain other buffs) can change, but the static scroll buffs cannot.
      * <p>
      *
-     * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
+     * <p>Originally taken from: <a href="https://github.com/Wynntils/wynntils-legacy/pull/615">Legacy</a>
      */
     /*
      * current regex:
@@ -45,7 +45,7 @@ public final class StatusEffectModel extends Model {
 
     // Test in StatusEffectModel_STATUS_EFFECT_PATTERN
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
-            "(?<prefix>.+?)§7\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d]+))?(?<modifierSuffix>((\\/\\d+s)|%)?)?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((.+?)\\))");
+            "(?<prefix>.+?)§7\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d]+))?(?<modifierSuffix>((\\/\\d+s)|%)?)?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((?<minutes>(\\d{2}|\\*{2})):(?<seconds>(\\d{2}|\\*{2}))\\))");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 
@@ -93,7 +93,15 @@ public final class StatusEffectModel extends Model {
 
             StyledText prefix = StyledText.fromString(m.group("prefix").trim());
             StyledText name = StyledText.fromString(color + m.group("name").trim());
-            StyledText displayedTime = StyledText.fromString(m.group("timer").trim());
+            StyledText minutes = StyledText.fromString(m.group("minutes")).trim();
+            StyledText seconds = StyledText.fromString(m.group("seconds")).trim();
+            StyledText displayedTime = StyledText.fromString(m.group("timer"));
+            int duration = -1;
+
+            try {
+                duration = Integer.parseInt(minutes.getString()) * 60 + Integer.parseInt(seconds.getString());
+            } catch (NumberFormatException ignored) {
+            }
 
             String modifierGroup = m.group("modifier");
             StyledText modifier =
@@ -104,10 +112,19 @@ public final class StatusEffectModel extends Model {
                     ? StyledText.EMPTY
                     : StyledText.fromString(color + modifierSuffixGroup.trim());
 
-            newStatusEffects.add(new StatusEffect(name, modifier, modifierSuffix, displayedTime, prefix));
+            newStatusEffects.add(new StatusEffect(name, modifier, modifierSuffix, displayedTime, prefix, duration));
         }
 
         statusEffects = newStatusEffects;
         WynntilsMod.postEvent(new StatusEffectsChangedEvent());
+    }
+
+    public StatusEffect searchStatusEffectByName(String query) {
+        for (StatusEffect effect : statusEffects) {
+            if (effect.getName().getStringWithoutFormatting().startsWith(query)) {
+                return effect;
+            }
+        }
+        return null;
     }
 }

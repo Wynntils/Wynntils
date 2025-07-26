@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
@@ -64,6 +65,21 @@ public class ConditionalFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("if_capped", "if_cap");
+        }
+    }
+
+    public static class IfCustomColorFunction extends IfFunctionBase<CustomColor> {
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("condition", Boolean.class, null),
+                    new FunctionArguments.Argument<>("ifTrue", CustomColor.class, null),
+                    new FunctionArguments.Argument<>("ifFalse", CustomColor.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("if_color", "if_customcolor");
         }
     }
 }

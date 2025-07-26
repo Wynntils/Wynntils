@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.colorpicker;
@@ -15,7 +15,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import java.awt.Color;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -60,6 +59,9 @@ public final class ColorPickerScreen extends WynntilsScreen {
     private float saturation;
     private float brightness;
 
+    private int offsetX;
+    private int offsetY;
+
     private ColorPickerScreen(Screen previousScreen, TextInputBoxWidget inputWidget) {
         super(Component.literal("Color Picker Screen"));
 
@@ -75,24 +77,26 @@ public final class ColorPickerScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
-        saturationBrightnessWidget =
-                new SaturationBrightnessWidget(getTranslationX() + 109, getTranslationY() + 15, 322, 82, this, color);
+        offsetX = (this.width - Texture.COLOR_PICKER_BACKGROUND.width()) / 2;
+        offsetY = (this.height - Texture.COLOR_PICKER_BACKGROUND.height()) / 2;
+
+        saturationBrightnessWidget = new SaturationBrightnessWidget(offsetX + 109, offsetY + 15, 322, 82, this, color);
         this.addRenderableWidget(saturationBrightnessWidget);
 
-        float[] hsbValues = Color.RGBtoHSB(color.r, color.g, color.b, null);
+        float[] hsbValues = color.asHSB();
         hue = hsbValues[0];
         saturation = hsbValues[1];
         brightness = hsbValues[2];
 
-        hueSlider = new HueSlider(getTranslationX() + 11, getTranslationY() + 105, 420, 20, hue, this);
+        hueSlider = new HueSlider(offsetX + 11, offsetY + 105, 420, 20, hue, this);
         this.addRenderableWidget(hueSlider);
 
-        alphaSlider = new AlphaSlider(getTranslationX() + 11, getTranslationY() + 133, 420, 20, color.a / 255.0, this);
+        alphaSlider = new AlphaSlider(offsetX + 11, offsetY + 133, 420, 20, color.a / 255.0, this);
         this.addRenderableWidget(alphaSlider);
 
         this.addRenderableWidget(
                 new Button.Builder(Component.translatable("screens.wynntils.colorPicker.cancel"), (button) -> onClose())
-                        .pos(getTranslationX() + 40, getTranslationY() + Texture.COLOR_PICKER_BACKGROUND.height() + 5)
+                        .pos(offsetX + 40, offsetY + Texture.COLOR_PICKER_BACKGROUND.height() + 5)
                         .size(150, 20)
                         .build());
 
@@ -102,18 +106,18 @@ public final class ColorPickerScreen extends WynntilsScreen {
                             onClose();
                         })
                         .pos(
-                                getTranslationX() + Texture.COLOR_PICKER_BACKGROUND.width() - 190,
-                                getTranslationY() + Texture.COLOR_PICKER_BACKGROUND.height() + 5)
+                                offsetX + Texture.COLOR_PICKER_BACKGROUND.width() - 190,
+                                offsetY + Texture.COLOR_PICKER_BACKGROUND.height() + 5)
                         .size(150, 20)
                         .build());
 
-        colorInput = new TextInputBoxWidget(getTranslationX() + 11, getTranslationY() + 84, 60, 18, null, this);
+        colorInput = new TextInputBoxWidget(offsetX + 11, offsetY + 84, 60, 18, null, this);
         colorInput.setTextBoxInput(color.toHexString());
         this.addRenderableWidget(colorInput);
 
         this.addRenderableWidget(
                 new Button.Builder(Component.literal("✔").withStyle(ChatFormatting.GREEN), (button) -> applyColor())
-                        .pos(getTranslationX() + 74, getTranslationY() + 83)
+                        .pos(offsetX + 74, offsetY + 83)
                         .size(20, 20)
                         .build());
 
@@ -121,8 +125,8 @@ public final class ColorPickerScreen extends WynntilsScreen {
         int y = 161;
 
         for (int i = 0; i < PRESET_COLORS.size(); i++) {
-            this.addRenderableWidget(new PresetColorButton(
-                    getTranslationX() + x, getTranslationY() + y, 12, 12, PRESET_COLORS.get(i), this));
+            this.addRenderableWidget(
+                    new PresetColorButton(offsetX + x, offsetY + y, 12, 12, PRESET_COLORS.get(i), this));
 
             x += 24;
 
@@ -142,10 +146,9 @@ public final class ColorPickerScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(
-                guiGraphics.pose(), Texture.COLOR_PICKER_BACKGROUND, getTranslationX(), getTranslationY());
+        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.COLOR_PICKER_BACKGROUND, offsetX, offsetY);
 
-        renderSelectedColor(guiGraphics, getTranslationX() + 11, getTranslationY() + 15);
+        renderSelectedColor(guiGraphics, offsetX + 11, offsetY + 15);
 
         this.renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
     }
@@ -169,7 +172,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
     public void setHue(float hue) {
         this.hue = hue;
 
-        float[] hsbColor = Color.RGBtoHSB(color.r, color.g, color.b, null);
+        float[] hsbColor = color.asHSB();
 
         color = CustomColor.fromHSV(hue, hsbColor[1], hsbColor[2], color.a / 255f);
 
@@ -189,7 +192,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
 
         colorInput.setTextBoxInput(color.toHexString());
 
-        float[] hsbColor = Color.RGBtoHSB(color.r, color.g, color.b, null);
+        float[] hsbColor = color.asHSB();
 
         hue = hsbColor[0];
         saturation = hsbColor[1];
@@ -203,14 +206,6 @@ public final class ColorPickerScreen extends WynntilsScreen {
 
     public CustomColor getColor() {
         return color;
-    }
-
-    public int getTranslationX() {
-        return (this.width - Texture.COLOR_PICKER_BACKGROUND.width()) / 2;
-    }
-
-    public int getTranslationY() {
-        return (this.height - Texture.COLOR_PICKER_BACKGROUND.height()) / 2;
     }
 
     private void applyColor() {

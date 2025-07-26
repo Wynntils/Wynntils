@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.wynntilsmenu;
@@ -11,10 +11,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
-import com.wynntils.screens.activities.WynntilsCaveScreen;
-import com.wynntils.screens.activities.WynntilsDialogueHistoryScreen;
-import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
-import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
@@ -28,7 +24,6 @@ import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.screens.statistics.WynntilsStatisticsScreen;
 import com.wynntils.screens.wynntilsmenu.widgets.WynntilsMenuButton;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
@@ -37,12 +32,12 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -53,13 +48,9 @@ import org.lwjgl.glfw.GLFW;
 
 public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private static final int BUTTON_SIZE = 30;
-    private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
-    private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
 
     private final List<List<WynntilsMenuButton>> buttons = new ArrayList<>();
     private WynntilsMenuButton hovered = null;
-
-    private boolean firstInit = true;
 
     // This makes sure we "save" our status on the settings & overlay screen, and we reopen it in the same state
     private static final Screen overlayScreenInstance = OverlaySelectionScreen.create();
@@ -67,7 +58,6 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     private WynntilsMenuScreen() {
         super(Component.translatable("screens.wynntils.wynntilsMenu.name"));
-        setup();
     }
 
     public static Screen create() {
@@ -76,29 +66,31 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     @Override
     protected void doInit() {
-        if (firstInit) {
-            if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
-                    .displayOverallProgress
-                    .get()) {
-                Models.Activity.scanOverallProgress();
-            }
-        }
+        super.doInit();
 
-        firstInit = false;
+        setup();
     }
 
     private void setup() {
+        buttons.clear();
+
         // Add 4 rows of buttons
         for (int i = 0; i < 4; i++) {
             buttons.add(new ArrayList<>());
         }
 
+        int x = ((BUTTON_SIZE + 5) + offsetX) - 15;
+        int y = (BUTTON_SIZE + 5) + offsetY + 15;
+
         // region Row 1: Content / Activities
-        buttons.getFirst()
+        buttons.get(0)
                 .add(new WynntilsMenuButton(
+                        x,
+                        y,
+                        BUTTON_SIZE,
                         Texture.QUEST_BOOK_ICON,
                         true,
-                        WynntilsQuestBookScreen.create(),
+                        () -> ContainerUtils.openInventory(InventoryUtils.CONTENT_BOOK_SLOT_NUM),
                         List.of(
                                 Component.literal("[>] ")
                                         .withStyle(ChatFormatting.GOLD)
@@ -110,62 +102,17 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                         .withStyle(ChatFormatting.GREEN))));
-        buttons.getFirst()
-                .add(new WynntilsMenuButton(
-                        Texture.DISCOVERIES_ICON,
-                        true,
-                        WynntilsDiscoveriesScreen.create(),
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable("screens.wynntils.wynntilsDiscoveries.name")
-                                                .withStyle(ChatFormatting.BOLD)
-                                                .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.wynntilsDiscoveries.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.literal(""),
-                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
-                                        .withStyle(ChatFormatting.GREEN))));
-        buttons.get(0)
-                .add(new WynntilsMenuButton(
-                        Texture.CAVE,
-                        false,
-                        WynntilsCaveScreen.create(),
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable("screens.wynntils.wynntilsCaves.name")
-                                                .withStyle(ChatFormatting.BOLD)
-                                                .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.wynntilsCaves.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.literal(""),
-                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
-                                        .withStyle(ChatFormatting.GREEN))));
-        buttons.get(0)
-                .add(new WynntilsMenuButton(
-                        Texture.ADD_ICON,
-                        false,
-                        () -> ContainerUtils.openInventory(InventoryUtils.CONTENT_BOOK_SLOT_NUM),
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable("screens.wynntils.additionalContent.name")
-                                                .withStyle(ChatFormatting.BOLD)
-                                                .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.additionalContent.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.literal(""),
-                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
-                                        .withStyle(ChatFormatting.GREEN))));
-
         // endregion
 
         // region Row 2: Map
-
+        x = ((BUTTON_SIZE + 5) + offsetX) - 15;
+        y += (BUTTON_SIZE + 5);
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class).isEnabled()) {
             buttons.get(1)
                     .add(new WynntilsMenuButton(
+                            x,
+                            y,
+                            BUTTON_SIZE,
                             Texture.MAP_ICON,
                             true,
                             MainMapScreen.create(),
@@ -182,8 +129,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                     Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                             .withStyle(ChatFormatting.GREEN))));
         }
+        x += (BUTTON_SIZE + 5);
         buttons.get(1)
                 .add(new WynntilsMenuButton(
+                        x,
+                        y,
+                        BUTTON_SIZE,
                         Texture.LOOTRUN_ICON,
                         true,
                         WynntilsLootrunPathsScreen.create(),
@@ -199,8 +150,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                         .withStyle(ChatFormatting.GREEN))));
+        x += (BUTTON_SIZE + 5);
         buttons.get(1)
                 .add(new WynntilsMenuButton(
+                        x,
+                        y,
+                        BUTTON_SIZE,
                         Texture.WAYPOINT_MANAGER_ICON,
                         false,
                         PoiManagementScreen.create(),
@@ -218,8 +173,13 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         // endregion
 
         // region Row 3: Guides
+        x = ((BUTTON_SIZE + 5) + offsetX) - 15;
+        y += (BUTTON_SIZE + 5);
         buttons.get(2)
                 .add(new WynntilsMenuButton(
+                        x,
+                        y,
+                        BUTTON_SIZE,
                         Texture.GUIDES_ICON,
                         true,
                         WynntilsGuidesListScreen.create(),
@@ -234,27 +194,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                         .withStyle(ChatFormatting.GREEN))));
-
+        x += (BUTTON_SIZE + 5);
         buttons.get(2)
                 .add(new WynntilsMenuButton(
-                        Texture.DIALOGUE_ICON,
-                        false,
-                        WynntilsDialogueHistoryScreen.create(),
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable(
-                                                        "screens.wynntils.wynntilsQuestBook.dialogueHistory.name")
-                                                .withStyle(ChatFormatting.BOLD)
-                                                .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.literal(""),
-                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
-                                        .withStyle(ChatFormatting.GREEN))));
-
-        buttons.get(2)
-                .add(new WynntilsMenuButton(
+                        x,
+                        y,
+                        BUTTON_SIZE,
                         Texture.FAVORITE_ICON,
                         false,
                         WynntilsStatisticsScreen.create(),
@@ -269,9 +214,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                         .withStyle(ChatFormatting.GREEN))));
-
+        x += (BUTTON_SIZE + 5);
         buttons.get(2)
                 .add(new WynntilsMenuButton(
+                        x,
+                        y,
+                        BUTTON_SIZE,
                         Texture.ITEM_LOCK,
                         false,
                         SavedItemsScreen.create(),
@@ -290,8 +238,13 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         // endregion
 
         // region Row 4: Wynntils
+        x = ((BUTTON_SIZE + 5) + offsetX) - 15;
+        y += (BUTTON_SIZE + 5);
         buttons.get(3)
                 .add(new WynntilsMenuButton(
+                        x,
+                        y,
+                        BUTTON_SIZE,
                         Texture.SETTINGS_ICON,
                         true,
                         settingsScreenInstance,
@@ -306,8 +259,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                         .withStyle(ChatFormatting.GREEN))));
+        x += (BUTTON_SIZE + 5);
         buttons.get(3)
                 .add(new WynntilsMenuButton(
+                        x,
+                        y,
+                        BUTTON_SIZE,
                         Texture.OVERLAYS_ICON,
                         true,
                         overlayScreenInstance,
@@ -323,9 +280,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                         .withStyle(ChatFormatting.GREEN))));
-
+        x += (BUTTON_SIZE + 5);
         buttons.get(3)
                 .add(new WynntilsMenuButton(
+                        x,
+                        y,
+                        BUTTON_SIZE,
                         Texture.SHARE_ICON,
                         false,
                         WynntilsCrowdSourcingSettingsScreen.create(),
@@ -341,9 +301,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                         .withStyle(ChatFormatting.GREEN))));
-
+        x += (BUTTON_SIZE + 5);
         buttons.get(3)
                 .add(new WynntilsMenuButton(
+                        x,
+                        y,
+                        BUTTON_SIZE,
                         Texture.EDIT_NAME_ICON,
                         false,
                         DownloadScreen.create(null, null),
@@ -369,30 +332,45 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         PoseStack poseStack = guiGraphics.pose();
         renderBackgroundTexture(poseStack);
 
-        // Make 0, 0 the top left corner of the rendered quest book background
-        poseStack.pushPose();
-        final float translationX = (this.width - Texture.CONTENT_BOOK_BACKGROUND.width()) / 2f;
-        final float translationY = (this.height - Texture.CONTENT_BOOK_BACKGROUND.height()) / 2f;
-        poseStack.translate(translationX, translationY, 1f);
-
-        poseStack.pushPose();
-        poseStack.translate(0, -15, 0);
-
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
-
-        poseStack.popPose();
 
         renderVersion(poseStack);
 
-        renderWidgets(poseStack, mouseX, mouseY);
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderPlayerInfo(guiGraphics, mouseX, mouseY);
-
-        poseStack.popPose();
 
         renderPlayer(guiGraphics, mouseX, mouseY);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderTitle(PoseStack poseStack, String titleString) {
+        int txWidth = Texture.CONTENT_BOOK_TITLE.width();
+        int txHeight = Texture.CONTENT_BOOK_TITLE.height();
+        RenderUtils.drawScalingTexturedRect(
+                poseStack,
+                Texture.CONTENT_BOOK_TITLE.resource(),
+                offsetX,
+                15 + offsetY,
+                0,
+                txWidth,
+                txHeight,
+                txWidth,
+                txHeight);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(titleString),
+                        10 + offsetX,
+                        21 + offsetY,
+                        CommonColors.YELLOW,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NORMAL,
+                        2f);
     }
 
     private void renderPlayerInfo(GuiGraphics guiGraphics, int mouseX, int mouseY) {
@@ -405,9 +383,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                     .renderAlignedTextInBox(
                             poseStack,
                             StyledText.fromString(rank + " of"),
-                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f,
-                            Texture.CONTENT_BOOK_BACKGROUND.width(),
-                            40,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                            40 + offsetY,
                             0,
                             CommonColors.CYAN,
                             HorizontalAlignment.CENTER,
@@ -417,9 +395,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                     .renderAlignedTextInBox(
                             poseStack,
                             StyledText.fromString(Models.Guild.getGuildName()),
-                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f,
-                            Texture.CONTENT_BOOK_BACKGROUND.width(),
-                            50,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                            50 + offsetY,
                             0,
                             CommonColors.CYAN,
                             HorizontalAlignment.CENTER,
@@ -431,9 +409,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         poseStack,
                         StyledText.fromComponent(McUtils.player().getDisplayName())
                                 .withoutFormatting(),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f,
-                        Texture.CONTENT_BOOK_BACKGROUND.width(),
-                        60,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                        60 + offsetY,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -442,15 +420,16 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(
-                                Models.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
-                                        + Models.CombatXp.getCombatLevel().current()),
-                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f,
-                        Texture.CONTENT_BOOK_BACKGROUND.width(),
-                        145,
+                                "Level " + Models.CombatXp.getCombatLevel().current() + " "
+                                        + Models.Character.getClassType().getName()),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                        145 + offsetY,
                         0,
                         CommonColors.PURPLE,
                         HorizontalAlignment.CENTER,
                         TextShadow.NONE);
+
         if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
                 .displayOverallProgress
                 .get()) {
@@ -461,9 +440,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                             StyledText.fromString(ChatFormatting.BLACK + "Progress: " + ChatFormatting.DARK_AQUA
                                     + progress.getPercentageInt() + "%" + ChatFormatting.BLACK + " ["
                                     + ChatFormatting.DARK_AQUA + progress + ChatFormatting.BLACK + "]"),
-                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f,
-                            Texture.CONTENT_BOOK_BACKGROUND.width(),
-                            160,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                            160 + offsetY,
                             0,
                             CommonColors.BLACK,
                             HorizontalAlignment.CENTER,
@@ -479,9 +458,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                     .renderAlignedTextInBox(
                             poseStack,
                             wrappedSplash[i],
-                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f,
-                            Texture.CONTENT_BOOK_BACKGROUND.width(),
-                            Texture.CONTENT_BOOK_BACKGROUND.height() - 45 + i * (McUtils.mc().font.lineHeight + 1),
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
+                            Texture.CONTENT_BOOK_BACKGROUND.height()
+                                    - 45
+                                    + i * (McUtils.mc().font.lineHeight + 1)
+                                    + offsetY,
                             0,
                             CommonColors.MAGENTA,
                             HorizontalAlignment.CENTER,
@@ -490,11 +472,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     private void renderPlayer(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        final float translationX = (this.width - Texture.CONTENT_BOOK_BACKGROUND.width()) / 2f;
-        final float translationY = (this.height - Texture.CONTENT_BOOK_BACKGROUND.height()) / 2f;
-
-        int posX = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 50 + translationX);
-        int posY = (int) (Texture.CONTENT_BOOK_BACKGROUND.height() / 2f - 40 + translationY);
+        int posX = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 50 + offsetX);
+        int posY = (int) (Texture.CONTENT_BOOK_BACKGROUND.height() / 2f - 40 + offsetY);
 
         final int renderWidth = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 100);
         final int renderHeight = 70;
@@ -517,7 +496,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         if (this.hovered == null) return false;
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            this.hovered.clickAction().run();
+            this.hovered.getClickAction().run();
         }
 
         return true;
@@ -527,97 +506,21 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         if (this.hovered != null) {
             guiGraphics.renderComponentTooltip(
                     FontRenderer.getInstance().getFont(),
-                    ComponentUtils.wrapTooltips(this.hovered.tooltipList(), 250),
+                    ComponentUtils.wrapTooltips(this.hovered.getTooltipList(), 250),
                     mouseX,
                     mouseY);
         }
     }
 
-    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY) {
-        int rowCount = buttons.size();
-
-        poseStack.pushPose();
-        poseStack.translate(20, 50, 0);
-
-        final int translationX = (this.width - Texture.CONTENT_BOOK_BACKGROUND.width()) / 2 + 20;
-        final int translationY = (this.height - Texture.CONTENT_BOOK_BACKGROUND.height()) / 2 + 50;
-
-        int adjustedMouseX = mouseX - translationX;
-        int adjustedMouseY = mouseY - translationY;
-
+    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
-        for (int row = 0; row < rowCount; row++) {
-            for (int col = 0; col < buttons.get(row).size(); col++) {
-                final int x = col * (BUTTON_SIZE + 5);
-                final int y = row * (BUTTON_SIZE + 5);
+        for (WynntilsMenuButton button : buttons.stream().flatMap(List::stream).toList()) {
+            button.render(guiGraphics, mouseX, mouseY, partialTick);
 
-                boolean hovered = x <= adjustedMouseX
-                        && x + BUTTON_SIZE >= adjustedMouseX
-                        && y <= adjustedMouseY
-                        && y + BUTTON_SIZE >= adjustedMouseY;
-
-                RenderUtils.drawRect(
-                        poseStack, hovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR, x, y, 0, BUTTON_SIZE, BUTTON_SIZE);
-                WynntilsMenuButton button = buttons.get(row).get(col);
-                Texture texture = button.buttonTexture();
-
-                if (hovered) {
-                    this.hovered = button;
-                }
-
-                if (!button.dynamicTexture()) {
-                    RenderUtils.drawTexturedRect(
-                            poseStack,
-                            texture.resource(),
-                            x + (BUTTON_SIZE - texture.width()) / 2f,
-                            y + (BUTTON_SIZE - texture.height()) / 2f,
-                            1,
-                            texture.width(),
-                            texture.height(),
-                            0,
-                            0,
-                            texture.width(),
-                            texture.height(),
-                            texture.width(),
-                            texture.height());
-                    continue;
-                }
-
-                if (hovered) {
-                    RenderUtils.drawTexturedRect(
-                            poseStack,
-                            texture.resource(),
-                            x + (BUTTON_SIZE - texture.width()) / 2f,
-                            y + (BUTTON_SIZE - texture.height() / 2f) / 2f,
-                            1,
-                            texture.width(),
-                            texture.height() / 2f,
-                            0,
-                            texture.height() / 2,
-                            texture.width(),
-                            texture.height() / 2,
-                            texture.width(),
-                            texture.height());
-                } else {
-                    RenderUtils.drawTexturedRect(
-                            poseStack,
-                            texture.resource(),
-                            x + (BUTTON_SIZE - texture.width()) / 2f,
-                            y + (BUTTON_SIZE - texture.height() / 2f) / 2f,
-                            1,
-                            texture.width(),
-                            texture.height() / 2f,
-                            0,
-                            0,
-                            texture.width(),
-                            texture.height() / 2,
-                            texture.width(),
-                            texture.height());
-                }
+            if (button.isMouseOver(mouseX, mouseY)) {
+                this.hovered = button;
             }
         }
-
-        poseStack.popPose();
     }
 }

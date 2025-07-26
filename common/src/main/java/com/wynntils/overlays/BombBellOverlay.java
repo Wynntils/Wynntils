@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
@@ -21,11 +20,15 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class BombBellOverlay extends Overlay {
@@ -34,6 +37,15 @@ public class BombBellOverlay extends Overlay {
 
     @Persisted
     public final Config<Float> fontScale = new Config<>(1.0f);
+
+    @Persisted
+    public final Config<Boolean> groupBombs = new Config<>(true);
+
+    @Persisted
+    public final Config<Integer> maxBombs = new Config<>(5);
+
+    @Persisted
+    public final Config<SortOrder> sortOrder = new Config<>(SortOrder.NEWEST);
 
     @Persisted
     public final Config<Boolean> showCombatBombs = new Config<>(true);
@@ -57,7 +69,10 @@ public class BombBellOverlay extends Overlay {
             Map.entry(BombType.PROFESSION_XP, showProfessionXpBombs::get),
             Map.entry(BombType.PROFESSION_SPEED, showProfessionSpeedBombs::get));
 
+    private Comparator<BombInfo> comparator;
     private TextRenderSetting textRenderSetting;
+
+    List<TextRenderTask> renderTasks = new ArrayList<>();
 
     public BombBellOverlay() {
         super(
@@ -73,23 +88,15 @@ public class BombBellOverlay extends Overlay {
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        poseStack,
+                        guiGraphics.pose(),
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),
-                        Models.Bomb.getBombBells().stream()
-                                .sorted(Comparator.comparing(BombInfo::getRemainingLong)
-                                        .reversed())
-                                .filter(bombInfo -> {
-                                    BombType bombType = bombInfo.bomb();
-                                    Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
-                                    return bombTypeSupplier != null && bombTypeSupplier.get();
-                                })
-                                .map(bombInfo -> new TextRenderTask(bombInfo.asString(), textRenderSetting))
-                                .toList(),
+                        renderTasks,
                         this.getWidth(),
                         this.getHeight(),
                         this.getRenderHorizontalAlignment(),
@@ -99,10 +106,10 @@ public class BombBellOverlay extends Overlay {
 
     @Override
     public void renderPreview(
-            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        poseStack,
+                        guiGraphics.pose(),
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),
@@ -122,7 +129,28 @@ public class BombBellOverlay extends Overlay {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
+        comparator = sortOrder.get() == SortOrder.NEWEST
+                ? Comparator.comparing(BombInfo::getRemainingLong).reversed()
+                : Comparator.comparing(BombInfo::getRemainingLong);
         updateTextRenderSetting();
+    }
+
+    @Override
+    public void tick() {
+        Stream<BombInfo> filteredBombs = Models.Bomb.getBombBells().stream().filter(bombInfo -> {
+            BombType bombType = bombInfo.bomb();
+            Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
+            return bombTypeSupplier != null && bombTypeSupplier.get();
+        });
+
+        Stream<BombInfo> processedBombs = groupBombs.get()
+                ? filteredBombs.collect(Collectors.groupingBy(BombInfo::bomb)).values().stream()
+                        .flatMap(list -> list.stream().sorted(comparator).limit(maxBombs.get()))
+                : filteredBombs.sorted(comparator).limit(maxBombs.get());
+
+        renderTasks = processedBombs
+                .map(bombInfo -> new TextRenderTask(bombInfo.asString(), textRenderSetting))
+                .toList();
     }
 
     private void updateTextRenderSetting() {
@@ -130,5 +158,10 @@ public class BombBellOverlay extends Overlay {
                 .withMaxWidth(this.getWidth())
                 .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                 .withTextShadow(textShadow.get());
+    }
+
+    private enum SortOrder {
+        NEWEST,
+        OLDEST
     }
 }

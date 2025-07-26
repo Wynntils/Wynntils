@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.type;
@@ -14,6 +14,7 @@ public enum ServiceKind {
     BLACKSMITH("Blacksmith", Texture.BLACKSMITH, "blacksmith"),
     BOOTH_SHOP("Booth Shop", Texture.BOOTH_SHOP, "booth-shop"),
     COOKING_STATION("Cooking Station", Texture.COOKING_STATION, "profession:cooking"),
+    DUNGEON_MERCHANT("Dungeon Merchant", Texture.DUNGEON_MERCHANT, "merchant:dungeon"),
     DUNGEON_SCROLL_MERCHANT("Dungeon Scroll Merchant", Texture.DUNGEON_SCROLL_MERCHANT, "merchant:dungeon-scroll"),
     EMERALD_MERCHANT("Emerald Merchant", Texture.EMERALD_MERCHANT, "merchant:emerald"),
     FAST_TRAVEL("Fast Travel", Texture.FAST_TRAVEL, "fast-travel"),

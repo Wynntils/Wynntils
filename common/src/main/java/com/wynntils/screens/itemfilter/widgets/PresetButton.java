@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets;
@@ -21,8 +21,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class PresetButton extends BasicTexturedButton {
-    private final float translationX;
-    private final float translationY;
+    private final int offsetX;
+    private final int offsetY;
     private final StyledText message;
 
     public PresetButton(
@@ -31,8 +31,8 @@ public class PresetButton extends BasicTexturedButton {
             StyledText message,
             Consumer<Integer> onClick,
             List<Component> tooltip,
-            float translationX,
-            float translationY) {
+            int offsetX,
+            int offsetY) {
         super(
                 x,
                 y,
@@ -43,8 +43,8 @@ public class PresetButton extends BasicTexturedButton {
                 tooltip);
 
         this.message = message;
-        this.translationX = translationX;
-        this.translationY = translationY;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
     @Override
@@ -57,9 +57,9 @@ public class PresetButton extends BasicTexturedButton {
                 && MathUtils.isInside(
                         mouseX,
                         mouseY,
-                        0,
+                        offsetX,
                         Texture.ITEM_FILTER_BACKGROUND.width(),
-                        0,
+                        offsetY,
                         Texture.ITEM_FILTER_BACKGROUND.height())) {
             isHovered = false;
         }
@@ -76,8 +76,6 @@ public class PresetButton extends BasicTexturedButton {
                         getY() + 10,
                         getY() + getHeight() - 10,
                         getWidth() - 8,
-                        translationX,
-                        translationY,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,

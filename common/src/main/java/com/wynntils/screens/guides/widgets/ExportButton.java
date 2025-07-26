@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.widgets;
@@ -32,21 +32,21 @@ public class ExportButton extends WynntilsButton implements TooltipProvider {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
-        Texture mapShareButton = Texture.SHARE_ICON;
+        Texture shareButton = Texture.SHARE_ICON_OFFSET;
         RenderUtils.drawTexturedRect(
                 poseStack,
-                mapShareButton.resource(),
+                shareButton.resource(),
                 this.getX(),
                 this.getY(),
                 0,
                 this.width,
                 this.height,
                 0,
-                0,
-                mapShareButton.width(),
-                mapShareButton.height(),
-                mapShareButton.width(),
-                mapShareButton.height());
+                isHovered ? shareButton.height() / 2 : 0,
+                shareButton.width(),
+                shareButton.height() / 2,
+                shareButton.width(),
+                shareButton.height());
     }
 
     @Override
