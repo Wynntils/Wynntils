@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -394,8 +394,6 @@ public final class UrlManager extends Manager {
     }
 
     private Pair<FileInputStream, File> getLocalCacheInputStreams() {
-        InputStream bundledStream = WynntilsMod.getModResourceAsStream("urls.json");
-
         // First check if there is a copy in the local cache
         File cacheFile = Managers.Net.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
         if (cacheFile.exists() && cacheFile.length() > 0) {
