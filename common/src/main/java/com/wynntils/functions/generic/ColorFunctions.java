@@ -119,7 +119,16 @@ public final class ColorFunctions {
     public static class GradientShaderFunction extends Function<CustomColor> {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
-            return CommonColors.GRADIENT;
+            return switch (arguments.getArgument("style").getIntegerValue()) {
+                case 2 -> CommonColors.GRADIENT2;
+                case null, default -> CommonColors.GRADIENT;
+            };
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("style", Integer.class, 1)));
         }
     }
 
@@ -134,13 +143,6 @@ public final class ColorFunctions {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
             return CommonColors.BLINK;
-        }
-    }
-
-    public static class GradientTwoShaderFunction extends Function<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            return CommonColors.GRADIENT2;
         }
     }
 
