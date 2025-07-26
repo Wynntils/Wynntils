@@ -46,7 +46,6 @@ public final class BeaconModel extends Model {
     private final Map<Integer, Beacon> beacons = new Int2ObjectArrayMap<>();
     private final Map<Integer, BeaconMarker> beaconMarkers = new Int2ObjectArrayMap<>();
 
-    // public static final Float BEACON_COLOR_CUSTOM_MODEL_DATA = 84f;
     public static final ModelSupplier BEACON_COLOR_CUSTOM_MODEL_DATA_SUPPLIER = ModelSupplier.forKey("beacon_color");
 
     public BeaconModel() {
