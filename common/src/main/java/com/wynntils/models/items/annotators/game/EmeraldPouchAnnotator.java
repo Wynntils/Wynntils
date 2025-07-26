@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -9,7 +9,6 @@ import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class EmeraldPouchAnnotator implements GameItemAnnotator {
-    private static final Pattern EMERALD_POUCH_PATTERN = Pattern.compile("^§aEmerald Pouch§2 \\[Tier ([IVX]{1,4})\\]$");
+    private static final Pattern EMERALD_POUCH_PATTERN = Pattern.compile("^§aEmerald Pouch §2\\[Tier (\\d+)\\]$");
     private static final Pattern EMERALD_POUCH_LORE_PATTERN =
             Pattern.compile("§6§l([\\d\\s,]+)" + EmeraldUnits.EMERALD.getSymbol() + ".*");
 
@@ -29,7 +28,7 @@ public final class EmeraldPouchAnnotator implements GameItemAnnotator {
         Matcher matcher = name.getMatcher(EMERALD_POUCH_PATTERN);
         if (!matcher.matches()) return null;
 
-        int tier = MathUtils.integerFromRoman(matcher.group(1));
+        int tier = Integer.parseInt(matcher.group(1));
 
         Matcher amountMatcher = LoreUtils.matchLoreLine(itemStack, 0, EMERALD_POUCH_LORE_PATTERN);
         // This can be an emerald pouch on the trade market, it has no amount line

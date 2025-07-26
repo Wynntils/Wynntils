@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -23,9 +23,7 @@ public final class GearBoxAnnotator implements GameItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        if (!(itemStack.getItem() == Items.STONE_SHOVEL
-                && itemStack.getDamageValue() >= 1
-                && itemStack.getDamageValue() <= 6)) return null;
+        if (!(itemStack.getItem() == Items.POTION)) return null;
         Matcher matcher = name.getMatcher(GEAR_BOX_PATTERN);
         if (!matcher.matches()) return null;
 

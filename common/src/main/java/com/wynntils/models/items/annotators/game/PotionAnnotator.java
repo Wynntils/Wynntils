@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -22,7 +22,8 @@ public final class PotionAnnotator implements GameItemAnnotator {
     private static final Pattern HEALING_PATTERN = Pattern.compile("^Healing§4 \\[(\\d+)/(\\d+)\\]$");
     private static final Pattern MANA_PATTERN = Pattern.compile("^Mana§3 \\[(\\d+)/(\\d+)\\]$");
     private static final Pattern XP_PATTERN = Pattern.compile("^Wisdom$");
-    private static final Pattern SKILL_PATTERN = Pattern.compile("^§[2ebcf][✤✦❉✹❋] (.*)§a \\[(\\d+)/(\\d+)\\]$");
+    private static final Pattern SKILL_PATTERN =
+            Pattern.compile("^§[2ebcf][\uE001\uE003\uE004\uE002\uE000] ([A-Za-z]*)(?:§2 | )\\[(\\d+)\\/(\\d+)\\]$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
