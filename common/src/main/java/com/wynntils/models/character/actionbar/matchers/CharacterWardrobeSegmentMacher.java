@@ -11,8 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CharacterWardrobeSegmentMacher implements ActionBarSegmentMatcher {
-    private static final Pattern CHARACTER_WARDROBE_PATTERN = Pattern.compile(
-            "\u0001C\uDAFF\uDFFEh\uDAFF\uDFFEa\uDAFF\uDFFEr\uDAFF\uDFFEa\uDAFF\uDFFEc\uDAFF\uDFFEt\uDAFF\uDFFEe\uDAFF\uDFFEr W\uDAFF\uDFFEa\uDAFF\uDFFEr\uDAFF\uDFFEd\uDAFF\uDFFEr\uDAFF\uDFFEo\uDAFF\uDFFEb\uDAFF\uDFFEe\uDAFF\uDFD0");
+    private static final Pattern CHARACTER_WARDROBE_PATTERN =
+            Pattern.compile(".+C.+h.+a.+r.+a.+c.+t.+e.+r.+W.+a.+r.+d.+r.+o.+b.+e.+");
 
     @Override
     public ActionBarSegment parse(String actionBar) {
