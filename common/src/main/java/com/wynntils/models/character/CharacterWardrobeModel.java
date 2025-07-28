@@ -45,7 +45,6 @@ public class CharacterWardrobeModel extends Model {
             inWardrobe = false;
             afterAnimation = false;
         }
-        ;
     }
 
     public boolean isInWardrobe() {
