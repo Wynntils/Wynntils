@@ -734,11 +734,11 @@ public class TestRegex {
     @Test
     public void SkillPointAnnotator_SKILL_POINT_PATTERN() {
         PatternTester p = new PatternTester(SkillPointAnnotator.class, "SKILL_POINT_PATTERN");
-        p.shouldMatch("§dUpgrade your §2✤ Strength§d skill");
-        p.shouldMatch("§dUpgrade your §e✦ Dexterity§d skill");
-        p.shouldMatch("§dUpgrade your §b❉ Intelligence§d skill");
-        p.shouldMatch("§dUpgrade your §c✹ Defence§d skill");
-        p.shouldMatch("§dUpgrade your §f❋ Agility§d skill");
+        p.shouldMatch("\uDB00\uDC07§dUpgrade your §2\uE001 Strength§d skill");
+        p.shouldMatch("\uDB00\uDC06§dUpgrade your §e\uE003 Dexterity§d skill");
+        p.shouldMatch("\uDB00\uDC00§dUpgrade your §b\uE004 Intelligence§d skill");
+        p.shouldMatch("\uDB00\uDC09§dUpgrade your §c\uE002 Defence§d skill");
+        p.shouldMatch("\uDB00\uDC0F§dUpgrade your §f\uE000 Agility§d skill");
     }
 
     @Test
