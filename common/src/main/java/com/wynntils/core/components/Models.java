@@ -20,7 +20,6 @@ import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterPhysicalModel;
 import com.wynntils.models.character.CharacterSelectionModel;
-import com.wynntils.models.character.CharacterWardrobeModel;
 import com.wynntils.models.character.SkillPointModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;
 import com.wynntils.models.characterstats.CombatXpModel;
@@ -82,7 +81,6 @@ public final class Models {
     public static final CharacterPhysicalModel CharacterPhysical = new CharacterPhysicalModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CharacterStatsModel CharacterStats = new CharacterStatsModel();
-    public static final CharacterWardrobeModel CharacterWardrobe = new CharacterWardrobeModel();
     public static final CombatModel Combat = new CombatModel();
     public static final CombatXpModel CombatXp = new CombatXpModel();
     public static final ContainerModel Container = new ContainerModel();
