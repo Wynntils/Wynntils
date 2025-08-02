@@ -34,13 +34,13 @@ public final class AccountModel extends Model {
     private static final Pattern SILVERBULL_JOIN_PATTERN =
             Pattern.compile("§3Welcome to the §b✮ Silverbull Trading Company§3!");
     private static final Pattern SILVERBULL_UPDATE_PATTERN = Pattern.compile("§7Your subscription has been extended.");
-    // Test in AccountModel_SILVERBULL_PATTERN
-    private static final Pattern SILVERBULL_PATTERN = Pattern.compile("§7Subscription: §[ac][✖✔] ((?:Ina|A)ctive)");
+    private static final Pattern SILVERBULL_PATTERN = Pattern.compile("§8Become a Silverbull Member to");
     // Test in AccountModel_SILVERBULL_DURATION_PATTERN
     private static final Pattern SILVERBULL_DURATION_PATTERN = Pattern.compile(
-            "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)? ?(?:(?<minutes>\\d+) minutes?)? ?(?:(?<seconds>\\d+) seconds?)?");
+            "§#00a2e8ff- §7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)? ?(?:(?<minutes>\\d+) minutes?)? ?(?:(?<seconds>\\d+) seconds?)?");
     public static final Component SILVERBULL_STAR = Component.literal(" ✮").withStyle(ChatFormatting.AQUA);
     private static final int COSMETICS_SLOT = 25;
+    private static final int SILVERBULL_SLOT = 36;
 
     @Persisted
     private final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
@@ -86,8 +86,8 @@ public final class AccountModel extends Model {
                         && System.currentTimeMillis() > silverbullExpiresAt.get())) {
             // Open Cosmetics Menu
             queryBuilder.then(QueryStep.clickOnSlot(COSMETICS_SLOT)
-                    .expectContainerTitle(ContainerModel.COSMETICS_MENU_NAME)
-                    .processIncomingContainer(this::parseCratesBombsCosmeticsContainer));
+                    .expectContainerTitle(ContainerModel.STORE_MENU_NAME)
+                    .processIncomingContainer(this::parseStoreContainer));
         } else {
             WynntilsMod.info("Skipping silverbull subscription query ("
                     + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
@@ -97,24 +97,18 @@ public final class AccountModel extends Model {
         queryBuilder.build().executeQuery();
     }
 
-    private void parseCratesBombsCosmeticsContainer(ContainerContent container) {
-        ItemStack rankSubscriptionItem = container.items().getFirst();
+    private void parseStoreContainer(ContainerContent container) {
+        ItemStack silverbullItem = container.items().get(SILVERBULL_SLOT);
 
-        Matcher status = LoreUtils.matchLoreLine(rankSubscriptionItem, 0, SILVERBULL_PATTERN);
-        if (!status.matches()) {
-            WynntilsMod.warn("Could not parse Silverbull subscription status from item: "
-                    + LoreUtils.getLore(rankSubscriptionItem));
-            silverbullSubscriber.store(ConfirmedBoolean.FALSE);
-            return;
-        }
-
-        silverbullSubscriber.store(status.group(1).equals("Active") ? ConfirmedBoolean.TRUE : ConfirmedBoolean.FALSE);
+        Matcher status = LoreUtils.matchLoreLine(silverbullItem, 6, SILVERBULL_PATTERN);
+        silverbullSubscriber.store(status.matches() ? ConfirmedBoolean.FALSE : ConfirmedBoolean.TRUE);
+        WynntilsMod.info("Parsed Silverbull subscription status: " + silverbullSubscriber.get());
         if (silverbullSubscriber.get() != ConfirmedBoolean.TRUE) return;
 
-        Matcher expiry = LoreUtils.matchLoreLine(rankSubscriptionItem, 1, SILVERBULL_DURATION_PATTERN);
+        Matcher expiry = LoreUtils.matchLoreLine(silverbullItem, 7, SILVERBULL_DURATION_PATTERN);
         if (!expiry.matches()) {
-            WynntilsMod.warn("Could not parse Silverbull subscription expiry from item: "
-                    + LoreUtils.getLore(rankSubscriptionItem));
+            WynntilsMod.warn(
+                    "Could not parse Silverbull subscription expiry from item: " + LoreUtils.getLore(silverbullItem));
             silverbullExpiresAt.store(0L);
             return;
         }
@@ -131,7 +125,6 @@ public final class AccountModel extends Model {
                 + TimeUnit.SECONDS.toMillis(seconds);
         silverbullExpiresAt.store(expiryTime);
 
-        WynntilsMod.info(
-                "Parsed Silverbull subscription status: " + silverbullSubscriber.get() + ", expires at: " + expiryTime);
+        WynntilsMod.info("Parsed Silverbull expiry: " + expiryTime);
     }
 }

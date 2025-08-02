@@ -110,19 +110,12 @@ public class TestRegex {
     }
 
     @Test
-    public void AccountModel_SILVERBULL_PATTERN() {
-        PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_PATTERN");
-        p.shouldMatch("§7Subscription: §c✖ Inactive");
-        p.shouldMatch("§7Subscription: §a✔ Active");
-    }
-
-    @Test
     public void AccountModel_SILVERBULL_DURATION_PATTERN() {
         PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_DURATION_PATTERN");
-        p.shouldMatch("§7Expiration: §f1 week 5 days");
-        p.shouldMatch("§7Expiration: §f5 days");
-        p.shouldMatch("§7Expiration: §f1 week");
-        p.shouldMatch("§7Expiration: §f2 days 12 hours");
+        p.shouldMatch("§#00a2e8ff- §7Expiration: §f1 week 5 days");
+        p.shouldMatch("§#00a2e8ff- §7Expiration: §f5 days");
+        p.shouldMatch("§#00a2e8ff- §7Expiration: §f1 week");
+        p.shouldMatch("§#00a2e8ff- §7Expiration: §f2 days 12 hours");
     }
 
     @Test
