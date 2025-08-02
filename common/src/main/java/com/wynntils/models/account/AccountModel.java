@@ -31,8 +31,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class AccountModel extends Model {
-    // Test in AccountModel_VETERAN_PATTERN
-    private static final Pattern VETERAN_PATTERN = Pattern.compile("§7Rank: §[6dba]Vet");
     private static final Pattern SILVERBULL_JOIN_PATTERN =
             Pattern.compile("§3Welcome to the §b✮ Silverbull Trading Company§3!");
     private static final Pattern SILVERBULL_UPDATE_PATTERN = Pattern.compile("§7Your subscription has been extended.");
@@ -43,9 +41,6 @@ public final class AccountModel extends Model {
             "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)? ?(?:(?<minutes>\\d+) minutes?)? ?(?:(?<seconds>\\d+) seconds?)?");
     public static final Component SILVERBULL_STAR = Component.literal(" ✮").withStyle(ChatFormatting.AQUA);
     private static final int COSMETICS_SLOT = 25;
-
-    @Persisted
-    private final Storage<ConfirmedBoolean> isVeteran = new Storage<>(ConfirmedBoolean.UNCONFIRMED);
 
     @Persisted
     private final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
@@ -70,10 +65,6 @@ public final class AccountModel extends Model {
     public void onWorldStateChanged(WorldStateEvent e) {
         if (e.getNewState() != WorldState.WORLD) return;
         scanRankInfo(e.isFirstJoinWorld());
-    }
-
-    public ConfirmedBoolean isVeteran() {
-        return isVeteran.get();
     }
 
     public boolean isSilverbullSubscriber() {
@@ -108,9 +99,6 @@ public final class AccountModel extends Model {
 
     private void parseCratesBombsCosmeticsContainer(ContainerContent container) {
         ItemStack rankSubscriptionItem = container.items().getFirst();
-
-        Matcher veteran = LoreUtils.matchLoreLine(rankSubscriptionItem, 0, VETERAN_PATTERN);
-        isVeteran.store(veteran.matches() ? ConfirmedBoolean.TRUE : ConfirmedBoolean.FALSE);
 
         Matcher status = LoreUtils.matchLoreLine(rankSubscriptionItem, 0, SILVERBULL_PATTERN);
         if (!status.matches()) {

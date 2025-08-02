@@ -126,19 +126,6 @@ public class TestRegex {
     }
 
     @Test
-    public void AccountModel_VETERAN_PATTERN() {
-        PatternTester p = new PatternTester(AccountModel.class, "VETERAN_PATTERN");
-        // Champion
-        p.shouldMatch("§7Rank: §6Vet");
-        // Hero
-        p.shouldMatch("§7Rank: §dVet");
-        // VIP+
-        p.shouldMatch("§7Rank: §bVet");
-        // VIP
-        p.shouldMatch("§7Rank: §aVet");
-    }
-
-    @Test
     public void ArchetypeAbilitiesAnnotator_ARCHETYPE_NAME() {
         PatternTester p = new PatternTester(ArchetypeAbilitiesAnnotator.class, "ARCHETYPE_NAME");
         p.shouldMatch("§#eb3dfeff§lSharpshooter Archetype");
