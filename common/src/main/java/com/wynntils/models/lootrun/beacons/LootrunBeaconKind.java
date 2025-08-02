@@ -21,6 +21,7 @@ public enum LootrunBeaconKind implements BeaconKind, NullableConfig {
     DARK_GRAY(CustomColor.fromInt(0x808080), CommonColors.GRAY),
     WHITE(CommonColors.WHITE, CommonColors.WHITE),
     AQUA(CustomColor.fromInt(0x55FFFF), CommonColors.AQUA),
+    CRIMSON(CustomColor.fromInt(0xF010), CustomColor.fromHexString("#f01000")),
     RAINBOW(CustomColor.fromInt(0x00F000), CommonColors.RAINBOW);
 
     // These values are used to identify the beacon kind
