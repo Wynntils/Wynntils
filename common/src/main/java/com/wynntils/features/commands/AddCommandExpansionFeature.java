@@ -160,7 +160,6 @@ public class AddCommandExpansionFeature extends Feature {
         addAlias(root, consumablesNode, "token", AliasCommandLevel.ALL);
         addAlias(root, consumablesNode, "tokens", AliasCommandLevel.ALL);
         addAlias(root, consumablesNode, "consumable", AliasCommandLevel.ALL);
-        addAlias(root, consumablesNode, "consumables", AliasCommandLevel.ALL);
 
         // "use" aliases
         CommandNode<CommandSourceStack> useNode = literal("use").build();
