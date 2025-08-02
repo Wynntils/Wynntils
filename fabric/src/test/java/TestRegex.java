@@ -171,14 +171,14 @@ public class TestRegex {
     @Test
     public void BombModel_BOMB_THROWN_PATTERN() {
         PatternTester p = new PatternTester(BombModel.class, "BOMB_THROWN_PATTERN");
-        p.shouldMatch(
-                "§bExampleUser§3 has thrown a §bProfession Speed Bomb§3! §bResource respawn time/Crafting Resource requirements are halved§3, and the entire server gets §bdouble Crafting/Gathering Speed§3 for §b10 minutes§3!");
-        p.shouldMatch(
-                "§b§oExampleNickname§3 has thrown a §bProfession Speed Bomb§3! §bResource respawn time/Crafting Resource requirements are halved§3, and the entire server gets §bdouble Crafting/Gathering Speed§3 for §b10 minutes§3!");
-        p.shouldMatch(
-                "§bExampleUser§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp§3 for §b20 minutes§3!");
-        p.shouldMatch(
-                "§b§oExampleNickname§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp§3 for §b20 minutes§3!");
+        p.shouldMatch("§#a0c84bff\uE014\uE002 §lProfession Speed Bomb");
+        p.shouldMatch("§#a0c84bff\uE001 §lProfession Experience Bomb");
+    }
+
+    @Test
+    public void BombModel_BOMB_EXPIRED_PATTERN() {
+        PatternTester p = new PatternTester(BombModel.class, "BOMB_EXPIRED_PATTERN");
+        p.shouldMatch("§#a0c84bff\uE014\uE002 §#ffd750ff§o§<1>ShadowCat§#a0c84bff Profession Speed Bomb has expired! ");
     }
 
     @Test
@@ -489,7 +489,8 @@ public class TestRegex {
     @Test
     public void InfoBar_BOMB_INFO_PATTERN() {
         PatternTester p = new PatternTester(InfoBar.class, "BOMB_INFO_PATTERN");
-        p.shouldMatch("§3Double Profession Speed from §bCorkian§7 [§f2§7 min]");
+        p.shouldMatch("§#a0c84bffProfession Speed from §#ffd750ffRoseGeckoOlaf955§#a0c84bff §7[§f3m§7]");
+        p.shouldMatch("§#a0c84bffDouble Profession Experience from §#ffd750ffRoseGeckoOlaf955§#a0c84bff §7[§f13m§7]");
     }
 
     @Test

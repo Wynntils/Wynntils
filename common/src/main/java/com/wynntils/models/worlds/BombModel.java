@@ -17,6 +17,7 @@ import com.wynntils.models.worlds.event.BombEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
@@ -35,13 +36,13 @@ public final class BombModel extends Model {
     private static final Pattern BOMB_BELL_PATTERN =
             Pattern.compile("^\\[Bomb Bell\\] (?<user>.+) has thrown an? (?<bomb>.+) Bomb on (?<server>.+)$");
 
-    // §3You can buy Profession Speed Bombs at §b§nour store
-    private static final Pattern BOMB_EXPIRED_PATTERN =
-            Pattern.compile("§3You can buy (?<bomb>.+) Bombs at §b§nour store");
+    // Test in BombModel_BOMB_EXPIRED_PATTERN
+    private static final Pattern BOMB_EXPIRED_PATTERN = Pattern.compile(
+            "^§#a0c84bff(?:\uE014\uE002|\uE001) §#ffd750ff.+§#a0c84bff (?<bomb>.+) Bomb has expired!.*$");
 
     // Test in BombModel_BOMB_THROWN_PATTERN
-    private static final Pattern BOMB_THROWN_PATTERN = Pattern.compile(
-            "^§b(§o)?(?<user>.+?)§3 has thrown a §b(?<bomb>.+?) Bomb§3! .*?§3 for §b\\d{1,2} minutes§3!$");
+    private static final Pattern BOMB_THROWN_PATTERN =
+            Pattern.compile("^§#a0c84bff(?:\uE014\uE002|\uE001) §l(?<bomb>.+)$");
 
     private static final Map<BombType, BombInfo> CURRENT_SERVER_BOMBS = new EnumMap<>(BombType.class);
 
@@ -70,19 +71,24 @@ public final class BombModel extends Model {
             return;
         }
 
-        Matcher localMatcher = message.getMatcher(BOMB_THROWN_PATTERN);
+        StyledText unwrapped =
+                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
+
+        Matcher localMatcher = unwrapped.getMatcher(BOMB_THROWN_PATTERN);
         if (localMatcher.matches()) {
-            BombInfo bombInfo = addBombFromChat(
-                    localMatcher.group("user"), localMatcher.group("bomb"), Models.WorldState.getCurrentWorldName());
+            // FIXME: User is sent on following chat line, we don't currently use the name anywhere but if we do in
+            //  the future then this needs fixing
+            BombInfo bombInfo =
+                    addBombFromChat("", localMatcher.group("bomb"), Models.WorldState.getCurrentWorldName());
             if (bombInfo == null) return;
 
-            BombEvent.Local bombEvent = new BombEvent.Local(bombInfo, message);
+            BombEvent.Local bombEvent = new BombEvent.Local(bombInfo, unwrapped);
             WynntilsMod.postEvent(bombEvent);
             event.setMessage(bombEvent.getMessage());
             return;
         }
 
-        Matcher expiredMatcher = message.getMatcher(BOMB_EXPIRED_PATTERN);
+        Matcher expiredMatcher = unwrapped.getMatcher(BOMB_EXPIRED_PATTERN);
         if (expiredMatcher.matches()) {
             String bomb = expiredMatcher.group("bomb");
 

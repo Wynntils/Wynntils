@@ -1,20 +1,22 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds.type;
 
 public enum BombType {
-    COMBAT_XP("Combat XP", 20),
-    DUNGEON("Dungeon", 10),
-    LOOT("Loot", 20),
-    PROFESSION_SPEED("Profession Speed", 10),
-    PROFESSION_XP("Profession XP", 20);
+    COMBAT_XP("Combat Experience", "Combat XP", 20),
+    DUNGEON("Dungeon", "Dungeon", 10),
+    LOOT("Loot", "Loot", 20),
+    PROFESSION_SPEED("Profession Speed", "Profession Speed", 10),
+    PROFESSION_XP("Profession XP", "Profession Experience", 20);
 
+    private final String displayName;
     private final String parseName;
     private final int activeMinutes;
 
-    BombType(String parseName, int activeMinutes) {
+    BombType(String displayName, String parseName, int activeMinutes) {
+        this.displayName = displayName;
         this.parseName = parseName;
         this.activeMinutes = activeMinutes;
     }
@@ -32,7 +34,7 @@ public enum BombType {
         return activeMinutes;
     }
 
-    public String getName() {
-        return parseName;
+    public String getDisplayName() {
+        return displayName;
     }
 }
