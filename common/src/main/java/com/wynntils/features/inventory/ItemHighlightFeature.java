@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
@@ -22,19 +23,26 @@ import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.gui.CosmeticItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends Feature {
+    private static final String DEFAULT_HIGHLIGHT_KEY = "item_tier";
+
+    // TODO: Set default to WYNN when porting to 1.21.6+
     @Persisted
-    public final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.CIRCLE_TRANSPARENT);
+    public final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.TAG);
 
     @Persisted
     public final Config<Boolean> normalHighlightEnabled = new Config<>(true);
@@ -145,7 +153,10 @@ public class ItemHighlightFeature extends Feature {
     public final Config<Boolean> hotbarHighlightEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Float> hotbarOpacity = new Config<>(.5f);
+    public final Config<Float> hotbarOpacity = new Config<>(1f);
+
+    @Persisted
+    public final Config<Boolean> selectedItemHighlight = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRenderSlot(SlotRenderEvent.CountPre e) {
@@ -158,13 +169,14 @@ public class ItemHighlightFeature extends Feature {
         RenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
                 Texture.HIGHLIGHT.resource(),
-                color.withAlpha(inventoryOpacity.get()),
+                color,
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
                 100,
                 18,
                 18,
-                highlightTexture.get().ordinal() * 18,
+                // TODO: Remove +18 when porting to 1.21.6+
+                (highlightTexture.get().ordinal() * 18) + 18,
                 0,
                 18,
                 18,
@@ -180,15 +192,58 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
-        BufferedRenderUtils.drawRect(
+        if (selectedItemHighlight.get() && McUtils.inventory().getSelected().equals(e.getItemStack())) {
+            BufferedRenderUtils.drawTexturedRectWithColor(
+                    e.getPoseStack(),
+                    e.getGuiGraphics().bufferSource,
+                    Texture.HOTBAR_SELECTED_HIGHLIGHT,
+                    color,
+                    e.getX(),
+                    e.getY());
+            return;
+        }
+
+        BufferedRenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
                 e.getGuiGraphics().bufferSource,
-                color.withAlpha(hotbarOpacity.get()),
-                e.getX(),
-                e.getY(),
+                Texture.HIGHLIGHT.resource(),
+                color,
+                e.getX() - 1,
+                e.getY() - 1,
                 0,
-                16,
-                16);
+                18,
+                18,
+                // TODO: Remove +18 when porting to 1.21.6+
+                (highlightTexture.get().ordinal() * 18) + 18,
+                0,
+                18,
+                18,
+                Texture.HIGHLIGHT.width(),
+                Texture.HIGHLIGHT.height());
+    }
+
+    @SubscribeEvent
+    public void onSetSlot(SetSlotEvent.Pre event) {
+        removeVanillaHighlight(event.getItemStack());
+    }
+
+    @Override
+    public void onEnable() {
+        if (McUtils.player() == null) return;
+
+        McUtils.inventory().items.forEach(this::removeVanillaHighlight);
+    }
+
+    private void removeVanillaHighlight(ItemStack itemStack) {
+        CustomModelData itemStackModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+        if (itemStackModelData == null) return;
+
+        List<String> newStrings = itemStackModelData.strings().stream()
+                .filter(s -> !s.startsWith(DEFAULT_HIGHLIGHT_KEY))
+                .toList();
+        CustomModelData newModelData = new CustomModelData(
+                itemStackModelData.floats(), itemStackModelData.flags(), newStrings, itemStackModelData.colors());
+        itemStack.set(DataComponents.CUSTOM_MODEL_DATA, newModelData);
     }
 
     private CustomColor getHighlightColor(ItemStack itemStack, boolean hotbarHighlight) {
@@ -202,7 +257,7 @@ public class ItemHighlightFeature extends Feature {
 
         if (!highlight.isHighlightEnabled()) return CustomColor.NONE;
 
-        return highlight.getHighlightColor();
+        return highlight.getHighlightColor().withAlpha(hotbarHighlight ? hotbarOpacity.get() : inventoryOpacity.get());
     }
 
     private HighlightInfo calculateHighlightInfo(WynnItem wynnItem) {
@@ -382,6 +437,9 @@ public class ItemHighlightFeature extends Feature {
     }
 
     public enum HighlightTexture {
+        // TODO: Add WYNN back when porting to 1.21.6+
+        // WYNN,
+        TAG,
         CIRCLE_TRANSPARENT,
         CIRCLE_OPAQUE,
         CIRCLE_OUTLINE_LARGE,
