@@ -235,6 +235,7 @@ public class AddCommandExpansionFeature extends Feature {
                         .then(literal("VIP"))
                         .then(literal("VIP+"))
                         .then(literal("HERO"))
+                        .then(literal("HERO+"))
                         .then(literal("CHAMPION"))
                         .then(literal("RESET"))
                         .build());
