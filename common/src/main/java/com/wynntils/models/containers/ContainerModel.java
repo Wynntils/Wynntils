@@ -69,7 +69,8 @@ public final class ContainerModel extends Model {
     public static final Pattern ABILITY_TREE_PATTERN = Pattern.compile("\uDAFF\uDFEA\uE000");
 
     public static final String CHARACTER_INFO_NAME = "\uDAFF\uDFDC\uE003";
-    public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
+    public static final String STORE_MENU_NAME =
+            "\uDAFF\uDFF4\uE02C\uDAFF\uDF7C\uF027\uDAFF\uDF52\uDB00\uDC3D.\uDAFF\uDF22\uDB00\uDC40\uE004\uDAFF\uDF2F";
     public static final String GUILD_MENU_NAME = "[a-zA-Z\\s]+: Manage";
     public static final String GUILD_DIPLOMACY_MENU_NAME = "[a-zA-Z\\s]+: Diplomacy";
     public static final String MASTERY_TOMES_NAME = "\uDAFF\uDFDB\uE005";
