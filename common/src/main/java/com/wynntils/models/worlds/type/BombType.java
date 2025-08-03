@@ -5,7 +5,7 @@
 package com.wynntils.models.worlds.type;
 
 public enum BombType {
-    COMBAT_XP("Combat Experience", "Combat XP", 20),
+    COMBAT_XP("Combat XP", "Combat Experience", 20),
     DUNGEON("Dungeon", "Dungeon", 10),
     LOOT("Loot", "Loot", 20),
     PROFESSION_SPEED("Profession Speed", "Profession Speed", 10),
