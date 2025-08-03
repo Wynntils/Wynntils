@@ -21,8 +21,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
-    private static final ResourceLocation ACTION_BAR_FONT =
+    private static final ResourceLocation ACTION_BAR_HOTBAR_FONT =
             ResourceLocation.withDefaultNamespace("hud/gameplay/default/bottom_middle");
+    private static final ResourceLocation ACTION_BAR_POWDER_FONT =
+            ResourceLocation.withDefaultNamespace("hud/gameplay/default/center_middle");
     private static final ResourceLocation COORDINATES_FONT =
             ResourceLocation.withDefaultNamespace("hud/gameplay/default/top_right");
 
@@ -46,7 +48,8 @@ public final class ActionBarHandler extends Handler {
 
             // Separate the action bar text from the coordinates
             StyledText actionBarText = packetText.iterate((part, changes) -> {
-                if (!ACTION_BAR_FONT.equals(part.getPartStyle().getFont())) {
+                if (!ACTION_BAR_HOTBAR_FONT.equals(part.getPartStyle().getFont())
+                        && !ACTION_BAR_POWDER_FONT.equals(part.getPartStyle().getFont())) {
                     changes.remove(part);
                 }
 
