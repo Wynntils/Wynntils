@@ -107,7 +107,8 @@ public final class WynnItemParser {
             Pattern.compile("§[ac]([-+]\\d+)(%| tier|/[35]s)? ?§7 ?(.*)");
 
     // Test in WynnItemParser_SHINY_STAT_PATTERN
-    public static final Pattern SHINY_STAT_PATTERN = Pattern.compile("^§f⬡ §7([a-zA-Z ]+): §f(\\d+)$");
+    public static final Pattern SHINY_STAT_PATTERN =
+            Pattern.compile("^§f⬡ §7([a-zA-Z ]+): §f(\\d+)(?:§8 \\[(\\d+)\\])?$");
 
     // Crafted items
     // Test in WynnItemParser_CRAFTED_ITEM_NAME_PATTERN
@@ -426,6 +427,7 @@ public final class WynnItemParser {
             if (shinyStatMatcher.matches() && shinyStat.isEmpty()) {
                 String shinyName = shinyStatMatcher.group(1);
                 int shinyValue = Integer.parseInt(shinyStatMatcher.group(2));
+                int shinyRerolls = shinyStatMatcher.group(3) != null ? Integer.parseInt(shinyStatMatcher.group(3)) : 0;
                 shinyStat = Optional.of(new ShinyStat(Models.Shiny.getShinyStat(shinyName), shinyValue));
             }
         }
