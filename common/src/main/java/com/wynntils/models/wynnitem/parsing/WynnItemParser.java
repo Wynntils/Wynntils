@@ -47,18 +47,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class WynnItemParser {
-    public static final Pattern HEALTH_PATTERN = Pattern.compile("^§4❤ Health: ([+-]\\d+)§r$");
+    public static final Pattern HEALTH_PATTERN = Pattern.compile("^§4❤ Health: ([+-]\\d+)(?:§r)?$");
 
     // Test in WynnItemParser_ITEM_ATTACK_SPEED_PATTERN
-    private static final Pattern ITEM_ATTACK_SPEED_PATTERN = Pattern.compile("^§7(.+) Attack Speed§r$");
+    private static final Pattern ITEM_ATTACK_SPEED_PATTERN = Pattern.compile("^§7(.+) Attack Speed(?:§r)?$");
 
     // Test in WynnItemParser_ITEM_DAMAGE_PATTERN
     private static final Pattern ITEM_DAMAGE_PATTERN = Pattern.compile(
-            "^§.(?<symbol>[\uE005\uE001\uE003\uE004\uE002\uE000]+) (?<type>.+) Damage: (?<range>(\\d+)-(\\d+))§r$");
+            "^§.(?<symbol>[\uE005\uE001\uE003\uE004\uE002\uE000]+) (?<type>.+) Damage: (?<range>(\\d+)-(\\d+))(?:§r)?$");
 
     // Test in WynnItemParser_ITEM_DEFENCE_PATTERN
     private static final Pattern ITEM_DEFENCE_PATTERN = Pattern.compile(
-            "^§.(?<symbol>[\uE001\uE003\uE004\uE002\uE000]+) (?<type>.+)§7 Defence: (?<value>[+-]?\\d+)§r$");
+            "^§.(?<symbol>[\uE001\uE003\uE004\uE002\uE000]+) (?<type>.+)§7 Defence: (?<value>[+-]?\\d+)(?:§r)?$");
 
     // Test in WynnItemParser_IDENTIFICATION_STAT_PATTERN
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
@@ -70,7 +70,7 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_POWDER_PATTERN
     private static final Pattern POWDER_PATTERN =
-            Pattern.compile("^§7\\[(\\d+)\\/(\\d+)\\] Powder Slots(?: \\[§(.*)§7\\])?§r$");
+            Pattern.compile("^§7\\[(\\d+)\\/(\\d+)\\] Powder Slots(?: \\[§(.*)§7\\])?(?:§r)?$");
 
     // Test in WynnItemParser_EFFECT_LINE_PATTERN
     private static final Pattern EFFECT_LINE_PATTERN = Pattern.compile("^§(.)- §7(.*): §f([+-]?\\d+)(?:§.§.)? ?(.*)$");
@@ -99,7 +99,7 @@ public final class WynnItemParser {
 
     public static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
 
-    public static final Pattern SET_BONUS_PATTERN = Pattern.compile("^§aSet Bonus:§r$");
+    public static final Pattern SET_BONUS_PATTERN = Pattern.compile("^§aSet Bonus:(?:§r)?$");
 
     // Checks for items eg. "- Morph-Emerald" to determine if item is equipped from color
     public static final Pattern SET_ITEM_PATTERN = Pattern.compile("^§[a7]- §([28])(.+)");
