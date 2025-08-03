@@ -674,19 +674,43 @@ public class TestRegex {
     @Test
     public void RecipientType_PRIVATE_foregroundpattern() {
         PatternTester p = new PatternTester(RecipientType.PRIVATE, "foregroundPattern");
-        p.shouldMatch("§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE 42nao \uE003 Soulbound: §ftest");
         p.shouldMatch(
-                "§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §#ffe600ff§obol§6 \uE003 §#ffe600ff§obol§r§#ffe600ff:§6 §ftest");
-        p.shouldMatch(
-                "§6\uDAFF\uDFFC\uE001\uDB00\uDC06 §#ffe600ff§obol§6 \uE003 §#ffe600ff§obol§r§#ffe600ff:§6 §ftest ");
-        p.shouldMatch(
-                "§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §7kristof345§6 \uE003 §#ffe600ff§obol§r§#ffe600ff:§6 §fte ");
+                "§#ddcc99ff\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §#e8c00cff§oShadowCat§#ddcc99ff \uE003 §#e8c00cff§oShadowCat§r§#e8c00cff§[1]:§#ddcc99ff §fHi ");
     }
 
     @Test
     public void RecipientType_PRIVATE_backgroundPattern() {
         PatternTester p = new PatternTester(RecipientType.PRIVATE, "backgroundPattern");
-        p.shouldMatch("§8\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §7kristof345§8 \uE003 §f§obol§r§f:§8 te ");
+        p.shouldMatch(
+                "§#ddddddff\uDAFF\uDFFC\uE001\uDB00\uDC06 §#e8e8e8ff§oShadowCat§#ddddddff \uE003 §#e8e8e8ff§oShadowCat§r§#e8e8e8ff§[1]:§#ddddddff §8Hi ");
+    }
+
+    @Test
+    public void RecipientType_SHOUT_foregroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.SHOUT, "foregroundPattern");
+        p.shouldMatch(
+                "§#bd45ffff\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oShadowCat§r§#bd45ffff \uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE056\uDAFF\uDFFF\uE062\uDAFF\uDFEC§0\uE00D\uE000\uE026\uDB00\uDC02§#bd45ffff shouts: §#fad9f7ffo/");
+    }
+
+    @Test
+    public void RecipientType_SHOUT_backgroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.SHOUT, "backgroundPattern");
+        p.shouldMatch(
+                "§f\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oShadowCat§r§f \uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE056\uDAFF\uDFFF\uE062\uDAFF\uDFEC§8\uE00D\uE000\uE026\uDB00\uDC02§f shouts: §#fafafafftest");
+    }
+
+    @Test
+    public void RecipientType_PETS_foregroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.PETS, "foregroundPattern");
+        p.shouldMatch("§6\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE Duck: §#ffdd99ff§oquack");
+        p.shouldMatch("§6\uDAFF\uDFFC\uE001\uDB00\uDC06 §o§<1>Cosmo§r§6: §#ffdd99ff§obreezy squeak");
+    }
+
+    @Test
+    public void RecipientType_PETS_backgroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.PETS, "backgroundPattern");
+        p.shouldMatch("§f\uDAFF\uDFFC\uE001\uDB00\uDC06 §oKlutzy§r§f: §ofalls over");
+        p.shouldMatch("§f\uDAFF\uDFFC\uE001\uDB00\uDC06 §oKlutzy§r§f: §ofalls over");
     }
 
     @Test
