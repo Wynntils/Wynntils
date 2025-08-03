@@ -165,6 +165,23 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getSlot().getItem(), false);
         if (color == CustomColor.NONE) return;
 
+        if (selectedItemHighlight.get() && e.getSlot().getContainerSlot() == McUtils.inventory().selected) {
+            RenderSystem.enableDepthTest();
+            RenderUtils.drawTexturedRectWithColor(
+                    e.getPoseStack(),
+                    Texture.HOTBAR_SELECTED_HIGHLIGHT.resource(),
+                    color,
+                    e.getSlot().x,
+                    e.getSlot().y,
+                    100,
+                    16,
+                    16,
+                    16,
+                    16);
+            RenderSystem.disableDepthTest();
+            return;
+        }
+
         RenderSystem.enableDepthTest();
         RenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
