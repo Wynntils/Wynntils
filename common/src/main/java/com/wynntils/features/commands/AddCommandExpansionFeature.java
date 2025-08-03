@@ -140,11 +140,29 @@ public class AddCommandExpansionFeature extends Feature {
 
         addAlias(root, crateNode, "crates", AliasCommandLevel.ALL);
 
+        // "disguises" aliases
+        CommandNode<CommandSourceStack> disguisesNode = literal("disguises").build();
+        addNode(root, disguisesNode);
+
+        addAlias(root, disguisesNode, "disguise", AliasCommandLevel.ALL);
+
+        // "effects" aliases
+        CommandNode<CommandSourceStack> effectsNode = literal("effects").build();
+        addNode(root, effectsNode);
+
+        addAlias(root, effectsNode, "effect", AliasCommandLevel.ALL);
+
         // "hats" aliases
         CommandNode<CommandSourceStack> hatsNode = literal("hats").build();
         addNode(root, hatsNode);
 
         addAlias(root, hatsNode, "hat", AliasCommandLevel.ALL);
+
+        // "mounts" aliases
+        CommandNode<CommandSourceStack> mountsNode = literal("mounts").build();
+        addNode(root, mountsNode);
+
+        addAlias(root, mountsNode, "mount", AliasCommandLevel.ALL);
 
         // "weapons" aliases
         CommandNode<CommandSourceStack> weaponsNode = literal("weapons").build();
