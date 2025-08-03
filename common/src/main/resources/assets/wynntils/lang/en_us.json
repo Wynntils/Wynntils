@@ -140,6 +140,8 @@
   "feature.wynntils.bombBellOverlay.overlay.bombBell.showDungeonBombs.name": "Show Dungeon Bombs",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.showLootBombs.description": "Should Loot bombs be shown on the overlay?",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.showLootBombs.name": "Show Loot Bombs",
+  "feature.wynntils.bombBellOverlay.overlay.bombBell.showLootChestBombs.description": "Should Loot Chest bombs be shown on the overlay?",
+  "feature.wynntils.bombBellOverlay.overlay.bombBell.showLootChestBombs.name": "Show Loot Chest Bombs",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.showProfessionSpeedBombs.description": "Should Profession Speed bombs be shown on the overlay?",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.showProfessionSpeedBombs.name": "Show Profession Speed Bombs",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.showProfessionXpBombs.description": "Should Profession XP bombs be shown on the overlay?",

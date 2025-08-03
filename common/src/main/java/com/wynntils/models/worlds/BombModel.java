@@ -42,7 +42,7 @@ public final class BombModel extends Model {
 
     // Test in BombModel_BOMB_THROWN_PATTERN
     private static final Pattern BOMB_THROWN_PATTERN =
-            Pattern.compile("^§#a0c84bff(?:\uE014\uE002|\uE001) §l(?<bomb>.+)$");
+            Pattern.compile("^§#a0c84bff(?:\uE014\uE002|\uE001) §l(?<bomb>.+) Bomb$");
 
     private static final Map<BombType, BombInfo> CURRENT_SERVER_BOMBS = new EnumMap<>(BombType.class);
 

@@ -4,27 +4,36 @@
  */
 package com.wynntils.models.worlds.type;
 
+import java.util.List;
+
 public enum BombType {
     COMBAT_XP("Combat XP", "Combat Experience", 20),
-    DUNGEON("Dungeon", "Dungeon", 10),
+    DUNGEON("Dungeon", List.of("Dungeon", "Free Dungeon Entry"), 10),
     LOOT("Loot", "Loot", 20),
     PROFESSION_SPEED("Profession Speed", "Profession Speed", 10),
-    PROFESSION_XP("Profession XP", "Profession Experience", 20);
+    PROFESSION_XP("Profession XP", "Profession Experience", 20),
+    LOOT_CHEST("Loot Chest", List.of("Loot Chest", "More Chest Loot"), 20);
 
     private final String displayName;
-    private final String parseName;
+    private final List<String> parseNames;
     private final int activeMinutes;
 
-    BombType(String displayName, String parseName, int activeMinutes) {
+    BombType(String displayName, List<String> parseNames, int activeMinutes) {
         this.displayName = displayName;
-        this.parseName = parseName;
+        this.parseNames = parseNames;
         this.activeMinutes = activeMinutes;
+    }
+
+    BombType(String displayName, String parseName, int activeMinutes) {
+        this(displayName, List.of(parseName), activeMinutes);
     }
 
     public static BombType fromString(String name) {
         for (BombType type : values()) {
-            if (type.parseName.equalsIgnoreCase(name)) {
-                return type;
+            for (String parseName : type.parseNames) {
+                if (parseName.equalsIgnoreCase(name)) {
+                    return type;
+                }
             }
         }
         return null;
