@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class CharacterWardrobeSegmentMacher implements ActionBarSegmentMatcher {
     private static final Pattern CHARACTER_WARDROBE_PATTERN = Pattern.compile(
-            "\uDAFF\uDFD1\u0001C\uDAFF\uDFFEh\uDAFF\uDFFEa\uDAFF\uDFFEr\uDAFF\uDFFEa\uDAFF\uDFFEc\uDAFF\uDFFEt\uDAFF\uDFFEe\uDAFF\uDFFEr W\uDAFF\uDFFEa\uDAFF\uDFFEr\uDAFF\uDFFEd\uDAFF\uDFFEr\uDAFF\uDFFEo\uDAFF\uDFFEb\uDAFF\uDFFEe\uDAFF\uDFD0\uDAFF\uDF70");
+            "C\uDAFF\uDFFEh\uDAFF\uDFFEa\uDAFF\uDFFEr\uDAFF\uDFFEa\uDAFF\uDFFEc\uDAFF\uDFFEt\uDAFF\uDFFEe\uDAFF\uDFFEr W\uDAFF\uDFFEa\uDAFF\uDFFEr\uDAFF\uDFFEd\uDAFF\uDFFEr\uDAFF\uDFFEo\uDAFF\uDFFEb\uDAFF\uDFFEe");
 
     @Override
     public ActionBarSegment parse(String actionBar) {
