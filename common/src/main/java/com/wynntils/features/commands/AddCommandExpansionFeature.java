@@ -99,6 +99,7 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(root, literal("fixstart").build());
         addNode(root, literal("forum").build());
         addNode(root, literal("help").build());
+        addNode(root, literal("link").build());
         addNode(root, literal("rules").build());
         addNode(root, literal("scrap").build());
         addNode(root, literal("sign").build());
@@ -220,12 +221,6 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(root, recruitNode);
 
         addAlias(root, recruitNode, "rf", AliasCommandLevel.ALL);
-
-        // "discord" aliases
-        CommandNode<CommandSourceStack> discordNode = literal("discord").build();
-        addNode(root, discordNode);
-
-        addAlias(root, discordNode, "link", AliasCommandLevel.ALL);
     }
 
     private void addChangetagCommandNode(RootCommandNode<SharedSuggestionProvider> root) {
