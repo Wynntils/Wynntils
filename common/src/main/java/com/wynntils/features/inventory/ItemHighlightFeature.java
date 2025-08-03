@@ -165,7 +165,8 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getSlot().getItem(), false);
         if (color == CustomColor.NONE) return;
 
-        if (selectedItemHighlight.get() && e.getSlot().getContainerSlot() == McUtils.inventory().selected) {
+        if (selectedItemHighlight.get()
+                && McUtils.inventory().getSelected().equals(e.getSlot().getItem())) {
             RenderSystem.enableDepthTest();
             RenderUtils.drawTexturedRectWithColor(
                     e.getPoseStack(),
