@@ -306,8 +306,6 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "Milyen legyen a szöveg árnyéka?",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "Szöveg А́rnyék",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "Nyomon Követett",
-  "feature.wynntils.cosmeticsPreview.description": "Megjeleníti a játékosodat a kozmetikai képernyőn.",
-  "feature.wynntils.cosmeticsPreview.name": "Kozmetikai Játékos Előnézet",
   "feature.wynntils.craftingProfessionLevelProgressBar.description": "Megjelenít egy szint előrehaladási sávot, amikor egy kézműves állomáson vagy",
   "feature.wynntils.craftingProfessionLevelProgressBar.name": "Kézműves Szakma Előrehaladási Sáv",
   "feature.wynntils.craftingProfessionLevelProgressBar.texture.description": "Milyen textúrát használjon a sáv?",

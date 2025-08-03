@@ -308,8 +308,6 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "Hur ska textskuggan se ut?",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "Textskugga",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "Spårat",
-  "feature.wynntils.cosmeticsPreview.description": "Visar din spelare i kosmetikskärmen.",
-  "feature.wynntils.cosmeticsPreview.name": "Kosmetik Spelarvisning",
   "feature.wynntils.craftingProfessionLevelProgressBar.description": "Visa en nivåprogressionsbar när du är i en hantverksstation",
   "feature.wynntils.craftingProfessionLevelProgressBar.name": "Hantverksyrkes Progressionsbar",
   "feature.wynntils.craftingProfessionLevelProgressBar.texture.description": "Vilken textur ska användas för baren?",

@@ -370,8 +370,6 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "Text Shadow",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "Tracked",
-  "feature.wynntils.cosmeticsPreview.description": "Renders your player in the cosmetics screen.",
-  "feature.wynntils.cosmeticsPreview.name": "Cosmetics Player Preview",
   "feature.wynntils.craftingProfessionLevelProgressBar.description": "Display a level progress bar when in a crafting station",
   "feature.wynntils.craftingProfessionLevelProgressBar.name": "Crafting Profession Progress Bar",
   "feature.wynntils.craftingProfessionLevelProgressBar.texture.description": "What texture should be used for the bar?",

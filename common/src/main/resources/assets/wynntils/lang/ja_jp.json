@@ -306,8 +306,6 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "テキストの影はどのように見えますか？",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "テキストの影",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "追跡済み",
-  "feature.wynntils.cosmeticsPreview.description": "コスメティックスクリーンにプレイヤーを表示します。",
-  "feature.wynntils.cosmeticsPreview.name": "コスメティックプレイヤープレビュー",
   "feature.wynntils.craftingProfessionLevelProgressBar.description": "クラフトステーションにいるときにレベル進行バーを表示します",
   "feature.wynntils.craftingProfessionLevelProgressBar.name": "クラフト職業進行バー",
   "feature.wynntils.craftingProfessionLevelProgressBar.texture.description": "バーに使用するテクスチャは何ですか？",

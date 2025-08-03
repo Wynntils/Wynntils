@@ -306,8 +306,6 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "Como deve ser a sombra do texto?",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "Sombra do texto",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "Rastreado",
-  "feature.wynntils.cosmeticsPreview.description": "Renderiza o seu jogador na tela de cosméticos.",
-  "feature.wynntils.cosmeticsPreview.name": "Pré-visualização do jogador de cosméticos",
   "feature.wynntils.craftingProfessionLevelProgressBar.description": "Exibe uma barra de progresso de nível quando está em uma estação de artesanato",
   "feature.wynntils.craftingProfessionLevelProgressBar.name": "Barra de progresso da profissão de artesanato",
   "feature.wynntils.craftingProfessionLevelProgressBar.texture.description": "Qual textura deve ser usada para a barra?",
