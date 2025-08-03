@@ -110,32 +110,12 @@ public class TestRegex {
     }
 
     @Test
-    public void AccountModel_SILVERBULL_PATTERN() {
-        PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_PATTERN");
-        p.shouldMatch("§7Subscription: §c✖ Inactive");
-        p.shouldMatch("§7Subscription: §a✔ Active");
-    }
-
-    @Test
     public void AccountModel_SILVERBULL_DURATION_PATTERN() {
         PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_DURATION_PATTERN");
-        p.shouldMatch("§7Expiration: §f1 week 5 days");
-        p.shouldMatch("§7Expiration: §f5 days");
-        p.shouldMatch("§7Expiration: §f1 week");
-        p.shouldMatch("§7Expiration: §f2 days 12 hours");
-    }
-
-    @Test
-    public void AccountModel_VETERAN_PATTERN() {
-        PatternTester p = new PatternTester(AccountModel.class, "VETERAN_PATTERN");
-        // Champion
-        p.shouldMatch("§7Rank: §6Vet");
-        // Hero
-        p.shouldMatch("§7Rank: §dVet");
-        // VIP+
-        p.shouldMatch("§7Rank: §bVet");
-        // VIP
-        p.shouldMatch("§7Rank: §aVet");
+        p.shouldMatch("§#00a2e8ff- §7Expiration: §f1 week 5 days");
+        p.shouldMatch("§#00a2e8ff- §7Expiration: §f5 days");
+        p.shouldMatch("§#00a2e8ff- §7Expiration: §f1 week");
+        p.shouldMatch("§#00a2e8ff- §7Expiration: §f2 days 12 hours");
     }
 
     @Test
