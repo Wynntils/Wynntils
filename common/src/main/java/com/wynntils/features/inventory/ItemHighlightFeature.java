@@ -38,7 +38,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends Feature {
-    private static final String DEFAULT_HIGHLIGHT_KEY = "item_tier";
+    private static final List<String> DEFAULT_HIGHLIGHT_KEYS = List.of("item_tier", "ingredient_tier", "store_tier");
 
     // TODO: Set default to WYNN when porting to 1.21.6+
     @Persisted
@@ -257,7 +257,7 @@ public class ItemHighlightFeature extends Feature {
         if (itemStackModelData == null) return;
 
         List<String> newStrings = itemStackModelData.strings().stream()
-                .filter(s -> !s.startsWith(DEFAULT_HIGHLIGHT_KEY))
+                .filter(s -> DEFAULT_HIGHLIGHT_KEYS.stream().noneMatch(s::startsWith))
                 .toList();
         CustomModelData newModelData = new CustomModelData(
                 itemStackModelData.floats(), itemStackModelData.flags(), newStrings, itemStackModelData.colors());
