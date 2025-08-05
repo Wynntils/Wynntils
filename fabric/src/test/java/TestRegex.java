@@ -803,20 +803,27 @@ public class TestRegex {
     @Test
     public void WynnItemParser_ITEM_ATTACK_SPEED_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "ITEM_ATTACK_SPEED_PATTERN");
-        p.shouldMatch("§7Normal Attack Speed");
-        p.shouldMatch("§7Super Fast Attack Speed");
+        p.shouldMatch("§7Very Fast Attack Speed§r");
+        p.shouldMatch("§7Slow Attack Speed§r");
     }
 
     @Test
     public void WynnItemParser_ITEM_DAMAGE_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "ITEM_DAMAGE_PATTERN");
-        p.shouldMatch("§6✣ Neutral Damage: 55-68");
+        p.shouldMatch("§c\uE002 Fire§7 Damage: 38-42§r");
+        p.shouldMatch("§2\uE001 Earth§7 Damage: 105-145§r");
+        p.shouldMatch("§6\uE005 Neutral Damage: 372-455§r");
     }
 
     @Test
     public void WynnItemParser_ITEM_DEFENCE_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "ITEM_DEFENCE_PATTERN");
-        p.shouldMatch("§e✦ Thunder§7 Defence: +56");
+        p.shouldMatch("§2\uE001 Earth§7 Defence: +40§r");
+        p.shouldMatch("§e\uE003 Thunder§7 Defence: +28§r");
+        p.shouldMatch("§b\uE004 Water§7 Defence: +94§r");
+        p.shouldMatch("§c\uE002 Fire§7 Defence: +40§r");
+        p.shouldMatch("§f\uE000 Air§7 Defence: +40§r");
+        p.shouldMatch("§2\uE001 Earth§7 Defence: -100§r");
     }
 
     @Test
@@ -842,28 +849,25 @@ public class TestRegex {
     @Test
     public void WynnItemParser_TIER_AND_REROLL_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "TIER_AND_REROLL_PATTERN");
-        p.shouldMatch("§eUnique Item");
-        p.shouldMatch("§dRare Item");
-        p.shouldMatch("§dRare Item [2]");
-        p.shouldMatch("§bLegendary Item");
+        p.shouldMatch("§eUnique Item [2]");
         p.shouldMatch("§cFabled Item");
-        p.shouldMatch("§aSet Item");
+        p.shouldMatch("§aSet Item [2]");
+        p.shouldMatch("§fNormal Item");
+        p.shouldMatch("§dRare Item");
 
         // Crafted gear
-        p.shouldMatch("§3Crafted Wand§8 [134/137 Durability]");
-        p.shouldMatch("§3Crafted by player_name§8 [177/177 Durability]");
-        p.shouldMatch("§3Crafted by v8j§8 [177/177 Durability]");
+        p.shouldMatch("§3Crafted by AveMarisStella §8[68/68 Durability]");
+        p.shouldMatch("§3Crafted by XrnThePyrolysed §8[339/339 Durability]§r");
     }
 
     @Test
     public void WynnItemParser_POWDER_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "POWDER_PATTERN");
-        p.shouldMatch("§7[0/1] Powder Slots");
-        p.shouldMatch("§7[1/1] Powder Slots [§r§c✹§r§7]");
-        p.shouldMatch("§7[3/3] Powder Slots [§r§f❋ ❋ ❋§r§7]");
-        p.shouldMatch("§7[2/2] Powder Slots [§r§e✦ ✦§r§7]");
-        p.shouldMatch("§7[2/2] Powder Slots [§r§b❉ ❉§r§7]");
-        p.shouldMatch("§7[3/3] Powder Slots [§r§2✤ §r§c✹ §r§b❉§r§7]");
+        p.shouldMatch("§7[2/2] Powder Slots [§c\uE002§r §c\uE002§7]§r");
+        p.shouldMatch("§7[0/3] Powder Slots§r");
+        p.shouldMatch("§7[2/3] Powder Slots [§2\uE001§r §2\uE001§7]§r");
+        p.shouldMatch("§7[4/4] Powder Slots [§e\uE003§r §e\uE003§r §e\uE003§r §e\uE003§7]§r");
+        p.shouldMatch("§7[2/3] Powder Slots [§b\uE004§r §f\uE000§7]§r");
     }
 
     @Test
@@ -875,34 +879,42 @@ public class TestRegex {
     @Test
     public void WynnItemParser_MIN_LEVEL_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "MIN_LEVEL_PATTERN");
-        p.shouldMatch("§a✔§7 Combat Lv. Min: 35");
-        p.shouldMatch("§c✖§7 Combat Lv. Min: 65");
+        p.shouldMatch("§a✔§7 Combat Lv. Min: 104§r");
+        p.shouldMatch("§c✖§7 Combat Lv. Min: 84§r");
+        p.shouldMatch("§a✔ §7Combat Lv. Min: §f103");
     }
 
     @Test
     public void WynnItemParser_CLASS_REQ_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "CLASS_REQ_PATTERN");
-        p.shouldMatch("§c✖§7 Class Req: Shaman/Skyseer§r");
+        p.shouldMatch("§a✔§7 Class Req: Shaman/Skyseer§r");
+        p.shouldMatch("§c✖§7 Class Req: Archer/Hunter§r");
+        p.shouldMatch("§c✖ §7Class Req: §fAssassin/Ninja");
     }
 
     @Test
     public void WynnItemParser_SKILL_REQ_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "SKILL_REQ_PATTERN");
-        p.shouldMatch("§a✔§7 Intelligence Min: 38");
+        p.shouldMatch("§c✖§7 Defence Min: 50§r");
+        p.shouldMatch("§a✔§7 Intelligence Min: 45§r");
+        p.shouldMatch("§a✔ §7Dexterity Min: §f15");
+        p.shouldMatch("§c✖ §7Agility Min: §f110");
     }
 
     @Test
     public void WynnItemParser_QUEST_REQ_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "QUEST_REQ_PATTERN");
-        p.shouldMatch("§a✔§7 Quest Req: The Qira Hive");
-        p.shouldMatch("§c✖§7 Quest Req: Realm of Light V - The Realm of Light");
+        p.shouldMatch("§c✖§7 Quest Req: The Qira Hive§r");
+        p.shouldMatch("§c✖§7 Quest Req: Realm of Light V - The Realm of Light§r");
+        p.shouldMatch("§a✔§7 Quest Req: Realm of Light V - The Realm of Light§r");
     }
 
     @Test
     public void WynnItemParser_MISC_REQ_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "MISC_REQ_PATTERN");
-        p.shouldMatch("§a✔§7 Quest Req: The Qira Hive");
-        p.shouldMatch("§c✖§7 Quest Req: Realm of Light V - The Realm of Light");
+        p.shouldMatch("§c✖§7 Quest Req: The Qira Hive§r");
+        p.shouldMatch("§c✖§7 Quest Req: Realm of Light V - The Realm of Light§r");
+        p.shouldMatch("§a✔§7 Quest Req: Realm of Light V - The Realm of Light§r");
     }
 
     @Test
@@ -928,9 +940,9 @@ public class TestRegex {
     @Test
     public void WynnItemParser_CRAFTED_ITEM_NAME_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "CRAFTED_ITEM_NAME_PATTERN");
-        p.shouldMatch("§3§otest item§b§o [24%]À");
-        p.shouldMatch("§3§oAbsorbant Skirt of the Skyraider§b§o [100%]À");
-        p.shouldMatch("§3Corkian finger choker III§b [100%]À");
+        p.shouldMatch("§3how do i rename horses now lol §b[100%]À");
+        p.shouldMatch("§3Dune Hero Fallen Chestplate §b[100%]");
+        p.shouldMatch("§3I need money pls §b[1/1]À");
     }
 
     @Test
