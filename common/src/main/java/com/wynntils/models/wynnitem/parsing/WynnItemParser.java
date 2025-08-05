@@ -47,18 +47,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class WynnItemParser {
-    public static final Pattern HEALTH_PATTERN = Pattern.compile("^§4❤ Health: ([+-]\\d+)$");
+    public static final Pattern HEALTH_PATTERN = Pattern.compile("^§4❤ Health: ([+-]\\d+)(?:§r)?$");
 
     // Test in WynnItemParser_ITEM_ATTACK_SPEED_PATTERN
-    private static final Pattern ITEM_ATTACK_SPEED_PATTERN = Pattern.compile("^§7(.+) Attack Speed$");
+    private static final Pattern ITEM_ATTACK_SPEED_PATTERN = Pattern.compile("^§7(.+) Attack Speed(?:§r)?$");
 
     // Test in WynnItemParser_ITEM_DAMAGE_PATTERN
-    private static final Pattern ITEM_DAMAGE_PATTERN =
-            Pattern.compile("^§.(?<symbol>[✤✦❉✹❋✣]+) (?<type>.+) Damage: (?<range>(\\d+)-(\\d+))$");
+    private static final Pattern ITEM_DAMAGE_PATTERN = Pattern.compile(
+            "^§.(?<symbol>[\uE005\uE001\uE003\uE004\uE002\uE000]+) (?<type>.+) Damage: (?<range>(\\d+)-(\\d+))(?:§r)?$");
 
     // Test in WynnItemParser_ITEM_DEFENCE_PATTERN
-    private static final Pattern ITEM_DEFENCE_PATTERN =
-            Pattern.compile("^§.(?<symbol>[✤✦❉✹❋]+) (?<type>.+)§7 Defence: (?<value>[+-]?\\d+)$");
+    private static final Pattern ITEM_DEFENCE_PATTERN = Pattern.compile(
+            "^§.(?<symbol>[\uE001\uE003\uE004\uE002\uE000]+) (?<type>.+)§7 Defence: (?<value>[+-]?\\d+)(?:§r)?$");
 
     // Test in WynnItemParser_IDENTIFICATION_STAT_PATTERN
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
@@ -66,39 +66,40 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_TIER_AND_REROLL_PATTERN
     private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(
-            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) ([A-Za-z\\d _]+)(?:§8)?(?: \\[(\\d+)(?:\\/(\\d+) Durability)?\\])?$");
+            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) ([A-Za-z\\d _]+)(?: §8)?(?:\\[(\\d+)(?:\\/(\\d+) Durability)?\\])?(?:§r)?$");
 
     // Test in WynnItemParser_POWDER_PATTERN
     private static final Pattern POWDER_PATTERN =
-            Pattern.compile("^§7\\[(\\d+)/(\\d+)\\] Powder Slots(?: \\[§(.*)§7\\])?$");
+            Pattern.compile("^§7\\[(\\d+)\\/(\\d+)\\] Powder Slots(?: \\[§(.*)§7\\])?(?:§r)?$");
 
     // Test in WynnItemParser_EFFECT_LINE_PATTERN
     private static final Pattern EFFECT_LINE_PATTERN = Pattern.compile("^§(.)- §7(.*): §f([+-]?\\d+)(?:§.§.)? ?(.*)$");
 
     // Test in WynnItemParser_MIN_LEVEL_PATTERN
-    private static final Pattern MIN_LEVEL_PATTERN = Pattern.compile("^§(c✖|a✔)§7 Combat Lv. Min: (?<level>\\d+)$");
+    private static final Pattern MIN_LEVEL_PATTERN =
+            Pattern.compile("^§(c✖|a✔) ?§7 ?Combat Lv. Min: (?:§f)?(?<level>\\d+)(?:§r)?$");
 
     // Test in WynnItemParser_CLASS_REQ_PATTERN
     private static final Pattern CLASS_REQ_PATTERN =
-            Pattern.compile("^§(c✖|a✔)§7 Class Req: (?<name>.+)\\/(?<skinned>.+)$");
+            Pattern.compile("^§(c✖|a✔) ?§7 ?Class Req: (?:§f)?(?<name>.+)\\/(?<skinned>.+)(?:§r)?$");
 
     // Test in WynnItemParser_SKILL_REQ_PATTERN
     private static final Pattern SKILL_REQ_PATTERN =
-            Pattern.compile("^§(c✖|a✔)§7 (?<skill>[a-zA-Z]+) Min: (?<value>-?\\d+)$");
+            Pattern.compile("^§(c✖|a✔) ?§7 ?(?<skill>[a-zA-Z]+) Min: (?:§f)?(?<value>-?\\d+)(?:§r)?$");
 
     // Test in WynnItemParser_QUEST_REQ_PATTERN
-    private static final Pattern QUEST_REQ_PATTERN = Pattern.compile("^§(c✖|a✔)§7 Quest Req: (.+)$");
+    private static final Pattern QUEST_REQ_PATTERN = Pattern.compile("^§(c✖|a✔) ?§7 ?Quest Req: (.+)(?:§r)?$");
 
     // Test in WynnItemParser_MISC_REQ_PATTERN
-    private static final Pattern MISC_REQ_PATTERN = Pattern.compile("^§(c✖|a✔)§7 (.+)$");
+    private static final Pattern MISC_REQ_PATTERN = Pattern.compile("^§(c✖|a✔) ?§7 ?(.+)$");
 
     private static final Pattern EFFECT_HEADER_PATTERN = Pattern.compile("^§(.)Effect:$");
 
-    private static final Pattern POWDER_MARKERS = Pattern.compile("[^✹✦❋❉✤]");
+    private static final Pattern POWDER_MARKERS = Pattern.compile("[^\uE001\uE003\uE004\uE002\uE000]");
 
     public static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
 
-    public static final Pattern SET_BONUS_PATTERN = Pattern.compile("^§aSet Bonus:$");
+    public static final Pattern SET_BONUS_PATTERN = Pattern.compile("^§aSet Bonus:(?:§r)?$");
 
     // Checks for items eg. "- Morph-Emerald" to determine if item is equipped from color
     public static final Pattern SET_ITEM_PATTERN = Pattern.compile("^§[a7]- §([28])(.+)");
@@ -112,7 +113,7 @@ public final class WynnItemParser {
     // Crafted items
     // Test in WynnItemParser_CRAFTED_ITEM_NAME_PATTERN
     public static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile(
-            "^§3(?:§o)?(?<name>.+)§b(?:§o)? \\[(((?<effectStrength>\\d+)%)|((?<currentUses>\\d+)\\/(?<maxUses>\\d+)))\\]À*$");
+            "^§3(?:§o)?(?<name>.+) §b(?:§o)?\\[(((?<effectStrength>\\d+)%)|((?<currentUses>\\d+)\\/(?<maxUses>\\d+)))\\]À*$");
 
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
