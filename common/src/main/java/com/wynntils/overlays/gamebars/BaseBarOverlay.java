@@ -79,7 +79,7 @@ public abstract class BaseBarOverlay extends Overlay {
 
     @Override
     public void tick() {
-        if (!Models.WorldState.onWorld() || !isActive()) return;
+        if ((!Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe()) || !isActive()) return;
 
         if (animationTime.get() == 0) {
             currentProgress = progress().progress();
@@ -93,7 +93,7 @@ public abstract class BaseBarOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        if (!Models.WorldState.onWorld() || !isActive()) return;
+        if ((!Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe()) || !isActive()) return;
 
         PoseStack poseStack = guiGraphics.pose();
 
