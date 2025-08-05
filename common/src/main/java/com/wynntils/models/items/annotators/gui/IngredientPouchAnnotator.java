@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
@@ -23,11 +23,11 @@ import net.minecraft.world.item.Items;
 public final class IngredientPouchAnnotator implements GuiItemAnnotator {
     private static final Pattern INGREDIENT_POUCH_PATTERN = Pattern.compile("§6[a-zA-Z0-9]+(?:'s)? Pouch");
     private static final Pattern INGREDIENT_LORE_LINE_PATTERN =
-            Pattern.compile("^§f(\\d+) x §7([^§]*)(?:§[3567])? \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
+            Pattern.compile("^§f(\\d+) x §7([^§]*) (?:§[3567])?\\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\](?:§r)?$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        if (itemStack.getItem() != Items.IRON_HORSE_ARMOR) return null;
+        if (itemStack.getItem() != Items.POTION) return null;
         if (!name.matches(INGREDIENT_POUCH_PATTERN)) return null;
 
         List<Pair<IngredientInfo, Integer>> ingredients = new ArrayList<>();
