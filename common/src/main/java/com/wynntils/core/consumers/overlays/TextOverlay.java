@@ -144,6 +144,6 @@ public abstract class TextOverlay extends DynamicOverlay {
      * @return whether the overlay is rendered with the default (empty) template
      */
     public boolean isRenderedDefault() {
-        return Models.WorldState.onWorld();
+        return Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe();
     }
 }
