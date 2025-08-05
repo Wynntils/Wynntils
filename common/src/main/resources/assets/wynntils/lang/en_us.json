@@ -2711,6 +2711,7 @@
   "screens.wynntils.playerViewer.removeFriend": "Remove Friend",
   "screens.wynntils.playerViewer.trade": "Trade",
   "screens.wynntils.playerViewer.viewStats": "View Statistics",
+  "screens.wynntils.playerViewer.warning": "The information required for viewing other players' gear is no longer sent by Wynncraft to reduce bandwith from these items. For the moment you will be unable to inspect gear. Please do not ask Wynncraft developers to add this back, they may do so if and when it can be done without causing issues for them.",
   "screens.wynntils.poiCreation.cancel": "Cancel",
   "screens.wynntils.poiCreation.centerPlayer": "Click to place your waypoint at your current position",
   "screens.wynntils.poiCreation.centerWorld": "Click to place your waypoint at the center of the world",
