@@ -13,6 +13,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.items.items.gui.ActivityItem;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -147,11 +148,19 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
         resetNextSetContent = mouseButton != GLFW.GLFW_MOUSE_BUTTON_LEFT
                 || (slot != PROGRESS_SLOTS.b() && slot != DIALOGUE_HISTORY_SLOTS.b());
 
-        ContainerUtils.clickOnSlot(
-                slot,
-                wrappedScreen.getWrappedScreenInfo().containerId(),
-                mouseButton,
-                McUtils.containerMenu().getItems());
+        if (KeyboardUtils.isShiftDown()) {
+            ContainerUtils.shiftClickOnSlot(
+                    slot,
+                    wrappedScreen.getWrappedScreenInfo().containerId(),
+                    mouseButton,
+                    McUtils.containerMenu().getItems());
+        } else {
+            ContainerUtils.clickOnSlot(
+                    slot,
+                    wrappedScreen.getWrappedScreenInfo().containerId(),
+                    mouseButton,
+                    McUtils.containerMenu().getItems());
+        }
     }
 
     private boolean handleActivityItem(ItemStack itemStack, int slot) {
