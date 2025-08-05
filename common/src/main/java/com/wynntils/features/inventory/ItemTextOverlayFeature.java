@@ -71,7 +71,7 @@ public class ItemTextOverlayFeature extends Feature {
     public final Config<Boolean> emeraldPouchTierEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(true);
+    public final Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(false);
 
     @Persisted
     public final Config<TextShadow> emeraldPouchTierShadow = new Config<>(TextShadow.OUTLINE);
@@ -80,7 +80,7 @@ public class ItemTextOverlayFeature extends Feature {
     public final Config<Boolean> gatheringToolTierEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> gatheringToolTierRomanNumerals = new Config<>(true);
+    public final Config<Boolean> gatheringToolTierRomanNumerals = new Config<>(false);
 
     @Persisted
     public final Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
@@ -89,7 +89,7 @@ public class ItemTextOverlayFeature extends Feature {
     public final Config<Boolean> horseTierEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> horseTierRomanNumerals = new Config<>(true);
+    public final Config<Boolean> horseTierRomanNumerals = new Config<>(false);
 
     @Persisted
     public final Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);

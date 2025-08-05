@@ -18,26 +18,26 @@ import java.util.regex.Pattern;
 
 public class PowderSpecialSegmentMatcher implements ActionBarSegmentMatcher {
     // The start of a powder special segment, a spacer
-    private static final String SEGMENT_START = "\uDAFF\uDFF0";
+    private static final String SEGMENT_START = "(\uDAFF\uDFEF\uDAFF\uDFFF\u0001|\uDAFF\uDFF0)";
 
     // The end of a powder special segment, a spacer
-    private static final String SEGMENT_END = "\uDAFF\uDFEF";
+    private static final String SEGMENT_END = "(\uDAFF\uDFEE|\uDAFF\uDFEF)";
 
     // Empty powder special character
-    private static final String EMPTY_POWDER_SPECIAL = "\uE190";
+    private static final String EMPTY_POWDER_SPECIAL = "\uE010";
 
     // Characters for powder specials, by type, each having a 10 character range, a character being 10% of the bar
     private static final Map<Powder, Pair<Character, Character>> POWDER_SPECIAL_MAP = Map.of(
             Powder.AIR,
-            Pair.of('\uE1A0', '\uE1A9'),
+            Pair.of('\uE020', '\uE029'),
             Powder.EARTH,
-            Pair.of('\uE1B0', '\uE1B9'),
+            Pair.of('\uE030', '\uE039'),
             Powder.FIRE,
-            Pair.of('\uE1C0', '\uE1C9'),
+            Pair.of('\uE040', '\uE049'),
             Powder.THUNDER,
-            Pair.of('\uE1D0', '\uE1D9'),
+            Pair.of('\uE050', '\uE059'),
             Powder.WATER,
-            Pair.of('\uE1E0', '\uE1E9'));
+            Pair.of('\uE060', '\uE069'));
 
     private static final Pattern POWDER_SPECIAL_REGEX = Pattern.compile(SEGMENT_START + "(?<powder>["
             + String.join(

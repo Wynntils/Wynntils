@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
@@ -16,7 +16,8 @@ import net.minecraft.world.item.ItemStack;
 
 public final class SkillPointAnnotator implements GuiItemAnnotator {
     // Test in SkillPointAnnotator_SKILL_POINT_PATTERN
-    private static final Pattern SKILL_POINT_PATTERN = Pattern.compile("^§dUpgrade your §[2ebcf][✤✦❉✹❋] (.*)§d skill$");
+    private static final Pattern SKILL_POINT_PATTERN = Pattern.compile(
+            "^[\uDB00\uDC00-\uDB00\uDC0F]§dUpgrade your §[2ebcf][\uE001\uE003\uE004\uE002\uE000] (.*)§d skill$");
     // Test in SkillPointAnnotator_LORE_PATTERN
     private static final Pattern LORE_PATTERN = Pattern.compile("^.*§7(-?\\d+) points§r.*§6-?\\d+ points$");
 
