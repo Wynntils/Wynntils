@@ -37,7 +37,7 @@ public final class CommonColors {
     // Animated blinking between #e63232 and black
     public static final CustomColor BLINK = CustomColor.fromInt(0x00f00c);
     // Animated gradient from #560505ff to #8a0303ff
-    public static final CustomColor GRADIENT2 = CustomColor.fromInt(0x00f010);
+    public static final CustomColor GRADIENT_2 = CustomColor.fromInt(0x00f010);
     // Animated shine effect between #a3cc52ff to #ffffd2ff
     public static final CustomColor SHINE = CustomColor.fromInt(0x00f014);
 }
