@@ -82,7 +82,7 @@ public final class BombModel extends Model {
                     addBombFromChat("", localMatcher.group("bomb"), Models.WorldState.getCurrentWorldName());
             if (bombInfo == null) return;
 
-            BombEvent.Local bombEvent = new BombEvent.Local(bombInfo, unwrapped);
+            BombEvent.Local bombEvent = new BombEvent.Local(bombInfo, message);
             WynntilsMod.postEvent(bombEvent);
             event.setMessage(bombEvent.getMessage());
             return;
