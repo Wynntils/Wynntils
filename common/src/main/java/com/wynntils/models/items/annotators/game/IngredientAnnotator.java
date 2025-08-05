@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 public final class IngredientAnnotator implements GameItemAnnotator {
     // Test in IngredientAnnotator_INGREDIENT_PATTERN
     private static final Pattern INGREDIENT_PATTERN =
-            Pattern.compile("^§7(.+?)(?:§[3567])? \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
+            Pattern.compile("^§7(.+?) (?:§[3567])?\\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
