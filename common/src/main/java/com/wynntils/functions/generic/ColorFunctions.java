@@ -120,8 +120,8 @@ public final class ColorFunctions {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
             return switch (arguments.getArgument("style").getIntegerValue()) {
-                case 2 -> CommonColors.GRADIENT2;
-                case null, default -> CommonColors.GRADIENT;
+                case 2 -> CommonColors.GRADIENT_2;
+                default -> CommonColors.GRADIENT;
             };
         }
 
