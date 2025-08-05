@@ -136,7 +136,6 @@
   "feature.wynntils.bulkBuy.bulkBuyActive": "Shift-Klick, um %d Mal zu kaufen",
   "feature.wynntils.bulkBuy.bulkBuyAmount.description": "Wie viele Artikel sollen auf einmal gekauft werden?",
   "feature.wynntils.bulkBuy.bulkBuyAmount.name": "Mengenrabatt",
-  "feature.wynntils.bulkBuy.bulkBuyNormal": "Klicken, um zu kaufen",
   "feature.wynntils.bulkBuy.description": "Fügt die Möglichkeit hinzu, Artikel in großen Mengen zu kaufen.",
   "feature.wynntils.bulkBuy.name": "Massenkauf",
   "feature.wynntils.changelog.autoClassMenu.description": "Soll der Spieler in das Klassenauswahlmenü gebracht werden, bevor das Änderungsprotokoll angezeigt wird?",

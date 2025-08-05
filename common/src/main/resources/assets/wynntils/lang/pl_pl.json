@@ -136,7 +136,6 @@
   "feature.wynntils.bulkBuy.bulkBuyActive": "Shift-Kliknij, aby kupić %d razy",
   "feature.wynntils.bulkBuy.bulkBuyAmount.description": "Ile przedmiotów powinno być kupowanych jednocześnie?",
   "feature.wynntils.bulkBuy.bulkBuyAmount.name": "Ilość Zakupu Hurtowego",
-  "feature.wynntils.bulkBuy.bulkBuyNormal": "Kliknij, aby kupić",
   "feature.wynntils.bulkBuy.description": "Dodaje możliwość hurtowego zakupu przedmiotów.",
   "feature.wynntils.bulkBuy.name": "Zakup Hurtowy",
   "feature.wynntils.changelog.autoClassMenu.description": "Czy gracz powinien zostać przeniesiony do menu wyboru klasy przed wyświetleniem dziennika zmian?",

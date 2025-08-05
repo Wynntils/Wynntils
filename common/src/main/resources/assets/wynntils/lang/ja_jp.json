@@ -136,7 +136,6 @@
   "feature.wynntils.bulkBuy.bulkBuyActive": "Shift-クリックで%d回購入",
   "feature.wynntils.bulkBuy.bulkBuyAmount.description": "一度に購入するアイテムの数は？",
   "feature.wynntils.bulkBuy.bulkBuyAmount.name": "大量購入数",
-  "feature.wynntils.bulkBuy.bulkBuyNormal": "クリックして購入",
   "feature.wynntils.bulkBuy.description": "アイテムをまとめて購入する機能を追加します。",
   "feature.wynntils.bulkBuy.name": "大量購入",
   "feature.wynntils.changelog.autoClassMenu.description": "変更ログを表示する前にプレイヤーをクラス選択メニューに移動させるべきですか？",

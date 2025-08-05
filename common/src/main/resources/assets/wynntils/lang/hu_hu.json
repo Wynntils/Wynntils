@@ -136,7 +136,6 @@
   "feature.wynntils.bulkBuy.bulkBuyActive": "Shift-Kattintás a vásárláshoz %d alkalommal",
   "feature.wynntils.bulkBuy.bulkBuyAmount.description": "Hány tárgyat vásároljunk egyszerre?",
   "feature.wynntils.bulkBuy.bulkBuyAmount.name": "Tömeges Vásárlás Mennyisége",
-  "feature.wynntils.bulkBuy.bulkBuyNormal": "Kattintson a vásárláshoz",
   "feature.wynntils.bulkBuy.description": "Hozzáadja a lehetőséget, hogy tömegesen vásároljon tárgyakat.",
   "feature.wynntils.bulkBuy.name": "Tömeges Vásárlás",
   "feature.wynntils.changelog.autoClassMenu.description": "A játékos kerüljön a class kiválasztási menübe, mielőtt megjelenik a változásnapló?",
