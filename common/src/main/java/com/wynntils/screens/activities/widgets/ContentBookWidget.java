@@ -9,11 +9,13 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
+import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.screens.activities.ContentBookHolder;
 import com.wynntils.screens.activities.WynntilsContentBookScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -139,7 +141,14 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && canOpenMap()) {
             Models.Activity.openMapOnActivity(activityInfo);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            Models.Activity.openActivityOnWiki(activityInfo);
+            // Shift right clicking world events is used to fast travel to them
+            if (activityInfo.type() == ActivityType.WORLD_EVENT
+                    && activityInfo.status() == ActivityStatus.AVAILABLE
+                    && KeyboardUtils.isShiftDown()) {
+                holder.pressSlot(slot, button);
+            } else {
+                Models.Activity.openActivityOnWiki(activityInfo);
+            }
         }
 
         return true;
