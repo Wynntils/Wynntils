@@ -70,7 +70,7 @@ public abstract class CustomBarOverlayBase extends BarOverlay implements CustomN
      * @return whether the overlay is rendered with the default (empty) template
      */
     public boolean isRenderedDefault() {
-        return Models.WorldState.onWorld();
+        return Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe();
     }
 
     @Override
