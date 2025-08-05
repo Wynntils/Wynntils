@@ -5,12 +5,9 @@
 package com.wynntils.screens.guides.emeraldpouch;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.inventory.ItemTextOverlayFeature;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -62,12 +59,7 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString(
-                                Managers.Feature.getFeatureInstance(ItemTextOverlayFeature.class)
-                                                .emeraldPouchTierRomanNumerals
-                                                .get()
-                                        ? MathUtils.toRoman(itemStack.getTier())
-                                        : String.valueOf(itemStack.getTier())),
+                        StyledText.fromString(String.valueOf(itemStack.getTier())),
                         getX() + 2,
                         getX() + 14,
                         getY() + 8,
