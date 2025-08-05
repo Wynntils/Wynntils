@@ -192,7 +192,7 @@ public class BulkBuyFeature extends Feature {
         if (!isBulkBuyable(McUtils.containerMenu(), event.getItemStack())) return;
 
         MutableComponent component = Component.empty()
-                .append(Component.literal("\uE004\uDB00\uDC02\uE014\uDB00\uDC02\uE001")
+                .append(Component.literal("\uE004\uDB00\uDC02\uE014\uDB00\uDC02\uE000")
                         .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("keybind"))))
                 .append(Component.literal(" ")
                         .append(Component.translatable("feature.wynntils.bulkBuy.bulkBuyActive", bulkBuyAmount.get()))
