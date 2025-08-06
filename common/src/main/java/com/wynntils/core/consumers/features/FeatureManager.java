@@ -24,7 +24,6 @@ import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.features.chat.ChatTimestampFeature;
 import com.wynntils.features.chat.DeathCoordinatesFeature;
 import com.wynntils.features.chat.DialogueOptionOverrideFeature;
-import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.InputTranscriptionFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.chat.RemoveWynncraftChatWrapFeature;
@@ -226,7 +225,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChatTimestampFeature());
         registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
-        registerFeature(new GuildRankReplacementFeature());
         registerFeature(new InputTranscriptionFeature());
         registerFeature(new MessageFilterFeature());
         registerFeature(new RemoveWynncraftChatWrapFeature());

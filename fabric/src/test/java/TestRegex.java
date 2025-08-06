@@ -2,7 +2,6 @@
  * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
@@ -450,20 +449,6 @@ public class TestRegex {
     public void GuildModel_ALLIED_GUILD_PATTERN() {
         PatternTester p = new PatternTester(GuildModel.class, "ALLIED_GUILD_PATTERN");
         p.shouldMatch("§a- §7GUILD NAME [wynn]");
-    }
-
-    @Test
-    public void GuildRankReplacementFeature_GUILD_MESSAGE_PATTERN() {
-        PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "GUILD_MESSAGE_PATTERN");
-        p.shouldMatch("§3[§b★★★★★§3§oDisco reroller§3]§b");
-        p.shouldMatch("§3[§b★★★★★§3§oafKing§3]§b");
-        p.shouldMatch("§3[§b★★★★§3§obol§3]§b");
-    }
-
-    @Test
-    public void GuildRankReplacementFeature_RECRUIT_USERNAME_PATTERN() {
-        PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "RECRUIT_USERNAME_PATTERN");
-        p.shouldMatch("§3[_user0name_");
     }
 
     @Test
