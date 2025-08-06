@@ -9,12 +9,16 @@ import com.google.common.collect.ComparisonChain;
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.AbstractConfigurable;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -22,6 +26,14 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Comparable<Overlay> {
+    @Persisted(i18nKey = "overlay.wynntils.overlay.enabledTemplate")
+    protected final Config<String> enabledTemplate = new Config<>("");
+
+    private ErrorOr<Boolean> enabledTemplateCache = null;
+
+    @Persisted(i18nKey = "overlay.wynntils.overlay.enabledTemplateOverwrite")
+    protected final Config<Boolean> enabledTemplateOverwrite = new Config<>(false);
+
     @Persisted(i18nKey = "overlay.wynntils.overlay.position")
     protected final Config<OverlayPosition> position = new Config<>(null);
 
@@ -63,6 +75,21 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         this.verticalAlignmentOverride.store(verticalAlignmentOverride);
     }
 
+    protected boolean defaultRenderCondition() {
+        return Models.WorldState.onWorld()
+                && (McUtils.player() != null && !McUtils.player().isSpectator());
+    }
+    ;
+
+    protected boolean isRendered() {
+        if (enabledTemplateCache == null || enabledTemplateCache.hasError()) return defaultRenderCondition();
+        if (enabledTemplateOverwrite.get()) {
+            return enabledTemplateCache.getValue();
+        } else {
+            return defaultRenderCondition() && enabledTemplateCache.getValue();
+        }
+    }
+
     @Override
     public String getTypeName() {
         return "Overlay";
@@ -77,6 +104,18 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     }
 
     public void tick() {}
+
+    protected void updateCache() {
+        String template = enabledTemplate.get();
+        if (template.isEmpty()) {
+            this.enabledTemplateCache = null;
+            return;
+        }
+
+        String formattedTemplate =
+                StyledText.join("", Managers.Function.doFormatLines(template)).getString();
+        this.enabledTemplateCache = Managers.Function.tryGetRawValueOfType(formattedTemplate, Boolean.class);
+    }
 
     @Override
     public final void updateConfigOption(Config<?> config) {

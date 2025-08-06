@@ -60,11 +60,15 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
+    protected boolean defaultRenderCondition() {
+        return super.defaultRenderCondition()
+                && !Models.Objectives.getPersonalObjectives().isEmpty();
+    }
+
+    @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         List<WynnObjective> objectives = Models.Objectives.getPersonalObjectives();
-
-        if (objectives.isEmpty()) return;
 
         PoseStack poseStack = guiGraphics.pose();
 

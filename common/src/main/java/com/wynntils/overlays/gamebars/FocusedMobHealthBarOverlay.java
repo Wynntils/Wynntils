@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
@@ -66,8 +66,9 @@ public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    public boolean isActive() {
-        return Models.Combat.getFocusedMobHealth() > 0
+    public boolean defaultRenderCondition() {
+        return super.defaultRenderCondition()
+                && Models.Combat.getFocusedMobHealth() > 0
                 && System.currentTimeMillis() - Models.Combat.getLastDamageDealtTimestamp() < 5000;
     }
 
