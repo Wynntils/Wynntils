@@ -4,16 +4,12 @@
  */
 package com.wynntils.overlays.custombars;
 
-import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.BarOverlay;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.HiddenConfig;
-import com.wynntils.core.text.StyledText;
-import com.wynntils.utils.type.ErrorOr;
 
 public abstract class CustomBarOverlayBase extends BarOverlay implements CustomNameProperty {
     @Persisted
@@ -24,9 +20,6 @@ public abstract class CustomBarOverlayBase extends BarOverlay implements CustomN
 
     @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.valueTemplate")
     public final Config<String> valueTemplate = new Config<>("");
-
-    @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.enabledTemplate")
-    public final Config<String> enabledTemplate = new Config<>("");
 
     protected CustomBarOverlayBase(int id, OverlaySize overlaySize) {
         super(id, overlaySize);
@@ -47,30 +40,8 @@ public abstract class CustomBarOverlayBase extends BarOverlay implements CustomN
     }
 
     @Override
-    public final boolean isRendered() {
-        // If the value template is empty, the overlay is not rendered.
-        if (valueTemplate.get().isEmpty()) return false;
-
-        // If the enabled template is empty,
-        // the overlay is rendered when the player is in the world.
-        String template = enabledTemplate.get();
-        if (template.isEmpty()) return isRenderedDefault();
-
-        // If the enabled template is not empty,
-        // the overlay is rendered when the template is true.
-        String formattedTemplate =
-                StyledText.join("", Managers.Function.doFormatLines(template)).getString();
-        ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(formattedTemplate, Boolean.class);
-        return !enabledOrError.hasError() && enabledOrError.getValue();
-    }
-
-    /**
-     * Returns whether the overlay is rendered with the default (empty) template.
-     *
-     * @return whether the overlay is rendered with the default (empty) template
-     */
-    public boolean isRenderedDefault() {
-        return Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe();
+    public boolean defaultRenderCondition() {
+        return super.defaultRenderCondition() && !valueTemplate.get().isEmpty();
     }
 
     @Override

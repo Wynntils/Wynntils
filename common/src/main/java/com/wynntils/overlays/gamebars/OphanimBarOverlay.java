@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
@@ -40,8 +40,8 @@ public class OphanimBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected boolean isActive() {
-        return Models.Ability.ophanimBar.isActive();
+    protected boolean defaultRenderCondition() {
+        return super.defaultRenderCondition() && Models.Ability.ophanimBar.isActive();
     }
 
     @Override

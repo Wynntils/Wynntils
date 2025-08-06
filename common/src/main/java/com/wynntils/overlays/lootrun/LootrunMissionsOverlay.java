@@ -55,7 +55,7 @@ public class LootrunMissionsOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean isRenderedDefault() {
-        return Models.Lootrun.getState() != LootrunningState.NOT_RUNNING;
+    public boolean defaultRenderCondition() {
+        return super.defaultRenderCondition() && Models.Lootrun.getState() != LootrunningState.NOT_RUNNING;
     }
 }

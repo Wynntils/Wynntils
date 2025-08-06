@@ -8,7 +8,6 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -65,8 +64,6 @@ public abstract class BaseBarOverlay extends Overlay {
 
     protected abstract Class<? extends TrackedBar> getTrackedBarClass();
 
-    protected abstract boolean isActive();
-
     // As this is an abstract class, this event was subscribed to manually in ctor
     protected void onBossBarAdd(BossBarAddedEvent event) {
         if (!Managers.Overlay.isEnabled(this)) return;
@@ -79,7 +76,7 @@ public abstract class BaseBarOverlay extends Overlay {
 
     @Override
     public void tick() {
-        if ((!Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe()) || !isActive()) return;
+        if (!isRendered() || progress() == null) return;
 
         if (animationTime.get() == 0) {
             currentProgress = progress().progress();
@@ -93,8 +90,6 @@ public abstract class BaseBarOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        if ((!Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe()) || !isActive()) return;
-
         PoseStack poseStack = guiGraphics.pose();
 
         float barHeight = textureHeight() * (this.getWidth() / 81);

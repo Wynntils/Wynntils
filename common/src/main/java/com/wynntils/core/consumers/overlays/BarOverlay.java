@@ -7,7 +7,6 @@ package com.wynntils.core.consumers.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
@@ -54,8 +53,6 @@ public abstract class BarOverlay extends DynamicOverlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        if (!isRendered()) return;
-
         PoseStack poseStack = guiGraphics.pose();
 
         BarOverlayTemplatePair template = getTemplate();
@@ -106,7 +103,7 @@ public abstract class BarOverlay extends DynamicOverlay {
 
     @Override
     public void tick() {
-        if (!Models.WorldState.onWorld() || !isRendered()) return;
+        if (!isRendered()) return;
 
         BarOverlayTemplatePair template = getTemplate();
 
@@ -192,8 +189,6 @@ public abstract class BarOverlay extends DynamicOverlay {
             case BOTTOM -> this.getRenderY() + this.getHeight() - renderedHeight;
         };
     }
-
-    protected abstract boolean isRendered();
 
     protected abstract Texture getTexture();
 

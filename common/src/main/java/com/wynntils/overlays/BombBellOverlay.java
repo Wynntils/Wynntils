@@ -88,6 +88,11 @@ public class BombBellOverlay extends Overlay {
     }
 
     @Override
+    protected boolean defaultRenderCondition() {
+        return !Models.Bomb.getBombBells().isEmpty();
+    }
+
+    @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()

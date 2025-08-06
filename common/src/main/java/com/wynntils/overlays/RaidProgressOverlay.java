@@ -66,8 +66,8 @@ public class RaidProgressOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean isRenderedDefault() {
-        return Models.Raid.getCurrentRaid() != null;
+    public boolean defaultRenderCondition() {
+        return super.defaultRenderCondition() && Models.Raid.getCurrentRaid() != null;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
