@@ -109,7 +109,7 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_SHINY_STAT_PATTERN
     public static final Pattern SHINY_STAT_PATTERN =
-            Pattern.compile("^§f⬡ §7([a-zA-Z ]+): §f(\\d+)(?:§8 \\[(\\d+)\\])?$");
+            Pattern.compile("^§f⬡ §7(?: )?([a-zA-Z ]+): §f(\\d+)(?:§8 \\[(\\d+)\\])?$");
 
     // Crafted items
     // Test in WynnItemParser_CRAFTED_ITEM_NAME_PATTERN
