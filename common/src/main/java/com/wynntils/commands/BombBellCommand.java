@@ -14,7 +14,6 @@ import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
@@ -25,18 +24,13 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class BombCommand extends Command {
+public class BombBellCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> BOMB_TYPE_SUGGESTION_PROVIDER = (context, builder) ->
             SharedSuggestionProvider.suggest(Arrays.stream(BombType.values()).map(Enum::name), builder);
 
     @Override
     public String getCommandName() {
-        return "bomb";
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return List.of("bombbell", "bombs");
+        return "bombbell";
     }
 
     @Override
