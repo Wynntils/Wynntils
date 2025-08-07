@@ -221,15 +221,12 @@ public class TestRegex {
     @Test
     public void DamageLabelParser_DAMAGE_LABEL_PATTERN() {
         PatternTester p = new PatternTester(DamageLabelParser.class, "DAMAGE_LABEL_PATTERN");
-        p.shouldMatch("§4-13 ❤ ");
-        p.shouldMatch("§4-10 ❤ ");
-        p.shouldMatch("§c-8 ✹ ");
-        p.shouldMatch("§e-30 ✦ ");
-        p.shouldMatch("§2-41 ✤ ");
-        p.shouldMatch("§b-21 ❉ ");
-        p.shouldMatch("§f-32 ❋ ");
-        p.shouldMatch("§c-28 ✹ ");
-        p.shouldMatch("§c-116 ✹ §2-17 ✤ ");
+        p.shouldMatch("§e§l-509 §r§e\uE003 §f§l-398 §r§f\uE000 §c§l-5162 §r§c\uE002 §b§l-386 §r§b\uE004 ");
+        p.shouldMatch("§c§l-608 §r§c\uE002 §2§l-219 §r§2\uE001 ");
+        p.shouldMatch("§c-387 \uE002 §2-140 \uE001 ");
+        p.shouldMatch("§c§l-4089 §r§c\uE002 ");
+        p.shouldMatch("§c-2685 \uE002 ");
+        p.shouldMatch("§4-6 ❤ ");
     }
 
     @Test
