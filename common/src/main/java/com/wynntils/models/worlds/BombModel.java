@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -33,8 +32,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class BombModel extends Model {
     public static final TrackedBar InfoBar = new InfoBar();
 
-    private static final Pattern BOMB_BELL_PATTERN =
-            Pattern.compile("^\\[Bomb Bell\\] (?<user>.+) has thrown an? (?<bomb>.+) Bomb on (?<server>.+)$");
+    private static final Pattern BOMB_BELL_PATTERN = Pattern.compile(
+            "^§#fddd5cff(?:\uE01E\uE002|\uE001) (?<user>.+) has thrown an? §#f3e6b2ff(?<bomb>.+) Bomb§#fddd5cff on §#f3e6b2ff§n(?<server>.+)$");
 
     // Test in BombModel_BOMB_EXPIRED_PATTERN
     private static final Pattern BOMB_EXPIRED_PATTERN = Pattern.compile(
@@ -57,8 +56,10 @@ public final class BombModel extends Model {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
         StyledText message = event.getOriginalStyledText();
+        StyledText unwrapped =
+                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
 
-        Matcher bellMatcher = message.getMatcher(BOMB_BELL_PATTERN, PartStyle.StyleType.NONE);
+        Matcher bellMatcher = unwrapped.getMatcher(BOMB_BELL_PATTERN);
         if (bellMatcher.matches()) {
             BombInfo bombInfo =
                     addBombFromChat(bellMatcher.group("user"), bellMatcher.group("bomb"), bellMatcher.group("server"));
@@ -70,9 +71,6 @@ public final class BombModel extends Model {
 
             return;
         }
-
-        StyledText unwrapped =
-                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
 
         Matcher localMatcher = unwrapped.getMatcher(BOMB_THROWN_PATTERN);
         if (localMatcher.matches()) {
