@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -24,14 +24,14 @@ public class DamageDataTransformer extends DataTransformer<DamageData> {
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, DamageData data) {
         return switch (version) {
-            case VERSION_1 -> encodeDamageData(data);
+            case VERSION_1, VERSION_2 -> encodeDamageData(data);
         };
     }
 
     @Override
     public ErrorOr<DamageData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1 -> decodeDamageData(byteReader);
+            case VERSION_1, VERSION_2 -> decodeDamageData(byteReader);
         };
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding;
@@ -50,7 +50,7 @@ import java.util.Optional;
  * The {@link ItemTransformer} then decodes the {@link ItemData} objects into a {@link com.wynntils.models.items.WynnItem}.
  */
 public final class ItemTransformerRegistry {
-    private static final ItemTransformingVersion CURRENT_VERSION = ItemTransformingVersion.VERSION_1;
+    private static final ItemTransformingVersion CURRENT_VERSION = ItemTransformingVersion.VERSION_2;
 
     private final DataTransformerRegistry dataTransformerRegistry = new DataTransformerRegistry();
 
