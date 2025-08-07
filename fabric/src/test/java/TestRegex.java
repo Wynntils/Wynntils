@@ -149,6 +149,14 @@ public class TestRegex {
     }
 
     @Test
+    public void BombMobel_BOMB_BELL_PATTERN() {
+        PatternTester p = new PatternTester(BombModel.class, "BOMB_BELL_PATTERN");
+
+        p.shouldMatch("§#fddd5cff\uE01E\uE002 Wanytails has thrown a §#f3e6b2ffProfession Speed Bomb§#fddd5cff on §#f3e6b2ff§nNA3");
+        p.shouldMatch("§#fddd5cff\uE001 Wanytails has thrown a §#f3e6b2ffCombat Experience Bomb§#fddd5cff on §#f3e6b2ff§nNA3");
+    }
+
+    @Test
     public void BombModel_BOMB_THROWN_PATTERN() {
         PatternTester p = new PatternTester(BombModel.class, "BOMB_THROWN_PATTERN");
         p.shouldMatch("§#a0c84bff\uE014\uE002 §lProfession Speed Bomb");
