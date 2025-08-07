@@ -532,7 +532,7 @@ public final class ChatHandler extends Handler {
      * message entirely.
      */
     private StyledText postChatLine(StyledText styledText, MessageType messageType) {
-        String plainText = styledText.getStringWithoutFormatting();
+        String plainText = StyledTextUtils.unwrap(styledText).getStringWithoutFormatting();
         if (!plainText.isBlank()) {
             // We store the unformatted string version to be able to compare between
             // foreground and background versions
