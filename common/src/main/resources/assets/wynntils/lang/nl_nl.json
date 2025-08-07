@@ -306,8 +306,6 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "Hoe moet de tekstschaduw eruitzien?",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "Tekstschaduw",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "Gevolgd",
-  "feature.wynntils.cosmeticsPreview.description": "Render je speler in het cosmeticascherm.",
-  "feature.wynntils.cosmeticsPreview.name": "Cosmetica Speler Voorvertoning",
   "feature.wynntils.craftingProfessionLevelProgressBar.description": "Toont een niveau voortgangsbalk wanneer je in een ambachtstation bent",
   "feature.wynntils.craftingProfessionLevelProgressBar.name": "Ambacht Beroep Voortgangsbalk",
   "feature.wynntils.craftingProfessionLevelProgressBar.texture.description": "Welke textuur moet voor de balk worden gebruikt?",

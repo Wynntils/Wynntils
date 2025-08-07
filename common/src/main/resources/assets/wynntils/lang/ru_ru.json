@@ -306,8 +306,6 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "Как должна выглядеть тень текста?",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "Тень текста",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "Отслеживается",
-  "feature.wynntils.cosmeticsPreview.description": "Отображает вашего игрока на экране косметики.",
-  "feature.wynntils.cosmeticsPreview.name": "Предварительный просмотр косметики игрока",
   "feature.wynntils.craftingProfessionLevelProgressBar.description": "Отображает индикатор уровня, когда вы находитесь на станции крафта",
   "feature.wynntils.craftingProfessionLevelProgressBar.name": "Индикатор прогресса профессии крафта",
   "feature.wynntils.craftingProfessionLevelProgressBar.texture.description": "Какую текстуру следует использовать для полосы?",

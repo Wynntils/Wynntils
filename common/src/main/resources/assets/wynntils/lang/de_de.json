@@ -309,8 +309,6 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "Wie sollte der Textschatten aussehen?",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "Textschatten",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "Verfolgt",
-  "feature.wynntils.cosmeticsPreview.description": "Zeigt deinen Spieler im Kosmetikbildschirm an.",
-  "feature.wynntils.cosmeticsPreview.name": "Kosmetik-Spieler-Vorschau",
   "feature.wynntils.craftingProfessionLevelProgressBar.description": "Zeigt eine Fortschrittsleiste an, wenn du an einer Handwerksstation bist",
   "feature.wynntils.craftingProfessionLevelProgressBar.name": "Fortschrittsleiste für Handwerksberufe",
   "feature.wynntils.craftingProfessionLevelProgressBar.texture.description": "Welche Textur sollte für die Leiste verwendet werden?",

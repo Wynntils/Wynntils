@@ -370,8 +370,6 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "텍스트 그림자를 어떻게 표시할까요?",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "텍스트 그림자",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "추적 중인",
-  "feature.wynntils.cosmeticsPreview.description": "치장 아이템 선택 화면에서 플레이어를 렌더링합니다.",
-  "feature.wynntils.cosmeticsPreview.name": "치장 미리보기",
   "feature.wynntils.craftingProfessionLevelProgressBar.description": "제작 스테이션에서 경험치 바 표시",
   "feature.wynntils.craftingProfessionLevelProgressBar.name": "제작 스테이션 경험치 바",
   "feature.wynntils.craftingProfessionLevelProgressBar.texture.description": "막대의 모양을 어떻게 할까요?",

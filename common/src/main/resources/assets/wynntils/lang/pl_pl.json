@@ -306,8 +306,6 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "Jak powinna wyglądać cień tekstu?",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "Cień tekstu",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "Śledzone",
-  "feature.wynntils.cosmeticsPreview.description": "Renderuje twojego gracza na ekranie kosmetyków.",
-  "feature.wynntils.cosmeticsPreview.name": "Podgląd gracza kosmetyków",
   "feature.wynntils.craftingProfessionLevelProgressBar.description": "Wyświetla pasek postępu poziomu podczas przebywania w stacji rzemieślniczej",
   "feature.wynntils.craftingProfessionLevelProgressBar.name": "Pasek postępu poziomu rzemiosła",
   "feature.wynntils.craftingProfessionLevelProgressBar.texture.description": "Jaką teksturę powinien mieć pasek?",

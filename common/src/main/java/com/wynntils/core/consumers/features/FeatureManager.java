@@ -135,7 +135,6 @@ import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.trademarket.TradeMarketQuickSearchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
-import com.wynntils.features.ui.CosmeticsPreviewFeature;
 import com.wynntils.features.ui.CraftingProfessionLevelProgressBarFeature;
 import com.wynntils.features.ui.CustomGuildLogScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
@@ -361,7 +360,6 @@ public final class FeatureManager extends Manager {
         // region ui
         registerFeature(new BulkBuyFeature());
         registerFeature(new ContainerScrollFeature());
-        registerFeature(new CosmeticsPreviewFeature());
         registerFeature(new CraftingProfessionLevelProgressBarFeature());
         registerFeature(new CustomGuildLogScreenFeature());
         registerFeature(new CustomLoadingScreenFeature());

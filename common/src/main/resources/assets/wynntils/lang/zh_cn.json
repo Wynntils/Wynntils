@@ -306,8 +306,6 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "文本阴影应该是什么样的？",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "文本阴影",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "已跟踪",
-  "feature.wynntils.cosmeticsPreview.description": "在化妆品屏幕上渲染你的玩家。",
-  "feature.wynntils.cosmeticsPreview.name": "化妆品玩家预览",
   "feature.wynntils.craftingProfessionLevelProgressBar.description": "在制作站时显示等级进度条",
   "feature.wynntils.craftingProfessionLevelProgressBar.name": "制作职业进度条",
   "feature.wynntils.craftingProfessionLevelProgressBar.texture.description": "条形图应该使用什么纹理？",
