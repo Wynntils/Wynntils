@@ -136,7 +136,6 @@
   "feature.wynntils.bulkBuy.bulkBuyActive": "Shift-點擊購買%d次",
   "feature.wynntils.bulkBuy.bulkBuyAmount.description": "一次應購買多少物品？",
   "feature.wynntils.bulkBuy.bulkBuyAmount.name": "批量購買數量",
-  "feature.wynntils.bulkBuy.bulkBuyNormal": "點擊購買",
   "feature.wynntils.bulkBuy.description": "添加批量購買物品的功能。",
   "feature.wynntils.bulkBuy.name": "批量購買",
   "feature.wynntils.changelog.autoClassMenu.description": "在顯示更新日誌之前，是否應將玩家帶到職業選擇菜單？",

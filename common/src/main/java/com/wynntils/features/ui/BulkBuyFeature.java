@@ -11,7 +11,9 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -23,9 +25,11 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -33,6 +37,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
@@ -53,9 +60,11 @@ public class BulkBuyFeature extends Feature {
 
     private static final String SHOP_TITLE_SUFFIX = " Shop";
     // Test in BulkBuyFeature_PRICE_PATTERN
-    private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §(?:c✖|a✔) §f(\\d+)§7²");
+    private static final Pattern PRICE_PATTERN =
+            Pattern.compile("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §(?:c✖|a✔)(?:§6)? §f(\\d{1,3}(?:,\\d{3})*)² §8(.+)");
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
-    private static final StyledText PRICE_STR = StyledText.fromString("§6Price:");
+    private static final StyledText PRICE_STR =
+            StyledText.fromString("§6\uDAFF\uDFFC\uE00A\uDAFF\uDFFF\uE002\uDAFF\uDFFE Price");
 
     private BulkBuyWidget bulkBuyWidget;
     private int bulkBoughtSlotNumber = -1; // Slot number of the thing we're buying
@@ -182,22 +191,23 @@ public class BulkBuyFeature extends Feature {
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         if (!isBulkBuyable(McUtils.containerMenu(), event.getItemStack())) return;
 
-        List<Component> tooltips = List.of(
-                Component.literal(""), // Empty line
-                Component.translatable("feature.wynntils.bulkBuy.bulkBuyNormal", bulkBuyAmount.get())
-                        .withStyle(BULK_BUY_ACTIVE_COLOR),
-                Component.translatable("feature.wynntils.bulkBuy.bulkBuyActive", bulkBuyAmount.get())
+        MutableComponent component = Component.empty()
+                .append(Component.literal("\uE004\uDB00\uDC02\uE014\uDB00\uDC02\uE000")
+                        .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("keybind"))))
+                .append(Component.literal(" ")
+                        .append(Component.translatable("feature.wynntils.bulkBuy.bulkBuyActive", bulkBuyAmount.get()))
                         .withStyle(BULK_BUY_ACTIVE_COLOR));
+
+        List<Component> tooltips = List.of(component);
 
         event.setTooltips(LoreUtils.appendTooltip(event.getItemStack(), replacePrices(event.getTooltips()), tooltips));
     }
 
     private int findItemPrice(List<StyledText> lore) {
-        // Go backwards since prices are usually at the bottoms of the tooltips
-        for (int i = lore.size() - 1; i >= 0; i--) {
-            Matcher priceMatcher = lore.get(i).getMatcher(PRICE_PATTERN);
+        for (StyledText styledTextParts : lore) {
+            Matcher priceMatcher = styledTextParts.getMatcher(PRICE_PATTERN);
             if (priceMatcher.find()) {
-                return Integer.parseInt(priceMatcher.group(1));
+                return Integer.parseInt(priceMatcher.group(1).replaceAll(",", ""));
             }
         }
 
@@ -225,13 +235,39 @@ public class BulkBuyFeature extends Feature {
             Matcher priceMatcher = oldLine.getMatcher(PRICE_PATTERN);
             if (!priceMatcher.find()) continue;
 
-            int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
-            StyledText newLine = StyledText.fromString(oldLine.getString())
-                    .replaceFirst(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice));
-            if (newPrice > Models.Emerald.getAmountInInventory()) {
-                newLine = StyledText.fromString(
-                        newLine.getString().replace("a✔", "c✖")); // Replace green checkmark with red x
-            }
+            int newPrice = Integer.parseInt(priceMatcher.group(1).replaceAll(",", "")) * bulkBuyAmount.get();
+            StyledText newLine = oldLine.iterateBackwards((part, changes) -> {
+                if (newPrice > Models.Emerald.getAmountInInventory()
+                        && part.getString(null, PartStyle.StyleType.NONE).equals("✔")) {
+                    changes.remove(part);
+                    StyledTextPart newPart = new StyledTextPart(
+                            "✖", part.getPartStyle().getStyle().withColor(ChatFormatting.RED), null, Style.EMPTY);
+                    changes.add(newPart);
+                }
+                if (part.getString(null, PartStyle.StyleType.NONE).startsWith(priceMatcher.group(1))) {
+                    changes.remove(part);
+                    StyledTextPart newPart = new StyledTextPart(
+                            String.format(Locale.ROOT, "%,d² ", newPrice),
+                            part.getPartStyle().getStyle(),
+                            null,
+                            Style.EMPTY);
+                    changes.add(newPart);
+                    return IterationDecision.CONTINUE;
+                }
+                if (part.getString(null, PartStyle.StyleType.NONE).equals(priceMatcher.group(2))) {
+                    changes.remove(part);
+                    StyledTextPart newPart = new StyledTextPart(
+                            "(" + Models.Emerald.getFormattedString(newPrice, false) + ")",
+                            part.getPartStyle().getStyle(),
+                            null,
+                            Style.EMPTY);
+                    changes.add(newPart);
+                    return IterationDecision.CONTINUE;
+                }
+
+                return IterationDecision.CONTINUE;
+            });
+
             returnable.set(returnable.indexOf(line), newLine.getComponent());
             break;
         }

@@ -136,7 +136,6 @@
   "feature.wynntils.bulkBuy.bulkBuyActive": "Maj-Clic pour acheter %d fois",
   "feature.wynntils.bulkBuy.bulkBuyAmount.description": "Combien d'articles doivent être achetés à la fois ?",
   "feature.wynntils.bulkBuy.bulkBuyAmount.name": "Quantité d'Achat en Gros",
-  "feature.wynntils.bulkBuy.bulkBuyNormal": "Cliquez pour acheter",
   "feature.wynntils.bulkBuy.description": "Ajoute la capacité d'acheter des articles en gros.",
   "feature.wynntils.bulkBuy.name": "Achat en Gros",
   "feature.wynntils.changelog.autoClassMenu.description": "Le joueur doit-il être dirigé vers le menu de sélection de classe avant d'afficher le journal des modifications ?",

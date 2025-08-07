@@ -136,7 +136,6 @@
   "feature.wynntils.bulkBuy.bulkBuyActive": "Shift-Клик для покупки %d раз",
   "feature.wynntils.bulkBuy.bulkBuyAmount.description": "Сколько предметов следует покупать за раз?",
   "feature.wynntils.bulkBuy.bulkBuyAmount.name": "Количество массовой покупки",
-  "feature.wynntils.bulkBuy.bulkBuyNormal": "Кликните, чтобы купить",
   "feature.wynntils.bulkBuy.description": "Добавляет возможность массовой покупки предметов.",
   "feature.wynntils.bulkBuy.name": "Массовая покупка",
   "feature.wynntils.changelog.autoClassMenu.description": "Следует ли игроку перейти в меню выбора класса перед отображением журнала изменений?",

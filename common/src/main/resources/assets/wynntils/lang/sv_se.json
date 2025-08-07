@@ -136,7 +136,6 @@
   "feature.wynntils.bulkBuy.bulkBuyActive": "Skift-klicka för att köpa %d gånger",
   "feature.wynntils.bulkBuy.bulkBuyAmount.description": "Hur många föremål ska köpas på en gång?",
   "feature.wynntils.bulkBuy.bulkBuyAmount.name": "Bulkinköpsmängd",
-  "feature.wynntils.bulkBuy.bulkBuyNormal": "Klicka för att köpa",
   "feature.wynntils.bulkBuy.description": "Lägger till möjligheten att köpa föremål i bulk.",
   "feature.wynntils.bulkBuy.name": "Bulkinköp",
   "feature.wynntils.changelog.autoClassMenu.description": "Ska spelaren sättas i klassvalsmenyn innan ändringsloggen visas?",

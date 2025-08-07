@@ -174,9 +174,9 @@ public class TestRegex {
     @Test
     public void BulkBuyFeature_PRICE_PATTERN() {
         PatternTester p = new PatternTester(BulkBuyFeature.class, "PRICE_PATTERN");
-        p.shouldMatch("§6 - §a✔ §f24§7²");
-        p.shouldMatch("§6 - §a✔ §f648§7²");
-        p.shouldMatch("§6 - §c✖ §f24§7²");
+        p.shouldMatch("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §a✔§6 §f6² §8(6²)");
+        p.shouldMatch("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §c✖§6 §f16,384² §8(4¼²)");
+        p.shouldMatch("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §a✔§6 §f371² §8(5²½ 51²)");
     }
 
     @Test
