@@ -195,7 +195,9 @@ public final class ChatHandler extends Handler {
 
         long currentTicks = McUtils.mc().level.getGameTime();
 
-        List<StyledText> lines = StyledTextUtils.splitInLines(styledText);
+        // If the unwrapped text still has multiple lines, we treat it as a chat screen
+        // (otherwise it is just a multi-line player chat message)
+        List<StyledText> lines = StyledTextUtils.splitInLines(StyledTextUtils.unwrap(styledText));
 
         // It is a multi-line screen if it is parsed to be multiple lines,
         // or if it is empty and sent in the same tick (with some fuzziness) as the current screen
@@ -530,7 +532,7 @@ public final class ChatHandler extends Handler {
      * message entirely.
      */
     private StyledText postChatLine(StyledText styledText, MessageType messageType) {
-        String plainText = styledText.getStringWithoutFormatting();
+        String plainText = StyledTextUtils.unwrap(styledText).getStringWithoutFormatting();
         if (!plainText.isBlank()) {
             // We store the unformatted string version to be able to compare between
             // foreground and background versions
