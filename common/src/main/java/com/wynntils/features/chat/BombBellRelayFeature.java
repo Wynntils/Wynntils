@@ -67,7 +67,7 @@ public class BombBellRelayFeature extends Feature {
         if (lastBomb == null) return null;
 
         // This is not localized as it is sent to other players
-        String bombMessage = lastBomb.bomb().getName() + " bomb on " + lastBomb.server();
+        String bombMessage = lastBomb.bomb().getDisplayName() + " bomb on " + lastBomb.server();
 
         if (showTime.get()) {
             bombMessage += " with " + lastBomb.getRemainingString() + " remaining";
