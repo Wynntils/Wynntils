@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -62,6 +62,8 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
         // The following bytes is are assembled into an integer representing the shiny value.
         long statValue = UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
-        return ErrorOr.of(new ShinyData(new ShinyStat(Models.Shiny.getShinyStatType(statTypeId.value()), statValue)));
+        // Note: V1 encoding does not support shiny rerolls, so we default to 0.
+        return ErrorOr.of(
+                new ShinyData(new ShinyStat(Models.Shiny.getShinyStatType(statTypeId.value()), statValue, 0)));
     }
 }

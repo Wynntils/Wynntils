@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds.type;
@@ -24,7 +24,7 @@ public record BombInfo(String user, BombType bomb, String server, long startTime
     }
 
     public String asString() {
-        return ChatFormatting.GOLD + bomb.getName()
+        return ChatFormatting.GOLD + bomb.getDisplayName()
                 + ChatFormatting.GRAY
                 + " on "
                 + (server.equals(Models.WorldState.getCurrentWorldName()) ? ChatFormatting.GREEN : ChatFormatting.WHITE)

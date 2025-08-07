@@ -362,6 +362,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ColorFunctions.HueShiftFunction());
         registerFunction(new ColorFunctions.RainbowShaderFunction());
         registerFunction(new ColorFunctions.SaturationShiftFunction());
+        registerFunction(new ColorFunctions.ShineShaderFunction());
         registerFunction(new ColorFunctions.ToHexStringFunction());
 
         registerFunction(new ConditionalFunctions.IfCappedValueFunction());
@@ -425,6 +426,11 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.CurrentTerritoryFunction());
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
+        registerFunction(new WorldFunctions.GatheringTotemCountFunction());
+        registerFunction(new WorldFunctions.GatheringTotemDistanceFunction());
+        registerFunction(new WorldFunctions.GatheringTotemFunction());
+        registerFunction(new WorldFunctions.GatheringTotemOwnerFunction());
+        registerFunction(new WorldFunctions.GatheringTotemTimeLeftFunction());
         registerFunction(new WorldFunctions.InMappedAreaFunction());
         registerFunction(new WorldFunctions.InStreamFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());

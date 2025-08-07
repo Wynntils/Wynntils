@@ -202,6 +202,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/materials.json"
   },
   {
+    "id": "dataStaticModelData",
+    "md5": "cb7b6fef5c747e8c90458a5cb02af852",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/model_data.json"
+  },
+  {
     "id": "dataStaticPlaceMapFeatures",
     "md5": "fba1ef5092add312b243e5dde3ab9004",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/place_mapfeatures.json"
