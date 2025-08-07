@@ -19,10 +19,15 @@ import com.wynntils.screens.playerviewer.widgets.FriendButton;
 import com.wynntils.screens.playerviewer.widgets.PartyButton;
 import com.wynntils.screens.playerviewer.widgets.PlayerInteractionButton;
 import com.wynntils.screens.playerviewer.widgets.SimplePlayerInteractionButton;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -171,6 +176,20 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
         renderPlayerModel(guiGraphics, mouseX, mouseY);
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        guiGraphics.pose(),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.playerViewer.warning")),
+                        this.width / 2f - 200,
+                        this.width / 2f + 200,
+                        (this.height - Texture.PLAYER_VIEWER_BACKGROUND.height()) / 2f - 110,
+                        (this.height - Texture.PLAYER_VIEWER_BACKGROUND.height()) / 2f - 10,
+                        400,
+                        CommonColors.RED,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.OUTLINE);
 
         interactionButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
     }

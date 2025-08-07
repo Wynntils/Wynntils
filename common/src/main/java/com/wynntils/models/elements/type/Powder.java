@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.elements.type;
@@ -66,7 +66,7 @@ public enum Powder {
     }
 
     public char getSymbol() {
-        return element.getSymbol().charAt(0);
+        return element.getDisplaySymbol().charAt(0);
     }
 
     public CustomColor getColor() {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.seaskipper;
@@ -10,7 +10,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
@@ -31,7 +30,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public final class SeaskipperModel extends Model {
-    private static final StyledText OAK_BOAT_NAME = StyledText.fromString("§bOak Boat");
+    private static final String BOAT_NAME = "Boat";
 
     private List<SeaskipperDestination> allDestinations = new ArrayList<>();
     private List<SeaskipperDestination> availableDestinations = new ArrayList<>();
@@ -63,7 +62,7 @@ public final class SeaskipperModel extends Model {
         for (int i = 0; i < event.getItems().size(); i++) {
             ItemStack item = event.getItems().get(i);
 
-            if (boatSlot == -1 && StyledText.fromComponent(item.getHoverName()).equals(OAK_BOAT_NAME)) {
+            if (item.getHoverName().getString().equals(BOAT_NAME)) {
                 boatSlot = i;
                 continue;
             }

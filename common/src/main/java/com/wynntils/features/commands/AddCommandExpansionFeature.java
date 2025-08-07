@@ -99,12 +99,12 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(root, literal("fixstart").build());
         addNode(root, literal("forum").build());
         addNode(root, literal("help").build());
+        addNode(root, literal("link").build());
         addNode(root, literal("rules").build());
         addNode(root, literal("scrap").build());
         addNode(root, literal("sign").build());
         addNode(root, literal("skiptutorial").build());
         addNode(root, literal("tracking").build());
-        addNode(root, literal("use").build());
 
         // There is also a command "server" but it is reserved for those with admin permissions
         // only, so don't include it here.
@@ -140,6 +140,54 @@ public class AddCommandExpansionFeature extends Feature {
 
         addAlias(root, crateNode, "crates", AliasCommandLevel.ALL);
 
+        // "disguises" aliases
+        CommandNode<CommandSourceStack> disguisesNode = literal("disguises").build();
+        addNode(root, disguisesNode);
+
+        addAlias(root, disguisesNode, "disguise", AliasCommandLevel.ALL);
+
+        // "effects" aliases
+        CommandNode<CommandSourceStack> effectsNode = literal("effects").build();
+        addNode(root, effectsNode);
+
+        addAlias(root, effectsNode, "effect", AliasCommandLevel.ALL);
+
+        // "hats" aliases
+        CommandNode<CommandSourceStack> hatsNode = literal("hats").build();
+        addNode(root, hatsNode);
+
+        addAlias(root, hatsNode, "hat", AliasCommandLevel.ALL);
+
+        // "mounts" aliases
+        CommandNode<CommandSourceStack> mountsNode = literal("mounts").build();
+        addNode(root, mountsNode);
+
+        addAlias(root, mountsNode, "mount", AliasCommandLevel.ALL);
+
+        // "weapons" aliases
+        CommandNode<CommandSourceStack> weaponsNode = literal("weapons").build();
+        addNode(root, weaponsNode);
+
+        addAlias(root, weaponsNode, "weapon", AliasCommandLevel.ALL);
+
+        // "consumables" aliases
+        CommandNode<CommandSourceStack> consumablesNode = literal("consumables").build();
+        addNode(root, consumablesNode);
+
+        addAlias(root, consumablesNode, "bomb", AliasCommandLevel.ALL);
+        addAlias(root, consumablesNode, "bombs", AliasCommandLevel.ALL);
+        addAlias(root, consumablesNode, "token", AliasCommandLevel.ALL);
+        addAlias(root, consumablesNode, "tokens", AliasCommandLevel.ALL);
+        addAlias(root, consumablesNode, "consumable", AliasCommandLevel.ALL);
+
+        // "use" aliases
+        CommandNode<CommandSourceStack> useNode = literal("use").build();
+        addNode(root, useNode);
+
+        addAlias(root, useNode, "rank", AliasCommandLevel.ALL);
+        addAlias(root, useNode, "shop", AliasCommandLevel.ALL);
+        addAlias(root, useNode, "store", AliasCommandLevel.ALL);
+
         // "kill" aliases
         CommandNode<CommandSourceStack> killNode = literal("kill").build();
         addNode(root, killNode);
@@ -168,14 +216,6 @@ public class AddCommandExpansionFeature extends Feature {
 
         addAlias(root, partyfinderNode, "pfinder", AliasCommandLevel.SHORT_FORMS);
 
-        // "silverbull" aliases
-        CommandNode<CommandSourceStack> silverbullNode = literal("silverbull").build();
-        addNode(root, silverbullNode);
-
-        addAlias(root, silverbullNode, "shop", AliasCommandLevel.ALL);
-        addAlias(root, silverbullNode, "store", AliasCommandLevel.ALL);
-        addAlias(root, silverbullNode, "share", AliasCommandLevel.ALL);
-
         // "stream" aliases
         CommandNode<CommandSourceStack> streamNode = literal("stream").build();
         addNode(root, streamNode);
@@ -199,12 +239,6 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(root, recruitNode);
 
         addAlias(root, recruitNode, "rf", AliasCommandLevel.ALL);
-
-        // "discord" aliases
-        CommandNode<CommandSourceStack> discordNode = literal("discord").build();
-        addNode(root, discordNode);
-
-        addAlias(root, discordNode, "link", AliasCommandLevel.ALL);
     }
 
     private void addChangetagCommandNode(RootCommandNode<SharedSuggestionProvider> root) {
@@ -214,6 +248,7 @@ public class AddCommandExpansionFeature extends Feature {
                         .then(literal("VIP"))
                         .then(literal("VIP+"))
                         .then(literal("HERO"))
+                        .then(literal("HERO+"))
                         .then(literal("CHAMPION"))
                         .then(literal("RESET"))
                         .build());
@@ -459,7 +494,6 @@ public class AddCommandExpansionFeature extends Feature {
                 root,
                 literal("toggle")
                         .then(literal("100"))
-                        .then(literal("attacksound"))
                         .then(literal("autotracking"))
                         .then(literal("beacon"))
                         .then(literal("blood"))
@@ -482,7 +516,6 @@ public class AddCommandExpansionFeature extends Feature {
                         .then(literal("pouchpickup"))
                         .then(literal("publicProfile"))
                         .then(literal("queststartbeacon"))
-                        .then(literal("rpwarning"))
                         .then(literal("sb"))
                         .then(literal("swears"))
                         .then(literal("vet"))
