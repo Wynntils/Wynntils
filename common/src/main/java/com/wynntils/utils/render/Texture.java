@@ -341,6 +341,7 @@ public enum Texture {
     EXIT_FLAG("ui_components/exit_flag.png", 73, 62),
     GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
+    HOTBAR_SELECTED_HIGHLIGHT("ui_components/hotbar_selected_highlight.png", 16, 16),
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     LIST_SEARCH("ui_components/list_search.png", 133, 23),
