@@ -124,9 +124,9 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private ServerData getWynncraftServer() {
-        String ip = (serverRegionOverride.get() == ServerRegion.WC
-                        ? serverType.get().serverAddressPrefix
-                        : serverRegionOverride.get().name().toLowerCase(Locale.ROOT))
+        String ip = (serverType.get() == ServerType.GAME && serverRegionOverride.get() != ServerRegion.WC
+                        ? serverRegionOverride.get().name().toLowerCase(Locale.ROOT)
+                        : serverType.get().serverAddressPrefix)
                 + WYNNCRAFT_DOMAIN;
         ServerData wynncraftServer = new ServerData("Wynncraft", ip, ServerData.Type.OTHER);
         wynncraftServer.setResourcePackStatus(

@@ -96,7 +96,7 @@ public class BombBellCommand extends Command {
                         .thenComparing(BombInfo::startTime)
                         .reversed())
                 .toList()) {
-            response.append(Component.literal("\n" + bomb.bomb().getName())
+            response.append(Component.literal("\n" + bomb.bomb().getDisplayName())
                             .withStyle(ChatFormatting.WHITE)
                             .append(Component.literal(" on ").withStyle(ChatFormatting.GRAY))
                             .append(Component.literal(bomb.server()).withStyle(ChatFormatting.WHITE)))

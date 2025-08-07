@@ -47,6 +47,8 @@ import com.wynntils.models.containers.containers.reward.ChallengeRewardContainer
 import com.wynntils.models.containers.containers.reward.DailyRewardContainer;
 import com.wynntils.models.containers.containers.reward.EventContainer;
 import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
+import com.wynntils.models.containers.containers.reward.IngredientBombRewardContainer;
+import com.wynntils.models.containers.containers.reward.ItemBombRewardContainer;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.ObjectiveRewardContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketBuyContainer;
@@ -132,8 +134,10 @@ public final class ContainerModel extends Model {
         registerContainer(new HelmetCosmeticsMenuContainer());
         registerContainer(new HousingJukeboxContainer());
         registerContainer(new HousingListContainer());
+        registerContainer(new IngredientBombRewardContainer());
         registerContainer(new IngredientPouchContainer());
         registerContainer(new IslandBlockBankContainer());
+        registerContainer(new ItemBombRewardContainer());
         registerContainer(new ItemIdentifierContainer());
         registerContainer(new InventoryContainer());
         registerContainer(new JukeboxContainer());
