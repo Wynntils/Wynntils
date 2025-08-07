@@ -930,6 +930,7 @@ public class TestRegex {
         p.shouldNotMatch("§f⬡ §7Mobs Killed: §f");
         p.shouldMatch("§f⬡ §7Wars Won: §f164");
         p.shouldMatch("§f⬡ §7Raids Won: §f0");
+        p.shouldMatch("§f⬡ §7 World Events Won: §f0§8 [3]");
     }
 
     @Test
