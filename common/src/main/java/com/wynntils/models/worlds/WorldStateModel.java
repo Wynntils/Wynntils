@@ -17,7 +17,9 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionSegment;
+import com.wynntils.models.worlds.actionbar.matchers.CharacterWardrobeSegmentMacher;
 import com.wynntils.models.worlds.actionbar.matchers.WynncraftVersionSegmentMatcher;
+import com.wynntils.models.worlds.actionbar.segments.CharacterWardrobeSegment;
 import com.wynntils.models.worlds.actionbar.segments.WynncraftVersionSegment;
 import com.wynntils.models.worlds.bossbars.SkipCutsceneBar;
 import com.wynntils.models.worlds.event.CutsceneStartedEvent;
@@ -61,12 +63,14 @@ public final class WorldStateModel extends Model {
     private boolean hasJoinedAnyWorld = false;
     private boolean inStream = false;
     private boolean onHousing = false;
+    private boolean inCharacterWardrobe = false;
     private WynncraftVersion worldVersion = null;
 
     public WorldStateModel() {
         super(List.of());
 
         Handlers.ActionBar.registerSegment(new WynncraftVersionSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new CharacterWardrobeSegmentMacher());
         Handlers.BossBar.registerBar(skipCutsceneBar);
     }
 
@@ -74,6 +78,10 @@ public final class WorldStateModel extends Model {
 
     public boolean onWorld() {
         return currentState == WorldState.WORLD;
+    }
+
+    public boolean inCharacterWardrobe() {
+        return inCharacterWardrobe;
     }
 
     public boolean onHousing() {
@@ -193,6 +201,8 @@ public final class WorldStateModel extends Model {
         event.runIfPresent(CharacterCreationSegment.class, this::onCharacterCreation);
         event.runIfPresent(CharacterSelectionSegment.class, this::onCharacterSelection);
         event.runIfPresent(WynncraftVersionSegment.class, this::setWorldVersion);
+        inCharacterWardrobe = false;
+        event.runIfPresent(CharacterWardrobeSegment.class, this::onCharacterWardrobe);
     }
 
     private void onCharacterCreation(CharacterCreationSegment segment) {
@@ -205,6 +215,10 @@ public final class WorldStateModel extends Model {
 
     private void setWorldVersion(WynncraftVersionSegment segment) {
         worldVersion = segment.getWynncraftVersion();
+    }
+
+    private void onCharacterWardrobe(CharacterWardrobeSegment segment) {
+        inCharacterWardrobe = true;
     }
 
     @SubscribeEvent
