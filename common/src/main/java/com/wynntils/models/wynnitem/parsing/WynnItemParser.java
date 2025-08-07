@@ -429,7 +429,7 @@ public final class WynnItemParser {
                 String shinyName = shinyStatMatcher.group(1);
                 int shinyValue = Integer.parseInt(shinyStatMatcher.group(2));
                 int shinyRerolls = shinyStatMatcher.group(3) != null ? Integer.parseInt(shinyStatMatcher.group(3)) : 0;
-                shinyStat = Optional.of(new ShinyStat(Models.Shiny.getShinyStat(shinyName), shinyValue));
+                shinyStat = Optional.of(new ShinyStat(Models.Shiny.getShinyStat(shinyName), shinyValue, shinyRerolls));
             }
         }
 
