@@ -714,6 +714,8 @@ public class TestRegex {
         PatternTester p = new PatternTester(RecipientType.SHOUT, "foregroundPattern");
         p.shouldMatch(
                 "§#bd45ffff\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oShadowCat§r§#bd45ffff \uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE056\uDAFF\uDFFF\uE062\uDAFF\uDFEC§0\uE00D\uE000\uE026\uDB00\uDC02§#bd45ffff shouts: §#fad9f7ffo/");
+        p.shouldMatch(
+                "§#bd45ffff\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE CBI2004 \uE060\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE051\uDAFF\uDFFF\uE062\uDAFF\uDFEE§0\uE000\uE012\uE021\uDB00\uDC02§#bd45ffff shouts: §#fad9f7ffAeq recruit AS raider or join notg\n§#bd45ffff\uDAFF\uDFFC\uE001\uDB00\uDC06 §#fad9f7ffas pf or invte me as pf we got 2ppl rn. /msg CBI2004 if\n§#bd45ffff\uDAFF\uDFFC\uE001\uDB00\uDC06 §#fad9f7ffinterested");
     }
 
     @Test
