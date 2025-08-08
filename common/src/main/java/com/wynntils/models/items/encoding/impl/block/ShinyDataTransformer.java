@@ -55,7 +55,7 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
         bytes[1] = UnsignedByte.of((byte) data.shinyStat().shinyRerolls());
 
         // The following bytes is are assembled into an integer representing the shiny value.
-        System.arraycopy(shinyStatValueBytes, 0, bytes, 1, shinyStatValueBytes.length);
+        System.arraycopy(shinyStatValueBytes, 0, bytes, 2, shinyStatValueBytes.length);
 
         return bytes;
     }
