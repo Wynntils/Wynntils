@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.chat;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.Persisted;
@@ -19,6 +20,8 @@ import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
@@ -66,8 +69,11 @@ public class RevealNicknamesFeature extends Feature {
                 return IterationDecision.CONTINUE;
             }
 
+            Pattern nicknamePartPattern = Pattern.compile("^" + nickname + "(:)?\\s*(.*)$");
+            Matcher nicknamePartMatcher = nicknamePartPattern.matcher(currentPart.getString(null, PartStyle.StyleType.NONE));
+
             // If the text part is not the nickname as the text, it's not a nickname text part
-            if (!currentPart.getString(null, PartStyle.StyleType.NONE).equals(nickname + ": ")) {
+            if (!nicknamePartMatcher.matches()) {
                 return IterationDecision.CONTINUE;
             }
 
