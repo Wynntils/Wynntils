@@ -32,6 +32,7 @@ import com.wynntils.models.npc.label.FastTravelLabelParser;
 import com.wynntils.models.npc.label.NpcLabelParser;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.PartyModel;
+import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
@@ -299,6 +300,27 @@ public class TestRegex {
         PatternTester p = new PatternTester(FriendsModel.class, "LEAVE_PATTERN");
         p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun left the game.");
         p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun left the game.");
+    }
+
+    @Test
+    public void GatheringNodeHarvestLabelParser_EXPERIENCE_PATTERN() {
+        PatternTester p = new PatternTester(GatheringNodeHarvestLabelParser.class, "EXPERIENCE_PATTERN");
+
+        p.shouldMatch("§f+3852 §7Ⓑ Mining XP §6[0%]");
+        p.shouldMatch("§f+2660 §7Ⓒ Woodcutting XP §6[1.75%]");
+        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+4252 §7Ⓒ Woodcutting XP §6[2.13%]");
+        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+3670 §7Ⓚ Fishing XP §6[1.69%]");
+    }
+
+    @Test
+    public void GatheringNodeHarvestLabelParser_HARVEST_PATTERN() {
+        PatternTester p = new PatternTester(GatheringNodeHarvestLabelParser.class, "HARVEST_PATTERN");
+
+        p.shouldMatch("§f+1 §7Sky Wood§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§f+1 §7Starfish Oil§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§f+1 §7Hemp String§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§f+1 §7Diamond Ingot§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+2 §7Sky Wood§6 [§e✫§8✫✫§6]");
     }
 
     @Test
@@ -692,6 +714,8 @@ public class TestRegex {
         PatternTester p = new PatternTester(RecipientType.SHOUT, "foregroundPattern");
         p.shouldMatch(
                 "§#bd45ffff\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oShadowCat§r§#bd45ffff \uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE056\uDAFF\uDFFF\uE062\uDAFF\uDFEC§0\uE00D\uE000\uE026\uDB00\uDC02§#bd45ffff shouts: §#fad9f7ffo/");
+        p.shouldMatch(
+                "§#bd45ffff\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE CBI2004 \uE060\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE051\uDAFF\uDFFF\uE062\uDAFF\uDFEE§0\uE000\uE012\uE021\uDB00\uDC02§#bd45ffff shouts: §#fad9f7ffAeq recruit AS raider or join notg\n§#bd45ffff\uDAFF\uDFFC\uE001\uDB00\uDC06 §#fad9f7ffas pf or invte me as pf we got 2ppl rn. /msg CBI2004 if\n§#bd45ffff\uDAFF\uDFFC\uE001\uDB00\uDC06 §#fad9f7ffinterested");
     }
 
     @Test
