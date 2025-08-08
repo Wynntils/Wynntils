@@ -20,6 +20,7 @@ import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.type.DamageType;
+import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.type.Pair;
@@ -142,12 +143,21 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
         }
 
         if (gearInstance != null && gearInstance.shinyStat().isPresent()) {
-            header.add(Component.literal(
-                            "⬡ " + gearInstance.shinyStat().get().statType().displayName() + ": ")
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal(String.valueOf(
-                                    gearInstance.shinyStat().get().value()))
-                            .withStyle(ChatFormatting.WHITE)));
+            ShinyStat shinyStat = gearInstance.shinyStat().get();
+            if (shinyStat.shinyRerolls() == 0) {
+                header.add(Component.literal("⬡ " + shinyStat.statType().displayName() + ": ")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(Component.literal(String.valueOf(shinyStat.value()))
+                                .withStyle(ChatFormatting.WHITE)));
+            } else {
+                header.add(Component.literal("⬡ " + shinyStat.statType().displayName() + ": ")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(Component.literal(String.valueOf(shinyStat.value()))
+                                .withStyle(ChatFormatting.WHITE))
+                        .append(Component.literal(" [" + shinyStat.shinyRerolls() + "]")
+                                .withStyle(ChatFormatting.DARK_GRAY)));
+            }
+
             header.add(Component.literal(""));
         }
 
