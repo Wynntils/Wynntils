@@ -382,7 +382,7 @@ public final class SkillPointModel extends Model {
         // soul points resent last for both containers
         return changeType == ContainerContentChangeType.SET_CONTENT
                 && changes.containsKey(contentBookSlot)
-                && (content.items().get(contentBookSlot).getItem() == Items.PAPER);
+                && (content.items().get(contentBookSlot).getItem() == Items.POTION);
     }
 
     private void processTotalSkillPoints(ContainerContent content) {
