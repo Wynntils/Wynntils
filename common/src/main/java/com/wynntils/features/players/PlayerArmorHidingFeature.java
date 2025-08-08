@@ -50,13 +50,8 @@ public class PlayerArmorHidingFeature extends Feature {
                 if (!(entity instanceof AbstractClientPlayer player)) return;
 
                 // Only cancel if the helmet item isn't cosmetic.
-                // Pre-2.1 cosmetics helmet skins use a diamond pickaxe texture
-                // Cosmetics released after 2.1 use an iron horse armor texture
-                // Post-2.1.3 cosmetics use the potion texture
                 ItemStack headItem = player.getItemBySlot(event.getSlot());
-                if (headItem.getItem() != Items.DIAMOND_PICKAXE
-                        && headItem.getItem() != Items.IRON_HORSE_ARMOR
-                        && headItem.getItem() != Items.POTION) {
+                if (headItem.getItem() != Items.POTION) {
                     event.setCanceled(true);
                 }
             }
