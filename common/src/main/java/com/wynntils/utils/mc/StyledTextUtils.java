@@ -26,8 +26,9 @@ public final class StyledTextUtils {
             Pattern.compile(".*\\[(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?\\].*");
 
     // Note: Post Wynncraft 2.1, the hover text is inconsistent, sometimes "'s" is white, sometimes it's gray
+    // And yes, the "user" needs to be optional
     public static final Pattern NICKNAME_PATTERN =
-            Pattern.compile("§f(?<nick>.+?)(§7)?'s?(§7)? real username is §f(?<username>.+)");
+            Pattern.compile("§f(?<nick>.+?)(§7)?'s?(§7)? real (user)?name is §f(?<username>.+)");
 
     private static final String NEWLINE_PREPARATION = "\n";
     private static final Pattern NEWLINE_WRAP_PATTERN = Pattern.compile("\uDAFF\uDFFC\uE001\uDB00\uDC06");

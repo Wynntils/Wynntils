@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -67,7 +67,7 @@ public class RevealNicknamesFeature extends Feature {
             }
 
             // If the text part is not the nickname as the text, it's not a nickname text part
-            if (!currentPart.getString(null, PartStyle.StyleType.NONE).equals(nickname)) {
+            if (!currentPart.getString(null, PartStyle.StyleType.NONE).equals(nickname + ": ")) {
                 return IterationDecision.CONTINUE;
             }
 
@@ -88,7 +88,7 @@ public class RevealNicknamesFeature extends Feature {
                                     StyledText.join("\n", newHoverTexts).getComponent()))
                             .getStyle();
 
-                    StyledTextPart newPart = new StyledTextPart(username, newStyle, null, Style.EMPTY);
+                    StyledTextPart newPart = new StyledTextPart(username + ": ", newStyle, null, Style.EMPTY);
                     changes.add(newPart);
                 }
                 case PREPEND_USERNAME -> {
