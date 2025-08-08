@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.chat;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.Persisted;
@@ -20,8 +19,6 @@ import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
