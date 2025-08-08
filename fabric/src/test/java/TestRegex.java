@@ -32,6 +32,7 @@ import com.wynntils.models.npc.label.FastTravelLabelParser;
 import com.wynntils.models.npc.label.NpcLabelParser;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.PartyModel;
+import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
@@ -299,6 +300,27 @@ public class TestRegex {
         PatternTester p = new PatternTester(FriendsModel.class, "LEAVE_PATTERN");
         p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun left the game.");
         p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun left the game.");
+    }
+
+    @Test
+    public void GatheringNodeHarvestLabelParser_EXPERIENCE_PATTERN() {
+        PatternTester p = new PatternTester(GatheringNodeHarvestLabelParser.class, "EXPERIENCE_PATTERN");
+
+        p.shouldMatch("§f+3852 §7Ⓑ Mining XP §6[0%]");
+        p.shouldMatch("§f+2660 §7Ⓒ Woodcutting XP §6[1.75%]");
+        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+4252 §7Ⓒ Woodcutting XP §6[2.13%]");
+        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+3670 §7Ⓚ Fishing XP §6[1.69%]");
+    }
+
+    @Test
+    public void GatheringNodeHarvestLabelParser_HARVEST_PATTERN() {
+        PatternTester p = new PatternTester(GatheringNodeHarvestLabelParser.class, "HARVEST_PATTERN");
+
+        p.shouldMatch("§f+1 §7Sky Wood§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§f+1 §7Starfish Oil§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§f+1 §7Hemp String§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§f+1 §7Diamond Ingot§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+2 §7Sky Wood§6 [§e✫§8✫✫§6]");
     }
 
     @Test

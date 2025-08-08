@@ -203,7 +203,7 @@
   },
   {
     "id": "dataStaticModelData",
-    "md5": "cb7b6fef5c747e8c90458a5cb02af852",
+    "md5": "c2b17aee3f01135d7e7a6f6b64a61980",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/model_data.json"
   },
   {
@@ -238,7 +238,7 @@
   },
   {
     "id": "dataStaticShinyStats",
-    "md5": "c1837281e4b45af5683189ebd465d1cc",
+    "md5": "43227d9e0f0327fd68e852feb2a5a728",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/shiny_stats.json"
   },
   {
