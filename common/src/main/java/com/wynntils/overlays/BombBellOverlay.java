@@ -57,6 +57,9 @@ public class BombBellOverlay extends Overlay {
     public final Config<Boolean> showLootBombs = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> showLootChestBombs = new Config<>(true);
+
+    @Persisted
     public final Config<Boolean> showProfessionXpBombs = new Config<>(true);
 
     @Persisted
@@ -66,6 +69,7 @@ public class BombBellOverlay extends Overlay {
             Map.entry(BombType.COMBAT_XP, showCombatBombs::get),
             Map.entry(BombType.DUNGEON, showDungeonBombs::get),
             Map.entry(BombType.LOOT, showLootBombs::get),
+            Map.entry(BombType.LOOT_CHEST, showLootChestBombs::get),
             Map.entry(BombType.PROFESSION_XP, showProfessionXpBombs::get),
             Map.entry(BombType.PROFESSION_SPEED, showProfessionSpeedBombs::get));
 

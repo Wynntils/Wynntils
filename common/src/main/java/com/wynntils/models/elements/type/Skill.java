@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.elements.type;
@@ -74,7 +74,7 @@ public enum Skill {
     }
 
     public String getSymbol() {
-        return associatedElement.getSymbol();
+        return associatedElement.getDisplaySymbol();
     }
 
     public ChatFormatting getColorCode() {

@@ -41,6 +41,9 @@ jobs:
       - name: Delete empty files
         run: find $(git ls-files -m) -size 0 -delete
 
+      - name: Run remove_unused_i18n.sh
+        run: bash utils/remove_unused_i18n.sh
+
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_user_name: 'WynntilsBot'

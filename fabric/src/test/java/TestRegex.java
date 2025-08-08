@@ -2,7 +2,6 @@
  * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
@@ -12,6 +11,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.account.AccountModel;
+import com.wynntils.models.bonustotems.label.BonusTotemLabelParser;
 import com.wynntils.models.combat.CombatModel;
 import com.wynntils.models.combat.label.DamageLabelParser;
 import com.wynntils.models.combat.label.KillLabelParser;
@@ -149,24 +149,34 @@ public class TestRegex {
     }
 
     @Test
+    public void BombMobel_BOMB_BELL_PATTERN() {
+        PatternTester p = new PatternTester(BombModel.class, "BOMB_BELL_PATTERN");
+
+        p.shouldMatch(
+                "§#fddd5cff\uE01E\uE002 Wanytails has thrown a §#f3e6b2ffProfession Speed Bomb§#fddd5cff on §#f3e6b2ff§nNA3");
+        p.shouldMatch(
+                "§#fddd5cff\uE001 Wanytails has thrown a §#f3e6b2ffCombat Experience Bomb§#fddd5cff on §#f3e6b2ff§nNA3");
+    }
+
+    @Test
     public void BombModel_BOMB_THROWN_PATTERN() {
         PatternTester p = new PatternTester(BombModel.class, "BOMB_THROWN_PATTERN");
-        p.shouldMatch(
-                "§bExampleUser§3 has thrown a §bProfession Speed Bomb§3! §bResource respawn time/Crafting Resource requirements are halved§3, and the entire server gets §bdouble Crafting/Gathering Speed§3 for §b10 minutes§3!");
-        p.shouldMatch(
-                "§b§oExampleNickname§3 has thrown a §bProfession Speed Bomb§3! §bResource respawn time/Crafting Resource requirements are halved§3, and the entire server gets §bdouble Crafting/Gathering Speed§3 for §b10 minutes§3!");
-        p.shouldMatch(
-                "§bExampleUser§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp§3 for §b20 minutes§3!");
-        p.shouldMatch(
-                "§b§oExampleNickname§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp§3 for §b20 minutes§3!");
+        p.shouldMatch("§#a0c84bff\uE014\uE002 §lProfession Speed Bomb");
+        p.shouldMatch("§#a0c84bff\uE001 §lProfession Experience Bomb");
+    }
+
+    @Test
+    public void BombModel_BOMB_EXPIRED_PATTERN() {
+        PatternTester p = new PatternTester(BombModel.class, "BOMB_EXPIRED_PATTERN");
+        p.shouldMatch("§#a0c84bff\uE014\uE002 §#ffd750ff§o§<1>ShadowCat§#a0c84bff Profession Speed Bomb has expired! ");
     }
 
     @Test
     public void BulkBuyFeature_PRICE_PATTERN() {
         PatternTester p = new PatternTester(BulkBuyFeature.class, "PRICE_PATTERN");
-        p.shouldMatch("§6 - §a✔ §f24§7²");
-        p.shouldMatch("§6 - §a✔ §f648§7²");
-        p.shouldMatch("§6 - §c✖ §f24§7²");
+        p.shouldMatch("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §a✔§6 §f6² §8(6²)");
+        p.shouldMatch("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §c✖§6 §f16,384² §8(4¼²)");
+        p.shouldMatch("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §a✔§6 §f371² §8(5²½ 51²)");
     }
 
     @Test
@@ -222,15 +232,12 @@ public class TestRegex {
     @Test
     public void DamageLabelParser_DAMAGE_LABEL_PATTERN() {
         PatternTester p = new PatternTester(DamageLabelParser.class, "DAMAGE_LABEL_PATTERN");
-        p.shouldMatch("§4-13 ❤ ");
-        p.shouldMatch("§4-10 ❤ ");
-        p.shouldMatch("§c-8 ✹ ");
-        p.shouldMatch("§e-30 ✦ ");
-        p.shouldMatch("§2-41 ✤ ");
-        p.shouldMatch("§b-21 ❉ ");
-        p.shouldMatch("§f-32 ❋ ");
-        p.shouldMatch("§c-28 ✹ ");
-        p.shouldMatch("§c-116 ✹ §2-17 ✤ ");
+        p.shouldMatch("§e§l-509 §r§e\uE003 §f§l-398 §r§f\uE000 §c§l-5162 §r§c\uE002 §b§l-386 §r§b\uE004 ");
+        p.shouldMatch("§c§l-608 §r§c\uE002 §2§l-219 §r§2\uE001 ");
+        p.shouldMatch("§c-387 \uE002 §2-140 \uE001 ");
+        p.shouldMatch("§c§l-4089 §r§c\uE002 ");
+        p.shouldMatch("§c-2685 \uE002 ");
+        p.shouldMatch("§4-6 ❤ ");
     }
 
     @Test
@@ -453,23 +460,10 @@ public class TestRegex {
     }
 
     @Test
-    public void GuildRankReplacementFeature_GUILD_MESSAGE_PATTERN() {
-        PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "GUILD_MESSAGE_PATTERN");
-        p.shouldMatch("§3[§b★★★★★§3§oDisco reroller§3]§b");
-        p.shouldMatch("§3[§b★★★★★§3§oafKing§3]§b");
-        p.shouldMatch("§3[§b★★★★§3§obol§3]§b");
-    }
-
-    @Test
-    public void GuildRankReplacementFeature_RECRUIT_USERNAME_PATTERN() {
-        PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "RECRUIT_USERNAME_PATTERN");
-        p.shouldMatch("§3[_user0name_");
-    }
-
-    @Test
     public void InfoBar_BOMB_INFO_PATTERN() {
         PatternTester p = new PatternTester(InfoBar.class, "BOMB_INFO_PATTERN");
-        p.shouldMatch("§3Double Profession Speed from §bCorkian§7 [§f2§7 min]");
+        p.shouldMatch("§#a0c84bffProfession Speed from §#ffd750ffRoseGeckoOlaf955§#a0c84bff §7[§f3m§7]");
+        p.shouldMatch("§#a0c84bffDouble Profession Experience from §#ffd750ffRoseGeckoOlaf955§#a0c84bff §7[§f13m§7]");
     }
 
     @Test
@@ -545,6 +539,14 @@ public class TestRegex {
                 "§5Party Finder:§d Hey nickname spaces, over here! Join the §bThe Canyon Colossus§d queue and match up with §e1 other player§d!"); // Nickname 1 player
         p.shouldMatch(
                 "§5Party Finder:§d Hey nickname spaces 20cr, over here! Join the §bThe Canyon Colossus§d queue and match up with §e11 other players§d!"); // Nickname 11 players
+    }
+
+    @Test
+    public void BonusTotemLabelParser_BONUS_TOTEM_PATTERN() {
+        PatternTester p = new PatternTester(BonusTotemLabelParser.class, "BONUS_TOTEM_PATTERN");
+        p.shouldMatch("§#ffd750ff§oShadowCat§r§#ffd750ff's§#a0c84bff Mob Totem\n§d\uE01F §74m 59s");
+        p.shouldMatch("§#ffd750ff§oShadowCat§r§#ffd750ff's§#a0c84bff Mob Totem\n§d\uE01F §749s");
+        p.shouldMatch("§#ffd750ffConventionality's§#a0c84bff Gathering Totem\n§d\uE01F §74m 40s");
     }
 
     @Test
@@ -674,19 +676,43 @@ public class TestRegex {
     @Test
     public void RecipientType_PRIVATE_foregroundpattern() {
         PatternTester p = new PatternTester(RecipientType.PRIVATE, "foregroundPattern");
-        p.shouldMatch("§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE 42nao \uE003 Soulbound: §ftest");
         p.shouldMatch(
-                "§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §#ffe600ff§obol§6 \uE003 §#ffe600ff§obol§r§#ffe600ff:§6 §ftest");
-        p.shouldMatch(
-                "§6\uDAFF\uDFFC\uE001\uDB00\uDC06 §#ffe600ff§obol§6 \uE003 §#ffe600ff§obol§r§#ffe600ff:§6 §ftest ");
-        p.shouldMatch(
-                "§6\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §7kristof345§6 \uE003 §#ffe600ff§obol§r§#ffe600ff:§6 §fte ");
+                "§#ddcc99ff\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §#e8c00cff§oShadowCat§#ddcc99ff \uE003 §#e8c00cff§oShadowCat§r§#e8c00cff§[1]:§#ddcc99ff §fHi ");
     }
 
     @Test
     public void RecipientType_PRIVATE_backgroundPattern() {
         PatternTester p = new PatternTester(RecipientType.PRIVATE, "backgroundPattern");
-        p.shouldMatch("§8\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §7kristof345§8 \uE003 §f§obol§r§f:§8 te ");
+        p.shouldMatch(
+                "§#ddddddff\uDAFF\uDFFC\uE001\uDB00\uDC06 §#e8e8e8ff§oShadowCat§#ddddddff \uE003 §#e8e8e8ff§oShadowCat§r§#e8e8e8ff§[1]:§#ddddddff §8Hi ");
+    }
+
+    @Test
+    public void RecipientType_SHOUT_foregroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.SHOUT, "foregroundPattern");
+        p.shouldMatch(
+                "§#bd45ffff\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oShadowCat§r§#bd45ffff \uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE056\uDAFF\uDFFF\uE062\uDAFF\uDFEC§0\uE00D\uE000\uE026\uDB00\uDC02§#bd45ffff shouts: §#fad9f7ffo/");
+    }
+
+    @Test
+    public void RecipientType_SHOUT_backgroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.SHOUT, "backgroundPattern");
+        p.shouldMatch(
+                "§f\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oShadowCat§r§f \uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE056\uDAFF\uDFFF\uE062\uDAFF\uDFEC§8\uE00D\uE000\uE026\uDB00\uDC02§f shouts: §#fafafafftest");
+    }
+
+    @Test
+    public void RecipientType_PETS_foregroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.PETS, "foregroundPattern");
+        p.shouldMatch("§6\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE Duck: §#ffdd99ff§oquack");
+        p.shouldMatch("§6\uDAFF\uDFFC\uE001\uDB00\uDC06 §o§<1>Cosmo§r§6: §#ffdd99ff§obreezy squeak");
+    }
+
+    @Test
+    public void RecipientType_PETS_backgroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.PETS, "backgroundPattern");
+        p.shouldMatch("§f\uDAFF\uDFFC\uE001\uDB00\uDC06 §oKlutzy§r§f: §ofalls over");
+        p.shouldMatch("§f\uDAFF\uDFFC\uE001\uDB00\uDC06 §oKlutzy§r§f: §ofalls over");
     }
 
     @Test
@@ -904,6 +930,7 @@ public class TestRegex {
         p.shouldNotMatch("§f⬡ §7Mobs Killed: §f");
         p.shouldMatch("§f⬡ §7Wars Won: §f164");
         p.shouldMatch("§f⬡ §7Raids Won: §f0");
+        p.shouldMatch("§f⬡ §7 World Events Won: §f0§8 [3]");
     }
 
     @Test

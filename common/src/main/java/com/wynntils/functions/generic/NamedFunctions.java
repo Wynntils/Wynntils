@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
@@ -23,9 +23,9 @@ public final class NamedFunctions {
         }
     }
 
-    public static class ValueFunction extends GenericFunction<Integer> {
+    public static class ValueFunction extends GenericFunction<Double> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Double getValue(FunctionArguments arguments) {
             return arguments.getArgument("named").getNamedValue().value();
         }
 

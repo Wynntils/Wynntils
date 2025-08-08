@@ -106,6 +106,22 @@ public class CharacterFunctions {
         }
     }
 
+    public static class StatusEffectModifierFunction extends Function<NamedValue> {
+        @Override
+        public NamedValue getValue(FunctionArguments arguments) {
+            String query = arguments.getArgument("query").getStringValue();
+            StatusEffect effect = Models.StatusEffect.searchStatusEffectByName(query);
+            if (effect == null || !effect.hasModifierValue()) return NamedValue.EMPTY;
+            return new NamedValue(effect.getModifierSuffix().getString(), effect.getModifierValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("query", String.class, null)));
+        }
+    }
+
     public static class ClassFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {

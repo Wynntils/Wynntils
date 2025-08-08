@@ -1,21 +1,28 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.mobtotem;
+package com.wynntils.models.bonustotems;
 
+import com.wynntils.models.bonustotems.type.BonusTotemType;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec3;
 
-public class MobTotem {
+public class BonusTotem {
+    private final BonusTotemType bonusTotemType;
     private final Position position;
     private final String owner;
     private String timerString;
 
-    public MobTotem(Position position, String owner) {
+    public BonusTotem(BonusTotemType bonusTotemType, Position position, String owner) {
+        this.bonusTotemType = bonusTotemType;
         this.position = position;
         this.owner = owner;
+    }
+
+    public BonusTotemType getBuffTotemType() {
+        return bonusTotemType;
     }
 
     public Position getPosition() {

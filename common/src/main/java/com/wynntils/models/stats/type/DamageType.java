@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.type;
@@ -65,7 +65,7 @@ public enum DamageType {
         // displayName needs padding
         this.displayName = element.getDisplayName() + " ";
         this.apiName = element.getDisplayName();
-        this.symbol = element.getSymbol();
+        this.symbol = element.getParseSymbol();
         this.colorCode = element.getColorCode();
 
         // Encoding id is the element id

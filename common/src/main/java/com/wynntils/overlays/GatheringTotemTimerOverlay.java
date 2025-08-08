@@ -17,11 +17,11 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class MobTotemTimerOverlay extends TextOverlay {
+public class GatheringTotemTimerOverlay extends TextOverlay {
     private static final String TEMPLATE =
-            "{MOB_TOTEM_OWNER(%d)}'s Mob Totem [{MOB_TOTEM_DISTANCE(%d):0} m] ({MOB_TOTEM_TIME_LEFT(%d)})";
+            "{GATHERING_TOTEM_OWNER(%d)}'s Gathering Totem [{GATHERING_TOTEM_DISTANCE(%d):0} m] ({GATHERING_TOTEM_TIME_LEFT(%d)})";
 
-    public MobTotemTimerOverlay() {
+    public GatheringTotemTimerOverlay() {
         super(
                 new OverlayPosition(
                         330,
@@ -36,7 +36,7 @@ public class MobTotemTimerOverlay extends TextOverlay {
     public String getTemplate() {
         return IntStream.rangeClosed(
                         1,
-                        Models.BonusTotem.getBonusTotemsByType(BonusTotemType.MOB)
+                        Models.BonusTotem.getBonusTotemsByType(BonusTotemType.GATHERING)
                                 .size())
                 .mapToObj(i -> TEMPLATE.replaceAll("%d", String.valueOf(i)))
                 .collect(Collectors.joining("\n"));
@@ -44,7 +44,7 @@ public class MobTotemTimerOverlay extends TextOverlay {
 
     @Override
     public String getPreviewTemplate() {
-        return "Player's Mob Totem [16 m] (4:11)";
+        return "Player's Gathering Totem [16 m] (4:11)";
     }
 
     @Override
