@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -37,9 +37,10 @@ public class StartDataTransformer extends DataTransformer<StartData> {
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, StartData data) {
         return switch (version) {
-            case VERSION_1 -> ErrorOr.of(new UnsignedByte[] {
-                UnsignedByte.of(data.version().getId()),
-            });
+            case VERSION_1, VERSION_2 ->
+                ErrorOr.of(new UnsignedByte[] {
+                    UnsignedByte.of(data.version().getId()),
+                });
         };
     }
 

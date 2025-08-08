@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -20,14 +20,14 @@ public class DurablityDataTransformer extends DataTransformer<DurabilityData> {
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, DurabilityData data) {
         return switch (version) {
-            case VERSION_1 -> encodeDurablityData(data);
+            case VERSION_1, VERSION_2 -> encodeDurablityData(data);
         };
     }
 
     @Override
     public ErrorOr<DurabilityData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1 -> decodeDurabilityData(byteReader);
+            case VERSION_1, VERSION_2 -> decodeDurabilityData(byteReader);
         };
     }
 

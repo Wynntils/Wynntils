@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -17,7 +17,7 @@ public class CustomConsumableTypeDataTransformer extends DataTransformer<CustomC
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, CustomConsumableTypeData data) {
         return switch (version) {
-            case VERSION_1 -> encodeCustomConsumableTypeData(data);
+            case VERSION_1, VERSION_2 -> encodeCustomConsumableTypeData(data);
         };
     }
 
@@ -25,7 +25,7 @@ public class CustomConsumableTypeDataTransformer extends DataTransformer<CustomC
     public ErrorOr<CustomConsumableTypeData> decodeData(
             ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1 -> decodeCustomConsumableTypeData(byteReader);
+            case VERSION_1, VERSION_2 -> decodeCustomConsumableTypeData(byteReader);
         };
     }
 
