@@ -73,7 +73,9 @@ public final class BonusTotemModel extends Model {
     }
 
     public BonusTotem getBonusTotem(BonusTotemType type, int index) {
-        if (index < 0 || index >= bonusTotems.getOrDefault(type, new LinkedHashMap<>()).size()) {
+        if (index < 0
+                || index
+                        >= bonusTotems.getOrDefault(type, new LinkedHashMap<>()).size()) {
             return null;
         }
 
