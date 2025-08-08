@@ -69,11 +69,8 @@ public class RevealNicknamesFeature extends Feature {
                 return IterationDecision.CONTINUE;
             }
 
-            Pattern nicknamePartPattern = Pattern.compile("^" + nickname + "(:)?\\s*(.*)$");
-            Matcher nicknamePartMatcher = nicknamePartPattern.matcher(currentPart.getString(null, PartStyle.StyleType.NONE));
-
             // If the text part is not the nickname as the text, it's not a nickname text part
-            if (!nicknamePartMatcher.matches()) {
+            if (!currentPart.getString(null, PartStyle.StyleType.NONE).startsWith(nickname)) {
                 return IterationDecision.CONTINUE;
             }
 
