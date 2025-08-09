@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.wynnitem;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -192,10 +193,30 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                 JsonObject value = icon.get("value").getAsJsonObject();
                 JsonElement customModelData = value.get("customModelData");
 
-                // The API is inconsistent, and sometimes returns a string instead of an int
-                int customModelDataInt = customModelData.isJsonPrimitive()
-                        ? customModelData.getAsInt()
-                        : Integer.parseInt(customModelData.getAsString());
+                int customModelDataInt;
+                if (customModelData.isJsonObject()) {
+                    // New format
+                    JsonObject customModelDataObject = customModelData.getAsJsonObject();
+                    JsonArray floats = customModelDataObject.getAsJsonArray("rangeDispatch");
+                    if (floats != null && !floats.isEmpty()) {
+                        customModelDataInt = floats.get(0).getAsInt();
+                    } else {
+                        WynntilsMod.warn("Item DB does not contain custom model data for "
+                                + json.get("name").getAsString());
+                        return ItemMaterial.fromItemId("minecraft:air", 0);
+                    }
+                } else if (customModelData.isJsonPrimitive()) {
+                    // Original format, only the single model data was sent as either a string or an int
+                    if (customModelData.getAsJsonPrimitive().isNumber()) {
+                        customModelDataInt = customModelData.getAsInt();
+                    } else {
+                        customModelDataInt = Integer.parseInt(customModelData.getAsString());
+                    }
+                } else {
+                    WynntilsMod.warn("Unexpected custom model data format for "
+                            + json.get("name").getAsString());
+                    return ItemMaterial.fromItemId("minecraft:air", 0);
+                }
 
                 return ItemMaterial.fromItemId(value.get("id").getAsString(), customModelDataInt);
             }
