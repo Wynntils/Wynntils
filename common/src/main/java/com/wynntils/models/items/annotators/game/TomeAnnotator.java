@@ -19,7 +19,7 @@ public final class TomeAnnotator implements GameItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        if (itemStack.getItem() != Items.IRON_HORSE_ARMOR) return null;
+        if (itemStack.getItem() != Items.POTION) return null;
         Matcher matcher = name.getMatcher(TOME_PATTERN);
         if (!matcher.matches()) return null;
 
