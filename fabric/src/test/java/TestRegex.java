@@ -729,14 +729,17 @@ public class TestRegex {
     public void RecipientType_PETS_foregroundPattern() {
         PatternTester p = new PatternTester(RecipientType.PETS, "foregroundPattern");
         p.shouldMatch("§6\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE Duck: §#ffdd99ff§oquack");
-        p.shouldMatch("§6\uDAFF\uDFFC\uE001\uDB00\uDC06 §o§<1>Cosmo§r§6: §#ffdd99ff§obreezy squeak");
+        p.shouldMatch("§6\uDAFF\uDFFC\uE001\uDB00\uDC06 §oCosmo§r§6: §#ffdd99ff§obreezy squeak");
+        p.shouldMatch(
+                "§6\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oHanafubuki§r§6: §#ffdd99ffThose grooks look awfully... tempting.");
     }
 
     @Test
     public void RecipientType_PETS_backgroundPattern() {
         PatternTester p = new PatternTester(RecipientType.PETS, "backgroundPattern");
         p.shouldMatch("§f\uDAFF\uDFFC\uE001\uDB00\uDC06 §oKlutzy§r§f: §ofalls over");
-        p.shouldMatch("§f\uDAFF\uDFFC\uE001\uDB00\uDC06 §oKlutzy§r§f: §ofalls over");
+        p.shouldMatch(
+                "§f\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oHanafubuki§r§f: Watch the eye pal, watch the eye!");
     }
 
     @Test
