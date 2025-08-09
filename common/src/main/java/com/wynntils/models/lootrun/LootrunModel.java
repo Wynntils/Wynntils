@@ -120,8 +120,8 @@ public final class LootrunModel extends Model {
     //                        ÀÀÀ§7Challenges Completed: §f7
 
     private static final Pattern LOOTRUN_FAILED_PATTERN = Pattern.compile("\uDB00\uDC6D§c§lLootrun Failed!");
-    private static final Pattern CHALLENGE_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC5F§a§lChallenge Completed");
-    private static final Pattern CHALLENGE_FAILED_PATTERN = Pattern.compile("\uDB00\uDC6A§c§lChallenge Failed!");
+    private static final Pattern CHALLENGE_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC5E§a§lChallenge Completed");
+    private static final Pattern CHALLENGE_FAILED_PATTERN = Pattern.compile("\uDB00\uDC68§c§lChallenge Failed!");
 
     private static final Pattern CHOOSE_BEACON_PATTERN = Pattern.compile("\uDB00\uDC66§6§lChoose a Beacon!");
     private static final Pattern BEACONS_PATTERN = Pattern.compile(
