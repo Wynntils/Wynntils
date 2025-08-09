@@ -100,6 +100,10 @@ public class DamageDataTransformer extends DataTransformer<DamageData> {
             int damageTypeId = byteReader.read().value();
             DamageType damageType = DamageType.fromEncodingId(damageTypeId);
 
+            if (damageType == null) { // Sometimes null when users mess with custom encoding
+                return ErrorOr.error("Invalid damage type encoding: " + damageTypeId);
+            }
+
             // The next bytes are the minimum damage bytes, which are assembled into an integer.
             int minDamage = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
