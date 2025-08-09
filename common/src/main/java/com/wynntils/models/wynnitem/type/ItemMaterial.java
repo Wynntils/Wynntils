@@ -6,10 +6,8 @@ package com.wynntils.models.wynnitem.type;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.SkinUtils;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,7 +18,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
-import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.Unbreakable;
 
 public record ItemMaterial(ItemStack itemStack) {
@@ -32,19 +29,6 @@ public record ItemMaterial(ItemStack itemStack) {
     public static ItemMaterial getDefaultCharmItemMaterial() {
         // All charms are different items, this is as good as any other item
         ItemStack itemStack = createItemStack(Items.CLAY, 0);
-        return new ItemMaterial(itemStack);
-    }
-
-    public static ItemMaterial fromArmorType(String materialType, GearType gearType, CustomColor color) {
-        String itemId = (materialType.equals("chain") ? "chainmail" : materialType) + "_"
-                + gearType.name().toLowerCase(Locale.ROOT);
-
-        ItemStack itemStack = createItemStack(getItem("minecraft:" + itemId), 0);
-        if (color != null) {
-            // color is only set in case of leather
-            itemStack.set(DataComponents.DYED_COLOR, new DyedItemColor(color.asInt(), false));
-        }
-
         return new ItemMaterial(itemStack);
     }
 
