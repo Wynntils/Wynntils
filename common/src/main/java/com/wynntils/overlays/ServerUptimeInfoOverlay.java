@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -45,7 +45,7 @@ public class ServerUptimeInfoOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean isRenderedDefault() {
-        return McUtils.mc().gui.getTabList().visible;
+    public boolean defaultRenderCondition() {
+        return super.defaultRenderCondition() && McUtils.mc().gui.getTabList().visible;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
@@ -42,8 +42,8 @@ public class BloodPoolBarOverlay extends HealthBarOverlay {
     }
 
     @Override
-    public boolean isActive() {
-        return Models.Ability.bloodPoolBar.isActive();
+    public boolean defaultRenderCondition() {
+        return super.defaultRenderCondition() && Models.Ability.bloodPoolBar.isActive();
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -56,7 +56,8 @@ public class TowerStatsOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean isRenderedDefault() {
-        return Models.GuildWarTower.getWarBattleInfo().isPresent();
+    public boolean defaultRenderCondition() {
+        return super.defaultRenderCondition()
+                && Models.GuildWarTower.getWarBattleInfo().isPresent();
     }
 }
