@@ -12,7 +12,7 @@ import net.minecraft.ChatFormatting;
 
 public enum DamageType {
     ALL("", "❤", ChatFormatting.DARK_RED),
-    NEUTRAL("Neutral", "✣", ChatFormatting.GOLD, 5),
+    NEUTRAL("Neutral", "\uE005", ChatFormatting.GOLD, 5),
     FIRE(Element.FIRE),
     WATER(Element.WATER),
     AIR(Element.AIR),
@@ -65,7 +65,7 @@ public enum DamageType {
         // displayName needs padding
         this.displayName = element.getDisplayName() + " ";
         this.apiName = element.getDisplayName();
-        this.symbol = element.getParseSymbol();
+        this.symbol = element.getSymbol();
         this.colorCode = element.getColorCode();
 
         // Encoding id is the element id

@@ -74,7 +74,7 @@ public enum Skill {
     }
 
     public String getSymbol() {
-        return associatedElement.getDisplaySymbol();
+        return associatedElement.getSymbol();
     }
 
     public ChatFormatting getColorCode() {

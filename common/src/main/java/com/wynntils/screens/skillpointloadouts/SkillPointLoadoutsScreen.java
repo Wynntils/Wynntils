@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.skillpointloadouts;
@@ -38,6 +38,8 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
 
 public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
@@ -204,7 +206,10 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(Skill.values()[i].getColorCode() + Skill.values()[i].getSymbol()),
+                            StyledText.fromComponent(Component.literal(Skill.values()[i].getSymbol())
+                                    .withStyle(Style.EMPTY
+                                            .withColor(Skill.values()[i].getColorCode())
+                                            .withFont(ResourceLocation.withDefaultNamespace("common")))),
                             dividedWidth * (21 + i * 2),
                             dividedHeight * 8,
                             CommonColors.WHITE,
@@ -238,7 +243,10 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(Skill.values()[i].getColorCode() + Skill.values()[i].getSymbol()),
+                            StyledText.fromComponent(Component.literal(Skill.values()[i].getSymbol())
+                                    .withStyle(Style.EMPTY
+                                            .withColor(Skill.values()[i].getColorCode())
+                                            .withFont(ResourceLocation.withDefaultNamespace("common")))),
                             dividedWidth * (51 + i * 2),
                             dividedHeight * 8,
                             CommonColors.WHITE,
@@ -314,7 +322,10 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 FontRenderer.getInstance()
                         .renderText(
                                 poseStack,
-                                StyledText.fromString(Skill.values()[i].getColorCode() + Skill.values()[i].getSymbol()),
+                                StyledText.fromComponent(Component.literal(Skill.values()[i].getSymbol())
+                                        .withStyle(Style.EMPTY
+                                                .withColor(Skill.values()[i].getColorCode())
+                                                .withFont(ResourceLocation.withDefaultNamespace("common")))),
                                 dividedWidth * (51 + i * 2),
                                 dividedHeight * 34,
                                 CommonColors.WHITE,

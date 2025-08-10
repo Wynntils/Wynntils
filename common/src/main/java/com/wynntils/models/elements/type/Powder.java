@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.elements.type;
 
-import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.Locale;
@@ -66,15 +65,11 @@ public enum Powder {
     }
 
     public char getSymbol() {
-        return element.getDisplaySymbol().charAt(0);
+        return element.getSymbol().charAt(0);
     }
 
     public CustomColor getColor() {
         return CustomColor.fromInt(this.lightColor.getColor()).withAlpha(255);
-    }
-
-    public StyledText getColoredSymbol() {
-        return StyledText.fromString(lightColor.toString() + getSymbol());
     }
 
     public Item getLowTierItem() {
