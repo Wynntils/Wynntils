@@ -350,6 +350,8 @@ public final class RaidModel extends Model {
         if (foundMythicAspect) {
             numRaidsWithoutMythicAspect.store(0);
             numAspectPullsWithoutMythicAspect.store(expectedNumAspectPulls.get());
+        } else {
+            numAspectPullsWithoutMythicAspect.store(numAspectPullsWithoutMythicAspect.get() + expectedNumAspectPulls.get());
         }
 
         if (expectedNumRewardPulls.get()
@@ -364,6 +366,8 @@ public final class RaidModel extends Model {
         if (foundMythicTome) {
             numRaidsWithoutMythicTome.store(0);
             numRewardPullsWithoutMythicTome.store(expectedNumRewardPulls.get());
+        } else {
+            numRewardPullsWithoutMythicTome.store(numRewardPullsWithoutMythicTome.get() + expectedNumRewardPulls.get());
         }
 
         rewardChestIsOpened = false;
