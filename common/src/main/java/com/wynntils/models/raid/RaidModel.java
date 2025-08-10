@@ -247,6 +247,11 @@ public final class RaidModel extends Model {
     @SubscribeEvent
     public void onSetContent(ContainerSetContentEvent.Post event) {
         if (event.getContainerId() != expectedRaidRewardChestId) return;
+        ItemStack rerollItem = event.getItems().get(RaidRewardChestContainer.REROLL_REWARDS_SLOT);
+        if (!rerollItem.isEmpty()) {
+            StyledText rerollLoreConfirm = LoreUtils.getLore(rerollItem).getFirst();
+            if (rerollLoreConfirm.matches(RaidRewardChestContainer.REROLL_CONFIRM_PATTERN)) return;
+        }
         rewardChestIsOpened = true;
 
         if (hasProcessedRewards) {
