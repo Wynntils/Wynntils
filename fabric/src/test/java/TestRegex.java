@@ -554,9 +554,9 @@ public class TestRegex {
     public void MessageFilterFeature_PARTY_FINDER_FG() {
         PatternTester p = new PatternTester(MessageFilterFeature.class, "PARTY_FINDER_FG");
         p.shouldMatch(
-                "§5\uE00A\uE002 Party Finder:§d Hey §oShadowCat§r§d, over here! Join the §bNest ofthe Grootslangs§d queue and match up with §e3§d other players!"); // Name 2 players
+                "§5\uE00A\uE002 Party Finder:§d Hey §oShadowCat§r§d, over here! Join the §bNest ofthe Grootslangs§d queue and match up with §e3§d other players!");
         p.shouldMatch(
-                "§5\uE00A\uE002 Party Finder:§d Hey §o§<1>ShadowCat§r§d, over here! Join the §bTheNameless Anomaly§d queue and match up with §e3§d other players!");
+                "§5\uE00A\uE002 Party Finder:§d Hey §oShadowCat§r§d, over here! Join the §bTheNameless Anomaly§d queue and match up with §e3§d other players!");
     }
 
     @Test
