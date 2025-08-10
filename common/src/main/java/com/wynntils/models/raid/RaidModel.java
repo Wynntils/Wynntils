@@ -351,7 +351,8 @@ public final class RaidModel extends Model {
             numRaidsWithoutMythicAspect.store(0);
             numAspectPullsWithoutMythicAspect.store(expectedNumAspectPulls.get());
         } else {
-            numAspectPullsWithoutMythicAspect.store(numAspectPullsWithoutMythicAspect.get() + expectedNumAspectPulls.get());
+            numAspectPullsWithoutMythicAspect.store(
+                    numAspectPullsWithoutMythicAspect.get() + expectedNumAspectPulls.get());
         }
 
         if (expectedNumRewardPulls.get()
