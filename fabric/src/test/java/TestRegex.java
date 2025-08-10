@@ -150,7 +150,7 @@ public class TestRegex {
     }
 
     @Test
-    public void BombMobel_BOMB_BELL_PATTERN() {
+    public void BombModel_BOMB_BELL_PATTERN() {
         PatternTester p = new PatternTester(BombModel.class, "BOMB_BELL_PATTERN");
 
         p.shouldMatch(
@@ -159,6 +159,8 @@ public class TestRegex {
                 "§#fddd5cff\uE001 Wanytails has thrown a §#f3e6b2ffCombat Experience Bomb§#fddd5cff on §#f3e6b2ff§nNA3");
         p.shouldMatch(
                 "§#fddd5cff\uE001 GravityLizard has thrown a §#f3e6b2ffProfession Experience Bomb§#fddd5cffon §#f3e6b2ff§nEU17");
+        p.shouldMatch(
+                "§#fddd5cff\uE01E\uE002 CursedShockwave has thrown a §#f3e6b2ffProfession ExperienceBomb§#fddd5cff on §#f3e6b2ff§nEU12");
     }
 
     @Test
