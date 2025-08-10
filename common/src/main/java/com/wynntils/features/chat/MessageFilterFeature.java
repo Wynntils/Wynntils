@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -36,8 +37,13 @@ public class MessageFilterFeature extends Feature {
             Pair.of(Pattern.compile("^ +§6§lWelcome to Wynncraft!$"), null),
             Pair.of(Pattern.compile("^ +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com$"), null));
 
-    private static final List<Pair<Pattern, Pattern>> SYSTEM_INFO =
-            List.of(Pair.of(Pattern.compile("^(§r)?§.\\[Info\\] .*$"), Pattern.compile("^(§8)?\\[Info\\] .*$")));
+    // Test in MessageFilterFeature_SYSTEM_INFO_FG
+    private static final Pattern SYSTEM_INFO_FG =
+            Pattern.compile("^§#a0aec0ff(\uE01B\uE002|\uE001) .+$", Pattern.DOTALL);
+    // Test in MessageFilterFeature_SYSTEM_INFO_BG
+    private static final Pattern SYSTEM_INFO_BG =
+            Pattern.compile("^§#c0c0c0ff(\uE01B\uE002|\uE001) .+$", Pattern.DOTALL);
+    private static final List<Pair<Pattern, Pattern>> SYSTEM_INFO = List.of(Pair.of(SYSTEM_INFO_FG, SYSTEM_INFO_BG));
 
     private static final List<Pair<Pattern, Pattern>> LEVEL_UP = List.of(
             Pair.of(
@@ -47,10 +53,13 @@ public class MessageFilterFeature extends Feature {
                     Pattern.compile("^§8\\[§7!§8\\] §7Congratulations to (§r)?.* for reaching (combat )?§flevel .*!$"),
                     Pattern.compile("^(§8)?\\[!\\] Congratulations to (§r)?.* for reaching (combat )?§7level .*!$")));
 
-    // Test in MessageFilterFeature_PARTY_FINDER
+    // Test in MessageFilterFeature_PARTY_FINDER_FG
     private static final Pattern PARTY_FINDER_FG = Pattern.compile(
-            "^§5Party Finder:§d Hey [\\w ]{1,20}, over here! Join the [a-zA-Z'§ ]+ queue and match up with §e\\d{1,2} other players?§d!$");
-    private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(Pair.of(PARTY_FINDER_FG, null));
+            "^§5(\uE00A\uE002|\uE001) Party Finder:§d Hey (§o)?[\\w ]{1,20}(§r§d)?, over here! Join the §?[a-zA-Z0-9#' ]+§d queue and match up with §e\\d{1,2}§d other players?!$");
+    // Test in MessageFilterFeature_PARTY_FINDER_BG
+    private static final Pattern PARTY_FINDER_BG = Pattern.compile(
+            "^§8(\uE00A\uE002|\uE001) Party Finder: Hey (§o)?[\\w ]{1,20}(§r§8)?, over here! Join the [a-zA-Z' ]+ queue and match up with \\d{1,2} other players?!$");
+    private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(Pair.of(PARTY_FINDER_FG, PARTY_FINDER_BG));
 
     @Persisted
     public final Config<Boolean> hideWelcome = new Config<>(false);
@@ -74,17 +83,19 @@ public class MessageFilterFeature extends Feature {
             return;
         }
 
-        if (hideSystemInfo.get() && processFilter(msg, messageType, SYSTEM_INFO)) {
-            e.setCanceled(true);
-            return;
-        }
-
         if (hideLevelUp.get() && processFilter(msg, messageType, LEVEL_UP)) {
             e.setCanceled(true);
             return;
         }
 
-        if (hidePartyFinder.get() && processFilter(msg, messageType, PARTY_FINDER)) {
+        StyledText unwrapped = StyledTextUtils.unwrap(msg).stripAlignment();
+
+        if (hideSystemInfo.get() && processFilter(unwrapped, messageType, SYSTEM_INFO)) {
+            e.setCanceled(true);
+            return;
+        }
+
+        if (hidePartyFinder.get() && processFilter(unwrapped, messageType, PARTY_FINDER)) {
             e.setCanceled(true);
             return;
         }

@@ -554,13 +554,30 @@ public class TestRegex {
     public void MessageFilterFeature_PARTY_FINDER_FG() {
         PatternTester p = new PatternTester(MessageFilterFeature.class, "PARTY_FINDER_FG");
         p.shouldMatch(
-                "§5Party Finder:§d Hey Rafii2198, over here! Join the §bThe Canyon Colossus§d queue and match up with §e2 other players§d!"); // Name 2 players
+                "§5\uE00A\uE002 Party Finder:§d Hey §oShadowCat§r§d, over here! Join the §bNest ofthe Grootslangs§d queue and match up with §e3§d other players!"); // Name 2 players
         p.shouldMatch(
-                "§5Party Finder:§d Hey Rafii2198, over here! Join the §bThe Canyon Colossus§d queue and match up with §e1 other player§d!"); // Name 1 player
+                "§5\uE00A\uE002 Party Finder:§d Hey §o§<1>ShadowCat§r§d, over here! Join the §bTheNameless Anomaly§d queue and match up with §e3§d other players!");
+    }
+
+    @Test
+    public void MessageFilterFeature_PARTY_FINDER_BG() {
+        PatternTester p = new PatternTester(MessageFilterFeature.class, "PARTY_FINDER_BG");
         p.shouldMatch(
-                "§5Party Finder:§d Hey nickname spaces, over here! Join the §bThe Canyon Colossus§d queue and match up with §e1 other player§d!"); // Nickname 1 player
+                "§8\uE00A\uE002 Party Finder: Hey §oShadowCat§r§8, over here! Join the TheNameless Anomaly queue and match up with 3 other players!");
+    }
+
+    @Test
+    public void MessageFilterFeature_SYSTEM_INFO_FG() {
+        PatternTester p = new PatternTester(MessageFilterFeature.class, "SYSTEM_INFO_FG");
         p.shouldMatch(
-                "§5Party Finder:§d Hey nickname spaces 20cr, over here! Join the §bThe Canyon Colossus§d queue and match up with §e11 other players§d!"); // Nickname 11 players
+                "§#a0aec0ff\uE01B\uE002 Follow us on Twitter to stay up to date with Wynncraft at §#77aefcffwynn.gg/twitter");
+    }
+
+    @Test
+    public void MessageFilterFeature_SYSTEM_INFO_BG() {
+        PatternTester p = new PatternTester(MessageFilterFeature.class, "SYSTEM_INFO_BG");
+        p.shouldMatch(
+                "§#c0c0c0ff\uE01B\uE002 Follow us on Twitter to stay up to date with Wynncraft at §#fcfcfcffwynn.gg/twitter");
     }
 
     @Test
