@@ -67,7 +67,7 @@ public class RevealNicknamesFeature extends Feature {
             }
 
             // If the text part is not the nickname as the text, it's not a nickname text part
-            if (!currentPart.getString(null, PartStyle.StyleType.NONE).equals(nickname + ": ")) {
+            if (!currentPart.getString(null, PartStyle.StyleType.NONE).startsWith(nickname)) {
                 return IterationDecision.CONTINUE;
             }
 
@@ -79,6 +79,11 @@ public class RevealNicknamesFeature extends Feature {
                 case REPLACE -> {
                     changes.remove(currentPart);
 
+                    String currentText = currentPart.getString(null, PartStyle.StyleType.NONE);
+                    boolean hasColon = currentText.trim().endsWith(":");
+
+                    String newText = username + (hasColon ? ": " : "");
+
                     // Add the real username as if it was the nickname
                     Style newStyle = currentPart
                             .getPartStyle()
@@ -88,7 +93,7 @@ public class RevealNicknamesFeature extends Feature {
                                     StyledText.join("\n", newHoverTexts).getComponent()))
                             .getStyle();
 
-                    StyledTextPart newPart = new StyledTextPart(username + ": ", newStyle, null, Style.EMPTY);
+                    StyledTextPart newPart = new StyledTextPart(newText, newStyle, null, Style.EMPTY);
                     changes.add(newPart);
                 }
                 case PREPEND_USERNAME -> {
