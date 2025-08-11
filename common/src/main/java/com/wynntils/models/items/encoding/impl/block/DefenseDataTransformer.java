@@ -76,7 +76,12 @@ public class DefenseDataTransformer extends DataTransformer<DefenseData> {
         for (int i = 0; i < defencesCount; i++) {
             // A defense stat is encoded the following way:
             // The first byte is the id of the skill (`ETWFA`).
-            Element element = Element.fromEncodingId(byteReader.read().value());
+            int elementTypeId = byteReader.read().value();
+            Element element = Element.fromEncodingId(elementTypeId);
+
+            if (element == null) { // Sometimes null when users mess with custom encoding
+                return ErrorOr.error("Invalid element encoding: " + elementTypeId);
+            }
 
             // The next bytes are the defense bytes, which are assembled into an integer.
             int defence = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
