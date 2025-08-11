@@ -63,7 +63,7 @@ public final class RaidModel extends Model {
     public static final Integer MAXIMUM_CHALLENGE_ROOMS = 3;
     public static final Integer MAXIMUM_BOSS_ROOMS = 2;
 
-    private static final Pattern CHALLENGE_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC5F§a§lChallenge Completed");
+    private static final Pattern CHALLENGE_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC5E§a§lChallenge Completed");
     private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
     private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
 
