@@ -31,6 +31,9 @@ import java.util.Optional;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 
 public class PowderSpecialBarOverlay extends Overlay {
     @Persisted
@@ -109,8 +112,11 @@ public class PowderSpecialBarOverlay extends Overlay {
             text = StyledText.fromString("Unknown");
         } else {
             color = powderSpecialType.getColor();
-            text = StyledText.fromString(
-                    powderSpecialType.getColoredSymbol().getString() + " " + (int) powderSpecialCharge + "%");
+            text = StyledText.fromComponent(Component.empty()
+                    .withStyle(powderSpecialType.getLightColor())
+                    .append(Component.literal(String.valueOf(powderSpecialType.getSymbol()))
+                            .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))))
+                    .append(Component.literal(" " + (int) powderSpecialCharge + "%")));
         }
 
         BufferedFontRenderer.getInstance()

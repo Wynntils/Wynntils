@@ -8,21 +8,19 @@ import com.wynntils.utils.StringUtils;
 import net.minecraft.ChatFormatting;
 
 public enum Element {
-    EARTH("\uE001", "✤", ChatFormatting.DARK_GREEN, 0),
-    THUNDER("\uE003", "✦", ChatFormatting.YELLOW, 1),
-    WATER("\uE004", "❉", ChatFormatting.AQUA, 2),
-    FIRE("\uE002", "✹", ChatFormatting.RED, 3),
-    AIR("\uE000", "❋", ChatFormatting.WHITE, 4);
+    EARTH("\uE001", ChatFormatting.DARK_GREEN, 0),
+    THUNDER("\uE003", ChatFormatting.YELLOW, 1),
+    WATER("\uE004", ChatFormatting.AQUA, 2),
+    FIRE("\uE002", ChatFormatting.RED, 3),
+    AIR("\uE000", ChatFormatting.WHITE, 4);
 
-    private final String parseSymbol;
-    private final String displaySymbol;
+    private final String symbol;
     private final ChatFormatting colorCode;
     private final String displayName;
     private final int encodingId;
 
-    Element(String parseSymbol, String displaySymbol, ChatFormatting colorCode, int encodingId) {
-        this.parseSymbol = parseSymbol;
-        this.displaySymbol = displaySymbol;
+    Element(String symbol, ChatFormatting colorCode, int encodingId) {
+        this.symbol = symbol;
         this.colorCode = colorCode;
         this.encodingId = encodingId;
         this.displayName = StringUtils.capitalized(this.name());
@@ -30,7 +28,7 @@ public enum Element {
 
     public static Element fromSymbol(String symbol) {
         for (Element element : Element.values()) {
-            if (element.parseSymbol.equals(symbol)) {
+            if (element.symbol.equals(symbol)) {
                 return element;
             }
         }
@@ -50,12 +48,8 @@ public enum Element {
         return displayName;
     }
 
-    public String getParseSymbol() {
-        return parseSymbol;
-    }
-
-    public String getDisplaySymbol() {
-        return displaySymbol;
+    public String getSymbol() {
+        return symbol;
     }
 
     public ChatFormatting getColorCode() {
