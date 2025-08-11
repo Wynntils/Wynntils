@@ -90,6 +90,10 @@ public class DamageDataTransformer extends DataTransformer<DamageData> {
         int attackSpeedId = byteReader.read().value();
         GearAttackSpeed attackSpeed = GearAttackSpeed.fromEncodingId(attackSpeedId);
 
+        if (attackSpeed == null) { // Sometimes null when users mess with custom encoding
+            return ErrorOr.error("Invalid attack speed encoding: " + attackSpeedId);
+        }
+
         // The next byte is the number of attack damages present on the item.
         int damageCount = byteReader.read().value();
 
@@ -99,6 +103,10 @@ public class DamageDataTransformer extends DataTransformer<DamageData> {
             // The first byte is the id of the skill (`ETWFAN`, where N represents Neutral).
             int damageTypeId = byteReader.read().value();
             DamageType damageType = DamageType.fromEncodingId(damageTypeId);
+
+            if (damageType == null) { // Sometimes null when users mess with custom encoding
+                return ErrorOr.error("Invalid damage type encoding: " + damageTypeId);
+            }
 
             // The next bytes are the minimum damage bytes, which are assembled into an integer.
             int minDamage = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);

@@ -25,6 +25,8 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 
 public class CraftedGearTooltipComponent extends CraftedTooltipComponent<CraftedGearItem> {
     @Override
@@ -50,9 +52,12 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
             for (Pair<DamageType, RangedValue> damageStat : damages) {
                 DamageType type = damageStat.key();
                 String elementSymbol =
-                        type.getElement().isPresent() ? type.getElement().get().getDisplaySymbol() : type.getSymbol();
-                MutableComponent damage = Component.literal(elementSymbol + " " + type.getDisplayName())
-                        .withStyle(type.getColorCode());
+                        type.getElement().isPresent() ? type.getElement().get().getSymbol() : type.getSymbol();
+                MutableComponent damage = Component.empty()
+                        .withStyle(type.getColorCode())
+                        .append(Component.literal(elementSymbol)
+                                .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))))
+                        .append(Component.literal(" " + type.getDisplayName()));
                 damage.append(Component.literal("Damage: " + damageStat.value().asString())
                         .withStyle(
                                 type == DamageType.NEUTRAL
@@ -77,9 +82,11 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
             List<Pair<Element, Integer>> defenses = craftedItem.getDefences();
             for (Pair<Element, Integer> defenceStat : defenses) {
                 Element element = defenceStat.key();
-                MutableComponent defense = Component.literal(
-                                element.getDisplaySymbol() + " " + element.getDisplayName())
-                        .withStyle(element.getColorCode());
+                MutableComponent defense = Component.empty()
+                        .withStyle(element.getColorCode())
+                        .append(Component.literal(element.getSymbol())
+                                .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))))
+                        .append(Component.literal(" " + element.getDisplayName()));
                 defense.append(Component.literal(" Defence: " + StringUtils.toSignedString(defenceStat.value()))
                         .withStyle(ChatFormatting.GRAY));
                 header.add(defense);
@@ -141,9 +148,20 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
             if (!craftedItem.getPowders().isEmpty()) {
                 MutableComponent powderList = Component.literal("[");
                 for (Powder p : craftedItem.getPowders()) {
-                    String symbol = p.getColoredSymbol().getString();
-                    if (!powderList.getSiblings().isEmpty()) symbol = " " + symbol;
-                    powderList.append(Component.literal(symbol));
+                    String symbol = String.valueOf(p.getSymbol());
+                    if (!powderList.getSiblings().isEmpty()) {
+                        powderList.append(Component.empty()
+                                .withStyle(Style.EMPTY.withColor(p.getLightColor()))
+                                .append(Component.literal(" "))
+                                .append(Component.literal(symbol)
+                                        .withStyle(Style.EMPTY.withFont(
+                                                ResourceLocation.withDefaultNamespace("common")))));
+                        continue;
+                    }
+                    powderList.append(Component.literal(symbol)
+                            .withStyle(Style.EMPTY
+                                    .withFont(ResourceLocation.withDefaultNamespace("common"))
+                                    .withColor(p.getLightColor())));
                 }
                 powderList.append(Component.literal("]"));
                 powderLine.append(powderList);

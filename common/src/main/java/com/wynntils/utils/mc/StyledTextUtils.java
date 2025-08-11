@@ -171,6 +171,14 @@ public final class StyledTextUtils {
                                 null));
                     }
 
+                    // After a soft wrap, we need to insert a space
+                    if (!newParts.getLast()
+                            .getString(null, PartStyle.StyleType.NONE)
+                            .equals(" ")) {
+                        newParts.add(new StyledTextPart(
+                                " ", lastWrappedPart.getPartStyle().getStyle(), null, null));
+                    }
+
                     expectEmptySpaceAfterWrap = true;
                 } else {
                     // The last part had a newline, but it was not a wrap, so we add it to the new parts
@@ -200,6 +208,12 @@ public final class StyledTextUtils {
         // If there is a part that turned out not to be wrapped, we add it to the new parts
         if (lastWrappedPart != null) {
             newParts.add(lastWrappedPart);
+        }
+
+        // If we inserted a space after a soft wrap but never saw a following part, drop that trailing space
+        if (!newParts.isEmpty()
+                && newParts.getLast().getString(null, PartStyle.StyleType.NONE).equals(" ")) {
+            newParts.removeLast();
         }
 
         return StyledText.fromParts(newParts);

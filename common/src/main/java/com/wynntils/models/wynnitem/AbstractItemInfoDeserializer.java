@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -29,13 +30,11 @@ import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -77,7 +76,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
 
     protected GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type) {
         GearRestrictions restrictions = parseRestrictions(json);
-        ItemMaterial material = parseMaterial(json, type);
+        ItemMaterial material = parseMaterial(json);
 
         if (material == null || material.itemStack().isEmpty()) {
             WynntilsMod.warn("Failed to parse material for " + json.get("name").getAsString());
@@ -150,11 +149,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return GearRestrictions.fromString(restrictions);
     }
 
-    protected ItemMaterial parseMaterial(JsonObject json, GearType type) {
-        boolean parseAsArmor = type.isArmor() && json.has("armourMaterial");
-        return parseAsArmor ? parseArmorType(json, type) : parseOtherMaterial(json);
-    }
-
     protected List<ItemObtainType> parseObtainTypes(JsonObject json) {
         List<ItemObtainType> types = new ArrayList<>();
 
@@ -183,30 +177,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return List.copyOf(types);
     }
 
-    protected ItemMaterial parseArmorType(JsonObject json, GearType gearType) {
-        String armourMaterial =
-                JsonUtils.getNullableJsonString(json, "armourMaterial").toLowerCase(Locale.ROOT);
-
-        // FIXME: As of writing, v3.3 API forgot to add armor colors to leather armor
-        CustomColor color = null;
-        if (armourMaterial.equals("leather")) {
-            String colorStr = JsonUtils.getNullableJsonString(json, "armorColor");
-            // Oddly enough a lot of items has a "dummy" color value of "160,101,64"; ignore them
-            if (colorStr != null && !colorStr.equals("160,101,64")) {
-                String[] colorArray = colorStr.split("[, ]");
-                if (colorArray.length == 3) {
-                    int r = Integer.parseInt(colorArray[0]);
-                    int g = Integer.parseInt(colorArray[1]);
-                    int b = Integer.parseInt(colorArray[2]);
-                    color = new CustomColor(r, g, b);
-                }
-            }
-        }
-
-        return ItemMaterial.fromArmorType(armourMaterial, gearType, color);
-    }
-
-    protected ItemMaterial parseOtherMaterial(JsonObject json) {
+    protected ItemMaterial parseMaterial(JsonObject json) {
         if (!json.has("icon")) {
             WynntilsMod.warn(
                     "Item DB does not contain an icon for " + json.get("name").getAsString());
@@ -222,10 +193,30 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                 JsonObject value = icon.get("value").getAsJsonObject();
                 JsonElement customModelData = value.get("customModelData");
 
-                // The API is inconsistent, and sometimes returns a string instead of an int
-                int customModelDataInt = customModelData.isJsonPrimitive()
-                        ? customModelData.getAsInt()
-                        : Integer.parseInt(customModelData.getAsString());
+                int customModelDataInt;
+                if (customModelData.isJsonObject()) {
+                    // New format
+                    JsonObject customModelDataObject = customModelData.getAsJsonObject();
+                    JsonArray floats = customModelDataObject.getAsJsonArray("rangeDispatch");
+                    if (floats != null && !floats.isEmpty()) {
+                        customModelDataInt = floats.get(0).getAsInt();
+                    } else {
+                        WynntilsMod.warn("Item DB does not contain custom model data for "
+                                + json.get("name").getAsString());
+                        return ItemMaterial.fromItemId("minecraft:air", 0);
+                    }
+                } else if (customModelData.isJsonPrimitive()) {
+                    // Original format, only the single model data was sent as either a string or an int
+                    if (customModelData.getAsJsonPrimitive().isNumber()) {
+                        customModelDataInt = customModelData.getAsInt();
+                    } else {
+                        customModelDataInt = Integer.parseInt(customModelData.getAsString());
+                    }
+                } else {
+                    WynntilsMod.warn("Unexpected custom model data format for "
+                            + json.get("name").getAsString());
+                    return ItemMaterial.fromItemId("minecraft:air", 0);
+                }
 
                 return ItemMaterial.fromItemId(value.get("id").getAsString(), customModelDataInt);
             }
