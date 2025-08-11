@@ -49,7 +49,6 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
             List<Pair<DamageType, RangedValue>> damages = craftedItem.getDamages();
             for (Pair<DamageType, RangedValue> damageStat : damages) {
                 DamageType type = damageStat.key();
-                if (type == null) continue;
                 String elementSymbol =
                         type.getElement().isPresent() ? type.getElement().get().getDisplaySymbol() : type.getSymbol();
                 MutableComponent damage = Component.literal(elementSymbol + " " + type.getDisplayName())
