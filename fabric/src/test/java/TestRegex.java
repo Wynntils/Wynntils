@@ -150,7 +150,7 @@ public class TestRegex {
     }
 
     @Test
-    public void BombMobel_BOMB_BELL_PATTERN() {
+    public void BombModel_BOMB_BELL_PATTERN() {
         PatternTester p = new PatternTester(BombModel.class, "BOMB_BELL_PATTERN");
 
         p.shouldMatch(
