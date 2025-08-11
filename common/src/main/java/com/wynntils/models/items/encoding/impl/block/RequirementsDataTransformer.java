@@ -106,6 +106,10 @@ public class RequirementsDataTransformer extends DataTransformer<RequirementsDat
             int id = byteReader.read().value();
             Skill skill = Skill.fromElement(Element.fromEncodingId(id));
 
+            if (skill == null) { // Sometimes null when users mess with custom encoding
+                return ErrorOr.error("Invalid skill encoding: " + id);
+            }
+
             // The next bytes are the skill requirement bytes, which are assembled into an integer.
             int requirement = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 

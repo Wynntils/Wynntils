@@ -90,6 +90,10 @@ public class DamageDataTransformer extends DataTransformer<DamageData> {
         int attackSpeedId = byteReader.read().value();
         GearAttackSpeed attackSpeed = GearAttackSpeed.fromEncodingId(attackSpeedId);
 
+        if (attackSpeed == null) { // Sometimes null when users mess with custom encoding
+            return ErrorOr.error("Invalid attack speed encoding: " + attackSpeedId);
+        }
+
         // The next byte is the number of attack damages present on the item.
         int damageCount = byteReader.read().value();
 
