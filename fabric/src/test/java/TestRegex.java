@@ -197,20 +197,14 @@ public class TestRegex {
     @Test
     public void ChatRedirectFeature_LoginRedirector_FOREGROUND_PATTERN() {
         PatternTester p = new PatternTester(ChatRedirectFeature.LoginRedirector.class, "FOREGROUND_PATTERN");
-        // champion
-        p.shouldMatch("\uE017 §#ffe60000v8j§6 has just logged in!");
+        // hero+ nickname
+        p.shouldMatch("§f\uE08A §#d4448cff§oZepart Heal§f §dhas just logged in!");
         // hero
-        p.shouldMatch("\uE01B §#a344aa00v8j§d has just logged in!");
+        p.shouldMatch("§f\uE01B §#d44fe0ffShadowFRCS§f §dhas just logged in!");
         // vip+
-        p.shouldMatch("\uE024 §#8a99ee00v8j§3 has just logged in!");
-        // vip
-        p.shouldMatch("\uE023 §#44aa3300v8j§a has just logged in!");
+        p.shouldMatch("§f\uE024 §#4c8dfcff§owater abso§f §3has just logged in!");
         // champion nickname
-        p.shouldMatch("\uE017 §#ffe60000§ocharlie268IsAWizard§6 has just logged in!");
-        // moderator nickname, new style
-        p.shouldMatch("\uE01F §6§o§<1>Navi§e has just logged in!");
-        // music, new style
-        p.shouldMatch("\uE020 §3Texilated§b has just logged in!");
+        p.shouldMatch("§f\uE017 §#e8c00cff§oInfernal Defender§f §6has just logged in!");
     }
 
     @Test
