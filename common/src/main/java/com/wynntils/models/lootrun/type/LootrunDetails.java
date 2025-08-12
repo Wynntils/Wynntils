@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class LootrunDetails {
+    private LootrunLocation location = LootrunLocation.UNKNOWN;
     private Map<LootrunBeaconKind, Integer> selectedBeacons = new TreeMap<>();
     private LootrunBeaconKind lastTaskBeaconColor = null;
     private boolean lastTaskVibrantBeacon = false;
@@ -25,6 +26,16 @@ public class LootrunDetails {
     private List<MissionType> missions = new ArrayList<>();
     private int sacrifices = 0;
     private int rerolls = 0;
+    private Map<LootrunLocation, Integer> latestRewardPulls = new TreeMap<>();
+    private Map<LootrunLocation, Integer> sacrificedPulls = new TreeMap<>();
+
+    public LootrunLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(LootrunLocation location) {
+        this.location = location;
+    }
 
     public Map<LootrunBeaconKind, Integer> getSelectedBeacons() {
         return Collections.unmodifiableMap(selectedBeacons);
@@ -112,6 +123,22 @@ public class LootrunDetails {
 
     public void addMission(MissionType newMission) {
         missions.add(newMission);
+    }
+
+    public int getLatestRewardPulls(LootrunLocation location) {
+        return this.latestRewardPulls.getOrDefault(location, 0);
+    }
+
+    public void setLatestRewardPulls(LootrunLocation location, int pulls) {
+        this.latestRewardPulls.put(location, pulls);
+    }
+
+    public int getSacrificedPulls(LootrunLocation location) {
+        return this.sacrificedPulls.getOrDefault(location, 0);
+    }
+
+    public void setSacrificedPulls(LootrunLocation location, int pulls) {
+        this.sacrificedPulls.put(location, pulls);
     }
 
     public int getSacrifices() {

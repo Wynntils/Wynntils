@@ -578,6 +578,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
         registerFunction(new LootrunFunctions.LootrunTimeFunction());
         registerFunction(new LootrunFunctions.LootrunBeaconVibrantFunction());
+        registerFunction(new LootrunFunctions.LootrunSacrificedPullsFunction());
         registerFunction(new LootrunFunctions.LootrunSacrificesFunction());
         registerFunction(new LootrunFunctions.LootrunRerollsFunction());
 

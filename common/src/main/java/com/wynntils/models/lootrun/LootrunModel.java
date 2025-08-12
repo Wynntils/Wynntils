@@ -21,13 +21,17 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.particle.event.ParticleVerifiedEvent;
 import com.wynntils.handlers.particle.type.ParticleType;
+import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.ContainerOpenEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
+import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.containers.containers.reward.LootrunRewardContainer;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearItem;
@@ -77,6 +81,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
@@ -99,6 +105,7 @@ public final class LootrunModel extends Model {
     //    ÀÀÀ§f260§7 Lootrun Experience§r       ÀÀ§7Challenges Completed: §f13
 
     private static final Pattern LOOTRUN_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC61§6§lLootrun Completed!");
+    private static final Pattern LOOTRUN_STARTED_PATTERN = Pattern.compile("§7Prepare to Lootrun");
 
     // Rewards
     private static final Pattern REWARD_PULLS_PATTERN = Pattern.compile("§.(\\d+)§7 Reward Pulls§r");
@@ -512,6 +519,16 @@ public final class LootrunModel extends Model {
     public void onLootrunCompleted(LootrunFinishedEvent.Completed event) {
         dryPulls.store(dryPulls.get() + event.getRewardPulls());
         checkedItemEntities.clear();
+
+        int totalPulls = event.getRewardPulls() + getSacrificedPulls(getCurrentLootrunLocation());
+        getCurrentLootrunDetails().setLatestRewardPulls(getCurrentLootrunLocation(), totalPulls);
+        lootrunDetailsStorage.touched();
+    }
+
+    @SubscribeEvent
+    public void onLootrunFailed(LootrunFinishedEvent.Failed event) {
+        getCurrentLootrunDetails().setSacrificedPulls(getCurrentLootrunLocation(), 0);
+        lootrunDetailsStorage.touched();
     }
 
     @SubscribeEvent
@@ -773,6 +790,10 @@ public final class LootrunModel extends Model {
         return getCurrentLootrunDetails().getRainbowBeaconCount();
     }
 
+    public int getSacrificedPulls(LootrunLocation location) {
+        return getCurrentLootrunDetails().getSacrificedPulls(location);
+    }
+
     private void setLastTaskBeaconColor(LootrunBeaconKind lootrunBeaconKind) {
         getCurrentLootrunDetails().setLastTaskBeaconColor(lootrunBeaconKind);
         getCurrentLootrunDetails().setLastTaskVibrantBeacon(vibrantBeacons.contains(lootrunBeaconKind));
@@ -796,6 +817,11 @@ public final class LootrunModel extends Model {
 
     private void resetRerolls() {
         getCurrentLootrunDetails().setRerolls(0);
+        lootrunDetailsStorage.touched();
+    }
+
+    private void resetLocation() {
+        getCurrentLootrunDetails().setLocation(LootrunLocation.UNKNOWN);
         lootrunDetailsStorage.touched();
     }
 
@@ -880,7 +906,6 @@ public final class LootrunModel extends Model {
             setClosestBeacon(null);
             setLastTaskBeaconColor(null);
             resetBeaconCounts();
-            resetSacrifices();
             resetRerolls();
 
             possibleTaskLocations = new HashSet<>();
@@ -1232,5 +1257,77 @@ public final class LootrunModel extends Model {
 
     private LootrunDetails getCurrentLootrunDetails() {
         return lootrunDetailsStorage.get().getOrDefault(Models.Character.getId(), new LootrunDetails());
+    }
+
+    @SubscribeEvent
+    public void onConfirmationClick(ContainerClickEvent event) {
+        if (!(Models.Container.getCurrentContainer() instanceof LootrunRewardContainer container)) return;
+
+        Component itemName = event.getItemStack().getCustomName();
+        LootrunLocation location = getCurrentLootrunLocation();
+
+        if (itemName == null) return;
+
+        if (container.getConfirmSacrificePattern().matcher(itemName.getString()).find()) {
+            int sacrificedPulls = getSacrificedPullsCalc(
+                    getCurrentLootrunDetails().getLatestRewardPulls(location),
+                    getCurrentLootrunDetails().getSacrifices());
+
+            getCurrentLootrunDetails().setSacrificedPulls(location, sacrificedPulls);
+            lootrunDetailsStorage.touched();
+        } else if (container
+                .getConfirmRewardsPattern()
+                .matcher(itemName.getString())
+                .find()) {
+            getCurrentLootrunDetails().setSacrificedPulls(location, 0);
+            lootrunDetailsStorage.touched();
+        }
+    }
+
+    @SubscribeEvent
+    public void onLootrunStart(TitleSetTextEvent event) {
+        String text = event.getComponent().getString();
+        if (!LOOTRUN_STARTED_PATTERN.matcher(text).matches()) return;
+
+        resetLocation();
+        getCurrentLootrunDetails().setLocation(getCurrentLootrunLocation());
+
+        // Sacrifices are reset here as opposed to at the end of the run, as they are needed to calculate the sacrificed
+        // pulls.
+        resetSacrifices();
+    }
+
+    @SubscribeEvent
+    public void onContainerOpen(ContainerOpenEvent event) {
+        if (!(Models.Container.getCurrentContainer() instanceof LootrunRewardContainer container)) return;
+
+        event.getItems().forEach(itemStack -> {
+            if (itemStack.isEmpty()) return;
+
+            Component itemName = itemStack.getCustomName();
+            if (container.getCloseChestPattern().matcher(itemName.getString()).find()) {
+                getCurrentLootrunDetails().setSacrificedPulls(getCurrentLootrunLocation(), 0);
+                lootrunDetailsStorage.touched();
+                return;
+            }
+        });
+    }
+
+    public LootrunLocation getCurrentLootrunLocation() {
+        if (getCurrentLootrunDetails().getLocation() != LootrunLocation.UNKNOWN) {
+            return getCurrentLootrunDetails().getLocation();
+        }
+
+        BlockPos pos = McUtils.player().blockPosition();
+        Location location = new Location(pos.getX(), pos.getY(), pos.getZ());
+
+        return LootrunLocation.getNearest(location);
+    }
+
+    private int getSacrificedPullsCalc(int pulls, int sacrifices) {
+        if (sacrifices <= 0) return 0;
+
+        int savedPulls = (int) Math.ceil(pulls * (1 - Math.pow(0.5, sacrifices)));
+        return Math.max(0, savedPulls);
     }
 }

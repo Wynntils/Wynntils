@@ -29,6 +29,7 @@ import com.wynntils.models.containers.containers.ItemIdentifierContainer;
 import com.wynntils.models.containers.containers.JukeboxContainer;
 import com.wynntils.models.containers.containers.LeaderboardRewardsContainer;
 import com.wynntils.models.containers.containers.LobbyContainer;
+import com.wynntils.models.containers.containers.LootrunChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RatingRewardsContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
@@ -50,6 +51,7 @@ import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
 import com.wynntils.models.containers.containers.reward.IngredientBombRewardContainer;
 import com.wynntils.models.containers.containers.reward.ItemBombRewardContainer;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
+import com.wynntils.models.containers.containers.reward.LootrunRewardContainer;
 import com.wynntils.models.containers.containers.reward.ObjectiveRewardContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketBuyContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketContainer;
@@ -58,6 +60,7 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderCon
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.guild.type.GuildLogType;
+import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.profession.type.ProfessionType;
 import java.util.ArrayList;
 import java.util.List;
@@ -144,6 +147,7 @@ public final class ContainerModel extends Model {
         registerContainer(new LeaderboardRewardsContainer());
         registerContainer(new LobbyContainer());
         registerContainer(new LootChestContainer());
+        registerContainer(new LootrunRewardContainer());
         registerContainer(new MiscBucketContainer());
         registerContainer(new ObjectiveRewardContainer());
         registerContainer(new PlayerEffectsMenuContainer());
@@ -167,6 +171,11 @@ public final class ContainerModel extends Model {
 
         for (GuildLogType type : GuildLogType.values()) {
             registerContainer(new GuildLogContainer(type));
+        }
+
+        for (LootrunLocation location : LootrunLocation.values()) {
+            if (location == LootrunLocation.UNKNOWN) continue;
+            registerContainer(new LootrunChestContainer(location));
         }
     }
 
