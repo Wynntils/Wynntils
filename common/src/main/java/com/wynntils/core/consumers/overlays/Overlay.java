@@ -15,6 +15,7 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
@@ -22,6 +23,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.Display;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Comparable<Overlay> {
@@ -77,10 +79,11 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     /**
      * <li>The default condition that determines whether an overlay is going to be rendered.</li>
      * <li>Overwrite this to completly change the condition, or overwite additionalRenderCondition() instead to only add to the default condition.</li>
-     * <li>By default overlays only render when on world and not in character wardrobe</li>
+     * <li>By default overlays only render when on world and not riding Display enity</li>
      */
     protected boolean defaultRenderCondition() {
-        return Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe();
+        return Models.WorldState.onWorld()
+                && (McUtils.player() != null && !(McUtils.player().getVehicle() instanceof Display));
     }
 
     /**
