@@ -15,13 +15,13 @@ import java.util.regex.Pattern;
 import net.minecraft.world.entity.Entity;
 
 public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNodeHarvestLabelInfo> {
-    // §7x1 [+3952§f Ⓒ§7 Woodcutting XP] §6[14.64%]
+    // Test in GatheringNodeHarvestLabelParser_EXPERIENCE_PATTERN
     private static final Pattern EXPERIENCE_PATTERN = Pattern.compile(
-            "(§.x[\\d\\.]+ )?(§.)?\\[\\+(§d)?(?<gain>\\d+)§f [ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§7 (?<name>.+) XP\\] §6\\[(?<current>[\\d.]+)%\\]");
+            "(§(.+?)\\[§(.+?)x\\d§(.+?)\\] )?§(.+?)\\+(§d)?(?<gain>\\d+) §7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] (?<name>.+) XP §6\\[(?<current>[\\d.]+)%\\]");
 
-    // §a+1§2 Dernic Wood§6 [§e✫§8✫✫§6]
-    private static final Pattern HARVEST_PATTERN =
-            Pattern.compile("§a\\+\\d+§2 (?<type>.+) (?<material>.+)§6 \\[§e✫((?:§8)?✫(?:§8)?)✫§6\\]");
+    // Test in GatheringNodeHarvestLabelParser_HARVEST_PATTERN
+    private static final Pattern HARVEST_PATTERN = Pattern.compile(
+            "(§(.+?)\\[§(.+?)x\\d§(.+?)\\] )?§(.+?)\\+\\d+ §7(?<type>.+) (?<material>.+)§6 \\[§e✫((?:§8)?✫(?:§8)?)✫§6\\]");
 
     @Override
     public GatheringNodeHarvestLabelInfo getInfo(StyledText label, Location location, Entity entity) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -21,14 +21,14 @@ public class EffectsDataTransformer extends DataTransformer<EffectsData> {
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, EffectsData data) {
         return switch (version) {
-            case VERSION_1 -> encodeEffectsData(data);
+            case VERSION_1, VERSION_2 -> encodeEffectsData(data);
         };
     }
 
     @Override
     public ErrorOr<EffectsData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1 -> decodeEffectsData(byteReader);
+            case VERSION_1, VERSION_2 -> decodeEffectsData(byteReader);
         };
     }
 

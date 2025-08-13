@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.powder;
@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,8 +45,11 @@ public final class GuidePowderItemStack extends GuideItemStack {
 
     @Override
     public Component getHoverName() {
-        return Component.literal(element.getSymbol() + " " + element.getName() + " Powder " + MathUtils.toRoman(tier))
-                .withStyle(element.getLightColor());
+        return Component.empty()
+                .withStyle(Style.EMPTY.withColor(element.getLightColor()))
+                .append(Component.literal(String.valueOf(element.getSymbol()))
+                        .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))))
+                .append(Component.literal(" " + element.getName() + " Powder " + MathUtils.toRoman(tier)));
     }
 
     @Override
@@ -82,21 +87,45 @@ public final class GuidePowderItemStack extends GuideItemStack {
                 .append(Component.literal("]").withStyle(ChatFormatting.GRAY)));
         itemLore.add(Component.empty());
         itemLore.add(Component.literal("Effect on Weapons:").withStyle(element.getDarkColor()));
-        itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+" + powderTierInfo.min()
-                + "-" + powderTierInfo.max() + " " + element.getLightColor() + element.getSymbol() + " " + name + " "
-                + ChatFormatting.GRAY + "Damage"));
-        itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
-                + powderTierInfo.convertedFromNeutral() + "% " + ChatFormatting.GOLD + "✣ Neutral" + ChatFormatting.GRAY
-                + " to " + element.getLightColor() + element.getSymbol() + " " + name));
+        itemLore.add(Component.empty()
+                .append(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
+                        + powderTierInfo.min() + "-" + powderTierInfo.max() + " " + element.getLightColor()))
+                .append(Component.literal(String.valueOf(element.getSymbol()))
+                        .withStyle(Style.EMPTY
+                                .withFont(ResourceLocation.withDefaultNamespace("common"))
+                                .withColor(element.getLightColor())))
+                .append(Component.literal(
+                        element.getLightColor() + " " + name + " " + ChatFormatting.GRAY + "Damage")));
+        itemLore.add(Component.empty()
+                .append(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
+                        + powderTierInfo.convertedFromNeutral() + "% " + ChatFormatting.GOLD + "✣ Neutral"
+                        + ChatFormatting.GRAY + " to " + element.getLightColor()))
+                .append(Component.literal(String.valueOf(element.getSymbol()))
+                        .withStyle(Style.EMPTY
+                                .withFont(ResourceLocation.withDefaultNamespace("common"))
+                                .withColor(element.getLightColor())))
+                .append(Component.literal(element.getLightColor() + " " + name)));
         itemLore.add(Component.empty());
         itemLore.add(Component.literal("Effect on Armour:").withStyle(element.getDarkColor()));
-        itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
-                + powderTierInfo.addedDefence() + " " + element.getLightColor() + element.getSymbol() + " " + name + " "
-                + ChatFormatting.GRAY + "Defence"));
-        itemLore.add(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "-"
-                + powderTierInfo.removedDefence() + " " + opposingElement.getLightColor() + opposingElement.getSymbol()
-                + " " + StringUtils.capitalizeFirst(opposingElement.name().toLowerCase(Locale.ROOT)) + " "
-                + ChatFormatting.GRAY + "Defence"));
+        itemLore.add(Component.empty()
+                .append(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
+                        + powderTierInfo.addedDefence() + " " + element.getLightColor()))
+                .append(Component.literal(String.valueOf(element.getSymbol()))
+                        .withStyle(Style.EMPTY
+                                .withFont(ResourceLocation.withDefaultNamespace("common"))
+                                .withColor(element.getLightColor())))
+                .append(Component.literal(
+                        element.getLightColor() + " " + name + " " + ChatFormatting.GRAY + "Defence")));
+        itemLore.add(Component.empty()
+                .append(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "-"
+                        + powderTierInfo.removedDefence() + " " + opposingElement.getLightColor()))
+                .append(Component.literal(String.valueOf(opposingElement.getSymbol()))
+                        .withStyle(Style.EMPTY
+                                .withFont(ResourceLocation.withDefaultNamespace("common"))
+                                .withColor(opposingElement.getLightColor())))
+                .append(Component.literal(opposingElement.getLightColor() + " "
+                        + StringUtils.capitalizeFirst(opposingElement.name().toLowerCase(Locale.ROOT)) + " "
+                        + ChatFormatting.GRAY + "Defence")));
         itemLore.add(Component.empty());
         itemLore.add(Component.literal(
                         "Add this powder to your items by visiting a Powder Master or use it as an ingredient when crafting.")

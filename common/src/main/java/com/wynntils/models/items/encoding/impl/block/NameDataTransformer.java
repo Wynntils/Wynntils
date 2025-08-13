@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -19,14 +19,14 @@ public class NameDataTransformer extends DataTransformer<NameData> {
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, NameData data) {
         return switch (version) {
-            case VERSION_1 -> encodeName(data.name().orElse(""));
+            case VERSION_1, VERSION_2 -> encodeName(data.name().orElse(""));
         };
     }
 
     @Override
     public ErrorOr<NameData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1 -> decodeName(byteReader);
+            case VERSION_1, VERSION_2 -> decodeName(byteReader);
         };
     }
 

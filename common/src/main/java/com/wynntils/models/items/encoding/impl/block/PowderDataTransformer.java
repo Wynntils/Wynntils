@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -24,7 +24,7 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, PowderData data) {
         return switch (version) {
-            case VERSION_1 -> encodePowderData(data);
+            case VERSION_1, VERSION_2 -> encodePowderData(data);
         };
     }
 
@@ -36,7 +36,7 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
     @Override
     public ErrorOr<PowderData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1 -> decodePowderData(byteReader);
+            case VERSION_1, VERSION_2 -> decodePowderData(byteReader);
         };
     }
 

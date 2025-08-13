@@ -26,8 +26,9 @@ public final class StyledTextUtils {
             Pattern.compile(".*\\[(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?\\].*");
 
     // Note: Post Wynncraft 2.1, the hover text is inconsistent, sometimes "'s" is white, sometimes it's gray
+    // And yes, the "user" needs to be optional
     public static final Pattern NICKNAME_PATTERN =
-            Pattern.compile("§f(?<nick>.+?)(§7)?'s?(§7)? real username is §f(?<username>.+)");
+            Pattern.compile("§f(?<nick>.+?)(§7)?'s?(§7)? real (user)?name is §f(?<username>.+)");
 
     private static final String NEWLINE_PREPARATION = "\n";
     private static final Pattern NEWLINE_WRAP_PATTERN = Pattern.compile("\uDAFF\uDFFC\uE001\uDB00\uDC06");
@@ -170,6 +171,14 @@ public final class StyledTextUtils {
                                 null));
                     }
 
+                    // After a soft wrap, we need to insert a space
+                    if (!newParts.getLast()
+                            .getString(null, PartStyle.StyleType.NONE)
+                            .equals(" ")) {
+                        newParts.add(new StyledTextPart(
+                                " ", lastWrappedPart.getPartStyle().getStyle(), null, null));
+                    }
+
                     expectEmptySpaceAfterWrap = true;
                 } else {
                     // The last part had a newline, but it was not a wrap, so we add it to the new parts
@@ -199,6 +208,12 @@ public final class StyledTextUtils {
         // If there is a part that turned out not to be wrapped, we add it to the new parts
         if (lastWrappedPart != null) {
             newParts.add(lastWrappedPart);
+        }
+
+        // If we inserted a space after a soft wrap but never saw a following part, drop that trailing space
+        if (!newParts.isEmpty()
+                && newParts.getLast().getString(null, PartStyle.StyleType.NONE).equals(" ")) {
+            newParts.removeLast();
         }
 
         return StyledText.fromParts(newParts);

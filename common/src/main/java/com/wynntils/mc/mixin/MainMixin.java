@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -26,9 +26,12 @@ public abstract class MainMixin {
         // Also causes problems on macOS, see:
         // https://github.com/MinecraftForge/MinecraftForge/pull/5591#issuecomment-470805491
 
+        boolean isWayland = SystemUtils.isWayland();
+        boolean isMac = SystemUtils.isMac();
+
         // This uses a Mixin because this must be done as early as possible - before other mods load that use AWT
         // see https://github.com/BuiltBrokenModding/SBM-SheepMetal/issues/2
-        if (!SystemUtils.isMac()) {
+        if (!isWayland && !isMac) {
             // Do NOT use logger here. If we reference the WynntilsMod class, we will crash.
             System.out.println("[Wynntils] Setting java.awt.headless to false");
             System.setProperty("java.awt.headless", "false");
@@ -41,6 +44,13 @@ public abstract class MainMixin {
             } catch (HeadlessException e) {
                 // Do NOT use logger here. If we reference the WynntilsMod class, we will crash.
                 System.out.println("[Wynntils] java.awt.headless property was not set properly!");
+            }
+        } else {
+            // Do NOT use logger here. If we reference the WynntilsMod class, we will crash.
+            if (isWayland) {
+                System.out.println("[Wynntils] Not setting java.awt.headless to false on Wayland");
+            } else if (isMac) {
+                System.out.println("[Wynntils] Not setting java.awt.headless to false on macOS");
             }
         }
     }

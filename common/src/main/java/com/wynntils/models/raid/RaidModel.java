@@ -12,8 +12,10 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.combat.type.DamageDealtEvent;
@@ -38,6 +40,7 @@ import com.wynntils.models.raid.type.RaidRoomInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -60,7 +63,7 @@ public final class RaidModel extends Model {
     public static final Integer MAXIMUM_CHALLENGE_ROOMS = 3;
     public static final Integer MAXIMUM_BOSS_ROOMS = 2;
 
-    private static final Pattern CHALLENGE_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC5F§a§lChallenge Completed");
+    private static final Pattern CHALLENGE_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC5E§a§lChallenge Completed");
     private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
     private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
 
@@ -89,19 +92,24 @@ public final class RaidModel extends Model {
     @Persisted
     private final Storage<Integer> numRewardPullsWithoutMythicTome = new Storage<>(0);
 
+    @Persisted
+    private final Storage<Integer> expectedNumAspectPulls = new Storage<>(-1);
+
+    @Persisted
+    private final Storage<Integer> expectedNumRewardPulls = new Storage<>(-1);
+
     private static final List<RaidKind> RAIDS = new ArrayList<>();
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
     private Map<String, List<String>> partyRaidBuffs = new HashMap<>();
 
-    private int expectedNumAspectPulls = -1;
-    private int expectedNumRewardPulls = -1;
     private int foundNumRewardPulls;
     private int expectedRaidRewardChestId = -2;
     private boolean foundMythicTome;
     private boolean foundMythicAspect;
     private boolean rewardChestIsOpened = false;
     private boolean hasProcessedRewards = true;
+    private boolean rerollingRewards = false;
 
     private boolean completedCurrentChallenge = false;
     private boolean inBuffRoom = false;
@@ -145,14 +153,14 @@ public final class RaidModel extends Model {
 
         Matcher rewardPullMatcher = styledText.getMatcher(REWARD_PULLS_PATTERN);
         if (rewardPullMatcher.find()) {
-            expectedNumRewardPulls = Integer.parseInt(rewardPullMatcher.group(1));
+            expectedNumRewardPulls.store(Integer.parseInt(rewardPullMatcher.group(1)));
             hasProcessedRewards = false;
             return;
         }
 
         Matcher aspectPullMatcher = styledText.getMatcher(ASPECT_PULLS_PATTERN);
         if (aspectPullMatcher.find()) {
-            expectedNumAspectPulls = Integer.parseInt(aspectPullMatcher.group(1));
+            expectedNumAspectPulls.store(Integer.parseInt(aspectPullMatcher.group(1)));
             return;
         }
 
@@ -222,8 +230,28 @@ public final class RaidModel extends Model {
     }
 
     @SubscribeEvent
+    public void onSlotClicked(ContainerClickEvent e) {
+        if (Models.Container.getCurrentContainer() instanceof RaidRewardChestContainer raidRewardChest) {
+            if (e.getSlotNum() == raidRewardChest.REROLL_REWARDS_SLOT) {
+                StyledText rerollLoreConfirm =
+                        LoreUtils.getLore(e.getItemStack()).getFirst();
+
+                if (rerollLoreConfirm.matches(raidRewardChest.REROLL_CONFIRM_PATTERN)) {
+                    rerollingRewards = true;
+                    hasProcessedRewards = false;
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onSetContent(ContainerSetContentEvent.Post event) {
         if (event.getContainerId() != expectedRaidRewardChestId) return;
+        ItemStack rerollItem = event.getItems().get(RaidRewardChestContainer.REROLL_REWARDS_SLOT);
+        if (!rerollItem.isEmpty()) {
+            StyledText rerollLoreConfirm = LoreUtils.getLore(rerollItem).getFirst();
+            if (rerollLoreConfirm.matches(RaidRewardChestContainer.REROLL_CONFIRM_PATTERN)) return;
+        }
         rewardChestIsOpened = true;
 
         if (hasProcessedRewards) {
@@ -233,10 +261,11 @@ public final class RaidModel extends Model {
             return;
         }
         hasProcessedRewards = true;
-        if (expectedNumAspectPulls == -1 || expectedNumRewardPulls == -1) {
+        if (expectedNumAspectPulls.get() == -1 || expectedNumRewardPulls.get() == -1) {
             WynntilsMod.warn(
                     "[RaidModel] Set content of raid reward chest, but did not detect number of expected pulls. Got expectedNumAspectPulls="
-                            + expectedNumAspectPulls + " and expectedNumRewardPulls=" + expectedNumRewardPulls
+                            + expectedNumAspectPulls.get() + " and expectedNumRewardPulls="
+                            + expectedNumRewardPulls.get()
                             + ". Probably, the player tried closing the chest before, which got cancelled and the contents of the chest got refreshed. Ignoring contents of this raid chest.");
             return;
         }
@@ -259,12 +288,14 @@ public final class RaidModel extends Model {
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post event) {
         if (!rewardChestIsOpened) return;
+        // This is when the user closes the chest after claiming rewards
         expectedRaidRewardChestId = -2; // Reset to null
 
-        if (expectedNumRewardPulls == -1 || expectedNumAspectPulls == -1) {
+        if (expectedNumRewardPulls.get() == -1 || expectedNumAspectPulls.get() == -1) {
             WynntilsMod.warn(
                     "[RaidModel] Failed to update dry raid counts after closing the reward chest. Did not detect number of expected pulls. Got expectedNumAspectPulls="
-                            + expectedNumAspectPulls + " and expectedNumRewardPulls=" + expectedNumRewardPulls
+                            + expectedNumAspectPulls.get() + " and expectedNumRewardPulls="
+                            + expectedNumRewardPulls.get()
                             + ". Probably, the player tried closing the chest before, which got cancelled and the contents of the chest got refreshed.");
             return;
         }
@@ -274,15 +305,17 @@ public final class RaidModel extends Model {
             numAspectPullsWithoutMythicAspect.store(0);
         } else {
             numRaidsWithoutMythicAspect.store(numRaidsWithoutMythicAspect.get() + 1);
-            numAspectPullsWithoutMythicAspect.store(numAspectPullsWithoutMythicAspect.get() + expectedNumAspectPulls);
+            numAspectPullsWithoutMythicAspect.store(
+                    numAspectPullsWithoutMythicAspect.get() + expectedNumAspectPulls.get());
         }
 
-        if (expectedNumRewardPulls <= (RAID_REWARD_CHEST_REWARD_SLOTS_END - RAID_REWARD_CHEST_REWARD_SLOTS_START + 1)
-                && foundNumRewardPulls != expectedNumRewardPulls) {
-            WynntilsMod.warn("[RaidModel] Expected user to receive " + expectedNumRewardPulls
+        if (expectedNumRewardPulls.get()
+                        <= (RAID_REWARD_CHEST_REWARD_SLOTS_END - RAID_REWARD_CHEST_REWARD_SLOTS_START + 1)
+                && foundNumRewardPulls != expectedNumRewardPulls.get()) {
+            WynntilsMod.warn("[RaidModel] Expected user to receive " + expectedNumRewardPulls.get()
                     + " pulls based on raid summary in chat. However, detected "
                     + foundNumRewardPulls + " items in reward chest. Awarding "
-                    + expectedNumRewardPulls + " pulls based on raid summary chat message.");
+                    + expectedNumRewardPulls.get() + " pulls based on raid summary chat message.");
         }
 
         if (foundMythicTome) {
@@ -290,12 +323,56 @@ public final class RaidModel extends Model {
             numRewardPullsWithoutMythicTome.store(0);
         } else {
             numRaidsWithoutMythicTome.store(numRaidsWithoutMythicTome.get() + 1);
-            numRewardPullsWithoutMythicTome.store(numRewardPullsWithoutMythicTome.get() + expectedNumRewardPulls);
+            numRewardPullsWithoutMythicTome.store(numRewardPullsWithoutMythicTome.get() + expectedNumRewardPulls.get());
         }
 
-        expectedNumAspectPulls = -1;
-        expectedNumRewardPulls = -1;
+        expectedNumAspectPulls.store(-1);
+        expectedNumRewardPulls.store(-1);
+
         rewardChestIsOpened = false;
+    }
+
+    @SubscribeEvent
+    public void onMenuClosed(MenuEvent.MenuClosedEvent event) {
+        if (!rewardChestIsOpened) return;
+        if (!rerollingRewards) return;
+        // This is when the server closes the chest to reroll the chest
+
+        if (expectedNumRewardPulls.get() == -1 || expectedNumAspectPulls.get() == -1) {
+            WynntilsMod.warn(
+                    "[RaidModel] Failed to update dry raid counts after rerolling the reward chest. Did not detect number of expected pulls. Got expectedNumAspectPulls="
+                            + expectedNumAspectPulls.get() + " and expectedNumRewardPulls="
+                            + expectedNumRewardPulls.get()
+                            + ".");
+            return;
+        }
+
+        if (foundMythicAspect) {
+            numRaidsWithoutMythicAspect.store(0);
+            numAspectPullsWithoutMythicAspect.store(expectedNumAspectPulls.get());
+        } else {
+            numAspectPullsWithoutMythicAspect.store(
+                    numAspectPullsWithoutMythicAspect.get() + expectedNumAspectPulls.get());
+        }
+
+        if (expectedNumRewardPulls.get()
+                        <= (RAID_REWARD_CHEST_REWARD_SLOTS_END - RAID_REWARD_CHEST_REWARD_SLOTS_START + 1)
+                && foundNumRewardPulls != expectedNumRewardPulls.get()) {
+            WynntilsMod.warn("[RaidModel] Expected user to receive " + expectedNumRewardPulls.get()
+                    + " pulls based on raid summary in chat. However, detected "
+                    + foundNumRewardPulls + " items in reward chest. Awarding "
+                    + expectedNumRewardPulls.get() + " pulls based on raid summary chat message.");
+        }
+
+        if (foundMythicTome) {
+            numRaidsWithoutMythicTome.store(0);
+            numRewardPullsWithoutMythicTome.store(expectedNumRewardPulls.get());
+        } else {
+            numRewardPullsWithoutMythicTome.store(numRewardPullsWithoutMythicTome.get() + expectedNumRewardPulls.get());
+        }
+
+        rewardChestIsOpened = false;
+        rerollingRewards = false;
     }
 
     public void tryEnterChallengeIntermission() {

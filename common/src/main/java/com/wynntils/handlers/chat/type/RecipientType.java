@@ -35,13 +35,13 @@ public enum RecipientType {
             "Private"),
     // Test in RecipientType_SHOUT_foregroundPattern and RecipientType_SHOUT_backgroundPattern
     SHOUT(
-            "^§#bd45ffff((\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) (§o)?.+?(§r)?§#bd45ffff .+?§#bd45ffff shouts: .+$",
-            "^§f((\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) (§o)?.+?(§r)?§f .+?§f shouts: .+$",
+            "^§#bd45ffff((\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) (§o)?.+?(§r§#bd45ffff)? .+?§#bd45ffff shouts: .+$",
+            "^§f((\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) (§o)?.+?(§r§f)? .+?§f shouts: .+$",
             "Shout"),
     // Test in RecipientType_PETS_foregroundPattern and RecipientType_PETS_backgroundPattern
     PETS(
-            "^§6((\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) (§o)?.+?(§r§6)?: §#ffdd99ff§o.+$",
-            "^§f((\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) (§o)?.+?(§r§f)?: §o.+$",
+            "^§6((\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) (§o)?.+?(§r§6)?: §#ffdd99ff(§o)?.+$",
+            "^§f((\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) (§o)?.+?(§r§f)?: (§o)?.+$",
             "Pets"),
     GAME_MESSAGE("^§7[A-Z0-9].*$", null, "Game Message"); // Like dialogues but not uttered by an NPC
 

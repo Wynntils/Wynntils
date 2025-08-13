@@ -514,11 +514,9 @@ public class AddCommandExpansionFeature extends Feature {
                         .then(literal("popups"))
                         .then(literal("pouchmsg"))
                         .then(literal("pouchpickup"))
-                        .then(literal("publicProfile"))
                         .then(literal("queststartbeacon"))
                         .then(literal("sb"))
                         .then(literal("swears"))
-                        .then(literal("vet"))
                         .then(literal("war"))
                         .build());
     }

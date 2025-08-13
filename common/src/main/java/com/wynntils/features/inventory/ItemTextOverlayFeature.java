@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.activities.type.Dungeon;
@@ -38,6 +39,9 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -435,7 +439,8 @@ public class ItemTextOverlayFeature extends Feature {
         public ItemTextOverlayFeature.TextOverlay getTextOverlay() {
             Skill skill = item.getSkill();
 
-            String text = skill.getSymbol();
+            StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
+                    .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());
@@ -460,7 +465,8 @@ public class ItemTextOverlayFeature extends Feature {
         public TextOverlay getTextOverlay() {
             Skill skill = item.getType().getSkill();
 
-            String text = skill.getSymbol();
+            StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
+                    .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());

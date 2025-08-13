@@ -32,6 +32,7 @@ import com.wynntils.models.npc.label.FastTravelLabelParser;
 import com.wynntils.models.npc.label.NpcLabelParser;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.PartyModel;
+import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
@@ -149,7 +150,7 @@ public class TestRegex {
     }
 
     @Test
-    public void BombMobel_BOMB_BELL_PATTERN() {
+    public void BombModel_BOMB_BELL_PATTERN() {
         PatternTester p = new PatternTester(BombModel.class, "BOMB_BELL_PATTERN");
 
         p.shouldMatch(
@@ -299,6 +300,27 @@ public class TestRegex {
         PatternTester p = new PatternTester(FriendsModel.class, "LEAVE_PATTERN");
         p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun left the game.");
         p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun left the game.");
+    }
+
+    @Test
+    public void GatheringNodeHarvestLabelParser_EXPERIENCE_PATTERN() {
+        PatternTester p = new PatternTester(GatheringNodeHarvestLabelParser.class, "EXPERIENCE_PATTERN");
+
+        p.shouldMatch("§f+3852 §7Ⓑ Mining XP §6[0%]");
+        p.shouldMatch("§f+2660 §7Ⓒ Woodcutting XP §6[1.75%]");
+        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+4252 §7Ⓒ Woodcutting XP §6[2.13%]");
+        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+3670 §7Ⓚ Fishing XP §6[1.69%]");
+    }
+
+    @Test
+    public void GatheringNodeHarvestLabelParser_HARVEST_PATTERN() {
+        PatternTester p = new PatternTester(GatheringNodeHarvestLabelParser.class, "HARVEST_PATTERN");
+
+        p.shouldMatch("§f+1 §7Sky Wood§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§f+1 §7Starfish Oil§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§f+1 §7Hemp String§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§f+1 §7Diamond Ingot§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+2 §7Sky Wood§6 [§e✫§8✫✫§6]");
     }
 
     @Test
@@ -532,13 +554,30 @@ public class TestRegex {
     public void MessageFilterFeature_PARTY_FINDER_FG() {
         PatternTester p = new PatternTester(MessageFilterFeature.class, "PARTY_FINDER_FG");
         p.shouldMatch(
-                "§5Party Finder:§d Hey Rafii2198, over here! Join the §bThe Canyon Colossus§d queue and match up with §e2 other players§d!"); // Name 2 players
+                "§5\uE00A\uE002 Party Finder:§d Hey §oShadowCat§r§d, over here! Join the §bNest ofthe Grootslangs§d queue and match up with §e3§d other players!");
         p.shouldMatch(
-                "§5Party Finder:§d Hey Rafii2198, over here! Join the §bThe Canyon Colossus§d queue and match up with §e1 other player§d!"); // Name 1 player
+                "§5\uE00A\uE002 Party Finder:§d Hey §oShadowCat§r§d, over here! Join the §bTheNameless Anomaly§d queue and match up with §e3§d other players!");
+    }
+
+    @Test
+    public void MessageFilterFeature_PARTY_FINDER_BG() {
+        PatternTester p = new PatternTester(MessageFilterFeature.class, "PARTY_FINDER_BG");
         p.shouldMatch(
-                "§5Party Finder:§d Hey nickname spaces, over here! Join the §bThe Canyon Colossus§d queue and match up with §e1 other player§d!"); // Nickname 1 player
+                "§8\uE00A\uE002 Party Finder: Hey §oShadowCat§r§8, over here! Join the TheNameless Anomaly queue and match up with 3 other players!");
+    }
+
+    @Test
+    public void MessageFilterFeature_SYSTEM_INFO_FG() {
+        PatternTester p = new PatternTester(MessageFilterFeature.class, "SYSTEM_INFO_FG");
         p.shouldMatch(
-                "§5Party Finder:§d Hey nickname spaces 20cr, over here! Join the §bThe Canyon Colossus§d queue and match up with §e11 other players§d!"); // Nickname 11 players
+                "§#a0aec0ff\uE01B\uE002 Follow us on Twitter to stay up to date with Wynncraft at §#77aefcffwynn.gg/twitter");
+    }
+
+    @Test
+    public void MessageFilterFeature_SYSTEM_INFO_BG() {
+        PatternTester p = new PatternTester(MessageFilterFeature.class, "SYSTEM_INFO_BG");
+        p.shouldMatch(
+                "§#c0c0c0ff\uE01B\uE002 Follow us on Twitter to stay up to date with Wynncraft at §#fcfcfcffwynn.gg/twitter");
     }
 
     @Test
@@ -692,6 +731,8 @@ public class TestRegex {
         PatternTester p = new PatternTester(RecipientType.SHOUT, "foregroundPattern");
         p.shouldMatch(
                 "§#bd45ffff\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oShadowCat§r§#bd45ffff \uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE056\uDAFF\uDFFF\uE062\uDAFF\uDFEC§0\uE00D\uE000\uE026\uDB00\uDC02§#bd45ffff shouts: §#fad9f7ffo/");
+        p.shouldMatch(
+                "§#bd45ffff\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE CBI2004 \uE060\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE051\uDAFF\uDFFF\uE062\uDAFF\uDFEE§0\uE000\uE012\uE021\uDB00\uDC02§#bd45ffff shouts: §#fad9f7ffAeq recruit AS raider or join notg\n§#bd45ffff\uDAFF\uDFFC\uE001\uDB00\uDC06 §#fad9f7ffas pf or invte me as pf we got 2ppl rn. /msg CBI2004 if\n§#bd45ffff\uDAFF\uDFFC\uE001\uDB00\uDC06 §#fad9f7ffinterested");
     }
 
     @Test
@@ -705,14 +746,17 @@ public class TestRegex {
     public void RecipientType_PETS_foregroundPattern() {
         PatternTester p = new PatternTester(RecipientType.PETS, "foregroundPattern");
         p.shouldMatch("§6\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE Duck: §#ffdd99ff§oquack");
-        p.shouldMatch("§6\uDAFF\uDFFC\uE001\uDB00\uDC06 §o§<1>Cosmo§r§6: §#ffdd99ff§obreezy squeak");
+        p.shouldMatch("§6\uDAFF\uDFFC\uE001\uDB00\uDC06 §oCosmo§r§6: §#ffdd99ff§obreezy squeak");
+        p.shouldMatch(
+                "§6\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oHanafubuki§r§6: §#ffdd99ffThose grooks look awfully... tempting.");
     }
 
     @Test
     public void RecipientType_PETS_backgroundPattern() {
         PatternTester p = new PatternTester(RecipientType.PETS, "backgroundPattern");
         p.shouldMatch("§f\uDAFF\uDFFC\uE001\uDB00\uDC06 §oKlutzy§r§f: §ofalls over");
-        p.shouldMatch("§f\uDAFF\uDFFC\uE001\uDB00\uDC06 §oKlutzy§r§f: §ofalls over");
+        p.shouldMatch(
+                "§f\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oHanafubuki§r§f: Watch the eye pal, watch the eye!");
     }
 
     @Test
