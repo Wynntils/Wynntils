@@ -15,7 +15,6 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
@@ -78,11 +77,10 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     /**
      * <li>The default condition that determines whether an overlay is going to be rendered.</li>
      * <li>Overwrite this to completly change the condition, or overwite additionalRenderCondition() instead to only add to the default condition.</li>
-     * <li>By default overlays only render when on world and not in spectator gamemode</li>
+     * <li>By default overlays only render when on world and not in character wardrobe</li>
      */
     protected boolean defaultRenderCondition() {
-        return Models.WorldState.onWorld()
-                && (McUtils.player() != null && !McUtils.player().isSpectator());
+        return Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe();
     }
 
     /**
