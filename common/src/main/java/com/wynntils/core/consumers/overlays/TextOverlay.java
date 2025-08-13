@@ -100,8 +100,8 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     @Override
-    protected boolean defaultRenderCondition() {
-        return super.defaultRenderCondition() && !getTemplate().isEmpty();
+    protected boolean additionalRenderCondition() {
+        return !getTemplate().isEmpty();
     }
 
     protected StyledText[] calculateTemplateValue(String template) {

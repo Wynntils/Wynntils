@@ -42,8 +42,8 @@ public class BloodPoolBarOverlay extends HealthBarOverlay {
     }
 
     @Override
-    public boolean defaultRenderCondition() {
-        return super.defaultRenderCondition() && Models.Ability.bloodPoolBar.isActive();
+    public boolean additionalRenderCondition() {
+        return Models.Ability.bloodPoolBar.isActive();
     }
 
     @Override

@@ -60,9 +60,8 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
-    protected boolean defaultRenderCondition() {
-        return super.defaultRenderCondition()
-                && !Models.Objectives.getPersonalObjectives().isEmpty();
+    protected boolean additionalRenderCondition() {
+        return !Models.Objectives.getPersonalObjectives().isEmpty();
     }
 
     @Override

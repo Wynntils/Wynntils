@@ -66,9 +66,8 @@ public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    public boolean defaultRenderCondition() {
-        return super.defaultRenderCondition()
-                && Models.Combat.getFocusedMobHealth() > 0
+    public boolean additionalRenderCondition() {
+        return Models.Combat.getFocusedMobHealth() > 0
                 && System.currentTimeMillis() - Models.Combat.getLastDamageDealtTimestamp() < 5000;
     }
 

@@ -43,7 +43,7 @@ public class HolyPowerBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    public boolean defaultRenderCondition() {
-        return super.defaultRenderCondition() && Models.Ability.holyPowerBar.isActive();
+    public boolean additionalRenderCondition() {
+        return Models.Ability.holyPowerBar.isActive();
     }
 }

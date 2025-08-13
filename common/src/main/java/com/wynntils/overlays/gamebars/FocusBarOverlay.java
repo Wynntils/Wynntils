@@ -43,7 +43,7 @@ public class FocusBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    public boolean defaultRenderCondition() {
-        return super.defaultRenderCondition() && Models.Ability.focusBar.isActive();
+    public boolean additionalRenderCondition() {
+        return Models.Ability.focusBar.isActive();
     }
 }

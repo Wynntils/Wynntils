@@ -61,8 +61,8 @@ public class ManaBarOverlay extends OverflowableBarOverlay {
     }
 
     @Override
-    public boolean defaultRenderCondition() {
-        return super.defaultRenderCondition() && Models.CharacterStats.getMana().isPresent();
+    public boolean additionalRenderCondition() {
+        return Models.CharacterStats.getMana().isPresent();
     }
 
     @Override

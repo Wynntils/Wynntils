@@ -75,18 +75,32 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         this.verticalAlignmentOverride.store(verticalAlignmentOverride);
     }
 
+    /**
+     * <li>The default condition that determines whether an overlay is going to be rendered.</li>
+     * <li>Overwrite this to completly change the condition, or overwite additionalRenderCondition() instead to only add to the default condition.</li>
+     * <li>By default overlays only render when on world and not in spectator gamemode</li>
+     */
     protected boolean defaultRenderCondition() {
         return Models.WorldState.onWorld()
                 && (McUtils.player() != null && !McUtils.player().isSpectator());
     }
-    ;
+
+    /**
+     * <li>Additional condition that is added onto defaultRenderCondition()</li>
+     * <li>Overwrite this to add to the default or overwrite defaultRenderCondition() to completly change the condition</li>
+     * <li>By default it is always true</li>
+     */
+    protected boolean additionalRenderCondition() {
+        return true;
+    }
 
     protected boolean isRendered() {
-        if (enabledTemplateCache == null || enabledTemplateCache.hasError()) return defaultRenderCondition();
+        if (enabledTemplateCache == null || enabledTemplateCache.hasError())
+            return defaultRenderCondition() && additionalRenderCondition();
         if (enabledTemplateOverwrite.get()) {
             return enabledTemplateCache.getValue();
         } else {
-            return defaultRenderCondition() && enabledTemplateCache.getValue();
+            return defaultRenderCondition() && additionalRenderCondition() && enabledTemplateCache.getValue();
         }
     }
 

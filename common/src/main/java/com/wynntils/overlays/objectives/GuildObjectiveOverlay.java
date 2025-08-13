@@ -59,8 +59,8 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
-    protected boolean defaultRenderCondition() {
-        return super.defaultRenderCondition() && Models.Objectives.getGuildObjective() != null;
+    protected boolean additionalRenderCondition() {
+        return Models.Objectives.getGuildObjective() != null;
     }
 
     @Override

@@ -50,9 +50,8 @@ public class HealthBarOverlay extends OverflowableBarOverlay {
     }
 
     @Override
-    public boolean defaultRenderCondition() {
-        return super.defaultRenderCondition()
-                && Models.CharacterStats.getHealth().isPresent();
+    public boolean additionalRenderCondition() {
+        return Models.CharacterStats.getHealth().isPresent();
     }
 
     @Override

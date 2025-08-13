@@ -45,7 +45,7 @@ public class ServerUptimeInfoOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean defaultRenderCondition() {
-        return super.defaultRenderCondition() && McUtils.mc().gui.getTabList().visible;
+    public boolean additionalRenderCondition() {
+        return McUtils.mc().gui.getTabList().visible;
     }
 }

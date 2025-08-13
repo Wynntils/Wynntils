@@ -43,7 +43,7 @@ public class AwakenedProgressBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    public boolean defaultRenderCondition() {
-        return super.defaultRenderCondition() && Models.Ability.awakenedBar.isActive();
+    public boolean additionalRenderCondition() {
+        return Models.Ability.awakenedBar.isActive();
     }
 }

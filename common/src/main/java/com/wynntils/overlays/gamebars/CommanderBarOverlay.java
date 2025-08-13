@@ -50,8 +50,8 @@ public class CommanderBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    public boolean defaultRenderCondition() {
-        return super.defaultRenderCondition() && Models.Ability.commanderBar.isActive();
+    public boolean additionalRenderCondition() {
+        return Models.Ability.commanderBar.isActive();
     }
 
     @Override
