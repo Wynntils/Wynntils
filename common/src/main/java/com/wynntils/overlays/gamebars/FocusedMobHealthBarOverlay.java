@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
@@ -11,7 +11,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
-import com.wynntils.models.combat.CombatModel;
+import com.wynntils.models.combat.bossbar.DamageBar;
 import com.wynntils.models.combat.type.FocusedDamageEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -73,6 +73,6 @@ public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
 
     @Override
     protected Class<? extends TrackedBar> getTrackedBarClass() {
-        return CombatModel.DamageBar.class;
+        return DamageBar.class;
     }
 }
