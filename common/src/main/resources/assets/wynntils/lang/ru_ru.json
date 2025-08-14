@@ -612,8 +612,6 @@
   "feature.wynntils.itemGuess.possibilities": "Возможности: ",
   "feature.wynntils.itemGuess.showGuessesPrice.description": "Показывать цены в подсказке для неидентифицированных предметов",
   "feature.wynntils.itemGuess.showGuessesPrice.name": "Показать Оценочную Цену",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.description": "Включить подсветку косметических предметов",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.name": "Подсветка Косметических Предметов",
   "feature.wynntils.itemHighlight.craftedHighlightColor.description": "Какого цвета должны быть подсвечены изготовленные предметы?",
   "feature.wynntils.itemHighlight.craftedHighlightColor.name": "Цвет Подсветки Изготовленных Предметов",
   "feature.wynntils.itemHighlight.craftedHighlightEnabled.description": "Включить подсветку изготовленных предметов",

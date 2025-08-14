@@ -741,8 +741,6 @@
   "feature.wynntils.itemGuess.possibilities": "감정 예상: ",
   "feature.wynntils.itemGuess.showGuessesPrice.description": "예상 감정가를 표시합니다.",
   "feature.wynntils.itemGuess.showGuessesPrice.name": "예상 감정가 표시",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.description": "치장 아이템 강조 기능 활성화",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.name": "치장 아이템 강조",
   "feature.wynntils.itemHighlight.craftedHighlightColor.description": "제작 아이템 강조색을 어떻게 할까요?",
   "feature.wynntils.itemHighlight.craftedHighlightColor.name": "제작 아이템 강조색",
   "feature.wynntils.itemHighlight.craftedHighlightEnabled.description": "제작 아이템 강조 기능 활성화",
