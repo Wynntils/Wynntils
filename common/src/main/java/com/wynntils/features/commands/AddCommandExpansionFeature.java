@@ -180,6 +180,12 @@ public class AddCommandExpansionFeature extends Feature {
         addAlias(root, consumablesNode, "tokens", AliasCommandLevel.ALL);
         addAlias(root, consumablesNode, "consumable", AliasCommandLevel.ALL);
 
+        // "emotes" aliases
+        CommandNode<CommandSourceStack> emotesNode = literal("emotes").build();
+        addNode(root, emotesNode);
+
+        addAlias(root, consumablesNode, "emote", AliasCommandLevel.ALL);
+
         // "use" aliases
         CommandNode<CommandSourceStack> useNode = literal("use").build();
         addNode(root, useNode);
