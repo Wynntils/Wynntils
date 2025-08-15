@@ -598,8 +598,6 @@
   "feature.wynntils.itemGuess.possibilities": "可能性: ",
   "feature.wynntils.itemGuess.showGuessesPrice.description": "未識別アイテムのツールチップに価格を表示",
   "feature.wynntils.itemGuess.showGuessesPrice.name": "推定価格を表示",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.description": "化粧品アイテムのハイライトを有効にする",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.name": "化粧品アイテムのハイライト",
   "feature.wynntils.itemHighlight.craftedHighlightColor.description": "製作されたアイテムは何色でハイライトされるべきですか？",
   "feature.wynntils.itemHighlight.craftedHighlightColor.name": "製作アイテムのハイライトカラー",
   "feature.wynntils.itemHighlight.craftedHighlightEnabled.description": "製作アイテムのハイライトを有効にする",

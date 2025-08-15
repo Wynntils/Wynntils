@@ -41,7 +41,6 @@ import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ActivityAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
-import com.wynntils.models.items.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.models.items.annotators.gui.GambitAnnotator;
 import com.wynntils.models.items.annotators.gui.GuildLogAnnotator;
@@ -51,6 +50,7 @@ import com.wynntils.models.items.annotators.gui.SeaskipperDestinationAnnotator;
 import com.wynntils.models.items.annotators.gui.ServerAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
+import com.wynntils.models.items.annotators.gui.StoreTierAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import java.util.List;
@@ -97,7 +97,6 @@ public final class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new ActivityAnnotator());
         Handlers.Item.registerAnnotator(new ArchetypeAbilitiesAnnotator());
         Handlers.Item.registerAnnotator(new CharacterAnnotator());
-        Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
         Handlers.Item.registerAnnotator(new GambitAnnotator());
         Handlers.Item.registerAnnotator(new GuildLogAnnotator());
@@ -107,6 +106,7 @@ public final class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new ServerAnnotator());
         Handlers.Item.registerAnnotator(new SkillCrystalAnnotator());
         Handlers.Item.registerAnnotator(new SkillPointAnnotator());
+        Handlers.Item.registerAnnotator(new StoreTierAnnotator());
         Handlers.Item.registerAnnotator(new TerritoryAnnotator());
         Handlers.Item.registerAnnotator(new TerritoryUpgradeAnnotator());
 

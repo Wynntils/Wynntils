@@ -20,7 +20,7 @@ import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.items.items.game.PowderItem;
-import com.wynntils.models.items.items.gui.CosmeticItem;
+import com.wynntils.models.items.items.gui.StoreItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -136,7 +136,7 @@ public class ItemHighlightFeature extends Feature {
     public final Config<CustomColor> threeStarMaterialHighlightColor = new Config<>(new CustomColor(230, 77, 0));
 
     @Persisted
-    public final Config<Boolean> cosmeticHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> storeHighlightEnabled = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> powderHighlightEnabled = new Config<>(true);
@@ -280,9 +280,6 @@ public class ItemHighlightFeature extends Feature {
     }
 
     private HighlightInfo calculateHighlightInfo(WynnItem wynnItem) {
-        if (wynnItem instanceof CosmeticItem cosmeticItem) {
-            return new CosmeticHighlight(cosmeticItem);
-        }
         if (wynnItem instanceof GearTierItemProperty gearItem) {
             return new GearHighlight(gearItem);
         }
@@ -294,6 +291,9 @@ public class ItemHighlightFeature extends Feature {
         }
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderHighlight(powderItem);
+        }
+        if (wynnItem instanceof StoreItem storeItem) {
+            return new StoreHighlight(storeItem);
         }
         if (wynnItem instanceof EmeraldPouchItem emeraldPouchItem) {
             return new EmeraldPouchHighlight(emeraldPouchItem);
@@ -308,16 +308,16 @@ public class ItemHighlightFeature extends Feature {
         boolean isHighlightEnabled();
     }
 
-    private final class CosmeticHighlight implements HighlightInfo {
-        private final CosmeticItem item;
+    private final class StoreHighlight implements HighlightInfo {
+        private final StoreItem item;
 
-        private CosmeticHighlight(CosmeticItem item) {
+        private StoreHighlight(StoreItem item) {
             this.item = item;
         }
 
         @Override
         public boolean isHighlightEnabled() {
-            return cosmeticHighlightEnabled.get();
+            return storeHighlightEnabled.get();
         }
 
         @Override
