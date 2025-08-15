@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
@@ -77,7 +77,7 @@ public final class StringUtils {
         for (int i = 1; i < SUFFIXES.length; i++) {
             if (numStr.endsWith(SUFFIXES[i])) {
                 double baseValue = Double.parseDouble(numStr.substring(0, numStr.length() - 1));
-                return ((long) Math.ceil(baseValue)) * SUFFIX_MULTIPLIERS[i];
+                return (long) Math.ceil(baseValue * SUFFIX_MULTIPLIERS[i]);
             }
         }
         return Long.parseLong(numStr);

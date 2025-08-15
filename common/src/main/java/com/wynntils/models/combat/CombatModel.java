@@ -17,6 +17,7 @@ import com.wynntils.models.combat.label.KillLabelParser;
 import com.wynntils.models.combat.type.DamageDealtEvent;
 import com.wynntils.models.combat.type.FocusedDamageEvent;
 import com.wynntils.models.combat.type.KillCreditType;
+import com.wynntils.models.combat.type.MobElementals;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.type.CappedValue;
@@ -42,7 +43,7 @@ public final class CombatModel extends Model {
     private final TimedSet<KillCreditType> killSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
 
     private String focusedMobName = "";
-    private String focusedMobElementals = "";
+    private MobElementals focusedMobElementals = MobElementals.EMPTY;
     private long focusedMobHealth;
     private CappedValue focusedMobHealthPercent = CappedValue.EMPTY;
     private long focusedMobExpiryTime = -1L;
@@ -114,8 +115,8 @@ public final class CombatModel extends Model {
     public void onWorldStateChange(WorldStateEvent event) {
         areaDamageSet.clear();
         focusedMobName = "";
-        focusedMobElementals = "";
         focusedMobHealth = 0;
+        focusedMobElementals = MobElementals.EMPTY;
         focusedMobHealthPercent = CappedValue.EMPTY;
         focusedMobExpiryTime = -1L;
         lastDamageDealtTimestamp = 0L;
@@ -134,7 +135,7 @@ public final class CombatModel extends Model {
         return includeShared ? Math.max(lastSelfKillTimestamp, lastSharedKillTimestamp) : lastSelfKillTimestamp;
     }
 
-    public void updateFocusedMob(String name, String elementals, long health) {
+    public void updateFocusedMob(String name, MobElementals elementals, long health) {
         focusedMobName = name;
         focusedMobElementals = elementals;
         focusedMobHealth = health;
@@ -147,7 +148,7 @@ public final class CombatModel extends Model {
         return focusedMobName;
     }
 
-    public String getFocusedMobElementals() {
+    public MobElementals getFocusedMobElementals() {
         checkFocusedMobValidity();
         // TODO: Parse this into specific elements and expose as functions
         return focusedMobElementals;
@@ -209,7 +210,7 @@ public final class CombatModel extends Model {
     public void checkFocusedMobValidity() {
         if (focusedMobExpiryTime >= 0 && System.currentTimeMillis() >= focusedMobExpiryTime) {
             focusedMobName = "";
-            focusedMobElementals = "";
+            focusedMobElementals = MobElementals.EMPTY;
             focusedMobHealth = 0;
             focusedMobHealthPercent = CappedValue.EMPTY;
             focusedMobExpiryTime = -1L;
