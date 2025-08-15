@@ -596,8 +596,6 @@
   "feature.wynntils.itemGuess.possibilities": "Possibilidades: ",
   "feature.wynntils.itemGuess.showGuessesPrice.description": "Mostrar preços na dica de ferramenta para itens não identificados",
   "feature.wynntils.itemGuess.showGuessesPrice.name": "Mostrar Preço Estimado",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.description": "Ativar destaque de itens cosméticos",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.name": "Destaque de Itens Cosméticos",
   "feature.wynntils.itemHighlight.craftedHighlightColor.description": "Qual cor devem ter os itens fabricados destacados?",
   "feature.wynntils.itemHighlight.craftedHighlightColor.name": "Cor de Destaque de Itens Fabricados",
   "feature.wynntils.itemHighlight.craftedHighlightEnabled.description": "Ativar destaque de itens fabricados",

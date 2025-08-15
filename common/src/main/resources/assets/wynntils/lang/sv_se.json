@@ -604,8 +604,6 @@
   "feature.wynntils.itemGuess.possibilities": "Möjligheter: ",
   "feature.wynntils.itemGuess.showGuessesPrice.description": "Visa priser i verktygstipset för oidentifierade föremål",
   "feature.wynntils.itemGuess.showGuessesPrice.name": "Visa gissningspris",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.description": "Aktivera markering av kosmetiska föremål",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.name": "Kosmetisk föremålsmarkering",
   "feature.wynntils.itemHighlight.craftedHighlightColor.description": "Vilken färg ska hantverkade föremål markeras med?",
   "feature.wynntils.itemHighlight.craftedHighlightColor.name": "Hantverkad markeringfärg",
   "feature.wynntils.itemHighlight.craftedHighlightEnabled.description": "Aktivera markering av hantverkade föremål",

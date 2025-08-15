@@ -50,7 +50,7 @@ public final class WynnItemParser {
     public static final Pattern HEALTH_PATTERN = Pattern.compile("^§4❤ Health: ([+-]\\d+)(?:§r)?$");
 
     // Test in WynnItemParser_ITEM_ATTACK_SPEED_PATTERN
-    private static final Pattern ITEM_ATTACK_SPEED_PATTERN = Pattern.compile("^§7(.+) Attack Speed(?:§r)?$");
+    private static final Pattern ITEM_ATTACK_SPEED_PATTERN = Pattern.compile("^§7(.+ Attack Speed)(?:§r)?$");
 
     // Test in WynnItemParser_ITEM_DAMAGE_PATTERN
     private static final Pattern ITEM_DAMAGE_PATTERN = Pattern.compile(
@@ -231,7 +231,7 @@ public final class WynnItemParser {
             Matcher attackSpeedMatcher = coded.getMatcher(ITEM_ATTACK_SPEED_PATTERN);
             if (attackSpeedMatcher.matches()) {
                 String speedName = attackSpeedMatcher.group(1);
-                attackSpeed = GearAttackSpeed.fromString(speedName.replaceAll(" ", "_"));
+                attackSpeed = GearAttackSpeed.fromString(speedName);
                 continue;
             }
 

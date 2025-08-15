@@ -599,8 +599,6 @@
   "feature.wynntils.itemGuess.possibilities": "Möglichkeiten: ",
   "feature.wynntils.itemGuess.showGuessesPrice.description": "Preise im Tooltip für nicht identifizierte Gegenstände anzeigen",
   "feature.wynntils.itemGuess.showGuessesPrice.name": "Schätzpreis Anzeigen",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.description": "Hervorhebung von kosmetischen Gegenständen aktivieren",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.name": "Kosmetische Gegenstände Hervorheben",
   "feature.wynntils.itemHighlight.craftedHighlightColor.description": "Welche Farbe sollen hervorgehobene hergestellte Gegenstände haben?",
   "feature.wynntils.itemHighlight.craftedHighlightColor.name": "Farbe für Hergestellte Gegenstände",
   "feature.wynntils.itemHighlight.craftedHighlightEnabled.description": "Hervorhebung von hergestellten Gegenständen aktivieren",

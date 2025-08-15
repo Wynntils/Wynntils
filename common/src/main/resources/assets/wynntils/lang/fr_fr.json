@@ -596,8 +596,6 @@
   "feature.wynntils.itemGuess.possibilities": "Possibilités : ",
   "feature.wynntils.itemGuess.showGuessesPrice.description": "Afficher les prix dans l'infobulle pour les objets non identifiés",
   "feature.wynntils.itemGuess.showGuessesPrice.name": "Afficher le Prix Estimé",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.description": "Activer la mise en surbrillance des objets cosmétiques",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.name": "Mise en Surbrillance des Objets Cosmétiques",
   "feature.wynntils.itemHighlight.craftedHighlightColor.description": "Quelle couleur doivent avoir les objets fabriqués en surbrillance ?",
   "feature.wynntils.itemHighlight.craftedHighlightColor.name": "Couleur de Surbrillance des Objets Fabriqués",
   "feature.wynntils.itemHighlight.craftedHighlightEnabled.description": "Activer la mise en surbrillance des objets fabriqués",
