@@ -19,6 +19,7 @@ import com.wynntils.core.persisted.upfixers.config.CustomPoiVisbilityUpfixer;
 import com.wynntils.core.persisted.upfixers.config.DurabilityArcToDurabilityOverlayUpfixer;
 import com.wynntils.core.persisted.upfixers.config.EnumNamingUpfixer;
 import com.wynntils.core.persisted.upfixers.config.GameBarOverlayMoveUpfixer;
+import com.wynntils.core.persisted.upfixers.config.ItemHighlightFeatureCosmeticToStoreUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MobTotemTimerOverlayFeatureToBonusTotemTimerOverlayFeature;
 import com.wynntils.core.persisted.upfixers.config.NpcDialoguesOverlayConfigsMovedUpfixer;
@@ -73,6 +74,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new WynntilsContentBookReplaceToShiftBehaviourUpfixer());
         registerConfigUpfixer(new DurabilityArcToDurabilityOverlayUpfixer());
         registerConfigUpfixer(new MobTotemTimerOverlayFeatureToBonusTotemTimerOverlayFeature());
+        registerConfigUpfixer(new ItemHighlightFeatureCosmeticToStoreUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());

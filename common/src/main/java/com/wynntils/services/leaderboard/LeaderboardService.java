@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.leaderboard;
 
 import com.google.gson.JsonElement;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.ApiResponse;
@@ -41,8 +42,15 @@ public class LeaderboardService extends Service {
                     Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_LEADERBOARD, Map.of("type", type.getKey()));
             apiResponse.handleJsonObject(json -> {
                 for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
-                    UUID uuid = UUID.fromString(
-                            entry.getValue().getAsJsonObject().get("uuid").getAsString());
+                    String uuidStr =
+                            entry.getValue().getAsJsonObject().get("uuid").getAsString();
+
+                    if (uuidStr.equals("redacted")) {
+                        WynntilsMod.info(type.getKey() + " leaderboard position " + entry.getKey() + " is redacted.");
+                        continue;
+                    }
+
+                    UUID uuid = UUID.fromString(uuidStr);
                     List<LeaderboardBadge> badges = leaderboard.getOrDefault(uuid, new ArrayList<>());
 
                     badges.add(LeaderboardBadge.from(type, Integer.parseInt(entry.getKey())));
