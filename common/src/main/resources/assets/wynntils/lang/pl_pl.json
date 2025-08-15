@@ -598,8 +598,6 @@
   "feature.wynntils.itemGuess.possibilities": "Możliwości: ",
   "feature.wynntils.itemGuess.showGuessesPrice.description": "Pokaż ceny na podpowiedzi dla niezidentyfikowanych przedmiotów",
   "feature.wynntils.itemGuess.showGuessesPrice.name": "Pokaż Cenę Zgadywania",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.description": "Włącz podświetlanie przedmiotów kosmetycznych",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.name": "Podświetlanie Przedmiotów Kosmetycznych",
   "feature.wynntils.itemHighlight.craftedHighlightColor.description": "Jakim kolorem powinny być podświetlane przedmioty wytworzone?",
   "feature.wynntils.itemHighlight.craftedHighlightColor.name": "Kolor Podświetlenia Wytworzonych Przedmiotów",
   "feature.wynntils.itemHighlight.craftedHighlightEnabled.description": "Włącz podświetlanie przedmiotów wytworzonych",

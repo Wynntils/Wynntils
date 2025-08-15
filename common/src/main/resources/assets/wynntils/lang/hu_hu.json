@@ -598,8 +598,6 @@
   "feature.wynntils.itemGuess.possibilities": "Lehetőségek: ",
   "feature.wynntils.itemGuess.showGuessesPrice.description": "Mutassa az árakat az azonosítatlan tárgyak eszköztippjén",
   "feature.wynntils.itemGuess.showGuessesPrice.name": "Találgatás А́rának Megjelenítése",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.description": "Kozmetikai tárgyak kiemelésének engedélyezése",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.name": "Kozmetikai Tárgy Kiemelés",
   "feature.wynntils.itemHighlight.craftedHighlightColor.description": "Milyen színnel legyenek kiemelve a készített tárgyak?",
   "feature.wynntils.itemHighlight.craftedHighlightColor.name": "Készített Kiemelés Színe",
   "feature.wynntils.itemHighlight.craftedHighlightEnabled.description": "Készített tárgyak kiemelésének engedélyezése",

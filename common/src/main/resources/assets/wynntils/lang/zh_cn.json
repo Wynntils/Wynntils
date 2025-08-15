@@ -598,8 +598,6 @@
   "feature.wynntils.itemGuess.possibilities": "可能性：",
   "feature.wynntils.itemGuess.showGuessesPrice.description": "在未识别物品的工具提示中显示价格",
   "feature.wynntils.itemGuess.showGuessesPrice.name": "显示估计价格",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.description": "启用化妆品物品高亮",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.name": "化妆品物品高亮",
   "feature.wynntils.itemHighlight.craftedHighlightColor.description": "制作物品应以什么颜色高亮显示？",
   "feature.wynntils.itemHighlight.craftedHighlightColor.name": "制作物品高亮颜色",
   "feature.wynntils.itemHighlight.craftedHighlightEnabled.description": "启用制作物品高亮",

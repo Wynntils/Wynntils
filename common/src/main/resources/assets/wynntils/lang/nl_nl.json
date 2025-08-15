@@ -598,8 +598,6 @@
   "feature.wynntils.itemGuess.possibilities": "Mogelijkheden: ",
   "feature.wynntils.itemGuess.showGuessesPrice.description": "Toon prijzen op de tooltip voor ongeïdentificeerde items",
   "feature.wynntils.itemGuess.showGuessesPrice.name": "Toon Gissingsprijs",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.description": "Inschakelen van markering van cosmetische items",
-  "feature.wynntils.itemHighlight.cosmeticHighlightEnabled.name": "Cosmetische Item Markering",
   "feature.wynntils.itemHighlight.craftedHighlightColor.description": "Met welke kleur moeten vervaardigde items worden gemarkeerd?",
   "feature.wynntils.itemHighlight.craftedHighlightColor.name": "Vervaardigde Markering Kleur",
   "feature.wynntils.itemHighlight.craftedHighlightEnabled.description": "Inschakelen van markering van vervaardigde items",
