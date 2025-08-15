@@ -78,8 +78,8 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     /**
      * <li>The default condition that determines whether an overlay is going to be rendered.</li>
-     * <li>Overwrite this to completly change the condition, or overwite additionalRenderCondition() instead to only add to the default condition.</li>
-     * <li>By default overlays only render when on world and not riding Display enity</li>
+     * <li>Overwrite this to completely change the condition, or overwrite {@link #additionalRenderCondition()} instead to only add to the default condition.</li>
+     * <li>By default, overlays only render when on world and not riding a Display entity</li>
      */
     protected boolean defaultRenderCondition() {
         return Models.WorldState.onWorld()
@@ -87,9 +87,9 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     }
 
     /**
-     * <li>Additional condition that is added onto defaultRenderCondition()</li>
-     * <li>Overwrite this to add to the default or overwrite defaultRenderCondition() to completly change the condition</li>
-     * <li>By default it is always true</li>
+     * <li>Additional condition that is added onto {@link #defaultRenderCondition() default condition}, both of them need to be true</li>
+     * <li>Overwrite this to add to the default or overwrite {@link #defaultRenderCondition()} to completely change the condition</li>
+     * <li>By default, it is always true</li>
      */
     protected boolean additionalRenderCondition() {
         return true;
