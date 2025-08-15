@@ -7,9 +7,9 @@ package com.wynntils.models.combat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
+import com.wynntils.models.combat.bossbar.DamageBar;
 import com.wynntils.models.combat.label.DamageLabelInfo;
 import com.wynntils.models.combat.label.DamageLabelParser;
 import com.wynntils.models.combat.label.KillLabelInfo;
@@ -17,9 +17,9 @@ import com.wynntils.models.combat.label.KillLabelParser;
 import com.wynntils.models.combat.type.DamageDealtEvent;
 import com.wynntils.models.combat.type.FocusedDamageEvent;
 import com.wynntils.models.combat.type.KillCreditType;
+import com.wynntils.models.combat.type.MobElementals;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
 import java.util.EnumMap;
@@ -27,15 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CombatModel extends Model {
-    // Test in CombatModel_DAMAGE_BAR_PATTERN
-    private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile(
-            "^\\s*§[0-9a-f](.*) - §c(\\d+(?:\\.\\d+)?[kKmM]?)§4❤(?:§r - ( ?(§.(.+))(Dam|Weak|Def))+)?\\s*$");
-
     // Wynncraft updates the focused mob health bar by repeatedly destroying and recreating the boss bar. We don't want
     // to lose the entire focused mob state every time the boss bar is recreated, so we delay invalidation by this many
     // milliseconds and revalidate if a recreation/update event arrives during the delay
@@ -49,7 +43,7 @@ public final class CombatModel extends Model {
     private final TimedSet<KillCreditType> killSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
 
     private String focusedMobName = "";
-    private String focusedMobElementals = "";
+    private MobElementals focusedMobElementals = MobElementals.EMPTY;
     private long focusedMobHealth;
     private CappedValue focusedMobHealthPercent = CappedValue.EMPTY;
     private long focusedMobExpiryTime = -1L;
@@ -121,8 +115,8 @@ public final class CombatModel extends Model {
     public void onWorldStateChange(WorldStateEvent event) {
         areaDamageSet.clear();
         focusedMobName = "";
-        focusedMobElementals = "";
         focusedMobHealth = 0;
+        focusedMobElementals = MobElementals.EMPTY;
         focusedMobHealthPercent = CappedValue.EMPTY;
         focusedMobExpiryTime = -1L;
         lastDamageDealtTimestamp = 0L;
@@ -133,8 +127,20 @@ public final class CombatModel extends Model {
         return lastDamageDealtTimestamp;
     }
 
+    public void setLastDamageDealtTimestamp(long lastDamageDealtTimestamp) {
+        this.lastDamageDealtTimestamp = lastDamageDealtTimestamp;
+    }
+
     public long getLastKillTimestamp(boolean includeShared) {
         return includeShared ? Math.max(lastSelfKillTimestamp, lastSharedKillTimestamp) : lastSelfKillTimestamp;
+    }
+
+    public void updateFocusedMob(String name, MobElementals elementals, long health) {
+        focusedMobName = name;
+        focusedMobElementals = elementals;
+        focusedMobHealth = health;
+
+        WynntilsMod.postEvent(new FocusedDamageEvent.MobFocused(name, elementals, health));
     }
 
     public String getFocusedMobName() {
@@ -142,7 +148,7 @@ public final class CombatModel extends Model {
         return focusedMobName;
     }
 
-    public String getFocusedMobElementals() {
+    public MobElementals getFocusedMobElementals() {
         checkFocusedMobValidity();
         // TODO: Parse this into specific elements and expose as functions
         return focusedMobElementals;
@@ -153,9 +159,21 @@ public final class CombatModel extends Model {
         return focusedMobHealth;
     }
 
+    public void updateFocusedMobHealth(long newHealth) {
+        long oldHealth = this.focusedMobHealth;
+        this.focusedMobHealth = newHealth;
+
+        WynntilsMod.postEvent(
+                new FocusedDamageEvent.MobDamaged(focusedMobName, focusedMobElementals, newHealth, oldHealth));
+    }
+
     public CappedValue getFocusedMobHealthPercent() {
         checkFocusedMobValidity();
         return focusedMobHealthPercent;
+    }
+
+    public void updateFocusedMobHealthPercent(CappedValue newHealthPercent) {
+        this.focusedMobHealthPercent = newHealthPercent;
     }
 
     public long getAreaDamagePerSecond() {
@@ -189,69 +207,21 @@ public final class CombatModel extends Model {
                 .size();
     }
 
-    private void checkFocusedMobValidity() {
+    public void checkFocusedMobValidity() {
         if (focusedMobExpiryTime >= 0 && System.currentTimeMillis() >= focusedMobExpiryTime) {
             focusedMobName = "";
-            focusedMobElementals = "";
+            focusedMobElementals = MobElementals.EMPTY;
             focusedMobHealth = 0;
             focusedMobHealthPercent = CappedValue.EMPTY;
             focusedMobExpiryTime = -1L;
         }
     }
 
-    private void invalidateFocusedMob() {
+    public void invalidateFocusedMob() {
         focusedMobExpiryTime = System.currentTimeMillis() + FOCUSED_MOB_INVALIDATION_DELAY;
     }
 
-    private void revalidateFocusedMob() {
+    public void revalidateFocusedMob() {
         focusedMobExpiryTime = -1L;
-    }
-
-    public final class DamageBar extends TrackedBar {
-        private DamageBar() {
-            super(DAMAGE_BAR_PATTERN);
-        }
-
-        @Override
-        public void onUpdateName(Matcher match) {
-            String mobName = match.group(1);
-            long health = StringUtils.parseSuffixedInteger(match.group(2));
-            String mobElementals = match.group(3);
-            if (mobElementals == null) {
-                mobElementals = "";
-            }
-
-            checkFocusedMobValidity();
-            if (mobName.equals(focusedMobName) && mobElementals.equals(focusedMobElementals)) {
-                long oldHealth = focusedMobHealth;
-                focusedMobHealth = health;
-
-                WynntilsMod.postEvent(new FocusedDamageEvent.MobDamaged(
-                        focusedMobName, focusedMobElementals, focusedMobHealth, oldHealth));
-            } else {
-                focusedMobName = mobName;
-                focusedMobElementals = mobElementals;
-                focusedMobHealth = health;
-
-                WynntilsMod.postEvent(
-                        new FocusedDamageEvent.MobFocused(focusedMobName, focusedMobElementals, focusedMobHealth));
-            }
-            revalidateFocusedMob();
-
-            lastDamageDealtTimestamp = System.currentTimeMillis();
-        }
-
-        @Override
-        public void onUpdateProgress(float progress) {
-            focusedMobHealthPercent = new CappedValue(Math.round(progress * 100), 100);
-            revalidateFocusedMob();
-
-            lastDamageDealtTimestamp = System.currentTimeMillis();
-        }
-
-        @Override
-        protected void reset() {
-            invalidateFocusedMob();
-        }
     }
 }

@@ -12,7 +12,7 @@ import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.bonustotems.label.BonusTotemLabelParser;
-import com.wynntils.models.combat.CombatModel;
+import com.wynntils.models.combat.bossbar.DamageBar;
 import com.wynntils.models.combat.label.DamageLabelParser;
 import com.wynntils.models.combat.label.KillLabelParser;
 import com.wynntils.models.containers.ContainerModel;
@@ -208,20 +208,27 @@ public class TestRegex {
     }
 
     @Test
-    public void CombatModel_DAMAGE_BAR_PATTERN() {
-        PatternTester p = new PatternTester(CombatModel.class, "DAMAGE_BAR_PATTERN");
-        p.shouldMatch("§aTravelling Merchant§r - §c5985§4❤");
-        p.shouldMatch("§aGrook§r - §c23§4❤");
-        p.shouldMatch("§cZombie§r - §c43§4❤");
-        p.shouldMatch("§cFeligember Frog§r - §c1553§4❤§r - §7§e✦Weak §c✹Dam §c✹Def");
-        p.shouldMatch("§cLongleg Gripper§r - §c40500§4❤§r - §2✤Dam §e✦§c✹Def");
-        p.shouldMatch("§cBlinder§r - §c6566§4❤");
-    }
-
-    @Test
     public void ContainerModel_ABILITY_TREE_PATTERN() {
         PatternTester p = new PatternTester(ContainerModel.class, "ABILITY_TREE_PATTERN");
         p.shouldMatch("\uDAFF\uDFEA\uE000");
+    }
+
+    @Test
+    public void DamageBar_DAMAGE_BAR_PATTERN() {
+        PatternTester p = new PatternTester(DamageBar.class, "DAMAGE_BAR_PATTERN");
+        p.shouldMatch("§cShrieking Observer§r - §c20.6k§4❤");
+        p.shouldMatch("§cLongleg Gripper§r - §c3902§4❤§r - §2\uE001Dam §e\uE003§c\uE002Def");
+        p.shouldMatch("§cBlinder§r - §c1543§4❤");
+        p.shouldMatch("§cLight of Freedom§r - §c107k§4❤§r - §b\uE004Dam \uE004§e\uE003Def");
+        p.shouldMatch("§cVoid Vassal§r - §c42.6k§4❤§r - §2\uE001§f\uE000Weak §b\uE004Dam ");
+        p.shouldMatch("§cAzure Necromancer§r - §c104k§4❤§r - §b\uE004§e\uE003Dam §b\uE004Def");
+        p.shouldMatch("§cCerulean Crustacean§r - §c7559§4❤§r - §2\uE001Weak §b\uE004Dam \uE004§c\uE002Def");
+        p.shouldMatch("§cSoul Shrub§r - §c485k§4❤§r - §b\uE004Weak §e\uE003§f\uE000Dam §e\uE003§2\uE001Def");
+        p.shouldMatch(
+                "§cShift Singularity§r - §c159k§4❤§r - §e\uE003Weak §b\uE004§2\uE001§f\uE000§c\uE002Dam §b\uE004§2\uE001§f\uE000§c\uE002Def");
+        p.shouldMatch("§cDespairing Crawler§r - §c3.4m§4❤§r - §e\uE003§c\uE002Dam §b\uE004§2\uE001Def");
+        p.shouldMatch(
+                "§9§lThe §1§k12345§9§l Anomaly§r - §c27.7m§4❤§r - §b\uE004§e\uE003§f\uE000Dam §b\uE004§e\uE003§f\uE000Def");
     }
 
     @Test

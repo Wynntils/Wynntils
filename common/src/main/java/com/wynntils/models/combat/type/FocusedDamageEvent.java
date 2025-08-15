@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.combat.type;
@@ -17,10 +17,10 @@ import net.neoforged.bus.api.Event;
  */
 public abstract class FocusedDamageEvent extends Event {
     private final String mobName;
-    private final String mobElementals;
+    private final MobElementals mobElementals;
     private final long health;
 
-    protected FocusedDamageEvent(String mobName, String mobElementals, long health) {
+    protected FocusedDamageEvent(String mobName, MobElementals mobElementals, long health) {
         this.mobName = mobName;
         this.mobElementals = mobElementals;
         this.health = health;
@@ -30,7 +30,7 @@ public abstract class FocusedDamageEvent extends Event {
         return mobName;
     }
 
-    public String getMobElementals() {
+    public MobElementals getMobElementals() {
         return mobElementals;
     }
 
@@ -39,7 +39,7 @@ public abstract class FocusedDamageEvent extends Event {
     }
 
     public static final class MobFocused extends FocusedDamageEvent {
-        public MobFocused(String mobName, String mobElementals, long health) {
+        public MobFocused(String mobName, MobElementals mobElementals, long health) {
             super(mobName, mobElementals, health);
         }
     }
@@ -47,7 +47,7 @@ public abstract class FocusedDamageEvent extends Event {
     public static final class MobDamaged extends FocusedDamageEvent {
         private final long oldHealth;
 
-        public MobDamaged(String mobName, String mobElementals, long currentHealth, long oldHealth) {
+        public MobDamaged(String mobName, MobElementals mobElementals, long currentHealth, long oldHealth) {
             super(mobName, mobElementals, currentHealth);
             this.oldHealth = oldHealth;
         }
