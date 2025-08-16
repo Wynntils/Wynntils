@@ -13,12 +13,12 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.Unbreakable;
 
 public final class GuideEmeraldPouchItemStack extends GuideItemStack {
     private final int tier;
@@ -31,7 +31,7 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
 
         this.tier = tier;
 
-        this.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
+        this.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
 
         generatedTooltip = generatePouchLore(tier);
     }
