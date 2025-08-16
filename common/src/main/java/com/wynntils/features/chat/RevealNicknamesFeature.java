@@ -40,12 +40,13 @@ public class RevealNicknamesFeature extends Feature {
             HoverEvent hoverEvent = currentPart.getPartStyle().getStyle().getHoverEvent();
 
             // If the hover event doesn't exist or it is not SHOW_TEXT event, it's not a nickname text part
-            if (hoverEvent == null || hoverEvent.getAction() != HoverEvent.Action.SHOW_TEXT) {
+            if (hoverEvent == null || hoverEvent.action() != HoverEvent.Action.SHOW_TEXT) {
                 return IterationDecision.CONTINUE;
             }
 
-            StyledText[] partTexts = StyledText.fromComponent(hoverEvent.getValue(HoverEvent.Action.SHOW_TEXT))
-                    .split("\n");
+            HoverEvent.ShowText showTextHoverEvent = (HoverEvent.ShowText) hoverEvent;
+            StyledText[] partTexts =
+                    StyledText.fromComponent(showTextHoverEvent.value()).split("\n");
 
             List<StyledText> newHoverTexts = new ArrayList<>();
             String nickname = null;
@@ -88,8 +89,7 @@ public class RevealNicknamesFeature extends Feature {
                     Style newStyle = currentPart
                             .getPartStyle()
                             .withItalic(false)
-                            .withHoverEvent(new HoverEvent(
-                                    HoverEvent.Action.SHOW_TEXT,
+                            .withHoverEvent(new HoverEvent.ShowText(
                                     StyledText.join("\n", newHoverTexts).getComponent()))
                             .getStyle();
 
@@ -101,8 +101,7 @@ public class RevealNicknamesFeature extends Feature {
                     Style newStyle = currentPart
                             .getPartStyle()
                             .withItalic(false)
-                            .withHoverEvent(new HoverEvent(
-                                    HoverEvent.Action.SHOW_TEXT,
+                            .withHoverEvent(new HoverEvent.ShowText(
                                     StyledText.join("\n", newHoverTexts).getComponent()))
                             .getStyle();
 
