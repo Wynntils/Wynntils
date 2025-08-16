@@ -4,28 +4,36 @@
  */
 package com.wynntils.overlays.gamebars;
 
-import com.wynntils.core.components.Managers;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
-import com.wynntils.features.combat.AbbreviateMobHealthFeature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
-import com.wynntils.models.combat.CombatModel;
+import com.wynntils.models.combat.bossbar.DamageBar;
 import com.wynntils.models.combat.type.FocusedDamageEvent;
+import com.wynntils.models.combat.type.MobElementals;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
-    private static final String FMT_STR_WITHOUT_ELEMS =
-            ChatFormatting.WHITE + "%s" + ChatFormatting.RED + " ❤ " + ChatFormatting.WHITE + "%s";
-    private static final String FMT_STR_WITH_ELEMS =
-            FMT_STR_WITHOUT_ELEMS + " " + ChatFormatting.GRAY + "[%s" + ChatFormatting.GRAY + "]";
+    @Persisted
+    public final Config<Boolean> abbreviateHealth = new Config<>(true);
+
+    private StyledText barText = StyledText.EMPTY;
 
     public FocusedMobHealthBarOverlay() {
         super(
@@ -52,27 +60,52 @@ public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected String text() {
-        String healthString = Managers.Feature.getFeatureInstance(AbbreviateMobHealthFeature.class)
-                        .isEnabled()
-                ? StringUtils.integerToShortString(Models.Combat.getFocusedMobHealth())
-                : Long.toString(Models.Combat.getFocusedMobHealth());
-        String elementals = Models.Combat.getFocusedMobElementals();
-        if (elementals.isBlank()) {
-            return String.format(FMT_STR_WITHOUT_ELEMS, Models.Combat.getFocusedMobName(), healthString);
-        } else {
-            return String.format(FMT_STR_WITH_ELEMS, Models.Combat.getFocusedMobName(), healthString, elementals);
-        }
-    }
-
-    @Override
     public boolean additionalRenderCondition() {
         return Models.Combat.getFocusedMobHealth() > 0
                 && System.currentTimeMillis() - Models.Combat.getLastDamageDealtTimestamp() < 5000;
     }
 
     @Override
+    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, String text) {
+        BufferedFontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        bufferSource,
+                        barText,
+                        this.getRenderX(),
+                        this.getRenderX() + this.getWidth(),
+                        renderY,
+                        0,
+                        this.textColor.get(),
+                        this.getRenderHorizontalAlignment(),
+                        this.textShadow.get());
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        String healthString = abbreviateHealth.get()
+                ? StringUtils.integerToShortString(Models.Combat.getFocusedMobHealth())
+                : Long.toString(Models.Combat.getFocusedMobHealth());
+
+        MutableComponent text = Component.empty()
+                .withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))
+                .append(Component.literal(Models.Combat.getFocusedMobName()))
+                .append(Component.literal(" ❤ ").withStyle(Style.EMPTY.withColor(ChatFormatting.RED)))
+                .append(Component.literal(healthString));
+
+        if (!Models.Combat.getFocusedMobElementals().equals(MobElementals.EMPTY)) {
+            text.append(Component.literal(" [").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)))
+                    .append(Models.Combat.getFocusedMobElementals().getFormatted())
+                    .append(Component.literal("]").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        }
+
+        barText = StyledText.fromComponent(text);
+    }
+
+    @Override
     protected Class<? extends TrackedBar> getTrackedBarClass() {
-        return CombatModel.DamageBar.class;
+        return DamageBar.class;
     }
 }

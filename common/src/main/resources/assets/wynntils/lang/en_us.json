@@ -599,6 +599,8 @@
   "feature.wynntils.gameBarsOverlay.overlay.commanderBar.name": "Commander Bar",
   "feature.wynntils.gameBarsOverlay.overlay.corruptedBar.name": "Corrupted Bar",
   "feature.wynntils.gameBarsOverlay.overlay.focusBar.name": "Focus Bar",
+  "feature.wynntils.gameBarsOverlay.overlay.focusedMobHealthBar.abbreviateHealth.description": "Should the focused mobs health be abbreviated or displayed in full?",
+  "feature.wynntils.gameBarsOverlay.overlay.focusedMobHealthBar.abbreviateHealth.name": "Abbreviate Health",
   "feature.wynntils.gameBarsOverlay.overlay.focusedMobHealthBar.name": "Focused Mob Health Bar",
   "feature.wynntils.gameBarsOverlay.overlay.healthBar.name": "Health Bar",
   "feature.wynntils.gameBarsOverlay.overlay.holyPowerBar.name": "Holy Power Bar",
