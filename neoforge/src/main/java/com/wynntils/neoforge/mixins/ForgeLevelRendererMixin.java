@@ -60,7 +60,8 @@ public abstract class ForgeLevelRendererMixin {
     // This reverts the patch made by NeoForge here: https://github.com/neoforged/NeoForge/pull/858
     // Wynncraft uses this behaviour to hide the local player in certain cases such as the character selection screen.
     @Redirect(
-            method = "collectVisibleEntities(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/culling/Frustum;Ljava/util/List;)Z",
+            method =
+                    "collectVisibleEntities(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/culling/Frustum;Ljava/util/List;)Z",
             at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
     private boolean removePlayerFromVisibleEntities(
             List<Entity> list, Object obj, Camera camera, Frustum frustum, List<Entity> output) {
