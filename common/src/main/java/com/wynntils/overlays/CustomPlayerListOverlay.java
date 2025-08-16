@@ -77,9 +77,13 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     @Override
+    protected boolean defaultRenderCondition() {
+        return !(!McUtils.options().keyPlayerList.isDown() && animationPercentage.finishedClosingAnimation());
+    }
+
+    @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        if (!McUtils.options().keyPlayerList.isDown() && animationPercentage.finishedClosingAnimation()) return;
         renderPlayerList(guiGraphics, animationPercentage.getAnimation());
     }
 

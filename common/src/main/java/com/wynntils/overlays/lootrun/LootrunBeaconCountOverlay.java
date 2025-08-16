@@ -68,7 +68,7 @@ public class LootrunBeaconCountOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean isRenderedDefault() {
+    public boolean additionalRenderCondition() {
         return Models.Lootrun.getState() != LootrunningState.NOT_RUNNING;
     }
 }
