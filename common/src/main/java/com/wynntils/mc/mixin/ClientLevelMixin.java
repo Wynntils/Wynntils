@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -9,6 +9,7 @@ import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,8 +25,8 @@ public abstract class ClientLevelMixin {
         MixinHelper.post(new PlayerJoinedWorldEvent(player));
     }
 
-    @Inject(method = "disconnect()V", at = @At("HEAD"))
-    private void disconnectPre(CallbackInfo ci) {
+    @Inject(method = "disconnect(Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"))
+    private void disconnectPre(Component reason, CallbackInfo ci) {
         // User-triggered logoff
         MixinHelper.postAlways(new ConnectionEvent.DisconnectedEvent());
     }
