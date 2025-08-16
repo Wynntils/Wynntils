@@ -10,6 +10,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.ItemCooldownRenderEvent;
 import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.TooltipRenderEvent;
@@ -134,6 +135,23 @@ public abstract class GuiGraphicsMixin {
         wynntilsCountOverlayColor.set(event.getCountColor());
 
         return event.getCountString();
+    }
+
+    @Inject(
+            method = "renderItemCooldown(Lnet/minecraft/world/item/ItemStack;II)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;fill(Lnet/minecraft/client/renderer/RenderType;IIIIII)V"),
+            cancellable = true)
+    private void renderItemCooldown(ItemStack stack, int x, int y, CallbackInfo ci) {
+        ItemCooldownRenderEvent event = new ItemCooldownRenderEvent(stack);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @WrapOperation(

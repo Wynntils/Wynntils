@@ -68,6 +68,7 @@ import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.inventory.ExtendedItemCountFeature;
 import com.wynntils.features.inventory.GuildBankHotkeyFeature;
+import com.wynntils.features.inventory.HideAttackCooldownFeature;
 import com.wynntils.features.inventory.IngredientPouchHotkeyFeature;
 import com.wynntils.features.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.inventory.ItemFavoriteFeature;
@@ -272,6 +273,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new ExtendedItemCountFeature());
         registerFeature(new GuildBankHotkeyFeature());
+        registerFeature(new HideAttackCooldownFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new ItemFavoriteFeature());
