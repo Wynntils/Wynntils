@@ -30,7 +30,7 @@ public abstract class ItemStackLayerRenderStateMixin {
             at =
                     @At(
                             target =
-                                    "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack;)V",
+                                    "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V",
                             value = "INVOKE"))
     private void onRenderItem(
             PoseStack poseStack,
