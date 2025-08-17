@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -26,8 +26,8 @@ public final class RaycastUtils {
                 .expandTowards(look.x * RAYCAST_RANGE, look.y * RAYCAST_RANGE, look.z * RAYCAST_RANGE)
                 .expandTowards(1, 1, 1);
 
-        EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(
-                McUtils.mc().level, player, start, direction, bb, (e) -> e instanceof Player);
+        EntityHitResult hitResult =
+                ProjectileUtil.getEntityHitResult(player, start, direction, bb, (e) -> e instanceof Player, 0.3f);
 
         if (hitResult == null) return Optional.empty();
 
