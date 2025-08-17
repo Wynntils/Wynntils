@@ -35,7 +35,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
+import net.minecraft.network.protocol.game.ServerboundPlayerInputPacket;
+import net.minecraft.world.entity.player.Input;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -159,15 +160,15 @@ public class NpcDialogueFeature extends Feature {
     @SubscribeEvent
     public void onPacketSent(PacketEvent.PacketSentEvent<?> e) {
         if (scheduledAutoProgressKeyPress == null) return;
-        if (!(e.getPacket() instanceof ServerboundPlayerCommandPacket packet)) return;
-        if (packet.getAction() != ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY) return;
+        if (!(e.getPacket() instanceof ServerboundPlayerInputPacket(Input input))) return;
+        if (!input.shift()) return;
 
         scheduledAutoProgressKeyPress.cancel(true);
 
         // Must be scheduled, can't be sent immediately
         autoProgressExecutor.schedule(
-                () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                        McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY)),
+                () -> McUtils.sendPacket(
+                        new ServerboundPlayerInputPacket(new Input(false, false, false, false, false, false, false))),
                 100,
                 TimeUnit.MILLISECONDS);
 
@@ -205,8 +206,8 @@ public class NpcDialogueFeature extends Feature {
         long delay = Models.NpcDialogue.calculateMessageReadTime(dialogue);
 
         return autoProgressExecutor.schedule(
-                () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                        McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY)),
+                () -> McUtils.sendPacket(
+                        new ServerboundPlayerInputPacket(new Input(false, false, false, false, false, true, false))),
                 delay,
                 TimeUnit.MILLISECONDS);
     }
