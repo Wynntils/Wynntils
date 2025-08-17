@@ -109,7 +109,7 @@ public class RangeVisualizerFeature extends Feature {
             }
 
             // Check armor slots
-            player.getArmorSlots().forEach(itemStack -> {
+            player.equipment.items.values().forEach(itemStack -> {
                 GearInfo armorGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
                 if (armorGearInfo != null) {
                     if (armorGearInfo.type().isArmor()) {

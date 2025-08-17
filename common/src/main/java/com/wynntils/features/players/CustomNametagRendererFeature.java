@@ -160,7 +160,7 @@ public class CustomNametagRendererFeature extends Feature {
         MutableComponent handComp = getItemComponent(heldItem);
         if (handComp != null) nametags.add(new CustomNametag(handComp, customNametagScale.get()));
 
-        for (ItemStack armorStack : hitPlayerCache.getArmorSlots()) {
+        for (ItemStack armorStack : hitPlayerCache.equipment.items.values()) {
             MutableComponent armorComp = getItemComponent(armorStack);
             if (armorComp != null) nametags.add(new CustomNametag(armorComp, customNametagScale.get()));
         }

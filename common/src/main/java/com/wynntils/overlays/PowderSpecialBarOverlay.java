@@ -72,7 +72,7 @@ public class PowderSpecialBarOverlay extends Overlay {
         if (this.hideIfNoCharge.get() && powderSpecialInfoOpt.isEmpty()) return;
 
         if (this.onlyIfWeaponHeld.get()
-                && !ItemUtils.isWeapon(McUtils.inventory().getSelected())) {
+                && !ItemUtils.isWeapon(McUtils.inventory().getSelectedItem())) {
             return;
         }
 

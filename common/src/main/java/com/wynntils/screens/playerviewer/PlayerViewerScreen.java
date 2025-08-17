@@ -82,7 +82,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
         ItemStack heldItem = createDecoratedItemStack(player.getMainHandItem(), player.getName());
 
         List<ItemStack> armorItems = new ArrayList<>();
-        for (ItemStack armorSlot : player.getArmorSlots()) {
+        for (ItemStack armorSlot : player.equipment.items.values()) {
             armorItems.add(createDecoratedItemStack(armorSlot, player.getName()));
         }
         Collections.reverse(armorItems);
