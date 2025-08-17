@@ -10,13 +10,15 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.models.players.event.FriendsEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.mc.McUtils;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,8 +29,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public final class FriendsModel extends Model {
     // 󏿼󏿿󏿾 is for the first line
@@ -46,8 +46,12 @@ public final class FriendsModel extends Model {
     DETAIL (optional) should be a descriptor if necessary
      */
 
-    private static final Pattern FRIEND_LIST =
-            Pattern.compile(FRIEND_PREFIX_REGEX + ".+'s? friends \\(.+\\): (.*)", Pattern.MULTILINE | Pattern.DOTALL);
+    // Friend lists are sent in multiple messages
+    private static final Pattern FRIEND_LIST_FIRST_LINE =
+            Pattern.compile(FRIEND_PREFIX_REGEX + ".+'s? friends \\(\\d+\\): (.*)");
+    private static final Pattern FRIEND_LIST_EXTRA_LINE =
+            Pattern.compile(FRIEND_PREFIX_REGEX + "(.+)");
+
     private static final Pattern FRIEND_LIST_FAIL_1 =
             Pattern.compile(FRIEND_PREFIX_REGEX + "We couldn't find any friends\\.");
     private static final Pattern FRIEND_LIST_FAIL_2 =
@@ -107,10 +111,7 @@ public final class FriendsModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatReceived(ChatMessageReceivedEvent event) {
-        if (event.getMessageType() != MessageType.FOREGROUND) return;
-
         StyledText styledText = event.getOriginalStyledText();
-        String unformatted = styledText.getStringWithoutFormatting();
 
         Matcher joinMatcher = styledText.getMatcher(JOIN_PATTERN);
         if (joinMatcher.matches()) {
@@ -133,16 +134,37 @@ public final class FriendsModel extends Model {
 
         if (tryParseFriendMessages(styledText)) return;
 
-        if (friendMessageStatus == ListStatus.EXPECTING) {
-            if (tryParseFriendList(unformatted) || tryParseNoFriendList(styledText)) {
-                event.setCanceled(true);
-                friendMessageStatus = ListStatus.IDLE;
-                return;
-            }
+        // Skip first message of two, but still expect more messages
+        if (styledText.getMatcher(FRIEND_LIST_FAIL_1).matches()) {
+            event.setCanceled(true);
+            return;
+        }
+        if (styledText.getMatcher(FRIEND_LIST_FAIL_2).matches()) {
+            WynntilsMod.info("Friend list is empty.");
+            event.setCanceled(true);
+            friendMessageStatus = ListStatus.IDLE;
+            return;
+        }
 
-            // Skip first message of two, but still expect more messages
-            if (styledText.getMatcher(FRIEND_LIST_FAIL_1).matches()) {
+        if (friendMessageStatus == ListStatus.EXPECTING) {
+            Matcher firstLineMatcher = styledText.getMatcher(FRIEND_LIST_FIRST_LINE);
+            if (firstLineMatcher.matches()) {
+                friendMessageStatus = ListStatus.PROCESSING;
+                String[] friendList = firstLineMatcher.group(1)
+                        .replaceAll(FRIEND_PREFIX_REGEX, "")
+                        .replaceAll("\\n", "")
+                        .split(", ");
+                friends = Arrays.stream(friendList).collect(Collectors.toSet());
+                WynntilsMod.info("Found friends in first line: " + friends);
                 event.setCanceled(true);
+
+                if (!styledText.endsWith(",")) {
+                    friendMessageStatus = ListStatus.IDLE;
+                    WynntilsMod.postEvent(new FriendsEvent.Listed());
+                    WynntilsMod.postEvent(
+                            new HadesRelationsUpdateEvent.FriendList(friends, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+                    WynntilsMod.info("Successfully updated friend list, user has " + friends.size() + " friends.");
+                }
                 return;
             }
         }
@@ -151,11 +173,42 @@ public final class FriendsModel extends Model {
                 && styledText.getMatcher(ONLINE_FRIENDS_HEADER).matches()) {
             // List of online friends is sent in multiple messages
             // When we detect the first message indicating the start of the friends list, we set a flag
+            // We do not need to manually search for no online friends; the header is still sent
             onlineMessageStatus = ListStatus.PROCESSING;
             onlineFriends.clear();
             event.setCanceled(true);
             return;
         }
+
+        if (friendMessageStatus == ListStatus.PROCESSING) {
+            Matcher extraLineMatcher = styledText.getMatcher(FRIEND_LIST_EXTRA_LINE);
+            if (extraLineMatcher.matches()) {
+                event.setCanceled(true);
+                String[] friendList = extraLineMatcher.group(1)
+                        .replaceAll(FRIEND_PREFIX_REGEX, "")
+                        .replaceAll("\\n", "")
+                        .split(", ");
+                friends.addAll(Arrays.stream(friendList).collect(Collectors.toSet()));
+                WynntilsMod.info("Found additional friends: " + Arrays.toString(friendList));
+
+                // If we reach a message that does not end with a comma, we know the list has ended
+                if (!styledText.endsWith(",")) {
+                    friendMessageStatus = ListStatus.IDLE;
+                    WynntilsMod.postEvent(new FriendsEvent.Listed());
+                    WynntilsMod.postEvent(
+                            new HadesRelationsUpdateEvent.FriendList(friends, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+                    WynntilsMod.info("Successfully updated friend list, user has " + friends.size() + " friends.");
+                }
+            } else {
+                // If we reach a message that does not match, we also know the list has ended
+                friendMessageStatus = ListStatus.IDLE;
+                WynntilsMod.postEvent(new FriendsEvent.Listed());
+                WynntilsMod.postEvent(
+                        new HadesRelationsUpdateEvent.FriendList(friends, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+                WynntilsMod.info("Successfully updated friend list, user has " + friends.size() + " friends.");
+            }
+        }
+
         if (onlineMessageStatus == ListStatus.PROCESSING) {
             // If this flag is set, the next messages should be the list of online friends
             // But as soon as the matcher fails, we know we've reached the end of the list
@@ -171,17 +224,10 @@ public final class FriendsModel extends Model {
             } else {
                 onlineMessageStatus = ListStatus.IDLE;
                 WynntilsMod.postEvent(new FriendsEvent.OnlineListed());
+                WynntilsMod.info("Successfully updated online friend list, user has " +
+                        onlineFriends.size() + " online friends.");
             }
         }
-    }
-
-    private boolean tryParseNoFriendList(StyledText styledText) {
-        if (styledText.getMatcher(FRIEND_LIST_FAIL_2).matches()) {
-            WynntilsMod.info("Friend list is empty.");
-            return true;
-        }
-
-        return false;
     }
 
     private boolean tryParseFriendMessages(StyledText styledText) {
@@ -212,24 +258,6 @@ public final class FriendsModel extends Model {
         }
 
         return false;
-    }
-
-    private boolean tryParseFriendList(String unformatted) {
-        Matcher matcher = FRIEND_LIST.matcher(unformatted);
-        if (!matcher.matches()) return false;
-
-        String[] friendList = matcher.group(1)
-                .replaceAll(FRIEND_PREFIX_REGEX, "")
-                .replaceAll("\\n", "")
-                .split(", ");
-
-        friends = Arrays.stream(friendList).collect(Collectors.toSet());
-        WynntilsMod.postEvent(
-                new HadesRelationsUpdateEvent.FriendList(friends, HadesRelationsUpdateEvent.ChangeType.RELOAD));
-        WynntilsMod.postEvent(new FriendsEvent.Listed());
-
-        WynntilsMod.info("Successfully updated friend list, user has " + friendList.length + " friends.");
-        return true;
     }
 
     private void resetData() {
