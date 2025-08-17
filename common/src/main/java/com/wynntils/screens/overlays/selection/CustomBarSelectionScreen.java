@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.overlays.selection;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -12,7 +11,6 @@ import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.BarTexture;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.ManaTexture;
@@ -100,22 +98,20 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-
         // Draw the custom bar centered in the screen with 50% progress
-        BufferedRenderUtils.drawProgressBar(
-                poseStack,
-                guiGraphics.bufferSource,
-                availableBars.get(barTypeIndex).a(),
-                barX,
-                barY,
-                barX + availableBars.get(barTypeIndex).a().width(),
-                barY + availableBars.get(barTypeIndex).b().get(barTextureIndex).getHeight(),
-                0,
-                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY1(),
-                availableBars.get(barTypeIndex).a().width(),
-                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY2(),
-                0.5f);
+        //        BufferedRenderUtils.drawProgressBar(
+        //                poseStack,
+        //                guiGraphics.bufferSource,
+        //                availableBars.get(barTypeIndex).a(),
+        //                barX,
+        //                barY,
+        //                barX + availableBars.get(barTypeIndex).a().width(),
+        //                barY + availableBars.get(barTypeIndex).b().get(barTextureIndex).getHeight(),
+        //                0,
+        //                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY1(),
+        //                availableBars.get(barTypeIndex).a().width(),
+        //                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY2(),
+        //                0.5f);
     }
 
     @Override

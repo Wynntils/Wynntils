@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.settings;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
@@ -277,11 +276,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
 
         renderTags(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderBg(poseStack);
+        renderBg(guiGraphics);
 
         String categoryName = selectedCategory == null
                 ? I18n.get("screens.wynntils.settingsScreen.all")
@@ -289,7 +287,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(categoryName),
                         Texture.CONFIG_BOOK_BACKGROUND.width() * 0.25f + offsetX,
                         McUtils.mc().font.lineHeight + 5 + offsetY,
@@ -298,15 +296,15 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        RenderUtils.drawLine(
-                poseStack,
-                CommonColors.GRAY,
-                offsetX + 11,
-                offsetY + 19,
-                Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 6 + offsetX,
-                19 + offsetY,
-                0,
-                1);
+        //        RenderUtils.drawLine(
+        //                poseStack,
+        //                CommonColors.GRAY,
+        //                offsetX + 11,
+        //                offsetY + 19,
+        //                Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 6 + offsetX,
+        //                19 + offsetY,
+        //                0,
+        //                1);
 
         if (selectedConfigurable != null) {
             String textToRender = selectedConfigurable.getTranslatedName();
@@ -320,7 +318,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(textToRender),
                             Texture.CONFIG_BOOK_BACKGROUND.width() * 0.75f + offsetX,
                             McUtils.mc().font.lineHeight + 5 + offsetY,
@@ -329,19 +327,19 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            RenderUtils.drawLine(
-                    poseStack,
-                    CommonColors.GRAY,
-                    Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 6 + offsetX,
-                    19 + offsetY,
-                    Texture.CONFIG_BOOK_BACKGROUND.width() - 11 + offsetX,
-                    19 + offsetY,
-                    0,
-                    1);
+            //            RenderUtils.drawLine(
+            //                    poseStack,
+            //                    CommonColors.GRAY,
+            //                    Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 6 + offsetX,
+            //                    19 + offsetY,
+            //                    Texture.CONFIG_BOOK_BACKGROUND.width() - 11 + offsetX,
+            //                    19 + offsetY,
+            //                    0,
+            //                    1);
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.settingsScreen.unselectedConfig")),
                             Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + offsetX,
@@ -357,11 +355,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         }
 
         if (configurables.size() > CONFIGURABLES_PER_PAGE) {
-            renderConfigurableScroll(poseStack);
+            renderConfigurableScroll(guiGraphics);
         }
 
         if (configs.size() > CONFIGS_PER_PAGE) {
-            renderConfigScroll(poseStack);
+            renderConfigScroll(guiGraphics);
         }
 
         renderConfigs(guiGraphics, mouseX, mouseY, partialTick);
@@ -376,8 +374,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         if (McUtils.mc().level == null) {
             renderPanorama(guiGraphics, partialTick);
         }
-
-        // Don't render the blurred background
     }
 
     @Override
@@ -919,8 +915,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         return StringUtils.partialMatch(translatable.getTranslatedName(), searchWidget.getTextBoxInput());
     }
 
-    private void renderBg(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.CONFIG_BOOK_BACKGROUND, offsetX, offsetY);
+    private void renderBg(GuiGraphics guiGraphics) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONFIG_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
     private void renderTags(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -939,13 +935,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderConfigurableScroll(PoseStack poseStack) {
+    private void renderConfigurableScroll(GuiGraphics guiGraphics) {
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 CONFIGURABLE_SCROLL_X + offsetX,
                 21 + offsetY,
-                0,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
                 SCROLL_AREA_HEIGHT);
 
@@ -959,10 +954,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f);
 
         RenderUtils.drawHoverableTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON,
                 CONFIGURABLE_SCROLL_X + offsetX,
-                configurableScrollRenderY,
+                (int) configurableScrollRenderY,
                 draggingConfigurableScroll);
     }
 
@@ -981,15 +976,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderConfigScroll(PoseStack poseStack) {
+    private void renderConfigScroll(GuiGraphics guiGraphics) {
         if (configs.size() <= CONFIGS_PER_PAGE) return;
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 CONFIG_SCROLL_X + offsetX,
                 SCROLL_START_Y + offsetY,
-                0,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
                 SCROLL_AREA_HEIGHT);
 
@@ -1003,10 +997,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f);
 
         RenderUtils.drawHoverableTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON,
                 CONFIG_SCROLL_X + offsetX,
-                configScrollRenderY,
+                (int) configScrollRenderY,
                 draggingConfigScroll);
     }
 
@@ -1017,8 +1011,9 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                //                guiGraphics.renderComponentTooltip(
+                //                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(),
+                // mouseX, mouseY);
                 break;
             }
         }

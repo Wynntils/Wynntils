@@ -184,10 +184,10 @@ public enum Texture {
 
     // Generic Offset
     ADD_ICON_OFFSET("icons/generic_offset/add_icon_offset.png", 14, 28),
-    BACK_ARROW_OFFSET("icons/generic_offset/back_arrow_icon_offset.png", 32, 9),
-    BACKWARD_ARROW_OFFSET("icons/generic_offset/backward_arrow_icon_offset.png", 36, 10),
-    FORWARD_ARROW_OFFSET("icons/generic_offset/forward_arrow_icon_offset.png", 36, 10),
-    RELOAD_ICON_OFFSET("icons/generic_offset/reload_icon_offset.png", 40, 20),
+    BACK_ARROW_OFFSET("icons/generic_offset/back_arrow_icon_offset.png", 16, 20),
+    BACKWARD_ARROW_OFFSET("icons/generic_offset/backward_arrow_icon_offset.png", 18, 20),
+    FORWARD_ARROW_OFFSET("icons/generic_offset/forward_arrow_icon_offset.png", 18, 20),
+    RELOAD_ICON_OFFSET("icons/generic_offset/reload_icon_offset.png", 20, 40),
     REMOVE_ICON_OFFSET("icons/generic_offset/remove_icon_offset.png", 14, 28),
     SHARE_ICON_OFFSET("icons/generic_offset/share_icon_offset.png", 16, 28),
     SORT_ALPHABETICALLY_OFFSET("icons/generic_offset/sort_alphabetical_icon_offset.png", 23, 46),

@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -18,7 +17,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -76,29 +74,27 @@ public class ConfigTile extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         resetButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderDisplayName(poseStack);
+        renderDisplayName(guiGraphics);
 
-        RenderUtils.drawLine(
-                poseStack,
-                CommonColors.GRAY,
-                this.getX(),
-                this.getY() + this.height,
-                this.getX() + this.width,
-                this.getY() + this.height,
-                0,
-                1);
+        //        RenderUtils.drawLine(
+        //                poseStack,
+        //                CommonColors.GRAY,
+        //                this.getX(),
+        //                this.getY() + this.height,
+        //                this.getX() + this.width,
+        //                this.getY() + this.height,
+        //                0,
+        //                1);
 
         configOptionElement.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderDisplayName(PoseStack poseStack) {
+    private void renderDisplayName(GuiGraphics guiGraphics) {
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         displayName,
                         getRenderX(),
                         this.getY() + 3,

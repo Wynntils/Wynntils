@@ -95,15 +95,13 @@ public abstract class BaseBarOverlay extends Overlay {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         if ((!Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe()) || !isActive()) return;
 
-        PoseStack poseStack = guiGraphics.pose();
-
         float barHeight = textureHeight() * (this.getWidth() / 81);
         float renderY = getModifiedRenderY(barHeight + 10);
 
-        renderText(poseStack, bufferSource, renderY, text());
+        renderText(guiGraphics, bufferSource, renderY, text());
 
         float renderedProgress = Math.round((flip.get() ? -1 : 1) * currentProgress * 100) / 100f;
-        renderBar(poseStack, bufferSource, renderY + 10, barHeight, renderedProgress);
+        //        renderBar(poseStack, bufferSource, renderY + 10, barHeight, renderedProgress);
     }
 
     protected String text() {
@@ -143,10 +141,10 @@ public abstract class BaseBarOverlay extends Overlay {
                 progress);
     }
 
-    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, String text) {
+    protected void renderText(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderY, String text) {
         BufferedFontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         bufferSource,
                         StyledText.fromString(text),
                         this.getRenderX(),

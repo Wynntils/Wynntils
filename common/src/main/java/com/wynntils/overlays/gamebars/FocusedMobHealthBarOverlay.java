@@ -4,7 +4,6 @@
  */
 package com.wynntils.overlays.gamebars;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -23,6 +22,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -66,10 +66,10 @@ public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, String text) {
+    protected void renderText(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderY, String text) {
         BufferedFontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         bufferSource,
                         barText,
                         this.getRenderX(),

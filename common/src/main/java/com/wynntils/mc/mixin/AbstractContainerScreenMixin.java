@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -53,9 +53,9 @@ public abstract class AbstractContainerScreenMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V",
                             ordinal = 0))
-    private int renderContainerLabel(
+    private void renderContainerLabel(
             GuiGraphics instance,
             Font font,
             Component text,
@@ -68,9 +68,9 @@ public abstract class AbstractContainerScreenMixin {
                 (AbstractContainerScreen<?>) (Object) this, instance, color, x, y, text);
         MixinHelper.post(event);
 
-        if (event.isCanceled()) return 0;
+        if (event.isCanceled()) return;
 
-        return original.call(instance, font, event.getContainerLabel(), x, y, event.getColor(), dropShadow);
+        original.call(instance, font, event.getContainerLabel(), x, y, event.getColor(), dropShadow);
     }
 
     @WrapOperation(
@@ -79,9 +79,9 @@ public abstract class AbstractContainerScreenMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V",
                             ordinal = 1))
-    private int renderInventoryLabel(
+    private void renderInventoryLabel(
             GuiGraphics instance,
             Font font,
             Component text,
@@ -94,9 +94,9 @@ public abstract class AbstractContainerScreenMixin {
                 (AbstractContainerScreen<?>) (Object) this, instance, color, x, y, text);
         MixinHelper.post(event);
 
-        if (event.isCanceled()) return 0;
+        if (event.isCanceled()) return;
 
-        return original.call(instance, font, event.getInventoryLabel(), x, y, event.getColor(), dropShadow);
+        original.call(instance, font, event.getInventoryLabel(), x, y, event.getColor(), dropShadow);
     }
 
     @Inject(

@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.aspect;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -48,30 +47,20 @@ public class GuideAspectItemStackButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         CustomColor color = CustomColor.fromChatFormatting(
                 itemStack.getAspectInfo().gearTier().getChatFormatting());
 
         RenderUtils.drawTexturedRectWithColor(
-                poseStack,
-                Texture.HIGHLIGHT.resource(),
-                color.withAlpha(1f),
-                getX() - 1,
-                getY() - 1,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+                guiGraphics, Texture.HIGHLIGHT, getX() - 1, getY() - 1, 18, 18, 0, 0, color);
 
         RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 200);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(0, 0); // TODO: Check if the 200 is still needed
+
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(MathUtils.toRoman(itemStack.getTier())),
                         getX() + 2,
                         getX() + 14,
@@ -80,19 +69,11 @@ public class GuideAspectItemStackButton extends WynntilsButton {
                         textColor,
                         HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
 
         if (Services.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(
-                    poseStack,
-                    Texture.FAVORITE_ICON.resource(),
-                    getX() + 12,
-                    getY() - 4,
-                    200,
-                    9,
-                    9,
-                    Texture.FAVORITE_ICON.width(),
-                    Texture.FAVORITE_ICON.height());
+                    guiGraphics, Texture.FAVORITE_ICON.resource(), getX() + 12, getY() - 4, 9, 9);
         }
     }
 

@@ -4,10 +4,8 @@
  */
 package com.wynntils.features.combat;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
@@ -20,7 +18,6 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.buffered.CustomRenderType;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +35,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.joml.Matrix4f;
 
 @ConfigCategory(Category.COMBAT)
 public class RangeVisualizerFeature extends Feature {
@@ -174,34 +170,34 @@ public class RangeVisualizerFeature extends Feature {
     private void renderCircle(PoseStack poseStack, Position position, float radius, int color) {
         // Circle must be rendered on both sides, otherwise it will be invisible when looking at
         // it from the outside
-        RenderSystem.disableCull();
-
-        poseStack.pushPose();
-        poseStack.translate(-position.x(), -position.y(), -position.z());
-        VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
-
-        Matrix4f matrix4f = poseStack.last().pose();
-        double angleStep = 2 * Math.PI / SEGMENTS;
-        double startingAngle = -(System.currentTimeMillis() % 40000) * 2 * Math.PI / 40000.0;
-        double angle = startingAngle;
-        for (int i = 0; i < SEGMENTS; i++) {
-            if (i % 4 > 2) {
-                angle += angleStep;
-                continue;
-            }
-            float x = (float) (position.x() + Math.sin(angle) * radius);
-            float z = (float) (position.z() + Math.cos(angle) * radius);
-            consumer.addVertex(matrix4f, x, (float) position.y(), z).setColor(color);
-            consumer.addVertex(matrix4f, x, (float) position.y() + HEIGHT, z).setColor(color);
-            angle += angleStep;
-            float x2 = (float) (position.x() + Math.sin(angle) * radius);
-            float z2 = (float) (position.z() + Math.cos(angle) * radius);
-            consumer.addVertex(matrix4f, x2, (float) position.y() + HEIGHT, z2).setColor(color);
-            consumer.addVertex(matrix4f, x2, (float) position.y(), z2).setColor(color);
-        }
-
-        BUFFER_SOURCE.endBatch();
-        poseStack.popPose();
-        RenderSystem.enableCull();
+        //        RenderSystem.disableCull();
+        //
+        //        poseStack.pushPose();
+        //        poseStack.translate(-position.x(), -position.y(), -position.z());
+        //        VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
+        //
+        //        Matrix4f matrix4f = poseStack.last().pose();
+        //        double angleStep = 2 * Math.PI / SEGMENTS;
+        //        double startingAngle = -(System.currentTimeMillis() % 40000) * 2 * Math.PI / 40000.0;
+        //        double angle = startingAngle;
+        //        for (int i = 0; i < SEGMENTS; i++) {
+        //            if (i % 4 > 2) {
+        //                angle += angleStep;
+        //                continue;
+        //            }
+        //            float x = (float) (position.x() + Math.sin(angle) * radius);
+        //            float z = (float) (position.z() + Math.cos(angle) * radius);
+        //            consumer.addVertex(matrix4f, x, (float) position.y(), z).setColor(color);
+        //            consumer.addVertex(matrix4f, x, (float) position.y() + HEIGHT, z).setColor(color);
+        //            angle += angleStep;
+        //            float x2 = (float) (position.x() + Math.sin(angle) * radius);
+        //            float z2 = (float) (position.z() + Math.cos(angle) * radius);
+        //            consumer.addVertex(matrix4f, x2, (float) position.y() + HEIGHT, z2).setColor(color);
+        //            consumer.addVertex(matrix4f, x2, (float) position.y(), z2).setColor(color);
+        //        }
+        //
+        //        BUFFER_SOURCE.endBatch();
+        //        poseStack.popPose();
+        //        RenderSystem.enableCull();
     }
 }

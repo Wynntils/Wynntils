@@ -4,9 +4,7 @@
  */
 package com.wynntils.screens.overlays.selection.widgets;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -19,7 +17,6 @@ import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -107,17 +104,16 @@ public class OverlayButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
         boolean enabled = Managers.Overlay.isEnabled(overlay);
 
-        RenderUtils.drawRect(poseStack, getRectColor(enabled).withAlpha(100), getX(), getY(), 0, width, height);
-
-        RenderUtils.drawRectBorders(
-                poseStack, getBorderColor(enabled), getX(), getY(), getX() + width, getY() + height, 1, 2);
+        RenderUtils.drawRect(guiGraphics, getRectColor(enabled).withAlpha(100), getX(), getY(), width, height);
+        //
+        //        RenderUtils.drawRectBorders(
+        //                poseStack, getBorderColor(enabled), getX(), getY(), getX() + width, getY() + height, 1, 2);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(textToRender),
                         getX() + 2,
                         getY() + (height / 2f),
@@ -144,21 +140,22 @@ public class OverlayButton extends WynntilsButton {
         // name is being edited
         if (isHovered) {
             if (!overlay.isParentEnabled()) {
-                McUtils.mc()
-                        .screen
-                        .setTooltipForNextRenderPass(Lists.transform(
-                                ComponentUtils.wrapTooltips(
-                                        List.of(Component.translatable(
-                                                "screens.wynntils.overlaySelection.parentDisabled",
-                                                overlay.getParentTranslatedName())),
-                                        200),
-                                Component::getVisualOrderText));
+                //                McUtils.mc()
+                //                        .screen
+                //                        .setTooltipForNextRenderPass(Lists.transform(
+                //                                ComponentUtils.wrapTooltips(
+                //                                        List.of(Component.translatable(
+                //                                                "screens.wynntils.overlaySelection.parentDisabled",
+                //                                                overlay.getParentTranslatedName())),
+                //                                        200),
+                //                                Component::getVisualOrderText));
             } else {
-                McUtils.mc()
-                        .screen
-                        .setTooltipForNextRenderPass(Lists.transform(
-                                (editInput != null && editInput.visible) ? SAVE_NAME_TOOLTIP : descriptionTooltip,
-                                Component::getVisualOrderText));
+                //                McUtils.mc()
+                //                        .screen
+                //                        .setTooltipForNextRenderPass(Lists.transform(
+                //                                (editInput != null && editInput.visible) ? SAVE_NAME_TOOLTIP :
+                // descriptionTooltip,
+                //                                Component::getVisualOrderText));
             }
         }
     }

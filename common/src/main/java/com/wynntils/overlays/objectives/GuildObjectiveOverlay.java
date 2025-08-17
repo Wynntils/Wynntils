@@ -5,7 +5,6 @@
 package com.wynntils.overlays.objectives;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -18,9 +17,7 @@ import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
@@ -65,8 +62,6 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
 
         if (guildObjective == null) return;
 
-        PoseStack poseStack = guiGraphics.pose();
-
         if (this.hideOnInactivity.get()) {
             final int maxInactivityMs = 3000;
             if (guildObjective.getUpdatedAt() + maxInactivityMs < System.currentTimeMillis()) {
@@ -91,7 +86,7 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
         final String text = guildObjective.asObjectiveString();
         BufferedFontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         bufferSource,
                         StyledText.fromString(text),
                         this.getRenderX(),
@@ -109,19 +104,19 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
         }
 
         if (this.enableProgressBar.get()) {
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
-                    Texture.BUBBLE_BAR,
-                    this.getRenderX(),
-                    renderY + SPACE_BETWEEN,
-                    this.getRenderX() + this.getWidth(),
-                    renderY + SPACE_BETWEEN + actualBarHeight,
-                    0,
-                    objectivesTexture.get().getTextureY1(),
-                    barWidth,
-                    objectivesTexture.get().getTextureY2(),
-                    guildObjective.getProgress());
+            //            BufferedRenderUtils.drawProgressBar(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    Texture.BUBBLE_BAR,
+            //                    this.getRenderX(),
+            //                    renderY + SPACE_BETWEEN,
+            //                    this.getRenderX() + this.getWidth(),
+            //                    renderY + SPACE_BETWEEN + actualBarHeight,
+            //                    0,
+            //                    objectivesTexture.get().getTextureY1(),
+            //                    barWidth,
+            //                    objectivesTexture.get().getTextureY2(),
+            //                    guildObjective.getProgress());
         }
     }
 }

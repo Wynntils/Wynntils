@@ -135,7 +135,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         if (widgets.isEmpty()) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.noFilters")),
                             getX(),
                             getX() + getWidth(),
@@ -159,7 +159,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         RenderUtils.disableScissor(guiGraphics);
 
         if (isScrollable()) {
-            renderScrollBar(guiGraphics.pose());
+            //            renderScrollBar(guiGraphics.pose());
         }
     }
 

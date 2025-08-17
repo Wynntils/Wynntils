@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.crowdsourcing;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
@@ -35,8 +34,8 @@ public class WynntilsCrowdSourcingSettingsScreen
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f + offsetX),
                 65 + offsetY,
-                Texture.BACK_ARROW_OFFSET.width() / 2,
-                Texture.BACK_ARROW_OFFSET.height(),
+                Texture.BACK_ARROW_OFFSET.width(),
+                Texture.BACK_ARROW_OFFSET.height() / 2,
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
@@ -45,34 +44,32 @@ public class WynntilsCrowdSourcingSettingsScreen
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
                         + offsetX),
                 Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
-                Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.FORWARD_ARROW_OFFSET.height(),
+                Texture.FORWARD_ARROW_OFFSET.width(),
+                Texture.FORWARD_ARROW_OFFSET.height() / 2,
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
                 Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
-                Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.FORWARD_ARROW_OFFSET.height(),
+                Texture.FORWARD_ARROW_OFFSET.width(),
+                Texture.FORWARD_ARROW_OFFSET.height() / 2,
                 true,
                 this));
     }
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        renderBackgroundTexture(guiGraphics);
 
-        renderBackgroundTexture(poseStack);
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsCrowdSourcing.name"));
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsCrowdSourcing.name"));
-
-        renderVersion(poseStack);
+        renderVersion(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsCrowdSourcing.screenDescription"), "");
+        renderDescription(guiGraphics, I18n.get("screens.wynntils.wynntilsCrowdSourcing.screenDescription"), "");
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }

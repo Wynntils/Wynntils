@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -22,6 +21,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositione
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.joml.Matrix3x2fStack;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
@@ -77,10 +77,10 @@ public class TooltipFittingFeature extends Feature {
 
         lastScaleFactor = scaleFactor;
 
-        // push pose before scaling, so we can pop it afterwards
-        PoseStack poseStack = e.getPoseStack();
-        poseStack.pushPose();
-        poseStack.scale(scaleFactor, scaleFactor, 1);
+        // push matrix before scaling, so we can pop it afterwards
+        Matrix3x2fStack stack = e.getGuiGraphics().pose();
+        stack.pushMatrix();
+        stack.scale(scaleFactor, scaleFactor);
 
         scaledLast = true;
     }
@@ -90,7 +90,7 @@ public class TooltipFittingFeature extends Feature {
     public void onTooltipPost(ItemTooltipRenderEvent.Post e) {
         if (!scaledLast) return;
 
-        e.getPoseStack().popPose();
+        e.getGuiGraphics().pose().popMatrix();
         scaledLast = false;
     }
 

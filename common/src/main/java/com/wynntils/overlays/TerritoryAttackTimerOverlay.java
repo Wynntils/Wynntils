@@ -65,7 +65,7 @@ public class TerritoryAttackTimerOverlay extends Overlay {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),
@@ -85,7 +85,7 @@ public class TerritoryAttackTimerOverlay extends Overlay {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()
                 .renderTextWithAlignment(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),

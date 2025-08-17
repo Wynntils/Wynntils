@@ -45,7 +45,7 @@ public class LowHealthVignetteFeature extends Feature {
         if (!shouldRender || event.getType() != RenderEvent.ElementType.GUI) return;
         if (!Models.WorldState.onWorld()) return;
 
-        RenderUtils.renderVignetteOverlay(event.getPoseStack(), color.get(), value);
+        RenderUtils.renderVignetteOverlay(event.getGuiGraphics(), color.get(), value);
     }
 
     @SubscribeEvent

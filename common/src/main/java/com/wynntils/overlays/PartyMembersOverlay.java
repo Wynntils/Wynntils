@@ -5,7 +5,6 @@
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.overlays.ContainerOverlay;
@@ -23,9 +22,7 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.services.hades.event.HadesUserEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.SkinUtils;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.ManaTexture;
@@ -183,31 +180,30 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
         @Override
         public void render(
                 GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-            PoseStack poseStack = guiGraphics.pose();
-            poseStack.pushPose();
+            guiGraphics.pose().pushMatrix();
 
             ResourceLocation skin = SkinUtils.getSkin(hadesUser.getUuid());
 
             float renderX = getRenderX();
             float renderY = getRenderY();
 
-            poseStack.translate(renderX, renderY, 0);
+            guiGraphics.pose().translate(renderX, renderY);
 
             // head
-            BufferedRenderUtils.drawTexturedRect(
-                    poseStack, bufferSource, skin, 0, 0, 0, HEAD_SIZE, HEAD_SIZE, 8, 8, 8, 8, 64, 64);
+            //            BufferedRenderUtils.drawTexturedRect(
+            //                    poseStack, bufferSource, skin, 0, 0, 0, HEAD_SIZE, HEAD_SIZE, 8, 8, 8, 8, 64, 64);
 
             // hat
-            BufferedRenderUtils.drawTexturedRect(
-                    poseStack, bufferSource, skin, 0, 0, 1, HEAD_SIZE, HEAD_SIZE, 40, 8, 8, 8, 64, 64);
+            //            BufferedRenderUtils.drawTexturedRect(
+            //                    poseStack, bufferSource, skin, 0, 0, 1, HEAD_SIZE, HEAD_SIZE, 40, 8, 8, 8, 64, 64);
+            //
+            guiGraphics.pose().translate(HEAD_SIZE, 0);
 
-            poseStack.translate(HEAD_SIZE, 0, 0);
-
-            poseStack.translate(3, 0, 0);
+            guiGraphics.pose().translate(3, 0);
 
             BufferedFontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             bufferSource,
                             StyledText.fromString(hadesUser.getName()),
                             0,
@@ -217,62 +213,62 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
                             VerticalAlignment.TOP,
                             TextShadow.NORMAL);
 
-            poseStack.translate(0, 12, 0);
+            guiGraphics.pose().translate(0, 12);
 
             double healthProgress = hadesUser.getHealth().getProgress();
             double manaProgress = hadesUser.getMana().getProgress();
 
             // health
             HealthTexture healthTexture = PartyMembersOverlay.this.healthTexture.get();
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
-                    Texture.HEALTH_BAR,
-                    0,
-                    0,
-                    81 * 0.85f,
-                    healthTexture.getHeight() * 0.85f,
-                    0,
-                    healthTexture.getTextureY1(),
-                    81,
-                    healthTexture.getTextureY2(),
-                    (float) healthProgress);
+            //            BufferedRenderUtils.drawProgressBar(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    Texture.HEALTH_BAR,
+            //                    0,
+            //                    0,
+            //                    81 * 0.85f,
+            //                    healthTexture.getHeight() * 0.85f,
+            //                    0,
+            //                    healthTexture.getTextureY1(),
+            //                    81,
+            //                    healthTexture.getTextureY2(),
+            //                    (float) healthProgress);
 
             if (healthProgress > 1) {
-                BufferedRenderUtils.drawProgressBar(
-                        poseStack,
-                        bufferSource,
-                        Texture.HEALTH_BAR_OVERFLOW,
-                        0,
-                        0,
-                        81 * 0.85f,
-                        healthTexture.getHeight() * 0.85f,
-                        0,
-                        healthTexture.getTextureY1(),
-                        81,
-                        healthTexture.getTextureY2(),
-                        (float) healthProgress - 1f);
+                //                BufferedRenderUtils.drawProgressBar(
+                //                        poseStack,
+                //                        bufferSource,
+                //                        Texture.HEALTH_BAR_OVERFLOW,
+                //                        0,
+                //                        0,
+                //                        81 * 0.85f,
+                //                        healthTexture.getHeight() * 0.85f,
+                //                        0,
+                //                        healthTexture.getTextureY1(),
+                //                        81,
+                //                        healthTexture.getTextureY2(),
+                //                        (float) healthProgress - 1f);
             }
 
-            poseStack.translate(0, healthTexture.getHeight() * 0.85f, 0);
+            guiGraphics.pose().translate(0, healthTexture.getHeight() * 0.85f);
 
             // mana
             ManaTexture manaTexture = PartyMembersOverlay.this.manaTexture.get();
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
-                    Texture.MANA_BAR,
-                    0,
-                    2,
-                    81 * 0.85f,
-                    2 + manaTexture.getHeight() * 0.85f,
-                    0,
-                    manaTexture.getTextureY1(),
-                    81,
-                    manaTexture.getTextureY2(),
-                    (float) manaProgress);
+            //            BufferedRenderUtils.drawProgressBar(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    Texture.MANA_BAR,
+            //                    0,
+            //                    2,
+            //                    81 * 0.85f,
+            //                    2 + manaTexture.getHeight() * 0.85f,
+            //                    0,
+            //                    manaTexture.getTextureY1(),
+            //                    81,
+            //                    manaTexture.getTextureY2(),
+            //                    (float) manaProgress);
 
-            poseStack.popPose();
+            guiGraphics.pose().popMatrix();
         }
     }
 }

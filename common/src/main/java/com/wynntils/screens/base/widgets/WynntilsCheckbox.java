@@ -4,11 +4,9 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.google.common.collect.Lists;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -106,11 +104,11 @@ public class WynntilsCheckbox extends AbstractButton {
         }
 
         RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(), resourceLocation, this.getX(), this.getY(), 0, this.width, this.height, 20, 20);
+                guiGraphics, resourceLocation, this.getX(), this.getY(), this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(this.getMessage()),
                         this.getX() + this.width + 2,
                         this.getY() + (this.height / 2f),
@@ -122,7 +120,8 @@ public class WynntilsCheckbox extends AbstractButton {
                         1f);
 
         if (isHovered && tooltip != null) {
-            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            //            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip,
+            // Component::getVisualOrderText));
         }
     }
 

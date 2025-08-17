@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -39,6 +38,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -129,17 +129,17 @@ public class ItemTextOverlayFeature extends Feature {
     public void onRenderSlot(SlotRenderEvent.Post e) {
         if (!inventoryTextOverlayEnabled.get()) return;
 
-        drawTextOverlay(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
+        drawTextOverlay(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
         if (!hotbarTextOverlayEnabled.get()) return;
 
-        drawTextOverlay(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), true);
+        drawTextOverlay(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY(), true);
     }
 
-    private void drawTextOverlay(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+    private void drawTextOverlay(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
@@ -156,13 +156,12 @@ public class ItemTextOverlayFeature extends Feature {
             return;
         }
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
-        poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().scale(textOverlay.scale(), textOverlay.scale());
         float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
         float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
-        FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task(), Font.DisplayMode.NORMAL);
-        poseStack.popPose();
+        FontRenderer.getInstance().renderText(guiGraphics, x, y, textOverlay.task(), Font.DisplayMode.NORMAL);
+        guiGraphics.pose().popMatrix();
     }
 
     private TextOverlayInfo calculateOverlay(WynnItem wynnItem) {

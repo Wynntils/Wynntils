@@ -24,7 +24,6 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -179,7 +178,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.playerViewer.warning")),
                         this.width / 2f - 200,
                         this.width / 2f + 200,
@@ -216,12 +215,12 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        BufferedRenderUtils.drawTexturedRect(
-                guiGraphics.pose(),
-                guiGraphics.bufferSource,
-                Texture.PLAYER_VIEWER_BACKGROUND,
-                this.leftPos,
-                this.topPos);
+        //        BufferedRenderUtils.drawTexturedRect(
+        //                guiGraphics.pose(),
+        //                guiGraphics.bufferSource,
+        //                Texture.PLAYER_VIEWER_BACKGROUND,
+        //                this.leftPos,
+        //                this.topPos);
     }
 
     @Override

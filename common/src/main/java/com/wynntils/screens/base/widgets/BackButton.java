@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -22,40 +21,8 @@ public class BackButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        Texture backArrow = Texture.BACK_ARROW_OFFSET;
-        if (this.isHovered) {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    backArrow.resource(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    this.width,
-                    this.height,
-                    backArrow.width() / 2,
-                    0,
-                    backArrow.width() / 2,
-                    backArrow.height(),
-                    backArrow.width(),
-                    backArrow.height());
-        } else {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    backArrow.resource(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    this.width,
-                    this.height,
-                    0,
-                    0,
-                    backArrow.width() / 2,
-                    backArrow.height(),
-                    backArrow.width(),
-                    backArrow.height());
-        }
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics, Texture.BACK_ARROW_OFFSET, this.getX(), this.getY(), isHovered);
     }
 
     @Override

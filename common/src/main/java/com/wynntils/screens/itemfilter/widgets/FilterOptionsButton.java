@@ -4,13 +4,11 @@
  */
 package com.wynntils.screens.itemfilter.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -51,8 +49,6 @@ public class FilterOptionsButton extends BasicTexturedButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         // Only count as hovered if the mouse is outside of the background area as a slight bit
         // of the button is rendered underneath the background
         if (isHovered
@@ -67,11 +63,12 @@ public class FilterOptionsButton extends BasicTexturedButton {
         }
 
         // When selected or hovered it should use the alternate texture
-        RenderUtils.drawHoverableTexturedRect(poseStack, texture, getX(), getY(), this.isHovered || this.isSelected);
+        //        RenderUtils.drawHoverableTexturedRect(poseStack, texture, getX(), getY(), this.isHovered ||
+        // this.isSelected);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         message,
                         getX() + 2,
                         getX() + getWidth() - 4,

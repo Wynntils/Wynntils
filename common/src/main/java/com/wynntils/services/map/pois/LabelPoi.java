@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.services.map.Label;
 import com.wynntils.services.map.type.DisplayPriority;
@@ -17,6 +16,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class LabelPoi implements Poi {
@@ -95,7 +95,7 @@ public class LabelPoi implements Poi {
 
     @Override
     public void renderAt(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             float renderX,
             float renderY,
@@ -115,13 +115,13 @@ public class LabelPoi implements Poi {
         }
         CustomColor color = getRenderedColor(alpha);
 
-        poseStack.pushPose();
-        poseStack.translate(renderX, renderY, getDisplayPriority().ordinal());
-        poseStack.scale(modifier, modifier, modifier);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(renderX, renderY); // TODO: Check if the priority z is needed
+        guiGraphics.pose().scale(modifier, modifier); // Check is the z modifier is needed
 
         BufferedFontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         bufferSource,
                         StyledText.fromString(label.getName()),
                         0,
@@ -136,7 +136,7 @@ public class LabelPoi implements Poi {
             if (level.isPresent() && level.get() >= 1) {
                 BufferedFontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 bufferSource,
                                 StyledText.fromString("[Lv. " + level.get() + "]"),
                                 0,
@@ -148,7 +148,7 @@ public class LabelPoi implements Poi {
                                 1f);
             }
         }
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players;
@@ -7,7 +7,6 @@ package com.wynntils.models.players;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -199,7 +198,8 @@ public final class PlayerModel extends Model {
                     fetching.remove(uuid);
 
                     // Schedule cape loading for next render tick
-                    RenderSystem.recordRenderCall(() -> Services.Cosmetics.loadCosmeticTextures(uuid, user));
+                    //                    RenderSystem.recordRenderCall(() ->
+                    // Services.Cosmetics.loadCosmeticTextures(uuid, user));
                 },
                 onError -> {
                     errors.put(System.currentTimeMillis());

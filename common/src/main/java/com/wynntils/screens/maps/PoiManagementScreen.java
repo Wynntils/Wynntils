@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps;
 
 import com.google.gson.JsonSyntaxException;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.config.HiddenConfig;
@@ -385,9 +384,17 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawScalingTexturedRect(
+                guiGraphics,
+                Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
+                (int) backgroundX,
+                (int) backgroundY,
+                (int) backgroundWidth,
+                (int) backgroundHeight);
+
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-        renderScrollButton(poseStack);
+
+        renderScrollButton(guiGraphics);
 
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
@@ -395,7 +402,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                 .isEmpty()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.poiManagementGui.noPois")),
                             (int) (dividedWidth * 32),
@@ -410,7 +417,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.search")),
                         (int) (dividedWidth * 10) + 5,
                         (int) dividedHeight,
@@ -422,7 +429,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         if (pois.isEmpty()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.poiManagementGui.noFilteredPois")),
                             (int) (dividedWidth * 32),
@@ -432,31 +439,16 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         } else {
-            RenderUtils.drawRect(
-                    poseStack,
-                    CommonColors.WHITE,
-                    (int) (dividedWidth * 12),
-                    (int) (dividedHeight * HEADER_HEIGHT),
-                    0,
-                    (int) (dividedWidth * 38),
-                    1);
+            // TODO: Use drawLine instead
+            //            RenderUtils.drawRect(
+            //                    poseStack,
+            //                    CommonColors.WHITE,
+            //                    (int) (dividedWidth * 12),
+            //                    (int) (dividedHeight * HEADER_HEIGHT),
+            //                    0,
+            //                    (int) (dividedWidth * 38),
+            //                    1);
         }
-    }
-
-    @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
-        RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(),
-                Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
-                backgroundX,
-                backgroundY,
-                0,
-                backgroundWidth,
-                backgroundHeight,
-                Texture.WAYPOINT_MANAGER_BACKGROUND.width(),
-                Texture.WAYPOINT_MANAGER_BACKGROUND.height());
     }
 
     @Override
@@ -629,7 +621,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         this.filteredIcons = filteredIcons;
     }
 
-    private void renderScrollButton(PoseStack poseStack) {
+    private void renderScrollButton(GuiGraphics guiGraphics) {
         // Don't render the scroll button if it will not be useable
         if (pois.size() <= maxPoisToDisplay) return;
 
@@ -639,15 +631,12 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                 + MathUtils.map(scrollOffset, 0, pois.size() - maxPoisToDisplay, 0, scrollAreaHeight);
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.SCROLL_BUTTON.resource(),
-                scrollButtonRenderX,
-                scrollButtonRenderY,
-                1,
-                (dividedWidth / 2),
-                scrollButtonHeight,
-                Texture.SCROLL_BUTTON.width(),
-                Texture.SCROLL_BUTTON.height());
+                (int) scrollButtonRenderX,
+                (int) scrollButtonRenderY,
+                (int) (dividedWidth / 2),
+                (int) scrollButtonHeight);
     }
 
     private void scroll(int delta) {
@@ -755,20 +744,24 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
             case ICON_ASC -> pois.sort(Comparator.comparing(CustomPoi::getIcon));
             case ICON_DESC -> pois.sort(Comparator.comparing(CustomPoi::getIcon).reversed());
             case NAME_ASC -> pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
-            case NAME_DESC -> pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
-                    .reversed());
-            case X_ASC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getX()));
-            case X_DESC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
-            case Y_ASC -> pois.sort(Comparator.comparing(
-                    poi -> poi.getLocation().getY().orElse(null), Comparator.nullsFirst(Comparator.naturalOrder())));
-            case Y_DESC -> pois.sort(Comparator.comparing(
-                    poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
-            case Z_ASC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getZ()));
-            case Z_DESC -> pois.sort(
-                    Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
+            case NAME_DESC ->
+                pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
+                        .reversed());
+            case X_ASC ->
+                pois.sort(Comparator.comparing(poi -> poi.getLocation().getX()));
+            case X_DESC ->
+                pois.sort(Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
+            case Y_ASC ->
+                pois.sort(Comparator.comparing(
+                        poi -> poi.getLocation().getY().orElse(null),
+                        Comparator.nullsFirst(Comparator.naturalOrder())));
+            case Y_DESC ->
+                pois.sort(Comparator.comparing(
+                        poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
+            case Z_ASC ->
+                pois.sort(Comparator.comparing(poi -> poi.getLocation().getZ()));
+            case Z_DESC ->
+                pois.sort(Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
         }
     }
 

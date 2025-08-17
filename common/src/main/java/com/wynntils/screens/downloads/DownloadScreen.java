@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.downloads;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.DownloadDependencyGraph;
 import com.wynntils.core.net.QueuedDownload;
@@ -109,11 +108,9 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.downloads.name")
                                 .withStyle(ChatFormatting.UNDERLINE)),
                         dividedWidth * 32,
@@ -138,11 +135,10 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         RenderUtils.disableScissor(guiGraphics);
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.LIGHT_GRAY,
-                (dividedWidth * 48),
+                (int) (dividedWidth * 48),
                 (int) (dividedHeight * WIDGET_TOP_Y),
-                0,
                 6,
                 WIDGETS_PER_PAGE * widgetHeight);
 
@@ -150,17 +146,16 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, (WIDGETS_PER_PAGE * widgetHeight) - 20));
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 draggingScroll ? CommonColors.BLACK : CommonColors.GRAY,
-                (dividedWidth * 48),
+                (int) (dividedWidth * 48),
                 scrollY,
-                0,
                 6,
                 20);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.downloads.info")
                                 .withStyle(ChatFormatting.UNDERLINE)),
                         (dividedWidth * 56),
@@ -173,7 +168,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(infoText),
                         (dividedWidth * 50),
                         (dividedWidth * 63),

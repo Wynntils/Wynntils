@@ -1,13 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.BoundingBox;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class MapTexture {
@@ -42,7 +40,7 @@ public class MapTexture {
     public ResourceLocation resource() {
         if (!registered) {
             registered = true;
-            McUtils.mc().getTextureManager().register(mapResource, new DynamicTexture(texture));
+            //            McUtils.mc().getTextureManager().register(mapResource, new DynamicTexture(texture));
         }
 
         return mapResource;

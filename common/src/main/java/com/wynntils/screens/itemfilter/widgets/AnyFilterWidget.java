@@ -34,7 +34,7 @@ public class AnyFilterWidget extends GeneralFilterWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                 "screens.wynntils.itemFilter.anyFilterActive",
                                 parent.getProvider().getDisplayName())),

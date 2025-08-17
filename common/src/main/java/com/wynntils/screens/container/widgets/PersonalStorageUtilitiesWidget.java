@@ -70,12 +70,12 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BANK_PANEL, getX(), getY());
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.BANK_PANEL, getX(), getY());
 
         if (!Models.Bank.isEditingName()) {
             FontRenderer.getInstance()
                     .renderScrollingText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(pageName),
                             getX() + 4,
                             getY() + 11,

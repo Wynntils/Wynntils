@@ -100,7 +100,7 @@ public class ContentTrackerOverlay extends Overlay {
 
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),
@@ -118,7 +118,7 @@ public class ContentTrackerOverlay extends Overlay {
 
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),

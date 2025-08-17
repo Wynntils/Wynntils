@@ -87,7 +87,7 @@ public abstract class TextOverlay extends DynamicOverlay {
         float renderY = this.getRenderY();
         BufferedFontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         bufferSource,
                         lines,
                         renderX,

@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -54,7 +53,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.Locale;
 import java.util.Map;
@@ -195,9 +193,10 @@ public class ContainerSearchFeature extends Feature {
         Boolean result = wynnItemOpt.get().getData().get(WynnItemData.SEARCHED_KEY);
         if (result == null || !result) return;
 
-        RenderSystem.enableDepthTest();
-        RenderUtils.drawArc(e.getPoseStack(), highlightColor.get(), e.getSlot().x, e.getSlot().y, 100, 1f, 6, 8);
-        RenderSystem.disableDepthTest();
+        //        RenderSystem.enableDepthTest();
+        //        RenderUtils.drawArc(e.getPoseStack(), highlightColor.get(), e.getSlot().x, e.getSlot().y, 100, 1f, 6,
+        // 8);
+        //        RenderSystem.disableDepthTest();
     }
 
     @SubscribeEvent

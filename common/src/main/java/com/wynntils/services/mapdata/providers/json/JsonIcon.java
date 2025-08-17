@@ -1,14 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.providers.json;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
-import com.wynntils.utils.mc.McUtils;
 import java.io.IOException;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class JsonIcon implements MapIcon {
@@ -32,7 +30,7 @@ public class JsonIcon implements MapIcon {
         if (!registered) {
             // We canot do this in the constructor since GL is not initiated at that time
             registered = true;
-            McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
+            //            McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
         }
 
         return resource;

@@ -127,36 +127,28 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                //                guiGraphics.renderComponentTooltip(
+                //                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(),
+                // mouseX, mouseY);
                 return;
             }
         }
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.FULLSCREEN_MAP_BORDER.resource(),
-                renderX,
-                renderY,
-                100,
-                renderWidth,
-                renderHeight,
-                Texture.FULLSCREEN_MAP_BORDER.width(),
-                Texture.FULLSCREEN_MAP_BORDER.height());
-    }
-
-    protected void renderBlurredBackground() {
-        super.renderBlurredBackground();
+                (int) renderX,
+                (int) renderY,
+                (int) renderWidth,
+                (int) renderHeight);
     }
 
     protected void renderPois(
             List<Poi> pois,
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             BoundingBox textureBoundingBox,
             float poiScale,
             int mouseX,
@@ -176,7 +168,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
             poi.renderAt(
-                    poseStack,
+                    guiGraphics,
                     bufferSource,
                     poiRenderX,
                     poiRenderZ,
@@ -297,13 +289,13 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
-    protected void renderCoordinates(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderCoordinates(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
         int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(gameX + ", " + gameZ),
                         this.centerX,
                         this.renderHeight - this.renderedBorderYOffset - 40,
@@ -313,12 +305,12 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderZoomWidget(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderZoomWidget(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (!KeyboardUtils.isShiftDown()) return;
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("Zoom " + Math.round(zoomLevel)),
                         renderX + renderedBorderXOffset + mapWidth - 40,
                         this.renderHeight - this.renderedBorderYOffset - 10,
@@ -329,13 +321,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void renderMapButtons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        PoseStack poseStack = guiGraphics.pose();
-
         RenderUtils.drawTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.MAP_BUTTONS_BACKGROUND,
-                this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f,
-                this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
+                (int) (this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f),
+                (int) (this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height()));
 
         for (Renderable renderable : this.renderables) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
@@ -357,8 +347,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void renderMap(GuiGraphics guiGraphics) {
-        PoseStack poseStack = guiGraphics.pose();
-
         RenderUtils.enableScissor(
                 guiGraphics,
                 (int) (renderX + renderedBorderXOffset),
@@ -367,14 +355,14 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 (int) mapHeight);
 
         // Background black void color
-        RenderUtils.drawRect(
-                poseStack,
-                CommonColors.BLACK,
-                renderX + renderedBorderXOffset,
-                renderY + renderedBorderYOffset,
-                0,
-                mapWidth,
-                mapHeight);
+        //        RenderUtils.drawRect(
+        //                poseStack,
+        //                CommonColors.BLACK,
+        //                renderX + renderedBorderXOffset,
+        //                renderY + renderedBorderYOffset,
+        //                0,
+        //                mapWidth,
+        //                mapHeight);
 
         BoundingBox textureBoundingBox =
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
@@ -385,17 +373,17 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);
 
-            MapRenderer.renderMapQuad(
-                    map,
-                    poseStack,
-                    BUFFER_SOURCE,
-                    centerX,
-                    centerZ,
-                    textureX,
-                    textureZ,
-                    mapWidth,
-                    mapHeight,
-                    1f / zoomRenderScale);
+            //            MapRenderer.renderMapQuad(
+            //                    map,
+            //                    poseStack,
+            //                    BUFFER_SOURCE,
+            //                    centerX,
+            //                    centerZ,
+            //                    textureX,
+            //                    textureZ,
+            //                    mapWidth,
+            //                    mapHeight,
+            //                    1f / zoomRenderScale);
         }
 
         BUFFER_SOURCE.endBatch();

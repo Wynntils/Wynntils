@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.territorymanagement.widgets;
@@ -7,7 +7,6 @@ package com.wynntils.screens.territorymanagement.widgets;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.function.Consumer;
@@ -40,7 +39,7 @@ public class TerritoryApplyLoadoutButton extends WynntilsButton implements Toolt
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), textureSupplier.get(), this.getX(), this.getY());
+        //        RenderUtils.drawTexturedRect(guiGraphics.pose(), textureSupplier.get(), this.getX(), this.getY());
     }
 
     @Override

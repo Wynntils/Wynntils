@@ -151,7 +151,7 @@ public class GameNotificationOverlay extends Overlay {
 
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),
@@ -162,7 +162,8 @@ public class GameNotificationOverlay extends Overlay {
                                                 .getRenderTask()
                                                 .getSetting()
                                                 .customColor()
-                                                // A minimum alpha is required, otherwise too small values render with
+                                                // A minimum alpha is required, otherwise too small values
+                                                //         render with
                                                 // max alpha
                                                 .withAlpha(messageContainer.getRemainingTime() / 1000f + 0.01f))))
                                 .toList(),
@@ -177,7 +178,7 @@ public class GameNotificationOverlay extends Overlay {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()
                 .renderTextWithAlignment(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),

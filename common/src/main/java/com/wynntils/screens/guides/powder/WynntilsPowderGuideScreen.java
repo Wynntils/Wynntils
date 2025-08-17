@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.powder;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsListScreen;
@@ -52,8 +51,8 @@ public final class WynntilsPowderGuideScreen
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + offsetX,
                 65 + offsetY,
-                Texture.BACK_ARROW_OFFSET.width() / 2,
-                Texture.BACK_ARROW_OFFSET.height(),
+                Texture.BACK_ARROW_OFFSET.width(),
+                Texture.BACK_ARROW_OFFSET.height() / 2,
                 WynntilsGuidesListScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
@@ -62,36 +61,34 @@ public final class WynntilsPowderGuideScreen
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
                         + offsetX),
                 Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
-                Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.FORWARD_ARROW_OFFSET.height(),
+                Texture.FORWARD_ARROW_OFFSET.width(),
+                Texture.FORWARD_ARROW_OFFSET.height() / 2,
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
                 Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
-                Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.FORWARD_ARROW_OFFSET.height(),
+                Texture.FORWARD_ARROW_OFFSET.width(),
+                Texture.FORWARD_ARROW_OFFSET.height() / 2,
                 true,
                 this));
     }
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        renderBackgroundTexture(guiGraphics);
 
-        renderBackgroundTexture(poseStack);
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.powder.name"));
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.powder.name"));
+        renderDescription(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.guideDescription"), "");
 
-        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsGuides.guideDescription"), "");
+        renderVersion(guiGraphics);
 
-        renderVersion(poseStack);
-
-        renderItemsHeader(poseStack);
+        renderItemsHeader(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -99,17 +96,18 @@ public final class WynntilsPowderGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuidePowderItemStackButton guidePowderItemStack) {
-            guiGraphics.renderTooltip(
-                    FontRenderer.getInstance().getFont(), guidePowderItemStack.getItemStack(), mouseX, mouseY);
+            //            guiGraphics.renderTooltip(
+            //                    FontRenderer.getInstance().getFont(), guidePowderItemStack.getItemStack(), mouseX,
+            // mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderItemsHeader(PoseStack poseStack) {
+    private void renderItemsHeader(GuiGraphics guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
                         Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + offsetX,
                         30 + offsetY,

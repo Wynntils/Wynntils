@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.chattabs.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;
@@ -69,18 +68,16 @@ public class ChatTabsWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         if (this.isMouseOver(mouseX, mouseY)) {
             RenderUtils.drawRect(
-                    poseStack, CommonColors.GRAY.withAlpha(70), this.getX(), this.getY(), 0, this.width, this.height);
+                    guiGraphics, CommonColors.GRAY.withAlpha(70), this.getX(), this.getY(), this.width, this.height);
         }
 
         CustomColor nameColor = parent.isActiveChatTab(chatTab) ? CommonColors.GREEN : CommonColors.WHITE;
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(chatTab.getName()),
                         this.getX() + 4,
                         this.getY() + (this.height >> 1),

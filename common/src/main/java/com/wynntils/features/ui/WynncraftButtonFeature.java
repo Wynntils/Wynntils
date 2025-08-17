@@ -4,10 +4,8 @@
  */
 package com.wynntils.features.ui;
 
-import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
@@ -26,8 +24,8 @@ import com.wynntils.screens.update.UpdateScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -44,7 +42,6 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -189,22 +186,19 @@ public class WynncraftButtonFeature extends Feature {
             }
 
             // Insets the icon by 3
-            BufferedRenderUtils.drawScalingTexturedRect(
-                    guiGraphics.pose(),
-                    guiGraphics.bufferSource,
+            RenderUtils.drawScalingTexturedRectWithColor(
+                    guiGraphics,
                     serverIcon.getServerIconLocation(),
                     this.getX() + 3,
                     this.getY() + 3,
-                    0,
                     this.width - 6,
                     this.height - 6,
-                    64,
-                    64);
+                    CommonColors.WHITE.withAlpha(this.alpha));
 
             if (warningType == WarningType.DOWNLOADS) {
                 FontRenderer.getInstance()
                         .renderText(
-                                guiGraphics.pose(),
+                                guiGraphics,
                                 StyledText.fromString("⚠"),
                                 this.getX() + 20,
                                 this.getY(),
@@ -215,7 +209,7 @@ public class WynncraftButtonFeature extends Feature {
             } else if (warningType == WarningType.UPDATE) {
                 FontRenderer.getInstance()
                         .renderText(
-                                guiGraphics.pose(),
+                                guiGraphics,
                                 StyledText.fromString("⟳"),
                                 this.getX() + 2,
                                 this.getY(),
@@ -227,9 +221,10 @@ public class WynncraftButtonFeature extends Feature {
             }
 
             if (isHovered) {
-                McUtils.mc()
-                        .screen
-                        .setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+                //                McUtils.mc()
+                //                        .screen
+                //                        .setTooltipForNextRenderPass(Lists.transform(tooltip,
+                // Component::getVisualOrderText));
             }
         }
 
@@ -342,10 +337,11 @@ public class WynncraftButtonFeature extends Feature {
                 Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 
                 synchronized (this) {
-                    RenderSystem.recordRenderCall(() -> {
-                        McUtils.mc().getTextureManager().register(destination, new DynamicTexture(nativeImage));
-                        serverIconLocation = destination;
-                    });
+                    //                    RenderSystem.recordRenderCall(() -> {
+                    //                        McUtils.mc().getTextureManager().register(destination, new
+                    // DynamicTexture(nativeImage));
+                    //                        serverIconLocation = destination;
+                    //                    });
                 }
             } catch (IOException e) {
                 WynntilsMod.error("Unable to read server image: " + server.name, e);

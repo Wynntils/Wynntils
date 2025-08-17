@@ -4,8 +4,6 @@
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -23,11 +21,9 @@ import com.wynntils.services.map.pois.PlayerMainMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.BoundingBox;
@@ -232,8 +228,6 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .openMapKeybind
@@ -243,9 +237,11 @@ public final class MainMapScreen extends AbstractMapScreen {
             return;
         }
 
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderSystem.enableDepthTest();
+        //        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        //
+        //        RenderSystem.enableDepthTest();
 
         renderMap(guiGraphics);
 
@@ -256,57 +252,55 @@ public final class MainMapScreen extends AbstractMapScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(poseStack, mouseX, mouseY);
+        renderPois(guiGraphics, mouseX, mouseY);
 
         if (Managers.Feature.getFeatureInstance(MappingProgressFeature.class).isEnabled()) {
-            renderChunkBorders(poseStack);
+            //            renderChunkBorders(poseStack);
             BUFFER_SOURCE.endBatch();
         }
 
         // Cursor
-        renderCursor(
-                poseStack,
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .playerPointerScale
-                        .get(),
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .pointerColor
-                        .get(),
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .pointerType
-                        .get());
+        //        renderCursor(
+        //                poseStack,
+        //                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+        //                        .playerPointerScale
+        //                        .get(),
+        //                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+        //                        .pointerColor
+        //                        .get(),
+        //                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+        //                        .pointerType
+        //                        .get());
 
         LootrunPathInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
 
         if (currentLootrun != null) {
-            MapRenderer.renderLootrunLine(
-                    currentLootrun,
-                    2f,
-                    3f,
-                    poseStack,
-                    centerX,
-                    centerZ,
-                    mapCenterX,
-                    mapCenterZ,
-                    zoomRenderScale,
-                    CommonColors.LIGHT_BLUE.asInt(),
-                    CommonColors.BLACK.asInt());
+            //            MapRenderer.renderLootrunLine(
+            //                    currentLootrun,
+            //                    2f,
+            //                    3f,
+            //                    poseStack,
+            //                    centerX,
+            //                    centerZ,
+            //                    mapCenterX,
+            //                    mapCenterZ,
+            //                    zoomRenderScale,
+            //                    CommonColors.LIGHT_BLUE.asInt(),
+            //                    CommonColors.BLACK.asInt());
         }
 
         RenderUtils.disableScissor(guiGraphics);
 
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        renderCoordinates(guiGraphics, mouseX, mouseY);
 
-        renderCoordinates(poseStack, mouseX, mouseY);
-
-        renderZoomWidget(poseStack, mouseX, mouseY);
+        renderZoomWidget(guiGraphics, mouseX, mouseY);
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         Stream<? extends Poi> pois = Services.Poi.getServicePois();
 
         pois = Stream.concat(pois, Services.Poi.getCombatPois());
@@ -330,7 +324,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         renderPois(
                 pois.collect(Collectors.toList()),
-                poseStack,
+                guiGraphics,
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
                 Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .poiScale

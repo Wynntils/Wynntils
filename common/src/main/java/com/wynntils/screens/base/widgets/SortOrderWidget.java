@@ -1,13 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.Locale;
@@ -35,8 +33,6 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         Texture sortTexture =
                 switch (sortableActivityScreen.getActivitySortOrder()) {
                     case LEVEL -> Texture.SORT_LEVEL_OFFSET;
@@ -48,35 +44,35 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
         float renderY = this.getY();
 
         if (this.isHovered) {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    sortTexture.resource(),
-                    renderX,
-                    renderY,
-                    0,
-                    this.width,
-                    this.height,
-                    0,
-                    sortTexture.height() / 2,
-                    sortTexture.width(),
-                    sortTexture.height() / 2,
-                    sortTexture.width(),
-                    sortTexture.height());
+            //            RenderUtils.drawTexturedRect(
+            //                    poseStack,
+            //                    sortTexture.resource(),
+            //                    renderX,
+            //                    renderY,
+            //                    0,
+            //                    this.width,
+            //                    this.height,
+            //                    0,
+            //                    sortTexture.height() / 2,
+            //                    sortTexture.width(),
+            //                    sortTexture.height() / 2,
+            //                    sortTexture.width(),
+            //                    sortTexture.height());
         } else {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    sortTexture.resource(),
-                    renderX,
-                    renderY,
-                    0,
-                    this.width,
-                    this.height,
-                    0,
-                    0,
-                    sortTexture.width(),
-                    sortTexture.height() / 2,
-                    sortTexture.width(),
-                    sortTexture.height());
+            //            RenderUtils.drawTexturedRect(
+            //                    poseStack,
+            //                    sortTexture.resource(),
+            //                    renderX,
+            //                    renderY,
+            //                    0,
+            //                    this.width,
+            //                    this.height,
+            //                    0,
+            //                    0,
+            //                    sortTexture.width(),
+            //                    sortTexture.height() / 2,
+            //                    sortTexture.width(),
+            //                    sortTexture.height());
         }
     }
 

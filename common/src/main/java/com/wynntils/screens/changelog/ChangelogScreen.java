@@ -77,15 +77,15 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         this.addRenderableWidget(new PageSelectorButton(
                 (int) (80 - Texture.FORWARD_ARROW_OFFSET.width() / 2f + offsetX),
                 Texture.SCROLL_BACKGROUND.height() - 17 + offsetY,
-                Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.FORWARD_ARROW_OFFSET.height(),
+                Texture.FORWARD_ARROW_OFFSET.width(),
+                Texture.FORWARD_ARROW_OFFSET.height() / 2,
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.SCROLL_BACKGROUND.width() - 80 + offsetX,
                 Texture.SCROLL_BACKGROUND.height() - 17 + offsetY,
-                Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.FORWARD_ARROW_OFFSET.height(),
+                Texture.FORWARD_ARROW_OFFSET.width(),
+                Texture.FORWARD_ARROW_OFFSET.height() / 2,
                 true,
                 this));
 
@@ -105,30 +105,28 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
+        //        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
         RenderUtils.enableScissor(guiGraphics, offsetX + 40, offsetY + 11, 220, SCISSOR_HEIGHT);
         FontRenderer.getInstance()
-                .renderTexts(poseStack, 45 + offsetX, 15 + offsetY - scrollOffset, changelogTasks.get(currentPage));
+                .renderTexts(guiGraphics, 45 + offsetX, 15 + offsetY - scrollOffset, changelogTasks.get(currentPage));
         RenderUtils.disableScissor(guiGraphics);
 
         if (getMaxScrollOffset() != 0) {
-            renderScrollBar(poseStack);
+            //            renderScrollBar(poseStack);
         }
 
-        renderPageInfo(poseStack, getCurrentPage() + 1, getMaxPage() + 1);
+        renderPageInfo(guiGraphics, getCurrentPage() + 1, getMaxPage() + 1);
 
         for (Renderable renderable : this.renderables) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
-    private void renderPageInfo(PoseStack poseStack, int currentPage, int maxPage) {
+    private void renderPageInfo(GuiGraphics guiGraphics, int currentPage, int maxPage) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
                         80 + offsetX,
                         Texture.SCROLL_BACKGROUND.width() - 80 + offsetX,

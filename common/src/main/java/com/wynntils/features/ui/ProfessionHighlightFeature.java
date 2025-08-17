@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -24,8 +23,6 @@ import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
-import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -103,21 +100,21 @@ public class ProfessionHighlightFeature extends Feature {
         if (selectedProfession == null) return;
         if (!professionItemPropertyOpt.get().getProfessionTypes().contains(selectedProfession)) return;
 
-        RenderSystem.enableDepthTest();
-
-        RenderUtils.drawTexturedRectWithColor(
-                event.getPoseStack(),
-                Texture.HIGHLIGHT.resource(),
-                highlightColor.get(),
-                slot.x - 1,
-                slot.y - 1,
-                201,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
-
-        RenderSystem.disableDepthTest();
+        //        RenderSystem.enableDepthTest();
+        //
+        //        RenderUtils.drawTexturedRectWithColor(
+        //                event.getPoseStack(),
+        //                Texture.HIGHLIGHT.resource(),
+        //                highlightColor.get(),
+        //                slot.x - 1,
+        //                slot.y - 1,
+        //                201,
+        //                18,
+        //                18,
+        //                Texture.HIGHLIGHT.width(),
+        //                Texture.HIGHLIGHT.height());
+        //
+        //        RenderSystem.disableDepthTest();
     }
 
     public void setSelectedProfession(ProfessionType professionType) {
