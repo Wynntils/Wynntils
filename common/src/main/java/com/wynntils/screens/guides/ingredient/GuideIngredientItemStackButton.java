@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.ingredient;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
@@ -36,36 +35,17 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         CustomColor color = getHighlightColor(itemStack.getIngredientInfo().tier());
 
         RenderUtils.drawTexturedRectWithColor(
-                poseStack,
-                Texture.HIGHLIGHT.resource(),
-                color.withAlpha(1f),
-                getX() - 1,
-                getY() - 1,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+                guiGraphics, Texture.HIGHLIGHT, getX() - 1, getY() - 1, 18, 18, 0, 0, color);
 
         RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
 
         String unformattedName = itemStack.getIngredientInfo().name();
         if (Services.Favorites.isFavorite(unformattedName)) {
             RenderUtils.drawScalingTexturedRect(
-                    poseStack,
-                    Texture.FAVORITE_ICON.resource(),
-                    getX() + 12,
-                    getY() - 4,
-                    200,
-                    9,
-                    9,
-                    Texture.FAVORITE_ICON.width(),
-                    Texture.FAVORITE_ICON.height());
+                    guiGraphics, Texture.FAVORITE_ICON.resource(), getX() + 12, getY() - 4, 9, 9);
         }
     }
 

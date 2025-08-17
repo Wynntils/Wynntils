@@ -10,7 +10,6 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.trademarket.TradeMarketSearchResultScreen;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class PresetButton extends WynntilsButton implements TooltipProvider {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         Texture itemTexture = isSavedPreset() ? Texture.SAVED_PRESET : Texture.PRESET;
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), itemTexture, this.getX(), this.getY());
+        //        RenderUtils.drawTexturedRect(guiGraphics.pose(), itemTexture, this.getX(), this.getY());
     }
 
     @Override

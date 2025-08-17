@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.overlays.selection;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
@@ -46,7 +45,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -153,11 +151,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         // When not rendering a preview of the selected overlay
         if (!renderPreview) {
-            RenderUtils.drawTexturedRect(poseStack, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
+            RenderUtils.drawTexturedRect(guiGraphics, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
 
             searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -174,7 +170,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromString(textToRender),
                                 146 + offsetX,
                                 338 + offsetX,
@@ -188,7 +184,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             } else {
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromComponent(
                                         Component.translatable("screens.wynntils.overlaySelection.unselectedOverlay")),
                                 146 + offsetX,
@@ -203,12 +199,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             }
 
             if (overlayList.size() > MAX_OVERLAYS_PER_PAGE) {
-                renderOverlayScroll(poseStack);
+                renderOverlayScroll(guiGraphics);
             }
 
             if (selectedOverlay != null
                     && selectedOverlay.getVisibleConfigOptions().size() > CONFIGS_PER_PAGE) {
-                renderConfigScroll(poseStack);
+                renderConfigScroll(guiGraphics);
             }
 
             renderTooltips(guiGraphics, mouseX, mouseY);
@@ -222,17 +218,18 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             exitPreviewButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
             // We don't have a delta tracker here, so we'll just use a zero delta tracker
-            selectedOverlay.renderPreview(guiGraphics, guiGraphics.bufferSource, DeltaTracker.ZERO, McUtils.window());
+            //            selectedOverlay.renderPreview(guiGraphics, guiGraphics.bufferSource, DeltaTracker.ZERO,
+            // McUtils.window());
 
-            RenderUtils.drawRectBorders(
-                    poseStack,
-                    CommonColors.RED,
-                    selectedOverlay.getRenderX(),
-                    selectedOverlay.getRenderY(),
-                    selectedOverlay.getRenderX() + selectedOverlay.getWidth(),
-                    selectedOverlay.getRenderY() + selectedOverlay.getHeight(),
-                    1,
-                    1);
+            //            RenderUtils.drawRectBorders(
+            //                    poseStack,
+            //                    CommonColors.RED,
+            //                    selectedOverlay.getRenderX(),
+            //                    selectedOverlay.getRenderY(),
+            //                    selectedOverlay.getRenderX() + selectedOverlay.getWidth(),
+            //                    selectedOverlay.getRenderY() + selectedOverlay.getHeight(),
+            //                    1,
+            //                    1);
         }
     }
 
@@ -933,7 +930,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderOverlayScroll(PoseStack poseStack) {
+    private void renderOverlayScroll(GuiGraphics guiGraphics) {
         overlayScrollY = 24
                 + offsetY
                 + MathUtils.map(
@@ -943,10 +940,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                         0,
                         177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 133 + offsetX, overlayScrollY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 133 + offsetX, (int) overlayScrollY);
     }
 
-    private void renderConfigScroll(PoseStack poseStack) {
+    private void renderConfigScroll(GuiGraphics guiGraphics) {
         configScrollY = 24
                 + offsetY
                 + MathUtils.map(
@@ -956,7 +953,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                         0,
                         177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 344 + offsetX, configScrollY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 344 + offsetX, (int) configScrollY);
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
@@ -974,8 +971,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
         for (GuiEventListener child : optionButtons) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                //                guiGraphics.renderComponentTooltip(
+                //                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(),
+                // mouseX, mouseY);
                 break;
             }
         }

@@ -29,7 +29,6 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
@@ -120,14 +119,15 @@ public class CosmeticsService extends Service {
 
             if (frames == 1) { // not animated
                 locations[0] = ResourceLocation.parse(baseLocation);
-                McUtils.mc().getTextureManager().register(locations[0], new DynamicTexture(image));
+                //                McUtils.mc().getTextureManager().register(locations[0], new DynamicTexture(image));
             } else { // animated
                 for (int i = 0; i < frames; i++) {
                     NativeImage frame = new NativeImage(frameHeight * 2, frameHeight, false);
                     image.copyRect(frame, 0, frameHeight * i, 0, 0, frameHeight * 2, frameHeight, false, false);
 
                     locations[i] = ResourceLocation.parse(baseLocation + "/" + i);
-                    McUtils.mc().getTextureManager().register(locations[i], new DynamicTexture(frame));
+                    //                    McUtils.mc().getTextureManager().register(locations[i], new
+                    // DynamicTexture(frame));
                 }
             }
 

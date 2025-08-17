@@ -1,12 +1,10 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.colorpicker.widgets;
 
 import com.wynntils.screens.colorpicker.ColorPickerScreen;
-import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.network.chat.Component;
@@ -23,28 +21,28 @@ public class AlphaSlider extends AbstractSliderButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.fillSidewaysGradient(
-                guiGraphics.pose(),
-                getX(),
-                getY(),
-                getX() + width,
-                getY() + height,
-                0,
-                CommonColors.WHITE.withAlpha(0),
-                colorPickerScreen.getColor().withAlpha(255));
+        //        RenderUtils.fillSidewaysGradient(
+        //                guiGraphics.pose(),
+        //                getX(),
+        //                getY(),
+        //                getX() + width,
+        //                getY() + height,
+        //                0,
+        //                CommonColors.WHITE.withAlpha(0),
+        //                colorPickerScreen.getColor().withAlpha(255));
 
         double exactX = getX() + width * value;
         int handleX = (int) Math.round(exactX);
 
-        RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
-                CommonColors.DARK_GRAY,
-                (float) (handleX - 1.0),
-                (float) getY(),
-                (float) (handleX + 1.0),
-                (float) (getY() + getHeight()),
-                2,
-                1);
+        //        RenderUtils.drawRectBorders(
+        //                guiGraphics.pose(),
+        //                CommonColors.DARK_GRAY,
+        //                (float) (handleX - 1.0),
+        //                (float) getY(),
+        //                (float) (handleX + 1.0),
+        //                (float) (getY() + getHeight()),
+        //                2,
+        //                1);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemsharing.widgets;
@@ -25,8 +25,7 @@ public class SavedCategoryButton extends WynntilsButton {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawHoverableTexturedRect(
-                guiGraphics.pose(), buttonTexture, this.getX(), this.getY(), this.isHovered);
+        RenderUtils.drawHoverableTexturedRect(guiGraphics, buttonTexture, this.getX(), this.getY(), this.isHovered);
     }
 
     @Override

@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -34,13 +33,13 @@ public class EmeraldPouchFillArcFeature extends Feature {
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.CountPre e) {
         if (!renderFillArcHotbar.get()) return;
-        drawFilledArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+        //        drawFilledArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
     }
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.CountPre e) {
         if (!renderFillArcInventory.get()) return;
-        drawFilledArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+        //        drawFilledArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
     }
 
     private void drawFilledArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
@@ -60,8 +59,8 @@ public class EmeraldPouchFillArcFeature extends Feature {
         float ringFraction = Math.min(1f, capacityFraction);
 
         // draw
-        RenderSystem.enableDepthTest();
+        //        RenderSystem.enableDepthTest();
         RenderUtils.drawArc(poseStack, color, slotX - 2, slotY - 2, 100, ringFraction, 8, 10);
-        RenderSystem.disableDepthTest();
+        //        RenderSystem.disableDepthTest();
     }
 }

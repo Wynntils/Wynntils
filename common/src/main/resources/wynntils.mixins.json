@@ -27,6 +27,7 @@
     "GuiMessageMixin",
     "GuiMixin",
     "HumanoidArmorLayerMixin",
+    "InventoryScreenMixin",
     "ItemEntityRendererMixin",
     "ItemStackLayerRenderStateMixin",
     "ItemStackMixin",

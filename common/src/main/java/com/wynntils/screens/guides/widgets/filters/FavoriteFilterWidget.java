@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.widgets.filters;
 
-import com.google.common.collect.Lists;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
@@ -14,8 +13,6 @@ import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -25,8 +22,6 @@ import com.wynntils.utils.type.ConfirmedBoolean;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class FavoriteFilterWidget extends GuideFilterWidget {
@@ -42,17 +37,16 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
-                guiGraphics.pose(),
+                guiGraphics,
                 CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f),
                 getX(),
                 getY(),
-                0,
                 getWidth(),
                 getHeight());
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromString(state == ConfirmedBoolean.UNCONFIRMED ? "☆" : "★"),
                         getX() + getWidth() / 2f,
                         getY() + getHeight() / 2f + 1,
@@ -62,15 +56,15 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
                         TextShadow.NONE);
 
         if (isHovered) {
-            McUtils.mc()
-                    .screen
-                    .setTooltipForNextRenderPass(Lists.transform(
-                            ComponentUtils.wrapTooltips(
-                                    List.of(Component.translatable(
-                                            "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
-                                            I18n.get("service.wynntils.itemFilter.stat.favorite.name"))),
-                                    200),
-                            Component::getVisualOrderText));
+            //            McUtils.mc()
+            //                    .screen
+            //                    .setTooltipForNextRenderPass(Lists.transform(
+            //                            ComponentUtils.wrapTooltips(
+            //                                    List.of(Component.translatable(
+            //                                            "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
+            //                                            I18n.get("service.wynntils.itemFilter.stat.favorite.name"))),
+            //                                    200),
+            //                            Component::getVisualOrderText));
         }
     }
 

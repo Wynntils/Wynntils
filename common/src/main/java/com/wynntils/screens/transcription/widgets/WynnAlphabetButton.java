@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.transcription.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
@@ -31,10 +30,8 @@ public class WynnAlphabetButton extends WynntilsButton {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (wynnAlphabet == null) return;
 
-        PoseStack poseStack = guiGraphics.pose();
-
         RenderUtils.drawRect(
-                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
+                guiGraphics, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), width, height);
 
         CustomColor color = getButtonColor();
 
@@ -48,7 +45,7 @@ public class WynnAlphabetButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         buttonText,
                         getX() + 1,
                         getX() + width,

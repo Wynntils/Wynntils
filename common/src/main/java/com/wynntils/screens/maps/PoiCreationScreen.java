@@ -4,8 +4,6 @@
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
@@ -22,7 +20,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -390,13 +387,11 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderBlurredBackground();
-
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-        RenderSystem.enableDepthTest();
+        //        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        //
+        //        RenderSystem.enableDepthTest();
         renderMap(guiGraphics);
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -418,38 +413,35 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();
 
-            poi.renderAt(
-                    poseStack,
-                    bufferSource,
-                    MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
-                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
-                    hovered == poi,
-                    1,
-                    zoomRenderScale,
-                    zoomLevel,
-                    true);
+            //            poi.renderAt(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
+            //                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
+            //                    hovered == poi,
+            //                    1,
+            //                    zoomRenderScale,
+            //                    zoomLevel,
+            //                    true);
 
             bufferSource.endBatch();
         }
 
-        renderCursor(
-                poseStack,
-                1.5f,
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .pointerColor
-                        .get(),
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .pointerType
-                        .get());
+        //        renderCursor(
+        //                poseStack,
+        //                1.5f,
+        //                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+        //                        .pointerColor
+        //                        .get(),
+        //                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+        //                        .pointerType
+        //                        .get());
 
         RenderUtils.disableScissor(guiGraphics);
 
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.waypointName") + ":"),
                         (int) (dividedWidth * 4),
                         (int) (dividedHeight * 12.5f),
@@ -460,7 +452,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("X:"),
                         dividedWidth,
                         dividedHeight * 34.5f,
@@ -470,7 +462,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("Y:"),
                         dividedWidth * 9.0f,
                         dividedHeight * 34.5f,
@@ -480,7 +472,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("Z:"),
                         dividedWidth * 17.0f,
                         dividedHeight * 34.5f,
@@ -493,7 +485,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.color") + ":"),
                         dividedWidth * 19f,
                         (int) (dividedHeight * 12.5f),
@@ -504,7 +496,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.visibility") + ":"),
                         dividedWidth * 10.0f,
                         dividedHeight * 45.5f,
@@ -514,7 +506,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get(selectedVisiblity.getTranslationKey())),
                         dividedWidth * 15.0f,
                         dividedWidth * 15.0f,

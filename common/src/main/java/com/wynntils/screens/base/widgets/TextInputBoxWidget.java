@@ -4,8 +4,6 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.MathUtils;
@@ -13,7 +11,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -92,8 +89,6 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         Pair<String, Integer> renderedTextDetails = getRenderedText(getMaxTextWidth());
         String renderedText = renderedTextDetails.a();
         int renderedTextStart = renderedTextDetails.b();
@@ -114,7 +109,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         int lastWidth = font.width(lastPortion);
 
         doRenderWidget(
-                poseStack,
+                guiGraphics,
                 renderedText,
                 renderedTextStart,
                 firstPortion,
@@ -127,7 +122,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     protected void doRenderWidget(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -137,26 +132,26 @@ public class TextInputBoxWidget extends AbstractWidget {
             int firstWidth,
             int highlightedWidth,
             int lastWidth) {
-        poseStack.pushPose();
+        guiGraphics.pose().pushMatrix();
 
-        poseStack.translate(this.getX(), this.getY(), 0);
+        guiGraphics.pose().translate(this.getX(), this.getY());
 
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
-        RenderUtils.drawRectBorders(
-                poseStack,
-                isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
-                0,
-                0,
-                this.width,
-                this.height,
-                1,
-                2);
+        //        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
+        //        RenderUtils.drawRectBorders(
+        //                poseStack,
+        //                isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
+        //                0,
+        //                0,
+        //                this.width,
+        //                this.height,
+        //                1,
+        //                2);
 
         boolean defaultText = Objects.equals(textBoxInput, "");
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(defaultText ? DEFAULT_TEXT.getString() : firstPortion),
                         textPadding,
                         this.width - lastWidth - highlightedWidth,
@@ -171,7 +166,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         if (!defaultText) {
             FontRenderer.getInstance()
                     .renderAlignedHighlightedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(highlightedPortion),
                             textPadding + firstWidth,
                             this.width - lastWidth,
@@ -185,7 +180,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(lastPortion),
                             textPadding + firstWidth + highlightedWidth,
                             this.width,
@@ -199,17 +194,18 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         drawCursor(
-                poseStack,
+                guiGraphics,
                 font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))),
                 (textPadding + this.height - textPadding) / 2,
                 VerticalAlignment.MIDDLE,
                 false);
 
         if (isHovered && tooltip != null) {
-            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            //            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip,
+            // Component::getVisualOrderText));
         }
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     protected int getMaxTextWidth() {
@@ -548,7 +544,11 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     protected void drawCursor(
-            PoseStack poseStack, float x, float y, VerticalAlignment verticalAlignment, boolean forceUnfocusedCursor) {
+            GuiGraphics guiGraphics,
+            float x,
+            float y,
+            VerticalAlignment verticalAlignment,
+            boolean forceUnfocusedCursor) {
         if (isDragging || hasHighlighted()) return;
 
         if (System.currentTimeMillis() - lastCursorSwitch > CURSOR_TICK) {
@@ -568,7 +568,8 @@ public class TextInputBoxWidget extends AbstractWidget {
                         case BOTTOM -> y - font.lineHeight - (CURSOR_PADDING - 1);
                     };
 
-            RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, cursorRenderY, 0, 1, font.lineHeight + 3);
+            //            RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, cursorRenderY, 0, 1,
+            // font.lineHeight + 3);
         }
     }
 

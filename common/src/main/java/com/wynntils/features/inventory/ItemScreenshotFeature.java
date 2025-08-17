@@ -4,11 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.google.common.collect.Lists;
-import com.mojang.blaze3d.pipeline.MainTarget;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -17,33 +12,17 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.extension.MinecraftExtension;
-import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.wynn.ItemUtils;
-import java.awt.HeadlessException;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-import javax.imageio.ImageIO;
-import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -115,94 +94,96 @@ public class ItemScreenshotFeature extends Feature {
         float scalew = (float) screen.width / width;
 
         // Create tooltip renderer
-        Screen.DeferredTooltipRendering deferredTooltipRendering = new Screen.DeferredTooltipRendering(
-                Lists.transform(tooltip, Component::getVisualOrderText), NO_POSITIONER);
-
-        // draw tooltip to framebuffer, create image
-        McUtils.mc().getMainRenderTarget().unbindWrite();
-
-        ByteBufferBuilder byteBuffer = new ByteBufferBuilder(256);
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(byteBuffer);
-        GuiGraphics guiGraphics = new GuiGraphics(McUtils.mc(), bufferSource);
-        RenderTarget fb = new MainTarget(width * 2, height * 2);
-        fb.setClearColor(1f, 1f, 1f, 0f);
-        fb.createBuffers(width * 2, height * 2);
-        fb.bindWrite(false);
-        ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(fb);
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().scale(scalew, scaleh, 1);
-        guiGraphics.renderTooltip(
-                FontRenderer.getInstance().getFont(),
-                deferredTooltipRendering.tooltip(),
-                deferredTooltipRendering.positioner(),
-                0,
-                0);
-        guiGraphics.pose().popPose();
-        guiGraphics.flush();
-        fb.unbindWrite();
-        ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(null);
-        McUtils.mc().getMainRenderTarget().bindWrite(true);
-
-        BufferedImage bi = SystemUtils.createScreenshot(fb);
-
-        // Free the buffer source to prevent memory leaks
-        byteBuffer.close();
-        bufferSource = null;
-
-        if (saveToDisk.get()) {
-            // First try to save it to disk
-            String itemNameForFile = StyledText.fromComponent(itemStack.getHoverName())
-                    .trim()
-                    .replaceAll("⬡ ", "") // remove shiny indicator
-                    .replaceAll("[/ ]", "_")
-                    .getNormalized()
-                    .getString(PartStyle.StyleType.NONE);
-            File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
-            String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
-            try {
-                Files.createDirectories(screenshotDir.toPath()); // create dir if it doesn't exist, ignore if it does
-                File outputfile = new File(screenshotDir, filename);
-                ImageIO.write(bi, "png", outputfile);
-
-                McUtils.sendMessageToClient(Component.translatable(
-                                "feature.wynntils.itemScreenshot.save.message",
-                                itemStack.getHoverName(),
-                                Component.literal(outputfile.getName())
-                                        .withStyle(ChatFormatting.UNDERLINE)
-                                        .withStyle(style -> style.withClickEvent(new ClickEvent(
-                                                ClickEvent.Action.OPEN_FILE, outputfile.getAbsolutePath()))))
-                        .withStyle(ChatFormatting.GREEN));
-            } catch (IOException e) {
-                WynntilsMod.error("Failed to save image to disk", e);
-                McUtils.sendErrorToClient(
-                        I18n.get("feature.wynntils.itemScreenshot.save.error", itemStack.getHoverName(), filename));
-            }
-
-            if (SystemUtils.isMac()) {
-                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac")
-                        .withStyle(ChatFormatting.GRAY));
-                return;
-            }
-        } else if (SystemUtils.isMac()) {
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac2")
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(Component.translatable("feature.wynntils.itemScreenshot.copy.mac.clickHere")
-                            .withStyle(ChatFormatting.GRAY)
-                            .withStyle(ChatFormatting.UNDERLINE)
-                            .withStyle(style -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND,
-                                    "/wynntils config set ItemScreenshot saveToDisk true")))));
-            return;
-        }
-
-        try {
-            SystemUtils.copyImageToClipboard(bi);
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.message")
-                    .withStyle(ChatFormatting.GREEN));
-        } catch (HeadlessException ex) {
-            WynntilsMod.error("Failed to copy image to clipboard", ex);
-            McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.copy.error"));
-        }
+        //        Screen.DeferredTooltipRendering deferredTooltipRendering = new Screen.DeferredTooltipRendering(
+        //                Lists.transform(tooltip, Component::getVisualOrderText), NO_POSITIONER);
+        //
+        //        // draw tooltip to framebuffer, create image
+        //        McUtils.mc().getMainRenderTarget().unbindWrite();
+        //
+        //        ByteBufferBuilder byteBuffer = new ByteBufferBuilder(256);
+        //        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(byteBuffer);
+        //        GuiGraphics guiGraphics = new GuiGraphics(McUtils.mc(), bufferSource);
+        //        RenderTarget fb = new MainTarget(width * 2, height * 2);
+        //        fb.setClearColor(1f, 1f, 1f, 0f);
+        //        fb.createBuffers(width * 2, height * 2);
+        //        fb.bindWrite(false);
+        //        ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(fb);
+        //        guiGraphics.pose().pushPose();
+        //        guiGraphics.pose().scale(scalew, scaleh, 1);
+        //        guiGraphics.renderTooltip(
+        //                FontRenderer.getInstance().getFont(),
+        //                deferredTooltipRendering.tooltip(),
+        //                deferredTooltipRendering.positioner(),
+        //                0,
+        //                0);
+        //        guiGraphics.pose().popPose();
+        //        guiGraphics.flush();
+        //        fb.unbindWrite();
+        //        ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(null);
+        //        McUtils.mc().getMainRenderTarget().bindWrite(true);
+        //
+        //        BufferedImage bi = SystemUtils.createScreenshot(fb);
+        //
+        //        // Free the buffer source to prevent memory leaks
+        //        byteBuffer.close();
+        //        bufferSource = null;
+        //
+        //        if (saveToDisk.get()) {
+        //            // First try to save it to disk
+        //            String itemNameForFile = StyledText.fromComponent(itemStack.getHoverName())
+        //                    .trim()
+        //                    .replaceAll("⬡ ", "") // remove shiny indicator
+        //                    .replaceAll("[/ ]", "_")
+        //                    .getNormalized()
+        //                    .getString(PartStyle.StyleType.NONE);
+        //            File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
+        //            String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
+        //            try {
+        //                Files.createDirectories(screenshotDir.toPath()); // create dir if it doesn't exist, ignore if
+        // it does
+        //                File outputfile = new File(screenshotDir, filename);
+        //                ImageIO.write(bi, "png", outputfile);
+        //
+        //                McUtils.sendMessageToClient(Component.translatable(
+        //                                "feature.wynntils.itemScreenshot.save.message",
+        //                                itemStack.getHoverName(),
+        //                                Component.literal(outputfile.getName())
+        //                                        .withStyle(ChatFormatting.UNDERLINE)
+        //                                        .withStyle(style -> style.withClickEvent(new ClickEvent(
+        //                                                ClickEvent.Action.OPEN_FILE, outputfile.getAbsolutePath()))))
+        //                        .withStyle(ChatFormatting.GREEN));
+        //            } catch (IOException e) {
+        //                WynntilsMod.error("Failed to save image to disk", e);
+        //                McUtils.sendErrorToClient(
+        //                        I18n.get("feature.wynntils.itemScreenshot.save.error", itemStack.getHoverName(),
+        // filename));
+        //            }
+        //
+        //            if (SystemUtils.isMac()) {
+        //                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac")
+        //                        .withStyle(ChatFormatting.GRAY));
+        //                return;
+        //            }
+        //        } else if (SystemUtils.isMac()) {
+        //            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac2")
+        //                    .withStyle(ChatFormatting.GRAY)
+        //                    .append(Component.translatable("feature.wynntils.itemScreenshot.copy.mac.clickHere")
+        //                            .withStyle(ChatFormatting.GRAY)
+        //                            .withStyle(ChatFormatting.UNDERLINE)
+        //                            .withStyle(style -> style.withClickEvent(new ClickEvent(
+        //                                    ClickEvent.Action.RUN_COMMAND,
+        //                                    "/wynntils config set ItemScreenshot saveToDisk true")))));
+        //            return;
+        //        }
+        //
+        //        try {
+        //            SystemUtils.copyImageToClipboard(bi);
+        //            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.message")
+        //                    .withStyle(ChatFormatting.GREEN));
+        //        } catch (HeadlessException ex) {
+        //            WynntilsMod.error("Failed to copy image to clipboard", ex);
+        //            McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.copy.error"));
+        //        }
     }
 
     /**

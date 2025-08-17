@@ -65,8 +65,8 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f) + offsetX,
                 65 + offsetY,
-                Texture.BACK_ARROW_OFFSET.width() / 2,
-                Texture.BACK_ARROW_OFFSET.height(),
+                Texture.BACK_ARROW_OFFSET.width(),
+                Texture.BACK_ARROW_OFFSET.height() / 2,
                 WynntilsGuidesListScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
@@ -75,15 +75,15 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
                         - Texture.FORWARD_ARROW_OFFSET.width() / 2f
                         + offsetX),
                 Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
-                Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.FORWARD_ARROW_OFFSET.height(),
+                Texture.FORWARD_ARROW_OFFSET.width(),
+                Texture.FORWARD_ARROW_OFFSET.height() / 2,
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.CONTENT_BOOK_BACKGROUND.width() - 50 + offsetX,
                 Texture.CONTENT_BOOK_BACKGROUND.height() - 25 + offsetY,
-                Texture.FORWARD_ARROW_OFFSET.width() / 2,
-                Texture.FORWARD_ARROW_OFFSET.height(),
+                Texture.FORWARD_ARROW_OFFSET.width(),
+                Texture.FORWARD_ARROW_OFFSET.height() / 2,
                 true,
                 this));
 

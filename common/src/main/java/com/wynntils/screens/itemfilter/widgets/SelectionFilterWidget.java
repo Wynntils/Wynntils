@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
@@ -12,7 +11,6 @@ import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -51,16 +49,14 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawRect(poseStack, getRectColor().withAlpha(100), getX(), getY(), 0, width - 18, height);
-
-        RenderUtils.drawRectBorders(
-                poseStack, getBorderColor(), getX(), getY(), getX() + width - 18, getY() + height, 1, 2);
+        //        RenderUtils.drawRect(poseStack, getRectColor().withAlpha(100), getX(), getY(), 0, width - 18, height);
+        //
+        //        RenderUtils.drawRectBorders(
+        //                poseStack, getBorderColor(), getX(), getY(), getX() + width - 18, getY() + height, 1, 2);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(valueName),
                         getX() + 2,
                         getY() + (height / 2f),

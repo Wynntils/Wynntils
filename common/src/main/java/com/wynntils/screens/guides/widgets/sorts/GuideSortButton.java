@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.widgets.sorts;
 
-import com.google.common.collect.Lists;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
@@ -13,14 +12,11 @@ import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortDirection;
 import com.wynntils.services.itemfilter.type.SortInfo;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -49,17 +45,16 @@ public class GuideSortButton extends AbstractWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
-                guiGraphics.pose(),
+                guiGraphics,
                 CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f),
                 getX(),
                 getY(),
-                0,
                 getWidth(),
                 getHeight());
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromString(getSortName()),
                         getX() + getWidth() / 2f,
                         getY() + getHeight() / 2f,
@@ -71,7 +66,7 @@ public class GuideSortButton extends AbstractWidget {
         if (sortDirection != null) {
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(sortDirection == SortDirection.ASCENDING ? "▲" : "▼"),
                             getX() + getWidth(),
                             getY() - 2,
@@ -82,14 +77,15 @@ public class GuideSortButton extends AbstractWidget {
         }
 
         if (isHovered) {
-            McUtils.mc()
-                    .screen
-                    .setTooltipForNextRenderPass(Lists.transform(
-                            ComponentUtils.wrapTooltips(
-                                    List.of(Component.translatable(
-                                            "screens.wynntils.wynntilsGuides.sortWidget.tooltip", getSortName())),
-                                    200),
-                            Component::getVisualOrderText));
+            //            McUtils.mc()
+            //                    .screen
+            //                    .setTooltipForNextRenderPass(Lists.transform(
+            //                            ComponentUtils.wrapTooltips(
+            //                                    List.of(Component.translatable(
+            //                                            "screens.wynntils.wynntilsGuides.sortWidget.tooltip",
+            // getSortName())),
+            //                                    200),
+            //                            Component::getVisualOrderText));
         }
     }
 

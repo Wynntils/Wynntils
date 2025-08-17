@@ -4,15 +4,9 @@
  */
 package com.wynntils.utils.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.MathUtils;
@@ -21,21 +15,14 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
-import com.wynntils.utils.render.buffered.CustomRenderType;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.type.BoundingBox;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import org.joml.Matrix4f;
-import org.joml.Vector2d;
 import org.joml.Vector2f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 public final class MapRenderer {
     // The possible zoom levels range between [1, ZOOM_LEVELS] (inclusive).
@@ -80,51 +67,52 @@ public final class MapRenderer {
                 logMinZoomGuiScale + (logMaxZoomGuiScale - logMinZoomGuiScale) * (zoomLevel - 1) / (ZOOM_LEVELS - 1));
     }
 
-    public static void renderMapQuad(
-            MapTexture map,
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
-            float centerX,
-            float centerZ,
-            float textureX,
-            float textureZ,
-            float width,
-            float height,
-            float scale) {
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getMapPositionTextureQuad(map.resource()));
+    //    public static void renderMapQuad(
+    //            MapTexture map,
+    //            PoseStack poseStack,
+    //            MultiBufferSource bufferSource,
+    //            float centerX,
+    //            float centerZ,
+    //            float textureX,
+    //            float textureZ,
+    //            float width,
+    //            float height,
+    //            float scale) {
+    //        VertexConsumer buffer =
+    // bufferSource.getBuffer(CustomRenderType.getMapPositionTextureQuad(map.resource()));
+    //
+    //        renderMap(map, poseStack, buffer, centerX, centerZ, textureX, textureZ, width, height, scale);
+    //    }
 
-        renderMap(map, poseStack, buffer, centerX, centerZ, textureX, textureZ, width, height, scale);
-    }
-
-    public static void renderMapQuad(
-            MapTexture map,
-            PoseStack poseStack,
-            float centerX,
-            float centerZ,
-            float textureX,
-            float textureZ,
-            float width,
-            float height,
-            float scale) {
-        RenderSystem.disableBlend();
-
-        RenderSystem.setShader(CoreShaders.POSITION_TEX);
-        RenderSystem.setShaderTexture(0, map.resource());
-
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-
-        // clamp map rendering
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
-
-        BufferBuilder builder =
-                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-
-        renderMap(map, poseStack, builder, centerX, centerZ, textureX, textureZ, width, height, scale);
-
-        BufferUploader.drawWithShader(builder.build());
-    }
+    //    public static void renderMapQuad(
+    //            MapTexture map,
+    //            PoseStack poseStack,
+    //            float centerX,
+    //            float centerZ,
+    //            float textureX,
+    //            float textureZ,
+    //            float width,
+    //            float height,
+    //            float scale) {
+    //        RenderSystem.disableBlend();
+    //
+    //        RenderSystem.setShader(CoreShaders.POSITION_TEX);
+    //        RenderSystem.setShaderTexture(0, map.resource());
+    //
+    //        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+    //        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+    //
+    //        // clamp map rendering
+    //        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
+    //        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
+    //
+    //        BufferBuilder builder =
+    //                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+    //
+    //        renderMap(map, poseStack, builder, centerX, centerZ, textureX, textureZ, width, height, scale);
+    //
+    //        BufferUploader.drawWithShader(builder.build());
+    //    }
 
     private static void renderMap(
             MapTexture map,
@@ -265,81 +253,81 @@ public final class MapRenderer {
         }
     }
 
-    public static void renderLootrunLine(
-            LootrunPathInstance lootrun,
-            float lootrunWidth,
-            float outlineWidth,
-            PoseStack poseStack,
-            float centerX,
-            float centerZ,
-            float mapTextureX,
-            float mapTextureZ,
-            float currentZoom,
-            int lootrunColor,
-            int outlineColor) {
-        if (lootrun.simplifiedPath().size() < 3) return;
-
-        BufferBuilder bufferBuilder =
-                Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
-        RenderSystem.setShader(CoreShaders.POSITION_COLOR);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.disableCull();
-
-        List<Vector2f> points = new ArrayList<>();
-
-        List<Vector2f> middlePoints = new ArrayList<>();
-
-        Vector2f last = null;
-        for (Vector2d point : lootrun.simplifiedPath()) {
-            Vector2f screenPos = new Vector2f(
-                    getRenderX((int) point.x(), mapTextureX, centerX, currentZoom),
-                    getRenderZ((int) point.y(), mapTextureZ, centerZ, currentZoom));
-
-            if (last == null) {
-                last = screenPos;
-                points.add(screenPos);
-                continue;
-            }
-
-            if (new Vector2f(last).sub(screenPos).length() > 2) {
-                last = screenPos;
-                points.add(screenPos);
-            }
-        }
-
-        for (int i = 0; i < points.size() - 1; i++) {
-            if (i == 0) {
-                middlePoints.add(points.getFirst());
-            } else if (i == points.size() - 2) {
-                middlePoints.add(points.getLast());
-            } else {
-                middlePoints.add(
-                        new Vector2f(points.get(i)).add(points.get(i + 1)).mul(0.5f));
-            }
-        }
-
-        for (int i = 1; i < middlePoints.size(); i++) {
-            drawTriangles(
-                    bufferBuilder,
-                    poseStack,
-                    middlePoints.get(i - 1),
-                    points.get(i),
-                    middlePoints.get(i),
-                    outlineColor,
-                    outlineWidth);
-            drawTriangles(
-                    bufferBuilder,
-                    poseStack,
-                    middlePoints.get(i - 1),
-                    points.get(i),
-                    middlePoints.get(i),
-                    lootrunColor,
-                    lootrunWidth);
-        }
-
-        BufferUploader.drawWithShader(bufferBuilder.build());
-        RenderSystem.enableCull();
-    }
+    //    public static void renderLootrunLine(
+    //            LootrunPathInstance lootrun,
+    //            float lootrunWidth,
+    //            float outlineWidth,
+    //            PoseStack poseStack,
+    //            float centerX,
+    //            float centerZ,
+    //            float mapTextureX,
+    //            float mapTextureZ,
+    //            float currentZoom,
+    //            int lootrunColor,
+    //            int outlineColor) {
+    //        if (lootrun.simplifiedPath().size() < 3) return;
+    //
+    //        BufferBuilder bufferBuilder =
+    //                Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
+    //        RenderSystem.setShader(CoreShaders.POSITION_COLOR);
+    //        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+    //        RenderSystem.disableCull();
+    //
+    //        List<Vector2f> points = new ArrayList<>();
+    //
+    //        List<Vector2f> middlePoints = new ArrayList<>();
+    //
+    //        Vector2f last = null;
+    //        for (Vector2d point : lootrun.simplifiedPath()) {
+    //            Vector2f screenPos = new Vector2f(
+    //                    getRenderX((int) point.x(), mapTextureX, centerX, currentZoom),
+    //                    getRenderZ((int) point.y(), mapTextureZ, centerZ, currentZoom));
+    //
+    //            if (last == null) {
+    //                last = screenPos;
+    //                points.add(screenPos);
+    //                continue;
+    //            }
+    //
+    //            if (new Vector2f(last).sub(screenPos).length() > 2) {
+    //                last = screenPos;
+    //                points.add(screenPos);
+    //            }
+    //        }
+    //
+    //        for (int i = 0; i < points.size() - 1; i++) {
+    //            if (i == 0) {
+    //                middlePoints.add(points.getFirst());
+    //            } else if (i == points.size() - 2) {
+    //                middlePoints.add(points.getLast());
+    //            } else {
+    //                middlePoints.add(
+    //                        new Vector2f(points.get(i)).add(points.get(i + 1)).mul(0.5f));
+    //            }
+    //        }
+    //
+    //        for (int i = 1; i < middlePoints.size(); i++) {
+    //            drawTriangles(
+    //                    bufferBuilder,
+    //                    poseStack,
+    //                    middlePoints.get(i - 1),
+    //                    points.get(i),
+    //                    middlePoints.get(i),
+    //                    outlineColor,
+    //                    outlineWidth);
+    //            drawTriangles(
+    //                    bufferBuilder,
+    //                    poseStack,
+    //                    middlePoints.get(i - 1),
+    //                    points.get(i),
+    //                    middlePoints.get(i),
+    //                    lootrunColor,
+    //                    lootrunWidth);
+    //        }
+    //
+    //        BufferUploader.drawWithShader(bufferBuilder.build());
+    //        RenderSystem.enableCull();
+    //    }
 
     private static void drawTriangles(
             BufferBuilder bufferBuilder,

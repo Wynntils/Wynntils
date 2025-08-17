@@ -30,12 +30,12 @@ public abstract class ForgeGuiGraphicsMixin {
     //       See FabricAbstractContainerScreenMixin#renderTooltipPre for the Fabric mixin.
     @WrapOperation(
             method =
-                    "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/resources/ResourceLocation;)V",
+                    "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/resources/ResourceLocation;)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V"),
+                                    "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V"),
             remap = false)
     private void renderTooltipPre(
             GuiGraphics instance,
@@ -70,7 +70,7 @@ public abstract class ForgeGuiGraphicsMixin {
     // See FabricAbstractContainerScreenMixin#renderTooltipPost for the Fabric mixin.
     @Inject(
             method =
-                    "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;II)V",
+                    "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;II)V",
             at = @At("RETURN"),
             remap = false)
     private void renderTooltipPost(

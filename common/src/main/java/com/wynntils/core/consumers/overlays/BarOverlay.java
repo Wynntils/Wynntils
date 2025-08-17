@@ -53,8 +53,6 @@ public abstract class BarOverlay extends DynamicOverlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PoseStack poseStack = guiGraphics.pose();
-
         BarOverlayTemplatePair template = getTemplate();
 
         if (templateCache == null) {
@@ -63,42 +61,43 @@ public abstract class BarOverlay extends DynamicOverlay {
 
         ErrorOr<CappedValue> valueOrError = templateCache.value();
         if (valueOrError.hasError()) {
-            renderText(poseStack, bufferSource, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
+            renderText(
+                    guiGraphics, bufferSource, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
             return;
         }
 
-        render(poseStack, bufferSource, currentProgress, templateCache.key());
+        //        render(poseStack, bufferSource, currentProgress, templateCache.key());
     }
 
     @Override
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PoseStack poseStack = guiGraphics.pose();
-
         BarOverlayTemplatePair previewTemplate = getPreviewTemplate();
         Pair<StyledText, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
 
         ErrorOr<CappedValue> valueOrError = calculatedTemplate.value();
         if (valueOrError.hasError()) {
-            renderText(poseStack, bufferSource, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
+            renderText(
+                    guiGraphics, bufferSource, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
             return;
         }
 
         // Do not render bars that has no value
         if (valueOrError.getValue().equals(CappedValue.EMPTY)) return;
 
-        render(poseStack, bufferSource, (float) valueOrError.getValue().getProgress(), calculatedTemplate.key());
+        //        render(poseStack, bufferSource, (float) valueOrError.getValue().getProgress(),
+        // calculatedTemplate.key());
     }
 
     private void render(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderedProgress, StyledText textValue) {
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderedProgress, StyledText textValue) {
         float barHeight = getTextureHeight() * heightModifier.get();
         float renderY = getModifiedRenderY(barHeight + 10);
 
-        renderText(poseStack, bufferSource, renderY, textValue);
+        renderText(guiGraphics, bufferSource, renderY, textValue);
 
         float progress = (flip.get() ? -1 : 1) * renderedProgress;
-        renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
+        //        renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
     }
 
     @Override
@@ -167,10 +166,10 @@ public abstract class BarOverlay extends DynamicOverlay {
         }
     }
 
-    private void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, StyledText text) {
+    private void renderText(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderY, StyledText text) {
         BufferedFontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         bufferSource,
                         text,
                         getRenderX(),

@@ -5,7 +5,6 @@
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -21,7 +20,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
@@ -78,13 +76,13 @@ public class PowderSpecialBarOverlay extends Overlay {
 
         PowderSpecialInfo powderSpecialInfo = powderSpecialInfoOpt.orElse(PowderSpecialInfo.EMPTY);
         renderWithSpecificSpecial(
-                guiGraphics.pose(), bufferSource, powderSpecialInfo.charge() * 100f, powderSpecialInfo.powder());
+                guiGraphics, bufferSource, powderSpecialInfo.charge() * 100f, powderSpecialInfo.powder());
     }
 
     @Override
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        renderWithSpecificSpecial(guiGraphics.pose(), bufferSource, 40, Powder.THUNDER);
+        renderWithSpecificSpecial(guiGraphics, bufferSource, 40, Powder.THUNDER);
     }
 
     @Override
@@ -93,7 +91,10 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     private void renderWithSpecificSpecial(
-            PoseStack poseStack, MultiBufferSource bufferSource, float powderSpecialCharge, Powder powderSpecialType) {
+            GuiGraphics guiGraphics,
+            MultiBufferSource bufferSource,
+            float powderSpecialCharge,
+            Powder powderSpecialType) {
         Texture universalBarTexture = Texture.UNIVERSAL_BAR;
 
         final float renderedHeight = barTexture.get().getHeight() * (this.getWidth() / 81);
@@ -121,7 +122,7 @@ public class PowderSpecialBarOverlay extends Overlay {
 
         BufferedFontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         bufferSource,
                         text,
                         this.getRenderX(),
@@ -132,19 +133,19 @@ public class PowderSpecialBarOverlay extends Overlay {
                         this.getRenderHorizontalAlignment(),
                         this.textShadow.get());
 
-        BufferedRenderUtils.drawColoredProgressBar(
-                poseStack,
-                bufferSource,
-                universalBarTexture,
-                color,
-                this.getRenderX(),
-                renderY + 10,
-                this.getRenderX() + this.getWidth(),
-                renderY + 10 + renderedHeight,
-                0,
-                barTexture.get().getTextureY1(),
-                Texture.UNIVERSAL_BAR.width(),
-                barTexture.get().getTextureY2(),
-                (this.flip.get() ? -1f : 1f) * powderSpecialCharge / 100f);
+        //        BufferedRenderUtils.drawColoredProgressBar(
+        //                poseStack,
+        //                bufferSource,
+        //                universalBarTexture,
+        //                color,
+        //                this.getRenderX(),
+        //                renderY + 10,
+        //                this.getRenderX() + this.getWidth(),
+        //                renderY + 10 + renderedHeight,
+        //                0,
+        //                barTexture.get().getTextureY1(),
+        //                Texture.UNIVERSAL_BAR.width(),
+        //                barTexture.get().getTextureY2(),
+        //                (this.flip.get() ? -1f : 1f) * powderSpecialCharge / 100f);
     }
 }

@@ -106,7 +106,7 @@ public class BombBellOverlay extends Overlay {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),
@@ -123,7 +123,7 @@ public class BombBellOverlay extends Overlay {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),

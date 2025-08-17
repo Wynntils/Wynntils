@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.crowdsourcing.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.text.StyledText;
@@ -55,14 +54,12 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         CustomColor backgroundColor = this.isHovered ? BUTTON_COLOR.b() : BUTTON_COLOR.a();
-        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
+        RenderUtils.drawRect(guiGraphics, backgroundColor, this.getX(), this.getY(), this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(crowdSourcedDataType.getTranslatedName()),
                         this.getX() + 14,
                         this.getY() + 1,
@@ -80,15 +77,15 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
                     case UNCONFIRMED -> Texture.QUESTION_MARK;
                 };
 
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                stateTexture.resource(),
-                this.getX() + 1,
-                this.getY() + 1,
-                stateTexture.width(),
-                stateTexture.height(),
-                stateTexture.width(),
-                stateTexture.height());
+        //        RenderUtils.drawTexturedRect(
+        //                poseStack,
+        //                stateTexture.resource(),
+        //                this.getX() + 1,
+        //                this.getY() + 1,
+        //                stateTexture.width(),
+        //                stateTexture.height(),
+        //                stateTexture.width(),
+        //                stateTexture.height());
     }
 
     @Override

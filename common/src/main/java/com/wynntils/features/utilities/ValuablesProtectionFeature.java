@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.utilities;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -34,7 +33,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -101,23 +99,23 @@ public class ValuablesProtectionFeature extends Feature {
         if (currentContainerType != null && !currentContainerType.isInstance(currentContainer)) return;
         if (!slotsToWarn.contains(e.getSlot().index)) return;
 
-        RenderSystem.enableDepthTest();
-        RenderUtils.drawTexturedRectWithColor(
-                e.getPoseStack(),
-                CIRCLE_TEXTURE,
-                CommonColors.RED,
-                e.getSlot().x - 16,
-                e.getSlot().y - 16,
-                200,
-                48,
-                48,
-                0,
-                emphasizeAnimationFrame * 48,
-                48,
-                48,
-                48,
-                192);
-        RenderSystem.disableDepthTest();
+        //        RenderSystem.enableDepthTest();
+        //        RenderUtils.drawTexturedRectWithColor(
+        //                e.getPoseStack(),
+        //                CIRCLE_TEXTURE,
+        //                CommonColors.RED,
+        //                e.getSlot().x - 16,
+        //                e.getSlot().y - 16,
+        //                200,
+        //                48,
+        //                48,
+        //                0,
+        //                emphasizeAnimationFrame * 48,
+        //                48,
+        //                48,
+        //                48,
+        //                192);
+        //        RenderSystem.disableDepthTest();
     }
 
     @SubscribeEvent
@@ -354,7 +352,7 @@ public class ValuablesProtectionFeature extends Feature {
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(text),
                             getX(),
                             getY(),

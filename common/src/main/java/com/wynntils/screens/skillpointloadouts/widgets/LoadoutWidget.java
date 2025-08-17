@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.skillpointloadouts.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.SavableSkillPointSet;
@@ -13,7 +12,6 @@ import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -57,23 +55,22 @@ public class LoadoutWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         if (this.isMouseOver(mouseX, mouseY)) {
-            RenderUtils.drawRect(
-                    poseStack, CommonColors.GRAY.withAlpha(100), this.getX(), this.getY(), 0, width, height);
+            //            RenderUtils.drawRect(
+            //                    poseStack, CommonColors.GRAY.withAlpha(100), this.getX(), this.getY(), 0, width,
+            // height);
         }
         if (parent.getSelectedLoadout() != null
                 && parent.getSelectedLoadout().key().equals(this.name)) {
-            RenderUtils.drawRectBorders(
-                    poseStack,
-                    CommonColors.WHITE,
-                    this.getX(),
-                    this.getY(),
-                    this.getX() + this.getWidth(),
-                    this.getY() + this.getHeight(),
-                    1,
-                    0.5f);
+            //            RenderUtils.drawRectBorders(
+            //                    poseStack,
+            //                    CommonColors.WHITE,
+            //                    this.getX(),
+            //                    this.getY(),
+            //                    this.getX() + this.getWidth(),
+            //                    this.getY() + this.getHeight(),
+            //                    1,
+            //                    0.5f);
         }
 
         int nameYOffset = 2;
@@ -85,7 +82,7 @@ public class LoadoutWidget extends AbstractWidget {
                     FontRenderer.getInstance().getFont());
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(text),
                             dividedWidth * 4,
                             this.getY() + ((float) this.getHeight() / 4 * 3),
@@ -98,7 +95,7 @@ public class LoadoutWidget extends AbstractWidget {
         // Renders "name (skillPointsSum - Level minLevel)". Level is red if minLevel is higher than current level.
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(name + " (" + loadout.getSkillPointsSum() + " - "
                                 + (loadout.getMinimumCombatLevel()
                                                 > Models.CombatXp.getCombatLevel()
@@ -119,7 +116,7 @@ public class LoadoutWidget extends AbstractWidget {
         for (int i = 0; i < 5; i++) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(
                                     Skill.values()[i].getColorCode() + "" + loadout.getSkillPointsAsArray()[i]),
                             dividedWidth * (21 + i * 2),

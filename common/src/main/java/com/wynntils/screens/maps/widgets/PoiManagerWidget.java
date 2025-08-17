@@ -4,9 +4,6 @@
  */
 package com.wynntils.screens.maps.widgets;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.PoiCreationScreen;
@@ -111,13 +108,16 @@ public class PoiManagerWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderIcon(poseStack);
+        RenderUtils.drawTexturedRectWithColor(
+                guiGraphics,
+                poi.getIcon(),
+                (int) (getX() + dividedWidth - (poi.getIcon().width() / 2f)),
+                (int) (getY() + 10 - (poi.getIcon().height() / 2f)),
+                poi.getIconColor());
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(poi.getName()),
                         getX() + (int) (dividedWidth * 3),
                         getY() + 10,
@@ -130,7 +130,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(String.valueOf(poi.getLocation().getX())),
                         getX() + (int) (dividedWidth * 20),
                         getY() + 10,
@@ -143,7 +143,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         poiY.map(integer -> StyledText.fromString(String.valueOf(integer)))
                                 .orElse(StyledText.EMPTY),
                         getX() + (int) (dividedWidth * 23),
@@ -155,7 +155,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(String.valueOf(poi.getLocation().getZ())),
                         getX() + (int) (dividedWidth * 26),
                         getY() + 10,
@@ -169,15 +169,15 @@ public class PoiManagerWidget extends AbstractWidget {
             selectButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
             // Border to show selected pois, orange when selected, white if not
-            RenderUtils.drawRectBorders(
-                    poseStack,
-                    selected ? CommonColors.ORANGE : CommonColors.WHITE,
-                    getX(),
-                    getY() + 1,
-                    getX() + width,
-                    getY() + height - 1,
-                    0,
-                    1f);
+            //            RenderUtils.drawRectBorders(
+            //                    poseStack,
+            //                    selected ? CommonColors.ORANGE : CommonColors.WHITE,
+            //                    getX(),
+            //                    getY() + 1,
+            //                    getX() + width,
+            //                    getY() + height - 1,
+            //                    0,
+            //                    1f);
         } else {
             editButton.render(guiGraphics, mouseX, mouseY, partialTick);
             deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -220,23 +220,6 @@ public class PoiManagerWidget extends AbstractWidget {
             managementScreen.selectPoi(poi);
             return true;
         }
-    }
-
-    private void renderIcon(PoseStack poseStack) {
-        float[] poiColor = CustomColor.fromInt(poi.getColor().asInt()).asFloatArray();
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(poiColor[0], poiColor[1], poiColor[2], 1);
-
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                poi.getIcon(),
-                getX() + dividedWidth - (poi.getIcon().width() / 2f),
-                getY() + 10 - (poi.getIcon().height() / 2f));
-
-        RenderSystem.disableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
     @Override

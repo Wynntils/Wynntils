@@ -7,7 +7,6 @@ package com.wynntils.screens.guildlog.widgets;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -43,11 +42,11 @@ public class LogDateWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_DATE_ENTRY, getX(), getY());
+        //        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_DATE_ENTRY, getX(), getY());
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         renderText,
                         getX() + 4,
                         getY() + height / 2f,

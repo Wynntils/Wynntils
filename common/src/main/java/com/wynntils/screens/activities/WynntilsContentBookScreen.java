@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.activities;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -159,11 +158,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderBackgroundTexture(poseStack);
+        renderBackgroundTexture(guiGraphics);
 
         contentBookWidgets
                 .get(currentPage)
@@ -177,7 +172,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         if (!Models.CombatXp.getCombatLevel().isAtCap()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(Component.translatable(
                                     "screens.wynntils.contentBook.xpToLevelUp",
                                     String.format(Locale.ROOT, "%,d", Models.CombatXp.getXpPointsNeededToLevelUp()),
@@ -193,7 +188,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         if (trackedActivity != null) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(
                                     EnumUtils.toNiceString(trackedActivity.type()) + " - " + trackedActivity.name()),
                             offsetX + 24,
@@ -207,7 +202,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
             if (trackedDescription != null) {
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                poseStack,
+                                guiGraphics,
                                 trackedDescription,
                                 offsetX + 24,
                                 offsetX + 410,
@@ -224,7 +219,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
             if (!trackedRewards.isEmpty()) {
                 FontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromComponent(
                                         Component.translatable("screens.wynntils.contentBook.rewards")),
                                 trackedRewardsX,
@@ -240,7 +235,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.contentBook.selectToTrack")),
                             offsetX + 4,
@@ -456,15 +451,16 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         scrollDownButton.visible = scrollDownActive || currentPage < contentBookWidgets.size() - 1;
     }
 
-    private void renderBackgroundTexture(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.CUSTOM_CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
+    private void renderBackgroundTexture(GuiGraphics guiGraphics) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CUSTOM_CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : getWidgetsForIteration().toList()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                //                guiGraphics.renderComponentTooltip(
+                //                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(),
+                // mouseX, mouseY);
                 break;
             }
         }

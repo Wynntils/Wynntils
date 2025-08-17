@@ -4,12 +4,12 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class ListSearchWidget extends SearchWidget {
     public ListSearchWidget(
@@ -18,22 +18,14 @@ public class ListSearchWidget extends SearchWidget {
     }
 
     @Override
-    protected void renderBackground(PoseStack poseStack) {
+    protected void renderBackground(GuiGraphics guiGraphics) {
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.LIST_SEARCH.resource(),
-                this.getX(),
-                this.getY(),
-                0,
-                this.width,
-                this.height,
-                Texture.LIST_SEARCH.width(),
-                Texture.LIST_SEARCH.height());
+                guiGraphics, Texture.LIST_SEARCH.resource(), this.getX(), this.getY(), this.width, this.height);
     }
 
     @Override
     protected void renderText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -44,12 +36,12 @@ public class ListSearchWidget extends SearchWidget {
             int highlightedWidth,
             int lastWidth,
             boolean defaultText) {
-        poseStack.pushPose();
+        guiGraphics.pose().pushMatrix();
 
-        poseStack.translate(getXOffset(), getYOffset(), 0);
+        guiGraphics.pose().translate(getXOffset(), getYOffset());
 
         super.renderText(
-                poseStack,
+                guiGraphics,
                 renderedText,
                 renderedTextStart,
                 firstPortion,
@@ -61,7 +53,7 @@ public class ListSearchWidget extends SearchWidget {
                 lastWidth,
                 defaultText);
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     @Override

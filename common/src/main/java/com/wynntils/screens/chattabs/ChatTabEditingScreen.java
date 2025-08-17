@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.chattabs;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -243,15 +242,13 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-
         // Chat Tabs List
         chatTabsWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
 
         if (edited == null) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.create")),
                             dividedWidth * 48,
                             dividedHeight * HEADER_ROW_Y,
@@ -262,7 +259,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         } else {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.edit", edited.getName())),
                             dividedWidth * 48,
                             dividedHeight * HEADER_ROW_Y,
@@ -275,7 +272,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         // Name
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(
                                 I18n.get("screens.wynntils.chatTabsGui.name") + ChatFormatting.DARK_RED + " *"),
                         (int) (dividedWidth * 35),
@@ -288,7 +285,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         // Auto Command
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.autoCommand")),
                         (int) (dividedWidth * 47),
                         (int) (dividedHeight * FIRST_ROW_Y),
@@ -300,7 +297,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         // Order
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.order")),
                         (int) (dividedWidth * 59),
                         (int) (dividedHeight * FIRST_ROW_Y),
@@ -312,7 +309,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         // Recipient Types
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(
                                 I18n.get("screens.wynntils.chatTabsGui.types") + ChatFormatting.DARK_RED + " *"),
                         (int) (dividedWidth * 35),
@@ -325,7 +322,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         // Filter Pattern
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.filter")),
                         (int) (dividedWidth * 35),
                         (int) (dividedHeight * THIRD_ROW_Y),

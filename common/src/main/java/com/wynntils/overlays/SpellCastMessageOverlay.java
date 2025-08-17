@@ -88,7 +88,7 @@ public class SpellCastMessageOverlay extends Overlay {
 
         BufferedFontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         bufferSource,
                         spellMessage,
                         this.getRenderX(),

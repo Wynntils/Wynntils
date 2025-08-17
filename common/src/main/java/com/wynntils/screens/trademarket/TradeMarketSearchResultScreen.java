@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.trademarket;
@@ -158,12 +158,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         updateItems();
 
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        renderScrollButton(poseStack);
+        //        renderScrollButton(poseStack);
 
         renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
 
@@ -173,8 +171,9 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         // Render tooltip for hovered widget
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                //                guiGraphics.renderComponentTooltip(
+                //                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(),
+                // mouseX, mouseY);
                 break;
             }
         }
@@ -193,37 +192,36 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        PoseStack poseStack = guiGraphics.pose();
-
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
         // Container
-        RenderUtils.drawTexturedRect(
-                poseStack, CONTAINER_BACKGROUND, x, y, this.imageWidth, this.menu.getRowCount() * 18 + 17, 256, 256);
+        //        RenderUtils.drawTexturedRect(
+        //                poseStack, CONTAINER_BACKGROUND, x, y, this.imageWidth, this.menu.getRowCount() * 18 + 17,
+        // 256, 256);
 
         // Inventory
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                CONTAINER_BACKGROUND,
-                x,
-                y + this.menu.getRowCount() * 18 + 17,
-                0,
-                this.imageWidth,
-                96,
-                0,
-                126,
-                this.imageWidth,
-                96,
-                256,
-                256);
+        //        RenderUtils.drawTexturedRect(
+        //                poseStack,
+        //                CONTAINER_BACKGROUND,
+        //                x,
+        //                y + this.menu.getRowCount() * 18 + 17,
+        //                0,
+        //                this.imageWidth,
+        //                96,
+        //                0,
+        //                126,
+        //                this.imageWidth,
+        //                96,
+        //                256,
+        //                256);
 
         // Scrollbar
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLLBAR_BACKGROUND, x + this.imageWidth - 7, y);
+        //        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLLBAR_BACKGROUND, x + this.imageWidth - 7, y);
 
         // Sidebar
-        RenderUtils.drawTexturedRect(
-                poseStack, Texture.CONTAINER_SIDEBAR, x - Texture.CONTAINER_SIDEBAR.width() + 7, y);
+        //        RenderUtils.drawTexturedRect(
+        //                poseStack, Texture.CONTAINER_SIDEBAR, x - Texture.CONTAINER_SIDEBAR.width() + 7, y);
     }
 
     private void renderScrollButton(PoseStack poseStack) {

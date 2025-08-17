@@ -1,14 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.powder;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -31,30 +29,17 @@ public class GuidePowderItemStackButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         CustomColor color = itemStack.getElement().getColor();
 
         RenderUtils.drawTexturedRectWithColor(
-                poseStack,
-                Texture.HIGHLIGHT.resource(),
-                color.withAlpha(1f),
-                getX() - 1,
-                getY() - 1,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+                guiGraphics, Texture.HIGHLIGHT, getX() - 1, getY() - 1, 18, 18, 0, 0, color);
 
         RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 200);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
-                        StyledText.fromString(MathUtils.toRoman(itemStack.getTier())),
+                        guiGraphics,
+                        StyledText.fromString(String.valueOf(itemStack.getTier())),
                         getX() + 2,
                         getX() + 14,
                         getY() + 8,
@@ -62,19 +47,10 @@ public class GuidePowderItemStackButton extends WynntilsButton {
                         color,
                         HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
-        poseStack.popPose();
 
         if (Services.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(
-                    poseStack,
-                    Texture.FAVORITE_ICON.resource(),
-                    getX() + 12,
-                    getY() - 4,
-                    200,
-                    9,
-                    9,
-                    Texture.FAVORITE_ICON.width(),
-                    Texture.FAVORITE_ICON.height());
+                    guiGraphics, Texture.FAVORITE_ICON.resource(), getX() + 12, getY() - 4, 9, 9);
         }
     }
 

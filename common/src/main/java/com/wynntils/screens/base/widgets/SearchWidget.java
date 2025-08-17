@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -17,6 +16,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -35,7 +35,7 @@ public class SearchWidget extends TextInputBoxWidget {
 
     @Override
     protected void doRenderWidget(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -47,10 +47,10 @@ public class SearchWidget extends TextInputBoxWidget {
             int lastWidth) {
         boolean defaultText = Objects.equals(textBoxInput, "");
 
-        renderBackground(poseStack);
+        renderBackground(guiGraphics);
 
         renderText(
-                poseStack,
+                guiGraphics,
                 renderedText,
                 renderedTextStart,
                 firstPortion,
@@ -64,7 +64,7 @@ public class SearchWidget extends TextInputBoxWidget {
     }
 
     protected void renderText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -77,7 +77,7 @@ public class SearchWidget extends TextInputBoxWidget {
             boolean defaultText) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(defaultText ? DEFAULT_TEXT.getString() : firstPortion),
                         this.getX() + textPadding,
                         this.getX() + this.width - textPadding - lastWidth - highlightedWidth,
@@ -90,7 +90,7 @@ public class SearchWidget extends TextInputBoxWidget {
         if (!defaultText) {
             FontRenderer.getInstance()
                     .renderAlignedHighlightedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(highlightedPortion),
                             this.getX() + textPadding + firstWidth,
                             this.getX() + this.width - textPadding - lastWidth,
@@ -104,7 +104,7 @@ public class SearchWidget extends TextInputBoxWidget {
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(lastPortion),
                             this.getX() + textPadding + firstWidth + highlightedWidth,
                             this.getX() + this.width - textPadding,
@@ -116,7 +116,7 @@ public class SearchWidget extends TextInputBoxWidget {
         }
 
         drawCursor(
-                poseStack,
+                guiGraphics,
                 this.getX()
                         + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length())))
                         + textPadding
@@ -126,17 +126,17 @@ public class SearchWidget extends TextInputBoxWidget {
                 false);
     }
 
-    protected void renderBackground(PoseStack poseStack) {
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.getX(), this.getY(), 0, this.width, this.height);
-        RenderUtils.drawRectBorders(
-                poseStack,
-                isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
-                this.getX(),
-                this.getY(),
-                this.getX() + this.width,
-                this.getY() + this.height,
-                0,
-                1f);
+    protected void renderBackground(GuiGraphics guiGraphics) {
+        RenderUtils.drawRect(guiGraphics, CommonColors.BLACK, this.getX(), this.getY(), this.width, this.height);
+        //        RenderUtils.drawRectBorders(
+        //                poseStack,
+        //                isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
+        //                this.getX(),
+        //                this.getY(),
+        //                this.getX() + this.width,
+        //                this.getY() + this.height,
+        //                0,
+        //                1f);
     }
 
     @Override

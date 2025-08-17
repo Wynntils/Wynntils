@@ -5,7 +5,6 @@
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
@@ -114,8 +113,7 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     private void renderPlayerList(GuiGraphics guiGraphics, double animation) {
-        RenderSystem.disableDepthTest();
-        PoseStack poseStack = guiGraphics.pose();
+        //        RenderSystem.disableDepthTest();
 
         if (animation < 1) {
             RenderUtils.enableScissor(
@@ -126,22 +124,22 @@ public class CustomPlayerListOverlay extends Overlay {
                     McUtils.mc().getWindow().getScreenHeight());
         }
 
-        renderBackground(poseStack);
-
-        renderPlayerNames(poseStack, availablePlayers.get());
+        //        renderBackground(poseStack);
+        //
+        renderPlayerNames(guiGraphics, availablePlayers.get());
 
         if (animation < 1) {
             RenderUtils.disableScissor(guiGraphics);
         }
 
         float middle = getRenderX() + HALF_WIDTH + ROLL_WIDTH;
-        renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 11 - HALF_WIDTH * animation), 0);
-        renderRoll(
-                poseStack,
-                (float) (middle - 11 + HALF_WIDTH * animation),
-                Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH);
-
-        RenderSystem.enableDepthTest();
+        //        renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 11 - HALF_WIDTH * animation), 0);
+        //        renderRoll(
+        //                poseStack,
+        //                (float) (middle - 11 + HALF_WIDTH * animation),
+        //                Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH);
+        //
+        //        RenderSystem.enableDepthTest();
     }
 
     private void renderRoll(PoseStack poseStack, float xPos, int uOffset) {
@@ -161,7 +159,7 @@ public class CustomPlayerListOverlay extends Overlay {
                 Texture.PLAYER_LIST_OVERLAY.height());
     }
 
-    private void renderPlayerNames(PoseStack poseStack, List<StyledText> players) {
+    private void renderPlayerNames(GuiGraphics guiGraphics, List<StyledText> players) {
         for (int i = 0; i < players.size(); i++) {
             int x = i / 20;
             int y = i % 20;
@@ -177,7 +175,7 @@ public class CustomPlayerListOverlay extends Overlay {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             players.get(i),
                             xPos,
                             yPos,

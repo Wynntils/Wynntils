@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets.numeric;
@@ -70,7 +70,7 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromString("-"),
                         getX() + 59,
                         getY() + 11,
