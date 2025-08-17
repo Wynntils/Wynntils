@@ -26,8 +26,8 @@ public final class RaycastUtils {
                 .expandTowards(look.x * RAYCAST_RANGE, look.y * RAYCAST_RANGE, look.z * RAYCAST_RANGE)
                 .expandTowards(1, 1, 1);
 
-        EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(
-                McUtils.mc().level, player, start, direction, boundingBox, (e) -> e instanceof Player);
+        EntityHitResult hitResult = 
+                ProjectileUtil.getEntityHitResult(player, start, direction, boundingBox, (e) -> e instanceof Player, 0.3f);
 
         if (hitResult == null) return Optional.empty();
 
