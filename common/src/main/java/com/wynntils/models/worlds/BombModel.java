@@ -62,8 +62,10 @@ public final class BombModel extends Model {
 
         Matcher bellMatcher = unwrapped.getMatcher(BOMB_BELL_PATTERN);
         if (bellMatcher.matches()) {
-            BombInfo bombInfo =
-                    addBombFromChat(bellMatcher.group("user"), bellMatcher.group("bomb"), bellMatcher.group("server"));
+            BombInfo bombInfo = addBombFromChat(
+                    bellMatcher.group("user"),
+                    bellMatcher.group("bomb"),
+                    bellMatcher.group("server").trim());
             if (bombInfo == null) return;
 
             BombEvent.BombBell bombEvent = new BombEvent.BombBell(bombInfo, message);
