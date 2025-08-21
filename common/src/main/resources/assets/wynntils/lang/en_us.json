@@ -663,6 +663,8 @@
   "feature.wynntils.heldItemCooldownOverlay.description": "Displays the cooldown of your held item (e.g. weapon swing cooldown) as an overlay.",
   "feature.wynntils.heldItemCooldownOverlay.name": "Held Item Cooldown Overlay",
   "feature.wynntils.heldItemCooldownOverlay.overlay.heldItemCooldown.name": "Held Item Cooldown",
+  "feature.wynntils.hideAttackCooldown.description": "Hides the attack cooldown indicator on items that are not weapons.",
+  "feature.wynntils.hideAttackCooldown.name": "Hide Attack Cooldown",
   "feature.wynntils.hideDamageLabels.description": "Hides the damage labels that popup when damaging enemies",
   "feature.wynntils.hideDamageLabels.name": "Hide Damage Labels",
   "feature.wynntils.horseMount.alreadyRiding": "You are already riding a horse.",
