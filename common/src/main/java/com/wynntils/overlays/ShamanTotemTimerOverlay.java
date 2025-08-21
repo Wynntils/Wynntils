@@ -16,7 +16,9 @@ import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 
@@ -51,7 +53,7 @@ public class ShamanTotemTimerOverlay extends TextOverlay {
     public String getTemplate() {
         return Models.ShamanTotem.getActiveTotems().stream()
                 .filter(Objects::nonNull)
-                .map(totem -> totemColorsArray[totem.getTotemNumber() - 1]
+                .map(totem -> totemColorsArray.get(totem.getTotemNumber() - 1).get()
                         + totemTrackingDetail
                                 .get()
                                 .getTemplate()
@@ -64,7 +66,7 @@ public class ShamanTotemTimerOverlay extends TextOverlay {
         StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < TotemTrackingDetail.values().length; i++) {
-            builder.append(totemColorsArray[i])
+            builder.append(totemColorsArray.get(i).get())
                     .append(TotemTrackingDetail.values()[i].getPreviewTemplate())
                     .append("\n");
         }
@@ -81,12 +83,12 @@ public class ShamanTotemTimerOverlay extends TextOverlay {
                 .toArray(StyledText[]::new);
     }
 
-    private final ChatFormatting[] totemColorsArray = {
-        firstTotemTextColor.get().getChatFormatting(),
-        secondTotemTextColor.get().getChatFormatting(),
-        thirdTotemTextColor.get().getChatFormatting(),
-        fourthTotemTextColor.get().getChatFormatting()
-    };
+    private final List<Supplier<ChatFormatting>> totemColorsArray = List.of(
+            () -> firstTotemTextColor.get().getChatFormatting(),
+            () -> secondTotemTextColor.get().getChatFormatting(),
+            () -> thirdTotemTextColor.get().getChatFormatting(),
+            () -> fourthTotemTextColor.get().getChatFormatting()
+    );
 
     private enum TotemTrackingDetail {
         NONE(
