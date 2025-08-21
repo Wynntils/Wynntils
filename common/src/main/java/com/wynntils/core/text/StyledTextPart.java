@@ -62,10 +62,14 @@ public final class StyledTextPart {
         boolean nextIsFormatting = false;
         StringBuilder hexColorFormatting = new StringBuilder();
 
+        StringBuilder fontFormatting = new StringBuilder();
         // []
         boolean clickEventPrefix = false;
         // <>
         boolean hoverEventPrefix = false;
+        // {}
+        boolean fontFormattingPrefix = false;
+
         String eventIndexString = "";
 
         for (char current : codedString.toCharArray()) {
@@ -87,6 +91,11 @@ public final class StyledTextPart {
                 // It looks like we have a hex color code
                 if (current == '#') {
                     hexColorFormatting.append(current);
+                    continue;
+                }
+
+                if (current == '{') {
+                    fontFormattingPrefix = true;
                     continue;
                 }
 
@@ -229,6 +238,18 @@ public final class StyledTextPart {
                     currentStyle = currentStyle.withColor(customColor.asInt());
                     hexColorFormatting = new StringBuilder();
                 }
+
+                continue;
+            }
+            if (fontFormattingPrefix) {
+                if (current != '}') {
+                    fontFormatting.append(current);
+                    continue;
+                }
+                if (fontFormatting.isEmpty()) continue;
+                currentStyle = currentStyle.withFont(ResourceLocation.parse(fontFormatting.toString()));
+                fontFormattingPrefix = false;
+                fontFormatting = new StringBuilder();
 
                 continue;
             }
