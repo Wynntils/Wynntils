@@ -42,7 +42,7 @@ public class BloodPoolBarOverlay extends HealthBarOverlay {
     }
 
     @Override
-    public boolean additionalRenderCondition() {
+    public boolean isVisible() {
         return Models.Ability.bloodPoolBar.isActive();
     }
 

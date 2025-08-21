@@ -40,7 +40,7 @@ public class OphanimBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected boolean additionalRenderCondition() {
+    protected boolean isVisible() {
         return Models.Ability.ophanimBar.isActive();
     }
 

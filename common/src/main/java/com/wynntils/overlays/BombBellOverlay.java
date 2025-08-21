@@ -92,7 +92,12 @@ public class BombBellOverlay extends Overlay {
     }
 
     @Override
-    protected boolean defaultRenderCondition() {
+    protected boolean hideWhenNoGui() {
+        return false;
+    }
+
+    @Override
+    protected boolean isVisible() {
         return !Models.Bomb.getBombBells().isEmpty();
     }
 

@@ -77,7 +77,12 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     @Override
-    protected boolean defaultRenderCondition() {
+    protected boolean hideWhenNoGui() {
+        return false;
+    }
+
+    @Override
+    protected boolean isVisible() {
         return !(!McUtils.options().keyPlayerList.isDown() && animationPercentage.finishedClosingAnimation());
     }
 

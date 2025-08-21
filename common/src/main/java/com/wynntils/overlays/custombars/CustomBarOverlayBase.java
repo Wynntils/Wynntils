@@ -40,7 +40,7 @@ public abstract class CustomBarOverlayBase extends BarOverlay implements CustomN
     }
 
     @Override
-    public boolean additionalRenderCondition() {
+    public boolean isVisible() {
         return !valueTemplate.get().isEmpty();
     }
 

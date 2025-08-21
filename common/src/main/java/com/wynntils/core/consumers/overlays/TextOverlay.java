@@ -100,7 +100,7 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     @Override
-    protected boolean additionalRenderCondition() {
+    protected boolean isVisible() {
         return !getTemplate().isEmpty();
     }
 

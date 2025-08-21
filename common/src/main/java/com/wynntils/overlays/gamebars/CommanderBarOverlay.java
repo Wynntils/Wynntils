@@ -50,7 +50,7 @@ public class CommanderBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    public boolean additionalRenderCondition() {
+    public boolean isVisible() {
         return Models.Ability.commanderBar.isActive();
     }
 

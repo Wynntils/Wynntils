@@ -46,7 +46,7 @@ public class ManaBankBarOverlay extends ManaBarOverlay {
     }
 
     @Override
-    public boolean additionalRenderCondition() {
+    public boolean isVisible() {
         return Models.Ability.manaBankBar.isActive();
     }
 

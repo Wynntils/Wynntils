@@ -46,7 +46,12 @@ public class ServerUptimeInfoOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean defaultRenderCondition() {
+    protected boolean hideWhenNoGui() {
+        return false;
+    }
+
+    @Override
+    public boolean isVisible() {
         return McUtils.mc().gui.getTabList().visible || Models.WorldState.getCurrentState() == WorldState.HUB;
     }
 }

@@ -76,32 +76,34 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         this.verticalAlignmentOverride.store(verticalAlignmentOverride);
     }
 
-    /**
-     * <li>The default condition that determines whether an overlay is going to be rendered.</li>
-     * <li>Overwrite this to completely change the condition, or overwrite {@link #additionalRenderCondition()} instead to only add to the default condition.</li>
-     * <li>By default, overlays only render when on world and not riding a Display entity</li>
-     */
-    protected boolean defaultRenderCondition() {
-        return Models.WorldState.onWorld()
-                && (McUtils.player() != null && !(McUtils.player().getVehicle() instanceof Display));
+    private boolean isRenderedDefault() {
+        return (Models.WorldState.onWorld()
+                        && (McUtils.player() != null && !(McUtils.player().getVehicle() instanceof Display)))
+                || !hideWhenNoGui();
     }
 
     /**
-     * <li>Additional condition that is added onto {@link #defaultRenderCondition() default condition}, both of them need to be true</li>
-     * <li>Overwrite this to add to the default or overwrite {@link #defaultRenderCondition()} to completely change the condition</li>
-     * <li>By default, it is always true</li>
+     * Whether the overlay should be hidden when Wynncraft hides gui.
+     * @return true
      */
-    protected boolean additionalRenderCondition() {
+    protected boolean hideWhenNoGui() {
+        return true;
+    }
+
+    /**
+     * Whether the overlay should be rendered.
+     * @return true
+     */
+    protected boolean isVisible() {
         return true;
     }
 
     protected boolean isRendered() {
-        if (enabledTemplateCache == null || enabledTemplateCache.hasError())
-            return defaultRenderCondition() && additionalRenderCondition();
+        if (enabledTemplateCache == null || enabledTemplateCache.hasError()) return isRenderedDefault() && isVisible();
         if (enabledTemplateOverwrite.get()) {
             return enabledTemplateCache.getValue();
         } else {
-            return defaultRenderCondition() && additionalRenderCondition() && enabledTemplateCache.getValue();
+            return isRenderedDefault() && isVisible() && enabledTemplateCache.getValue();
         }
     }
 

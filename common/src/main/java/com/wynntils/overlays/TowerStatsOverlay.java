@@ -56,7 +56,7 @@ public class TowerStatsOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean additionalRenderCondition() {
+    public boolean isVisible() {
         return Models.GuildWarTower.getWarBattleInfo().isPresent();
     }
 }

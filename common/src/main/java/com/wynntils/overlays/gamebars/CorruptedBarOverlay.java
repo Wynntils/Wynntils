@@ -43,7 +43,7 @@ public class CorruptedBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    public boolean additionalRenderCondition() {
+    public boolean isVisible() {
         return Models.Ability.corruptedBar.isActive();
     }
 }

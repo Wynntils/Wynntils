@@ -66,7 +66,7 @@ public class RaidProgressOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean additionalRenderCondition() {
+    public boolean isVisible() {
         return Models.Raid.getCurrentRaid() != null;
     }
 
