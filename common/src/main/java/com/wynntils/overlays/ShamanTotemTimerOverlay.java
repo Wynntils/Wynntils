@@ -15,12 +15,11 @@ import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ShamanTotemTimerOverlay extends TextOverlay {
     @Persisted
@@ -37,6 +36,12 @@ public class ShamanTotemTimerOverlay extends TextOverlay {
 
     @Persisted
     public final Config<ColorChatFormatting> fourthTotemTextColor = new Config<>(ColorChatFormatting.GREEN);
+    private final ChatFormatting[] totemColorsArray = {
+            firstTotemTextColor.get().getChatFormatting(),
+            secondTotemTextColor.get().getChatFormatting(),
+            thirdTotemTextColor.get().getChatFormatting(),
+            fourthTotemTextColor.get().getChatFormatting()
+    };
 
     public ShamanTotemTimerOverlay() {
         super(
@@ -53,11 +58,11 @@ public class ShamanTotemTimerOverlay extends TextOverlay {
     public String getTemplate() {
         return Models.ShamanTotem.getActiveTotems().stream()
                 .filter(Objects::nonNull)
-                .map(totem -> totemColorsArray.get(totem.getTotemNumber() - 1).get()
+                .map(totem -> totemColorsArray[totem.getTotemNumber() - 1]
                         + totemTrackingDetail
-                                .get()
-                                .getTemplate()
-                                .replaceAll("%d", String.valueOf(totem.getTotemNumber())))
+                        .get()
+                        .getTemplate()
+                        .replaceAll("%d", String.valueOf(totem.getTotemNumber())))
                 .collect(Collectors.joining("\n"));
     }
 
@@ -66,7 +71,7 @@ public class ShamanTotemTimerOverlay extends TextOverlay {
         StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < TotemTrackingDetail.values().length; i++) {
-            builder.append(totemColorsArray.get(i).get())
+            builder.append(totemColorsArray[i])
                     .append(TotemTrackingDetail.values()[i].getPreviewTemplate())
                     .append("\n");
         }
@@ -82,13 +87,6 @@ public class ShamanTotemTimerOverlay extends TextOverlay {
                 .flatMap(Arrays::stream)
                 .toArray(StyledText[]::new);
     }
-
-    private final ChatFormatting[] totemColorsArray = {
-            firstTotemTextColor.get().getChatFormatting(),
-            secondTotemTextColor.get().getChatFormatting(),
-            thirdTotemTextColor.get().getChatFormatting(),
-            fourthTotemTextColor.get().getChatFormatting()
-    };
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
