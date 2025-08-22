@@ -246,12 +246,16 @@ public final class StyledTextPart {
                     fontFormatting.append(current);
                     continue;
                 }
-                if (fontFormatting.isEmpty()) continue;
-                currentStyle = currentStyle.withFont(ResourceLocation.parse(fontFormatting.toString()));
-                fontFormattingPrefix = false;
-                fontFormatting = new StringBuilder();
+                if (!fontFormatting.isEmpty()) {
+                    parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, parentStyle));
+                    currentString = new StringBuilder();
 
-                continue;
+                    currentStyle = currentStyle.withFont(ResourceLocation.parse(fontFormatting.toString()));
+                    fontFormattingPrefix = false;
+                    fontFormatting = new StringBuilder();
+
+                    continue;
+                }
             }
 
             if (current == ChatFormatting.PREFIX_CODE) {
