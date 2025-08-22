@@ -83,11 +83,20 @@ public class ShamanTotemTimerOverlay extends TextOverlay {
                 .toArray(StyledText[]::new);
     }
 
-    private final List<Supplier<ChatFormatting>> totemColorsArray = List.of(
-            () -> firstTotemTextColor.get().getChatFormatting(),
-            () -> secondTotemTextColor.get().getChatFormatting(),
-            () -> thirdTotemTextColor.get().getChatFormatting(),
-            () -> fourthTotemTextColor.get().getChatFormatting());
+    private final ChatFormatting[] totemColorsArray = {
+            firstTotemTextColor.get().getChatFormatting(),
+            secondTotemTextColor.get().getChatFormatting(),
+            thirdTotemTextColor.get().getChatFormatting(),
+            fourthTotemTextColor.get().getChatFormatting()
+    };
+
+    @Override
+    protected void onConfigUpdate(Config<?> config) {
+        totemColorsArray[0] = firstTotemTextColor.get().getChatFormatting();
+        totemColorsArray[1] = secondTotemTextColor.get().getChatFormatting();
+        totemColorsArray[2] = thirdTotemTextColor.get().getChatFormatting();
+        totemColorsArray[3] = fourthTotemTextColor.get().getChatFormatting();
+    }
 
     private enum TotemTrackingDetail {
         NONE(
