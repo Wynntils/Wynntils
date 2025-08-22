@@ -15,11 +15,10 @@ import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.ChatFormatting;
-
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
 
 public class ShamanTotemTimerOverlay extends TextOverlay {
     @Persisted
@@ -36,11 +35,12 @@ public class ShamanTotemTimerOverlay extends TextOverlay {
 
     @Persisted
     public final Config<ColorChatFormatting> fourthTotemTextColor = new Config<>(ColorChatFormatting.GREEN);
+
     private final ChatFormatting[] totemColorsArray = {
-            firstTotemTextColor.get().getChatFormatting(),
-            secondTotemTextColor.get().getChatFormatting(),
-            thirdTotemTextColor.get().getChatFormatting(),
-            fourthTotemTextColor.get().getChatFormatting()
+        firstTotemTextColor.get().getChatFormatting(),
+        secondTotemTextColor.get().getChatFormatting(),
+        thirdTotemTextColor.get().getChatFormatting(),
+        fourthTotemTextColor.get().getChatFormatting()
     };
 
     public ShamanTotemTimerOverlay() {
@@ -60,9 +60,9 @@ public class ShamanTotemTimerOverlay extends TextOverlay {
                 .filter(Objects::nonNull)
                 .map(totem -> totemColorsArray[totem.getTotemNumber() - 1]
                         + totemTrackingDetail
-                        .get()
-                        .getTemplate()
-                        .replaceAll("%d", String.valueOf(totem.getTotemNumber())))
+                                .get()
+                                .getTemplate()
+                                .replaceAll("%d", String.valueOf(totem.getTotemNumber())))
                 .collect(Collectors.joining("\n"));
     }
 
