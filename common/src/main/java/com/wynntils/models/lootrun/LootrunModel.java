@@ -180,7 +180,6 @@ public final class LootrunModel extends Model {
     private boolean foundLootrunMythic = false;
     private boolean rerollingRewards = false;
     private boolean rewardChestIsOpened = false;
-    private int expectedLootrunRewardChestId = -2;
 
     private Map<LootrunLocation, Set<TaskLocation>> taskLocations = new HashMap<>();
 
