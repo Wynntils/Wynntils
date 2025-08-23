@@ -651,8 +651,6 @@
   "feature.wynntils.heldItemCooldownOverlay.description": "들고 있는 아이템 (예: 무기 휘두르기 쿨다운)의 쿨다운을 오버레이로 표시합니다.",
   "feature.wynntils.heldItemCooldownOverlay.name": "들고 있는 아이템 쿨다운 오버레이",
   "feature.wynntils.heldItemCooldownOverlay.overlay.heldItemCooldown.name": "들고 있는 아이템 쿨다운",
-  "feature.wynntils.hideDamageLabels.description": "피해를 가할 때의 피해량 라벨 표시를 숨깁니다",
-  "feature.wynntils.hideDamageLabels.name": "피해량 표시 숨기기",
   "feature.wynntils.horseMount.alreadyRiding": "이미 말에 타고 있습니다.",
   "feature.wynntils.horseMount.conflictingSlots": "말을 불러내기 위해서는 핫바에 빈 칸이 하나 필요합니다.",
   "feature.wynntils.horseMount.description": "단축키로 말에 기승하는 기능을 제공합니다.",
