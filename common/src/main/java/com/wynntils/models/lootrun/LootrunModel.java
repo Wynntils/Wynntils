@@ -21,6 +21,9 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.particle.event.ParticleVerifiedEvent;
 import com.wynntils.handlers.particle.type.ParticleType;
+import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.beacons.event.BeaconEvent;
@@ -28,6 +31,7 @@ import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.containers.containers.LootrunRewardChestContainer;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearItem;
@@ -36,7 +40,6 @@ import com.wynntils.models.items.items.game.SimulatorItem;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconMarkerKind;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
-import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEventBuilder;
 import com.wynntils.models.lootrun.markers.LootrunBeaconMarkerProvider;
 import com.wynntils.models.lootrun.particle.LootrunTaskParticleVerifier;
@@ -54,6 +57,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -168,8 +172,15 @@ public final class LootrunModel extends Model {
     @Persisted
     public final Storage<Integer> dryPulls = new Storage<>(0);
 
+    @Persisted
+    private final Storage<Integer> expectedPulls = new Storage<>(-1);
+
     private Location closestLootrunMasterLocation = null;
     private Set<UUID> checkedItemEntities = new HashSet<>();
+    private boolean foundLootrunMythic = false;
+    private boolean rerollingRewards = false;
+    private boolean rewardChestIsOpened = false;
+    private int expectedLootrunRewardChestId = -2;
 
     private Map<LootrunLocation, Set<TaskLocation>> taskLocations = new HashMap<>();
 
@@ -478,40 +489,109 @@ public final class LootrunModel extends Model {
             if (packedItem.id() == idToCheck) {
                 if (!(packedItem.value() instanceof ItemStack itemStack)) return;
 
-                boolean foundLootrunMythic = false;
+                boolean foundMythic = false;
                 Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
                 if (gearItemOpt.isPresent()) {
                     GearItem gearItem = gearItemOpt.get();
 
                     if (gearItem.getGearTier() == GearTier.MYTHIC) {
-                        foundLootrunMythic = true;
+                        foundMythic = true;
                     }
                 }
 
                 // No need to check tier for these as they are only mythic
                 Optional<InsulatorItem> insulatorItemOpt = Models.Item.asWynnItem(itemStack, InsulatorItem.class);
                 if (insulatorItemOpt.isPresent()) {
-                    foundLootrunMythic = true;
+                    foundMythic = true;
                 }
 
                 Optional<SimulatorItem> simulatorItemOpt = Models.Item.asWynnItem(itemStack, SimulatorItem.class);
                 if (simulatorItemOpt.isPresent()) {
-                    foundLootrunMythic = true;
+                    foundMythic = true;
                 }
 
-                if (foundLootrunMythic) {
+                if (foundMythic) {
+                    foundLootrunMythic = true;
                     WynntilsMod.postEvent(
                             new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST));
-                    dryPulls.store(0);
                 }
             }
         }
     }
 
     @SubscribeEvent
-    public void onLootrunCompleted(LootrunFinishedEvent.Completed event) {
-        dryPulls.store(dryPulls.get() + event.getRewardPulls());
-        checkedItemEntities.clear();
+    public void onScreenInit(ScreenInitEvent.Pre e) {
+        if (Models.Container.getCurrentContainer() instanceof LootrunRewardChestContainer lootrunRewardChestContainer) {
+            checkedItemEntities.clear();
+            rewardChestIsOpened = true;
+        } else {
+            rewardChestIsOpened = false;
+        }
+    }
+
+    @SubscribeEvent
+    public void onMenuClosed(MenuEvent.MenuClosedEvent event) {
+        if (!rewardChestIsOpened) return;
+        if (!rerollingRewards) return;
+        // This is when the server closes the chest to reroll the chest
+
+        if (expectedPulls.get() == -1) {
+            WynntilsMod.warn(
+                    "[LootrunModel] Failed to update dry lootrun count after closing the reward chest. Did not detect number of expected pulls. Got expectedPulls="
+                            + expectedPulls.get()
+                            + ".");
+            return;
+        }
+
+        if (foundLootrunMythic) {
+            dryPulls.store(expectedPulls.get());
+        } else {
+            dryPulls.store(dryPulls.get() + expectedPulls.get());
+        }
+
+        rewardChestIsOpened = false;
+        rerollingRewards = false;
+    }
+
+    @SubscribeEvent
+    public void onSlotClicked(ContainerClickEvent e) {
+        if (e.getItemStack().isEmpty()) return;
+
+        if (Models.Container.getCurrentContainer() instanceof LootrunRewardChestContainer lootrunRewardChestContainer) {
+            if (e.getSlotNum() == lootrunRewardChestContainer.REROLL_REWARDS_SLOT) {
+                StyledText rerollLoreConfirm =
+                        LoreUtils.getLore(e.getItemStack()).getFirst();
+
+                if (rerollLoreConfirm.matches(lootrunRewardChestContainer.REROLL_CONFIRM_PATTERN)) {
+                    rerollingRewards = true;
+                    checkedItemEntities.clear();
+                }
+            } else if (e.getSlotNum() == lootrunRewardChestContainer.CLOSE_CHEST_SLOT) {
+                StyledText itemName = StyledText.fromComponent(e.getItemStack().getHoverName());
+
+                if (!itemName.equals(lootrunRewardChestContainer.CLOSE_CHEST_ITEM_NAME)) return;
+
+                // This is when the user closes the chest after claiming rewards
+
+                if (expectedPulls.get() == -1) {
+                    WynntilsMod.warn(
+                            "[LootrunModel] Failed to update dry lootrun count after closing the reward chest. Did not detect number of expected pulls. Got expectedPulls="
+                                    + expectedPulls.get()
+                                    + ". Probably, the player tried closing the chest before, which got cancelled and the contents of the chest got refreshed.");
+                    return;
+                }
+
+                if (foundLootrunMythic) {
+                    dryPulls.store(0);
+                } else {
+                    dryPulls.store(dryPulls.get() + expectedPulls.get());
+                }
+
+                expectedPulls.store(-1);
+
+                rewardChestIsOpened = false;
+            }
+        }
     }
 
     @SubscribeEvent
@@ -1159,7 +1239,9 @@ public final class LootrunModel extends Model {
     private void parseCompletedMessages(StyledText styledText) {
         Matcher matcher = styledText.getMatcher(REWARD_PULLS_PATTERN);
         if (matcher.find()) {
-            lootrunCompletedBuilder.setRewardPulls(Integer.parseInt(matcher.group(1)));
+            int pulls = Integer.parseInt(matcher.group(1));
+            lootrunCompletedBuilder.setRewardPulls(pulls);
+            expectedPulls.store(pulls);
 
             matcher = styledText.getMatcher(TIME_ELAPSED_PATTERN);
             if (matcher.find()) {
