@@ -102,7 +102,7 @@ public final class LootrunModel extends Model {
     //         ÀÀ§f2§7 Reward Rerolls§r                  §7Mobs Killed: §f236
     //    ÀÀÀ§f260§7 Lootrun Experience§r       ÀÀ§7Challenges Completed: §f13
 
-    private static final Pattern LOOTRUN_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC61§6§lLootrun Completed!");
+    private static final Pattern LOOTRUN_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC62§6§lLootrun Completed!");
 
     // Rewards
     private static final Pattern REWARD_PULLS_PATTERN = Pattern.compile("§.(\\d+)§7 Reward Pulls§r");
