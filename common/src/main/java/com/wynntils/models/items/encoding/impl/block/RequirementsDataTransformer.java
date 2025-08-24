@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -25,14 +25,14 @@ public class RequirementsDataTransformer extends DataTransformer<RequirementsDat
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, RequirementsData data) {
         return switch (version) {
-            case VERSION_1 -> encodeRequirementsData(data);
+            case VERSION_1, VERSION_2 -> encodeRequirementsData(data);
         };
     }
 
     @Override
     public ErrorOr<RequirementsData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1 -> decodeRequirementsData(byteReader);
+            case VERSION_1, VERSION_2 -> decodeRequirementsData(byteReader);
         };
     }
 
@@ -105,6 +105,10 @@ public class RequirementsDataTransformer extends DataTransformer<RequirementsDat
             // A skill requirement encoded as an id byte, representing the skill (`ETWFA` order).
             int id = byteReader.read().value();
             Skill skill = Skill.fromElement(Element.fromEncodingId(id));
+
+            if (skill == null) { // Sometimes null when users mess with custom encoding
+                return ErrorOr.error("Invalid skill encoding: " + id);
+            }
 
             // The next bytes are the skill requirement bytes, which are assembled into an integer.
             int requirement = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);

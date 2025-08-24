@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
@@ -19,22 +20,30 @@ import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.items.items.game.PowderItem;
-import com.wynntils.models.items.items.gui.CosmeticItem;
+import com.wynntils.models.items.items.gui.StoreItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends Feature {
+    private static final List<String> DEFAULT_HIGHLIGHT_KEYS =
+            List.of("item_tier", "ingredient_tier", "material_tier", "store_tier");
+
+    // TODO: Set default to WYNN when porting to 1.21.6+
     @Persisted
-    public final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.CIRCLE_TRANSPARENT);
+    public final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.TAG);
 
     @Persisted
     public final Config<Boolean> normalHighlightEnabled = new Config<>(true);
@@ -127,7 +136,7 @@ public class ItemHighlightFeature extends Feature {
     public final Config<CustomColor> threeStarMaterialHighlightColor = new Config<>(new CustomColor(230, 77, 0));
 
     @Persisted
-    public final Config<Boolean> cosmeticHighlightEnabled = new Config<>(true);
+    public final Config<Boolean> storeHighlightEnabled = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> powderHighlightEnabled = new Config<>(true);
@@ -145,7 +154,10 @@ public class ItemHighlightFeature extends Feature {
     public final Config<Boolean> hotbarHighlightEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Float> hotbarOpacity = new Config<>(.5f);
+    public final Config<Float> hotbarOpacity = new Config<>(1f);
+
+    @Persisted
+    public final Config<Boolean> selectedItemHighlight = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRenderSlot(SlotRenderEvent.CountPre e) {
@@ -154,17 +166,36 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getSlot().getItem(), false);
         if (color == CustomColor.NONE) return;
 
+        if (selectedItemHighlight.get()
+                && McUtils.inventory().getSelected().equals(e.getSlot().getItem())) {
+            RenderSystem.enableDepthTest();
+            RenderUtils.drawTexturedRectWithColor(
+                    e.getPoseStack(),
+                    Texture.HOTBAR_SELECTED_HIGHLIGHT.resource(),
+                    color,
+                    e.getSlot().x,
+                    e.getSlot().y,
+                    100,
+                    16,
+                    16,
+                    16,
+                    16);
+            RenderSystem.disableDepthTest();
+            return;
+        }
+
         RenderSystem.enableDepthTest();
         RenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
                 Texture.HIGHLIGHT.resource(),
-                color.withAlpha(inventoryOpacity.get()),
+                color,
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
                 100,
                 18,
                 18,
-                highlightTexture.get().ordinal() * 18,
+                // TODO: Remove +18 when porting to 1.21.6+
+                (highlightTexture.get().ordinal() * 18) + 18,
                 0,
                 18,
                 18,
@@ -180,15 +211,58 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
-        BufferedRenderUtils.drawRect(
+        if (selectedItemHighlight.get() && McUtils.inventory().getSelected().equals(e.getItemStack())) {
+            BufferedRenderUtils.drawTexturedRectWithColor(
+                    e.getPoseStack(),
+                    e.getGuiGraphics().bufferSource,
+                    Texture.HOTBAR_SELECTED_HIGHLIGHT,
+                    color,
+                    e.getX(),
+                    e.getY());
+            return;
+        }
+
+        BufferedRenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
                 e.getGuiGraphics().bufferSource,
-                color.withAlpha(hotbarOpacity.get()),
-                e.getX(),
-                e.getY(),
+                Texture.HIGHLIGHT.resource(),
+                color,
+                e.getX() - 1,
+                e.getY() - 1,
                 0,
-                16,
-                16);
+                18,
+                18,
+                // TODO: Remove +18 when porting to 1.21.6+
+                (highlightTexture.get().ordinal() * 18) + 18,
+                0,
+                18,
+                18,
+                Texture.HIGHLIGHT.width(),
+                Texture.HIGHLIGHT.height());
+    }
+
+    @SubscribeEvent
+    public void onSetSlot(SetSlotEvent.Pre event) {
+        removeVanillaHighlight(event.getItemStack());
+    }
+
+    @Override
+    public void onEnable() {
+        if (McUtils.player() == null) return;
+
+        McUtils.inventory().items.forEach(this::removeVanillaHighlight);
+    }
+
+    private void removeVanillaHighlight(ItemStack itemStack) {
+        CustomModelData itemStackModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+        if (itemStackModelData == null) return;
+
+        List<String> newStrings = itemStackModelData.strings().stream()
+                .filter(s -> DEFAULT_HIGHLIGHT_KEYS.stream().noneMatch(s::startsWith))
+                .toList();
+        CustomModelData newModelData = new CustomModelData(
+                itemStackModelData.floats(), itemStackModelData.flags(), newStrings, itemStackModelData.colors());
+        itemStack.set(DataComponents.CUSTOM_MODEL_DATA, newModelData);
     }
 
     private CustomColor getHighlightColor(ItemStack itemStack, boolean hotbarHighlight) {
@@ -202,13 +276,10 @@ public class ItemHighlightFeature extends Feature {
 
         if (!highlight.isHighlightEnabled()) return CustomColor.NONE;
 
-        return highlight.getHighlightColor();
+        return highlight.getHighlightColor().withAlpha(hotbarHighlight ? hotbarOpacity.get() : inventoryOpacity.get());
     }
 
     private HighlightInfo calculateHighlightInfo(WynnItem wynnItem) {
-        if (wynnItem instanceof CosmeticItem cosmeticItem) {
-            return new CosmeticHighlight(cosmeticItem);
-        }
         if (wynnItem instanceof GearTierItemProperty gearItem) {
             return new GearHighlight(gearItem);
         }
@@ -220,6 +291,9 @@ public class ItemHighlightFeature extends Feature {
         }
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderHighlight(powderItem);
+        }
+        if (wynnItem instanceof StoreItem storeItem) {
+            return new StoreHighlight(storeItem);
         }
         if (wynnItem instanceof EmeraldPouchItem emeraldPouchItem) {
             return new EmeraldPouchHighlight(emeraldPouchItem);
@@ -234,16 +308,16 @@ public class ItemHighlightFeature extends Feature {
         boolean isHighlightEnabled();
     }
 
-    private final class CosmeticHighlight implements HighlightInfo {
-        private final CosmeticItem item;
+    private final class StoreHighlight implements HighlightInfo {
+        private final StoreItem item;
 
-        private CosmeticHighlight(CosmeticItem item) {
+        private StoreHighlight(StoreItem item) {
             this.item = item;
         }
 
         @Override
         public boolean isHighlightEnabled() {
-            return cosmeticHighlightEnabled.get();
+            return storeHighlightEnabled.get();
         }
 
         @Override
@@ -382,6 +456,9 @@ public class ItemHighlightFeature extends Feature {
     }
 
     public enum HighlightTexture {
+        // TODO: Add WYNN back when porting to 1.21.6+
+        // WYNN,
+        TAG,
         CIRCLE_TRANSPARENT,
         CIRCLE_OPAQUE,
         CIRCLE_OUTLINE_LARGE,

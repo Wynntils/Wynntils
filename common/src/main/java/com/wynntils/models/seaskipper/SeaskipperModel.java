@@ -12,7 +12,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
@@ -36,7 +35,7 @@ import org.lwjgl.glfw.GLFW;
 public final class SeaskipperModel extends Model {
     private static final SeaskipperDestinationAreaProvider SEASKIPPER_DESTINATION_AREA_PROVIDER =
             new SeaskipperDestinationAreaProvider();
-    private static final StyledText OAK_BOAT_NAME = StyledText.fromString("§bOak Boat");
+    private static final String BOAT_NAME = "Boat";
 
     private final List<SeaskipperDestination> allDestinations = new CopyOnWriteArrayList<>();
     private List<SeaskipperDestination> availableDestinations = new ArrayList<>();
@@ -74,7 +73,7 @@ public final class SeaskipperModel extends Model {
         for (int i = 0; i < event.getItems().size(); i++) {
             ItemStack item = event.getItems().get(i);
 
-            if (boatSlot == -1 && StyledText.fromComponent(item.getHoverName()).equals(OAK_BOAT_NAME)) {
+            if (item.getHoverName().getString().equals(BOAT_NAME)) {
                 boatSlot = i;
                 continue;
             }

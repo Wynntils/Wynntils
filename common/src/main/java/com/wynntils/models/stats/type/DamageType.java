@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.type;
@@ -12,7 +12,7 @@ import net.minecraft.ChatFormatting;
 
 public enum DamageType {
     ALL("", "❤", ChatFormatting.DARK_RED),
-    NEUTRAL("Neutral", "✣", ChatFormatting.GOLD, 5),
+    NEUTRAL("Neutral", "\uE005", ChatFormatting.GOLD, 5),
     FIRE(Element.FIRE),
     WATER(Element.WATER),
     AIR(Element.AIR),

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.emeraldpouch;
@@ -8,7 +8,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.screens.guides.GuideItemStack;
-import com.wynntils.utils.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -87,12 +86,14 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
 
         switch (upTo) {
             case 0 -> itemLore.add(Component.literal("No Auto-Conversions").withStyle(ChatFormatting.GRAY));
-            case 1 -> itemLore.add(Component.literal("Converts up to")
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal(" Emerald Blocks").withStyle(ChatFormatting.WHITE)));
-            default -> itemLore.add(Component.literal("Converts up to")
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal(" Liquid Emeralds").withStyle(ChatFormatting.WHITE)));
+            case 1 ->
+                itemLore.add(Component.literal("Converts up to")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(Component.literal(" Emerald Blocks").withStyle(ChatFormatting.WHITE)));
+            default ->
+                itemLore.add(Component.literal("Converts up to")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(Component.literal(" Liquid Emeralds").withStyle(ChatFormatting.WHITE)));
         }
 
         return itemLore;
@@ -102,8 +103,7 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
     public Component getHoverName() {
         return Component.literal("Emerald Pouch ")
                 .withStyle(ChatFormatting.GREEN)
-                .append(Component.literal("[Tier " + MathUtils.toRoman(tier) + "]")
-                        .withStyle(ChatFormatting.DARK_GREEN));
+                .append(Component.literal("[Tier " + tier + "]").withStyle(ChatFormatting.DARK_GREEN));
     }
 
     @Override

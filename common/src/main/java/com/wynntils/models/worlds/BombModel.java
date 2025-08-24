@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -17,6 +16,7 @@ import com.wynntils.models.worlds.event.BombEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
@@ -32,16 +32,17 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class BombModel extends Model {
     public static final TrackedBar InfoBar = new InfoBar();
 
-    private static final Pattern BOMB_BELL_PATTERN =
-            Pattern.compile("^\\[Bomb Bell\\] (?<user>.+) has thrown an? (?<bomb>.+) Bomb on (?<server>.+)$");
+    // Test in BombModel_BOMB_BELL_PATTERN
+    private static final Pattern BOMB_BELL_PATTERN = Pattern.compile(
+            "^§#fddd5cff(?:\uE01E\uE002|\uE001) (?<user>.+) has thrown an? §#f3e6b2ff(?<bomb>.+) Bomb§#fddd5cff on §#f3e6b2ff§n(?<server>.+)$");
 
-    // §3You can buy Profession Speed Bombs at §b§nour store
-    private static final Pattern BOMB_EXPIRED_PATTERN =
-            Pattern.compile("§3You can buy (?<bomb>.+) Bombs at §b§nour store");
+    // Test in BombModel_BOMB_EXPIRED_PATTERN
+    private static final Pattern BOMB_EXPIRED_PATTERN = Pattern.compile(
+            "^§#a0c84bff(?:\uE014\uE002|\uE001) §#ffd750ff.+§#a0c84bff (?<bomb>.+) Bomb has expired!.*$");
 
     // Test in BombModel_BOMB_THROWN_PATTERN
-    private static final Pattern BOMB_THROWN_PATTERN = Pattern.compile(
-            "^§b(§o)?(?<user>.+?)§3 has thrown a §b(?<bomb>.+?) Bomb§3! .*?§3 for §b\\d{1,2} minutes§3!$");
+    private static final Pattern BOMB_THROWN_PATTERN =
+            Pattern.compile("^§#a0c84bff(?:\uE014\uE002|\uE001) §l(?<bomb>.+) Bomb$");
 
     private static final Map<BombType, BombInfo> CURRENT_SERVER_BOMBS = new EnumMap<>(BombType.class);
 
@@ -56,11 +57,15 @@ public final class BombModel extends Model {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
         StyledText message = event.getOriginalStyledText();
+        StyledText unwrapped =
+                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
 
-        Matcher bellMatcher = message.getMatcher(BOMB_BELL_PATTERN, PartStyle.StyleType.NONE);
+        Matcher bellMatcher = unwrapped.getMatcher(BOMB_BELL_PATTERN);
         if (bellMatcher.matches()) {
-            BombInfo bombInfo =
-                    addBombFromChat(bellMatcher.group("user"), bellMatcher.group("bomb"), bellMatcher.group("server"));
+            BombInfo bombInfo = addBombFromChat(
+                    bellMatcher.group("user"),
+                    bellMatcher.group("bomb"),
+                    bellMatcher.group("server").trim());
             if (bombInfo == null) return;
 
             BombEvent.BombBell bombEvent = new BombEvent.BombBell(bombInfo, message);
@@ -70,10 +75,12 @@ public final class BombModel extends Model {
             return;
         }
 
-        Matcher localMatcher = message.getMatcher(BOMB_THROWN_PATTERN);
+        Matcher localMatcher = unwrapped.getMatcher(BOMB_THROWN_PATTERN);
         if (localMatcher.matches()) {
-            BombInfo bombInfo = addBombFromChat(
-                    localMatcher.group("user"), localMatcher.group("bomb"), Models.WorldState.getCurrentWorldName());
+            // FIXME: User is sent on following chat line, we don't currently use the name anywhere but if we do in
+            //  the future then this needs fixing
+            BombInfo bombInfo =
+                    addBombFromChat("", localMatcher.group("bomb"), Models.WorldState.getCurrentWorldName());
             if (bombInfo == null) return;
 
             BombEvent.Local bombEvent = new BombEvent.Local(bombInfo, message);
@@ -82,7 +89,7 @@ public final class BombModel extends Model {
             return;
         }
 
-        Matcher expiredMatcher = message.getMatcher(BOMB_EXPIRED_PATTERN);
+        Matcher expiredMatcher = unwrapped.getMatcher(BOMB_EXPIRED_PATTERN);
         if (expiredMatcher.matches()) {
             String bomb = expiredMatcher.group("bomb");
 

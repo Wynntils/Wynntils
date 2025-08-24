@@ -390,6 +390,26 @@ public final class BufferedRenderUtils {
     }
 
     public static void drawTexturedRectWithColor(
+            PoseStack poseStack, MultiBufferSource bufferSource, Texture tex, CustomColor color, float x, float y) {
+        drawTexturedRectWithColor(
+                poseStack,
+                bufferSource,
+                tex.resource(),
+                color,
+                x,
+                y,
+                0,
+                tex.width(),
+                tex.height(),
+                0,
+                0,
+                tex.width(),
+                tex.height(),
+                tex.width(),
+                tex.height());
+    }
+
+    public static void drawTexturedRectWithColor(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             ResourceLocation tex,

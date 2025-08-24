@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.elements.type;
@@ -8,11 +8,11 @@ import com.wynntils.utils.StringUtils;
 import net.minecraft.ChatFormatting;
 
 public enum Element {
-    EARTH("✤", ChatFormatting.DARK_GREEN, 0),
-    THUNDER("✦", ChatFormatting.YELLOW, 1),
-    WATER("❉", ChatFormatting.AQUA, 2),
-    FIRE("✹", ChatFormatting.RED, 3),
-    AIR("❋", ChatFormatting.WHITE, 4);
+    EARTH("\uE001", ChatFormatting.DARK_GREEN, 0),
+    THUNDER("\uE003", ChatFormatting.YELLOW, 1),
+    WATER("\uE004", ChatFormatting.AQUA, 2),
+    FIRE("\uE002", ChatFormatting.RED, 3),
+    AIR("\uE000", ChatFormatting.WHITE, 4);
 
     private final String symbol;
     private final ChatFormatting colorCode;

@@ -48,7 +48,7 @@ public final class CharacterModel extends Model {
 
     private boolean hasCharacter;
 
-    private ClassType classType;
+    private ClassType classType = ClassType.NONE;
     private boolean reskinned;
     private int level;
 

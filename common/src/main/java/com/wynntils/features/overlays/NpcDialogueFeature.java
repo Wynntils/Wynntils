@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
@@ -8,6 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.notifications.MessageContainer;
@@ -49,6 +50,7 @@ import org.lwjgl.glfw.GLFW;
  * </ol>
  * If the feature is disabled, we stop all special processing for chat screens in ChatHandler.
  */
+@StartDisabled
 @ConfigCategory(Category.OVERLAYS)
 public class NpcDialogueFeature extends Feature {
     // This is deliberately a styled text, so we construct new components every time

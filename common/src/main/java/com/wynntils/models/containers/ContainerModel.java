@@ -29,6 +29,7 @@ import com.wynntils.models.containers.containers.ItemIdentifierContainer;
 import com.wynntils.models.containers.containers.JukeboxContainer;
 import com.wynntils.models.containers.containers.LeaderboardRewardsContainer;
 import com.wynntils.models.containers.containers.LobbyContainer;
+import com.wynntils.models.containers.containers.LootrunRewardChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RatingRewardsContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
@@ -47,6 +48,8 @@ import com.wynntils.models.containers.containers.reward.ChallengeRewardContainer
 import com.wynntils.models.containers.containers.reward.DailyRewardContainer;
 import com.wynntils.models.containers.containers.reward.EventContainer;
 import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
+import com.wynntils.models.containers.containers.reward.IngredientBombRewardContainer;
+import com.wynntils.models.containers.containers.reward.ItemBombRewardContainer;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.ObjectiveRewardContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketBuyContainer;
@@ -69,7 +72,8 @@ public final class ContainerModel extends Model {
     public static final Pattern ABILITY_TREE_PATTERN = Pattern.compile("\uDAFF\uDFEA\uE000");
 
     public static final String CHARACTER_INFO_NAME = "\uDAFF\uDFDC\uE003";
-    public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
+    public static final String STORE_MENU_NAME =
+            "\uDAFF\uDFF4\uE02C\uDAFF\uDF7C\uF027\uDAFF\uDF52\uDB00\uDC3D.\uDAFF\uDF22\uDB00\uDC40.\uDAFF\uDF2F";
     public static final String GUILD_MENU_NAME = "[a-zA-Z\\s]+: Manage";
     public static final String GUILD_DIPLOMACY_MENU_NAME = "[a-zA-Z\\s]+: Diplomacy";
     public static final String MASTERY_TOMES_NAME = "\uDAFF\uDFDB\uE005";
@@ -131,14 +135,17 @@ public final class ContainerModel extends Model {
         registerContainer(new HelmetCosmeticsMenuContainer());
         registerContainer(new HousingJukeboxContainer());
         registerContainer(new HousingListContainer());
+        registerContainer(new IngredientBombRewardContainer());
         registerContainer(new IngredientPouchContainer());
         registerContainer(new IslandBlockBankContainer());
+        registerContainer(new ItemBombRewardContainer());
         registerContainer(new ItemIdentifierContainer());
         registerContainer(new InventoryContainer());
         registerContainer(new JukeboxContainer());
         registerContainer(new LeaderboardRewardsContainer());
         registerContainer(new LobbyContainer());
         registerContainer(new LootChestContainer());
+        registerContainer(new LootrunRewardChestContainer());
         registerContainer(new MiscBucketContainer());
         registerContainer(new ObjectiveRewardContainer());
         registerContainer(new PlayerEffectsMenuContainer());

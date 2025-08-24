@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
@@ -18,6 +18,12 @@ import java.util.Locale;
 public final class SystemUtils {
     public static boolean isMac() {
         return System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("mac");
+    }
+
+    public static boolean isWayland() {
+        String waylandDisplay = System.getenv("WAYLAND_DISPLAY");
+        String sessionType = System.getenv("XDG_SESSION_TYPE");
+        return (waylandDisplay != null && !waylandDisplay.isEmpty()) || ("wayland".equalsIgnoreCase(sessionType));
     }
 
     public static void copyImageToClipboard(BufferedImage bi) {

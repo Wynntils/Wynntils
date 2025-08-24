@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.data.EndData;
 import com.wynntils.models.items.encoding.data.NameData;
@@ -38,20 +39,18 @@ import java.util.Optional;
 /**
  * This class holds all the {@link ItemTransformer} instances,
  * for all gear types and encoding versions.
- *
+ * <p>
  * The process of item encoding:
  * A compatible {@link com.wynntils.models.items.WynnItem} is passed to the {@link ItemTransformer},
  * which encodes the item into a list of {@link ItemData} objects.
  * Each {@link ItemData} object is then encoded into a byte array,
  * using the appropriate {@link DataTransformer} to do the encoding to {@link EncodedByteBuffer}.
- *
+ * <p>
  * The process of item decoding:
  * The {@link EncodedByteBuffer} is decoded into a list of {@link ItemData} objects, using the appropriate {@link DataTransformer}.
  * The {@link ItemTransformer} then decodes the {@link ItemData} objects into a {@link com.wynntils.models.items.WynnItem}.
  */
 public final class ItemTransformerRegistry {
-    private static final ItemTransformingVersion CURRENT_VERSION = ItemTransformingVersion.VERSION_1;
-
     private final DataTransformerRegistry dataTransformerRegistry = new DataTransformerRegistry();
 
     private final ItemTransformerMap itemTransformers = new ItemTransformerMap();
@@ -120,11 +119,29 @@ public final class ItemTransformerRegistry {
             WynnItem wynnItem, EncodingSettings encodingSettings, ItemTransformer<WynnItem> transformer) {
         List<ItemData> encodedData = new ArrayList<>();
 
-        encodedData.add(new StartData(CURRENT_VERSION));
+        ItemTransformingVersion versionToEncodeWith = getEncodingVersionAccordingToItem(wynnItem);
+
+        encodedData.add(new StartData(versionToEncodeWith));
         encodedData.addAll(transformer.encode(wynnItem, encodingSettings));
         encodedData.add(new EndData());
 
-        return dataTransformerRegistry.encodeData(CURRENT_VERSION, encodedData);
+        return dataTransformerRegistry.encodeData(versionToEncodeWith, encodedData);
+    }
+
+    // FIXME: This could be much more sophisticated in the future,
+    //        e.g. by requesting the minimum versions requred from each transformer instead.
+    private static ItemTransformingVersion getEncodingVersionAccordingToItem(WynnItem wynnItem) {
+        ItemTransformingVersion versionToEncodeWith = ItemTransformingVersion.VERSION_1;
+        if (wynnItem instanceof GearItem gearItem) {
+            boolean shinyStatPresentWithRerolls = gearItem.getItemInstance()
+                    .map(GearInstance::shinyStat)
+                    .flatMap(shinyStat -> shinyStat.map(stat -> stat.shinyRerolls() != 0))
+                    .orElse(false);
+            if (shinyStatPresentWithRerolls) {
+                versionToEncodeWith = ItemTransformingVersion.VERSION_2;
+            }
+        }
+        return versionToEncodeWith;
     }
 
     private ErrorOr<WynnItem> decodeItem(List<ItemData> itemData, ItemTransformer<WynnItem> transformer) {

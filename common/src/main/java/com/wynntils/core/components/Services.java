@@ -8,6 +8,7 @@ import com.wynntils.services.athena.UpdateService;
 import com.wynntils.services.athena.WynntilsAccountService;
 import com.wynntils.services.chat.ChatTabService;
 import com.wynntils.services.cosmetics.CosmeticsService;
+import com.wynntils.services.custommodel.CustomModelService;
 import com.wynntils.services.destination.DestinationService;
 import com.wynntils.services.discord.DiscordService;
 import com.wynntils.services.favorites.FavoritesService;
@@ -31,6 +32,7 @@ import com.wynntils.services.usermarker.UserMarkerService;
 public final class Services {
     public static final ChatTabService ChatTab = new ChatTabService();
     public static final CosmeticsService Cosmetics = new CosmeticsService();
+    public static final CustomModelService CustomModel = new CustomModelService();
     public static final DestinationService Destination = new DestinationService();
     public static final DiscordService Discord = new DiscordService();
     public static final FavoritesService Favorites = new FavoritesService();

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -25,7 +25,7 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, CustomIdentificationsData data) {
         return switch (version) {
-            case VERSION_1 -> encodeCustomIdentificationData(data);
+            case VERSION_1, VERSION_2 -> encodeCustomIdentificationData(data);
         };
     }
 
@@ -33,7 +33,7 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
     public ErrorOr<CustomIdentificationsData> decodeData(
             ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1 -> decodeCustomIdentificationData(byteReader);
+            case VERSION_1, VERSION_2 -> decodeCustomIdentificationData(byteReader);
         };
     }
 
