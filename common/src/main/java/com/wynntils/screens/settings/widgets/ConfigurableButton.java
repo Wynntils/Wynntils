@@ -185,4 +185,8 @@ public class ConfigurableButton extends WynntilsButton {
 
         enabledCheckbox.setY(y);
     }
+
+    public Configurable getConfigurable() {
+        return configurable;
+    }
 }
