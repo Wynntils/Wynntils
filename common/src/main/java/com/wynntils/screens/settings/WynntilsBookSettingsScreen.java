@@ -26,6 +26,7 @@ import com.wynntils.screens.settings.widgets.SettingsCategoryTabButton;
 import com.wynntils.screens.settings.widgets.SettingsPageTabButton;
 import com.wynntils.screens.settings.widgets.SettingsSearchWidget;
 import com.wynntils.screens.settings.widgets.SettingsSideTabButton;
+import com.wynntils.screens.settings.widgets.UnsavedChangesWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -85,6 +86,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private SettingsCategoryTabButton allCategoriesButton;
     private SettingsCategoryTabButton selectedCategoryButton;
     private TextInputBoxWidget focusedTextInput;
+    private UnsavedChangesWidget unsavedChangesWidget;
 
     // UI size, postions, etc
     private boolean draggingConfigurableScroll = false;
@@ -98,6 +100,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private float configScrollRenderY;
 
     // Settings display
+    private boolean unsavedChanges = false;
+    private boolean displayWarning = false;
     private Category selectedCategory;
     private Configurable selectedConfigurable = null;
     private Configurable hoveredConfigurable = null;
@@ -203,6 +207,9 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 Texture.TAG_BLUE.height(),
                 (b) -> {
                     Managers.Config.saveConfig();
+                    unsavedChanges = false;
+                    displayWarning = false;
+                    unsavedChangesWidget.visible = false;
                     onClose();
                 },
                 ComponentUtils.wrapTooltips(
@@ -224,7 +231,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 yPos,
                 Texture.TAG_BLUE.width(),
                 Texture.TAG_BLUE.height(),
-                (b) -> onClose(),
+                (b) -> {
+                    // This button is specifically for closing without saving so ignore unsaved changes
+                    unsavedChanges = false;
+                    displayWarning = false;
+                    unsavedChangesWidget.visible = false;
+                    onClose();
+                },
                 ComponentUtils.wrapTooltips(
                         List.of(
                                 Component.translatable("screens.wynntils.settingsScreen.close")
@@ -284,12 +297,25 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 offsetY));
 
         this.addRenderableWidget(searchWidget);
+
+        unsavedChangesWidget = new UnsavedChangesWidget(
+                (int) ((this.width - Texture.SETTINGS_WARNING_BACKGROUND.width()) / 2f),
+                (int) ((this.height - Texture.SETTINGS_WARNING_BACKGROUND.height()) / 2f),
+                this);
+        unsavedChangesWidget.visible = displayWarning;
+
+        this.addRenderableWidget(unsavedChangesWidget);
     }
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         PoseStack poseStack = guiGraphics.pose();
+
+        if (displayWarning) {
+            unsavedChangesWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+            return;
+        }
 
         renderTags(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -408,6 +434,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
+        if (unsavedChanges) {
+            displayWarning = true;
+            unsavedChangesWidget.visible = true;
+            return;
+        }
+
         Managers.Config.reloadConfiguration(true);
 
         if (previousScreen != null) {
@@ -419,6 +451,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        if (displayWarning) {
+            if (unsavedChangesWidget.isMouseOver(mouseX, mouseY)) {
+                return unsavedChangesWidget.mouseClicked(mouseX, mouseY, button);
+            } else {
+                return false;
+            }
+        }
+
         for (GuiEventListener listener : getWidgetsForIteration().toList()) {
             if (listener.isMouseOver(mouseX, mouseY)) {
                 return listener.mouseClicked(mouseX, mouseY, button);
@@ -455,6 +495,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (displayWarning) {
+            if (unsavedChangesWidget.isMouseOver(mouseX, mouseY)) {
+                return unsavedChangesWidget.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            } else {
+                return false;
+            }
+        }
+
         if (draggingConfigurableScroll) {
             int scrollAreaStartY = SCROLL_START_Y + 7 + offsetY;
 
@@ -500,6 +548,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (displayWarning) {
+            if (unsavedChangesWidget.isMouseOver(mouseX, mouseY)) {
+                return unsavedChangesWidget.mouseReleased(mouseX, mouseY, button);
+            } else {
+                return false;
+            }
+        }
+
         for (GuiEventListener listener : getWidgetsForIteration().toList()) {
             listener.mouseReleased(mouseX, mouseY, button);
         }
@@ -512,6 +568,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        if (displayWarning) {
+            if (unsavedChangesWidget.isMouseOver(mouseX, mouseY)) {
+                return unsavedChangesWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
+            } else {
+                return false;
+            }
+        }
+
         int scrollAmount = (int) (-deltaY * SCROLL_FACTOR);
 
         // When mouse above the book, scroll the categories.
@@ -674,6 +738,21 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 scrollToMatchingConfig();
             }
         }
+    }
+
+    public void changesMade() {
+        unsavedChanges = true;
+    }
+
+    public void handleSaveChoice(boolean save) {
+        if (save) {
+            Managers.Config.saveConfig();
+        }
+
+        unsavedChanges = false;
+        displayWarning = false;
+        unsavedChangesWidget.visible = false;
+        this.onClose();
     }
 
     public Configurable getSelectedConfigurable() {
