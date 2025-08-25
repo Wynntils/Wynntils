@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class InventoryModel extends Model {
-    private static final int MAX_INVENTORY_SLOTS = 28;
+    private static final int MAX_INVENTORY_SLOTS = 29;
     private static final List<String> AUTO_CASTER_MAJOR_IDS = List.of("Sorcery", "Madness");
 
     private final InventoryWatcher emptySlotWatcher = new InventoryWatcher(ItemStack::isEmpty);
