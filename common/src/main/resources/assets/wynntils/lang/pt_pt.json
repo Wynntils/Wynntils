@@ -1182,8 +1182,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "Se as dicas de ferramentas devem se ajustar quando atingem o lado da tela",
   "feature.wynntils.tooltipFitting.wrapText.name": "Envolver Texto",
   "feature.wynntils.tooltipVanillaHide.description": "Oculta as dicas de ferramentas de baunilha.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "Isso ocultará informações adicionais, como 'Tingido', que não são relevantes no Wynncraft",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "Ocultar Informações Adicionais da Dica de Ferramenta",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Isso desativará as dicas de ferramentas avançadas (F3+H) no Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Sempre Ocultar Dica de Ferramenta Avançada",
   "feature.wynntils.tooltipVanillaHide.name": "Ocultar Informações de Dica de Ferramenta Irrelevantes",

@@ -1182,8 +1182,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "Si las descripciones deben ajustarse cuando alcanzan el lado de la pantalla",
   "feature.wynntils.tooltipFitting.wrapText.name": "Ajustar Texto",
   "feature.wynntils.tooltipVanillaHide.description": "Oculta las descripciones emergentes de vainilla.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "Esto ocultará información adicional, como 'Teñido', que no es relevante en Wynncraft",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "Ocultar Información Adicional de Descripción",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Esto desactivará las descripciones emergentes avanzadas (F3+H) en Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Ocultar Siempre Descripción Avanzada",
   "feature.wynntils.tooltipVanillaHide.name": "Ocultar Información de Descripción Irrelevante",

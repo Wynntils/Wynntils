@@ -1182,8 +1182,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "A tooltip-ek tördelődjenek, amikor elérik a képernyő szélét?",
   "feature.wynntils.tooltipFitting.wrapText.name": "Szöveg Tördelése",
   "feature.wynntils.tooltipVanillaHide.description": "Elrejti a vanília tooltipjeit.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "Ez elrejti a további információkat, mint például a 'Festett', amelyek nem relevánsak a Wynncrafton",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "További Tooltip Információk Elrejtése",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Ez kikapcsolja a fejlett tooltip-eket (F3+H) a Wynncrafton",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Mindig Rejtsd el a Fejlett Tooltipet",
   "feature.wynntils.tooltipVanillaHide.name": "Nem Releváns Tooltip Információk Elrejtése",

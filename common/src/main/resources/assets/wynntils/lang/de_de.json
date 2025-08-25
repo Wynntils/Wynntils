@@ -1185,8 +1185,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "Ob Tooltips umgebrochen werden sollen, wenn sie den Bildschirmrand erreichen",
   "feature.wynntils.tooltipFitting.wrapText.name": "Textumbruch",
   "feature.wynntils.tooltipVanillaHide.description": "Verbirgt die Vanilla-Tooltips.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "Dies wird zusätzliche Informationen wie 'Gefärbt' verbergen, die auf Wynncraft nicht relevant sind",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "Zusätzliche Tooltip-Informationen Verbergen",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Dies wird die erweiterten Tooltips (F3+H) auf Wynncraft deaktivieren",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Erweiterte Tooltip Immer Verbergen",
   "feature.wynntils.tooltipVanillaHide.name": "Irrelevante Tooltip-Informationen Verbergen",

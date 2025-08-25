@@ -1182,8 +1182,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "Se le descrizioni devono avvolgersi quando raggiungono il lato dello schermo",
   "feature.wynntils.tooltipFitting.wrapText.name": "Avvolgere il Testo",
   "feature.wynntils.tooltipVanillaHide.description": "Nasconde le descrizioni emergenti di vanilla.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "Questo nasconderà informazioni aggiuntive, come 'Tinto', che non sono rilevanti su Wynncraft",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "Nascondi Informazioni Aggiuntive della Descrizione",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Questo disattiverà le descrizioni avanzate (F3+H) su Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Nascondi Sempre la Descrizione Avanzata",
   "feature.wynntils.tooltipVanillaHide.name": "Nascondi Informazioni di Descrizione Irrilevanti",
