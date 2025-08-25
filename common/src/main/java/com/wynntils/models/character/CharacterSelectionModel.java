@@ -33,7 +33,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public final class CharacterSelectionModel extends Model {
-    private static final List<Integer> CHARACTER_SLOTS = List.of(9, 10, 11, 18, 19, 20, 27, 28, 29, 36, 37, 38, 45, 46);
+    private static final List<Integer> CHARACTER_SLOTS =
+            List.of(9, 10, 11, 18, 19, 20, 27, 28, 29, 36, 37, 38, 45, 46, 47);
     private static final StyledText CREATE_CHARACTER_NAME = StyledText.fromString("§a§lCreate a Character");
     private List<Integer> validCharacterSlots = new ArrayList<>();
     private List<ItemStack> selectionScreenItems = new ArrayList<>();

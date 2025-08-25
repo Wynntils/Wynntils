@@ -14,6 +14,7 @@ import com.wynntils.models.containers.containers.BlacksmithContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
+import com.wynntils.models.containers.containers.CosmeticContainer;
 import com.wynntils.models.containers.containers.CraftingStationContainer;
 import com.wynntils.models.containers.containers.GuildBadgesContainer;
 import com.wynntils.models.containers.containers.GuildBankContainer;
@@ -34,10 +35,7 @@ import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RatingRewardsContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
-import com.wynntils.models.containers.containers.cosmetics.HelmetCosmeticsMenuContainer;
-import com.wynntils.models.containers.containers.cosmetics.PetMenuContainer;
-import com.wynntils.models.containers.containers.cosmetics.PlayerEffectsMenuContainer;
-import com.wynntils.models.containers.containers.cosmetics.WeaponCosmeticsMenuContainer;
+import com.wynntils.models.containers.containers.StoreContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
@@ -60,6 +58,8 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketSellCont
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.guild.type.GuildLogType;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.models.store.type.CosmeticItemType;
+import com.wynntils.models.store.type.StoreItemType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -132,7 +132,6 @@ public final class ContainerModel extends Model {
         registerContainer(new GuildManagementContainer());
         registerContainer(new GuildMemberListContainer());
         registerContainer(new GuildTerritoriesContainer());
-        registerContainer(new HelmetCosmeticsMenuContainer());
         registerContainer(new HousingJukeboxContainer());
         registerContainer(new HousingListContainer());
         registerContainer(new IngredientBombRewardContainer());
@@ -148,9 +147,7 @@ public final class ContainerModel extends Model {
         registerContainer(new LootrunRewardChestContainer());
         registerContainer(new MiscBucketContainer());
         registerContainer(new ObjectiveRewardContainer());
-        registerContainer(new PlayerEffectsMenuContainer());
         registerContainer(new PersonalBlockBankContainer());
-        registerContainer(new PetMenuContainer());
         registerContainer(new RaidRewardChestContainer());
         registerContainer(new RatingRewardsContainer());
         registerContainer(new ScrapMenuContainer());
@@ -161,7 +158,6 @@ public final class ContainerModel extends Model {
         registerContainer(new TradeMarketOrderContainer());
         registerContainer(new TradeMarketSellContainer());
         registerContainer(new TradeMarketTradesContainer());
-        registerContainer(new WeaponCosmeticsMenuContainer());
 
         for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
             registerContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
@@ -169,6 +165,14 @@ public final class ContainerModel extends Model {
 
         for (GuildLogType type : GuildLogType.values()) {
             registerContainer(new GuildLogContainer(type));
+        }
+
+        for (CosmeticItemType type : CosmeticItemType.values()) {
+            registerContainer(new CosmeticContainer(type));
+        }
+
+        for (StoreItemType type : StoreItemType.values()) {
+            registerContainer(new StoreContainer(type));
         }
     }
 
