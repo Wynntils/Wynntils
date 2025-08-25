@@ -340,8 +340,6 @@
   "feature.wynntils.containerSearch.filterInPetMenu.name": "펫 메뉴 검색창",
   "feature.wynntils.containerSearch.filterInPlayerEffectsMenu.description": "플레이어 효과 메뉴에 검색 위젯을 추가할까요?",
   "feature.wynntils.containerSearch.filterInPlayerEffectsMenu.name": "플레이어 효과 메뉴 검색창",
-  "feature.wynntils.containerSearch.filterInScrapMenu.description": "스크랩 메뉴에 검색 위젯을 추가할까요?",
-  "feature.wynntils.containerSearch.filterInScrapMenu.name": "스크랩 메뉴 검색창",
   "feature.wynntils.containerSearch.filterInWeaponCosmeticsMenu.description": "무기 스킨 메뉴에 검색 위젯을 추가할까요?",
   "feature.wynntils.containerSearch.filterInWeaponCosmeticsMenu.name": "무기 스킨 메뉴 검색창",
   "feature.wynntils.containerSearch.highlightColor.description": "검색 결과 강조색을 설정합니다.",

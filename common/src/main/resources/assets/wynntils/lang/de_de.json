@@ -285,8 +285,6 @@
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "Suchleiste im Sonstiges-Eimer",
   "feature.wynntils.containerSearch.filterInPetMenu.description": "Sollte es ein Such-Widget im Haustiermenü geben?",
   "feature.wynntils.containerSearch.filterInPetMenu.name": "Suchleiste im Haustiermenü",
-  "feature.wynntils.containerSearch.filterInScrapMenu.description": "Sollte es ein Such-Widget im Schrottmenü geben?",
-  "feature.wynntils.containerSearch.filterInScrapMenu.name": "Suchleiste im Schrottmenü",
   "feature.wynntils.containerSearch.highlightColor.description": "Welche Farbe sollen die Hervorhebungsringe haben?",
   "feature.wynntils.containerSearch.highlightColor.name": "Hervorhebungsfarbe",
   "feature.wynntils.containerSearch.name": "Container-Suchhervorhebung",

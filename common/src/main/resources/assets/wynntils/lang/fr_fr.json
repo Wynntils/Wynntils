@@ -282,8 +282,6 @@
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "Barre de recherche dans le seau divers",
   "feature.wynntils.containerSearch.filterInPetMenu.description": "Faut-il un widget de recherche dans le menu des animaux de compagnie ?",
   "feature.wynntils.containerSearch.filterInPetMenu.name": "Barre de recherche dans le menu des animaux de compagnie",
-  "feature.wynntils.containerSearch.filterInScrapMenu.description": "Faut-il un widget de recherche dans le menu des ferrailles ?",
-  "feature.wynntils.containerSearch.filterInScrapMenu.name": "Barre de recherche dans le menu des ferrailles",
   "feature.wynntils.containerSearch.highlightColor.description": "De quelle couleur doivent être les cercles de surbrillance ?",
   "feature.wynntils.containerSearch.highlightColor.name": "Couleur de surbrillance",
   "feature.wynntils.containerSearch.name": "Surlignage de recherche dans les conteneurs",

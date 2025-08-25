@@ -282,8 +282,6 @@
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "杂项桶中的搜索栏",
   "feature.wynntils.containerSearch.filterInPetMenu.description": "宠物菜单中是否应该有搜索小部件？",
   "feature.wynntils.containerSearch.filterInPetMenu.name": "宠物菜单中的搜索栏",
-  "feature.wynntils.containerSearch.filterInScrapMenu.description": "废料菜单中是否应该有搜索小部件？",
-  "feature.wynntils.containerSearch.filterInScrapMenu.name": "废料菜单中的搜索栏",
   "feature.wynntils.containerSearch.highlightColor.description": "高亮圈应该是什么颜色？",
   "feature.wynntils.containerSearch.highlightColor.name": "高亮颜色",
   "feature.wynntils.containerSearch.name": "容器搜索高亮",
