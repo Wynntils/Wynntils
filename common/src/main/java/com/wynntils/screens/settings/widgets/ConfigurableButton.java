@@ -164,6 +164,7 @@ public class ConfigurableButton extends WynntilsButton {
             // Repopulate screen to update new enabled/disabled states
             if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
                 bookSettingsScreen.populateConfigurables();
+                bookSettingsScreen.changesMade();
             }
 
             return enabledCheckbox.mouseClicked(mouseX, mouseY, button);
@@ -184,5 +185,9 @@ public class ConfigurableButton extends WynntilsButton {
         super.setY(y);
 
         enabledCheckbox.setY(y);
+    }
+
+    public Configurable getConfigurable() {
+        return configurable;
     }
 }

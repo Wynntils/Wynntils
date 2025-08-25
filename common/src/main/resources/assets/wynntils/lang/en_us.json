@@ -2821,6 +2821,7 @@
   "screens.wynntils.settingsScreen.previous": "Previous",
   "screens.wynntils.settingsScreen.reset.description": "Reset config to default value.",
   "screens.wynntils.settingsScreen.reset.name": "Reset",
+  "screens.wynntils.settingsScreen.saveChanges": "Save changes?",
   "screens.wynntils.settingsScreen.toggleFeature": "Toggle the %s feature",
   "screens.wynntils.settingsScreen.toggleOverlay": "Toggle the %s overlay",
   "screens.wynntils.settingsScreen.unselectedConfig": "Here you can edit all of the various features available in Wynntils. Click any of the features in the left page of the book and the options available for that feature will appear here!",
