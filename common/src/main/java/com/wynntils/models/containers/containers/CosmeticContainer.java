@@ -1,22 +1,24 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.containers.containers.cosmetics;
+package com.wynntils.models.containers.containers;
 
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.type.ContainerBounds;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
+import com.wynntils.models.store.type.CosmeticItemType;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public abstract class CosmeticContainer extends Container implements SearchableContainerProperty {
+public class CosmeticContainer extends Container implements SearchableContainerProperty {
+    private static final String TITLE_START = "\uDAFF\uDFF8[\uE030-\uE033]\uDAFF\uDF80";
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Next Page");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Previous Page");
 
-    protected CosmeticContainer(Pattern titlePattern) {
-        super(titlePattern);
+    public CosmeticContainer(CosmeticItemType cosmeticItemType) {
+        super(Pattern.compile(TITLE_START + cosmeticItemType.getTitleCharacter()));
     }
 
     @Override
@@ -31,17 +33,17 @@ public abstract class CosmeticContainer extends Container implements SearchableC
 
     @Override
     public int getNextItemSlot() {
-        return 8;
+        return 53;
     }
 
     @Override
     public int getPreviousItemSlot() {
-        return 0;
+        return 51;
     }
 
     @Override
     public ContainerBounds getBounds() {
-        return new ContainerBounds(1, 0, 5, 8);
+        return new ContainerBounds(2, 0, 4, 8);
     }
 
     @Override
