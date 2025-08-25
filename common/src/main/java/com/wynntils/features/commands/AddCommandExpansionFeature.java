@@ -102,7 +102,6 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(root, literal("help").build());
         addNode(root, literal("link").build());
         addNode(root, literal("rules").build());
-        addNode(root, literal("scrap").build());
         addNode(root, literal("sign").build());
         addNode(root, literal("skiptutorial").build());
         addNode(root, literal("tracking").build());
