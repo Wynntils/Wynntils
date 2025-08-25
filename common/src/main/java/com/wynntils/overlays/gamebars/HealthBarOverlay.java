@@ -50,7 +50,7 @@ public class HealthBarOverlay extends OverflowableBarOverlay {
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isVisible() {
         return Models.CharacterStats.getHealth().isPresent();
     }
 
