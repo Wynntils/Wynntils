@@ -46,7 +46,7 @@ public class DurabilityOverlayFeature extends Feature {
         switch (durabilityRenderMode.get()) {
             case ARC -> drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
             case BAR -> drawDurabilityBar(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
-            case PERCENT -> drawDurabilityPercent(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+            case PERCENTAGE -> drawDurabilityPercentage(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
         }
     }
 
@@ -56,8 +56,8 @@ public class DurabilityOverlayFeature extends Feature {
         switch (durabilityRenderMode.get()) {
             case ARC -> drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
             case BAR -> drawDurabilityBar(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
-            case PERCENT ->
-                drawDurabilityPercent(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+            case PERCENTAGE ->
+                drawDurabilityPercentage(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
         }
     }
 
@@ -100,7 +100,7 @@ public class DurabilityOverlayFeature extends Feature {
     }
 
     // Inspiration taken from https://github.com/GTNewHorizons/DuraDisplay
-    private void drawDurabilityPercent(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
+    private void drawDurabilityPercentage(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
         Optional<DurableItemProperty> durableItemOpt =
                 Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return;
