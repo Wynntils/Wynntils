@@ -131,6 +131,6 @@ public class DurabilityOverlayFeature extends Feature {
     private enum DurabilityRenderMode {
         ARC,
         BAR,
-        PERCENT
+        PERCENTAGE
     }
 }
