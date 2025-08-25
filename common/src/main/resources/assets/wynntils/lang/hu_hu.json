@@ -280,8 +280,6 @@
   "feature.wynntils.containerSearch.filterInJukebox.name": "Keresősáv a zenegépben",
   "feature.wynntils.containerSearch.filterInMiscBucket.description": "Legyen kereső widget a vegyes vödörben a lakóhelyi telken?",
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "Keresősáv a vegyes vödörben",
-  "feature.wynntils.containerSearch.filterInPetMenu.description": "Legyen kereső widget a háziállat menüben?",
-  "feature.wynntils.containerSearch.filterInPetMenu.name": "Keresősáv a háziállat menüben",
   "feature.wynntils.containerSearch.highlightColor.description": "Milyen színűek legyenek a kiemelő körök?",
   "feature.wynntils.containerSearch.highlightColor.name": "Kiemelő szín",
   "feature.wynntils.containerSearch.name": "Tároló Keresés Kiemelés",

@@ -280,8 +280,6 @@
   "feature.wynntils.containerSearch.filterInJukebox.name": "Barra de búsqueda en el jukebox",
   "feature.wynntils.containerSearch.filterInMiscBucket.description": "¿Debería haber un widget de búsqueda en el cubo de misceláneos en tu parcela de vivienda?",
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "Barra de búsqueda en el cubo de misceláneos",
-  "feature.wynntils.containerSearch.filterInPetMenu.description": "¿Debería haber un widget de búsqueda en el menú de mascotas?",
-  "feature.wynntils.containerSearch.filterInPetMenu.name": "Barra de búsqueda en el menú de mascotas",
   "feature.wynntils.containerSearch.highlightColor.description": "¿De qué color deberían ser los círculos de resaltado?",
   "feature.wynntils.containerSearch.highlightColor.name": "Color de resaltado",
   "feature.wynntils.containerSearch.name": "Resaltado de búsqueda en contenedores",

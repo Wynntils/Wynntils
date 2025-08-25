@@ -280,8 +280,6 @@
   "feature.wynntils.containerSearch.filterInJukebox.name": "Sökfält i Jukebox",
   "feature.wynntils.containerSearch.filterInMiscBucket.description": "Ska det finnas en sökfunktion i diversehinken på din housing-tomt?",
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "Sökfält i Diversehink",
-  "feature.wynntils.containerSearch.filterInPetMenu.description": "Ska det finnas en sökfunktion i husdjursmenyn?",
-  "feature.wynntils.containerSearch.filterInPetMenu.name": "Sökfält i Husdjursmeny",
   "feature.wynntils.containerSearch.highlightColor.description": "Vilken färg ska markeringscirklarna ha?",
   "feature.wynntils.containerSearch.highlightColor.name": "Markeringsfärg",
   "feature.wynntils.containerSearch.name": "Behållarsökning Markering",

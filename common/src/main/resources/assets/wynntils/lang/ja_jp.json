@@ -280,8 +280,6 @@
   "feature.wynntils.containerSearch.filterInJukebox.name": "ジュークボックスの検索バー",
   "feature.wynntils.containerSearch.filterInMiscBucket.description": "住宅プロットの雑多なバケツに検索ウィジェットを追加しますか？",
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "雑多なバケツの検索バー",
-  "feature.wynntils.containerSearch.filterInPetMenu.description": "ペットメニューに検索ウィジェットを追加しますか？",
-  "feature.wynntils.containerSearch.filterInPetMenu.name": "ペットメニューの検索バー",
   "feature.wynntils.containerSearch.highlightColor.description": "ハイライトサークルは何色にしますか？",
   "feature.wynntils.containerSearch.highlightColor.name": "ハイライトカラー",
   "feature.wynntils.containerSearch.name": "コンテナ検索ハイライト",

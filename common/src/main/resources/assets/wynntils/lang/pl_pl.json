@@ -280,8 +280,6 @@
   "feature.wynntils.containerSearch.filterInJukebox.name": "Pasek wyszukiwania w szafie grającej",
   "feature.wynntils.containerSearch.filterInMiscBucket.description": "Czy powinien być widżet wyszukiwania w wiadrze różności na działce?",
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "Pasek wyszukiwania w wiadrze różności",
-  "feature.wynntils.containerSearch.filterInPetMenu.description": "Czy powinien być widżet wyszukiwania w menu zwierząt?",
-  "feature.wynntils.containerSearch.filterInPetMenu.name": "Pasek wyszukiwania w menu zwierząt",
   "feature.wynntils.containerSearch.highlightColor.description": "Jakiego koloru powinny być okręgi podświetlenia?",
   "feature.wynntils.containerSearch.highlightColor.name": "Kolor podświetlenia",
   "feature.wynntils.containerSearch.name": "Podświetlenie wyszukiwania w pojemnikach",

@@ -280,8 +280,6 @@
   "feature.wynntils.containerSearch.filterInJukebox.name": "Barra di ricerca nel jukebox",
   "feature.wynntils.containerSearch.filterInMiscBucket.description": "Dovrebbe esserci un widget di ricerca nel secchio di vari nella tua trama di casa?",
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "Barra di ricerca nel secchio di vari",
-  "feature.wynntils.containerSearch.filterInPetMenu.description": "Dovrebbe esserci un widget di ricerca nel menu degli animali domestici?",
-  "feature.wynntils.containerSearch.filterInPetMenu.name": "Barra di ricerca nel menu degli animali domestici",
   "feature.wynntils.containerSearch.highlightColor.description": "Di che colore dovrebbero essere i cerchi di evidenziazione?",
   "feature.wynntils.containerSearch.highlightColor.name": "Colore di evidenziazione",
   "feature.wynntils.containerSearch.name": "Evidenziazione ricerca nei contenitori",

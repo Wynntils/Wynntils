@@ -280,8 +280,6 @@
   "feature.wynntils.containerSearch.filterInJukebox.name": "Поисковая строка в музыкальном автомате",
   "feature.wynntils.containerSearch.filterInMiscBucket.description": "Должен ли быть виджет поиска в ведре с разным на вашем участке жилья?",
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "Поисковая строка в ведре с разным",
-  "feature.wynntils.containerSearch.filterInPetMenu.description": "Должен ли быть виджет поиска в меню питомцев?",
-  "feature.wynntils.containerSearch.filterInPetMenu.name": "Поисковая строка в меню питомцев",
   "feature.wynntils.containerSearch.highlightColor.description": "Какого цвета должны быть выделяющие круги?",
   "feature.wynntils.containerSearch.highlightColor.name": "Цвет выделения",
   "feature.wynntils.containerSearch.name": "Выделение поиска в контейнерах",

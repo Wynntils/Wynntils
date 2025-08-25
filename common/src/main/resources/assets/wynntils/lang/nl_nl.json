@@ -280,8 +280,6 @@
   "feature.wynntils.containerSearch.filterInJukebox.name": "Zoekbalk in Jukebox",
   "feature.wynntils.containerSearch.filterInMiscBucket.description": "Moet er een zoekwidget in de diverse emmer op je woningperceel zijn?",
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "Zoekbalk in Diverse Emmer",
-  "feature.wynntils.containerSearch.filterInPetMenu.description": "Moet er een zoekwidget in het huisdiermenu zijn?",
-  "feature.wynntils.containerSearch.filterInPetMenu.name": "Zoekbalk in Huisdiermenu",
   "feature.wynntils.containerSearch.highlightColor.description": "Welke kleur moeten de highlight-cirkels hebben?",
   "feature.wynntils.containerSearch.highlightColor.name": "Highlight Kleur",
   "feature.wynntils.containerSearch.name": "Container Zoek Highlight",
