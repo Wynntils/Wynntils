@@ -22,4 +22,12 @@ public interface SearchableContainerProperty extends ScrollableContainerProperty
     default boolean supportsAdvancedSearch() {
         return !supportedProviderTypes().isEmpty();
     }
+
+    /**
+     * Some container backgrounds render above the renderY of the container so we need to offset the search bar.
+     * @return A positive integer for how much to offset the search bar by.
+     */
+    default int renderYOffset() {
+        return 0;
+    }
 }

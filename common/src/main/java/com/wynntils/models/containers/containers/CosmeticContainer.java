@@ -50,4 +50,9 @@ public class CosmeticContainer extends Container implements SearchableContainerP
     public List<ItemProviderType> supportedProviderTypes() {
         return List.of();
     }
+
+    @Override
+    public int renderYOffset() {
+        return 20;
+    }
 }

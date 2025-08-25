@@ -157,10 +157,10 @@ public class ContainerSearchFeature extends Feature {
 
         matchedItems = false;
 
-        if (currentContainer instanceof PersonalStorageContainer) {
-            // Personal storage container textures extend above the normal renderY
+        if (currentContainer instanceof SearchableContainerProperty searchableContainer) {
+            // Some container textures extend above the normal renderY
             // so the widgets need to be shifted up more
-            renderY -= 20;
+            renderY -= searchableContainer.renderYOffset();
         }
 
         addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);

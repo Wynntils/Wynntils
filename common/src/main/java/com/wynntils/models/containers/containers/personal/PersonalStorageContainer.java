@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers.containers.personal;
@@ -70,5 +70,10 @@ public abstract class PersonalStorageContainer extends Container implements Sear
     @Override
     public List<ItemProviderType> supportedProviderTypes() {
         return ItemProviderType.normalTypes();
+    }
+
+    @Override
+    public int renderYOffset() {
+        return 20;
     }
 }
