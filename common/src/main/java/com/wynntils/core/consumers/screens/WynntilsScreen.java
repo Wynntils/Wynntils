@@ -6,6 +6,7 @@ package com.wynntils.core.consumers.screens;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.mod.type.CrashType;
+import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.mc.McUtils;
@@ -133,7 +134,15 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
             }
         }
 
-        return (getFocusedTextInput() != null && getFocusedTextInput().keyPressed(keyCode, scanCode, modifiers))
-                || super.keyPressed(keyCode, scanCode, modifiers);
+        if (getFocusedTextInput() != null) {
+            return getFocusedTextInput().keyPressed(keyCode, scanCode, modifiers);
+        }
+
+        if (this instanceof WrappedScreen && this.minecraft.options.keyInventory.matches(keyCode, scanCode)) {
+            this.onClose();
+            return true;
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 }

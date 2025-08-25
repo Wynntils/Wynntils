@@ -231,6 +231,8 @@ public final class RaidModel extends Model {
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
+        if (e.getItemStack().isEmpty()) return;
+
         if (Models.Container.getCurrentContainer() instanceof RaidRewardChestContainer raidRewardChest) {
             if (e.getSlotNum() == raidRewardChest.REROLL_REWARDS_SLOT) {
                 StyledText rerollLoreConfirm =
