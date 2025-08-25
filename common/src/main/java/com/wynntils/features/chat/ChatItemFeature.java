@@ -20,7 +20,6 @@ import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
-import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -44,16 +43,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.ItemLore;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -264,8 +268,21 @@ public class ChatItemFeature extends Feature {
         }
 
         ItemStack itemStack = new FakeItemStack(wynnItem, "From chat");
+        List<Component> tooltipLines =
+                itemStack.getTooltipLines(Item.TooltipContext.of(McUtils.mc().level), null, TooltipFlag.NORMAL);
+        // Get the formatted item name
+        Component formattedName = tooltipLines.getFirst();
+
+        List<Component> fixedLore = tooltipLines.stream()
+                // Skip the 1st line which is the item name
+                .skip(1)
+                // Remove the italics styling from the default lore
+                .map(c -> c.copy().withStyle(c.getStyle().withItalic(false)))
+                .collect(Collectors.toUnmodifiableList());
+
+        itemStack.set(DataComponents.ITEM_NAME, formattedName);
+        itemStack.set(DataComponents.LORE, new ItemLore(fixedLore));
         HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(itemStack);
-        ((ItemStackInfoAccessor) itemHoverEvent).setItemStack(itemStack);
         style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent));
 
         // Add the item name
