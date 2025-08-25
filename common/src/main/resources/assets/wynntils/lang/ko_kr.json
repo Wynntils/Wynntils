@@ -1372,8 +1372,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "도구 설명이 화면 끝에 닿았을 때 글자를 자동으로 조정할까요?",
   "feature.wynntils.tooltipFitting.wrapText.name": "글자 자동 조정",
   "feature.wynntils.tooltipVanillaHide.description": "바닐라의 도구 설명을 숨깁니다.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "바닐라에서 제공되는 '염색됨'과 같은 Wynncraft와 관련 없는 추가 정보를 숨깁니다.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "도구 설명 추가 정보 숨기기",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "마인크래프트에서 제공되는 고급 도구 설명 (F3 + H) 를 Wynncraft 에서 동작하지 않도록 합니다.",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "고급 도구 설명 숨기기",
   "feature.wynntils.tooltipVanillaHide.name": "필요없는 도구 설명 숨기기",

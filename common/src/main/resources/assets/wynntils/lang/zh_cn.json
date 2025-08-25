@@ -1182,8 +1182,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "提示是否应在到达屏幕边缘时换行",
   "feature.wynntils.tooltipFitting.wrapText.name": "换行文本",
   "feature.wynntils.tooltipVanillaHide.description": "隐藏原版提示。",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "这将隐藏在 Wynncraft 中不相关的“染色”等附加信息",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "隐藏附加提示信息",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "这将在 Wynncraft 上禁用高级提示 (F3+H)",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "始终隐藏高级提示",
   "feature.wynntils.tooltipVanillaHide.name": "隐藏不相关的提示信息",

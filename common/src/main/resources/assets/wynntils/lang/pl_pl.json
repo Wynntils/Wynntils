@@ -1182,8 +1182,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "Czy podpowiedzi powinny się zawijać, gdy osiągną krawędź ekranu?",
   "feature.wynntils.tooltipFitting.wrapText.name": "Zawijanie Tekstu",
   "feature.wynntils.tooltipVanillaHide.description": "Ukrywa podpowiedzi waniliowe.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "To ukryje dodatkowe informacje, takie jak 'Farbowane', które nie są istotne na Wynncraft",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "Ukryj Dodatkowe Informacje o Podpowiedziach",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "To wyłącza zaawansowane podpowiedzi (F3+H) na Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Zawsze Ukrywaj Zaawansowane Podpowiedzi",
   "feature.wynntils.tooltipVanillaHide.name": "Ukryj Nieistotne Informacje o Podpowiedziach",

@@ -1196,8 +1196,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "Om verktygstips ska brytas när de når skärmens kant",
   "feature.wynntils.tooltipFitting.wrapText.name": "Bryt Text",
   "feature.wynntils.tooltipVanillaHide.description": "Döljer vanliga verktygstips.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "Detta kommer att dölja ytterligare information, såsom 'Färgad', som inte är relevant på Wynncraft",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "Dölj Ytterligare Verktygstips Info",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Detta kommer att stänga av avancerade verktygstips (F3+H) på Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Dölj Alltid Avancerade Verktygstips",
   "feature.wynntils.tooltipVanillaHide.name": "Dölj Irrelevant Verktygstips Info",

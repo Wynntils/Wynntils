@@ -1182,8 +1182,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "Si les info-bulles doivent se replier lorsqu'elles atteignent le bord de l'écran",
   "feature.wynntils.tooltipFitting.wrapText.name": "Envelopper le Texte",
   "feature.wynntils.tooltipVanillaHide.description": "Masque les info-bulles vanille.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "Cela masquera des informations supplémentaires, telles que 'Teinté', qui ne sont pas pertinentes sur Wynncraft",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "Masquer les Informations Supplémentaires de l'Info-bulle",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Cela désactivera les info-bulles avancées (F3+H) sur Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Toujours Masquer l'Info-bulle Avancée",
   "feature.wynntils.tooltipVanillaHide.name": "Masquer les Informations d'Info-bulle Non Pertinentes",
