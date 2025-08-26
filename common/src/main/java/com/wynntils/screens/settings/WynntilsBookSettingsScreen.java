@@ -1035,9 +1035,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private void renderConfigurables(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.enableScissor(guiGraphics, 12 + offsetX, 21 + offsetY, 170, CONFIGURABLES_PER_PAGE * 12 - 3);
 
-        if (selectedConfigurable != null || mouseX >= 182 + offsetX) {
-            hoveredConfigurable = null;
-        }
+        hoveredConfigurable = null;
 
         for (WynntilsButton configurable : configurables) {
             configurable.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -1045,7 +1043,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             if (configurable.isHovered() && configurable instanceof ConfigurableButton configurableButton) {
                 Configurable hovered = configurableButton.getConfigurable();
 
-                if (hovered.equals(selectedConfigurable)) continue;
+                if (selectedConfigurable != null) continue;
 
                 hoveredConfigurable = configurableButton.getConfigurable();
             }
