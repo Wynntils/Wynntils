@@ -145,13 +145,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         populateCategories();
         getFilteredConfigurables();
         populateConfigurables();
-        // Only needs to be ran once, but we need offsetX and offsetY so can't do this in the constructor
-        if (configurableMap.isEmpty()) {
-            configurableMap = Stream.concat(
-                            Managers.Feature.getFeatures().stream(), Managers.Overlay.getOverlays().stream())
-                    .collect(Collectors.toMap(
-                            configurable -> configurable, this::buildConfigTiles, (a, b) -> a, LinkedHashMap::new));
-        }
 
         int yPos = Texture.TAG_BLUE.height() / 2 + offsetY;
 
@@ -699,6 +692,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         }
 
         scrollConfigurables(configurablesScrollOffset);
+
+        configurableMap = Stream.concat(
+                        Managers.Feature.getFeatures().stream(), Managers.Overlay.getOverlays().stream())
+                .collect(Collectors.toMap(
+                        configurable -> configurable, this::buildConfigTiles, (a, b) -> a, LinkedHashMap::new));
     }
 
     public void populateConfigs() {
