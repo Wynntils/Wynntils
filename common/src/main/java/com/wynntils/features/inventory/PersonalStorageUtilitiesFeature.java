@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.inventory;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
@@ -137,6 +138,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
     }
 
     public void jumpToDestination(int destination) {
+        WynntilsMod.info("Navigating to page " + destination);
         quickJumping = true;
         pageDestination = destination;
 
@@ -195,6 +197,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
                 if (pageMatcher.matches()
                         && Integer.parseInt(pageMatcher.group(1))
                                 == storageContainer.getQuickJumpDestinations().get(target)) {
+                    WynntilsMod.info("Quick jumping to " + target);
                     ContainerUtils.pressKeyOnSlot(
                             storageContainer.getNextItemSlot(),
                             storageContainer.getContainerId(),
@@ -212,6 +215,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
                 if (pageMatcher.matches()
                         && Integer.parseInt(pageMatcher.group(1))
                                 == storageContainer.getQuickJumpDestinations().get(target)) {
+                    WynntilsMod.info("Quick jumping to " + target);
                     ContainerUtils.pressKeyOnSlot(
                             storageContainer.getPreviousItemSlot(),
                             storageContainer.getContainerId(),
@@ -226,6 +230,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
     }
 
     private void clickNextPage() {
+        WynntilsMod.info("Jumping to next page");
         ContainerUtils.clickOnSlot(
                 storageContainer.getNextItemSlot(),
                 storageContainer.getContainerId(),
@@ -234,6 +239,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
     }
 
     private void clickPreviousPage() {
+        WynntilsMod.info("Jumping to previous page");
         ContainerUtils.clickOnSlot(
                 storageContainer.getPreviousItemSlot(),
                 storageContainer.getContainerId(),
