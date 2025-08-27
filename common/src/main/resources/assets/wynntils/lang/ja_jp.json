@@ -1182,8 +1182,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "ツールチップが画面の端に達したときに折り返すかどうか",
   "feature.wynntils.tooltipFitting.wrapText.name": "テキストを折り返す",
   "feature.wynntils.tooltipVanillaHide.description": "バニラのツールチップを隠します。",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "これは、Wynncraftで関連性のない「染色」などの追加情報を隠します",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "追加ツールチップ情報を隠す",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "これにより、Wynncraftで高度なツールチップ（F3+H）が無効になります",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "常に高度なツールチップを隠す",
   "feature.wynntils.tooltipVanillaHide.name": "関連性のないツールチップ情報を隠す",

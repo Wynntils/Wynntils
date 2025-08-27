@@ -1196,8 +1196,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "Должны ли подсказки переноситься, когда они достигают края экрана",
   "feature.wynntils.tooltipFitting.wrapText.name": "Перенос Текста",
   "feature.wynntils.tooltipVanillaHide.description": "Скрывает ванильные подсказки.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "Это скроет дополнительную информацию, такую как 'Окрашено', которая не имеет значения в Wynncraft",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "Скрыть Дополнительную Информацию Подсказки",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Это отключит расширенные подсказки (F3+H) на Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Всегда Скрывать Расширенную Подсказку",
   "feature.wynntils.tooltipVanillaHide.name": "Скрыть Нерелевантную Информацию Подсказки",

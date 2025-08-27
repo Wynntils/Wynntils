@@ -1182,8 +1182,6 @@
   "feature.wynntils.tooltipFitting.wrapText.description": "Moeten tooltips worden afgebroken wanneer ze de rand van het scherm bereiken?",
   "feature.wynntils.tooltipFitting.wrapText.name": "Tekst Omslaan",
   "feature.wynntils.tooltipVanillaHide.description": "Verbergt vanilla tooltips.",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.description": "Dit verbergt aanvullende informatie, zoals 'Geverfd', die niet relevant is op Wynncraft",
-  "feature.wynntils.tooltipVanillaHide.hideAdditionalInfo.name": "Verberg Aanvullende Tooltip Info",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Dit schakelt geavanceerde tooltips (F3+H) uit op Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Verberg Altijd Geavanceerde Tooltip",
   "feature.wynntils.tooltipVanillaHide.name": "Verberg Irrelevante Tooltip Info",
