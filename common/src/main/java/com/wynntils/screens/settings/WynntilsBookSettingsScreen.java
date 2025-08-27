@@ -145,13 +145,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         populateCategories();
         getFilteredConfigurables();
         populateConfigurables();
-        // Only needs to be ran once, but we need offsetX and offsetY so can't do this in the constructor
-        if (configurableMap.isEmpty()) {
-            configurableMap = Stream.concat(
-                            Managers.Feature.getFeatures().stream(), Managers.Overlay.getOverlays().stream())
-                    .collect(Collectors.toMap(
-                            configurable -> configurable, this::buildConfigTiles, (a, b) -> a, LinkedHashMap::new));
-        }
 
         int yPos = Texture.TAG_BLUE.height() / 2 + offsetY;
 
@@ -699,6 +692,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         }
 
         scrollConfigurables(configurablesScrollOffset);
+
+        configurableMap = Stream.concat(
+                        Managers.Feature.getFeatures().stream(), Managers.Overlay.getOverlays().stream())
+                .collect(Collectors.toMap(
+                        configurable -> configurable, this::buildConfigTiles, (a, b) -> a, LinkedHashMap::new));
     }
 
     public void populateConfigs() {
@@ -1037,9 +1035,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private void renderConfigurables(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.enableScissor(guiGraphics, 12 + offsetX, 21 + offsetY, 170, CONFIGURABLES_PER_PAGE * 12 - 3);
 
-        if (selectedConfigurable != null || mouseX >= 182 + offsetX) {
-            hoveredConfigurable = null;
-        }
+        hoveredConfigurable = null;
 
         for (WynntilsButton configurable : configurables) {
             configurable.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -1047,7 +1043,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             if (configurable.isHovered() && configurable instanceof ConfigurableButton configurableButton) {
                 Configurable hovered = configurableButton.getConfigurable();
 
-                if (hovered.equals(selectedConfigurable)) continue;
+                if (selectedConfigurable != null) continue;
 
                 hoveredConfigurable = configurableButton.getConfigurable();
             }
