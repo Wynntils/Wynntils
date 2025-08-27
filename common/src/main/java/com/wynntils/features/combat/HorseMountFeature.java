@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -42,7 +42,6 @@ public class HorseMountFeature extends Feature {
     private static final SoundEvent HORSE_WHISTLE_SOUND = SoundEvent.createVariableRangeEvent(HORSE_WHISTLE_ID);
 
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
-    private static final int SUMMON_ATTEMPTS = 8;
     private static final int SUMMON_DELAY_TICKS = 6;
 
     private static final List<String> HORSE_ERROR_MESSAGES = List.of(
@@ -63,6 +62,9 @@ public class HorseMountFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> guaranteedMount = new Config<>(true);
+
+    @Persisted
+    public final Config<Integer> summonAttempts = new Config<>(8);
 
     @Persisted
     public final Config<Boolean> playWhistle = new Config<>(true);
@@ -101,7 +103,7 @@ public class HorseMountFeature extends Feature {
                 postHorseErrorMessage(MountHorseStatus.NO_HORSE);
                 return;
             }
-            trySummonAndMountHorse(horseInventorySlot, SUMMON_ATTEMPTS);
+            trySummonAndMountHorse(horseInventorySlot, summonAttempts.get());
         } else { // Horse already exists, mount it
             mountHorse(horse);
         }
@@ -114,7 +116,6 @@ public class HorseMountFeature extends Feature {
         }
 
         // swap to soul points to avoid right click problems
-        int prevItem = McUtils.inventory().selected;
         int nonConflictingSlot = findNonConflictingSlot();
         if (nonConflictingSlot == -1) {
             postHorseErrorMessage(MountHorseStatus.CONFLICTING_SLOTS);
@@ -149,6 +150,7 @@ public class HorseMountFeature extends Feature {
     private void trySummonAndMountHorse(int horseInventorySlot, int attempts) {
         if (attempts <= 0) {
             postHorseErrorMessage(MountHorseStatus.NO_HORSE);
+            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
             return;
         }
 
