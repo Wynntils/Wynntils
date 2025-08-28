@@ -30,8 +30,6 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     @Persisted(i18nKey = "overlay.wynntils.overlay.enabledTemplate")
     protected final Config<String> enabledTemplate = new Config<>("");
 
-    private ErrorOr<Boolean> enabledTemplateCache = null;
-
     @Persisted(i18nKey = "overlay.wynntils.overlay.enabledTemplateOverwrite")
     protected final Config<Boolean> enabledTemplateOverwrite = new Config<>(false);
 
@@ -54,6 +52,8 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.verticalAlignmentOverride")
     protected final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
+
+    private ErrorOr<Boolean> enabledTemplateCache = null;
 
     protected Overlay(OverlayPosition position, float width, float height) {
         this.position.store(position);
