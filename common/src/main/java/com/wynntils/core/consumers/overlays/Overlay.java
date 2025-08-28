@@ -15,8 +15,11 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.DeltaTracker;
@@ -50,7 +53,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     @Persisted(i18nKey = "overlay.wynntils.overlay.verticalAlignmentOverride")
     protected final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
 
-    private ErrorOr<Boolean> enabledTemplateCache = null;
+    protected ErrorOr<Boolean> enabledTemplateCache = null;
 
     protected Overlay(OverlayPosition position, float width, float height) {
         this.position.store(position);
@@ -89,9 +92,11 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     protected boolean isRendered() {
         if (enabledTemplateCache == null || enabledTemplateCache.hasError())
-            return (Models.WorldState.onWorld()
-                            && (McUtils.player() != null && !(McUtils.player().getVehicle() instanceof Display)))
-                    || !hideWhenNoGui() && isVisible();
+            return ((Models.WorldState.onWorld()
+                                    && (McUtils.player() != null
+                                            && !(McUtils.player().getVehicle() instanceof Display)))
+                            || !hideWhenNoGui())
+                    && isVisible();
         return enabledTemplateCache.getValue();
     }
 
@@ -106,6 +111,28 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         this.render(guiGraphics, bufferSource, deltaTracker, window);
+    }
+
+    public void renderErrorMessage(GuiGraphics guiGraphics, MultiBufferSource bufferSource) {
+        StyledText[] errorMessage = {
+            StyledText.fromString("§c§lError in Enabled Template of: " + getTranslationKeyName()),
+            StyledText.fromUnformattedString(enabledTemplateCache.getError())
+        };
+        BufferedFontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        guiGraphics.pose(),
+                        bufferSource,
+                        errorMessage,
+                        getRenderX(),
+                        getRenderX() + getWidth(),
+                        getRenderY(),
+                        getRenderY() + getHeight(),
+                        0,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.OUTLINE,
+                        1);
     }
 
     public void tick() {}

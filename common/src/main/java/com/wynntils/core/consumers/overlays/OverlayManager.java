@@ -277,7 +277,13 @@ public final class OverlayManager extends Manager {
                             event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
                 } else if (shouldRender && overlay.isRendered()) {
                     long startTime = System.currentTimeMillis();
-                    overlay.render(event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
+                    if (overlay.enabledTemplateCache != null && overlay.enabledTemplateCache.hasError()) {
+                        overlay.renderErrorMessage(event.getGuiGraphics(), BUFFER_SOURCE);
+
+                    } else {
+                        overlay.render(
+                                event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
+                    }
                     logProfilingData(startTime, overlay);
                 }
             } catch (Throwable t) {
