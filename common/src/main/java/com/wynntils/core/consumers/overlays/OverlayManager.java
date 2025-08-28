@@ -279,7 +279,6 @@ public final class OverlayManager extends Manager {
                     long startTime = System.currentTimeMillis();
                     if (overlay.enabledTemplateCache != null && overlay.enabledTemplateCache.hasError()) {
                         overlay.renderErrorMessage(event.getGuiGraphics(), BUFFER_SOURCE);
-
                     } else {
                         overlay.render(
                                 event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
