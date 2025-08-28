@@ -278,7 +278,7 @@ public final class OverlayManager extends Manager {
                 } else if (shouldRender && overlay.isRendered()) {
                     long startTime = System.currentTimeMillis();
                     if (overlay.enabledTemplateCache != null && overlay.enabledTemplateCache.hasError()) {
-                        overlay.renderErrorMessage(event.getGuiGraphics(), BUFFER_SOURCE);
+                        overlay.renderEnabledTemplateErrorMessage(event.getGuiGraphics(), BUFFER_SOURCE);
                     } else {
                         overlay.render(
                                 event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());

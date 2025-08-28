@@ -110,9 +110,10 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         this.render(guiGraphics, bufferSource, deltaTracker, window);
     }
 
-    public void renderErrorMessage(GuiGraphics guiGraphics, MultiBufferSource bufferSource) {
+    public void renderEnabledTemplateErrorMessage(GuiGraphics guiGraphics, MultiBufferSource bufferSource) {
         StyledText[] errorMessage = {
-            StyledText.fromString("§c§lError in Enabled Template of: " + getTranslationKeyName()),
+            StyledText.fromString(
+                    "§c§l" + I18n.get("overlay.wynntils.overlay.enabledTemplate.error") + " " + getTranslatedName()),
             StyledText.fromUnformattedString(enabledTemplateCache.getError())
         };
         BufferedFontRenderer.getInstance()

@@ -2433,6 +2433,7 @@
   "overlay.wynntils.objectivesTexture.description": "What texture should be used for the objectives bar?",
   "overlay.wynntils.objectivesTexture.name": "Objectives Bar Texture",
   "overlay.wynntils.overlay.enabledTemplate.description": "A function template returning boolean value, which determines whether this overlay should be rendered or not. This template should not have curly brackets. When set, it will overwrite the default rendering condition of this overlay.",
+  "overlay.wynntils.overlay.enabledTemplate.error": "Error in Enabled Template of:",
   "overlay.wynntils.overlay.enabledTemplate.name": "Enabled Template",
   "overlay.wynntils.overlay.growDirection.description": "The direction the overlay will grow, i.e. where new parts will be added",
   "overlay.wynntils.overlay.growDirection.name": "Grow Direction",
