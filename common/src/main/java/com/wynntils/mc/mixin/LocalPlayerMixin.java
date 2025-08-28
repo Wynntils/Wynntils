@@ -7,8 +7,10 @@ package com.wynntils.mc.mixin;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
+import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,5 +36,17 @@ public abstract class LocalPlayerMixin {
         if (event.isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @Inject(method = "startRiding", at = @At("HEAD"))
+    private void startRidingPre(Entity vehicle, boolean force, CallbackInfoReturnable<Boolean> ci) {
+        SetLocalPlayerVehicleEvent event = new SetLocalPlayerVehicleEvent(vehicle);
+        MixinHelper.post(event);
+    }
+
+    @Inject(method = "removeVehicle", at = @At("Head"))
+    private void stopRidingPre(CallbackInfo ci) {
+        SetLocalPlayerVehicleEvent event = new SetLocalPlayerVehicleEvent(null);
+        MixinHelper.post(event);
     }
 }

@@ -15,8 +15,8 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -26,7 +26,6 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.world.entity.Display;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Comparable<Overlay> {
@@ -92,9 +91,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     protected boolean isRendered() {
         if (enabledTemplateCache == null || enabledTemplateCache.hasError())
-            return ((Models.WorldState.onWorld()
-                                    && (McUtils.player() != null
-                                            && !(McUtils.player().getVehicle() instanceof Display)))
+            return ((Models.WorldState.onWorld() && Models.Character.getVehicle() != VehicleType.DISPLAY)
                             || !hideWhenNoGui())
                     && isVisible();
         return enabledTemplateCache.getValue();
