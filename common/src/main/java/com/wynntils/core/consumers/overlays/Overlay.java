@@ -78,7 +78,6 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     /**
      * Whether the overlay should be hidden when Wynncraft hides gui.
-     * @return true
      */
     protected boolean hideWhenNoGui() {
         return true;
@@ -86,7 +85,6 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     /**
      * Whether the overlay should be rendered.
-     * @return true
      */
     protected boolean isVisible() {
         return true;
