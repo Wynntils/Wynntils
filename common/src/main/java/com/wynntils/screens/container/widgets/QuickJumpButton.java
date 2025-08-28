@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.container.widgets;
@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -38,13 +39,24 @@ public class QuickJumpButton extends WynntilsButton {
 
         RenderUtils.drawHoverableTexturedRect(poseStack, Texture.QUICK_JUMP_BUTTON, getX(), getY(), isHovered);
 
+        CustomColor color = CommonColors.WHITE;
+        Component tooltip = Component.translatable(
+                "feature.wynntils.personalStorageUtilities.jumpTo", Models.Bank.getPageName(destination));
+        if (Models.Bank.getCurrentPage() == destination) {
+            color = CommonColors.GREEN;
+            tooltip = Component.translatable("feature.wynntils.personalStorageUtilities.youAreHere");
+        } else if (destination > Models.Bank.getFinalPage()) {
+            color = CommonColors.RED;
+            tooltip = Component.translatable("feature.wynntils.personalStorageUtilities.unavailable", destination);
+        }
+
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(String.valueOf(destination)),
                         getX() + 8,
                         getY() + 8,
-                        Models.Bank.getCurrentPage() == destination ? CommonColors.GREEN : CommonColors.WHITE,
+                        color,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
@@ -52,11 +64,7 @@ public class QuickJumpButton extends WynntilsButton {
         if (isHovered) {
             McUtils.mc()
                     .screen
-                    .setTooltipForNextRenderPass(Lists.transform(
-                            List.of(Component.translatable(
-                                    "feature.wynntils.personalStorageUtilities.clickToJump",
-                                    Models.Bank.getPageName(destination))),
-                            Component::getVisualOrderText));
+                    .setTooltipForNextRenderPass(Lists.transform(List.of(tooltip), Component::getVisualOrderText));
         }
     }
 
