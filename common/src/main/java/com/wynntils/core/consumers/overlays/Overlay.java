@@ -76,12 +76,6 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         this.verticalAlignmentOverride.store(verticalAlignmentOverride);
     }
 
-    private boolean isRenderedDefault() {
-        return (Models.WorldState.onWorld()
-                        && (McUtils.player() != null && !(McUtils.player().getVehicle() instanceof Display)))
-                || !hideWhenNoGui();
-    }
-
     /**
      * Whether the overlay should be hidden when Wynncraft hides gui.
      * @return true
@@ -99,11 +93,15 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     }
 
     protected boolean isRendered() {
-        if (enabledTemplateCache == null || enabledTemplateCache.hasError()) return isRenderedDefault() && isVisible();
+        boolean defaultCondition = (Models.WorldState.onWorld()
+                        && (McUtils.player() != null && !(McUtils.player().getVehicle() instanceof Display)))
+                || !hideWhenNoGui();
+
+        if (enabledTemplateCache == null || enabledTemplateCache.hasError()) return defaultCondition && isVisible();
         if (enabledTemplateOverwrite.get()) {
             return enabledTemplateCache.getValue();
         } else {
-            return isRenderedDefault() && isVisible() && enabledTemplateCache.getValue();
+            return defaultCondition && isVisible() && enabledTemplateCache.getValue();
         }
     }
 
