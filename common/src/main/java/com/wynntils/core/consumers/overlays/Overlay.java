@@ -30,9 +30,6 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     @Persisted(i18nKey = "overlay.wynntils.overlay.enabledTemplate")
     protected final Config<String> enabledTemplate = new Config<>("");
 
-    @Persisted(i18nKey = "overlay.wynntils.overlay.enabledTemplateOverwrite")
-    protected final Config<Boolean> enabledTemplateOverwrite = new Config<>(false);
-
     @Persisted(i18nKey = "overlay.wynntils.overlay.position")
     protected final Config<OverlayPosition> position = new Config<>(null);
 
@@ -91,16 +88,11 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     }
 
     protected boolean isRendered() {
-        boolean defaultCondition = (Models.WorldState.onWorld()
-                        && (McUtils.player() != null && !(McUtils.player().getVehicle() instanceof Display)))
-                || !hideWhenNoGui();
-
-        if (enabledTemplateCache == null || enabledTemplateCache.hasError()) return defaultCondition && isVisible();
-        if (enabledTemplateOverwrite.get()) {
-            return enabledTemplateCache.getValue();
-        } else {
-            return defaultCondition && isVisible() && enabledTemplateCache.getValue();
-        }
+        if (enabledTemplateCache == null || enabledTemplateCache.hasError())
+            return (Models.WorldState.onWorld()
+                            && (McUtils.player() != null && !(McUtils.player().getVehicle() instanceof Display)))
+                    || !hideWhenNoGui() && isVisible();
+        return enabledTemplateCache.getValue();
     }
 
     @Override
