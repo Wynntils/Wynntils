@@ -118,7 +118,7 @@
   },
   {
     "id": "dataStaticCombatMapFeatures",
-    "md5": "af45124a2370cf65db36dfbb33e0a499",
+    "md5": "ae014dde3797591343e40170a9884d32",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/combat_mapfeatures.json"
   },
   {
@@ -223,8 +223,8 @@
   },
   {
     "id": "dataStaticServiceMapFeatures",
-    "md5": "c84ea9dfea44549d579c376fc904be35",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/service_mapfeatures.json"
+    "md5": "f8da52e87a8d35843a57bc8fa2c4a260",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/service_mapfeatures.json"
   },
   {
     "id": "dataStaticServices",

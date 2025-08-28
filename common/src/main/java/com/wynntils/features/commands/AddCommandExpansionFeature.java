@@ -60,6 +60,7 @@ public class AddCommandExpansionFeature extends Feature {
 
         addArgumentlessCommandNodes(root);
         addChangetagCommandNode(root);
+        addEmoteCommandNode(root);
         addFriendCommandNode(root);
         addGuildCommandNode(root);
         addIgnoreCommandNode(root);
@@ -101,7 +102,6 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(root, literal("help").build());
         addNode(root, literal("link").build());
         addNode(root, literal("rules").build());
-        addNode(root, literal("scrap").build());
         addNode(root, literal("sign").build());
         addNode(root, literal("skiptutorial").build());
         addNode(root, literal("tracking").build());
@@ -180,12 +180,6 @@ public class AddCommandExpansionFeature extends Feature {
         addAlias(root, consumablesNode, "tokens", AliasCommandLevel.ALL);
         addAlias(root, consumablesNode, "consumable", AliasCommandLevel.ALL);
 
-        // "emotes" aliases
-        CommandNode<CommandSourceStack> emotesNode = literal("emotes").build();
-        addNode(root, emotesNode);
-
-        addAlias(root, consumablesNode, "emote", AliasCommandLevel.ALL);
-
         // "use" aliases
         CommandNode<CommandSourceStack> useNode = literal("use").build();
         addNode(root, useNode);
@@ -258,6 +252,23 @@ public class AddCommandExpansionFeature extends Feature {
                         .then(literal("CHAMPION"))
                         .then(literal("RESET"))
                         .build());
+    }
+
+    private void addEmoteCommandNode(RootCommandNode<SharedSuggestionProvider> root) {
+        // FIXME: We should only provide the emotes that the player has access to
+        CommandNode<CommandSourceStack> node = literal("emote")
+                .then(literal("cheer"))
+                .then(literal("clap"))
+                .then(literal("dance"))
+                .then(literal("flop"))
+                .then(literal("hug"))
+                .then(literal("relax"))
+                .then(literal("jump"))
+                .then(literal("wave"))
+                .build();
+        addNode(root, node);
+
+        addAlias(root, node, "emotes", AliasCommandLevel.ALL);
     }
 
     private void addFriendCommandNode(RootCommandNode<SharedSuggestionProvider> root) {
