@@ -52,7 +52,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     @Persisted(i18nKey = "overlay.wynntils.overlay.verticalAlignmentOverride")
     protected final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
 
-    protected ErrorOr<Boolean> enabledTemplateCache = null;
+    private ErrorOr<Boolean> enabledTemplateCache = null;
 
     protected Overlay(OverlayPosition position, float width, float height) {
         this.position.store(position);
@@ -108,6 +108,15 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         this.render(guiGraphics, bufferSource, deltaTracker, window);
+    }
+
+    public void renderOrErrorMessage(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        if (this.enabledTemplateCache != null && this.enabledTemplateCache.hasError()) {
+            renderEnabledTemplateErrorMessage(guiGraphics, bufferSource);
+        } else {
+            render(guiGraphics, bufferSource, deltaTracker, window);
+        }
     }
 
     public void renderEnabledTemplateErrorMessage(GuiGraphics guiGraphics, MultiBufferSource bufferSource) {
