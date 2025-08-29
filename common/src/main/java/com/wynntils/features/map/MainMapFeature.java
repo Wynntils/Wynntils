@@ -146,22 +146,14 @@ public class MainMapFeature extends Feature {
     public void onLeftClick(PlayerAttackEvent event) {
         if (!autoWaypointChests.get()) return;
 
-        Entity entity = event.getTarget();
-        if (entity != null && entity.getType() == EntityType.INTERACTION) {
-            // We don't actually know if this is a chest, but it's a good enough guess.
-            lastChestPos = entity.blockPosition();
-        }
+        handleEntity(event.getTarget());
     }
 
     @SubscribeEvent
     public void onRightClick(PlayerInteractEvent.InteractAt event) {
         if (!autoWaypointChests.get()) return;
 
-        Entity entity = event.getEntityHitResult().getEntity();
-        if (entity != null && entity.getType() == EntityType.INTERACTION) {
-            // We don't actually know if this is a chest, but it's a good enough guess.
-            lastChestPos = entity.blockPosition();
-        }
+        handleEntity(event.getEntityHitResult().getEntity());
     }
 
     @SubscribeEvent
@@ -214,5 +206,12 @@ public class MainMapFeature extends Feature {
     public void updateWaypoints() {
         WaypointsProvider.resetFeatures();
         customPois.get().forEach(WaypointsProvider::registerFeature);
+    }
+
+    private void handleEntity(Entity entity) {
+        if (entity != null && entity.getType() == EntityType.INTERACTION) {
+            // We don't actually know if this is a chest, but it's a good enough guess.
+            lastChestPos = entity.blockPosition();
+        }
     }
 }
