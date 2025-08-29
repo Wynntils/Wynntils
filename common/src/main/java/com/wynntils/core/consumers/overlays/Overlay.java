@@ -90,11 +90,20 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     }
 
     protected boolean isRendered() {
-        if (enabledTemplateCache == null || enabledTemplateCache.hasError())
-            return ((Models.WorldState.onWorld() && Models.Character.getVehicle() != VehicleType.DISPLAY)
-                            || !hideWhenNoGui())
-                    && isVisible();
-        return enabledTemplateCache.getValue();
+        // When user provides Enabled Template but there is an error, render it to show the error
+        if (enabledTemplateCache != null && enabledTemplateCache.hasError()) return true;
+
+        // But if there are no errors, render acording to the template
+        if (enabledTemplateCache != null && !enabledTemplateCache.hasError()) {
+            return enabledTemplateCache.getValue();
+        }
+
+        // Otherwise render it according to defaults
+        if (!isVisible()) return false;
+        if (hideWhenNoGui()) {
+            return Models.WorldState.onWorld() && Models.Character.getVehicle() != VehicleType.DISPLAY;
+        }
+        return true;
     }
 
     @Override
@@ -138,7 +147,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.OUTLINE,
+                        TextShadow.NORMAL,
                         1);
     }
 
@@ -146,7 +155,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     protected void updateCache() {
         String template = enabledTemplate.get();
-        if (template.isEmpty()) {
+        if (template.trim().isEmpty()) {
             this.enabledTemplateCache = null;
             return;
         }
