@@ -10,19 +10,16 @@ import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ArmSwingEvent;
-import com.wynntils.mc.event.ArmSwingEvent.ArmSwingContext;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.items.properties.RequirementItemProperty;
-import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.MouseUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.util.Optional;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -31,81 +28,94 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.COMBAT)
 public class AutoAttackFeature extends Feature {
     private static final int TICKS_PER_ATTACK = 2;
-    private static final int SPELL_TIMEOUT_TICKS = 60;
 
+    private long lastSpellInput = -1L;
+    private int spellInputs = 0;
     private WeaponStatus weaponStatus = WeaponStatus.UNKNOWN;
-    private int lastSelectedSlot;
-    private int preventWrongCast = Integer.MIN_VALUE;
 
     @SubscribeEvent
     public void onChangeCarriedItemEvent(ChangeCarriedItemEvent event) {
-        weaponStatus = WeaponStatus.UNKNOWN;
+        lastSpellInput = -1L;
+        spellInputs = 0;
+
+        updateWeaponStatus();
     }
 
     @SubscribeEvent
     public void onSetSlotEvent(SetSlotEvent.Post event) {
         if (event.getSlot() == McUtils.inventory().selected) {
-            weaponStatus = WeaponStatus.UNKNOWN;
+            updateWeaponStatus();
         }
     }
 
     @SubscribeEvent
     public void onSwing(ArmSwingEvent event) {
-        if (event.getActionContext() != ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
-        if (event.getHand() != InteractionHand.MAIN_HAND) return;
-        if (Models.Character.getClassType() != ClassType.ARCHER) return;
+        if (Models.Character.getClassType() == ClassType.ARCHER) return;
+        if (spellInputs == 0) return;
 
-        lastSelectedSlot = McUtils.inventory().selected;
-        preventWrongCast = McUtils.player().tickCount + SPELL_TIMEOUT_TICKS;
+        handleInput();
     }
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (Models.Character.getClassType() == ClassType.ARCHER) return;
 
-        lastSelectedSlot = McUtils.inventory().selected;
-        preventWrongCast = McUtils.player().tickCount + SPELL_TIMEOUT_TICKS;
-    }
-
-    @SubscribeEvent
-    public void onSpellCastCompleted(SpellEvent.Completed event) {
-        preventWrongCast = Integer.MIN_VALUE;
-    }
-
-    private boolean isHoldingUsableWeapon() {
-        ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
-        if (!ItemUtils.isWeapon(heldItem)) return false;
-
-        Optional<RequirementItemProperty> wynnItem =
-                Models.Item.asWynnItemProperty(heldItem, RequirementItemProperty.class);
-        return wynnItem.isPresent() && wynnItem.get().meetsActualRequirements();
+        handleInput();
     }
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
         if (!Models.Spell.isSpellQueueEmpty()) return;
+        // Archers already have auto attack
+        if (Models.Character.getClassType() == ClassType.ARCHER) return;
+        int tickCount = McUtils.player().tickCount;
 
-        LocalPlayer player = McUtils.player();
-        int currentSelectedSlot = McUtils.inventory().selected;
-        if (currentSelectedSlot == lastSelectedSlot) {
-            if (preventWrongCast > player.tickCount) return;
-        } else {
-            lastSelectedSlot = currentSelectedSlot;
-            preventWrongCast = Integer.MIN_VALUE;
+        if (lastSpellInput + Models.Spell.SPELL_COST_RESET_TICKS < tickCount) {
+            lastSpellInput = -1L;
+            spellInputs = 0;
         }
 
-        if (player.tickCount % TICKS_PER_ATTACK != 0) return;
+        if (tickCount % TICKS_PER_ATTACK != 0) return;
+        if (lastSpellInput + Models.Spell.SPELL_COST_RESET_TICKS > McUtils.player().tickCount) return;
 
         if (weaponStatus == WeaponStatus.UNKNOWN) {
-            weaponStatus = isHoldingUsableWeapon() ? WeaponStatus.USABLE : WeaponStatus.NOT_USABLE;
+            updateWeaponStatus();
         }
 
         if (weaponStatus != WeaponStatus.USABLE) return;
 
         if (!McUtils.options().keyAttack.isDown()) return;
 
-        MouseUtils.sendAttackInput(Models.Character.getClassType() == ClassType.ARCHER);
+        MouseUtils.sendAttackInput(false);
+    }
+
+    private void handleInput() {
+        if (lastSpellInput == -1L || spellInputs < 3) {
+            lastSpellInput = McUtils.player().tickCount;
+            spellInputs++;
+
+            if (spellInputs == 3) {
+                spellInputs = 0;
+                lastSpellInput = -1;
+            }
+        }
+    }
+
+    private void updateWeaponStatus() {
+        ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+        if (!ItemUtils.isWeapon(heldItem)) {
+            weaponStatus = WeaponStatus.NOT_USABLE;
+            return;
+        }
+
+        Optional<RequirementItemProperty> wynnItem =
+                Models.Item.asWynnItemProperty(heldItem, RequirementItemProperty.class);
+        if (wynnItem.isPresent() && wynnItem.get().meetsActualRequirements()) {
+            weaponStatus = WeaponStatus.USABLE;
+        } else {
+            weaponStatus = WeaponStatus.NOT_USABLE;
+        }
     }
 
     private enum WeaponStatus {
