@@ -5,7 +5,6 @@
 package com.wynntils.services.leaderboard;
 
 import com.google.gson.JsonElement;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.ApiResponse;
