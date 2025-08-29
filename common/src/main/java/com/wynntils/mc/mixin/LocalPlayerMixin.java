@@ -38,13 +38,13 @@ public abstract class LocalPlayerMixin {
         }
     }
 
-    @Inject(method = "startRiding", at = @At("HEAD"))
+    @Inject(method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z", at = @At("HEAD"))
     private void startRidingPre(Entity vehicle, boolean force, CallbackInfoReturnable<Boolean> ci) {
         SetLocalPlayerVehicleEvent event = new SetLocalPlayerVehicleEvent(vehicle);
         MixinHelper.post(event);
     }
 
-    @Inject(method = "removeVehicle", at = @At("Head"))
+    @Inject(method = "removeVehicle()V", at = @At("HEAD"))
     private void stopRidingPre(CallbackInfo ci) {
         SetLocalPlayerVehicleEvent event = new SetLocalPlayerVehicleEvent(null);
         MixinHelper.post(event);
