@@ -46,7 +46,6 @@ public class LeaderboardService extends Service {
                             entry.getValue().getAsJsonObject().get("uuid").getAsString();
 
                     if (uuidStr.equals("redacted")) {
-                        WynntilsMod.info(type.getKey() + " leaderboard position " + entry.getKey() + " is redacted.");
                         continue;
                     }
 
