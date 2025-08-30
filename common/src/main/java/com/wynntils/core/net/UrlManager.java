@@ -84,6 +84,7 @@ import java.util.function.Function;
  *         <code>wynntils.url.force.type</code> - Force the source to be used, regardless of the version.
  *         Possible values are <code>bundled</code>, <code>local</code>, <code>remote</code>.
  *     </li>
+ * </ul>
  *
  * <h3>URL override</h3>
  * <p>
