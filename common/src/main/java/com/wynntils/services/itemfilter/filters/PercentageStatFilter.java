@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.filters;
@@ -19,7 +19,7 @@ public class PercentageStatFilter extends StatFilter<StatValue> {
 
     private final boolean equalsInString;
 
-    public PercentageStatFilter(float min, float max, boolean equalsInString) {
+    private PercentageStatFilter(float min, float max, boolean equalsInString) {
         this.min = min;
         this.max = max;
         this.equalsInString = equalsInString;

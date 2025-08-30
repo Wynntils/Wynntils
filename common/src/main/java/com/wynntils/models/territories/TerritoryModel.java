@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories;
@@ -117,19 +117,22 @@ public final class TerritoryModel extends Model {
     public List<TerritoryPoi> getFilteredTerritoryPoisFromAdvancement(
             int filterLevel, TerritoryDefenseFilterType filterType) {
         return switch (filterType) {
-            case HIGHER -> territoryPoiMap.values().stream()
-                    .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() >= filterLevel)
-                    .collect(Collectors.toList());
-            case LOWER -> territoryPoiMap.values().stream()
-                    .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() <= filterLevel)
-                    .collect(Collectors.toList());
-            case DEFAULT -> territoryPoiMap.values().stream()
-                    .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() == filterLevel)
-                    .collect(Collectors.toList());
+            case HIGHER ->
+                territoryPoiMap.values().stream()
+                        .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() >= filterLevel)
+                        .collect(Collectors.toList());
+            case LOWER ->
+                territoryPoiMap.values().stream()
+                        .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() <= filterLevel)
+                        .collect(Collectors.toList());
+            case DEFAULT ->
+                territoryPoiMap.values().stream()
+                        .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() == filterLevel)
+                        .collect(Collectors.toList());
         };
     }
 
-    public TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
+    private TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
         return territoryPoiMap.get(name);
     }
 

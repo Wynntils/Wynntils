@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades.event;
@@ -11,7 +11,7 @@ import net.neoforged.bus.api.Event;
 public abstract class HadesUserEvent extends Event {
     private final HadesUser hadesUser;
 
-    public HadesUserEvent(HadesUser hadesUser) {
+    protected HadesUserEvent(HadesUser hadesUser) {
         this.hadesUser = hadesUser;
     }
 

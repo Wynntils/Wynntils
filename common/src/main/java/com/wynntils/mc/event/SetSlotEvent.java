@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -12,7 +12,7 @@ import net.neoforged.bus.api.Event;
 public abstract class SetSlotEvent extends Event {
     private final Container container;
     private final int slot;
-    ItemStack itemStack;
+    protected ItemStack itemStack;
 
     protected SetSlotEvent(Container container, int slot, ItemStack itemStack) {
         this.container = container;

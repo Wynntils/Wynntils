@@ -49,16 +49,16 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
             new HadesUser("Player 2", new CappedValue(4561, 9870), new CappedValue(98, 170));
 
     @Persisted
-    public final Config<Boolean> disablePartyMembersOnScoreboard = new Config<>(false);
+    private final Config<Boolean> disablePartyMembersOnScoreboard = new Config<>(false);
 
     @Persisted
-    public final Config<Integer> maxPartyMembers = new Config<>(4);
+    private final Config<Integer> maxPartyMembers = new Config<>(4);
 
     @Persisted
-    public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
+    private final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
     @Persisted
-    public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
+    private final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
 
     public PartyMembersOverlay() {
         super(

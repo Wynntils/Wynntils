@@ -699,7 +699,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         configurable -> configurable, this::buildConfigTiles, (a, b) -> a, LinkedHashMap::new));
     }
 
-    public void populateConfigs() {
+    private void populateConfigs() {
         configs.clear();
 
         if (selectedConfigurable == null) return;
@@ -876,21 +876,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         int renderY = 21 + offsetY;
 
         for (Config<?> config : configOptions) {
-            ConfigTile configTile;
+            Overlay overlay = configurable instanceof Overlay overlayInstance ? overlayInstance : null;
 
-            if (configurable instanceof Overlay overlay) {
-                configTile = new ConfigTile(
-                        Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10 + offsetX,
-                        renderY,
-                        160,
-                        45,
-                        this,
-                        config,
-                        overlay);
-            } else {
-                configTile = new ConfigTile(
-                        Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10 + offsetX, renderY, 160, 45, this, config);
-            }
+            ConfigTile configTile = new ConfigTile(
+                    Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10 + offsetX, renderY, 160, 45, this, config, overlay);
 
             configTile.visible = renderY >= (21 + offsetY - 46) && renderY <= (21 + offsetY + CONFIGS_PER_PAGE * 45);
 

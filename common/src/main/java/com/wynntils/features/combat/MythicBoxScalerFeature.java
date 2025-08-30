@@ -19,10 +19,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class MythicBoxScalerFeature extends Feature {
-    public static final ModelSupplier MYTHIC_BOX_CUSTOM_MODEL_DATA_SUPPLIER = ModelSupplier.forKey("mythic_box");
+    private static final ModelSupplier MYTHIC_BOX_CUSTOM_MODEL_DATA_SUPPLIER = ModelSupplier.forKey("mythic_box");
 
     @Persisted
-    public final Config<Float> scale = new Config<>(1.5f);
+    private final Config<Float> scale = new Config<>(1.5f);
 
     @SubscribeEvent
     public void onItemRendering(GroundItemEntityTransformEvent e) {

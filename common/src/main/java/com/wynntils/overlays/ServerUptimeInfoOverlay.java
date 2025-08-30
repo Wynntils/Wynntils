@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -16,7 +16,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class ServerUptimeInfoOverlay extends TextOverlay {
     @Persisted
-    public final Config<Boolean> showWorldInStream = new Config<>(false);
+    private final Config<Boolean> showWorldInStream = new Config<>(false);
 
     public ServerUptimeInfoOverlay() {
         super(

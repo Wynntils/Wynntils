@@ -93,10 +93,10 @@ public class MainMapFeature extends Feature {
     public final Config<Boolean> centerWhenUnmapped = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> autoWaypointChests = new Config<>(true);
+    private final Config<Boolean> autoWaypointChests = new Config<>(true);
 
     @Persisted
-    public final Config<LootChestTier> minTierForAutoWaypoint = new Config<>(LootChestTier.TIER_3);
+    private final Config<LootChestTier> minTierForAutoWaypoint = new Config<>(LootChestTier.TIER_3);
 
     @Persisted
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);

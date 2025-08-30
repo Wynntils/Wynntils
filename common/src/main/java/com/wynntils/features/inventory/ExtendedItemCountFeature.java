@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -25,10 +25,10 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.INVENTORY)
 public class ExtendedItemCountFeature extends Feature {
     @Persisted
-    public final Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
+    private final Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
+    private final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
     private boolean isInventory;
 

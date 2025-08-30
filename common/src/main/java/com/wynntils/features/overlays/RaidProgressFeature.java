@@ -32,10 +32,10 @@ public class RaidProgressFeature extends Feature {
     private final RaidProgressOverlay raidProgressOverlay = new RaidProgressOverlay();
 
     @Persisted
-    public final Config<Boolean> printTimes = new Config<>(true);
+    private final Config<Boolean> printTimes = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> playSoundOnBest = new Config<>(true);
+    private final Config<Boolean> playSoundOnBest = new Config<>(true);
 
     @SubscribeEvent
     public void onRaidCompleted(RaidEndedEvent.Completed event) {

@@ -31,7 +31,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketPriceMatchFeature extends Feature {
     @Persisted
-    public final Config<Integer> undercutBy = new Config<>(0);
+    private final Config<Integer> undercutBy = new Config<>(0);
 
     private boolean sendPriceMessage = false;
     private long priceToSend = 0;

@@ -98,7 +98,7 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
         return Services.ItemFilter.getItemFilterString(Map.of(), getSortInfos(), List.of());
     }
 
-    protected final void forwardClick() {
+    private void forwardClick() {
         // Cycle between null and the sort directions
         if (sortDirection == null) {
             sortDirection = SortDirection.ASCENDING;
@@ -107,7 +107,7 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
         }
     }
 
-    protected final void backwardClick() {
+    private void backwardClick() {
         // Cycle between null and the sort directions
         if (sortDirection == null) {
             sortDirection = SortDirection.DESCENDING;
@@ -116,7 +116,7 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
         }
     }
 
-    protected final void resetClick() {
+    private void resetClick() {
         sortDirection = null;
     }
 

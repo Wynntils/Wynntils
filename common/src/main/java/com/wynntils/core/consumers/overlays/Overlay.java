@@ -23,7 +23,7 @@ import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Comparable<Overlay> {
     @Persisted(i18nKey = "overlay.wynntils.overlay.position")
-    protected final Config<OverlayPosition> position = new Config<>(null);
+    private final Config<OverlayPosition> position = new Config<>(null);
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.size")
     protected final Config<OverlaySize> size = new Config<>(null);

@@ -20,27 +20,7 @@ import net.minecraft.world.level.Level;
 public class ClientCommandSourceStack extends CommandSourceStack {
     public ClientCommandSourceStack(LocalPlayer player) {
         super(
-                new CommandSource() {
-                    @Override
-                    public void sendSystemMessage(Component component) {
-                        McUtils.sendMessageToClient(component);
-                    }
-
-                    @Override
-                    public boolean acceptsSuccess() {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean acceptsFailure() {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean shouldInformAdmins() {
-                        return true;
-                    }
-                },
+                new ClientCommandSource(),
                 player.position(),
                 player.getRotationVector(),
                 null,
@@ -71,5 +51,27 @@ public class ClientCommandSourceStack extends CommandSourceStack {
     @Override
     public RegistryAccess registryAccess() {
         return null;
+    }
+
+    private static class ClientCommandSource implements CommandSource {
+        @Override
+        public void sendSystemMessage(Component component) {
+            McUtils.sendMessageToClient(component);
+        }
+
+        @Override
+        public boolean acceptsSuccess() {
+            return true;
+        }
+
+        @Override
+        public boolean acceptsFailure() {
+            return true;
+        }
+
+        @Override
+        public boolean shouldInformAdmins() {
+            return true;
+        }
     }
 }

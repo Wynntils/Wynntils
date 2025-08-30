@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
@@ -32,7 +32,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemGuessFeature extends Feature {
     @Persisted
-    public final Config<Boolean> showGuessesPrice = new Config<>(true);
+    private final Config<Boolean> showGuessesPrice = new Config<>(true);
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {

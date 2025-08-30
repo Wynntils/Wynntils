@@ -33,7 +33,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.Component;
 
-public class UpdateScreen extends WynntilsScreen {
+public final class UpdateScreen extends WynntilsScreen {
     private final Screen titleScreen;
     private final ServerData serverData;
 

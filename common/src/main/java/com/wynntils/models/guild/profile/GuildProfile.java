@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.guild.profile;
@@ -33,9 +33,9 @@ public record GuildProfile(String prefix, String name, CustomColor color) {
                     : "";
 
             // If color is null or empty, use the name to generate a color
-            CustomColor color = !colorString.isBlank()
-                    ? CustomColor.fromHexString(colorString)
-                    : CustomColor.colorForStringHash(name);
+            CustomColor color = colorString.isBlank()
+                    ? CustomColor.colorForStringHash(name)
+                    : CustomColor.fromHexString(colorString);
 
             // Handle edge cases
             if (color == CustomColor.NONE) {

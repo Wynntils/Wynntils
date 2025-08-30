@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.custombars;
@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class HealthTexturedCustomBarOverlay extends CustomBarOverlayBase {
     @Persisted(i18nKey = "overlay.wynntils.healthBar.healthTexture")
-    public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
+    private final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
     public HealthTexturedCustomBarOverlay(int id) {
         super(id, new OverlaySize(81, 21));

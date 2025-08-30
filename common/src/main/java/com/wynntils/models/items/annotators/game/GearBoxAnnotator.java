@@ -23,7 +23,7 @@ public final class GearBoxAnnotator implements GameItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        if (!(itemStack.getItem() == Items.POTION)) return null;
+        if (itemStack.getItem() != Items.POTION) return null;
         Matcher matcher = name.getMatcher(GEAR_BOX_PATTERN);
         if (!matcher.matches()) return null;
 

@@ -50,8 +50,8 @@ public final class MapRenderer {
     // The minimum zoom is where the map is at its smallest, and the maximum zoom is where the map is at its largest.
     // The ratio is 20:1 when the zoom is at it's minimum, 1:10 when the zoom is at it's maximum.
     // The zoom is adjusted by GUI scale, to make sure these ratios are consistent across all GUI scales.
-    public static final float MIN_ZOOM = 0.2f;
-    public static final float MAX_ZOOM = 10f;
+    private static final float MIN_ZOOM = 0.2f;
+    private static final float MAX_ZOOM = 10f;
 
     // These don't have significance, they are just used to calculate the zoom,
     // and are cached for performance.

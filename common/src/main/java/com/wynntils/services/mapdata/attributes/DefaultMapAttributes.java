@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.attributes;
@@ -18,7 +18,7 @@ import java.util.Optional;
  * are defined. These are guaranteed to be non-empty.
  */
 public final class DefaultMapAttributes implements MapAttributes {
-    public static DefaultMapAttributes INSTANCE = new DefaultMapAttributes();
+    public static final DefaultMapAttributes INSTANCE = new DefaultMapAttributes();
 
     private DefaultMapAttributes() {}
 

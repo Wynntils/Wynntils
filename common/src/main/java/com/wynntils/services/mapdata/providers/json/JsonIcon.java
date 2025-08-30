@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.providers.json;
@@ -16,8 +16,9 @@ public class JsonIcon implements MapIcon {
     private final NativeImage nativeImage;
     private final int width;
     private final int height;
+    private final ResourceLocation resource;
+
     private boolean registered;
-    private ResourceLocation resource;
 
     public JsonIcon(String iconId, byte[] texture) throws IOException {
         this.iconId = iconId;
