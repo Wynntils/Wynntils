@@ -89,21 +89,19 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         return true;
     }
 
-    protected boolean isRendered() {
+    protected final boolean isRendered() {
         // When user provides Enabled Template but there is an error, render it to show the error
         if (enabledTemplateCache != null && enabledTemplateCache.hasError()) return true;
 
-        // But if there are no errors, render acording to the template
+        // But if there are no errors, render according to the template
         if (enabledTemplateCache != null && !enabledTemplateCache.hasError()) {
             return enabledTemplateCache.getValue();
         }
 
         // Otherwise render it according to defaults
         if (!isVisible()) return false;
-        if (hideWhenNoGui()) {
-            return Models.WorldState.onWorld() && Models.Character.getVehicle() != VehicleType.DISPLAY;
-        }
-        return true;
+        boolean hasGui = Models.WorldState.onWorld() && Models.Character.getVehicle() != VehicleType.DISPLAY;
+        return hasGui || !hideWhenNoGui();
     }
 
     @Override
@@ -119,7 +117,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         this.render(guiGraphics, bufferSource, deltaTracker, window);
     }
 
-    public void renderOrErrorMessage(
+    protected void renderOrErrorMessage(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         if (this.enabledTemplateCache != null && this.enabledTemplateCache.hasError()) {
             renderEnabledTemplateErrorMessage(guiGraphics, bufferSource);
@@ -128,7 +126,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         }
     }
 
-    public void renderEnabledTemplateErrorMessage(GuiGraphics guiGraphics, MultiBufferSource bufferSource) {
+    private void renderEnabledTemplateErrorMessage(GuiGraphics guiGraphics, MultiBufferSource bufferSource) {
         StyledText[] errorMessage = {
             StyledText.fromString(
                     "§c§l" + I18n.get("overlay.wynntils.overlay.enabledTemplate.error") + " " + getTranslatedName()),
@@ -151,11 +149,11 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
                         1);
     }
 
-    public void tick() {}
+    protected void tick() {}
 
     protected void updateCache() {
         String template = enabledTemplate.get();
-        if (template.trim().isEmpty()) {
+        if (template.isBlank()) {
             this.enabledTemplateCache = null;
             return;
         }

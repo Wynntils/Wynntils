@@ -106,11 +106,6 @@ public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBar
         }
 
         @Override
-        public boolean isRendered() {
-            return true;
-        }
-
-        @Override
         public CustomColor getRenderColor() {
             return CustomColor.fromChatFormatting(color.get().getChatFormatting());
         }
