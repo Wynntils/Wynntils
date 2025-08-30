@@ -1094,11 +1094,11 @@ public final class LootrunModel extends Model {
         // to rely on those for getting possible locations so we use the gathered task locations instead and we can
         // filter them based on the marker provided. The distance from the marker is also used to filter far
         // away tasks so whilst it would be ideal to only get tasks from current location this is fine for now.
-        taskLocations.values().forEach(hashSet -> {
-            currentTaskLocations.addAll(hashSet.stream()
-                    .filter(task -> task.taskType() == lootrunMarker.getTaskType())
-                    .collect(Collectors.toSet()));
-        });
+        taskLocations
+                .values()
+                .forEach(hashSet -> currentTaskLocations.addAll(hashSet.stream()
+                        .filter(task -> task.taskType() == lootrunMarker.getTaskType())
+                        .collect(Collectors.toSet())));
 
         if (currentTaskLocations.isEmpty()) {
             WynntilsMod.warn("No task locations found!");
