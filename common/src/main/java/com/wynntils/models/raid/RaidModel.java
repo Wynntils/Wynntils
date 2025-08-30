@@ -684,7 +684,7 @@ public final class RaidModel extends Model {
         Optional<AspectItem> aspectOptional = Models.Item.asWynnItem(itemStack, AspectItem.class);
         if (aspectOptional.isPresent()) {
             AspectItem aspectItem = aspectOptional.get();
-            WynntilsMod.warn("[RaidModel] User found aspect item \"" + aspectItem.toString() + "\" at slot " + slotId
+            WynntilsMod.warn("[RaidModel] User found aspect item \"" + aspectItem + "\" at slot " + slotId
                     + ", but this slot should be a reward item slot.");
             return;
         }

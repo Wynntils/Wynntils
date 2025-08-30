@@ -188,10 +188,10 @@ public class MythicFoundFeature extends Feature {
                 .append(itemName.getComponent())
                 .append(Component.literal(" after ")
                         .withStyle(ChatFormatting.LIGHT_PURPLE)
-                        .append(Component.literal(String.valueOf(numRaids) + " raids")
+                        .append(Component.literal(numRaids + " raids")
                                 .withStyle(ChatFormatting.GOLD)))
                 .append(Component.literal(" and ").withStyle(ChatFormatting.LIGHT_PURPLE))
-                .append(Component.literal(String.valueOf(numPulls) + " " + pullType + " pulls")
+                .append(Component.literal(numPulls + " " + pullType + " pulls")
                         .withStyle(ChatFormatting.GOLD))
                 .append(Component.literal(" without a mythic."))
                 .withStyle(ChatFormatting.LIGHT_PURPLE));
