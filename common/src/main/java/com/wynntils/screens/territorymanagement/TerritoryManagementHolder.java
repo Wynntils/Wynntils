@@ -565,7 +565,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
 
     private List<TerritoryItem> getItemsOnPage(int page) {
         return territories.int2ObjectEntrySet().stream()
-                .filter(entry -> entry.getKey() / ITEMS_PER_PAGE == page)
+                .filter(entry -> entry.getIntKey() / ITEMS_PER_PAGE == page)
                 .map(Map.Entry::getValue)
                 .map(Pair::b)
                 .collect(Collectors.toList());
