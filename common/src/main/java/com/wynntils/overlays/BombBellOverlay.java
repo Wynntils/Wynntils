@@ -92,6 +92,16 @@ public class BombBellOverlay extends Overlay {
     }
 
     @Override
+    protected boolean hideWhenNoGui() {
+        return false;
+    }
+
+    @Override
+    protected boolean isVisible() {
+        return !Models.Bomb.getBombBells().isEmpty();
+    }
+
+    @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         BufferedFontRenderer.getInstance()

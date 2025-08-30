@@ -205,7 +205,10 @@ public final class OverlayManager extends Manager {
     // region Ticking
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        enabledOverlays.forEach(Overlay::tick);
+        enabledOverlays.forEach(overlay -> {
+            overlay.tick();
+            overlay.updateEnabledCache();
+        });
     }
 
     // endregion
@@ -272,9 +275,10 @@ public final class OverlayManager extends Manager {
 
                     overlay.renderPreview(
                             event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
-                } else if (shouldRender) {
+                } else if (shouldRender && overlay.isRendered()) {
                     long startTime = System.currentTimeMillis();
-                    overlay.render(event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
+                    overlay.renderOrErrorMessage(
+                            event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
                     logProfilingData(startTime, overlay);
                 }
             } catch (Throwable t) {

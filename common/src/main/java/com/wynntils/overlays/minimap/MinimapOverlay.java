@@ -120,8 +120,6 @@ public class MinimapOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        if (!Models.WorldState.onWorld() || Models.WorldState.inCharacterWardrobe()) return;
-
         PoseStack poseStack = guiGraphics.pose();
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
