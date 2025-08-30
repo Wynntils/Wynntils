@@ -196,6 +196,7 @@ public final class UpdateService extends Service {
     }
 
     public boolean shouldPromptUpdate() {
+        if (WynntilsMod.isDevelopmentEnvironment()) return false;
         return !promptedUpdate
                 && modUpdateInfo != null
                 && !modUpdateInfo.version().equals(ignoredUpdate.get());
