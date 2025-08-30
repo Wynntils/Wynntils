@@ -367,11 +367,9 @@ public final class ActivityModel extends Model {
         switch (activityInfo.type()) {
             case QUEST, STORYLINE_QUEST -> openQuestOnWiki(activityInfo);
             case MINI_QUEST -> openMiniQuestOnWiki(activityInfo);
-            default -> {
-                Managers.Net.openLink(
-                        UrlId.LINK_WIKI_LOOKUP,
-                        Map.of("title", activityInfo.name().replace(" ", "_")));
-            }
+            default -> Managers.Net.openLink(
+                    UrlId.LINK_WIKI_LOOKUP,
+                    Map.of("title", activityInfo.name().replace(" ", "_")));
         }
     }
 
