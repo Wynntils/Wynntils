@@ -197,7 +197,8 @@ public class PersonalStorageUtilitiesFeature extends Feature {
                 if (pageMatcher.matches()
                         && Integer.parseInt(pageMatcher.group(1))
                                 == storageContainer.getQuickJumpDestinations().get(target)) {
-                    WynntilsMod.info("Quick jumping to " + target);
+                    WynntilsMod.info("Quick jumping to "
+                            + storageContainer.getQuickJumpDestinations().get(target));
                     ContainerUtils.pressKeyOnSlot(
                             storageContainer.getNextItemSlot(),
                             storageContainer.getContainerId(),
@@ -215,7 +216,8 @@ public class PersonalStorageUtilitiesFeature extends Feature {
                 if (pageMatcher.matches()
                         && Integer.parseInt(pageMatcher.group(1))
                                 == storageContainer.getQuickJumpDestinations().get(target)) {
-                    WynntilsMod.info("Quick jumping to " + target);
+                    WynntilsMod.info("Quick jumping to "
+                            + storageContainer.getQuickJumpDestinations().get(target));
                     ContainerUtils.pressKeyOnSlot(
                             storageContainer.getPreviousItemSlot(),
                             storageContainer.getContainerId(),
