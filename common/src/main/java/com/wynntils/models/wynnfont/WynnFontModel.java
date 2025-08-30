@@ -82,8 +82,7 @@ public final class WynnFontModel extends Model {
                 sb.append(' ');
                 continue;
             }
-            Character fancy = normalToFancy.get(c);
-            if (fancy == null) continue;
+            Character fancy = normalToFancy.getOrDefault(c, c);
             sb.append(fancy);
         }
         return sb.toString();
