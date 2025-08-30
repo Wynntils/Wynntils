@@ -300,7 +300,8 @@ public class ValuablesProtectionFeature extends Feature {
     public void onTick(TickEvent e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen)) return;
 
-        if (++emphasizeAnimationDelay % 4 == 0) {
+        emphasizeAnimationDelay++;
+        if (emphasizeAnimationDelay % 4 == 0) {
             emphasizeAnimationFrame += emphasizeDirection;
             if (emphasizeAnimationFrame == 4 || emphasizeAnimationFrame == -1) {
                 emphasizeDirection *= -1;
