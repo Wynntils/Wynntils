@@ -109,26 +109,31 @@ public class ChatItemFeature extends Feature {
             EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group("data"));
             ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
 
-            String name;
-            if (errorOrDecodedItem.hasError()) {
-                name = "encoding_error";
-            } else {
-                WynnItem decodedItem = errorOrDecodedItem.getValue();
-
-                name = decodedItem.getClass().getSimpleName();
-
-                if (decodedItem instanceof NamedItemProperty namedItemProperty) {
-                    name = namedItemProperty.getName();
-                }
-            }
-
-            while (chatItems.containsKey(name)) { // avoid overwriting entries
-                name += "_";
-            }
+            String name = getItemName(errorOrDecodedItem);
 
             chatInput.setValue(chatInput.getValue().replace(matcher.group(), "<" + name + ">"));
             chatItems.put(name, matcher.group());
         }
+    }
+
+    private String getItemName(ErrorOr<WynnItem> errorOrDecodedItem) {
+        String name;
+        if (errorOrDecodedItem.hasError()) {
+            name = "encoding_error";
+        } else {
+            WynnItem decodedItem = errorOrDecodedItem.getValue();
+
+            name = decodedItem.getClass().getSimpleName();
+
+            if (decodedItem instanceof NamedItemProperty namedItemProperty) {
+                name = namedItemProperty.getName();
+            }
+        }
+
+        while (chatItems.containsKey(name)) { // avoid overwriting entries
+            name += "_";
+        }
+        return name;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
