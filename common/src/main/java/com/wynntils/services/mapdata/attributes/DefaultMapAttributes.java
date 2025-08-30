@@ -18,7 +18,7 @@ import java.util.Optional;
  * are defined. These are guaranteed to be non-empty.
  */
 public final class DefaultMapAttributes implements MapAttributes {
-    public static DefaultMapAttributes INSTANCE = new DefaultMapAttributes();
+    public static final DefaultMapAttributes INSTANCE = new DefaultMapAttributes();
 
     private DefaultMapAttributes() {}
 
