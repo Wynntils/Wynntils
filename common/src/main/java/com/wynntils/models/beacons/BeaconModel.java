@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
@@ -39,6 +42,9 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class BeaconModel extends Model {
+    private static final Pattern MARKER_DISTANCE_PATTERN = Pattern.compile("\n(\\d+)m (§[a-z0-9])?(\uE000|\uE001)?");
+    private static final Pattern MARKER_COLOR_PATTERN = Pattern.compile("§((?:#)?([a-z0-9]{1,8}))");
+
     private static final ResourceLocation MARKER_FONT = ResourceLocation.withDefaultNamespace("marker");
     private static final List<BeaconKind> beaconRegistry = new ArrayList<>();
     private static final List<BeaconMarkerKind> beaconMarkerRegistry = new ArrayList<>();
@@ -81,8 +87,8 @@ public final class BeaconModel extends Model {
 
             if (beaconMarkerKind == null) return;
 
-            Optional<Integer> distanceOpt = beaconMarkerKind.getDistance(styledText);
-            Optional<CustomColor> customColorOpt = beaconMarkerKind.getCustomColor(styledText);
+            Optional<Integer> distanceOpt = getDistance(styledText);
+            Optional<CustomColor> customColorOpt = getCustomColor(styledText);
 
             BeaconMarker beaconMarker =
                     new BeaconMarker(entity.position(), beaconMarkerKind, distanceOpt, customColorOpt);
@@ -184,5 +190,33 @@ public final class BeaconModel extends Model {
         }
 
         return null;
+    }
+
+    private static Optional<Integer> getDistance(StyledText styledText) {
+        Optional<Integer> distanceOpt = Optional.empty();
+
+        Matcher distanceMatcher = styledText.getMatcher(MARKER_DISTANCE_PATTERN);
+        if (distanceMatcher.find()) {
+            distanceOpt = Optional.of(Integer.parseInt(distanceMatcher.group(1)));
+        }
+
+        return distanceOpt;
+    }
+
+    private static Optional<CustomColor> getCustomColor(StyledText styledText) {
+        Optional<CustomColor> colorOpt = Optional.empty();
+
+        Matcher colorMatcher = styledText.getMatcher(MARKER_COLOR_PATTERN);
+        if (colorMatcher.find()) {
+            String colorStr = colorMatcher.group(1);
+
+            if (colorStr.startsWith("#")) {
+                colorOpt = Optional.of(CustomColor.fromHexString(colorMatcher.group(1)));
+            } else {
+                colorOpt = Optional.of(CustomColor.fromChatFormatting(ChatFormatting.getByCode(colorStr.charAt(0))));
+            }
+        }
+
+        return colorOpt;
     }
 }
