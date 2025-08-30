@@ -40,7 +40,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class UnidentifiedItemIconFeature extends Feature {
     private static final Map<GearType, Pair<Integer, Integer>> TEXTURE_COORDS =
-            new EnumMap<GearType, Pair<Integer, Integer>>(Map.ofEntries(
+            new EnumMap<>(Map.ofEntries(
                     Map.entry(GearType.SPEAR, Pair.of(16 * 1, 16 * 1)),
                     Map.entry(GearType.WAND, Pair.of(16 * 0, 16 * 1)),
                     Map.entry(GearType.DAGGER, Pair.of(16 * 2, 16 * 1)),
