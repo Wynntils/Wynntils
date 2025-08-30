@@ -1054,6 +1054,12 @@ public final class LootrunModel extends Model {
             lootrunDetails.setRainbowBeaconCount(newCount);
         }
 
+        List<Integer> orangeCounts = getOrangeCounts(lootrunDetails);
+        lootrunDetails.setOrangeBeaconCounts(orangeCounts);
+        lootrunDetailsStorage.get().put(Models.Character.getId(), lootrunDetails);
+    }
+
+    private List<Integer> getOrangeCounts(LootrunDetails lootrunDetails) {
         List<Integer> orangeCounts = new ArrayList<>(lootrunDetails.getOrangeBeaconCounts());
 
         if (!orangeCounts.isEmpty()) {
@@ -1069,10 +1075,7 @@ public final class LootrunModel extends Model {
                 }
             }
         }
-
-        lootrunDetails.setOrangeBeaconCounts(orangeCounts);
-
-        lootrunDetailsStorage.get().put(Models.Character.getId(), lootrunDetails);
+        return orangeCounts;
     }
 
     private boolean updateTaskLocationPrediction(Beacon beacon, LootrunBeaconMarkerKind lootrunMarker, int distance) {
