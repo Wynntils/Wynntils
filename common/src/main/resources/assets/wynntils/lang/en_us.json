@@ -2503,6 +2503,7 @@
   "screens.wynntils.contentBook.rightClickToOpenWiki": "Right click to open on the wiki!",
   "screens.wynntils.contentBook.selectToTrack": "Filter and sort using the buttons at the top and select content to track from the list!",
   "screens.wynntils.contentBook.xpToLevelUp": "%s XP till level %d",
+  "screens.wynntils.customBarSelection.name": "Custom Bar Overlay Selection Screen",
   "screens.wynntils.customBarSelection.cancel": "Cancel",
   "screens.wynntils.customBarSelection.select": "Select",
   "screens.wynntils.customBarSelection.textureTooltip": "Cycle through the possible textures for this bar type. The default texture will be used on creation, you change it in the config screen.",
