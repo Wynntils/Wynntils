@@ -210,48 +210,11 @@ public class StatusEffectsOverlay extends Overlay {
                 return this.effect.asString();
             }
 
-            StyledText modifierText = StyledText.EMPTY;
-
-            switch (stackingBehaviour.get()) {
-                case SUM -> {
-                    if (!this.modifierList.isEmpty()) {
-                        // SUM modifiers
-                        double modifierValue = 0.0;
-                        for (double modifier : modifierList) {
-                            modifierValue += modifier;
-                        }
-                        // Eliminate .0 when the modifier needs trailing decimals. This is the case for powder specials
-                        // on armor.
-                        String numberString = (Math.round(modifierValue) == modifierValue)
-                                ? String.format("%+d", (long) modifierValue)
-                                : String.format("%+.1f", modifierValue);
-                        modifierText = StyledText.fromString(ChatFormatting.GRAY + numberString);
-                    }
-                }
-                case GROUP -> {
-                    String modifierString = this.effect.getModifier().getString();
-
-                    // look for either a - or a +
-                    int minusIndex = modifierString.indexOf('-');
-                    int plusIndex = modifierString.indexOf('+');
-                    int index = Math.max(minusIndex, plusIndex);
-
-                    if (index == -1) {
-                        // We can simply put the count string at the start
-                        modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
-                                .append(this.effect.getModifier());
-                    } else {
-                        // The count string is inserted between the +/- and the number
-                        index += 1;
-                        modifierText = StyledText.fromString(ChatFormatting.GRAY
-                                + modifierString.substring(0, index)
-                                + (this.count + "x")
-                                + modifierString.substring(index));
-                    }
-                }
-                // This shouldn't be reached
-                default -> {}
-            }
+            StyledText modifierText = switch (stackingBehaviour.get()) {
+                case SUM -> getStackedSum();
+                case GROUP -> getStackedGroup();
+                case NONE -> StyledText.EMPTY; // This shouldn't be reached
+            };
 
             return this.effect
                     .getPrefix()
@@ -262,6 +225,44 @@ public class StatusEffectsOverlay extends Overlay {
                     .append(this.effect.getName())
                     .append(StyledText.fromString(" "))
                     .append(this.effect.getDisplayedTime());
+        }
+
+        private StyledText getStackedSum() {
+            if (this.modifierList.isEmpty()) return StyledText.EMPTY;
+
+            // SUM modifiers
+            double modifierValue = 0.0;
+            for (double modifier : modifierList) {
+                modifierValue += modifier;
+            }
+            // Eliminate .0 when the modifier needs trailing decimals. This is the case for powder specials
+            // on armor.
+            String numberString = (Math.round(modifierValue) == modifierValue)
+                    ? String.format("%+d", (long) modifierValue)
+                    : String.format("%+.1f", modifierValue);
+            return StyledText.fromString(ChatFormatting.GRAY + numberString);
+        }
+
+        private StyledText getStackedGroup() {
+            String modifierString = this.effect.getModifier().getString();
+
+            // look for either a - or a +
+            int minusIndex = modifierString.indexOf('-');
+            int plusIndex = modifierString.indexOf('+');
+            int index = Math.max(minusIndex, plusIndex);
+
+            if (index == -1) {
+                // We can simply put the count string at the start
+                return StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
+                            .append(this.effect.getModifier());
+            } else {
+                // The count string is inserted between the +/- and the number
+                index += 1;
+                return StyledText.fromString(ChatFormatting.GRAY
+                            + modifierString.substring(0, index)
+                            + (this.count + "x")
+                            + modifierString.substring(index));
+            }
         }
 
         public int getCount() {
