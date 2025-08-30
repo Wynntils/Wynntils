@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -19,7 +19,7 @@ public class TowerAuraTimerOverlay extends TextOverlay {
             "{if_string(gte(aura_timer; 0); concat(\"Aura: : \"; string(aura_timer:1); \"s\"); \"\")}";
 
     @Persisted
-    public final Config<CustomColor> textColor = new Config<>(CommonColors.ORANGE);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.ORANGE);
 
     public TowerAuraTimerOverlay() {
         super(

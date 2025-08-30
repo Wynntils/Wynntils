@@ -87,7 +87,7 @@ public abstract class LevelRendererMixin {
             method =
                     "renderEntity(Lnet/minecraft/world/entity/Entity;DDDFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;)V",
             cancellable = true)
-    public void renderEntity(
+    private void renderEntity(
             Entity entity,
             double camX,
             double camY,

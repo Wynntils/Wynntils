@@ -22,7 +22,7 @@ public class ArrowShieldTrackerOverlay extends TextOverlay {
                     .formatted(ARROW_SYMBOL);
 
     @Persisted
-    public final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
     public ArrowShieldTrackerOverlay() {
         super(

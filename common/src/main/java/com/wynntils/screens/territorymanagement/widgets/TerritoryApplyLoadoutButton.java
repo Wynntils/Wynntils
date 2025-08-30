@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.territorymanagement.widgets;
@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class TerritoryApplyLoadoutButton extends WynntilsButton implements TooltipProvider {
-    protected static final int TOOLTIP_WIDTH = 200;
+    private static final int TOOLTIP_WIDTH = 200;
 
     private final Supplier<Texture> textureSupplier;
     private final Consumer<Integer> onClick;

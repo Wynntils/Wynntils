@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -27,19 +27,19 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.COMBAT)
 public class InvertAttackKeybindsFeature extends Feature {
     @Persisted
-    public final Config<Boolean> invertWarrior = new Config<>(false);
+    private final Config<Boolean> invertWarrior = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> invertArcher = new Config<>(true);
+    private final Config<Boolean> invertArcher = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> invertAssassin = new Config<>(false);
+    private final Config<Boolean> invertAssassin = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> invertMage = new Config<>(false);
+    private final Config<Boolean> invertMage = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> invertShaman = new Config<>(false);
+    private final Config<Boolean> invertShaman = new Config<>(false);
 
     private final Map<InputConstants.Key, InputConstants.Key> activeRemappings = new HashMap<>();
 
@@ -71,7 +71,7 @@ public class InvertAttackKeybindsFeature extends Feature {
         }
     }
 
-    public boolean isInvertingForClass(ClassType classType) {
+    private boolean isInvertingForClass(ClassType classType) {
         return switch (Models.Character.getClassType()) {
             case MAGE -> invertMage.get();
             case ARCHER -> invertArcher.get();
@@ -82,7 +82,7 @@ public class InvertAttackKeybindsFeature extends Feature {
         };
     }
 
-    public InputConstants.Key remapKey(InputConstants.Key key) {
+    private InputConstants.Key remapKey(InputConstants.Key key) {
         Options options = McUtils.options();
 
         // Ensure the key is either the attack or spell key

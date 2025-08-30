@@ -61,13 +61,13 @@ public class HorseMountFeature extends Feature {
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
 
     @Persisted
-    public final Config<Boolean> guaranteedMount = new Config<>(true);
+    private final Config<Boolean> guaranteedMount = new Config<>(true);
 
     @Persisted
-    public final Config<Integer> summonAttempts = new Config<>(8);
+    private final Config<Integer> summonAttempts = new Config<>(8);
 
     @Persisted
-    public final Config<Boolean> playWhistle = new Config<>(true);
+    private final Config<Boolean> playWhistle = new Config<>(true);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {

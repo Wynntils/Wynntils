@@ -33,22 +33,22 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class GameNotificationOverlay extends Overlay {
     @Persisted
-    public final Config<Float> messageTimeLimit = new Config<>(12f);
+    private final Config<Float> messageTimeLimit = new Config<>(12f);
 
     @Persisted
-    public final Config<Integer> messageLimit = new Config<>(8);
+    private final Config<Integer> messageLimit = new Config<>(8);
 
     @Persisted
-    public final Config<Boolean> invertGrowth = new Config<>(true);
+    private final Config<Boolean> invertGrowth = new Config<>(true);
 
     @Persisted
-    public final Config<Integer> messageMaxLength = new Config<>(0);
+    private final Config<Integer> messageMaxLength = new Config<>(0);
 
     @Persisted
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<Boolean> overrideNewMessages = new Config<>(true);
+    private final Config<Boolean> overrideNewMessages = new Config<>(true);
 
     private TextRenderSetting textRenderSetting;
     private static final List<TimedMessageContainer> messageQueue = new LinkedList<>();

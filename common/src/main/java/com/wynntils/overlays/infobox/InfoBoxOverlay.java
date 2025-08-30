@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.infobox;
@@ -12,10 +12,10 @@ import com.wynntils.core.persisted.config.HiddenConfig;
 
 public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
     @Persisted
-    public final HiddenConfig<String> customName = new HiddenConfig<>("");
+    private final HiddenConfig<String> customName = new HiddenConfig<>("");
 
     @Persisted
-    public final Config<String> content = new Config<>("");
+    private final Config<String> content = new Config<>("");
 
     public InfoBoxOverlay(int id) {
         super(id);

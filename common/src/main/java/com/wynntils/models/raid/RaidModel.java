@@ -101,7 +101,7 @@ public final class RaidModel extends Model {
     private static final List<RaidKind> RAIDS = new ArrayList<>();
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
-    private Map<String, List<String>> partyRaidBuffs = new HashMap<>();
+    private final Map<String, List<String>> partyRaidBuffs = new HashMap<>();
 
     private int foundNumRewardPulls;
     private int expectedRaidRewardChestId = -2;
@@ -684,7 +684,7 @@ public final class RaidModel extends Model {
         Optional<AspectItem> aspectOptional = Models.Item.asWynnItem(itemStack, AspectItem.class);
         if (aspectOptional.isPresent()) {
             AspectItem aspectItem = aspectOptional.get();
-            WynntilsMod.warn("[RaidModel] User found aspect item \"" + aspectItem.toString() + "\" at slot " + slotId
+            WynntilsMod.warn("[RaidModel] User found aspect item \"" + aspectItem + "\" at slot " + slotId
                     + ", but this slot should be a reward item slot.");
             return;
         }

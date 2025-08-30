@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -21,19 +21,19 @@ public class ShamanTotemTrackingFeature extends Feature {
     private static final int ENTITY_GLOWING_FLAG = 6;
 
     @Persisted
-    public final Config<Boolean> highlightShamanTotems = new Config<>(true);
+    private final Config<Boolean> highlightShamanTotems = new Config<>(true);
 
     @Persisted
-    public final Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
+    private final Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
 
     @Persisted
-    public final Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
+    private final Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
 
     @Persisted
-    public final Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
+    private final Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
 
     @Persisted
-    public final Config<CustomColor> fourthTotemColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> fourthTotemColor = new Config<>(CommonColors.GREEN);
 
     @SubscribeEvent
     public void onTotemSummoned(TotemEvent.Summoned e) {
@@ -48,8 +48,9 @@ public class ShamanTotemTrackingFeature extends Feature {
                     case 2 -> secondTotemColor.get();
                     case 3 -> thirdTotemColor.get();
                     case 4 -> fourthTotemColor.get();
-                    default -> throw new IllegalArgumentException(
-                            "totemNumber should be 1, 2, 3 or 4! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
+                    default ->
+                        throw new IllegalArgumentException(
+                                "totemNumber should be 1, 2, 3 or 4! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
                 };
 
         ((EntityExtension) totemAS).setGlowColor(color);

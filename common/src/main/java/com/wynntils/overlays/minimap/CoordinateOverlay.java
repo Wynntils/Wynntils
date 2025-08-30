@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.minimap;
@@ -25,10 +25,10 @@ public class CoordinateOverlay extends TextOverlay {
             "{if_str(in_mapped_area;concat(\"&c\";str(x(my_loc));\" &a\";str(y(my_loc));\" &9\";str(z(my_loc)));\"\")}";
 
     @Persisted
-    public final Config<Boolean> shouldBeColored = new Config<>(false);
+    private final Config<Boolean> shouldBeColored = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> shouldDisplayOriginal = new Config<>(true);
+    private final Config<Boolean> shouldDisplayOriginal = new Config<>(true);
 
     public CoordinateOverlay() {
         super(

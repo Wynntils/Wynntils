@@ -15,7 +15,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class LootrunTaskNameOverlay extends TextOverlay {
     @Persisted
-    public final Config<Boolean> forceCoordinates = new Config<>(false);
+    private final Config<Boolean> forceCoordinates = new Config<>(false);
 
     private static final String TEMPLATE = "{CONCAT("
             + "IF_STRING(STRING_EQUALS(lootrun_task_name(\"YELLOW\"); \"\");\"\";CONCAT(if_string(lootrun_beacon_vibrant(\"yellow\");\"§eVibrant \";\"\");\"§eYellow: \"; lootrun_task_type(\"YELLOW\");\" at \";lootrun_task_name(\"YELLOW\");\"\\n\"));"

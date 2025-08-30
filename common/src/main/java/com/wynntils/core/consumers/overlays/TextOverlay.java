@@ -26,13 +26,13 @@ import net.minecraft.client.renderer.MultiBufferSource;
  */
 public abstract class TextOverlay extends DynamicOverlay {
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.textShadow")
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.fontScale")
-    public final Config<Float> fontScale = new Config<>(1.0f);
+    protected final Config<Float> fontScale = new Config<>(1.0f);
 
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.enabledTemplate")
-    public final Config<String> enabledTemplate = new Config<>("");
+    private final Config<String> enabledTemplate = new Config<>("");
 
     private StyledText[] cachedLines = new StyledText[0];
 

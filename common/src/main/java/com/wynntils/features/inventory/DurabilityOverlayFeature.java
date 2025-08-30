@@ -32,10 +32,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class DurabilityOverlayFeature extends Feature {
     @Persisted
-    public final Config<Boolean> renderDurabilityOverlayInventories = new Config<>(true);
+    private final Config<Boolean> renderDurabilityOverlayInventories = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> renderDurabilityOverlayHotbar = new Config<>(true);
+    private final Config<Boolean> renderDurabilityOverlayHotbar = new Config<>(true);
 
     @Persisted
     private final Config<DurabilityRenderMode> durabilityRenderMode = new Config<>(DurabilityRenderMode.ARC);

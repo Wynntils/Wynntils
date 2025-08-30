@@ -51,7 +51,7 @@ public class ChatTabsFeature extends Feature {
             new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null))));
 
     @Persisted
-    public final Config<Boolean> oldTabHotkey = new Config<>(false);
+    private final Config<Boolean> oldTabHotkey = new Config<>(false);
 
     // We do this here, and not in Services.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)

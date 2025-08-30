@@ -150,10 +150,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 Texture.FULLSCREEN_MAP_BORDER.height());
     }
 
-    protected void renderBlurredBackground() {
-        super.renderBlurredBackground();
-    }
-
     protected void renderPois(
             List<Poi> pois,
             PoseStack poseStack,
@@ -455,7 +451,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         this.zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(this.zoomLevel);
     }
 
-    protected void adjustZoomLevel(float delta) {
+    private void adjustZoomLevel(float delta) {
         setZoomLevel(zoomLevel + delta);
     }
 

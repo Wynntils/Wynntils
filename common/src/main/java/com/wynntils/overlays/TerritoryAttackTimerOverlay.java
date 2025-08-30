@@ -30,10 +30,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class TerritoryAttackTimerOverlay extends Overlay {
     @Persisted
-    public final Config<Boolean> disableAttackTimersOnScoreboard = new Config<>(true);
+    private final Config<Boolean> disableAttackTimersOnScoreboard = new Config<>(true);
 
     @Persisted
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     private TextRenderSetting textRenderSetting;
 

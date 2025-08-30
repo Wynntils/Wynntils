@@ -56,31 +56,31 @@ public class CustomNametagRendererFeature extends Feature {
     private static final String WYNNTILS_NAMETAG_LOGO = "\uE100";
 
     @Persisted
-    public final Config<Boolean> hideAllNametags = new Config<>(false);
+    private final Config<Boolean> hideAllNametags = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> showOwnNametag = new Config<>(false);
+    private final Config<Boolean> showOwnNametag = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> hidePlayerNametags = new Config<>(false);
+    private final Config<Boolean> hidePlayerNametags = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> hideNametagBackground = new Config<>(false);
+    private final Config<Boolean> hideNametagBackground = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> showLeaderboardBadges = new Config<>(true);
+    private final Config<Boolean> showLeaderboardBadges = new Config<>(true);
 
     @Persisted
-    public final Config<Integer> badgeCount = new Config<>(7);
+    private final Config<Integer> badgeCount = new Config<>(7);
 
     @Persisted
-    public final Config<Boolean> showGearOnHover = new Config<>(true);
+    private final Config<Boolean> showGearOnHover = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showWynntilsMarker = new Config<>(true);
+    private final Config<Boolean> showWynntilsMarker = new Config<>(true);
 
     @Persisted
-    public final Config<Float> customNametagScale = new Config<>(0.5f);
+    private final Config<Float> customNametagScale = new Config<>(0.5f);
 
     private Player hitPlayerCache = null;
 

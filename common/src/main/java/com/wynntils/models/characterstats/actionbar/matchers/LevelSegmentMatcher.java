@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class LevelSegmentMatcher implements ActionBarSegmentMatcher {
     // The start and end characters' high surrogate for the level segment
-    protected static final char SPACER_HIGH_SURROGATE = '\uDAFF';
+    private static final char SPACER_HIGH_SURROGATE = '\uDAFF';
 
     // A separator between the level characters
     private static final String SEPARATOR = "\uDAFF\uDFFE";

@@ -31,7 +31,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     protected int currentPage = 0;
     protected int maxPage = 0;
-    protected List<E> elements = new ArrayList<>();
+    protected final List<E> elements = new ArrayList<>();
 
     private final List<B> elementButtons = new ArrayList<>();
     protected SearchWidget searchWidget;

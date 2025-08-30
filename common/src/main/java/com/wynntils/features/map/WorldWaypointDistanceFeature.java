@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
@@ -49,31 +49,31 @@ public class WorldWaypointDistanceFeature extends Feature {
     private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null, "");
 
     @Persisted
-    public final Config<Float> backgroundOpacity = new Config<>(0.2f);
+    private final Config<Float> backgroundOpacity = new Config<>(0.2f);
 
     @Persisted
-    public final Config<Float> scale = new Config<>(1.0f);
+    private final Config<Float> scale = new Config<>(1.0f);
 
     @Persisted
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
 
     @Persisted
-    public final Config<Float> bottomBoundingDistance = new Config<>(100f);
+    private final Config<Float> bottomBoundingDistance = new Config<>(100f);
 
     @Persisted
-    public final Config<Float> topBoundingDistance = new Config<>(40f);
+    private final Config<Float> topBoundingDistance = new Config<>(40f);
 
     @Persisted
-    public final Config<Float> horizontalBoundingDistance = new Config<>(30f);
+    private final Config<Float> horizontalBoundingDistance = new Config<>(30f);
 
     @Persisted
-    public final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
+    private final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
 
     @Persisted
     public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showAdditonalTextAbove = new Config<>(false);
+    private final Config<Boolean> showAdditonalTextAbove = new Config<>(false);
 
     private final List<RenderedMarkerInfo> renderedMarkers = new ArrayList<>();
 

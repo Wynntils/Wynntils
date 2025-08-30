@@ -26,16 +26,16 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public abstract class BarOverlay extends DynamicOverlay {
     @Persisted(i18nKey = "overlay.wynntils.barOverlay.textShadow")
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted(i18nKey = "overlay.wynntils.barOverlay.flip")
-    public final Config<Boolean> flip = new Config<>(false);
+    private final Config<Boolean> flip = new Config<>(false);
 
     @Persisted(i18nKey = "overlay.wynntils.barOverlay.animationTime")
-    public final Config<Float> animationTime = new Config<>(2f);
+    private final Config<Float> animationTime = new Config<>(2f);
 
     @Persisted(i18nKey = "overlay.wynntils.barOverlay.heightModifier")
-    public final Config<Float> heightModifier = new Config<>(1f);
+    private final Config<Float> heightModifier = new Config<>(1f);
 
     private Pair<StyledText, ErrorOr<CappedValue>> templateCache;
 

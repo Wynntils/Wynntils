@@ -118,7 +118,7 @@ public final class ConfigManager extends Manager {
     //       unused configs.
     //       This means we need to save - load - save, which we should not do. initOverlayGroups is the solution to
     //       this, for now.
-    public void loadConfigOptions(boolean resetIfNotFound, boolean initOverlayGroups) {
+    private void loadConfigOptions(boolean resetIfNotFound, boolean initOverlayGroups) {
         // We have to set up the overlay groups first, so that the overlays' configs can be loaded
         JsonObject overlayGroups = JsonUtils.getNullableJsonObject(configObject, OVERLAY_GROUPS_JSON_KEY);
 

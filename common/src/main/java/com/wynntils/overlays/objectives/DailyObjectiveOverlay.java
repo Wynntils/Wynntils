@@ -32,10 +32,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
     @Persisted
-    public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
+    private final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
     @Persisted(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-    public final Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
 
     public DailyObjectiveOverlay() {
         super(

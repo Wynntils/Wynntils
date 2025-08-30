@@ -27,16 +27,16 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class DiscordRichPresenceFeature extends Feature {
     @Persisted
-    public final Config<Boolean> displayLocation = new Config<>(true);
+    private final Config<Boolean> displayLocation = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> displayCharacterInfo = new Config<>(true);
+    private final Config<Boolean> displayCharacterInfo = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> displayWorld = new Config<>(true);
+    private final Config<Boolean> displayWorld = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> disableInStream = new Config<>(true);
+    private final Config<Boolean> disableInStream = new Config<>(true);
 
     private static final int TERRITORY_TICKS_DELAY = 10;
 

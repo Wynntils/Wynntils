@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -24,16 +24,16 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class XpGainMessageFeature extends Feature {
     @Persisted
-    public final Config<Boolean> combat = new Config<>(true);
+    private final Config<Boolean> combat = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> professions = new Config<>(true);
+    private final Config<Boolean> professions = new Config<>(true);
 
     @Persisted
-    public final Config<Float> secondDelay = new Config<>(10f);
+    private final Config<Float> secondDelay = new Config<>(10f);
 
     @Persisted
-    public final Config<Boolean> filterChat = new Config<>(true);
+    private final Config<Boolean> filterChat = new Config<>(true);
 
     private long lastCombatXpDisplayTime = 0;
     private final Map<ProfessionType, Long> lastProfessionXpDisplayTimes = new EnumMap<>(ProfessionType.class);

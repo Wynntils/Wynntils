@@ -25,10 +25,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.WYNNTILS)
 public class UpdatesFeature extends Feature {
     @Persisted
-    public final Config<Boolean> updateReminder = new Config<>(true);
+    private final Config<Boolean> updateReminder = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> autoUpdate = new Config<>(false);
+    private final Config<Boolean> autoUpdate = new Config<>(false);
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {

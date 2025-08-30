@@ -18,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.UTILITIES)
 public class GammabrightFeature extends Feature {
     @Persisted
-    public final Config<Boolean> gammabrightEnabled = new Config<>(false);
+    private final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
     @RegisterKeyBind
     private final KeyBind gammabrightKeyBind =

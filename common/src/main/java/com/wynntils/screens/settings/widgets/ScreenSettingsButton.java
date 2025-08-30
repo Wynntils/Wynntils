@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public abstract class ScreenSettingsButton extends GeneralSettingsButton {
-    protected final Config<?> config;
+    private final Config<?> config;
     private final Screen screen;
 
     protected ScreenSettingsButton(int x, int y, Config<?> config, Screen screen, int maskTopY, int maskBottomY) {

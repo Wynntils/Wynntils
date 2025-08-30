@@ -56,7 +56,8 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     private final Scoreboard scoreboard;
     private final PlayerTeam playerViewerTeam;
     private final PlayerTeam oldTeam;
-    private List<PlayerInteractionButton> interactionButtons = new ArrayList<>();
+    private final List<PlayerInteractionButton> interactionButtons = new ArrayList<>();
+
     private FriendButton friendButton;
     private PartyButton partyButton;
 

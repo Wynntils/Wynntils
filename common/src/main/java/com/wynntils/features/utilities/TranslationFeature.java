@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -29,25 +29,25 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class TranslationFeature extends Feature {
     @Persisted
-    public final Config<String> languageName = new Config<>("");
+    private final Config<String> languageName = new Config<>("");
 
     @Persisted
     public final Config<Boolean> translateTrackedQuest = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> translateNpc = new Config<>(true);
+    private final Config<Boolean> translateNpc = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> translateInfo = new Config<>(true);
+    private final Config<Boolean> translateInfo = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> translatePlayerChat = new Config<>(false);
+    private final Config<Boolean> translatePlayerChat = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> keepOriginal = new Config<>(true);
+    private final Config<Boolean> keepOriginal = new Config<>(true);
 
     @Persisted
-    public final Config<TranslationService.TranslationServices> translationService =
+    private final Config<TranslationService.TranslationServices> translationService =
             new Config<>(TranslationService.TranslationServices.GOOGLEAPI);
 
     @SubscribeEvent

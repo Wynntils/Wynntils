@@ -28,13 +28,13 @@ public class TradeMarketBulkSellFeature extends Feature {
     private static final int AMOUNT_ITEM_SLOT = 31;
 
     @Persisted
-    public final Config<Integer> bulkSell1Amount = new Config<>(64);
+    private final Config<Integer> bulkSell1Amount = new Config<>(64);
 
     @Persisted
-    public final Config<Integer> bulkSell2Amount = new Config<>(0);
+    private final Config<Integer> bulkSell2Amount = new Config<>(0);
 
     @Persisted
-    public final Config<Integer> bulkSell3Amount = new Config<>(0);
+    private final Config<Integer> bulkSell3Amount = new Config<>(0);
 
     private boolean sendAmountMessage = false;
     private int amountToSend = 0;

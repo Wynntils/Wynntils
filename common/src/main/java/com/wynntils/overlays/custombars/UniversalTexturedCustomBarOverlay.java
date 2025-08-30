@@ -20,10 +20,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
     @Persisted
-    public final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
+    private final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
 
     @Persisted
-    public final Config<String> colorTemplate = new Config<>("");
+    private final Config<String> colorTemplate = new Config<>("");
 
     private CustomColor colorCache = CommonColors.WHITE;
 

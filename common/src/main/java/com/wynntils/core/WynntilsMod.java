@@ -234,11 +234,7 @@ public final class WynntilsMod {
     }
 
     private static void parseVersion(String modVersion) {
-        if (modVersion.contains("SNAPSHOT")) {
-            developmentBuild = true;
-        } else {
-            developmentBuild = false;
-        }
+        developmentBuild = modVersion.contains("SNAPSHOT");
         version = "v" + modVersion;
     }
 

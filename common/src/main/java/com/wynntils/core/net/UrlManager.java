@@ -101,8 +101,8 @@ public final class UrlManager extends Manager {
     private final Property<Boolean> ignoreCache = createProperty(Boolean.class, "ignore.cache", false);
     private final Property<Boolean> debugLogs = createProperty(Boolean.class, "log.debug", false);
     private final Property<UrlMapperType> urlMapperForceType = createProperty(UrlMapperType.class, "force.type");
+    private final Map<UrlMapperType, UrlMapper> urlMappersByType = new ConcurrentHashMap<>();
 
-    private Map<UrlMapperType, UrlMapper> urlMappersByType = new ConcurrentHashMap<>();
     private UrlMapper urlMapper = UrlMapper.EMPTY;
 
     public UrlManager(NetManager netManager) {

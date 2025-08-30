@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -31,25 +31,25 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class TranscribeMessagesFeature extends Feature {
     @Persisted
-    public final Config<Boolean> transcribeChat = new Config<>(true);
+    private final Config<Boolean> transcribeChat = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> transcribeNpcs = new Config<>(true);
+    private final Config<Boolean> transcribeNpcs = new Config<>(true);
 
     @Persisted
-    public final Config<TranscribeCondition> transcribeCondition = new Config<>(TranscribeCondition.ALWAYS);
+    private final Config<TranscribeCondition> transcribeCondition = new Config<>(TranscribeCondition.ALWAYS);
 
     @Persisted
-    public final Config<Boolean> showTooltip = new Config<>(false);
+    private final Config<Boolean> showTooltip = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> coloredTranscriptions = new Config<>(true);
+    private final Config<Boolean> coloredTranscriptions = new Config<>(true);
 
     @Persisted
-    public final Config<ColorChatFormatting> gavellianColor = new Config<>(ColorChatFormatting.LIGHT_PURPLE);
+    private final Config<ColorChatFormatting> gavellianColor = new Config<>(ColorChatFormatting.LIGHT_PURPLE);
 
     @Persisted
-    public final Config<ColorChatFormatting> wynnicColor = new Config<>(ColorChatFormatting.DARK_GREEN);
+    private final Config<ColorChatFormatting> wynnicColor = new Config<>(ColorChatFormatting.DARK_GREEN);
 
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 

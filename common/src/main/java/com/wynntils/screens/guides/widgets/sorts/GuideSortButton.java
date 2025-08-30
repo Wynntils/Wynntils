@@ -29,8 +29,8 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class GuideSortButton extends AbstractWidget {
-    protected final WynntilsGuideScreen guideScreen;
-    protected final ItemStatProvider<?> provider;
+    private final WynntilsGuideScreen guideScreen;
+    private final ItemStatProvider<?> provider;
 
     private SortDirection sortDirection = null;
 

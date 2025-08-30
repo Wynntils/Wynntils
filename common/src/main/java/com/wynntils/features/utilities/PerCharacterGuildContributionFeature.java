@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -35,7 +35,7 @@ public class PerCharacterGuildContributionFeature extends Feature {
     private final HiddenConfig<Map<String, Integer>> characterContributions = new HiddenConfig<>(new TreeMap<>());
 
     @Persisted
-    public final Config<Boolean> hideContributionMessage = new Config<>(true);
+    private final Config<Boolean> hideContributionMessage = new Config<>(true);
 
     private boolean waitingForCommandResponse = false;
 

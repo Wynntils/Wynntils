@@ -32,7 +32,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class ContentTrackerOverlay extends Overlay {
-    public static final String PREVIEW_TASK =
+    private static final String PREVIEW_TASK =
             """
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer \
                     tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
@@ -40,10 +40,10 @@ public class ContentTrackerOverlay extends Overlay {
                     """;
 
     @Persisted
-    public final Config<Boolean> disableTrackerOnScoreboard = new Config<>(true);
+    private final Config<Boolean> disableTrackerOnScoreboard = new Config<>(true);
 
     @Persisted
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     private static final List<CustomColor> TEXT_COLORS =
             List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);

@@ -45,13 +45,13 @@ public class MythicFoundFeature extends Feature {
     private final Config<MythicSound> tomeFoundSound = new Config<>(MythicSound.NONE);
 
     @Persisted
-    public final Config<Boolean> showDryStreakMessage = new Config<>(true);
+    private final Config<Boolean> showDryStreakMessage = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showAspectDryStreakMessage = new Config<>(true);
+    private final Config<Boolean> showAspectDryStreakMessage = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showTomeDryStreakMessage = new Config<>(false);
+    private final Config<Boolean> showTomeDryStreakMessage = new Config<>(false);
 
     @SubscribeEvent
     public void onMythicFound(MythicFoundEvent event) {
@@ -188,11 +188,9 @@ public class MythicFoundFeature extends Feature {
                 .append(itemName.getComponent())
                 .append(Component.literal(" after ")
                         .withStyle(ChatFormatting.LIGHT_PURPLE)
-                        .append(Component.literal(String.valueOf(numRaids) + " raids")
-                                .withStyle(ChatFormatting.GOLD)))
+                        .append(Component.literal(numRaids + " raids").withStyle(ChatFormatting.GOLD)))
                 .append(Component.literal(" and ").withStyle(ChatFormatting.LIGHT_PURPLE))
-                .append(Component.literal(String.valueOf(numPulls) + " " + pullType + " pulls")
-                        .withStyle(ChatFormatting.GOLD))
+                .append(Component.literal(numPulls + " " + pullType + " pulls").withStyle(ChatFormatting.GOLD))
                 .append(Component.literal(" without a mythic."))
                 .withStyle(ChatFormatting.LIGHT_PURPLE));
     }

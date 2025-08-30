@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -28,11 +28,11 @@ public abstract class Manager extends CoreComponent {
         return "Manager";
     }
 
-    public final <T> Property<T> createProperty(Class<T> clazz, String propertyPath) {
+    protected final <T> Property<T> createProperty(Class<T> clazz, String propertyPath) {
         return createProperty(clazz, propertyPath, null);
     }
 
-    public final <T> Property<T> createProperty(Class<T> clazz, String propertyPath, T defaultValue) {
+    protected final <T> Property<T> createProperty(Class<T> clazz, String propertyPath, T defaultValue) {
         return new Property<>(this, clazz, propertyPath, defaultValue);
     }
 }

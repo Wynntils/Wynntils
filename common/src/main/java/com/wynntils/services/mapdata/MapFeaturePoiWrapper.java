@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata;
@@ -20,7 +20,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class MapFeaturePoiWrapper implements Poi {
     public static final int SPACING = 2;
-    public static final float TEXT_SCALE = 1f;
+    private static final float TEXT_SCALE = 1f;
     private final MapFeature feature;
     private final ResolvedMapAttributes attributes;
 

@@ -64,7 +64,7 @@ public class ItemScreenshotFeature extends Feature {
             new KeyBind("Screenshot Item", GLFW.GLFW_KEY_F4, true, null, this::onInventoryPress);
 
     @Persisted
-    public final Config<Boolean> saveToDisk = new Config<>(false);
+    private final Config<Boolean> saveToDisk = new Config<>(false);
 
     private Slot screenshotSlot = null;
 

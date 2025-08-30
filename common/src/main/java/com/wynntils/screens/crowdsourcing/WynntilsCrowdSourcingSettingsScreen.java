@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component;
 
 public class WynntilsCrowdSourcingSettingsScreen
         extends WynntilsListScreen<CrowdSourcedDataType, CrowdSourcedDataWidget> {
-    protected WynntilsCrowdSourcingSettingsScreen() {
+    private WynntilsCrowdSourcingSettingsScreen() {
         super(Component.translatable("screens.wynntils.wynntilsCrowdSourcing.name"));
     }
 

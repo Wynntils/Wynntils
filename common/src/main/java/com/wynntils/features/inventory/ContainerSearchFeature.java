@@ -70,46 +70,46 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.INVENTORY)
 public class ContainerSearchFeature extends Feature {
     @Persisted
-    public final Config<Boolean> filterInBank = new Config<>(true);
+    private final Config<Boolean> filterInBank = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInBlockBank = new Config<>(true);
+    private final Config<Boolean> filterInBlockBank = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInBookshelf = new Config<>(true);
+    private final Config<Boolean> filterInBookshelf = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInMiscBucket = new Config<>(true);
+    private final Config<Boolean> filterInMiscBucket = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildBank = new Config<>(true);
+    private final Config<Boolean> filterInGuildBank = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildMemberList = new Config<>(true);
+    private final Config<Boolean> filterInGuildMemberList = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInCosmeticMenus = new Config<>(true);
+    private final Config<Boolean> filterInCosmeticMenus = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInContentBook = new Config<>(true);
+    private final Config<Boolean> filterInContentBook = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildTerritories = new Config<>(true);
+    private final Config<Boolean> filterInGuildTerritories = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildBadges = new Config<>(true);
+    private final Config<Boolean> filterInGuildBadges = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInHousingJukebox = new Config<>(true);
+    private final Config<Boolean> filterInHousingJukebox = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInHousingList = new Config<>(true);
+    private final Config<Boolean> filterInHousingList = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInJukebox = new Config<>(true);
+    private final Config<Boolean> filterInJukebox = new Config<>(true);
 
     @Persisted
-    public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
+    private final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     private final Map<Class<? extends SearchableContainerProperty>, Supplier<Boolean>> searchableContainerMap =
             Map.ofEntries(

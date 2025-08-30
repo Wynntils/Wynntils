@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -239,7 +239,9 @@ public class LootrunCommand extends Command {
             context.getSource()
                     .sendSuccess(
                             () -> Component.translatable(
-                                            "command.wynntils.lootrun.noteRemovedSuccessfully", removedNote.component())
+                                            "command.wynntils.lootrun.noteRemovedSuccessfully",
+                                            pos.toShortString(),
+                                            removedNote.component())
                                     .withStyle(ChatFormatting.GREEN),
                             false);
         } else {

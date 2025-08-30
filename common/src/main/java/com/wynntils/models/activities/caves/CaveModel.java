@@ -100,7 +100,7 @@ public final class CaveModel extends Model {
                 .progress());
     }
 
-    public List<CaveInfo> getCavesRaw() {
+    private List<CaveInfo> getCavesRaw() {
         return Collections.unmodifiableList(caveStorage
                 .getOrDefault(Models.Character.getId(), CaveStorage.EMPTY)
                 .caves());

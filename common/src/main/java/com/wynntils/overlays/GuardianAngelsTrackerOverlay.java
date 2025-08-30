@@ -22,7 +22,7 @@ public class GuardianAngelsTrackerOverlay extends TextOverlay {
                     .formatted(GUARDIAN_ANGELS_SYMBOL);
 
     @Persisted
-    public final Config<CustomColor> textColor = new Config<>(CommonColors.YELLOW);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.YELLOW);
 
     public GuardianAngelsTrackerOverlay() {
         super(

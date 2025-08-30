@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2018-2024.
+ * Copyright © Wynntils 2018-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.translation;
@@ -24,7 +24,7 @@ public abstract class CachingTranslationProvider implements TranslationProvider 
 
     // Map language code (String) to a translation map (String -> String)
     private static Map<String, ConcurrentHashMap<String, List<String>>> translationCaches = new HashMap<>();
-    private static int counter;
+    private static int counter = 0;
 
     protected abstract void translateNew(
             List<String> message, String toLanguage, Consumer<List<String>> handleTranslation);

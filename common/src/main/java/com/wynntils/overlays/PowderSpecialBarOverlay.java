@@ -37,22 +37,22 @@ import net.minecraft.resources.ResourceLocation;
 
 public class PowderSpecialBarOverlay extends Overlay {
     @Persisted
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<Boolean> flip = new Config<>(false);
+    private final Config<Boolean> flip = new Config<>(false);
 
     @Persisted
-    public final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
+    private final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
 
     @Persisted
-    public final Config<Boolean> onlyIfWeaponHeld = new Config<>(true);
+    private final Config<Boolean> onlyIfWeaponHeld = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> hideIfNoCharge = new Config<>(true);
+    private final Config<Boolean> hideIfNoCharge = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> shouldDisplayOriginal = new Config<>(true);
+    private final Config<Boolean> shouldDisplayOriginal = new Config<>(true);
 
     public PowderSpecialBarOverlay() {
         super(

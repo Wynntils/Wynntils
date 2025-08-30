@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -27,6 +27,4 @@ public abstract class Model extends CoreComponent {
     public String getTypeName() {
         return "Model";
     }
-
-    public void reloadData() {}
 }

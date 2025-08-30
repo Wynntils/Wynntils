@@ -57,19 +57,19 @@ public class UnidentifiedItemIconFeature extends Feature {
                     Map.entry(GearType.CHARM, Pair.of(16 * 1, 16 * 3))));
 
     @Persisted
-    public final Config<UnidentifiedItemTextures> texture = new Config<>(UnidentifiedItemTextures.WYNN);
+    private final Config<UnidentifiedItemTextures> texture = new Config<>(UnidentifiedItemTextures.WYNN);
 
     @Persisted
-    public final Config<Boolean> markRevealedItems = new Config<>(true);
+    private final Config<Boolean> markRevealedItems = new Config<>(true);
 
     @Persisted
-    public final Config<UnidentifiedItemIconLocation> markRevealedItemsLocation =
+    private final Config<UnidentifiedItemIconLocation> markRevealedItemsLocation =
             new Config<>(UnidentifiedItemIconLocation.CENTER);
 
     private static final CustomColor DEFAULT_UNID_ICON_COLOR = CommonColors.WHITE.withAlpha(0.67f);
 
     @Persisted
-    public final Config<CustomColor> markRevealedItemsIconColor = new Config<>(DEFAULT_UNID_ICON_COLOR);
+    private final Config<CustomColor> markRevealedItemsIconColor = new Config<>(DEFAULT_UNID_ICON_COLOR);
 
     private static final StyledText QUESTION_MARK_TEXT = StyledText.fromComponent(Component.literal("?"));
 

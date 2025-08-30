@@ -23,13 +23,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class WynntilsCheckbox extends AbstractButton {
-    public static final ResourceLocation CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE =
+    private static final ResourceLocation CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE =
             ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected_highlighted.png");
-    public static final ResourceLocation CHECKBOX_SELECTED_SPRITE =
+    private static final ResourceLocation CHECKBOX_SELECTED_SPRITE =
             ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected.png");
-    public static final ResourceLocation CHECKBOX_HIGHLIGHTED_SPRITE =
+    private static final ResourceLocation CHECKBOX_HIGHLIGHTED_SPRITE =
             ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_highlighted.png");
-    public static final ResourceLocation CHECKBOX_SPRITE =
+    private static final ResourceLocation CHECKBOX_SPRITE =
             ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox.png");
 
     public boolean selected;

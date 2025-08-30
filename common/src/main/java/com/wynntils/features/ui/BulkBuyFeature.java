@@ -50,13 +50,13 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.UI)
 public class BulkBuyFeature extends Feature {
     @Persisted
-    public final Config<Integer> bulkBuyAmount = new Config<>(4);
+    private final Config<Integer> bulkBuyAmount = new Config<>(4);
 
     @Persisted
-    public final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
+    private final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
 
     @Persisted
-    public final Config<Integer> animationDuration = new Config<>(125);
+    private final Config<Integer> animationDuration = new Config<>(125);
 
     private static final String SHOP_TITLE_SUFFIX = " Shop";
     // Test in BulkBuyFeature_PRICE_PATTERN

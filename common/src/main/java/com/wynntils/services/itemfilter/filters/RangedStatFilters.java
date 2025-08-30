@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.filters;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public final class RangedStatFilters {
     public static class RangedIntegerStatFilter extends AbstractRangedStatFilter<Integer> {
-        public RangedIntegerStatFilter(int min, int max, boolean equalsInString) {
+        protected RangedIntegerStatFilter(int min, int max, boolean equalsInString) {
             super(min, max, equalsInString);
         }
 
@@ -33,7 +33,7 @@ public final class RangedStatFilters {
     }
 
     public static class RangedCappedValueStatFilter extends AbstractRangedStatFilter<CappedValue> {
-        public RangedCappedValueStatFilter(int min, int max, boolean equalsInString) {
+        protected RangedCappedValueStatFilter(int min, int max, boolean equalsInString) {
             super(min, max, equalsInString);
         }
 
@@ -52,7 +52,7 @@ public final class RangedStatFilters {
     }
 
     public static class RangedStatValueStatFilter extends AbstractRangedStatFilter<StatValue> {
-        public RangedStatValueStatFilter(int min, int max, boolean equalsInString) {
+        protected RangedStatValueStatFilter(int min, int max, boolean equalsInString) {
             super(min, max, equalsInString);
         }
 

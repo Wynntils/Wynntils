@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -34,19 +34,19 @@ public class ChatMentionFeature extends Feature {
             Pattern.compile("\\W"); // all non-alphanumeric-underscore characters
 
     @Persisted
-    public final Config<Boolean> markMention = new Config<>(true);
+    private final Config<Boolean> markMention = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> dingMention = new Config<>(true);
+    private final Config<Boolean> dingMention = new Config<>(true);
 
     @Persisted
-    public final Config<ColorChatFormatting> mentionColor = new Config<>(ColorChatFormatting.YELLOW);
+    private final Config<ColorChatFormatting> mentionColor = new Config<>(ColorChatFormatting.YELLOW);
 
     @Persisted
-    public final Config<String> aliases = new Config<>("");
+    private final Config<String> aliases = new Config<>("");
 
     @Persisted
-    public final Config<Boolean> suppressMentionsInInfo = new Config<>(false);
+    private final Config<Boolean> suppressMentionsInInfo = new Config<>(false);
 
     private List<Pattern> mentionPatterns;
 

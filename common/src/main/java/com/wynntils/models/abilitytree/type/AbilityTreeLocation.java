@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree.type;
@@ -24,7 +24,7 @@ public record AbilityTreeLocation(int page, int row, int col) implements Compara
         return new AbilityTreeLocation(page, row, col);
     }
 
-    public int getAbsoluteRow() {
+    private int getAbsoluteRow() {
         return (page - 1) * MAX_ROWS + row;
     }
 

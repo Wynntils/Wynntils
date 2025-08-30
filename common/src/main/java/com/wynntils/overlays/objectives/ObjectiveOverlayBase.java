@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.objectives;
@@ -18,16 +18,16 @@ public abstract class ObjectiveOverlayBase extends Overlay {
     protected static final float SPACE_BETWEEN = 10;
 
     @Persisted(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
-    public final Config<Boolean> hideOnInactivity = new Config<>(false);
+    protected final Config<Boolean> hideOnInactivity = new Config<>(false);
 
     @Persisted(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
-    public final Config<Boolean> enableProgressBar = new Config<>(true);
+    protected final Config<Boolean> enableProgressBar = new Config<>(true);
 
     @Persisted(i18nKey = "overlay.wynntils.objectivesTexture")
-    public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.A);
+    protected final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.A);
 
     @Persisted(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    protected final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     protected ObjectiveOverlayBase(
             OverlayPosition position,

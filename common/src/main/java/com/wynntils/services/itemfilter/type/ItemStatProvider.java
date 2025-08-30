@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.type;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import net.minecraft.client.resources.language.I18n;
 
 public abstract class ItemStatProvider<T extends Comparable<T>> implements Translatable, Comparator<WynnItem> {
-    protected final String name;
+    private final String name;
 
     protected ItemStatProvider() {
         String name = this.getClass().getSimpleName().replace("StatProvider", "");
@@ -55,13 +55,9 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
         return getTranslation("name");
     }
 
-    protected String getTranslationKey() {
-        return name;
-    }
-
     @Override
     public String getTranslation(String keySuffix, Object... formatValues) {
-        return I18n.get("service.wynntils.itemFilter.stat." + getTranslationKey() + "." + keySuffix, formatValues);
+        return I18n.get("service.wynntils.itemFilter.stat." + name + "." + keySuffix, formatValues);
     }
 
     @Override

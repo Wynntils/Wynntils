@@ -9,9 +9,9 @@ import com.wynntils.models.worlds.type.BombInfo;
 import net.neoforged.bus.api.Event;
 
 public abstract class BombEvent extends Event {
-    protected final BombInfo bombInfo;
+    private final BombInfo bombInfo;
 
-    protected StyledText message;
+    private StyledText message;
 
     protected BombEvent(BombInfo bombInfo, StyledText message) {
         this.bombInfo = bombInfo;

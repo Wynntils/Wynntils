@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
@@ -31,10 +31,10 @@ public class TooltipFittingFeature extends Feature {
     public final Config<Float> universalScale = new Config<>(1f);
 
     @Persisted
-    public final Config<Boolean> fitToScreen = new Config<>(true);
+    private final Config<Boolean> fitToScreen = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> wrapText = new Config<>(true);
+    private final Config<Boolean> wrapText = new Config<>(true);
 
     private boolean scaledLast = false;
     private float lastScaleFactor = 1f;

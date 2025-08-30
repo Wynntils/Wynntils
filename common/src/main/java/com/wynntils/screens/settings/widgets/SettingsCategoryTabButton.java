@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
 
 public class SettingsCategoryTabButton extends GeneralSettingsTabButton {
-    private Category category;
+    private final Category category;
 
     public SettingsCategoryTabButton(
             int x,

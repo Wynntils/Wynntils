@@ -47,7 +47,7 @@ public record BombInfo(String user, BombType bomb, String server, long startTime
         return System.currentTimeMillis() < startTime + getLength();
     }
 
-    public long getLength() {
+    private long getLength() {
         return (long) (length * 60000L);
     }
 }

@@ -70,10 +70,6 @@ public class ConfigTile extends WynntilsButton {
                 maskBottomY);
     }
 
-    public ConfigTile(int x, int y, int width, int height, Screen screen, Config<?> config) {
-        this(x, y, width, height, screen, config, null);
-    }
-
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();

@@ -43,22 +43,22 @@ public class InventoryEmeraldCountFeature extends Feature {
     private static final int TEXTURE_SIZE = 28;
 
     @Persisted
-    public final Config<EmeraldCountType> emeraldCountType = new Config<>(EmeraldCountType.TEXTURE);
+    private final Config<EmeraldCountType> emeraldCountType = new Config<>(EmeraldCountType.TEXTURE);
 
     @Persisted
-    public final Config<TextDisplaySide> textDisplaySide = new Config<>(TextDisplaySide.LEFT);
+    private final Config<TextDisplaySide> textDisplaySide = new Config<>(TextDisplaySide.LEFT);
 
     @Persisted
-    public final Config<Boolean> showInventoryEmeraldCount = new Config<>(true);
+    private final Config<Boolean> showInventoryEmeraldCount = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showContainerEmeraldCount = new Config<>(true);
+    private final Config<Boolean> showContainerEmeraldCount = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showZerosInEmeraldCount = new Config<>(true);
+    private final Config<Boolean> showZerosInEmeraldCount = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> combineInventoryAndContainer = new Config<>(false);
+    private final Config<Boolean> combineInventoryAndContainer = new Config<>(false);
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
@@ -131,8 +131,9 @@ public class InventoryEmeraldCountFeature extends Feature {
             int y = containerScreen.topPos + containerScreen.imageHeight;
             switch (emeraldCountType.get()) {
                 case TEXT -> renderTextCount(event.getPoseStack(), textX, y + 11, bottomEmeralds);
-                case TEXTURE -> renderTexturedCount(
-                        event.getGuiGraphics(), bottomTextureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
+                case TEXTURE ->
+                    renderTexturedCount(
+                            event.getGuiGraphics(), bottomTextureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
             }
         }
     }

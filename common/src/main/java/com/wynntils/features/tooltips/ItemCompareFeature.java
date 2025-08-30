@@ -67,19 +67,19 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemCompareFeature extends Feature {
     @Persisted
-    public final Config<Integer> maxCompareSelectedCount = new Config<>(4);
+    private final Config<Integer> maxCompareSelectedCount = new Config<>(4);
 
     @Persisted
-    public final Config<Boolean> removeFlavourText = new Config<>(true);
+    private final Config<Boolean> removeFlavourText = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> removeSetInfoText = new Config<>(true);
+    private final Config<Boolean> removeSetInfoText = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> displayTag = new Config<>(true);
+    private final Config<Boolean> displayTag = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> centerItemName = new Config<>(false);
+    private final Config<Boolean> centerItemName = new Config<>(false);
 
     @RegisterKeyBind
     private final KeyBind holdToCompareKeyBind =

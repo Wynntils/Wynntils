@@ -21,7 +21,7 @@ import com.wynntils.utils.type.CappedValue;
 
 public class HealthBarOverlay extends OverflowableBarOverlay {
     @Persisted(i18nKey = "overlay.wynntils.healthBar.healthTexture")
-    public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
+    private final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
     public HealthBarOverlay() {
         this(

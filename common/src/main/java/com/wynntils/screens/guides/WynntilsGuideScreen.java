@@ -25,8 +25,9 @@ import java.util.stream.Collectors;
 import net.minecraft.network.chat.Component;
 
 public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends WynntilsListScreen<E, B> {
-    private List<ItemProviderType> supportedProviderTypes;
     protected final List<GuideFilterWidget> guideFilterWidgets = new ArrayList<>();
+    private final List<ItemProviderType> supportedProviderTypes;
+
     protected GuideSortWidget guideSortWidget;
 
     protected WynntilsGuideScreen(Component component, List<ItemProviderType> supportedProviderTypes) {

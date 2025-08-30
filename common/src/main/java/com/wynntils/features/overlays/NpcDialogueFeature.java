@@ -65,10 +65,10 @@ public class NpcDialogueFeature extends Feature {
             new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
 
     @Persisted
-    public final Config<NpcDialogueChatDisplayType> chatDisplayType = new Config<>(NpcDialogueChatDisplayType.NORMAL);
+    private final Config<NpcDialogueChatDisplayType> chatDisplayType = new Config<>(NpcDialogueChatDisplayType.NORMAL);
 
     @Persisted
-    public final Config<Boolean> autoProgress = new Config<>(false);
+    private final Config<Boolean> autoProgress = new Config<>(false);
 
     @Persisted
     public final Config<Integer> dialogAutoProgressDefaultTime = new Config<>(1600); // Milliseconds
@@ -188,7 +188,7 @@ public class NpcDialogueFeature extends Feature {
         displayedHelperContainer = null;
     }
 
-    public void cancelAutoProgress() {
+    private void cancelAutoProgress() {
         if (scheduledAutoProgressKeyPress == null) return;
 
         scheduledAutoProgressKeyPress.cancel(true);

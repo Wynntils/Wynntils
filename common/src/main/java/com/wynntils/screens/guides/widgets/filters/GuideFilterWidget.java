@@ -18,7 +18,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public abstract class GuideFilterWidget extends AbstractWidget {
-    protected WynntilsGuideScreen guideScreen;
+    protected final WynntilsGuideScreen guideScreen;
 
     protected GuideFilterWidget(int x, int y, int width, int height, WynntilsGuideScreen guideScreen) {
         super(x, y, width, height, Component.empty());

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -26,7 +26,7 @@ public class ContentTrackerFeature extends Feature {
     public final Config<Boolean> autoTrackCoordinates = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> playSoundOnUpdate = new Config<>(true);
+    private final Config<Boolean> playSoundOnUpdate = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -20,7 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.COMBAT)
 public class TokenTrackerBellFeature extends Feature {
     @Persisted
-    public final Config<Boolean> playSound = new Config<>(true);
+    private final Config<Boolean> playSound = new Config<>(true);
 
     @SubscribeEvent
     public void onInventoryUpdated(TokenGatekeeperEvent.InventoryUpdated event) {

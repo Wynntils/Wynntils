@@ -34,7 +34,7 @@ import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 
 public class TextInputBoxWidget extends AbstractWidget {
-    protected static final Component DEFAULT_TEXT =
+    private static final Component DEFAULT_TEXT =
             Component.translatable("screens.wynntils.textInputWidget.defaultText");
 
     private static final int CURSOR_PADDING = 3;
@@ -48,7 +48,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     private int highlightPosition = 0;
     private long lastCursorSwitch = 0;
     private boolean renderCursor = true;
-    protected CustomColor renderColor = CommonColors.WHITE;
+    private CustomColor renderColor = CommonColors.WHITE;
 
     protected boolean isDragging = false;
 

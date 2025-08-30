@@ -59,10 +59,10 @@ public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBar
 
     protected static final class TokenBarOverlay extends BarOverlay {
         @Persisted
-        public final Config<ColorChatFormatting> color = new Config<>(ColorChatFormatting.GOLD);
+        protected final Config<ColorChatFormatting> color = new Config<>(ColorChatFormatting.GOLD);
 
         @Persisted
-        public final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
+        protected final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
 
         private TokenBarOverlay(int id) {
             super(id, new OverlaySize(81, 21));

@@ -49,10 +49,10 @@ public class AddCommandExpansionFeature extends Feature {
             (context, builder) -> SharedSuggestionProvider.suggest(Models.ServerList.getServers(), builder);
 
     @Persisted
-    public final Config<Boolean> includeDeprecatedCommands = new Config<>(false);
+    private final Config<Boolean> includeDeprecatedCommands = new Config<>(false);
 
     @Persisted
-    public final Config<AliasCommandLevel> includeAliases = new Config<>(AliasCommandLevel.SHORT_FORMS);
+    private final Config<AliasCommandLevel> includeAliases = new Config<>(AliasCommandLevel.SHORT_FORMS);
 
     @SubscribeEvent
     public void onCommandPacket(CommandsAddedEvent event) {

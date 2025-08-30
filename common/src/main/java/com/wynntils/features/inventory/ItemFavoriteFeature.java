@@ -47,13 +47,13 @@ public class ItemFavoriteFeature extends Feature {
             "Favorite/Unfavorite Item", GLFW.GLFW_KEY_UNKNOWN, true, null, this::tryChangeFavoriteStateOnHoveredSlot);
 
     @Persisted
-    public final Config<Boolean> allowFavoritingAllItems = new Config<>(false);
+    private final Config<Boolean> allowFavoritingAllItems = new Config<>(false);
 
     @Persisted
     public final HiddenConfig<Set<String>> favoriteItems = new HiddenConfig<>(new TreeSet<>());
 
     @Persisted
-    public final Config<Integer> lootChestCloseOverride = new Config<>(3);
+    private final Config<Integer> lootChestCloseOverride = new Config<>(3);
 
     private int lootChestCloseOverrideCounter = 0;
 

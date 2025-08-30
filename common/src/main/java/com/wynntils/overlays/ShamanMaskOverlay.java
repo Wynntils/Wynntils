@@ -24,10 +24,10 @@ public class ShamanMaskOverlay extends TextOverlay {
     private static final String TEMPLATE = "{shaman_mask} mask";
 
     @Persisted
-    public final Config<Boolean> hideMaskTitles = new Config<>(true);
+    private final Config<Boolean> hideMaskTitles = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> displayNone = new Config<>(false);
+    private final Config<Boolean> displayNone = new Config<>(false);
 
     public ShamanMaskOverlay() {
         super(

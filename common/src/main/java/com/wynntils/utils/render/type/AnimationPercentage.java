@@ -49,11 +49,11 @@ public final class AnimationPercentage {
         return openingProgress;
     }
 
-    public void addOpeningProgress(double openingProgress) {
+    private void addOpeningProgress(double openingProgress) {
         setOpeningProgress(this.openingProgress + openingProgress);
     }
 
-    public void setOpeningProgress(double openingProgress) {
+    private void setOpeningProgress(double openingProgress) {
         this.openingProgress = Math.clamp(0, 1, openingProgress);
     }
 

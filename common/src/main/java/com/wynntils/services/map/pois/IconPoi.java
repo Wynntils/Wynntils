@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -36,7 +36,7 @@ public abstract class IconPoi implements Poi {
     // Return -1 to always render without fading
     protected abstract float getMinZoomForRender();
 
-    public float getIconAlpha(float zoom) {
+    private float getIconAlpha(float zoom) {
         float minZoom = getMinZoomForRender();
         if (minZoom <= -1) return 1f;
 

@@ -171,7 +171,7 @@ public class QuickCastFeature extends Feature {
 
         boolean isSpellInverted = isArcher;
         List<SpellDirection> unconfirmedSpell = Stream.of(a, b, c)
-                .map(x -> (x == SpellUnit.PRIMARY) != isSpellInverted ? SpellDirection.RIGHT : SpellDirection.LEFT)
+                .map(x -> (x == SpellUnit.PRIMARY) == isSpellInverted ? SpellDirection.LEFT : SpellDirection.RIGHT)
                 .toList();
 
         List<SpellDirection> confirmedSpell = new ArrayList<>(unconfirmedSpell);

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.custombars;
@@ -15,14 +15,14 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class BubbleTexturedCustomBarOverlay extends CustomBarOverlayBase {
     @Persisted(i18nKey = "overlay.wynntils.objectivesTexture")
-    public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.A);
+    private final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.A);
 
     public BubbleTexturedCustomBarOverlay(int id) {
         super(id, new OverlaySize(150, 30));
     }
 
     @Override
-    public Texture getTexture() {
+    protected Texture getTexture() {
         return Texture.BUBBLE_BAR;
     }
 
