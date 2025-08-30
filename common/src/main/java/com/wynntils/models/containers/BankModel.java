@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.containers;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
@@ -14,6 +15,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
+import com.wynntils.models.containers.event.BankPageSetEvent;
 import com.wynntils.models.containers.type.PersonalStorageType;
 import java.util.List;
 import java.util.Map;
@@ -243,6 +245,8 @@ public final class BankModel extends Model {
         if (isItemIndicatingLastBankPage(nextPageItem)) {
             updateFinalPage();
         }
+
+        WynntilsMod.postEvent(new BankPageSetEvent());
     }
 
     private boolean isItemIndicatingLastBankPage(ItemStack item) {
