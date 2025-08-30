@@ -16,8 +16,9 @@ public class JsonIcon implements MapIcon {
     private final NativeImage nativeImage;
     private final int width;
     private final int height;
+    private final ResourceLocation resource;
+
     private boolean registered;
-    private ResourceLocation resource;
 
     public JsonIcon(String iconId, byte[] texture) throws IOException {
         this.iconId = iconId;

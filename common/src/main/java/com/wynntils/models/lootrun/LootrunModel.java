@@ -175,8 +175,9 @@ public final class LootrunModel extends Model {
     @Persisted
     private final Storage<Integer> expectedPulls = new Storage<>(-1);
 
+    private final Set<UUID> checkedItemEntities = new HashSet<>();
+
     private Location closestLootrunMasterLocation = null;
-    private Set<UUID> checkedItemEntities = new HashSet<>();
     private boolean foundLootrunMythic = false;
     private boolean rerollingRewards = false;
     private boolean rewardChestIsOpened = false;

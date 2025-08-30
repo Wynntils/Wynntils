@@ -20,7 +20,7 @@ public final class EncodedByteBuffer {
     private static final int PRIVATE_USE_AREA_A_START = 0xF0000;
     private static final int PRIVATE_USE_AREA_B_START = 0x100000;
 
-    private UnsignedByte[] bytes;
+    private final UnsignedByte[] bytes;
 
     private EncodedByteBuffer(UnsignedByte[] bytes) {
         this.bytes = bytes;

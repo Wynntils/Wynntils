@@ -9,13 +9,13 @@ import java.util.Collections;
 import java.util.Map;
 
 public abstract class RaidKind {
-    private String raidName;
-    private String abbreviation;
-    private StyledText entryTitle;
-    private Map<Integer, Map<String, String>> challengeNames;
-    private int challengeCount;
-    private int bossCount;
-    private Map<String, Map<Integer, String>> majorIdBuffs;
+    private final String raidName;
+    private final String abbreviation;
+    private final StyledText entryTitle;
+    private final Map<Integer, Map<String, String>> challengeNames;
+    private final int challengeCount;
+    private final int bossCount;
+    private final Map<String, Map<Integer, String>> majorIdBuffs;
 
     protected RaidKind(
             String raidName,
