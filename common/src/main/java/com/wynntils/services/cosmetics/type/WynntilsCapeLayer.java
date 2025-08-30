@@ -10,7 +10,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
-import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.event.RenderTranslucentCheckEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.utils.colors.CommonColors;
@@ -54,10 +53,6 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
             float yRot,
             float xRot) {
         if (!Managers.Feature.getFeatureInstance(WynntilsCosmeticsFeature.class).isEnabled()) return;
-
-        PlayerRenderLayerEvent.Cape renderLayerEvent = new PlayerRenderLayerEvent.Cape(playerRenderState);
-        MixinHelper.post(renderLayerEvent);
-        if (renderLayerEvent.isCanceled()) return;
 
         Entity entity = ((EntityRenderStateExtension) playerRenderState).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
