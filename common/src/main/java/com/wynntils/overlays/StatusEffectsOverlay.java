@@ -210,11 +210,12 @@ public class StatusEffectsOverlay extends Overlay {
                 return this.effect.asString();
             }
 
-            StyledText modifierText = switch (stackingBehaviour.get()) {
-                case SUM -> getStackedSum();
-                case GROUP -> getStackedGroup();
-                case NONE -> StyledText.EMPTY; // This shouldn't be reached
-            };
+            StyledText modifierText =
+                    switch (stackingBehaviour.get()) {
+                        case SUM -> getStackedSum();
+                        case GROUP -> getStackedGroup();
+                        case NONE -> StyledText.EMPTY; // This shouldn't be reached
+                    };
 
             return this.effect
                     .getPrefix()
@@ -254,14 +255,14 @@ public class StatusEffectsOverlay extends Overlay {
             if (index == -1) {
                 // We can simply put the count string at the start
                 return StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
-                            .append(this.effect.getModifier());
+                        .append(this.effect.getModifier());
             } else {
                 // The count string is inserted between the +/- and the number
                 index += 1;
                 return StyledText.fromString(ChatFormatting.GRAY
-                            + modifierString.substring(0, index)
-                            + (this.count + "x")
-                            + modifierString.substring(index));
+                        + modifierString.substring(0, index)
+                        + (this.count + "x")
+                        + modifierString.substring(index));
             }
         }
 

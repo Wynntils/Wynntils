@@ -879,13 +879,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             Overlay overlay = configurable instanceof Overlay overlayInstance ? overlayInstance : null;
 
             ConfigTile configTile = new ConfigTile(
-                    Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10 + offsetX,
-                    renderY,
-                    160,
-                    45,
-                    this,
-                    config,
-                    overlay);
+                    Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10 + offsetX, renderY, 160, 45, this, config, overlay);
 
             configTile.visible = renderY >= (21 + offsetY - 46) && renderY <= (21 + offsetY + CONFIGS_PER_PAGE * 45);
 
