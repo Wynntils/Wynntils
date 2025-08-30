@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 public class WaypointsProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
-    private static int counter;
+    private static int counter = 0;
 
     @Override
     public String getProviderId() {
