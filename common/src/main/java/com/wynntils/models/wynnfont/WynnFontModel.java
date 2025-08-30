@@ -41,37 +41,64 @@ public final class WynnFontModel extends Model {
         StringBuilder sb = new StringBuilder();
         BackgroundEdge left = BackgroundEdge.fromString(leftEdge);
         BackgroundEdge right = BackgroundEdge.fromString(rightEdge);
-        if (left != BackgroundEdge.NONE) {
-            sb.append("§");
-            sb.append(backgroundColor.toHexString());
-            sb.append(left.getLeft());
-            sb.append(NEGATIVE_SPACE_EDGE);
-        }
+
+        // Tracks whether we are currently "inside" the background
+        boolean inBackground = false;
         for (char c : text.toLowerCase(Locale.ROOT).toCharArray()) {
             if (c == ' ') {
-                sb.append("§");
-                sb.append(backgroundColor.toHexString());
-                sb.append(BACKGROUND);
-                sb.append(NEGATIVE_SPACE);
-                sb.append(' ');
+                if (inBackground) {
+                    sb.append("§")
+                            .append(backgroundColor.toHexString())
+                            .append(BACKGROUND)
+                            .append(NEGATIVE_SPACE)
+                            .append(' ');
+                } else {
+                    sb.append("§").append(textColor.toHexString()).append(' ');
+                }
                 continue;
             }
+
             Character fancy = normalToBackground.get(c);
-            if (fancy == null) continue;
-            sb.append("§");
-            sb.append(backgroundColor.toHexString());
-            sb.append(BACKGROUND);
-            sb.append(NEGATIVE_SPACE);
-            sb.append("§");
-            sb.append(textColor.toHexString());
-            sb.append(fancy);
+
+            // If the character is not present in the map then we add the normal version but we also need to close the
+            // current background if we are currently inside it.
+            if (fancy != null) {
+                if (!inBackground) {
+                    if (left != BackgroundEdge.NONE) {
+                        sb.append("§")
+                                .append(backgroundColor.toHexString())
+                                .append(left.getLeft())
+                                .append(NEGATIVE_SPACE_EDGE);
+                    }
+                    inBackground = true;
+                }
+                sb.append("§")
+                        .append(backgroundColor.toHexString())
+                        .append(BACKGROUND)
+                        .append(NEGATIVE_SPACE);
+                sb.append("§").append(textColor.toHexString()).append(fancy);
+            } else {
+                if (inBackground) {
+                    if (right != BackgroundEdge.NONE) {
+                        sb.append("§")
+                                .append(backgroundColor.toHexString())
+                                .append(NEGATIVE_SPACE_EDGE)
+                                .append(right.getRight());
+                    }
+                    inBackground = false;
+                }
+                sb.append("§").append(textColor.toHexString()).append(c);
+            }
         }
-        if (right != BackgroundEdge.NONE) {
-            sb.append("§");
-            sb.append(backgroundColor.toHexString());
-            sb.append(NEGATIVE_SPACE_EDGE);
-            sb.append(right.getRight());
+
+        // If we are in a background then we need to close it.
+        if (inBackground && right != BackgroundEdge.NONE) {
+            sb.append("§")
+                    .append(backgroundColor.toHexString())
+                    .append(NEGATIVE_SPACE_EDGE)
+                    .append(right.getRight());
         }
+
         return sb.toString();
     }
 
