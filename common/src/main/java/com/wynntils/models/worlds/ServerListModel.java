@@ -89,9 +89,7 @@ public final class ServerListModel extends Model {
         updateServerList();
     }
 
-    private CompletableFuture<Boolean> updateServerList() {
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
-
+    private void updateServerList() {
         // dataAthenaServerList is based on
         // https://api.wynncraft.com/public_api.php?action=onlinePlayers
         // but injects a firstSeen timestamp when the server was first noticed by Athena
@@ -120,8 +118,6 @@ public final class ServerListModel extends Model {
             }
 
             availableServers = newMap;
-            future.complete(true);
         });
-        return future;
     }
 }
