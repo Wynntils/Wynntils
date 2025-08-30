@@ -273,8 +273,8 @@ public final class FunctionManager extends Manager {
             resultBuilder.append(c);
         }
 
-        // Parse color codes before calculating the templates
-        String escapedTemplate = parseColorCodes(resultBuilder.toString());
+        // Parse formatting codes before calculating the templates
+        String escapedTemplate = parseFormattingCodes(resultBuilder.toString());
 
         String calculatedString = doFormat(escapedTemplate);
 
@@ -288,13 +288,16 @@ public final class FunctionManager extends Manager {
                 .toArray(StyledText[]::new);
     }
 
-    private String parseColorCodes(String toProcess) {
+    private String parseFormattingCodes(String toProcess) {
         // Replace &<code> with §<code> if not escaped (e.g., &a → §a, but \&\a stays unchanged)
         // doEscapeFormat preprocesses the string and replaces \& with \&\ so that it doesn't get replaced
         String processed = toProcess.replaceAll("&(?<!\\\\)([0-9a-fA-Fk-oK-OrR])", "§$1");
 
         // Replace &#AARRGGBB with §#AARRGGBB for hex colors
         processed = processed.replaceAll("&(?<!\\\\)(#[0-9A-Fa-f]{8})", "§$1");
+
+        // Replace &{<code>} with §{<code>} for fonts
+        processed = processed.replaceAll("&\\{(?<!\\\\)([0-9a-zA-Z_\\-\\/]+)\\}", "§{$1}");
 
         return processed;
     }

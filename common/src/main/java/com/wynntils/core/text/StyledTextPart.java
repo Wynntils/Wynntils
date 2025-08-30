@@ -62,10 +62,14 @@ public final class StyledTextPart {
         boolean nextIsFormatting = false;
         StringBuilder hexColorFormatting = new StringBuilder();
 
+        StringBuilder fontFormatting = new StringBuilder();
         // []
         boolean clickEventPrefix = false;
         // <>
         boolean hoverEventPrefix = false;
+        // {}
+        boolean fontFormattingPrefix = false;
+
         String eventIndexString = "";
 
         for (char current : codedString.toCharArray()) {
@@ -87,6 +91,11 @@ public final class StyledTextPart {
                 // It looks like we have a hex color code
                 if (current == '#') {
                     hexColorFormatting.append(current);
+                    continue;
+                }
+
+                if (current == '{') {
+                    fontFormattingPrefix = true;
                     continue;
                 }
 
@@ -231,6 +240,22 @@ public final class StyledTextPart {
                 }
 
                 continue;
+            }
+            if (fontFormattingPrefix) {
+                if (current != '}') {
+                    fontFormatting.append(current);
+                    continue;
+                }
+                if (!fontFormatting.isEmpty()) {
+                    parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, parentStyle));
+                    currentString = new StringBuilder();
+
+                    currentStyle = currentStyle.withFont(ResourceLocation.parse(fontFormatting.toString()));
+                    fontFormattingPrefix = false;
+                    fontFormatting = new StringBuilder();
+
+                    continue;
+                }
             }
 
             if (current == ChatFormatting.PREFIX_CODE) {
