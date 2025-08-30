@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.network.chat.Component;
-import net.neoforged.bus.api.ICancellableEvent;
 
 public class PlayerNametagRenderEvent extends EntityNameTagRenderEvent {
     public PlayerNametagRenderEvent(
