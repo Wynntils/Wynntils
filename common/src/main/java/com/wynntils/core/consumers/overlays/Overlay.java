@@ -151,7 +151,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     protected void tick() {}
 
-    protected void updateCache() {
+    protected void updateEnabledCache() {
         String template = enabledTemplate.get();
         if (template.isBlank()) {
             this.enabledTemplateCache = null;

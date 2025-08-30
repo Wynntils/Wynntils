@@ -207,7 +207,7 @@ public final class OverlayManager extends Manager {
     public void onTick(TickEvent event) {
         enabledOverlays.forEach(overlay -> {
             overlay.tick();
-            overlay.updateCache();
+            overlay.updateEnabledCache();
         });
     }
 
