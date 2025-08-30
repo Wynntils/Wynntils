@@ -69,6 +69,7 @@ public final class WynnFontModel extends Model {
         if (right != BackgroundEdge.NONE) {
             sb.append("§");
             sb.append(backgroundColor.toHexString());
+            sb.append(NEGATIVE_SPACE_EDGE);
             sb.append(right.getRight());
         }
         return sb.toString();
