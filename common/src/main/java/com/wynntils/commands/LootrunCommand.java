@@ -239,7 +239,7 @@ public class LootrunCommand extends Command {
             context.getSource()
                     .sendSuccess(
                             () -> Component.translatable(
-                                            "command.wynntils.lootrun.noteRemovedSuccessfully", removedNote.component())
+                                            "command.wynntils.lootrun.noteRemovedSuccessfully", pos.toShortString(), removedNote.component())
                                     .withStyle(ChatFormatting.GREEN),
                             false);
         } else {
