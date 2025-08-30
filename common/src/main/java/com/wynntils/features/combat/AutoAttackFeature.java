@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
+import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -21,6 +22,7 @@ import com.wynntils.utils.mc.MouseUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.util.Optional;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -59,6 +61,18 @@ public class AutoAttackFeature extends Feature {
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (Models.Character.getClassType() == ClassType.ARCHER) return;
+
+        handleInput();
+    }
+
+    @SubscribeEvent
+    public void onInteract(PlayerInteractEvent.InteractAt event) {
+        if (Models.Character.getClassType() == ClassType.ARCHER) return;
+
+        if (event.getEntityHitResult() != null) {
+            EntityType<?> entityType = event.getEntityHitResult().getEntity().getType();
+            if (entityType == EntityType.INTERACTION) return;
+        }
 
         handleInput();
     }
