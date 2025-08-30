@@ -33,7 +33,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class SpellModel extends Model {
     private static final Pattern SPELL_CAST =
             Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\](?: §4\\[§c-([0-9]+) ❤§4\\])?$");
-    private static final int SPELL_COST_RESET_TICKS = 60;
+    public static final int SPELL_COST_RESET_TICKS = 60;
     private static final int SPELL_EXPIRE_TICKS = 40;
 
     private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
