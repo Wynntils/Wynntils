@@ -29,6 +29,4 @@ public abstract class Service extends CoreComponent {
     public String getTypeName() {
         return "Service";
     }
-
-    public void reloadData() {}
 }

@@ -27,6 +27,4 @@ public abstract class Model extends CoreComponent {
     public String getTypeName() {
         return "Model";
     }
-
-    public void reloadData() {}
 }
