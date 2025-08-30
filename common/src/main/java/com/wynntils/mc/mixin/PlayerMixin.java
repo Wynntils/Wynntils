@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ArmSwingEvent;
 import net.minecraft.world.InteractionHand;
