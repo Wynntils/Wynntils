@@ -26,10 +26,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class EmeraldPouchFillArcFeature extends Feature {
     @Persisted
-    public final Config<Boolean> renderFillArcHotbar = new Config<>(true);
+    private final Config<Boolean> renderFillArcHotbar = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> renderFillArcInventory = new Config<>(true);
+    private final Config<Boolean> renderFillArcInventory = new Config<>(true);
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.CountPre e) {

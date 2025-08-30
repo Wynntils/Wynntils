@@ -21,7 +21,7 @@ import com.wynntils.utils.type.CappedValue;
 
 public class ManaBarOverlay extends OverflowableBarOverlay {
     @Persisted(i18nKey = "overlay.wynntils.manaBar.manaTexture")
-    public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
+    private final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
 
     public ManaBarOverlay() {
         this(

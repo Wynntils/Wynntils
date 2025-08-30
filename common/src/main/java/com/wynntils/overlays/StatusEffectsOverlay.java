@@ -35,19 +35,19 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class StatusEffectsOverlay extends Overlay {
     @Persisted
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<Float> fontScale = new Config<>(1.0f);
+    private final Config<Float> fontScale = new Config<>(1.0f);
 
     @Persisted
-    public final Config<StackingBehaviour> stackingBehaviour = new Config<>(StackingBehaviour.GROUP);
+    private final Config<StackingBehaviour> stackingBehaviour = new Config<>(StackingBehaviour.GROUP);
 
     @Persisted
-    public final Config<Boolean> sortEffects = new Config<>(true);
+    private final Config<Boolean> sortEffects = new Config<>(true);
 
     @Persisted
-    public final Config<String> ignoredEffects = new Config<>("");
+    private final Config<String> ignoredEffects = new Config<>("");
 
     private List<TextRenderTask> renderCache = List.of();
     private TextRenderSetting textRenderSetting;

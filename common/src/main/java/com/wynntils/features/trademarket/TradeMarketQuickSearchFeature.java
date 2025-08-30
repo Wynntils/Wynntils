@@ -33,13 +33,13 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketQuickSearchFeature extends Feature {
     @Persisted
-    public final Config<Boolean> instantSearch = new Config<>(true);
+    private final Config<Boolean> instantSearch = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> autoCancel = new Config<>(true);
+    private final Config<Boolean> autoCancel = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> hidePrompt = new Config<>(false);
+    private final Config<Boolean> hidePrompt = new Config<>(false);
 
     @RegisterKeyBind
     private final KeyBind quickSearchKeyBind = new KeyBind(

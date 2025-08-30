@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.providers.builtin;
@@ -59,7 +59,7 @@ public class WaypointsProvider extends BuiltInProvider {
     }
 
     private static final class WaypointLocation implements MapLocation {
-        public static final MapVisibility WAYPOINT_VISIBILITY =
+        protected static final MapVisibility WAYPOINT_VISIBILITY =
                 MapVisibility.builder().withMin(30f);
         private final Location location;
         private final String name;

@@ -57,7 +57,7 @@ public final class BankModel extends Model {
             new Storage<>(new TreeMap<>());
 
     public static final int QUICK_JUMP_SLOT = 7;
-    public static final String FINAL_PAGE_NAME = "\uDB3F\uDFFF";
+    private static final String FINAL_PAGE_NAME = "\uDB3F\uDFFF";
 
     private static final int MAX_CHARACTER_BANK_PAGES = 10;
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");

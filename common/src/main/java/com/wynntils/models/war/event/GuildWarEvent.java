@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.war.event;
@@ -8,7 +8,7 @@ import com.wynntils.models.war.type.WarBattleInfo;
 import net.neoforged.bus.api.Event;
 
 public abstract class GuildWarEvent extends Event {
-    protected final WarBattleInfo warBattleInfo;
+    private final WarBattleInfo warBattleInfo;
 
     protected GuildWarEvent(WarBattleInfo warBattleInfo) {
         this.warBattleInfo = warBattleInfo;

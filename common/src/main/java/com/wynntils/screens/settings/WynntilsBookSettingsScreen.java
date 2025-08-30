@@ -699,7 +699,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         configurable -> configurable, this::buildConfigTiles, (a, b) -> a, LinkedHashMap::new));
     }
 
-    public void populateConfigs() {
+    private void populateConfigs() {
         configs.clear();
 
         if (selectedConfigurable == null) return;

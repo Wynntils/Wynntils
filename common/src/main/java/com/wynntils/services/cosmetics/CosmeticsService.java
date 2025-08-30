@@ -137,7 +137,7 @@ public class CosmeticsService extends Service {
         }
     }
 
-    public ResourceLocation[] getUserCosmeticTexture(UUID uuid) {
+    private ResourceLocation[] getUserCosmeticTexture(UUID uuid) {
         return cosmeticTextures.getOrDefault(uuid, null);
     }
 }

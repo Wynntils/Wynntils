@@ -47,10 +47,10 @@ public class CustomPlayerListOverlay extends Overlay {
     private static final int MAX_WIDTH = 100;
 
     @Persisted
-    public final Config<Integer> openingDuration = new Config<>(125);
+    private final Config<Integer> openingDuration = new Config<>(125);
 
     @Persisted
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
 
     private final AnimationPercentage animationPercentage = new AnimationPercentage(
             McUtils.options().keyPlayerList::isDown, Duration.of(openingDuration.get(), ChronoUnit.MILLIS));

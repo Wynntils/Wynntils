@@ -365,7 +365,7 @@ public class ValuablesProtectionFeature extends Feature {
         @Override
         protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
-        public void setTextColor(CustomColor textColor) {
+        protected void setTextColor(CustomColor textColor) {
             this.textColor = textColor;
         }
     }

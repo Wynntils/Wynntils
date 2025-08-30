@@ -45,13 +45,13 @@ public class MythicFoundFeature extends Feature {
     private final Config<MythicSound> tomeFoundSound = new Config<>(MythicSound.NONE);
 
     @Persisted
-    public final Config<Boolean> showDryStreakMessage = new Config<>(true);
+    private final Config<Boolean> showDryStreakMessage = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showAspectDryStreakMessage = new Config<>(true);
+    private final Config<Boolean> showAspectDryStreakMessage = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showTomeDryStreakMessage = new Config<>(false);
+    private final Config<Boolean> showTomeDryStreakMessage = new Config<>(false);
 
     @SubscribeEvent
     public void onMythicFound(MythicFoundEvent event) {

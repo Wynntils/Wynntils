@@ -77,10 +77,10 @@ public class ChatItemFeature extends Feature {
             "Open Item Record", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc().setScreen(SavedItemsScreen.create()));
 
     @Persisted
-    public final Config<Boolean> showSharingScreen = new Config<>(true);
+    private final Config<Boolean> showSharingScreen = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showPerfectOrDefective = new Config<>(true);
+    private final Config<Boolean> showPerfectOrDefective = new Config<>(true);
 
     private final Map<String, String> chatItems = new HashMap<>();
 

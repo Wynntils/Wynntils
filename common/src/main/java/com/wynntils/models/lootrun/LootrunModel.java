@@ -891,7 +891,7 @@ public final class LootrunModel extends Model {
         expectRainbowBeacon = false;
     }
 
-    public void addToRedBeaconTaskCount(int changeAmount) {
+    private void addToRedBeaconTaskCount(int changeAmount) {
         int oldCount = getCurrentLootrunDetails().getRedBeaconTaskCount();
 
         int newCount = Math.max(oldCount + changeAmount, 0);
