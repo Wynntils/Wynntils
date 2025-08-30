@@ -8,8 +8,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
+import com.wynntils.mc.event.PlayerRenderLayerEvent;
+import com.wynntils.mc.event.RenderTranslucentCheckEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
+import com.wynntils.utils.colors.CommonColors;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerCapeModel;
 import net.minecraft.client.model.PlayerModel;
@@ -51,6 +55,10 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
             float xRot) {
         if (!Managers.Feature.getFeatureInstance(WynntilsCosmeticsFeature.class).isEnabled()) return;
 
+        PlayerRenderLayerEvent.Cape renderLayerEvent = new PlayerRenderLayerEvent.Cape(playerRenderState);
+        MixinHelper.post(renderLayerEvent);
+        if (renderLayerEvent.isCanceled()) return;
+
         Entity entity = ((EntityRenderStateExtension) playerRenderState).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (!Services.Cosmetics.shouldRenderCape(player, false)) return;
@@ -63,10 +71,24 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
             poseStack.translate(0.0F, -0.053125F, 0.06875F);
         }
 
-        VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutout(texture));
+        RenderTranslucentCheckEvent.Cape translucentCheckEvent =
+                new RenderTranslucentCheckEvent.Cape(false, playerRenderState, 1.0f);
+        MixinHelper.post(translucentCheckEvent);
+
+        VertexConsumer vertexConsumer = buffer.getBuffer(
+                translucentCheckEvent.getTranslucence() == 1.0f
+                        ? RenderType.entityCutout(texture)
+                        : RenderType.entityTranslucent(texture));
         this.getParentModel().copyPropertiesTo(this.model);
         this.model.setupAnim(playerRenderState);
-        this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY);
+        this.model.renderToBuffer(
+                poseStack,
+                vertexConsumer,
+                packedLight,
+                OverlayTexture.NO_OVERLAY,
+                CommonColors.WHITE
+                        .withAlpha(translucentCheckEvent.getTranslucence())
+                        .asInt());
         poseStack.popPose();
     }
 
