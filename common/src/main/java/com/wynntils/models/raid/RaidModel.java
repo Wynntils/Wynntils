@@ -659,7 +659,7 @@ public final class RaidModel extends Model {
     }
 
     private void processAspectItemFind(ItemStack itemStack, int slotId) {
-        if (itemStack.getItem() == Items.AIR) return;
+        if (itemStack.isEmpty()) return;
 
         Optional<AspectItem> aspectOptional = Models.Item.asWynnItem(itemStack, AspectItem.class);
         if (aspectOptional.isPresent()) {
@@ -677,7 +677,7 @@ public final class RaidModel extends Model {
     }
 
     private void processRewardItemFind(ItemStack itemStack, int slotId) {
-        if (itemStack.getItem() == Items.AIR) return;
+        if (itemStack.isEmpty()) return;
 
         foundNumRewardPulls += 1;
 

@@ -70,7 +70,7 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
             }
         } else if (event.getContainerId()
                 == wrappedScreen.getWrappedScreenInfo().containerId()) {
-            if (event.getItemStack().getItem() == Items.AIR) {
+            if (event.getItemStack().isEmpty()) {
                 activities.remove(event.getSlot());
                 contentBookScreen.reloadContentBookWidgets(true);
                 return;
@@ -100,7 +100,7 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
                 }
 
                 if (actionSlot) continue;
-                if (item.getItem() == Items.AIR) {
+                if (item.isEmpty()) {
                     activities.remove(i);
                     continue;
                 }

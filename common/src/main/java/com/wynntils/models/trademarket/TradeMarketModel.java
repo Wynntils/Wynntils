@@ -145,7 +145,7 @@ public final class TradeMarketModel extends Model {
             if (event.getItems().get(slot).getHoverName().getString().equals(NAME_FILTER)) {
                 nameFiltersActive = true;
             } else {
-                filtersActive = filtersActive || event.getItems().get(slot).getItem() != Items.AIR;
+                filtersActive = filtersActive || !event.getItems().get(slot).isEmpty();
             }
         });
     }

@@ -362,7 +362,7 @@ public final class GuildModel extends Model {
 
         for (int slot : DIPLOMACY_SLOTS) {
             ItemStack diplomacyItem = items.get(slot);
-            if (diplomacyItem.getItem() == Items.AIR) {
+            if (diplomacyItem.isEmpty()) {
                 continue;
             }
 

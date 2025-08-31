@@ -368,7 +368,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     }
 
     public void setScrollUpItem(ItemStack item) {
-        scrollUpActive = item.getItem() != Items.AIR;
+        scrollUpActive = !item.isEmpty();
 
         updateScrollButtonsVisibility();
     }
@@ -389,7 +389,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     }
 
     public void setScrollDownItem(ItemStack item) {
-        scrollDownActive = item.getItem() != Items.AIR;
+        scrollDownActive = !item.isEmpty();
 
         updateScrollButtonsVisibility();
     }

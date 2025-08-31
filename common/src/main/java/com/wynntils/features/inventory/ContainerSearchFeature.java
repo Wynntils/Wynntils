@@ -399,7 +399,7 @@ public class ContainerSearchFeature extends Feature {
             String name = StyledText.fromComponent(itemStack.getHoverName())
                     .getStringWithoutFormatting()
                     .toLowerCase(Locale.ROOT);
-            boolean filtered = !search.isEmpty() && name.contains(search) && itemStack.getItem() != Items.AIR;
+            boolean filtered = !search.isEmpty() && name.contains(search) && !itemStack.isEmpty();
 
             wynnItemOpt.get().getData().store(WynnItemData.SEARCHED_KEY, filtered);
             if (filtered) {

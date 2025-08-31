@@ -92,7 +92,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     private static ItemStack createDecoratedItemStack(ItemStack itemStack, Component playerName) {
-        if (itemStack.getItem() == Items.AIR) {
+        if (itemStack.isEmpty()) {
             return itemStack;
         }
 
