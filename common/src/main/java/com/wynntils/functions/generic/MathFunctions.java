@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
@@ -13,7 +13,7 @@ public final class MathFunctions {
         @Override
         public Double getValue(FunctionArguments arguments) {
             List<Number> values =
-                    arguments.<Number>getArgument("values").asList().getValues();
+                    arguments.getArgument("values").getNumberList();
 
             return values.stream().mapToDouble(Number::doubleValue).sum();
         }
@@ -49,7 +49,7 @@ public final class MathFunctions {
         @Override
         public Double getValue(FunctionArguments arguments) {
             List<Number> values =
-                    arguments.<Number>getArgument("values").asList().getValues();
+                    arguments.getArgument("values").getNumberList();
 
             return values.stream().mapToDouble(Number::doubleValue).reduce(1, (a, b) -> a * b);
         }
@@ -149,7 +149,7 @@ public final class MathFunctions {
         @Override
         public Double getValue(FunctionArguments arguments) {
             List<Number> values =
-                    arguments.<Number>getArgument("values").asList().getValues();
+                    arguments.getArgument("values").getNumberList();
             return values.stream().mapToDouble(Number::doubleValue).max().orElse(0);
             // .orElse(0) is safer because max() returns OptionalDouble, but will probably never be used
         }
@@ -165,7 +165,7 @@ public final class MathFunctions {
         @Override
         public Double getValue(FunctionArguments arguments) {
             List<Number> values =
-                    arguments.<Number>getArgument("values").asList().getValues();
+                    arguments.getArgument("values").getNumberList();
             return values.stream().mapToDouble(Number::doubleValue).min().orElse(0);
         }
 

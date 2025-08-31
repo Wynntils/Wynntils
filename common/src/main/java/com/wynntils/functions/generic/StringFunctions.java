@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
@@ -106,7 +106,7 @@ public class StringFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             List<String> values =
-                    arguments.<String>getArgument("values").asList().getValues();
+                    arguments.getArgument("values").getStringList();
 
             return String.join("", values);
         }

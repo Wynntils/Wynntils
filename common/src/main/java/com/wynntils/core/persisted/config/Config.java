@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -30,7 +30,7 @@ public class Config<T> extends PersistedValue<T> {
 
     @Override
     public void store(T value) {
-        Managers.Persisted.setRaw(this, value);
+        setWithoutTouch(value);
         // For now, do not call touch() on configs
     }
 
@@ -44,7 +44,7 @@ public class Config<T> extends PersistedValue<T> {
             return;
         }
 
-        Managers.Persisted.setRaw(this, value);
+        setWithoutTouch(value);
         ((Configurable) getMetadata().owner()).updateConfigOption(this);
         this.userEdited = true;
     }

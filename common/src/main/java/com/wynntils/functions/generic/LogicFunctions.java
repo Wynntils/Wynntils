@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
@@ -69,7 +69,7 @@ public class LogicFunctions {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             List<Boolean> values =
-                    arguments.<Boolean>getArgument("values").asList().getValues();
+                    arguments.getArgument("values").getBooleanList();
 
             return values.stream().allMatch(Boolean::booleanValue);
         }
@@ -85,7 +85,7 @@ public class LogicFunctions {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             List<Boolean> values =
-                    arguments.<Boolean>getArgument("values").asList().getValues();
+                    arguments.getArgument("values").getBooleanList();
 
             return values.stream().anyMatch(Boolean::booleanValue);
         }
