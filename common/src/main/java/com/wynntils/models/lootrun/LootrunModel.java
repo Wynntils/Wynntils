@@ -51,6 +51,7 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.MissionType;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
+import com.wynntils.models.lootrun.type.TrialType;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.npc.label.NpcLabelInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -144,6 +145,10 @@ public final class LootrunModel extends Model {
     private static final Pattern ACTIVE_MISSION_PATTERN = Pattern.compile("[À\\s]*?§b§l(?<mission>"
             + MissionType.missionTypes().stream().map(MissionType::getName).collect(Collectors.joining("|")) + ")");
 
+    private static final Pattern TRIAL_STARTED_PATTERN = Pattern.compile("\uDB00\uDC6D§b§lTrial Started");
+    private static final Pattern TRIAL_NAME_PATTERN = Pattern.compile("(?:.+)?§7(?<trial>"
+            + TrialType.trialTypes().stream().map(TrialType::getName).collect(Collectors.joining("|")) + ")");
+
     // These patterns detect when rerolls/sacrifices are gained after completing a challenge.
     // (Gambling Beast, Warmth Devourer)
     private static final Pattern CHALLENGE_GET_SACRIFICE_PATTERN =
@@ -202,6 +207,7 @@ public final class LootrunModel extends Model {
     private CappedValue challenges = CappedValue.EMPTY;
 
     private boolean expectMissionComplete = false;
+    private boolean expectTrialStarted = false;
     private boolean expectOrangeBeacon = false;
     private boolean expectRainbowBeacon = false;
 
@@ -343,6 +349,22 @@ public final class LootrunModel extends Model {
         if (matcher.find()) {
             MissionType mission = MissionType.fromName(matcher.group("mission"));
             addMission(mission);
+            return;
+        }
+
+        matcher = TRIAL_STARTED_PATTERN.matcher(styledText.getString());
+        if (matcher.find()) {
+            expectTrialStarted = true;
+            return;
+        }
+
+        if (expectTrialStarted) {
+            matcher = TRIAL_NAME_PATTERN.matcher(styledText.getString());
+            if (matcher.find()) {
+                TrialType trial = TrialType.fromName(matcher.group("trial"));
+                addTrial(trial);
+            }
+            expectTrialStarted = false;
             return;
         }
 
@@ -769,6 +791,17 @@ public final class LootrunModel extends Model {
         return colored ? mission.getColoredName() : mission.getName();
     }
 
+    public String getTrial(int index) {
+        List<TrialType> trials = getCurrentLootrunDetails().getTrials();
+
+        if (index < 0 || index >= trials.size()) {
+            return TrialType.UNKNOWN.getName();
+        }
+
+        TrialType trial = getCurrentLootrunDetails().getTrials().get(index);
+        return trial.getName();
+    }
+
     public LootrunningState getState() {
         return lootrunningState;
     }
@@ -930,6 +963,19 @@ public final class LootrunModel extends Model {
         expectMissionComplete = false;
     }
 
+    private void resetTrials() {
+        getCurrentLootrunDetails().setTrials(new ArrayList<>());
+        lootrunDetailsStorage.touched();
+    }
+
+    private void addTrial(TrialType trial) {
+        if (!getCurrentLootrunDetails().getTrials().contains(trial)) {
+            getCurrentLootrunDetails().addTrial(trial);
+        }
+
+        lootrunDetailsStorage.touched();
+    }
+
     public void setTimeLeft(int seconds) {
         timeLeft = seconds;
     }
@@ -955,6 +1001,7 @@ public final class LootrunModel extends Model {
         if (newState == LootrunningState.NOT_RUNNING) {
             resetBeaconStorage();
             resetMissions();
+            resetTrials();
 
             taskType = null;
             setClosestBeacon(null);
@@ -1039,6 +1086,9 @@ public final class LootrunModel extends Model {
 
         if (color == LootrunBeaconKind.GRAY) {
             addMission(MissionType.FAILED);
+        }
+        if (color == LootrunBeaconKind.CRIMSON) {
+            addTrial(TrialType.FAILED);
         }
 
         getCurrentLootrunDetails().setOrangeAmount(-1);
