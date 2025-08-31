@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.mojang.serialization.Codec;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
@@ -32,11 +33,16 @@ import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public final class StyledText implements Iterable<StyledTextPart> {
+    // Turn StyledText into Component, and use Component's codec
+    public static final Codec<StyledText> CODEC =
+            ComponentSerialization.CODEC.xmap(StyledText::fromComponent, StyledText::getComponent);
+
     // High surrogate characters for the positive and negative space characters
     // These can be used to trim unicode spacers from StyledTexts
     private static final char POSITIVE_SPACE_HIGH_SURROGATE = '\uDB00';

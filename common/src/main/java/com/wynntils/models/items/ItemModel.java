@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.items;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
@@ -142,10 +144,17 @@ public final class ItemModel extends Model {
         return Optional.of((T) wynnItem);
     }
 
+    public static final class FallbackItem extends WynnItem {
+        public static final FallbackItem INSTANCE = new FallbackItem();
+
+        public static final MapCodec<FallbackItem> CODEC =
+                RecordCodecBuilder.mapCodec(instance -> instance.stable(INSTANCE));
+    }
+
     public static final class FallbackAnnotator implements ItemAnnotator {
         @Override
         public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-            return new WynnItem();
+            return new FallbackItem();
         }
     }
 }

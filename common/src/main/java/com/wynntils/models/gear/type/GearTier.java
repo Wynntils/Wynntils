@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
 
+import com.mojang.serialization.Codec;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
@@ -11,8 +12,9 @@ import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
 
-public enum GearTier {
+public enum GearTier implements StringRepresentable {
     NORMAL(ChatFormatting.WHITE, 0, 0.0f, "common"),
     UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
     RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
@@ -21,6 +23,8 @@ public enum GearTier {
     FABLED(ChatFormatting.RED, 16, 8.0f),
     MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f),
     CRAFTED(ChatFormatting.DARK_AQUA, 0, 0.0f);
+
+    public static final Codec<GearTier> CODEC = StringRepresentable.fromEnum(GearTier::values);
 
     private final ChatFormatting chatFormatting;
     private final int baseCost;
@@ -39,6 +43,11 @@ public enum GearTier {
         this.baseCost = baseCost;
         this.costMultiplier = costMultiplier;
         this.apiName = apiName;
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public static GearTier fromString(String typeStr) {

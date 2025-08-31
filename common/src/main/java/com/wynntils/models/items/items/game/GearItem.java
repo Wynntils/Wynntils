@@ -1,9 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
@@ -12,6 +14,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
+import com.wynntils.models.items.codecs.WynnItemType;
 import com.wynntils.models.items.properties.ClassableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
@@ -42,6 +45,13 @@ public class GearItem extends GameItem
                 ClassableItemProperty,
                 SetItemProperty,
                 RequirementItemProperty {
+    public static final MapCodec<GearItem> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                    GearInfo.CODEC.fieldOf("gearInfo").forGetter(GearItem::getItemInfo),
+                    GearInstance.CODEC
+                            .optionalFieldOf("gearInstance")
+                            .forGetter(gearItem -> Optional.ofNullable(gearItem.gearInstance)))
+            .apply(instance, (gearInfo, gearInstance) -> new GearItem(gearInfo, gearInstance.orElse(null))));
+
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
 
@@ -165,6 +175,11 @@ public class GearItem extends GameItem
     @Override
     public boolean meetsActualRequirements() {
         return gearInstance != null && gearInstance.meetsRequirements();
+    }
+
+    @Override
+    public WynnItemType getType() {
+        return WynnItemType.GEAR;
     }
 
     @Override
