@@ -558,7 +558,7 @@ public final class LootrunModel extends Model {
         if (e.getItemStack().isEmpty()) return;
 
         if (Models.Container.getCurrentContainer() instanceof LootrunRewardChestContainer lootrunRewardChestContainer) {
-            if (e.getSlotNum() == lootrunRewardChestContainer.REROLL_REWARDS_SLOT) {
+            if (lootrunRewardChestContainer.REROLL_REWARDS_SLOTS.contains(e.getSlotNum())) {
                 StyledText rerollLoreConfirm =
                         LoreUtils.getLore(e.getItemStack()).getFirst();
 
