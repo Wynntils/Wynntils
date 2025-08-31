@@ -16,7 +16,6 @@ public enum MissionType {
     HIGH_ROLLER("High Roller", ChatFormatting.YELLOW, 0, 1),
     HOARDER("Hoarder", ChatFormatting.YELLOW),
     MATERIALISM("Materialism", ChatFormatting.YELLOW),
-    TREASURE_HUNTING("Treasure Hunting", ChatFormatting.YELLOW),
     GOURMAND("Gourmand", ChatFormatting.BLUE),
     ORPHIONS_GRACE("Orphion's Grace", ChatFormatting.BLUE),
     PORPHYROPHOBIA("Porphyrophobia", ChatFormatting.BLUE),
@@ -30,10 +29,7 @@ public enum MissionType {
     BACKUP_BEAT("Backup Beat", ChatFormatting.GREEN),
     STASIS("Stasis", ChatFormatting.GREEN),
     OPTIMISM("Optimism", ChatFormatting.GREEN),
-    GAMBLING_BEAST("Gambling Beast", ChatFormatting.RED),
     REDEMPTION("Redemption", ChatFormatting.RED, 1, 0),
-    ULTIMATE_SACRIFICE("Ultimate Sacrifice", ChatFormatting.RED, 1, 2),
-    WARMTH_DEVOURER("Warmth Devourer", ChatFormatting.RED),
     THRILL_SEEKER("Thrill Seeker", ChatFormatting.RED);
 
     private final String name;

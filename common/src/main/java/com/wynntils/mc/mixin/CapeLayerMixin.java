@@ -28,6 +28,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Mixin for {@link CapeLayer} to add support for custom cape translucence.
+ * <b>Make sure to sync changes to {@link WynntilsCapeLayer}.</b>
+ */
 @Mixin(CapeLayer.class)
 public abstract class CapeLayerMixin {
     @Shadow
