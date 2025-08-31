@@ -1,51 +1,34 @@
-Bulk Buy
-- When hovering a bulk buyable item with shift held the item name will now display how many will be bought
+Auto Attack
+- Reworked to hopefully fix issues
+- Still disabled by default for now
 
-Command Expansion
-- Added parameters to `/emotes` & `/emote`
-  - Currently this will list all emotes, in a future release it will only show available emotes
-- Removed `/scrap`
+Chat Items
+- Reverted fix to make chat items not display stone when using certain mods and/or clients
 
-Container Scroll
-- Store pages are now scrollable
+Lootrun Overlays
+- New overlay Lootrun Trials, displays the selected trials for the current lootrun
+- Adjusted default vertical position of missions overlay slightly
 
-Container Search Highlight
-- Added Search Bar in Cosmetic Menus config, covers all cosmetic types, default enabled
-- Removed Search Bar in Helmet Cosmetics Menu config
-- Removed Search Bar in Pet Menu config
-- Removed Search Bar in Player Effects Menu config
-- Removed Search Bar in Weapon Cosmetics Menu config
-- Removed Search Bar in Scrap Menu config
+Nametag Rendering, Wynntils Cosmetics
+- Leaderboard Badges, Wynntils Capes, Markers & Roles will now be displayed on ghosts
+  - For Wynntils related information/cosmetics, ghosts may not immediately display the information/cosmetics
 
-Durability Overlay
-- New render mode Percentage, will render the durability as a percentage below the item
+Overlays
+- All overlays now have an Enabled Template option to customise when they should be rendered using functions
+  - If no valid template is given, overlays will render if you are on a world and are not riding a Display entity (used in situations where you see your own player). Certain overlays override this and use other conditions such as custom player list or lootrun overlays
 
-Hide Damage Labels
-- Renamed feature to Hide Labels
-- Hide Damage Labels is now a config, still disabled by default
-  - If you had the feature enabled it will carry over to this config
-- New config Hide Kill Labels, will hide the label upon killing a mob, default disabled
-
-Hide Irrelevant Tooltip Info
-- Removed Hide Additional Tooltip Info config, the info previously hidden by this config is no longer displayed
-
-Horse Mounting
-- New config Summon Attempts, how many times should horse mounting be attempted before stopping, default 8
-
-Personal Storage Utilities
-- Added support for misc bucket and bookshelf pages 11 & 12
-- Pages that have not yet been visited/unlocked now have red text
-- Changed quick jump button tooltips
-
-Settings Screen
-- Hovering features on the left page will now display their configs on the right page until a feature has been selected
-  - These are only visual, in order to actually edit them you still need to click them on the left page
-- Closing the screen via esc when you have interacted with a setting will now give a prompt to save changes
-  - Closing the screen via the designated save/discard changes button will not give this prompt
+Functions
+- Font Functions
+  - `to_fancy_text` & `to_background_text` if the given character is not available in the font, then it will be rendered using the normal font
+- Lootrun Functions
+  - `lootrun_trial` returns the name of the lootrun trial at the given index or "Unknown" if not yet selected
+    - `index` required number argument, the index of which trial to get (starts at index 0)
 
 Fixes
-- Cosmetic pages can now be scrolled again
-- Scrap menu can now be scrolled again
-- Chat items should no longer appear as stone when using certain mods and/or clients
-- `capped_inventory_slots` and `inventory_free` functions now take into account the extra slot from soul points being removed
-- Fix horse mounting failing to swap back to original item if failing to mount horse
+- Loot chest locations are collected again
+- Opening loot chests with left click will now work for getting location
+- Added missing negative space to `to_background_text` function when using pill style for the right edge
+- Fix bank quick jumps not jumping under certain conditions
+- Lootrun rerolls will now be handled if the option to sacrifice is available
+- Fixed chat items being locked to a certain display type
+- Possibly fixed issue with Hades failing to connect causing the game to hang
