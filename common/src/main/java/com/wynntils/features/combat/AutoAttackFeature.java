@@ -97,8 +97,9 @@ public class AutoAttackFeature extends Feature {
 
         if (weaponStatus != WeaponStatus.USABLE) return;
 
-        if (Models.Character.getClassType() == ClassType.ARCHER ?
-                !McUtils.options().keyUse.isDown() : !McUtils.options().keyAttack.isDown()) return;
+        if (Models.Character.getClassType() == ClassType.ARCHER
+                ? !McUtils.options().keyUse.isDown()
+                : !McUtils.options().keyAttack.isDown()) return;
 
         MouseUtils.sendAttackInput(Models.Character.getClassType() == ClassType.ARCHER);
     }
