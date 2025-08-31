@@ -215,9 +215,8 @@ public class CustomNametagRendererFeature extends Feature {
         }
         Component prefixedName = Component.empty()
                 .append(Component.literal(WYNNTILS_NAMETAG_LOGO)
-                        .withStyle(Style.EMPTY
-                                .withFont(WYNNTILS_NAMETAG_LOGO_FONT)
-                                .withColor(logoColor)))
+                        .withStyle(
+                                Style.EMPTY.withFont(WYNNTILS_NAMETAG_LOGO_FONT).withColor(logoColor)))
                 .append(" ")
                 .append(event.getDisplayName());
         nametags.add(new CustomNametag(prefixedName, 1f));

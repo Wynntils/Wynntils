@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players;
@@ -115,7 +115,8 @@ public final class PlayerModel extends Model {
             return uuid;
         } else {
             // Ghost players have their UUIDs converted to version 2; convert it back
-            UUID uuidV4 = new UUID((uuid.getMostSignificantBits() & ~0xF000L) | 0x4000L, uuid.getLeastSignificantBits());
+            UUID uuidV4 =
+                    new UUID((uuid.getMostSignificantBits() & ~0xF000L) | 0x4000L, uuid.getLeastSignificantBits());
             return uuidV4;
         }
     }
