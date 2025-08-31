@@ -23,27 +23,15 @@ import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import net.minecraft.ChatFormatting;
 
-public class CustomColor {
+public record CustomColor(int r, int g, int b, int a) {
     public static final CustomColor NONE = new CustomColor(-1, -1, -1, -1);
 
     private static final Pattern HEX_PATTERN = Pattern.compile("#?([0-9a-fA-F]{6})([0-9a-fA-F]{2})?");
     private static final Pattern STRING_PATTERN = Pattern.compile("rgba\\((\\d+),(\\d+),(\\d+),(\\d+)\\)");
     private static final Map<String, CustomColor> REGISTERED_HASHED_COLORS = new HashMap<>();
 
-    public final int r;
-    public final int g;
-    public final int b;
-    public final int a;
-
     public CustomColor(int r, int g, int b) {
         this(r, g, b, 255);
-    }
-
-    public CustomColor(int r, int g, int b, int a) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
     }
 
     public CustomColor(float r, float g, float b) {
@@ -51,10 +39,7 @@ public class CustomColor {
     }
 
     public CustomColor(float r, float g, float b, float a) {
-        this.r = (int) (r * 255);
-        this.g = (int) (g * 255);
-        this.b = (int) (b * 255);
-        this.a = (int) (a * 255);
+        this((int) (r * 255), (int) (g * 255), (int) (b * 255), (int) (a * 255));
     }
 
     public CustomColor(CustomColor color) {
@@ -65,7 +50,7 @@ public class CustomColor {
         this(color.r, color.g, color.b, alpha);
     }
 
-    public CustomColor(String toParse) {
+    public static CustomColor fromStringWithHex(String toParse) {
         String noSpace = toParse.replace(" ", "");
 
         CustomColor parseTry = CustomColor.fromString(noSpace);
@@ -77,11 +62,7 @@ public class CustomColor {
                 throw new RuntimeException("Failed to parse CustomColor");
             }
         }
-
-        this.r = parseTry.r;
-        this.g = parseTry.g;
-        this.b = parseTry.b;
-        this.a = parseTry.a;
+        return new CustomColor(parseTry.r, parseTry.g, parseTry.b, parseTry.a);
     }
 
     public static CustomColor fromChatFormatting(ChatFormatting cf) {
@@ -230,14 +211,6 @@ public class CustomColor {
      */
     public String toHexString() {
         return "#" + String.format("%08x", ((r << 24) | (g << 16) | (b << 8) | a));
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof CustomColor color)) return false;
-
-        // colors are equal as long as rgba values match
-        return (this.r == color.r && this.g == color.g && this.b == color.b && this.a == color.a);
     }
 
     @Override
