@@ -32,6 +32,7 @@ public final class StyledTextUtils {
 
     private static final String NEWLINE_PREPARATION = "\n";
     private static final Pattern NEWLINE_WRAP_PATTERN = Pattern.compile("\uDAFF\uDFFC\uE001\uDB00\uDC06");
+    private static final Pattern WHITESPACES_PATTERN = Pattern.compile("\\s+");
 
     public static StyledTextPart createLocationPart(Location location) {
         String locationString = "[%d, %d, %d]".formatted(location.x, location.y, location.z);
@@ -56,9 +57,8 @@ public final class StyledTextUtils {
     }
 
     public static StyledText joinLines(List<StyledText> lines) {
-        String description = String.join(
-                        " ", lines.stream().map(StyledText::getString).toList())
-                .replaceAll("\\s+", " ")
+        String description = WHITESPACES_PATTERN.matcher(String.join(
+                        " ", lines.stream().map(StyledText::getString).toList())).replaceAll(" ")
                 .trim();
         return StyledText.fromString(description);
     }

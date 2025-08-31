@@ -7,11 +7,15 @@ package com.wynntils.utils.mc;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 
 public final class RenderedStringUtils {
+    private static final Pattern OPENING_PARANTHESIS_PATTERN = Pattern.compile(" \\(");
+    private static final Pattern OPENING_BRACKET_PATTERN = Pattern.compile(" \\[");
+
     public static StyledText[] wrapTextBySize(StyledText s, int maxPixels) {
         Font font = McUtils.mc().font;
         int spaceSize = font.width(" ");
@@ -76,7 +80,7 @@ public final class RenderedStringUtils {
                 color = line.getString().substring(0, 2);
             }
 
-            return StyledText.fromString(line.getString().replaceFirst(" \\[", "\n" + color + "["));
+            return StyledText.fromString(OPENING_BRACKET_PATTERN.matcher(line.getString()).replaceFirst("\n" + color + "["));
         } else if (maxFitting.contains("(")
                 && !maxFitting.contains(")")) { // Detail line did not appear to fit, force break
             String color = "";
@@ -85,7 +89,7 @@ public final class RenderedStringUtils {
                 color = line.getString().substring(0, 2);
             }
 
-            return StyledText.fromString(line.getString().replaceFirst(" \\(", "\n" + color + "("));
+            return StyledText.fromString(OPENING_PARANTHESIS_PATTERN.matcher(line.getString()).replaceFirst("\n" + color + "("));
         } else { // Fits fine, give normal lines
             return line;
         }

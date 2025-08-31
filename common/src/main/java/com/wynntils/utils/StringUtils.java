@@ -23,6 +23,9 @@ public final class StringUtils {
     private static final DecimalFormat FRACTIONAL_FORMAT = new DecimalFormat("#.#");
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
+    private static final Pattern WHITESPACES = Pattern.compile("\\s+");
+    private static final Pattern LINEBREAK = Pattern.compile("\n");
+    private static final Pattern MARKDOWN_HEADER_PATTERN = Pattern.compile("#+\\s+");
 
     /**
      * Converts a delimited list into a {@link java.util.List} of strings
@@ -152,7 +155,7 @@ public final class StringUtils {
      */
     public static boolean initialMatch(String toMatch, String searchTerm) {
         String lookAt = toMatch.toLowerCase(Locale.ROOT);
-        String searchFor = searchTerm.strip().toLowerCase(Locale.ROOT).replaceAll("\\s+", " ");
+        String searchFor = WHITESPACES.matcher(searchTerm.strip().toLowerCase(Locale.ROOT)).replaceAll(" ");
         // Turn all spaces into .*, including start and end
         String regex = (" " + searchFor + " ").replace(" ", ".*");
         return lookAt.matches(regex);
@@ -176,14 +179,14 @@ public final class StringUtils {
     }
 
     public static String convertMarkdownToColorCode(String input) {
-        return ChatFormatting.RESET + input.replaceFirst("#+\\s+", String.valueOf(ChatFormatting.BOLD));
+        return ChatFormatting.RESET + MARKDOWN_HEADER_PATTERN.matcher(input).replaceFirst(String.valueOf(ChatFormatting.BOLD));
     }
 
     public static ByteBuffer decodeBase64(String base64) {
         if (base64 == null) return null;
 
         return Base64.getDecoder()
-                .decode(ByteBuffer.wrap(base64.replaceAll("\n", "").getBytes(StandardCharsets.UTF_8)));
+                .decode(ByteBuffer.wrap(LINEBREAK.matcher(base64).replaceAll("").getBytes(StandardCharsets.UTF_8)));
     }
 
     /**
