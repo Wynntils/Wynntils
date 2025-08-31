@@ -78,8 +78,6 @@ jar {
     archiveClassifier = "dev"
 }
 
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
-    }
+shadow {
+    addShadowVariantIntoJavaComponent = false
 }
