@@ -52,22 +52,21 @@ public class AutoAttackFeature extends Feature {
 
     @SubscribeEvent
     public void onSwing(ArmSwingEvent event) {
-        if (Models.Character.getClassType() == ClassType.ARCHER) return;
-        if (spellInputs == 0) return;
+        if (Models.Character.getClassType() != ClassType.ARCHER && spellInputs == 0) return;
 
         handleInput();
     }
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
-        if (Models.Character.getClassType() == ClassType.ARCHER) return;
+        if (Models.Character.getClassType() == ClassType.ARCHER && spellInputs == 0) return;
 
         handleInput();
     }
 
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.InteractAt event) {
-        if (Models.Character.getClassType() == ClassType.ARCHER) return;
+        if (Models.Character.getClassType() == ClassType.ARCHER && spellInputs == 0) return;
 
         if (event.getEntityHitResult() != null) {
             EntityType<?> entityType = event.getEntityHitResult().getEntity().getType();
