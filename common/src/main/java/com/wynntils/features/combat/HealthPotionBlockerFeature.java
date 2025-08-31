@@ -30,7 +30,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.COMBAT)
 public class HealthPotionBlockerFeature extends Feature {
     @Persisted
-    public final Config<Integer> threshold = new Config<>(95);
+    private final Config<Integer> threshold = new Config<>(95);
 
     @SubscribeEvent
     public void onPotionUse(UseItemEvent event) {

@@ -50,13 +50,13 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.UI)
 public class BulkBuyFeature extends Feature {
     @Persisted
-    public final Config<Integer> bulkBuyAmount = new Config<>(4);
+    private final Config<Integer> bulkBuyAmount = new Config<>(4);
 
     @Persisted
-    public final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
+    private final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
 
     @Persisted
-    public final Config<Integer> animationDuration = new Config<>(125);
+    private final Config<Integer> animationDuration = new Config<>(125);
 
     private static final String SHOP_TITLE_SUFFIX = " Shop";
     // Test in BulkBuyFeature_PRICE_PATTERN
@@ -200,7 +200,8 @@ public class BulkBuyFeature extends Feature {
 
         List<Component> tooltips = List.of(component);
 
-        event.setTooltips(LoreUtils.appendTooltip(event.getItemStack(), replacePrices(event.getTooltips()), tooltips));
+        event.setTooltips(LoreUtils.appendTooltip(
+                event.getItemStack(), replacePrices(event.getItemStack(), event.getTooltips()), tooltips));
     }
 
     private int findItemPrice(List<StyledText> lore) {
@@ -217,15 +218,19 @@ public class BulkBuyFeature extends Feature {
 
     /**
      * When shift is pressed:
+     * Adds the amount to buy to the item name.
      * Replaces the price in the lore with the bulk buy price.
      * Also replaces the "✔" with a "✖" with a if the user can't afford the bulk buy.
      * @param oldLore Lore of the item that user wants to bulk buy
      * @return New lore with the above replacements
      */
-    private List<Component> replacePrices(List<Component> oldLore) {
+    private List<Component> replacePrices(ItemStack itemStack, List<Component> oldLore) {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
         List<Component> returnable = new ArrayList<>(oldLore);
+
+        // Add the amount to buy to the item name
+        returnable.set(0, Component.literal(bulkBuyAmount.get() + "x ").append(itemStack.getHoverName()));
 
         // iterate through lore to find the price, then replace it with the bulk buy price
         // there is no better way to do this since we cannot tell which line is the price (user may or may not have nbt

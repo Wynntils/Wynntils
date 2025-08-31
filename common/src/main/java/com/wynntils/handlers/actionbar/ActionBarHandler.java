@@ -127,7 +127,7 @@ public final class ActionBarHandler extends Handler {
         lastMatchedSegments = new ArrayList<>();
     }
 
-    public List<ActionBarSegment> parseActionBarSegments(StyledText actionBarText) {
+    private List<ActionBarSegment> parseActionBarSegments(StyledText actionBarText) {
         List<ActionBarSegment> matchedSegments = new ArrayList<>();
 
         for (ActionBarSegmentMatcher segmentMatcher : segmentMatchers) {

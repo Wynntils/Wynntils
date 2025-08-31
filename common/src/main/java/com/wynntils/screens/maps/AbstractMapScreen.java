@@ -217,9 +217,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 Texture.FULLSCREEN_MAP_BORDER.height());
     }
 
-    protected void renderBlurredBackground() {
-        super.renderBlurredBackground();
-    }
 
     protected void renderMapFeatures(PoseStack poseStack, int mouseX, int mouseY) {
         hoveredFeature = null;
@@ -643,7 +640,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
     }
 
-    protected void adjustZoomLevel(float delta) {
+    private void adjustZoomLevel(float delta) {
         setZoomLevel(zoomLevel + delta);
     }
 

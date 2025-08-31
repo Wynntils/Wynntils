@@ -20,10 +20,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.COMBAT)
 public class HideLabelsFeature extends Feature {
     @Persisted
-    public final Config<Boolean> hideDamageLabels = new Config<>(false);
+    private final Config<Boolean> hideDamageLabels = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> hideKillLabels = new Config<>(false);
+    private final Config<Boolean> hideKillLabels = new Config<>(false);
 
     @SubscribeEvent
     public void onLabelIdentified(LabelIdentifiedEvent event) {

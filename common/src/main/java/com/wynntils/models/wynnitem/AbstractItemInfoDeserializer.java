@@ -135,7 +135,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return List.copyOf(obtainInfo);
     }
 
-    protected Optional<StyledText> parseLore(JsonObject json) {
+    private Optional<StyledText> parseLore(JsonObject json) {
         String lore = JsonUtils.getNullableJsonString(json, "lore");
         if (lore == null) return Optional.empty();
 
@@ -149,7 +149,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return GearRestrictions.fromString(restrictions);
     }
 
-    protected List<ItemObtainType> parseObtainTypes(JsonObject json) {
+    private List<ItemObtainType> parseObtainTypes(JsonObject json) {
         List<ItemObtainType> types = new ArrayList<>();
 
         JsonObject dropMeta = JsonUtils.getNullableJsonObject(json, "dropMeta");
@@ -250,7 +250,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return new GearRequirements(level, classType, skills, quest);
     }
 
-    protected Optional<ClassType> parseClassType(JsonObject json, GearType type) {
+    private Optional<ClassType> parseClassType(JsonObject json, GearType type) {
         if (type.isWeapon()) {
             return Optional.of(type.getClassReq());
         }
@@ -261,7 +261,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return Optional.of(ClassType.fromName(classReq));
     }
 
-    protected List<Pair<Skill, Integer>> parseSkills(JsonObject json) {
+    private List<Pair<Skill, Integer>> parseSkills(JsonObject json) {
         List<Pair<Skill, Integer>> list = new ArrayList<>();
         for (Skill skill : Skill.values()) {
             int minPoints = JsonUtils.getNullableJsonInt(json, skill.getApiName());
@@ -274,7 +274,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return List.copyOf(list);
     }
 
-    protected Optional<String> parseQuest(JsonObject json) {
+    private Optional<String> parseQuest(JsonObject json) {
         String questName = JsonUtils.getNullableJsonString(json, "quest");
         if (questName == null) return Optional.empty();
 
@@ -296,7 +296,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return new FixedStats(healthBuff, attackSpeed, majorIds, damages, defences);
     }
 
-    protected Optional<GearMajorId> parseMajorIds(JsonObject json) {
+    private Optional<GearMajorId> parseMajorIds(JsonObject json) {
         JsonObject majorIdsJson = JsonUtils.getNullableJsonObject(json, "majorIds");
         if (majorIdsJson == null || majorIdsJson.isJsonNull() || majorIdsJson.isEmpty()) return Optional.empty();
 
@@ -319,7 +319,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return Optional.of(new GearMajorId(majorIdElement.getKey(), description));
     }
 
-    protected List<Pair<DamageType, RangedValue>> parseDamages(JsonObject json) {
+    private List<Pair<DamageType, RangedValue>> parseDamages(JsonObject json) {
         List<Pair<DamageType, RangedValue>> list = new ArrayList<>();
 
         // First look for neutral damage, which has a non-standard name
@@ -335,7 +335,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return List.copyOf(list);
     }
 
-    protected void addDamageStat(
+    private void addDamageStat(
             List<Pair<DamageType, RangedValue>> list, DamageType damageType, JsonElement damageJson) {
         if (damageJson == null) return;
 
@@ -347,7 +347,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         list.add(Pair.of(damageType, range));
     }
 
-    protected List<Pair<Element, Integer>> parseDefences(JsonObject json) {
+    private List<Pair<Element, Integer>> parseDefences(JsonObject json) {
         List<Pair<Element, Integer>> list = new ArrayList<>();
         for (Element element : Models.Element.getGearElementOrder()) {
             String defenceApiName = "base" + element.getDisplayName() + "Defence";

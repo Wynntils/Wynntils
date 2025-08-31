@@ -40,7 +40,7 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 StyledText.fromString(" "),
                 displayedTime);
         this.modifierValue =
-                modifier != StyledText.EMPTY ? Double.parseDouble(modifier.getStringWithoutFormatting()) : null;
+                modifier == StyledText.EMPTY ? null : Double.parseDouble(modifier.getStringWithoutFormatting());
         this.duration = duration;
     }
 

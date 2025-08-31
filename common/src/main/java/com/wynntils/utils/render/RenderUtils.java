@@ -655,7 +655,7 @@ public final class RenderUtils {
                 progress);
     }
 
-    public static void drawProgressBarForeground(
+    private static void drawProgressBarForeground(
             PoseStack poseStack,
             Texture texture,
             float x1,
@@ -754,7 +754,7 @@ public final class RenderUtils {
         BufferUploader.drawWithShader(bufferBuilder.build());
     }
 
-    public static void drawProgressBarBackground(
+    private static void drawProgressBarBackground(
             PoseStack poseStack,
             Texture texture,
             float x1,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -30,7 +30,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.CHAT)
 public class ChatTimestampFeature extends Feature {
     @Persisted
-    public final Config<String> formatPattern = new Config<>("HH:mm:ss");
+    private final Config<String> formatPattern = new Config<>("HH:mm:ss");
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern.get(), Locale.ROOT);
     private int timestampWidth = 0;

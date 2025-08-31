@@ -38,7 +38,7 @@ public final class SystemUtils {
             image.downloadTexture(0, false);
             image.flipY();
 
-            int[] pixelValues = image.makePixelArray();
+            int[] pixelValues = image.getPixelsABGR();
 
             bufferedimage.setRGB(0, 0, fb.width, fb.height, pixelValues, 0, fb.width);
         }

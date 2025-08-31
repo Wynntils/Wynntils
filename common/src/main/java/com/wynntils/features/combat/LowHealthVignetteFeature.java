@@ -25,16 +25,16 @@ public class LowHealthVignetteFeature extends Feature {
     private static final float INTENSITY = 0.3f;
 
     @Persisted
-    public final Config<Integer> lowHealthPercentage = new Config<>(25);
+    private final Config<Integer> lowHealthPercentage = new Config<>(25);
 
     @Persisted
-    public final Config<Float> animationSpeed = new Config<>(0.6f);
+    private final Config<Float> animationSpeed = new Config<>(0.6f);
 
     @Persisted
-    public final Config<HealthVignetteEffect> healthVignetteEffect = new Config<>(HealthVignetteEffect.PULSE);
+    private final Config<HealthVignetteEffect> healthVignetteEffect = new Config<>(HealthVignetteEffect.PULSE);
 
     @Persisted
-    public final Config<CustomColor> color = new Config<>(new CustomColor(255, 0, 0));
+    private final Config<CustomColor> color = new Config<>(new CustomColor(255, 0, 0));
 
     private float animation = 10f;
     private float value = INTENSITY;

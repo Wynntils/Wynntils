@@ -198,7 +198,7 @@ public final class TerritoryModel extends Model {
                 //       territories
                 if ((territoryInfo != null && territoryInfo.getTradingRoutes().contains(current.getName()))
                         || (currentTerritoryInfo != null
-                                && currentTerritoryInfo.getTradingRoutes().contains(territoryItem.getName()))) {
+                        && currentTerritoryInfo.getTradingRoutes().contains(territoryItem.getName()))) {
                     connectedTerritories.add(territoryItem);
                     queue.add(territoryItem);
 

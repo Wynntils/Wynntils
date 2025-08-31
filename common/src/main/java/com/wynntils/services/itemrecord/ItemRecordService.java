@@ -32,7 +32,7 @@ public class ItemRecordService extends Service {
     // This is basically a trash can for items that can't be decoded
     // This is useful for a backup in case the item can be decoded in the future (with a new version of the mod)
     @Persisted
-    public final Storage<Set<SavedItem>> faultyItems = new Storage<>(new TreeSet<>());
+    private final Storage<Set<SavedItem>> faultyItems = new Storage<>(new TreeSet<>());
 
     @Persisted
     public final Storage<Set<String>> categories = new Storage<>(new TreeSet<>(List.of(DEFAULT_CATEGORY)));

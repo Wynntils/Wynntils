@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -23,7 +23,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.UI)
 public class ContainerScrollFeature extends Feature {
     @Persisted
-    public final Config<Boolean> invertScroll = new Config<>(false);
+    private final Config<Boolean> invertScroll = new Config<>(false);
 
     @SubscribeEvent
     public void onInteract(MouseScrollEvent event) {

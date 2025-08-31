@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
@@ -16,22 +16,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.TOOLTIPS)
 public class TooltipVanillaHideFeature extends Feature {
     @Persisted
-    public final Config<Boolean> hideAdvanced = new Config<>(true);
-
-    @Persisted
-    public final Config<Boolean> hideAdditionalInfo = new Config<>(true);
+    private final Config<Boolean> hideAdvanced = new Config<>(true);
 
     @SubscribeEvent
-    public void onTooltipFlagsAdvanced(ItemTooltipFlagsEvent.Advanced event) {
+    public void onTooltipFlagsAdvanced(ItemTooltipFlagsEvent event) {
         if (!hideAdvanced.get()) return;
 
         event.setFlags(TooltipFlag.NORMAL);
-    }
-
-    @SubscribeEvent
-    public void onTooltipFlagsMask(ItemTooltipFlagsEvent.HideAdditionalTooltip event) {
-        if (!hideAdditionalInfo.get()) return;
-
-        event.setHideAdditionalTooltip(true);
     }
 }

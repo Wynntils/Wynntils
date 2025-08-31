@@ -33,37 +33,37 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class BombBellOverlay extends Overlay {
     @Persisted
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<Float> fontScale = new Config<>(1.0f);
+    private final Config<Float> fontScale = new Config<>(1.0f);
 
     @Persisted
-    public final Config<Boolean> groupBombs = new Config<>(true);
+    private final Config<Boolean> groupBombs = new Config<>(true);
 
     @Persisted
-    public final Config<Integer> maxBombs = new Config<>(5);
+    private final Config<Integer> maxBombs = new Config<>(5);
 
     @Persisted
-    public final Config<SortOrder> sortOrder = new Config<>(SortOrder.NEWEST);
+    private final Config<SortOrder> sortOrder = new Config<>(SortOrder.NEWEST);
 
     @Persisted
-    public final Config<Boolean> showCombatBombs = new Config<>(true);
+    private final Config<Boolean> showCombatBombs = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showDungeonBombs = new Config<>(true);
+    private final Config<Boolean> showDungeonBombs = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showLootBombs = new Config<>(true);
+    private final Config<Boolean> showLootBombs = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showLootChestBombs = new Config<>(true);
+    private final Config<Boolean> showLootChestBombs = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showProfessionXpBombs = new Config<>(true);
+    private final Config<Boolean> showProfessionXpBombs = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showProfessionSpeedBombs = new Config<>(true);
+    private final Config<Boolean> showProfessionSpeedBombs = new Config<>(true);
 
     private final Map<BombType, Supplier<Boolean>> bombTypeMap = Map.ofEntries(
             Map.entry(BombType.COMBAT_XP, showCombatBombs::get),
@@ -76,7 +76,7 @@ public class BombBellOverlay extends Overlay {
     private Comparator<BombInfo> comparator;
     private TextRenderSetting textRenderSetting;
 
-    List<TextRenderTask> renderTasks = new ArrayList<>();
+    private List<TextRenderTask> renderTasks = new ArrayList<>();
 
     public BombBellOverlay() {
         super(
@@ -89,6 +89,16 @@ public class BombBellOverlay extends Overlay {
                 new OverlaySize(200, 110));
 
         updateTextRenderSetting();
+    }
+
+    @Override
+    protected boolean hideWhenNoGui() {
+        return false;
+    }
+
+    @Override
+    protected boolean isVisible() {
+        return !Models.Bomb.getBombBells().isEmpty();
     }
 
     @Override

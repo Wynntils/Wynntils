@@ -31,9 +31,10 @@ import com.wynntils.services.hades.providers.PlayerProvider;
 import com.wynntils.services.hades.type.PlayerStatus;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -55,6 +56,7 @@ public final class HadesService extends Service {
 
     private final HadesUserRegistry userRegistry = new HadesUserRegistry();
 
+    private CompletableFuture<Void> connectionFuture;
     private HadesConnection hadesConnection;
     private int tickCountUntilUpdate = 0;
     private PlayerStatus lastSentStatus;
@@ -74,9 +76,13 @@ public final class HadesService extends Service {
     }
 
     private void login() {
-        // Try to log in to Hades, if we're not already connected
-        if (!isConnected()) {
-            tryCreateConnection();
+        connect();
+    }
+
+    private synchronized void connect() {
+        // Try to log in to Hades, if we're not already connected or trying to connect
+        if (!isConnected() && (connectionFuture == null || connectionFuture.isDone())) {
+            connectionFuture = CompletableFuture.runAsync(this::tryCreateConnection);
         }
     }
 
@@ -91,14 +97,15 @@ public final class HadesService extends Service {
 
             tickCountUntilUpdate = 0;
             lastSentStatus = null;
-        } catch (UnknownHostException e) {
-            WynntilsMod.error("Could not resolve Hades host address.", e);
+        } catch (IOException e) {
+            WynntilsMod.error("Could not connect to Hades.", e);
         }
     }
 
     public void tryDisconnect() {
         if (hadesConnection != null && hadesConnection.isOpen()) {
             hadesConnection.disconnect();
+            connectionFuture = null;
         }
     }
 
@@ -120,6 +127,7 @@ public final class HadesService extends Service {
         if (pingScheduler == null) return;
         pingScheduler.shutdown();
         pingScheduler = null;
+        connectionFuture = null;
     }
 
     private void sendPing() {
@@ -156,10 +164,8 @@ public final class HadesService extends Service {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() != WorldState.NOT_CONNECTED && !isConnected()) {
-            if (Services.WynntilsAccount.isLoggedIn()) {
-                tryCreateConnection();
-            }
+        if (event.getNewState() != WorldState.NOT_CONNECTED && Services.WynntilsAccount.isLoggedIn()) {
+            connect();
         }
 
         userRegistry.reset();

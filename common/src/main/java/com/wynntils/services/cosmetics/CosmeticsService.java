@@ -74,7 +74,7 @@ public class CosmeticsService extends Service {
 
     public boolean shouldRenderCape(Player player, boolean elytra) {
         if (player.isInvisible() || !player.isModelPartShown(PlayerModelPart.CAPE)) return false;
-        if (Models.Player.getUser(player.getUUID()) == null || getUserCosmeticTexture(player.getUUID()) == null) {
+        if (Models.Player.getWynntilsUser(player) == null || getUserCosmeticTexture(player) == null) {
             return false;
         }
 
@@ -85,12 +85,12 @@ public class CosmeticsService extends Service {
             return false;
         }
 
-        CosmeticInfo cosmetics = Models.Player.getUser(player.getUUID()).cosmetics();
+        CosmeticInfo cosmetics = Models.Player.getWynntilsUser(player).cosmetics();
         return (elytra ? cosmetics.hasElytra() : cosmetics.hasCape());
     }
 
     public ResourceLocation getCapeTexture(Player player) {
-        ResourceLocation[] textures = getUserCosmeticTexture(player.getUUID());
+        ResourceLocation[] textures = getUserCosmeticTexture(player);
         if (textures == null) return null;
 
         int frames = textures.length;
@@ -137,7 +137,7 @@ public class CosmeticsService extends Service {
         }
     }
 
-    public ResourceLocation[] getUserCosmeticTexture(UUID uuid) {
-        return cosmeticTextures.getOrDefault(uuid, null);
+    private ResourceLocation[] getUserCosmeticTexture(Player player) {
+        return cosmeticTextures.getOrDefault(Models.Player.getUserUUID(player), null);
     }
 }

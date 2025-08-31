@@ -23,7 +23,7 @@ public class ContentTrackerFeature extends Feature {
     private static final SoundEvent TRACKER_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(TRACKER_UPDATE_ID);
 
     @Persisted
-    public final Config<Boolean> playSoundOnUpdate = new Config<>(true);
+    private final Config<Boolean> playSoundOnUpdate = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);

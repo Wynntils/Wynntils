@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.containers;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
@@ -14,6 +15,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
+import com.wynntils.models.containers.event.BankPageSetEvent;
 import com.wynntils.models.containers.type.PersonalStorageType;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +59,7 @@ public final class BankModel extends Model {
             new Storage<>(new TreeMap<>());
 
     public static final int QUICK_JUMP_SLOT = 7;
-    public static final String FINAL_PAGE_NAME = "\uDB3F\uDFFF";
+    private static final String FINAL_PAGE_NAME = "\uDB3F\uDFFF";
 
     private static final int MAX_CHARACTER_BANK_PAGES = 10;
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
@@ -243,6 +245,8 @@ public final class BankModel extends Model {
         if (isItemIndicatingLastBankPage(nextPageItem)) {
             updateFinalPage();
         }
+
+        WynntilsMod.postEvent(new BankPageSetEvent());
     }
 
     private boolean isItemIndicatingLastBankPage(ItemStack item) {

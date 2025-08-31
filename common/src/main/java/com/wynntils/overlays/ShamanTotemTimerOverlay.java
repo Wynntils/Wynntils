@@ -22,19 +22,19 @@ import net.minecraft.ChatFormatting;
 
 public class ShamanTotemTimerOverlay extends TextOverlay {
     @Persisted
-    public final Config<TotemTrackingDetail> totemTrackingDetail = new Config<>(TotemTrackingDetail.COORDS);
+    private final Config<TotemTrackingDetail> totemTrackingDetail = new Config<>(TotemTrackingDetail.COORDS);
 
     @Persisted
-    public final Config<ColorChatFormatting> firstTotemTextColor = new Config<>(ColorChatFormatting.WHITE);
+    private final Config<ColorChatFormatting> firstTotemTextColor = new Config<>(ColorChatFormatting.WHITE);
 
     @Persisted
-    public final Config<ColorChatFormatting> secondTotemTextColor = new Config<>(ColorChatFormatting.BLUE);
+    private final Config<ColorChatFormatting> secondTotemTextColor = new Config<>(ColorChatFormatting.BLUE);
 
     @Persisted
-    public final Config<ColorChatFormatting> thirdTotemTextColor = new Config<>(ColorChatFormatting.RED);
+    private final Config<ColorChatFormatting> thirdTotemTextColor = new Config<>(ColorChatFormatting.RED);
 
     @Persisted
-    public final Config<ColorChatFormatting> fourthTotemTextColor = new Config<>(ColorChatFormatting.GREEN);
+    private final Config<ColorChatFormatting> fourthTotemTextColor = new Config<>(ColorChatFormatting.GREEN);
 
     private final ChatFormatting[] totemColorsArray = {
         firstTotemTextColor.get().getChatFormatting(),

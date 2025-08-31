@@ -41,7 +41,7 @@ public class LootrunBeaconCountOverlay extends TextOverlay {
             §aGreen: 0
             §cRed: 0 (0)
             §fWhite: 0/1
-            §#f01000ffCrimson: 0/2
+            §#00f010ffCrimson: 0/2
             §#00f000ffRainbow: 0 (10)
             """;
 
@@ -68,7 +68,7 @@ public class LootrunBeaconCountOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean isRenderedDefault() {
+    public boolean isVisible() {
         return Models.Lootrun.getState() != LootrunningState.NOT_RUNNING;
     }
 }

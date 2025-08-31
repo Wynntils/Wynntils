@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -14,7 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class TextInputBoxSettingsWidget<T> extends TextInputBoxWidget {
-    protected final Config<T> config;
+    private final Config<T> config;
     private final int maskTopY;
     private final int maskBottomY;
 

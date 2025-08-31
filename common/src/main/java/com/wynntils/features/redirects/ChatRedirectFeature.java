@@ -30,73 +30,73 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.REDIRECTS)
 public class ChatRedirectFeature extends Feature {
     @Persisted
-    public final Config<RedirectAction> blacksmith = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> blacksmith = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> bloodPactHealth = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> bloodPactHealth = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> craftedDurability = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> craftedDurability = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> emptyManaBank = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> emptyManaBank = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> friendJoin = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> friendJoin = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> heal = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> heal = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> horse = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> horse = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> housingMaster = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> housingMaster = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> housingTeleport = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> housingTeleport = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> ingredientPouch = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> ingredientPouch = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> loginAnnouncements = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> loginAnnouncements = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> mageTeleport = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> mageTeleport = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> notEnoughMana = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> notEnoughMana = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> potion = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> potion = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> scrollTeleport = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> scrollTeleport = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> shaman = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> shaman = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> speed = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> speed = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> toolDurability = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> toolDurability = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> unusedPoints = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> unusedPoints = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> guildBank = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> guildBank = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> guildRewards = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> guildRewards = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> merchant = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> merchant = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    public final Config<RedirectAction> itemDropped = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> itemDropped = new Config<>(RedirectAction.REDIRECT);
 
     private final List<Redirector> redirectors = new ArrayList<>();
 

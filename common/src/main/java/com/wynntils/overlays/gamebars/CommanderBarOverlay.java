@@ -25,7 +25,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class CommanderBarOverlay extends BaseBarOverlay {
     @Persisted
-    public final Config<CustomColor> activatedColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> activatedColor = new Config<>(CommonColors.GREEN);
 
     public CommanderBarOverlay() {
         super(
@@ -50,7 +50,7 @@ public class CommanderBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isVisible() {
         return Models.Ability.commanderBar.isActive();
     }
 

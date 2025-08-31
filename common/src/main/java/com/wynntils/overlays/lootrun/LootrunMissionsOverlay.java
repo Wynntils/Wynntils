@@ -34,7 +34,7 @@ public class LootrunMissionsOverlay extends TextOverlay {
     public LootrunMissionsOverlay() {
         super(
                 new OverlayPosition(
-                        80,
+                        75,
                         5,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
@@ -55,7 +55,7 @@ public class LootrunMissionsOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean isRenderedDefault() {
+    public boolean isVisible() {
         return Models.Lootrun.getState() != LootrunningState.NOT_RUNNING;
     }
 }

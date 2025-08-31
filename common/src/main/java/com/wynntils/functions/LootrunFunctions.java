@@ -139,6 +139,21 @@ public class LootrunFunctions {
         }
     }
 
+    public static class LootrunTrialFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int trialIndex = arguments.getArgument("index").getIntegerValue();
+
+            return Models.Lootrun.getTrial(trialIndex);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("index", Integer.class, null)));
+        }
+    }
+
     public static class LootrunTaskNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {

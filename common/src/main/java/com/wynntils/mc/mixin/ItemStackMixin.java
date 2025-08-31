@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
@@ -25,27 +24,6 @@ public abstract class ItemStackMixin implements ItemStackExtension {
     @Unique
     private StyledText wynntilsOriginalName;
 
-    // Note: If this mixin method is causing compatibility issues, we have a few options:
-    // 1. Remove the mixin method. It's barely used in Wynntils.
-    // 2. Set the hide additional tooltip flag for the item itself. This is a bit more invasive.
-    @ModifyExpressionValue(
-            method =
-                    "getTooltipLines(Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/world/item/ItemStack;has(Lnet/minecraft/core/component/DataComponentType;)Z",
-                            ordinal = 2))
-    private boolean redirectGetHideFlags(boolean original) {
-        ItemStack itemStack = (ItemStack) (Object) this;
-        ItemTooltipFlagsEvent.HideAdditionalTooltip event =
-                new ItemTooltipFlagsEvent.HideAdditionalTooltip(itemStack, original);
-        MixinHelper.post(event);
-
-        return event.getHideAdditionalTooltip();
-    }
-
     @ModifyVariable(
             method =
                     "getTooltipLines(Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;",
@@ -54,7 +32,7 @@ public abstract class ItemStackMixin implements ItemStackExtension {
             argsOnly = true)
     private TooltipFlag onGetTooltipLines(TooltipFlag flags) {
         ItemStack itemStack = (ItemStack) (Object) this;
-        ItemTooltipFlagsEvent.Advanced event = new ItemTooltipFlagsEvent.Advanced(itemStack, flags);
+        ItemTooltipFlagsEvent event = new ItemTooltipFlagsEvent(itemStack, flags);
         MixinHelper.post(event);
 
         return event.getFlags();

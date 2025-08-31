@@ -23,6 +23,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.containers.ContentBookContainer;
+import com.wynntils.models.containers.containers.CosmeticContainer;
 import com.wynntils.models.containers.containers.GuildBadgesContainer;
 import com.wynntils.models.containers.containers.GuildBankContainer;
 import com.wynntils.models.containers.containers.GuildMemberListContainer;
@@ -30,11 +31,6 @@ import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
 import com.wynntils.models.containers.containers.HousingJukeboxContainer;
 import com.wynntils.models.containers.containers.HousingListContainer;
 import com.wynntils.models.containers.containers.JukeboxContainer;
-import com.wynntils.models.containers.containers.ScrapMenuContainer;
-import com.wynntils.models.containers.containers.cosmetics.HelmetCosmeticsMenuContainer;
-import com.wynntils.models.containers.containers.cosmetics.PetMenuContainer;
-import com.wynntils.models.containers.containers.cosmetics.PlayerEffectsMenuContainer;
-import com.wynntils.models.containers.containers.cosmetics.WeaponCosmeticsMenuContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
@@ -74,58 +70,46 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.INVENTORY)
 public class ContainerSearchFeature extends Feature {
     @Persisted
-    public final Config<Boolean> filterInBank = new Config<>(true);
+    private final Config<Boolean> filterInBank = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInBlockBank = new Config<>(true);
+    private final Config<Boolean> filterInBlockBank = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInBookshelf = new Config<>(true);
+    private final Config<Boolean> filterInBookshelf = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInMiscBucket = new Config<>(true);
+    private final Config<Boolean> filterInMiscBucket = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildBank = new Config<>(true);
+    private final Config<Boolean> filterInGuildBank = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildMemberList = new Config<>(true);
+    private final Config<Boolean> filterInGuildMemberList = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInScrapMenu = new Config<>(true);
+    private final Config<Boolean> filterInCosmeticMenus = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInHelmetCosmeticsMenu = new Config<>(true);
+    private final Config<Boolean> filterInContentBook = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInPetMenu = new Config<>(true);
+    private final Config<Boolean> filterInGuildTerritories = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInPlayerEffectsMenu = new Config<>(true);
+    private final Config<Boolean> filterInGuildBadges = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInWeaponCosmeticsMenu = new Config<>(true);
+    private final Config<Boolean> filterInHousingJukebox = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInContentBook = new Config<>(true);
+    private final Config<Boolean> filterInHousingList = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildTerritories = new Config<>(true);
+    private final Config<Boolean> filterInJukebox = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildBadges = new Config<>(true);
-
-    @Persisted
-    public final Config<Boolean> filterInHousingJukebox = new Config<>(true);
-
-    @Persisted
-    public final Config<Boolean> filterInHousingList = new Config<>(true);
-
-    @Persisted
-    public final Config<Boolean> filterInJukebox = new Config<>(true);
-
-    @Persisted
-    public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
+    private final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     private final Map<Class<? extends SearchableContainerProperty>, Supplier<Boolean>> searchableContainerMap =
             Map.ofEntries(
@@ -137,17 +121,13 @@ public class ContainerSearchFeature extends Feature {
                     Map.entry(GuildBadgesContainer.class, filterInGuildBadges::get),
                     Map.entry(GuildMemberListContainer.class, filterInGuildMemberList::get),
                     Map.entry(GuildTerritoriesContainer.class, filterInGuildTerritories::get),
-                    Map.entry(HelmetCosmeticsMenuContainer.class, filterInHelmetCosmeticsMenu::get),
                     Map.entry(HousingJukeboxContainer.class, filterInHousingJukebox::get),
                     Map.entry(HousingListContainer.class, filterInHousingList::get),
                     Map.entry(IslandBlockBankContainer.class, filterInBlockBank::get),
                     Map.entry(JukeboxContainer.class, filterInJukebox::get),
                     Map.entry(MiscBucketContainer.class, filterInMiscBucket::get),
                     Map.entry(PersonalBlockBankContainer.class, filterInBlockBank::get),
-                    Map.entry(PetMenuContainer.class, filterInPetMenu::get),
-                    Map.entry(PlayerEffectsMenuContainer.class, filterInPlayerEffectsMenu::get),
-                    Map.entry(ScrapMenuContainer.class, filterInScrapMenu::get),
-                    Map.entry(WeaponCosmeticsMenuContainer.class, filterInWeaponCosmeticsMenu::get));
+                    Map.entry(CosmeticContainer.class, filterInCosmeticMenus::get));
 
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
     // for Wynn to send us the entire updated inventory. During this, the inventory will be in a weird state where
@@ -177,10 +157,10 @@ public class ContainerSearchFeature extends Feature {
 
         matchedItems = false;
 
-        if (currentContainer instanceof PersonalStorageContainer) {
-            // Personal storage container textures extend above the normal renderY
+        if (currentContainer instanceof SearchableContainerProperty searchableContainer) {
+            // Some container textures extend above the normal renderY
             // so the widgets need to be shifted up more
-            renderY -= 20;
+            renderY -= searchableContainer.renderYOffset();
         }
 
         addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);

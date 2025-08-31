@@ -160,7 +160,7 @@ public final class BufferedRenderUtils {
                     rightX,
                     y,
                     z,
-                    (i != colors.size() - 1 ? internalLineWidth : externalLineWidth));
+                    (i == colors.size() - 1 ? externalLineWidth : internalLineWidth));
             // top right to top center (always drawn)
             drawLine(poseStack, bufferSource, color, rightX, y, centerX, y, z, externalLineWidth);
             // top center to bottom left (drawn on i!=0)

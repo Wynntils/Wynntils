@@ -47,16 +47,16 @@ public class NpcDialogueOverlay extends Overlay {
     private static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromString("§cPress SNEAK to continue");
 
     @Persisted
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
 
     @Persisted
-    public final Config<Float> backgroundOpacity = new Config<>(0.2f);
+    private final Config<Float> backgroundOpacity = new Config<>(0.2f);
 
     @Persisted
-    public final Config<Boolean> stripColors = new Config<>(false);
+    private final Config<Boolean> stripColors = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> showHelperTexts = new Config<>(true);
+    private final Config<Boolean> showHelperTexts = new Config<>(true);
 
     private TextRenderSetting renderSetting;
 

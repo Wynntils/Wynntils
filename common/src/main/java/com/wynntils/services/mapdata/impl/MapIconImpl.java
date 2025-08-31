@@ -17,8 +17,9 @@ public class MapIconImpl implements MapIcon {
     private final byte[] texture;
     private final int width;
     private final int height;
+    private final ResourceLocation resource;
+
     private boolean registered;
-    private ResourceLocation resource;
 
     public MapIconImpl(String iconId, byte[] texture) throws IOException {
         this.iconId = iconId;

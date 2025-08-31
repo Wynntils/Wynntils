@@ -62,16 +62,16 @@ public class MessageFilterFeature extends Feature {
     private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(Pair.of(PARTY_FINDER_FG, PARTY_FINDER_BG));
 
     @Persisted
-    public final Config<Boolean> hideWelcome = new Config<>(false);
+    private final Config<Boolean> hideWelcome = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> hideSystemInfo = new Config<>(false);
+    private final Config<Boolean> hideSystemInfo = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> hideLevelUp = new Config<>(false);
+    private final Config<Boolean> hideLevelUp = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> hidePartyFinder = new Config<>(false);
+    private final Config<Boolean> hidePartyFinder = new Config<>(false);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onMessage(ChatMessageReceivedEvent e) {

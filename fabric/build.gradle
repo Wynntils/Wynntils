@@ -75,10 +75,8 @@ processResources {
     }
 }
 
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
-    }
+shadow {
+    addShadowVariantIntoJavaComponent = false
 }
 
 jar {

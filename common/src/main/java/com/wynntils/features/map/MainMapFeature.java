@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
+import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.WaypointCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;

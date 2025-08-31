@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -33,7 +33,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.CHAT)
 public class InputTranscriptionFeature extends Feature {
     @Persisted
-    public final Config<Boolean> transcriptionButtons = new Config<>(true);
+    private final Config<Boolean> transcriptionButtons = new Config<>(true);
 
     private static final int MAX_CHAT_LENGTH = 256;
     // Numbers higher than this will be replaced with "∞"

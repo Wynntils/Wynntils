@@ -47,7 +47,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class WynnItemParser {
-    public static final Pattern HEALTH_PATTERN = Pattern.compile("^§4❤ Health: ([+-]\\d+)(?:§r)?$");
+    private static final Pattern HEALTH_PATTERN = Pattern.compile("^§4❤ Health: ([+-]\\d+)(?:§r)?$");
 
     // Test in WynnItemParser_ITEM_ATTACK_SPEED_PATTERN
     private static final Pattern ITEM_ATTACK_SPEED_PATTERN = Pattern.compile("^§7(.+ Attack Speed)(?:§r)?$");
@@ -108,7 +108,7 @@ public final class WynnItemParser {
             Pattern.compile("§[ac]([-+]\\d+)(%| tier|/[35]s)? ?§7 ?(.*)");
 
     // Test in WynnItemParser_SHINY_STAT_PATTERN
-    public static final Pattern SHINY_STAT_PATTERN =
+    private static final Pattern SHINY_STAT_PATTERN =
             Pattern.compile("^§f⬡ §7(?: )?([a-zA-Z ]+): §f(\\d+)(?:§8 \\[(\\d+)\\])?$");
 
     // Crafted items

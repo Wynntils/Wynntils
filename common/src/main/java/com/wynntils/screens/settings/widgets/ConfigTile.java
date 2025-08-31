@@ -70,10 +70,6 @@ public class ConfigTile extends WynntilsButton {
                 maskBottomY);
     }
 
-    public ConfigTile(int x, int y, int width, int height, Screen screen, Config<?> config) {
-        this(x, y, width, height, screen, config, null);
-    }
-
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
@@ -114,6 +110,10 @@ public class ConfigTile extends WynntilsButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies to drag and released
         if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
+
+        if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+            bookSettingsScreen.changesMade();
+        }
 
         return resetButton.mouseClicked(mouseX, mouseY, button)
                 || configOptionElement.mouseClicked(mouseX, mouseY, button);

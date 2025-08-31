@@ -20,17 +20,17 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public abstract class TooltipBuilder {
-    protected static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
+    private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
             new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, true);
-    protected final List<Component> header;
-    protected final List<Component> footer;
-    protected final String source;
+    private final List<Component> header;
+    private final List<Component> footer;
+    private final String source;
 
     // The identificationsCache is only valid if the cached dependencies matchs
-    protected ClassType cachedCurrentClass;
-    protected TooltipStyle cachedStyle;
-    protected TooltipIdentificationDecorator cachedDecorator;
-    protected List<Component> identificationsCache;
+    private ClassType cachedCurrentClass;
+    private TooltipStyle cachedStyle;
+    private TooltipIdentificationDecorator cachedDecorator;
+    private List<Component> identificationsCache;
 
     protected TooltipBuilder(List<Component> header, List<Component> footer, String source) {
         this.header = header;
