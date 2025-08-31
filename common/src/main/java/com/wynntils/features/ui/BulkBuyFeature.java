@@ -97,10 +97,8 @@ public class BulkBuyFeature extends Feature {
         if (bulkBoughtSlotNumber != -1) return;
 
         if (!(screen instanceof ContainerScreen containerScreen)) return;
-        if (!(containerScreen.getMenu() instanceof AbstractContainerMenu acm)
-                || acm.getItems().size() != 90) {
-            return;
-        }
+        if (!(containerScreen.getMenu() instanceof AbstractContainerMenu acm)) return;
+        if (acm.getItems().size() != 90) return;
 
         StyledText title = StyledText.fromComponent(acm.getSlot(4).getItem().getHoverName());
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;
