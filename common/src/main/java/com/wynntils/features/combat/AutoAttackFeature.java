@@ -81,8 +81,7 @@ public class AutoAttackFeature extends Feature {
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
         if (!Models.Spell.isSpellQueueEmpty()) return;
-        // Archers already have auto attack
-        if (Models.Character.getClassType() == ClassType.ARCHER) return;
+
         int tickCount = McUtils.player().tickCount;
 
         if (lastSpellInput + Models.Spell.SPELL_COST_RESET_TICKS < tickCount) {
@@ -99,9 +98,10 @@ public class AutoAttackFeature extends Feature {
 
         if (weaponStatus != WeaponStatus.USABLE) return;
 
-        if (!McUtils.options().keyAttack.isDown()) return;
+        if (Models.Character.getClassType() == ClassType.ARCHER ?
+                !McUtils.options().keyUse.isDown() : !McUtils.options().keyAttack.isDown()) return;
 
-        MouseUtils.sendAttackInput(false);
+        MouseUtils.sendAttackInput(Models.Character.getClassType() == ClassType.ARCHER);
     }
 
     private void handleInput() {
