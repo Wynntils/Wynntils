@@ -30,7 +30,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class BombModel extends Model {
-    public static final TrackedBar InfoBar = new InfoBar();
+    private static final TrackedBar InfoBar = new InfoBar();
 
     // Test in BombModel_BOMB_BELL_PATTERN
     private static final Pattern BOMB_BELL_PATTERN = Pattern.compile(

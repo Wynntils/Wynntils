@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 
 public class CharacterSelectionLevelSegmentMatcher implements ActionBarSegmentMatcher {
     // The start and end characters' high surrogate for the level segment
-    protected static final char POSITIVE_SPACE_HIGH_SURROGATE = '\uDB00';
-    protected static final char NEGATIVE_SPACE_HIGH_SURROGATE = '\uDAFF';
+    private static final char POSITIVE_SPACE_HIGH_SURROGATE = '\uDB00';
+    private static final char NEGATIVE_SPACE_HIGH_SURROGATE = '\uDAFF';
 
     // A separator between the level characters
     private static final String SEPARATOR = "\uDAFF\uDFFE";

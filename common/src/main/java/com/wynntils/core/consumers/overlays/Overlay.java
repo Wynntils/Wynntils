@@ -33,7 +33,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     protected final Config<String> enabledTemplate = new Config<>("");
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.position")
-    protected final Config<OverlayPosition> position = new Config<>(null);
+    private final Config<OverlayPosition> position = new Config<>(null);
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.size")
     protected final Config<OverlaySize> size = new Config<>(null);

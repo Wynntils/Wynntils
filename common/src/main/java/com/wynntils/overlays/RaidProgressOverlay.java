@@ -34,7 +34,7 @@ public class RaidProgressOverlay extends TextOverlay {
     public final Config<Boolean> showDamage = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> disableRaidInfoOnScoreboard = new Config<>(false);
+    private final Config<Boolean> disableRaidInfoOnScoreboard = new Config<>(false);
 
     public RaidProgressOverlay() {
         super(

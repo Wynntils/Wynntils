@@ -5,7 +5,6 @@
 package com.wynntils.services.leaderboard;
 
 import com.google.gson.JsonElement;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.ApiResponse;
@@ -46,7 +45,6 @@ public class LeaderboardService extends Service {
                             entry.getValue().getAsJsonObject().get("uuid").getAsString();
 
                     if (uuidStr.equals("redacted")) {
-                        WynntilsMod.info(type.getKey() + " leaderboard position " + entry.getKey() + " is redacted.");
                         continue;
                     }
 

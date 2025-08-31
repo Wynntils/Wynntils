@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.custombars;
@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class ManaTexturedCustomBarOverlay extends CustomBarOverlayBase {
     @Persisted(i18nKey = "overlay.wynntils.manaBar.manaTexture")
-    public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
+    private final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
 
     public ManaTexturedCustomBarOverlay(int id) {
         super(id, new OverlaySize(81, 21));

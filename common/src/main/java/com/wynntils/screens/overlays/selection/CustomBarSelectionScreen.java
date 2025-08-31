@@ -48,7 +48,7 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
     private int barTypeIndex = 0;
 
     private CustomBarSelectionScreen(OverlaySelectionScreen previousScreen) {
-        super(Component.translatable("Custom Bar Overlay Selection Screen"));
+        super(Component.translatable("screens.wynntils.customBarSelection.name"));
 
         this.previousScreen = previousScreen;
     }

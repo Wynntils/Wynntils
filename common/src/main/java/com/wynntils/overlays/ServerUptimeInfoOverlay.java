@@ -17,7 +17,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class ServerUptimeInfoOverlay extends TextOverlay {
     @Persisted
-    public final Config<Boolean> showWorldInStream = new Config<>(false);
+    private final Config<Boolean> showWorldInStream = new Config<>(false);
 
     public ServerUptimeInfoOverlay() {
         super(

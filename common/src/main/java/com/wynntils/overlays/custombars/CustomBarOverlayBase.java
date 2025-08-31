@@ -13,20 +13,20 @@ import com.wynntils.core.persisted.config.HiddenConfig;
 
 public abstract class CustomBarOverlayBase extends BarOverlay implements CustomNameProperty {
     @Persisted
-    public final HiddenConfig<String> customName = new HiddenConfig<>("");
+    private final HiddenConfig<String> customName = new HiddenConfig<>("");
 
     @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.textTemplate")
-    public final Config<String> textTemplate = new Config<>("");
+    private final Config<String> textTemplate = new Config<>("");
 
     @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.valueTemplate")
-    public final Config<String> valueTemplate = new Config<>("");
+    private final Config<String> valueTemplate = new Config<>("");
 
     protected CustomBarOverlayBase(int id, OverlaySize overlaySize) {
         super(id, overlaySize);
     }
 
     @Override
-    public BarOverlayTemplatePair getTemplate() {
+    protected BarOverlayTemplatePair getTemplate() {
         return new BarOverlayTemplatePair(textTemplate.get(), valueTemplate.get());
     }
 

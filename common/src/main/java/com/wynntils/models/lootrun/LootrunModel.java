@@ -175,8 +175,9 @@ public final class LootrunModel extends Model {
     @Persisted
     private final Storage<Integer> expectedPulls = new Storage<>(-1);
 
+    private final Set<UUID> checkedItemEntities = new HashSet<>();
+
     private Location closestLootrunMasterLocation = null;
-    private Set<UUID> checkedItemEntities = new HashSet<>();
     private boolean foundLootrunMythic = false;
     private boolean rerollingRewards = false;
     private boolean rewardChestIsOpened = false;
@@ -890,7 +891,7 @@ public final class LootrunModel extends Model {
         expectRainbowBeacon = false;
     }
 
-    public void addToRedBeaconTaskCount(int changeAmount) {
+    private void addToRedBeaconTaskCount(int changeAmount) {
         int oldCount = getCurrentLootrunDetails().getRedBeaconTaskCount();
 
         int newCount = Math.max(oldCount + changeAmount, 0);
@@ -1054,6 +1055,12 @@ public final class LootrunModel extends Model {
             lootrunDetails.setRainbowBeaconCount(newCount);
         }
 
+        List<Integer> orangeCounts = getOrangeCounts(lootrunDetails);
+        lootrunDetails.setOrangeBeaconCounts(orangeCounts);
+        lootrunDetailsStorage.get().put(Models.Character.getId(), lootrunDetails);
+    }
+
+    private List<Integer> getOrangeCounts(LootrunDetails lootrunDetails) {
         List<Integer> orangeCounts = new ArrayList<>(lootrunDetails.getOrangeBeaconCounts());
 
         if (!orangeCounts.isEmpty()) {
@@ -1069,10 +1076,7 @@ public final class LootrunModel extends Model {
                 }
             }
         }
-
-        lootrunDetails.setOrangeBeaconCounts(orangeCounts);
-
-        lootrunDetailsStorage.get().put(Models.Character.getId(), lootrunDetails);
+        return orangeCounts;
     }
 
     private boolean updateTaskLocationPrediction(Beacon beacon, LootrunBeaconMarkerKind lootrunMarker, int distance) {
