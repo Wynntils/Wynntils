@@ -1001,7 +1001,9 @@ public final class RenderUtils {
             // bottom left
             bufferBuilder.addVertex(matrix, leftX, y + height, z).setColor(color.r(), color.g(), color.b(), color.a());
             // bottom right
-            bufferBuilder.addVertex(matrix, centerX, y + height, z).setColor(color.r(), color.g(), color.b(), color.a());
+            bufferBuilder
+                    .addVertex(matrix, centerX, y + height, z)
+                    .setColor(color.r(), color.g(), color.b(), color.a());
             // top right
             bufferBuilder.addVertex(matrix, rightX, y, z).setColor(color.r(), color.g(), color.b(), color.a());
             // top left
