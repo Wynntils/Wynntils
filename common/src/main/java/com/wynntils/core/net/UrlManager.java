@@ -331,10 +331,8 @@ public final class UrlManager extends Manager {
                 // Two main rules are applied:
                 // 1. If an URL is only present in the local cache, it is added to the list, without a hash.
                 // 2. If an URL is present in both the local cache and the bundled list, remove the hash info,
-                // to
-                //    ensure that the most up-to-date data is downloaded, as we have no way of knowing which one
-                // is
-                //    correct.
+                //    to ensure that the most up-to-date data is downloaded, as we have no way of knowing which one
+                //    is correct.
 
                 // Add all URLs from the local cache that are not in the current list
                 localCacheList.urls.entrySet().stream()
