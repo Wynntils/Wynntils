@@ -52,6 +52,7 @@ public final class HadesService extends Service {
 
     private final HadesUserRegistry userRegistry = new HadesUserRegistry();
 
+    private CompletableFuture<Void> connectionFuture;
     private HadesConnection hadesConnection;
     private int tickCountUntilUpdate = 0;
     private PlayerStatus lastSentStatus;
@@ -66,9 +67,13 @@ public final class HadesService extends Service {
     }
 
     private void login() {
-        // Try to log in to Hades, if we're not already connected
-        if (!isConnected()) {
-            CompletableFuture.runAsync(this::tryCreateConnection);
+        connect();
+    }
+
+    private synchronized void connect() {
+        // Try to log in to Hades, if we're not already connected or trying to connect
+        if (!isConnected() && (connectionFuture == null || connectionFuture.isDone())) {
+            connectionFuture = CompletableFuture.runAsync(this::tryCreateConnection);
         }
     }
 
@@ -91,6 +96,7 @@ public final class HadesService extends Service {
     public void tryDisconnect() {
         if (hadesConnection != null && hadesConnection.isOpen()) {
             hadesConnection.disconnect();
+            connectionFuture = null;
         }
     }
 
@@ -112,6 +118,7 @@ public final class HadesService extends Service {
         if (pingScheduler == null) return;
         pingScheduler.shutdown();
         pingScheduler = null;
+        connectionFuture = null;
     }
 
     private void sendPing() {
@@ -148,10 +155,8 @@ public final class HadesService extends Service {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() != WorldState.NOT_CONNECTED && !isConnected()) {
-            if (Services.WynntilsAccount.isLoggedIn()) {
-                CompletableFuture.runAsync(this::tryCreateConnection);
-            }
+        if (event.getNewState() != WorldState.NOT_CONNECTED && Services.WynntilsAccount.isLoggedIn()) {
+            connect();
         }
 
         userRegistry.reset();
