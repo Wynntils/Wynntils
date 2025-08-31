@@ -198,14 +198,14 @@ public final class HadesService extends Service {
         if (!isConnected()) return;
         if (!Models.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
         if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
-                .shareWithParty
-                .get()
+                        .shareWithParty
+                        .get()
                 && !Managers.Feature.getFeatureInstance(HadesFeature.class)
-                .shareWithGuild
-                .get()
+                        .shareWithGuild
+                        .get()
                 && !Managers.Feature.getFeatureInstance(HadesFeature.class)
-                .shareWithFriends
-                .get()) return;
+                        .shareWithFriends
+                        .get()) return;
 
         tickCountUntilUpdate--;
 
