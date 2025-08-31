@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.statistics;
@@ -20,7 +20,7 @@ import java.util.TreeMap;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class StatisticsService extends Service {
-    private final StatisticsCollectors collectors = new StatisticsCollectors();
+    private static final StatisticsCollectors COLLECTORS = new StatisticsCollectors();
 
     // All statistics, per character
     @Persisted
@@ -35,7 +35,7 @@ public final class StatisticsService extends Service {
     public StatisticsService() {
         super(List.of());
 
-        WynntilsMod.registerEventListener(collectors);
+        WynntilsMod.registerEventListener(COLLECTORS);
     }
 
     @SubscribeEvent
