@@ -90,6 +90,22 @@ public abstract class BaseBarOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        float renderedProgress = Math.round((flip.get() ? -1 : 1) * currentProgress * 100) / 100f;
+        renderAll(guiGraphics, bufferSource, renderedProgress);
+    }
+
+    @Override
+    public void renderPreview(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        if (progress() == null) {
+            renderAll(guiGraphics, bufferSource, 50);
+            return;
+        }
+        float renderedProgress = Math.round((flip.get() ? -1 : 1) * currentProgress * 100) / 100f;
+        renderAll(guiGraphics, bufferSource, renderedProgress);
+    }
+
+    private void renderAll(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderedProgress) {
         PoseStack poseStack = guiGraphics.pose();
 
         float barHeight = textureHeight() * (this.getWidth() / 81);
@@ -97,15 +113,21 @@ public abstract class BaseBarOverlay extends Overlay {
 
         renderText(poseStack, bufferSource, renderY, text());
 
-        float renderedProgress = Math.round((flip.get() ? -1 : 1) * currentProgress * 100) / 100f;
         renderBar(poseStack, bufferSource, renderY + 10, barHeight, renderedProgress);
     }
 
     protected String text() {
         BossBarProgress barProgress = progress();
-        return String.format(
-                "%s %s %s",
-                barProgress.value().current(), icon(), barProgress.value().max());
+        int current;
+        int max;
+        if (barProgress == null) {
+            current = 1;
+            max = 2;
+        } else {
+            current = progress().value().current();
+            max = progress().value().max();
+        }
+        return String.format("%s %s %s", current, icon(), max);
     }
 
     protected String icon() {
