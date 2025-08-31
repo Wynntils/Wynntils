@@ -1102,7 +1102,7 @@ public final class LootrunModel extends Model {
 
         if (currentTaskLocations.isEmpty()) {
             WynntilsMod.warn("No task locations found!");
-            return foundTask;
+            return false;
         }
 
         List<TaskPrediction> usedTaskLocations = beacons.entrySet().stream()
