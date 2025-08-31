@@ -35,7 +35,8 @@ public final class EmeraldPouchAnnotator implements GameItemAnnotator {
         // This can be an emerald pouch on the trade market, it has no amount line
         if (!amountMatcher.matches()) return new EmeraldPouchItem(tier, 0);
 
-        int amount = Integer.parseInt(WHITESPACE_PATTERN.matcher(amountMatcher.group(1)).replaceAll(""));
+        int amount = Integer.parseInt(
+                WHITESPACE_PATTERN.matcher(amountMatcher.group(1)).replaceAll(""));
 
         return new EmeraldPouchItem(tier, amount);
     }

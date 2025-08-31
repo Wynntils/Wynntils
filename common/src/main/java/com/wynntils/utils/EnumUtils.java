@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
@@ -50,7 +50,8 @@ public final class EnumUtils {
         // replaceAll
         // We have to account for CHEST_T1, which works fine with CaseFormat, hence the [a-z] regex
         String enumName = CaseFormat.LOWER_CAMEL.to(
-                CaseFormat.UPPER_UNDERSCORE, NUM_AFTER_ALPHA_PATTERN.matcher(jsonFormattedName).replaceAll("$1_$2"));
+                CaseFormat.UPPER_UNDERSCORE,
+                NUM_AFTER_ALPHA_PATTERN.matcher(jsonFormattedName).replaceAll("$1_$2"));
 
         try {
             return Enum.valueOf(enumClazz, enumName);

@@ -133,8 +133,8 @@ public final class ActionBarHandler extends Handler {
         List<ActionBarSegment> matchedSegments = new ArrayList<>();
 
         for (ActionBarSegmentMatcher segmentMatcher : segmentMatchers) {
-            ActionBarSegment parsedSegment =
-                    segmentMatcher.parse(PERCENT_PATTERN.matcher(actionBarText.getString()).replaceAll(""));
+            ActionBarSegment parsedSegment = segmentMatcher.parse(
+                    PERCENT_PATTERN.matcher(actionBarText.getString()).replaceAll(""));
             if (parsedSegment == null) continue;
 
             matchedSegments.add(parsedSegment);

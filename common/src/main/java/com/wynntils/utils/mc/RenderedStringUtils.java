@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -80,7 +80,8 @@ public final class RenderedStringUtils {
                 color = line.getString().substring(0, 2);
             }
 
-            return StyledText.fromString(OPENING_BRACKET_PATTERN.matcher(line.getString()).replaceFirst("\n" + color + "["));
+            return StyledText.fromString(
+                    OPENING_BRACKET_PATTERN.matcher(line.getString()).replaceFirst("\n" + color + "["));
         } else if (maxFitting.contains("(")
                 && !maxFitting.contains(")")) { // Detail line did not appear to fit, force break
             String color = "";
@@ -89,7 +90,8 @@ public final class RenderedStringUtils {
                 color = line.getString().substring(0, 2);
             }
 
-            return StyledText.fromString(OPENING_PARANTHESIS_PATTERN.matcher(line.getString()).replaceFirst("\n" + color + "("));
+            return StyledText.fromString(
+                    OPENING_PARANTHESIS_PATTERN.matcher(line.getString()).replaceFirst("\n" + color + "("));
         } else { // Fits fine, give normal lines
             return line;
         }

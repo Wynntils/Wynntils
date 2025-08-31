@@ -57,8 +57,10 @@ public final class StyledTextUtils {
     }
 
     public static StyledText joinLines(List<StyledText> lines) {
-        String description = WHITESPACES_PATTERN.matcher(String.join(
-                        " ", lines.stream().map(StyledText::getString).toList())).replaceAll(" ")
+        String description = WHITESPACES_PATTERN
+                .matcher(String.join(
+                        " ", lines.stream().map(StyledText::getString).toList()))
+                .replaceAll(" ")
                 .trim();
         return StyledText.fromString(description);
     }

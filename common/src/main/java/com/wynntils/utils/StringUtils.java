@@ -155,7 +155,8 @@ public final class StringUtils {
      */
     public static boolean initialMatch(String toMatch, String searchTerm) {
         String lookAt = toMatch.toLowerCase(Locale.ROOT);
-        String searchFor = WHITESPACES.matcher(searchTerm.strip().toLowerCase(Locale.ROOT)).replaceAll(" ");
+        String searchFor =
+                WHITESPACES.matcher(searchTerm.strip().toLowerCase(Locale.ROOT)).replaceAll(" ");
         // Turn all spaces into .*, including start and end
         String regex = (" " + searchFor + " ").replace(" ", ".*");
         return lookAt.matches(regex);
@@ -179,7 +180,8 @@ public final class StringUtils {
     }
 
     public static String convertMarkdownToColorCode(String input) {
-        return ChatFormatting.RESET + MARKDOWN_HEADER_PATTERN.matcher(input).replaceFirst(String.valueOf(ChatFormatting.BOLD));
+        return ChatFormatting.RESET
+                + MARKDOWN_HEADER_PATTERN.matcher(input).replaceFirst(String.valueOf(ChatFormatting.BOLD));
     }
 
     public static ByteBuffer decodeBase64(String base64) {
