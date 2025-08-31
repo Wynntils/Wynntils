@@ -372,7 +372,7 @@ public final class UrlManager extends Manager {
             urlMapper = new UrlMapper(currentVersion, currentUrls);
         }
 
-        if (urlMapper == null || urlMapper.urls().isEmpty()) {
+        if (urlMapper.urls().isEmpty()) {
             throw new IllegalStateException(
                     """
                                  URL list is empty after merging. This means all three of the URL sources failed to load.
