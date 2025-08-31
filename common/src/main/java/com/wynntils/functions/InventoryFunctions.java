@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class InventoryFunctions {
     public static class AccessoryDurabilityFunction extends Function<CappedValue> {
@@ -269,7 +270,7 @@ public class InventoryFunctions {
         public String getValue(FunctionArguments arguments) {
             ItemStack itemInHand = InventoryUtils.getItemInHand();
 
-            if (itemInHand == null) {
+            if (itemInHand.getItem() == Items.AIR) {
                 return "NONE";
             }
 
