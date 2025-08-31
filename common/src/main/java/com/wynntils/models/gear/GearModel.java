@@ -80,7 +80,7 @@ public final class GearModel extends Model {
         return possibleGear;
     }
 
-    public boolean canBeGearBox(GearInfo gear) {
+    private boolean canBeGearBox(GearInfo gear) {
         // If an item is pre-identified, it cannot be in a gear box
         // Also check that the item has a source that can drop boxed items
         return !gear.metaInfo().preIdentified()

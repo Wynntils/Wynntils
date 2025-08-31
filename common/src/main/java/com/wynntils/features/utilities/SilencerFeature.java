@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -35,7 +35,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.UTILITIES)
 public class SilencerFeature extends Feature {
     @Persisted
-    public final Config<Double> silencerVolume = new Config<>(0.01);
+    private final Config<Double> silencerVolume = new Config<>(0.01);
 
     @RegisterKeyBind
     private final KeyBind silencerKeyBind =

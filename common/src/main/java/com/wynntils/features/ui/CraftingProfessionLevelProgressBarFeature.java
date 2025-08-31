@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -29,7 +29,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UI)
 public class CraftingProfessionLevelProgressBarFeature extends Feature {
     @Persisted
-    public final Config<ObjectivesTextures> texture = new Config<>(ObjectivesTextures.WYNN);
+    private final Config<ObjectivesTextures> texture = new Config<>(ObjectivesTextures.WYNN);
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {

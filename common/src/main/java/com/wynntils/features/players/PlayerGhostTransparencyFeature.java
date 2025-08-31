@@ -20,10 +20,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.PLAYERS)
 public class PlayerGhostTransparencyFeature extends Feature {
     @Persisted
-    public final Config<Float> playerGhostTranslucenceLevel = new Config<>(0.75f);
+    private final Config<Float> playerGhostTranslucenceLevel = new Config<>(0.75f);
 
     @Persisted
-    public final Config<Boolean> transparentPlayerGhostArmor = new Config<>(true);
+    private final Config<Boolean> transparentPlayerGhostArmor = new Config<>(true);
 
     @SubscribeEvent
     public void onTranslucentCheck(RenderTranslucentCheckEvent.Body e) {

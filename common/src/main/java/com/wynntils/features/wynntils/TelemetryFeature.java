@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -31,7 +31,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 @ConfigCategory(Category.WYNNTILS)
 public class TelemetryFeature extends Feature {
     @Persisted
-    public final Config<ConfirmedBoolean> crashReports = new Config<>(ConfirmedBoolean.UNCONFIRMED);
+    private final Config<ConfirmedBoolean> crashReports = new Config<>(ConfirmedBoolean.UNCONFIRMED);
 
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {

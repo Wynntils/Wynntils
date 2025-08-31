@@ -11,7 +11,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.GetCameraEntityEvent;
@@ -56,31 +55,31 @@ public class CustomNametagRendererFeature extends Feature {
     private static final String WYNNTILS_NAMETAG_LOGO = "\uE100";
 
     @Persisted
-    public final Config<Boolean> hideAllNametags = new Config<>(false);
+    private final Config<Boolean> hideAllNametags = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> showOwnNametag = new Config<>(false);
+    private final Config<Boolean> showOwnNametag = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> hidePlayerNametags = new Config<>(false);
+    private final Config<Boolean> hidePlayerNametags = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> hideNametagBackground = new Config<>(false);
+    private final Config<Boolean> hideNametagBackground = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> showLeaderboardBadges = new Config<>(true);
+    private final Config<Boolean> showLeaderboardBadges = new Config<>(true);
 
     @Persisted
-    public final Config<Integer> badgeCount = new Config<>(7);
+    private final Config<Integer> badgeCount = new Config<>(7);
 
     @Persisted
-    public final Config<Boolean> showGearOnHover = new Config<>(true);
+    private final Config<Boolean> showGearOnHover = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showWynntilsMarker = new Config<>(true);
+    private final Config<Boolean> showWynntilsMarker = new Config<>(true);
 
     @Persisted
-    public final Config<Float> customNametagScale = new Config<>(0.5f);
+    private final Config<Float> customNametagScale = new Config<>(0.5f);
 
     private Player hitPlayerCache = null;
 
@@ -184,7 +183,7 @@ public class CustomNametagRendererFeature extends Feature {
         Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
 
-        WynntilsUser user = Models.Player.getUser(player.getUUID());
+        WynntilsUser user = Models.Player.getWynntilsUser(player);
         if (user == null) {
             if (!nametags.isEmpty()) {
                 // We will cancel vanilla rendering, so we must add back the normal vanilla base nametag
@@ -200,30 +199,27 @@ public class CustomNametagRendererFeature extends Feature {
                     new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
         }
 
-        // Add an appropriate Wynntils marker
-        Component realName = event.getDisplayName();
-        Component vanillaNametag = realName;
-
-        if (showWynntilsMarker.get()) {
-            StyledText styledText = StyledText.fromComponent(realName);
-            if (styledText.getString(PartStyle.StyleType.NONE).startsWith("[")) {
-                vanillaNametag = Component.empty()
-                        .append(Component.literal(WYNNTILS_NAMETAG_LOGO)
-                                .withStyle(Style.EMPTY
-                                        .withFont(WYNNTILS_NAMETAG_LOGO_FONT)
-                                        .withColor(ChatFormatting.DARK_GRAY)))
-                        .append(realName);
-            } else {
-                vanillaNametag = Component.empty()
-                        .append(Component.literal(WYNNTILS_NAMETAG_LOGO)
-                                .withStyle(Style.EMPTY
-                                        .withFont(WYNNTILS_NAMETAG_LOGO_FONT)
-                                        .withColor(ChatFormatting.GRAY)))
-                        .append(" ")
-                        .append(realName);
-            }
+        if (!showWynntilsMarker.get()) {
+            // We will cancel vanilla rendering, so we must add back the normal vanilla base nametag
+            Component realName = event.getDisplayName();
+            nametags.add(new CustomNametag(realName, 1f));
+            return;
         }
-        nametags.add(new CustomNametag(vanillaNametag, 1f));
+
+        // Add an appropriate Wynntils marker
+        ChatFormatting logoColor;
+        if (Models.Player.isLocalPlayer(player)) {
+            logoColor = ChatFormatting.WHITE;
+        } else {
+            logoColor = ChatFormatting.GRAY;
+        }
+        Component prefixedName = Component.empty()
+                .append(Component.literal(WYNNTILS_NAMETAG_LOGO)
+                        .withStyle(
+                                Style.EMPTY.withFont(WYNNTILS_NAMETAG_LOGO_FONT).withColor(logoColor)))
+                .append(" ")
+                .append(event.getDisplayName());
+        nametags.add(new CustomNametag(prefixedName, 1f));
     }
 
     private void drawNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
@@ -261,7 +257,7 @@ public class CustomNametagRendererFeature extends Feature {
         Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
 
-        List<LeaderboardBadge> allBadges = Services.Leaderboard.getBadges(player.getUUID());
+        List<LeaderboardBadge> allBadges = Services.Leaderboard.getBadges(Models.Player.getUserUUID(player));
 
         if (allBadges.isEmpty()) return;
 

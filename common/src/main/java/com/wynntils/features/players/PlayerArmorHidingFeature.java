@@ -22,19 +22,19 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.PLAYERS)
 public class PlayerArmorHidingFeature extends Feature {
     @Persisted
-    public final Config<Boolean> hideHelmets = new Config<>(true);
+    private final Config<Boolean> hideHelmets = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> hideChestplates = new Config<>(true);
+    private final Config<Boolean> hideChestplates = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> hideLeggings = new Config<>(true);
+    private final Config<Boolean> hideLeggings = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> hideBoots = new Config<>(true);
+    private final Config<Boolean> hideBoots = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showCosmetics = new Config<>(true);
+    private final Config<Boolean> showCosmetics = new Config<>(true);
 
     @SubscribeEvent
     public void onPlayerArmorRender(PlayerRenderLayerEvent.Armor event) {

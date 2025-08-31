@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -120,7 +120,7 @@ public class ProfessionHighlightFeature extends Feature {
         RenderSystem.disableDepthTest();
     }
 
-    public void setSelectedProfession(ProfessionType professionType) {
+    private void setSelectedProfession(ProfessionType professionType) {
         if (selectionMode.get() == HighlightSelectionMode.GLOBAL) {
             selectedProfession.store(professionType);
             return;
@@ -135,7 +135,7 @@ public class ProfessionHighlightFeature extends Feature {
         selectionPerContainer.touched();
     }
 
-    public ProfessionType getSelectedProfession() {
+    private ProfessionType getSelectedProfession() {
         if (selectionMode.get() == HighlightSelectionMode.GLOBAL) {
             return selectedProfession.get();
         }

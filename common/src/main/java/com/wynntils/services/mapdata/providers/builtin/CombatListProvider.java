@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.providers.builtin;
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 public class CombatListProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
-    private static int counter;
+    private static int counter = 0;
 
     @Override
     public String getProviderId() {
