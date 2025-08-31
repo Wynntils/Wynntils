@@ -75,7 +75,7 @@ public class CustomLoadingScreenFeature extends Feature {
     public void onTitleSetText(TitleSetTextEvent e) {
         if (loadingScreen == null) return;
 
-        loadingScreen.setTitle(e.getComponent().getString());
+        loadingScreen.setStageTitle(e.getComponent().getString());
     }
 
     @SubscribeEvent
