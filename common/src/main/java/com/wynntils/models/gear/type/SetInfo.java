@@ -6,6 +6,7 @@ package com.wynntils.models.gear.type;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.stats.type.StatType;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ import net.minecraft.util.Mth;
 public record SetInfo(String name, List<Map<StatType, Integer>> bonuses, List<String> items) {
     public static final Codec<SetInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                     Codec.STRING.fieldOf("name").forGetter(SetInfo::name),
-                    Codec.unboundedMap(StatType.CODEC, Codec.INT)
+                    Codec.unboundedMap(Models.Stat.CODEC, Codec.INT)
                             .listOf()
                             .fieldOf("bonuses")
                             .forGetter(SetInfo::bonuses),

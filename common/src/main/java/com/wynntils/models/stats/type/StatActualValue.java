@@ -6,11 +6,12 @@ package com.wynntils.models.stats.type;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.wynntils.core.components.Models;
 import com.wynntils.utils.type.RangedValue;
 
 public record StatActualValue(StatType statType, int value, int stars, RangedValue internalRoll) {
     public static final Codec<StatActualValue> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                    StatType.CODEC.fieldOf("statType").forGetter(StatActualValue::statType),
+                    Models.Stat.CODEC.fieldOf("statType").forGetter(StatActualValue::statType),
                     Codec.INT.fieldOf("value").forGetter(StatActualValue::value),
                     Codec.INT.fieldOf("stars").forGetter(StatActualValue::stars),
                     RangedValue.CODEC.fieldOf("internalRoll").forGetter(StatActualValue::internalRoll))

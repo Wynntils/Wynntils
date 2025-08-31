@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
 
 import com.google.common.reflect.TypeToken;
+import com.mojang.serialization.Codec;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -41,6 +42,11 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 public final class StatModel extends Model {
+    // Since this codec self-references StatModel, we can't put it in StatType nor make it static here
+    // FIXME: We should serialize StatType more thoroughly
+    //        Right now we just save the API names but still use StatModel to look them up
+    public final Codec<StatType> CODEC = Codec.STRING.xmap(this::fromApiName, StatType::getApiName);
+
     private final List<StatType> statTypeRegistry = new ArrayList<>();
     private final StatLookupTable statTypeLookup = new StatLookupTable();
     private final Map<StatListOrdering, List<StatType>> orderingLists;

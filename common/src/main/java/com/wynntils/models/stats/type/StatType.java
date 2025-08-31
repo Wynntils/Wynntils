@@ -4,8 +4,6 @@
  */
 package com.wynntils.models.stats.type;
 
-import com.mojang.serialization.Codec;
-import com.wynntils.core.components.Models;
 import com.wynntils.utils.type.RangedValue;
 import java.math.RoundingMode;
 import java.util.List;
@@ -15,10 +13,6 @@ import java.util.Optional;
 // The key is strictly not necessary, but is internally useful
 // The "internalRollName" is what is used in the json lore of other player's items
 public abstract class StatType {
-    // FIXME: We should serialize StatType more thoroughly
-    //        Right now we just save the API names but still use StatModel to look them up
-    public static final Codec<StatType> CODEC = Codec.STRING.xmap(Models.Stat::fromApiName, StatType::getApiName);
-
     // These ranges are used everywhere, except charms
     private static final List<RangedValue> STAR_INTERNAL_ROLL_RANGES = List.of(
             RangedValue.of(30, 100), // 0 stars

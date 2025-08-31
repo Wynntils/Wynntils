@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.mojang.serialization.JsonOps;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -17,6 +18,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
@@ -54,6 +56,17 @@ public class LogItemInfoFeature extends Feature {
 
         WynntilsMod.info(description);
         McUtils.sendMessageToClient(Component.literal(description).withStyle(ChatFormatting.AQUA));
+
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+        if (gearItemOpt.isPresent()) {
+            GearItem gearItem = gearItemOpt.get();
+            WynnItem.WYNN_ITEM_CODEC
+                    .encodeStart(JsonOps.INSTANCE, gearItem)
+                    .result()
+                    .ifPresentOrElse(
+                            json -> WynntilsMod.info("WynnItem JSON: " + json),
+                            () -> WynntilsMod.warn("Failed to encode WynnItem to JSON"));
+        }
     }
 
     private int showCommand(CommandContext<CommandSourceStack> context) {

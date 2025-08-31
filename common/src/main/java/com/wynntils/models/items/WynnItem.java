@@ -4,11 +4,15 @@
  */
 package com.wynntils.models.items;
 
+import com.mojang.serialization.Codec;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.codecs.WynnItemType;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class WynnItem implements ItemAnnotation {
+    public static final Codec<WynnItem> WYNN_ITEM_CODEC =
+            WynnItemType.CODEC.dispatch(WynnItem::getType, WynnItemType::getCodec);
+
     private final WynnItemData data = new WynnItemData();
 
     public WynnItemData getData() {

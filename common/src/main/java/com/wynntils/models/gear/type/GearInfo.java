@@ -6,6 +6,7 @@ package com.wynntils.models.gear.type;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.stats.type.FixedStats;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -33,7 +34,7 @@ public record GearInfo(
                     GearMetaInfo.CODEC.fieldOf("metaInfo").forGetter(GearInfo::metaInfo),
                     GearRequirements.CODEC.fieldOf("requirements").forGetter(GearInfo::requirements),
                     FixedStats.CODEC.fieldOf("fixedStats").forGetter(GearInfo::fixedStats),
-                    Pair.codec(StatType.CODEC, StatPossibleValues.CODEC)
+                    Pair.codec(Models.Stat.CODEC, StatPossibleValues.CODEC)
                             .listOf()
                             .fieldOf("variableStats")
                             .forGetter(GearInfo::variableStats),
