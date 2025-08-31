@@ -9,7 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.RenderStateShard;
 
 public abstract class CustomRenderStateShard extends RenderStateShard {
-    public static final TransparencyStateShard SEMI_TRANSPARENT_TRANSPARENCY = new TransparencyStateShard(
+    protected static final TransparencyStateShard SEMI_TRANSPARENT_TRANSPARENCY = new TransparencyStateShard(
             "semi_transparent_transparency",
             () -> {
                 RenderSystem.enableBlend();
