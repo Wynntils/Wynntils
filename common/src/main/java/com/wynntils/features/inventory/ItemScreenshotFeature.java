@@ -147,6 +147,7 @@ public class ItemScreenshotFeature extends Feature {
 
         // Free the buffer source to prevent memory leaks
         byteBuffer.close();
+        bufferSource = null;
 
         if (saveToDisk.get()) {
             // First try to save it to disk
