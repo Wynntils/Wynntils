@@ -813,7 +813,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                             setupButtons();
                         })
                 .pos(this.width / 2 - 10, yPos)
-                .size(BUTTON_HEIGHT, BUTTON_HEIGHT)
+                .size(BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(
                         buttonsAtBottom
                                 ? Component.translatable("screens.wynntils.overlayManagement.moveButtonsUpTooltip")
