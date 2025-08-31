@@ -384,11 +384,9 @@ public final class UrlManager extends Manager {
                 if (currentUrls.containsKey(key)) {
                     UrlInfo oldInfo = currentUrls.put(key, value);
 
-                    if (debugLogs.get()
-                            && oldInfo != null
-                            && !oldInfo.md5().equals(value.md5())) {
-                        WynntilsMod.info("Remote hash differs for " + key + ". Using remote hash. ("
-                                + oldInfo.md5() + " -> " + value.md5().orElse("null") + ")");
+                    if (debugLogs.get() && oldInfo != null && !oldInfo.md5().equals(value.md5())) {
+                        WynntilsMod.info("Remote hash differs for " + key + ". Using remote hash. (" + oldInfo.md5()
+                                + " -> " + value.md5().orElse("null") + ")");
                     }
                 } else {
                     currentUrls.put(key, value);
