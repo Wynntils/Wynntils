@@ -6,7 +6,6 @@ package com.wynntils.core.consumers.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
@@ -16,7 +15,6 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,9 +28,6 @@ public abstract class TextOverlay extends DynamicOverlay {
 
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.fontScale")
     protected final Config<Float> fontScale = new Config<>(1.0f);
-
-    @Persisted(i18nKey = "overlay.wynntils.textOverlay.enabledTemplate")
-    private final Config<String> enabledTemplate = new Config<>("");
 
     private StyledText[] cachedLines = new StyledText[0];
 
@@ -68,16 +63,12 @@ public abstract class TextOverlay extends DynamicOverlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        if (!isRendered()) return;
-
         renderTemplate(guiGraphics, bufferSource, cachedLines, getTextScale());
     }
 
     @Override
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        if (!Models.WorldState.onWorld()) return;
-
         renderTemplate(guiGraphics, bufferSource, calculateTemplateValue(getPreviewTemplate()), getTextScale());
     }
 
@@ -104,8 +95,13 @@ public abstract class TextOverlay extends DynamicOverlay {
 
     @Override
     public void tick() {
-        if (!Models.WorldState.onWorld()) return;
+        if (!isRendered()) return;
         cachedLines = calculateTemplateValue(getTemplate());
+    }
+
+    @Override
+    protected boolean isVisible() {
+        return !getTemplate().isEmpty();
     }
 
     protected StyledText[] calculateTemplateValue(String template) {
@@ -123,27 +119,4 @@ public abstract class TextOverlay extends DynamicOverlay {
     protected abstract String getTemplate();
 
     protected abstract String getPreviewTemplate();
-
-    public final boolean isRendered() {
-        // If the enabled template is empty,
-        // the overlay is rendered when the player is in the world.
-        String template = enabledTemplate.get();
-        if (template.isEmpty()) return isRenderedDefault();
-
-        // If the enabled template is not empty,
-        // the overlay is rendered when the template is true.
-        String formattedTemplate =
-                StyledText.join("", Managers.Function.doFormatLines(template)).getString();
-        ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(formattedTemplate, Boolean.class);
-        return !enabledOrError.hasError() && enabledOrError.getValue();
-    }
-
-    /**
-     * Returns whether the overlay is rendered with the default (empty) template.
-     *
-     * @return whether the overlay is rendered with the default (empty) template
-     */
-    public boolean isRenderedDefault() {
-        return Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe();
-    }
 }

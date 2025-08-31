@@ -59,11 +59,14 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
+    protected boolean isVisible() {
+        return Models.Objectives.getGuildObjective() != null;
+    }
+
+    @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         WynnObjective guildObjective = Models.Objectives.getGuildObjective();
-
-        if (guildObjective == null) return;
 
         PoseStack poseStack = guiGraphics.pose();
 

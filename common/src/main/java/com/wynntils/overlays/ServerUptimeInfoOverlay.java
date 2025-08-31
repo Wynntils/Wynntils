@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -45,7 +46,12 @@ public class ServerUptimeInfoOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean isRenderedDefault() {
-        return McUtils.mc().gui.getTabList().visible;
+    protected boolean hideWhenNoGui() {
+        return false;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return McUtils.mc().gui.getTabList().visible || Models.WorldState.getCurrentState() == WorldState.HUB;
     }
 }
