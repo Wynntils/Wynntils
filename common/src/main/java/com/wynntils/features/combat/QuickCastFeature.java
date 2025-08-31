@@ -80,8 +80,9 @@ public class QuickCastFeature extends Feature {
         if (!blockAttacks.get()) return;
         if (event.getActionContext() != ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
+        if (Models.Spell.isSpellQueueEmpty()) return;
 
-        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
+        event.setCanceled(true);
     }
 
     @SubscribeEvent
@@ -89,8 +90,9 @@ public class QuickCastFeature extends Feature {
         lastSpellTick = McUtils.player().tickCount;
 
         if (!blockAttacks.get()) return;
+        if (Models.Spell.isSpellQueueEmpty()) return;
 
-        event.setCanceled(!Models.Spell.isSpellQueueEmpty());
+        event.setCanceled(true);
     }
 
     @SubscribeEvent
@@ -171,7 +173,7 @@ public class QuickCastFeature extends Feature {
 
         boolean isSpellInverted = isArcher;
         List<SpellDirection> unconfirmedSpell = Stream.of(a, b, c)
-                .map(x -> (x == SpellUnit.PRIMARY) != isSpellInverted ? SpellDirection.RIGHT : SpellDirection.LEFT)
+                .map(x -> (x == SpellUnit.PRIMARY) == isSpellInverted ? SpellDirection.LEFT : SpellDirection.RIGHT)
                 .toList();
 
         List<SpellDirection> confirmedSpell = new ArrayList<>(unconfirmedSpell);

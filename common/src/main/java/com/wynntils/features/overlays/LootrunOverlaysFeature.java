@@ -13,6 +13,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.lootrun.LootrunBeaconCountOverlay;
 import com.wynntils.overlays.lootrun.LootrunMissionsOverlay;
 import com.wynntils.overlays.lootrun.LootrunTaskNameOverlay;
+import com.wynntils.overlays.lootrun.LootrunTrialsOverlay;
 
 @ConfigCategory(Category.OVERLAYS)
 public class LootrunOverlaysFeature extends Feature {
@@ -24,4 +25,7 @@ public class LootrunOverlaysFeature extends Feature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay lootrunMissionOverlay = new LootrunMissionsOverlay();
+
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    private final Overlay lootrunTrialOverlay = new LootrunTrialsOverlay();
 }

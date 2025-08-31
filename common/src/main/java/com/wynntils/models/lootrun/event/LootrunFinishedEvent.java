@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.event;
@@ -7,8 +7,8 @@ package com.wynntils.models.lootrun.event;
 import net.neoforged.bus.api.Event;
 
 public abstract class LootrunFinishedEvent extends Event {
-    protected final int challengesCompleted;
-    protected final int timeElapsed;
+    private final int challengesCompleted;
+    private final int timeElapsed;
 
     protected LootrunFinishedEvent(int challengesCompleted, int timeElapsed) {
         this.challengesCompleted = challengesCompleted;

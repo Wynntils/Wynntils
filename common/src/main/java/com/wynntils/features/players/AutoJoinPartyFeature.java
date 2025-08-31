@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -20,10 +20,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.PLAYERS)
 public class AutoJoinPartyFeature extends Feature {
     @Persisted
-    public final Config<Boolean> onlyFriends = new Config<>(true);
+    private final Config<Boolean> onlyFriends = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> onlySameWorld = new Config<>(true);
+    private final Config<Boolean> onlySameWorld = new Config<>(true);
 
     @SubscribeEvent
     public void onPartyInvite(PartyEvent.Invited event) {

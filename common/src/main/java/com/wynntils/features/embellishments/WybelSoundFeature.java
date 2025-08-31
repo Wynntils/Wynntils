@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.embellishments;
@@ -28,7 +28,7 @@ public class WybelSoundFeature extends Feature {
     private static final SoundEvent WYBEL_PURR_SOUND = SoundEvent.createVariableRangeEvent(WYBEL_PURR_ID);
 
     @Persisted
-    public final Config<Boolean> hideText = new Config<>(false);
+    private final Config<Boolean> hideText = new Config<>(false);
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {

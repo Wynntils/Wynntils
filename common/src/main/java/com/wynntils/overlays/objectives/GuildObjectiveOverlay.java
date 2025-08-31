@@ -31,10 +31,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     @Persisted
-    public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
+    private final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
     @Persisted(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-    public final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
     public GuildObjectiveOverlay() {
         super(
@@ -59,11 +59,14 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
+    protected boolean isVisible() {
+        return Models.Objectives.getGuildObjective() != null;
+    }
+
+    @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         WynnObjective guildObjective = Models.Objectives.getGuildObjective();
-
-        if (guildObjective == null) return;
 
         PoseStack poseStack = guiGraphics.pose();
 

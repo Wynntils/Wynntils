@@ -137,7 +137,7 @@ public class CosmeticsService extends Service {
         }
     }
 
-    public ResourceLocation[] getUserCosmeticTexture(Player player) {
+    private ResourceLocation[] getUserCosmeticTexture(Player player) {
         return cosmeticTextures.getOrDefault(Models.Player.getUserUUID(player), null);
     }
 }

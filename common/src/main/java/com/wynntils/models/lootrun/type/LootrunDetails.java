@@ -23,6 +23,7 @@ public class LootrunDetails {
     private int rainbowBeaconCount = 0;
     private int rainbowAmount = -1;
     private List<MissionType> missions = new ArrayList<>();
+    private List<TrialType> trials = new ArrayList<>();
     private int sacrifices = 0;
     private int rerolls = 0;
 
@@ -112,6 +113,18 @@ public class LootrunDetails {
 
     public void addMission(MissionType newMission) {
         missions.add(newMission);
+    }
+
+    public List<TrialType> getTrials() {
+        return Collections.unmodifiableList(trials);
+    }
+
+    public void setTrials(List<TrialType> trials) {
+        this.trials = new ArrayList<>(trials);
+    }
+
+    public void addTrial(TrialType newTrial) {
+        trials.add(newTrial);
     }
 
     public int getSacrifices() {

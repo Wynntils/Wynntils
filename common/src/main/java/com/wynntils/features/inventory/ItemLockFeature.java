@@ -43,16 +43,16 @@ public class ItemLockFeature extends Feature {
             new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, this::tryChangeLockStateOnHoveredSlot);
 
     @Persisted
-    public final HiddenConfig<Map<String, Set<Integer>>> classSlotLockMap = new HiddenConfig<>(new TreeMap<>());
+    private final HiddenConfig<Map<String, Set<Integer>>> classSlotLockMap = new HiddenConfig<>(new TreeMap<>());
 
     @Persisted
-    public final Config<Boolean> blockAllActionsOnLockedItems = new Config<>(false);
+    private final Config<Boolean> blockAllActionsOnLockedItems = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> allowClickOnEmeraldPouchInBlockingMode = new Config<>(true);
+    private final Config<Boolean> allowClickOnEmeraldPouchInBlockingMode = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> allowClickOnMultiHealthPotionsInBlockingMode = new Config<>(true);
+    private final Config<Boolean> allowClickOnMultiHealthPotionsInBlockingMode = new Config<>(true);
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {

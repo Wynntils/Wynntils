@@ -25,19 +25,19 @@ public class SpellCastVignetteFeature extends Feature {
     private static final int SHOW_VIGNETTE_TICKS = 40;
 
     @Persisted
-    public final Config<Boolean> renderVignette = new Config<>(true);
+    private final Config<Boolean> renderVignette = new Config<>(true);
 
     @Persisted
-    public final Config<Integer> vignetteFadeTime = new Config<>(12);
+    private final Config<Integer> vignetteFadeTime = new Config<>(12);
 
     @Persisted
-    public final Config<Float> vignetteIntensity = new Config<>(0.75f);
+    private final Config<Float> vignetteIntensity = new Config<>(0.75f);
 
     @Persisted
-    public final Config<Float> maxItensityPercent = new Config<>(100f);
+    private final Config<Float> maxItensityPercent = new Config<>(100f);
 
     @Persisted
-    public final Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
+    private final Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
 
     private int vignetteTimer;
     private float intensity;

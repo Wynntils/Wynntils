@@ -58,10 +58,10 @@ public class ItemStatInfoFeature extends Feature {
     public final Config<Boolean> colorLerp = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> legacyColors = new Config<>(false);
+    private final Config<Boolean> legacyColors = new Config<>(false);
 
     @Persisted
-    public final Config<ColorThreshold> perfectColorThreshold = new Config<>(ColorThreshold.NINETY_FIVE);
+    private final Config<ColorThreshold> perfectColorThreshold = new Config<>(ColorThreshold.NINETY_FIVE);
 
     @Persisted
     public final Config<Integer> decimalPlaces = new Config<>(1);

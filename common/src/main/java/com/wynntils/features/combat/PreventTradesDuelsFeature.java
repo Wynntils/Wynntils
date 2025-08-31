@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -25,13 +25,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.COMBAT)
 public class PreventTradesDuelsFeature extends Feature {
     @Persisted
-    public final Config<Boolean> onlyWhileFighting = new Config<>(true);
+    private final Config<Boolean> onlyWhileFighting = new Config<>(true);
 
     @Persisted
-    public final Config<Integer> fightingTimeCutoff = new Config<>(10); // seconds
+    private final Config<Integer> fightingTimeCutoff = new Config<>(10); // seconds
 
     @Persisted
-    public final Config<Boolean> whenHoldingGatheringTool = new Config<>(false);
+    private final Config<Boolean> whenHoldingGatheringTool = new Config<>(false);
 
     @SubscribeEvent
     public void onPlayerRightClick(PlayerInteractEvent.Interact event) {

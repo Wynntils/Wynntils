@@ -16,7 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.TOOLTIPS)
 public class TooltipVanillaHideFeature extends Feature {
     @Persisted
-    public final Config<Boolean> hideAdvanced = new Config<>(true);
+    private final Config<Boolean> hideAdvanced = new Config<>(true);
 
     @SubscribeEvent
     public void onTooltipFlagsAdvanced(ItemTooltipFlagsEvent event) {
