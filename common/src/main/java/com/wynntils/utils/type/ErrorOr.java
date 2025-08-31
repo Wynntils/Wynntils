@@ -43,7 +43,7 @@ public final class ErrorOr<T> {
         return error != null;
     }
 
-    public <T> ErrorOr<T> logged() {
+    public ErrorOr<T> logged() {
         if (!hasError()) {
             throw new IllegalStateException("Tried to log when no error is present.");
         }
