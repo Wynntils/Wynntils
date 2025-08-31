@@ -60,12 +60,14 @@ public class LogItemInfoFeature extends Feature {
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
         if (gearItemOpt.isPresent()) {
             GearItem gearItem = gearItemOpt.get();
-            WynnItem.WYNN_ITEM_CODEC
-                    .encodeStart(JsonOps.INSTANCE, gearItem)
-                    .result()
-                    .ifPresentOrElse(
-                            json -> WynntilsMod.info("WynnItem JSON: " + json),
-                            () -> WynntilsMod.warn("Failed to encode WynnItem to JSON"));
+            try {
+                WynnItem.WYNN_ITEM_CODEC
+                        .encodeStart(JsonOps.INSTANCE, gearItem)
+                        .ifSuccess(json -> WynntilsMod.info("WynnItem JSON: " + json))
+                        .ifError(err -> WynntilsMod.error("Failed to encode WynnItem to JSON: " + err));
+            } catch (Throwable t) {
+                WynntilsMod.error("Failed to encode WynnItem to JSON", t);
+            }
         }
     }
 

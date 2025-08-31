@@ -5,14 +5,17 @@
 package com.wynntils.utils.type;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 /**
  * The Pair Type Holds 1 field of type T and 1 field of type J
  */
 public record Pair<T, J>(T a, J b) {
     public static <A, B> Codec<Pair<A, B>> codec(Codec<A> aCodec, Codec<B> bCodec) {
-        return Codec.pair(aCodec, bCodec)
-                .xmap(p -> new Pair<>(p.getFirst(), p.getSecond()), p -> com.mojang.datafixers.util.Pair.of(p.a, p.b));
+        return RecordCodecBuilder.create(instance -> instance.group(
+                        aCodec.fieldOf("a").forGetter(Pair::a),
+                        bCodec.fieldOf("b").forGetter(Pair::b))
+                .apply(instance, Pair::new));
     }
 
     public static <T, J> Pair<T, J> of(T a, J b) {
