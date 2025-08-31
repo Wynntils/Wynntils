@@ -217,7 +217,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 Texture.FULLSCREEN_MAP_BORDER.height());
     }
 
-
     protected void renderMapFeatures(PoseStack poseStack, int mouseX, int mouseY) {
         hoveredFeature = null;
 
