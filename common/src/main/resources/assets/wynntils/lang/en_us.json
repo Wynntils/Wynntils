@@ -972,6 +972,8 @@
   "feature.wynntils.lootrunOverlays.overlay.lootrunTaskName.forceCoordinates.description": "Force showing coordinates instead of location names",
   "feature.wynntils.lootrunOverlays.overlay.lootrunTaskName.forceCoordinates.name": "Force Coordinates",
   "feature.wynntils.lootrunOverlays.overlay.lootrunTaskName.name": "Lootrun Task Name",
+  "feature.wynntils.lootrunOverlays.overlay.lootrunTrials.description": "Shows the current lootrun trials.",
+  "feature.wynntils.lootrunOverlays.overlay.lootrunTrials.name": "Lootrun Trials",
   "feature.wynntils.lowHealthVignette.animationSpeed.description": "How fast should the effect pulsate? This only applies to \"Pulse\" effect.",
   "feature.wynntils.lowHealthVignette.animationSpeed.name": "Animation Speed",
   "feature.wynntils.lowHealthVignette.color.description": "What color should the vignette be?",

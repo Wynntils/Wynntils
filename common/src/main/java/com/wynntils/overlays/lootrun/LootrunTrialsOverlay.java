@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.lootrun;
@@ -12,29 +12,25 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
-public class LootrunMissionsOverlay extends TextOverlay {
+public class LootrunTrialsOverlay extends TextOverlay {
     private static final String TEMPLATE =
             """
                     {concat(
-                        if_string(string_equals(lootrun_mission(0; false); "Unknown");"";concat("\\n§7Mission #1: "; lootrun_mission(0; true)));
-                        if_string(string_equals(lootrun_mission(1; false); "Unknown");"";concat("\\n§7Mission #2: "; lootrun_mission(1; true)));
-                        if_string(string_equals(lootrun_mission(2; false); "Unknown");"";concat("\\n§7Mission #3: "; lootrun_mission(2; true)));
-                        if_string(string_equals(lootrun_mission(3; false); "Unknown");"";concat("\\n§7Mission #4: "; lootrun_mission(3; true)))
+                        if_string(string_equals(lootrun_trial(0); "Unknown");"";concat("\\n§#00f010ffTrial #1: §7"; lootrun_trial(0)));
+                        if_string(string_equals(lootrun_trial(1); "Unknown");"";concat("\\n§#00f010ffTrial #2: §7"; lootrun_trial(1)))
                     )}
                     """;
 
     private static final String PREVIEW_TEMPLATE =
             """
-                    §7Mission #1: §eHigh Roller
-                    §7Mission #2: §5Equilibrium
-                    §7Mission #3: §cRedemption
-                    §7Mission #4: §9Orphion's Grace
+                    §#00f010ffTrial #1: §7All In
+                    §#00f010ffTrial #2: §7Side Hustle
                     """;
 
-    public LootrunMissionsOverlay() {
+    public LootrunTrialsOverlay() {
         super(
                 new OverlayPosition(
-                        75,
+                        55,
                         5,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
