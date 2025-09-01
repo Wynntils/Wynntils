@@ -14,6 +14,8 @@ import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
+import com.wynntils.services.mapdata.features.builtin.CombatLocation;
+import com.wynntils.services.mapdata.features.builtin.ServiceLocation;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.features.type.MapArea;
@@ -138,6 +140,16 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.RED)
                                 .append(Component.translatable("screens.wynntils.map.manager.name")),
                         Component.translatable("screens.wynntils.map.manager.description")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
+                Texture.OVERLAY_EXTRA_ICON,
+                (b) -> McUtils.mc().setScreen(MapFilterScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.DARK_PURPLE)
+                                .append(Component.translatable("screens.wynntils.map.filter.name")),
+                        Component.translatable("screens.wynntils.map.filter.description")
                                 .withStyle(ChatFormatting.GRAY))));
 
         addMapButton(new MapButton(
@@ -288,6 +300,13 @@ public final class MainMapScreen extends AbstractMapScreen {
             mapFeatures = mapFeatures.filter(feature -> !(feature instanceof TerritoryArea));
         }
 
+        mapFeatures = mapFeatures.filter(feature -> {
+            if (feature instanceof CombatLocation || feature instanceof ServiceLocation) {
+                return Services.MapData.isCategoryFilteredOnMap(feature.getCategoryId());
+            } else {
+                return true;
+            }
+        });
         mapFeatures = mapFeatures.filter(feature -> !(feature instanceof SeaskipperDestinationArea));
 
         // FIXME: Add back the pois that are still not converted to MapData

@@ -264,6 +264,31 @@ public final class RenderUtils {
                 texture.height());
     }
 
+    public static void drawHoverableScalingTexturedRect(
+            PoseStack poseStack,
+            Texture texture,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            boolean hovered) {
+        drawTexturedRect(
+                poseStack,
+                texture.resource(),
+                x,
+                y,
+                z,
+                width,
+                height,
+                0,
+                hovered ? texture.height() / 2 : 0,
+                texture.width(),
+                texture.height() / 2,
+                texture.width(),
+                texture.height());
+    }
+
     public static void drawTexturedRect(PoseStack poseStack, Texture texture, float x, float y) {
         drawTexturedRect(
                 poseStack,

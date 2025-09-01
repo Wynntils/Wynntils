@@ -18,6 +18,8 @@ import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
+import com.wynntils.services.mapdata.features.builtin.CombatLocation;
+import com.wynntils.services.mapdata.features.builtin.ServiceLocation;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
@@ -269,6 +271,13 @@ public class MinimapOverlay extends Overlay {
                 .filter(feature -> feature.isVisible(textureBoundingCircle))
                 .filter(feature -> feature instanceof TerritoryArea ? renderTerritories.get() : true)
                 .filter(feature -> !(feature instanceof SeaskipperDestinationArea))
+                .filter(feature -> {
+                    if (feature instanceof CombatLocation || feature instanceof ServiceLocation) {
+                        return Services.MapData.isCategoryFilteredOnMinimap(feature.getCategoryId());
+                    } else {
+                        return true;
+                    }
+                })
                 .map(feature -> Pair.of(feature, Services.MapData.resolveMapAttributes(feature)))
                 .sorted(Comparator.comparing(pair -> pair.b().priority()));
 

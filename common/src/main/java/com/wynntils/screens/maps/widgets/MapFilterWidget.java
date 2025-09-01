@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
@@ -7,7 +7,7 @@ package com.wynntils.screens.maps.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.SideListWidget;
-import com.wynntils.screens.maps.WaypointCategoryScreen;
+import com.wynntils.screens.maps.MapFilterScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -16,11 +16,11 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 
-public class CategoryWidget extends SideListWidget {
+public class MapFilterWidget extends SideListWidget {
     private final String category;
     private final boolean rootCategory;
 
-    public CategoryWidget(int y, int width, int height, String category, boolean rootCategory) {
+    public MapFilterWidget(int y, int width, int height, String category, boolean rootCategory) {
         super(y, width, height);
 
         this.category = category;
@@ -73,11 +73,11 @@ public class CategoryWidget extends SideListWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (McUtils.mc().screen instanceof WaypointCategoryScreen categoryScreen) {
+        if (McUtils.mc().screen instanceof MapFilterScreen filterScreen) {
             if (rootCategory) {
-                categoryScreen.selectPreviousCategory();
+                filterScreen.selectPreviousCategory();
             } else {
-                categoryScreen.selectCategory(category);
+                filterScreen.selectCategory(category);
             }
         }
 
