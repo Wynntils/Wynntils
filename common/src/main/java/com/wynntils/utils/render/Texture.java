@@ -174,7 +174,6 @@ public enum Texture {
     OVERLAY_EXTRA_ICON("icons/generic/overlay_extra_icon.png", 16, 16),
     PREVIOUS("icons/generic/previous.png", 16, 16),
     QUESTION_MARK("icons/generic/question_mark.png", 4, 7),
-    QUESTS_SCROLL_ICON("icons/generic/quests_scroll_icon.png", 16, 16),
     SAVE("icons/generic/save.png", 16, 16),
     SHARE_ICON("icons/generic/share_icon.png", 16, 14),
     SIGN_ICON("icons/generic/sign_icon.png", 17, 18),
