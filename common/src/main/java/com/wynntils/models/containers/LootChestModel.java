@@ -17,6 +17,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -108,12 +109,13 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
+    public void onLeftClick(PlayerAttackEvent event) {
+        handleEntity(event.getTarget());
+    }
+
+    @SubscribeEvent
     public void onRightClick(PlayerInteractEvent.InteractAt event) {
-        Entity entity = event.getEntityHitResult().getEntity();
-        if (entity != null && entity.getType() == EntityType.SLIME) {
-            // We don't actually know if this is a chest, but it's a good enough guess.
-            lastChestPos = entity.blockPosition();
-        }
+        handleEntity(event.getEntityHitResult().getEntity());
     }
 
     @SubscribeEvent
@@ -269,6 +271,13 @@ public final class LootChestModel extends Model {
         dryCount.store(0);
         dryEmeralds.store(0);
         dryItemTiers.store(new EnumMap<>(GearTier.class));
+    }
+
+    private void handleEntity(Entity entity) {
+        if (entity != null && entity.getType() == EntityType.INTERACTION) {
+            // We don't actually know if this is a chest, but it's a good enough guess.
+            lastChestPos = entity.blockPosition();
+        }
     }
 
     // region Poi Migration
