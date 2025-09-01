@@ -67,7 +67,22 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         WynnObjective guildObjective = Models.Objectives.getGuildObjective();
+        if (guildObjective == null) return;
+        renderObjective(guiGraphics, bufferSource, guildObjective);
+    }
 
+    @Override
+    public void renderPreview(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        WynnObjective guildObjective = Models.Objectives.getGuildObjective();
+        if (guildObjective == null) {
+            guildObjective = WynnObjective.DEMO_GUILD;
+        }
+        renderObjective(guiGraphics, bufferSource, guildObjective);
+    }
+
+    private void renderObjective(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, WynnObjective guildObjective) {
         PoseStack poseStack = guiGraphics.pose();
 
         if (this.hideOnInactivity.get()) {
