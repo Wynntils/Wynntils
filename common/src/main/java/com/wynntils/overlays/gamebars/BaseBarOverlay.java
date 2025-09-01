@@ -118,16 +118,12 @@ public abstract class BaseBarOverlay extends Overlay {
 
     protected String text() {
         BossBarProgress barProgress = progress();
-        int current;
-        int max;
-        if (barProgress == null) {
-            current = 1;
-            max = 2;
-        } else {
-            current = progress().value().current();
-            max = progress().value().max();
+        if (progress() == null) {
+            return icon();
         }
-        return String.format("%s %s %s", current, icon(), max);
+        return String.format(
+                "%s %s %s",
+                progress().value().current(), icon(), progress().value().max());
     }
 
     protected String icon() {

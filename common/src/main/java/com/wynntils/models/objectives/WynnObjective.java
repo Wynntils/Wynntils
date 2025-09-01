@@ -24,7 +24,7 @@ public final class WynnObjective {
     private final boolean hasEventBonus;
 
     public static WynnObjective DEMO_GUILD = new WynnObjective(
-            "Guild Objective", new CappedValue(5, 15), 0, StyledText.fromString("Guild Objectives"), true, false);
+            "Guild Objective", new CappedValue(5, 15), 0, StyledText.fromString("Slay Loot Chests"), true, false);
 
     private WynnObjective(
             String goal,
