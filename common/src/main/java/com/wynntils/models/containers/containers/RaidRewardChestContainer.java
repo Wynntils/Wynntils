@@ -5,8 +5,13 @@
 package com.wynntils.models.containers.containers;
 
 import com.wynntils.models.containers.Container;
+import com.wynntils.models.containers.type.ContainerBounds;
 import java.util.regex.Pattern;
 
+/**
+ * This represents the container for end raid rewards.
+ * For the container that displays a preview of available rewards see {@link RaidRewardContainer}.
+ */
 public class RaidRewardChestContainer extends Container {
     private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFEA\uE00E");
 
@@ -15,5 +20,9 @@ public class RaidRewardChestContainer extends Container {
 
     public RaidRewardChestContainer() {
         super(TITLE_PATTERN);
+    }
+
+    public ContainerBounds getAspectBounds() {
+        return new ContainerBounds(1, 2, 1, 6);
     }
 }
