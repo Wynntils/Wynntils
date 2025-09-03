@@ -11,6 +11,7 @@ import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.utils.EnumUtils;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Comparator;
@@ -305,6 +306,28 @@ public class LootrunFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.Lootrun.getRerolls();
+        }
+    }
+
+    public static class ChestsOpenedThisSessionFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int tier = MathUtils.clamp(arguments.getArgument("tier").getIntegerValue(), 1, 4);
+            boolean exact = arguments.getArgument("exact").getBooleanValue();
+
+            return Models.LootChest.getLootChestOpenedThisSession(tier, exact);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("tier", Integer.class, 1),
+                    new FunctionArguments.Argument<>("exact", Boolean.class, false)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("session_chests");
         }
     }
 }
