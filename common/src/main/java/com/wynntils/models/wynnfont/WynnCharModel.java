@@ -7,6 +7,7 @@ package com.wynntils.models.wynnfont;
 import com.wynntils.core.components.Model;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -51,6 +52,7 @@ public final class WynnCharModel extends Model {
                         0xE026, "+"));
 
         registerWynnCharMapping(defaultMapping);
+        registerWynnCharMapper("default-wrapped","w", new WrappingMapper(defaultMapping));
     }
 
     public static void registerWynnCharMapper(String font, String code, WynnCharMapper mapper) {
@@ -190,6 +192,41 @@ public final class WynnCharModel extends Model {
                     .filter(e -> token.equals(e.getValue()))
                     .map(Map.Entry::getKey)
                     .findFirst();
+        }
+    }
+
+    public static final class WrappingMapper implements WynnCharMapper {
+        private final WynnCharMapper delegate;
+
+        public WrappingMapper(WynnCharMapper delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Optional<String> getToken(int codepoint) {
+            Optional<String> delegateToken = delegate.getToken(codepoint);
+            if (delegateToken.isPresent()) return delegateToken;
+
+            if (0 <= codepoint && codepoint <= 0x00FF) return Optional.empty();
+
+            return Optional.of(String.format(Locale.ROOT, "+%04X", codepoint));
+        }
+
+        @Override
+        public Optional<Integer> getCodePoint(String token) {
+            Optional<Integer> delegateCodePoint = delegate.getCodePoint(token);
+            if (delegateCodePoint.isPresent()) return delegateCodePoint;
+
+            if (token.length() <= 1 || token.charAt(0) != '+') return Optional.empty();
+
+            try {
+                int v = Integer.parseInt(token.substring(1), 16);
+                if (v < 0 || v > Character.MAX_CODE_POINT) return Optional.empty();
+
+                return Optional.of(v);
+            } catch (NumberFormatException ignored) {
+                return Optional.empty();
+            }
         }
     }
 }

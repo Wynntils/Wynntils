@@ -143,4 +143,11 @@ public class TestWynnChar {
         String e12 = wynnCharModel.encodeWynnChars(t12, "default");
         Assertions.assertEquals("\uE017\uE080", e12); // '-' unknown → dropped
     }
+
+    @Test
+    public void testWrapper() {
+        String s1 = "\uE017\uE018a";
+        String d1 = wynnCharModel.decodeWynnChars(s1, "default-wrapped");
+        Assertions.assertEquals("§({champion}{+E018})a", d1);
+    }
 }
