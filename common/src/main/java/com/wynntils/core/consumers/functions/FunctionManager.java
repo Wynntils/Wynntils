@@ -421,6 +421,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.StringContainsFunction());
         registerFunction(new StringFunctions.StringEqualsFunction());
         registerFunction(new StringFunctions.StringFunction());
+        registerFunction(new StringFunctions.ToRomanNumeralsFunction());
 
         // Regular Functions
         registerFunction(new WorldFunctions.CurrentTerritoryFunction());
@@ -475,6 +476,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.StatusEffectDurationFunction());
         registerFunction(new CharacterFunctions.StatusEffectModifierFunction());
         registerFunction(new CharacterFunctions.StatusEffectsFunction());
+        registerFunction(new CharacterFunctions.IsRidingHorseFunction());
+        registerFunction(new CharacterFunctions.HasNoGuiFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
@@ -537,6 +540,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.ItemCountFunction());
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
+        registerFunction(new InventoryFunctions.InventoryIngredientsFunction());
+        registerFunction(new InventoryFunctions.IngredientPouchIngredientsFunction());
+        registerFunction(new InventoryFunctions.MaterialCountFunction());
 
         registerFunction(new GuildFunctions.CappedGuildLevelProgressFunction());
         registerFunction(new GuildFunctions.CappedGuildObjectivesProgressFunction());

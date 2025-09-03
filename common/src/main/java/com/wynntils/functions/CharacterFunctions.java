@@ -7,6 +7,7 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -299,6 +300,20 @@ public class CharacterFunctions {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             return Models.Ability.commanderBar.isActive() && Models.Ability.commanderBar.isActivated();
+        }
+    }
+
+    public static class IsRidingHorseFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Character.getVehicle() == VehicleType.HORSE;
+        }
+    }
+
+    public static class HasNoGuiFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Character.getVehicle() == VehicleType.DISPLAY;
         }
     }
 }

@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.RangedValue;
@@ -338,6 +339,20 @@ public class StringFunctions {
                     new FunctionArguments.Argument<>("source", String.class, null),
                     new FunctionArguments.Argument<>("regex", String.class, null),
                     new FunctionArguments.Argument<>("replacement", String.class, null)));
+        }
+    }
+
+    public static class ToRomanNumeralsFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int number = arguments.getArgument("number").getIntegerValue();
+            return MathUtils.toRoman(number);
+        }
+
+        @Override
+        protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("number", Integer.class, null)));
         }
     }
 }
