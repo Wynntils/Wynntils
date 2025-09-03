@@ -27,6 +27,39 @@ public class TestStyledText {
     }
 
     @Test
+    public void fontStyle() {
+        final Component component = Component.empty()
+                .withStyle(ChatFormatting.RED)
+                .withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "banner/pill")))
+                .append(Component.literal("inherited font"));
+        final String expected = "§c§{f:b}inherited font";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        Assertions.assertEquals(
+                expected, styledText.getString(), "StyledText for font formats returned an unexpected value.");
+    }
+
+    @Test
+    public void fontStyleWithWynnChars() {
+        final Component component = Component.empty()
+                .withStyle(ChatFormatting.RED)
+                .withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "banner/pill")))
+                .append(Component.literal("inherited font \uE017"));
+        final String expected = "§c§{f:b}inherited font §({champion})";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        String actual = styledText.getString(PartStyle.StyleType.WYNNCHAR_MAPPING);
+        Assertions.assertEquals(expected, actual, "StyledText for font formats returned an unexpected value.");
+
+        final String expectedNoRemap = "§c§{f:b}inherited font \uE017";
+        String actualNoRemap = styledText.getString();
+        Assertions.assertEquals(
+                expectedNoRemap, actualNoRemap, "StyledText for font formats returned an unexpected value.");
+    }
+
+    @Test
     public void advancedComponentTree_shouldProduceCorrectString() {
         final Component component = Component.empty()
                 .append(Component.literal("italicred")
