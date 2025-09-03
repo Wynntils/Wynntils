@@ -138,6 +138,18 @@ public final class WynnCharModel extends Model {
         return WYNN_FONT_CODES.getOrDefault(fontName, fontName);
     }
 
+    public ResourceLocation getFontFromFromFontCode(String fontCode) {
+        var fontNameOpt = WYNN_FONT_CODES.entrySet().stream()
+                .filter(e -> fontCode.equals(e.getValue()))
+                .map(Map.Entry::getKey)
+                .findFirst();
+        if (fontNameOpt.isEmpty()) {
+            // If the code is not found we're screwed, just return the default font
+            return ResourceLocation.fromNamespaceAndPath("minecraft", "default");
+        }
+        return ResourceLocation.tryParse(fontNameOpt.get());
+    }
+
     public interface WynnCharMapper {
         Optional<String> getToken(int codepoint);
 
