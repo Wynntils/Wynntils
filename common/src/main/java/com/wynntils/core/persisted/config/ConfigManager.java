@@ -48,8 +48,7 @@ public final class ConfigManager extends Manager {
     public ConfigManager() {
         super(List.of());
 
-        userConfigFile = new File(
-                CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
+        userConfigFile = new File(CONFIG_DIR, UndashedUuid.toString(McUtils.getUserProfileUUID()) + FILE_SUFFIX);
     }
 
     public void init() {
