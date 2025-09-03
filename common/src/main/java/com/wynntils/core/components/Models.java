@@ -65,6 +65,7 @@ import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.wynnalphabet.WynnAlphabetModel;
+import com.wynntils.models.wynnfont.WynnCharModel;
 import com.wynntils.models.wynnfont.WynnFontModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
 
@@ -127,6 +128,7 @@ public final class Models {
     public static final WorldEventModel WorldEvent = new WorldEventModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
     public static final WynnAlphabetModel WynnAlphabet = new WynnAlphabetModel();
+    public static final WynnCharModel WynnChar = new WynnCharModel();
     public static final WynnFontModel WynnFont = new WynnFontModel();
     public static final WynnItemModel WynnItem = new WynnItemModel();
 
