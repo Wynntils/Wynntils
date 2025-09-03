@@ -144,8 +144,12 @@ public final class WynnCharModel extends Model {
                 .map(Map.Entry::getKey)
                 .findFirst();
         if (fontNameOpt.isEmpty()) {
-            // If the code is not found we're screwed, just return the default font
-            return ResourceLocation.fromNamespaceAndPath("minecraft", "default");
+            // If we did not find a code, assume we have the full font name
+            ResourceLocation font = ResourceLocation.tryParse(fontCode);
+            // If this does not work we're screwed, just return the default font
+            if (font == null) return ResourceLocation.fromNamespaceAndPath("minecraft", "default");
+
+            return font;
         }
         return ResourceLocation.tryParse(fontNameOpt.get());
     }
