@@ -52,6 +52,31 @@ public class TestStyledText {
     }
 
     @Test
+    public void fontStyleInvalidFonts() {
+        final Component component = Component.empty()
+                .withStyle(ChatFormatting.RED)
+                .withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "banner/nosuchfont")))
+                .append(Component.literal("inherited font"));
+        final String expected = "§c§{f:minecraft:banner/nosuchfont}inherited font";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        Assertions.assertEquals(
+                expected, styledText.getString(), "StyledText for font formats returned an unexpected value.");
+
+        StyledText roundtrip = StyledText.fromString(expected);
+        String strippedFromFont = roundtrip.getStringWithoutFormatting();
+        Assertions.assertEquals(
+                "inherited font",
+                strippedFromFont,
+                "StyledText roundtrip string without formatting returned an unexpected value.");
+        String roundtripStr = roundtrip.getString();
+        Assertions.assertEquals(roundtripStr, expected, "StyledText roundtrip string returned an unexpected value.");
+
+        Assertions.assertEquals(styledText, roundtrip, "StyledText roundtrip ST returned an unexpected value.");
+    }
+
+    @Test
     public void fontStyleWithWynnChars() {
         final Component component = Component.empty()
                 .withStyle(ChatFormatting.RED)
