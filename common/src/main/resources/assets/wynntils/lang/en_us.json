@@ -2082,6 +2082,8 @@
   "function.wynntils.horseTier.name": "Horse Tier",
   "function.wynntils.horseXp.description": "Your horse's current XP",
   "function.wynntils.horseXp.name": "Horse XP",
+  "function.wynntils.hummingbirdsState.description": "Whether your hummingbirds are attacking or are with you",
+  "function.wynntils.hummingbirdsState.name": "Hummingbirds State",
   "function.wynntils.id.description": "Your character's ID",
   "function.wynntils.id.name": "ID",
   "function.wynntils.inMappedArea.argument.height": "Height of the area to check",

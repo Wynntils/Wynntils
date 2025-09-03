@@ -316,4 +316,11 @@ public class CharacterFunctions {
             return Models.Character.getVehicle() == VehicleType.DISPLAY;
         }
     }
+
+    public static class HummingbirdsStateFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Ability.hummingBirdsState;
+        }
+    }
 }

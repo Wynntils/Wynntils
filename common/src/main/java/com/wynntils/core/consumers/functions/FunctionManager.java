@@ -478,6 +478,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.StatusEffectsFunction());
         registerFunction(new CharacterFunctions.IsRidingHorseFunction());
         registerFunction(new CharacterFunctions.HasNoGuiFunction());
+        registerFunction(new CharacterFunctions.HummingbirdsStateFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
