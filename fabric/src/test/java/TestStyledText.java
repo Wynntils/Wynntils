@@ -38,6 +38,17 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected, styledText.getString(), "StyledText for font formats returned an unexpected value.");
+
+        StyledText roundtrip = StyledText.fromString(expected);
+        String strippedFromFont = roundtrip.getStringWithoutFormatting();
+        Assertions.assertEquals(
+                "inherited font",
+                strippedFromFont,
+                "StyledText roundtrip string without formatting returned an unexpected value.");
+        String roundtripStr = roundtrip.getString();
+        Assertions.assertEquals(roundtripStr, expected, "StyledText roundtrip string returned an unexpected value.");
+
+        Assertions.assertEquals(styledText, roundtrip, "StyledText roundtrip ST returned an unexpected value.");
     }
 
     @Test
