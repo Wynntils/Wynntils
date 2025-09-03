@@ -606,6 +606,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.ProfessionXpFunction());
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
+        registerFunction(new ProfessionFunctions.LastHarvestXpGainFunction());
 
         registerFunction(new RaidFunctions.CurrentRaidFunction());
         registerFunction(new RaidFunctions.CurrentRaidBossCountFunction());

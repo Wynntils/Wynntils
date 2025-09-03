@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.profession.label;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelParser;
 import com.wynntils.models.profession.type.MaterialProfile;
@@ -32,6 +33,7 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
         Matcher experienceMatcher = lines[0].getMatcher(EXPERIENCE_PATTERN);
 
         if (experienceMatcher.matches()) {
+            WynntilsMod.info(label.getString());
             ProfessionType profession = ProfessionType.fromString(experienceMatcher.group("name"));
             float gain = Float.parseFloat(experienceMatcher.group("gain"));
             float current = Float.parseFloat(experienceMatcher.group("current"));
@@ -44,7 +46,7 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
                 if (materialMatcher.matches()) {
                     String type = materialMatcher.group("type");
                     String material = materialMatcher.group("material");
-                    String tierGroup = materialMatcher.group(3);
+                    String tierGroup = materialMatcher.group(8);
 
                     gatheredMaterial = Optional.ofNullable(MaterialProfile.lookup(type, material, tierGroup));
                 }

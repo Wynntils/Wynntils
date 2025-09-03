@@ -2142,6 +2142,8 @@
   "function.wynntils.lastHarvestMaterialType.name": "Last Harvest Material Type",
   "function.wynntils.lastHarvestResourceType.description": "The type of resource you last harvested",
   "function.wynntils.lastHarvestResourceType.name": "Last Harvest Resource Type",
+  "function.wynntils.lastHarvestXpGain.description": "The amount of gather XP you gained in last harvest",
+  "function.wynntils.lastHarvestXpGain.name": "Last Harvest XP Gain",
   "function.wynntils.lastMythic.description": "The last mythic that you found in a loot chest.",
   "function.wynntils.lastMythic.name": "Last Mythic",
   "function.wynntils.lastSpellName.argument.burst": "Should only the last spell in the current burst be returned?",
