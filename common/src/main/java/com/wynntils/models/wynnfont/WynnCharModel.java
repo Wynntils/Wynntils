@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.resources.ResourceLocation;
 
 public final class WynnCharModel extends Model {
     private static final Pattern SEGMENT = Pattern.compile("§\\(([^)]*)\\)");
@@ -41,7 +42,7 @@ public final class WynnCharModel extends Model {
 
     private static void registerDefaultMapping() {
         WynnCharMapping defaultMapping = new WynnCharMapping(
-                "default",
+                "minecraft:default",
                 "d",
                 List.of(
                         new WynnCharRange(0xE040, 0xE059, "A"),
@@ -52,12 +53,13 @@ public final class WynnCharModel extends Model {
                         0xE026, "+"));
 
         registerWynnCharMapping(defaultMapping);
-        registerWynnCharMapper("default-wrapped","w", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("minecraft:banner/pill", "b", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("default-wrapped", "w", new WrappingMapper(defaultMapping));
     }
 
     public static void registerWynnCharMapper(String font, String code, WynnCharMapper mapper) {
         WYNN_MAPPERS.put(font, mapper);
-        WYNN_FONT_CODES.put(code, font);
+        WYNN_FONT_CODES.put(font, code);
     }
 
     public static void registerWynnCharMapping(WynnCharMapping mapping) {
@@ -129,6 +131,11 @@ public final class WynnCharModel extends Model {
         }
         segmentMatcher.appendTail(sb);
         return sb.toString();
+    }
+
+    public String getFontCodeFromFont(ResourceLocation font) {
+        String fontName = font.toString();
+        return WYNN_FONT_CODES.getOrDefault(fontName, fontName);
     }
 
     public interface WynnCharMapper {

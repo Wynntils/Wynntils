@@ -7,6 +7,7 @@ package com.wynntils.core.text;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.wynntils.core.components.Models;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
@@ -310,6 +311,13 @@ public final class StyledTextPart {
     }
 
     public String getString(PartStyle previousStyle, PartStyle.StyleType type) {
+        String text;
+        if (type == PartStyle.StyleType.WYNNCHAR_MAPPING) {
+            String fontName = style.getFont().toString();
+            text = Models.WynnChar.decodeWynnChars(this.text, fontName);
+        } else {
+            text = this.text;
+        }
         return style.asString(previousStyle, type) + text;
     }
 
