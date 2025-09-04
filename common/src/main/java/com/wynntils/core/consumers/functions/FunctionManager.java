@@ -14,6 +14,7 @@ import com.wynntils.core.consumers.functions.templates.Template;
 import com.wynntils.core.consumers.functions.templates.parser.TemplateParser;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.functions.ActivityFunctions;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
@@ -425,8 +426,15 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.StringContainsFunction());
         registerFunction(new StringFunctions.StringEqualsFunction());
         registerFunction(new StringFunctions.StringFunction());
+        registerFunction(new StringFunctions.ToRomanNumeralsFunction());
 
         // Regular Functions
+        registerFunction(new ActivityFunctions.ActivityNameFunction());
+        registerFunction(new ActivityFunctions.ActivityTaskFunction());
+        registerFunction(new ActivityFunctions.ActivityTypeFunction());
+        registerFunction(new ActivityFunctions.IsTrackingActivityFunction());
+        registerFunction(new ActivityFunctions.ActivityColorFunction());
+
         registerFunction(new WorldFunctions.CurrentTerritoryFunction());
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
@@ -479,6 +487,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.StatusEffectDurationFunction());
         registerFunction(new CharacterFunctions.StatusEffectModifierFunction());
         registerFunction(new CharacterFunctions.StatusEffectsFunction());
+        registerFunction(new CharacterFunctions.IsRidingHorseFunction());
+        registerFunction(new CharacterFunctions.HasNoGuiFunction());
+        registerFunction(new CharacterFunctions.HummingbirdsStateFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
@@ -541,6 +552,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.ItemCountFunction());
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
+        registerFunction(new InventoryFunctions.InventoryIngredientsFunction());
+        registerFunction(new InventoryFunctions.IngredientPouchIngredientsFunction());
+        registerFunction(new InventoryFunctions.MaterialCountFunction());
 
         registerFunction(new GuildFunctions.CappedGuildLevelProgressFunction());
         registerFunction(new GuildFunctions.CappedGuildObjectivesProgressFunction());
@@ -585,6 +599,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
         registerFunction(new LootrunFunctions.LootrunTimeFunction());
         registerFunction(new LootrunFunctions.LootrunTrialFunction());
+        registerFunction(new LootrunFunctions.ChestsOpenedThisSessionFunction());
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
@@ -604,6 +619,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.ProfessionXpFunction());
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
+        registerFunction(new ProfessionFunctions.LastHarvestXpGainFunction());
 
         registerFunction(new RaidFunctions.CurrentRaidFunction());
         registerFunction(new RaidFunctions.CurrentRaidBossCountFunction());

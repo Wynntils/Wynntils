@@ -96,7 +96,7 @@ public final class ProfessionModel extends Model {
 
                 if (lastGatherTime + MAX_HARVEST_LABEL_AGE >= System.currentTimeMillis()) {
                     lastHarvest = new HarvestInfo(
-                            lastGatherTime, gatheringInfo.getMaterialProfile().get());
+                            lastGatherTime, gatheringInfo.getMaterialProfile().get(), gatheringInfo.getXpGain());
                     lastGatherTime = 0L;
 
                     if (lastHarvest.materialProfile().getTier() == 3) {
@@ -108,7 +108,6 @@ public final class ProfessionModel extends Model {
 
                 return;
             }
-
             harvestIds.put(gatheringInfo.getEntity().getId());
             lastGatherTime = System.currentTimeMillis();
             WynntilsMod.postEvent(new ProfessionXpGainEvent(

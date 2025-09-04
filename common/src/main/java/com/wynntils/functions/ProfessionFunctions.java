@@ -189,6 +189,17 @@ public class ProfessionFunctions {
         }
     }
 
+    public static class LastHarvestXpGainFunction extends Function<Float> {
+        @Override
+        public Float getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return -1f;
+
+            return lastHarvest.get().xpGain();
+        }
+    }
+
     public static class MaterialDryStreak extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
