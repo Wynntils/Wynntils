@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(DataComponents.class)
 public abstract class DataComponentsMixin {
     @Inject(method = "<clinit>", at = @At("HEAD"))
-    private void onStaticInit(CallbackInfo ci) {
+    private static void onStaticInit(CallbackInfo ci) {
         CustomDataComponents.init();
     }
 }
