@@ -74,7 +74,7 @@ public class FunctionDumpFeature extends Feature {
                 function.getName(),
                 function.getDescription(),
                 aliases,
-                function.getFunctionType().getSimpleName()
+                function.getReturnTypeName()
             };
             dataLines.add(dataLine);
         }
@@ -133,7 +133,7 @@ public class FunctionDumpFeature extends Feature {
         String clearDatabase = "DROP SCHEMA public CASCADE; CREATE SCHEMA public;";
 
         Set<String> typeNames = Managers.Function.getFunctions().stream()
-                .map(function -> function.getFunctionType().getSimpleName())
+                .map(function -> function.getReturnTypeName())
                 .collect(Collectors.toSet());
         String makeTypeEnum = "CREATE TYPE type AS ENUM ("
                 + typeNames.stream().map(name -> "'" + name + "'").collect(Collectors.joining(",")) + ");";

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions;
@@ -8,6 +8,7 @@ import com.google.common.base.CaseFormat;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.persisted.Translatable;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 
 public abstract class Function<T> implements Translatable {
@@ -58,8 +59,13 @@ public abstract class Function<T> implements Translatable {
         return getTranslation("argument." + argumentName);
     }
 
-    @SuppressWarnings("unchecked")
-    public Class<T> getFunctionType() {
-        return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    public String getReturnTypeName() {
+        Type typeArgument = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        if (typeArgument instanceof Class clazz) {
+            return clazz.getSimpleName();
+        }
+        // We assume it is a Class, but keep this as a fallback
+        assert false;
+        return typeArgument.getTypeName();
     }
 }

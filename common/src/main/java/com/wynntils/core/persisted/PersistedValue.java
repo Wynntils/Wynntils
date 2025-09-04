@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted;
@@ -35,11 +35,8 @@ public abstract class PersistedValue<T> implements Comparable<PersistedValue<T>>
         return Managers.Persisted.getMetadata(this).valueType();
     }
 
-    // This can only be called from Managers.Persisted, since all writes to the
-    // value need to be handled properly
-    @SuppressWarnings("unchecked")
-    void setRaw(Object value) {
-        this.value = (T) value;
+    protected void setWithoutTouch(T value) {
+        this.value = value;
     }
 
     @Override
