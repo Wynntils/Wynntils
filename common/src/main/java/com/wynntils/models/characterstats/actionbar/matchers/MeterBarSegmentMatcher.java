@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
@@ -10,6 +10,7 @@ import com.wynntils.models.characterstats.actionbar.segments.MeterBarSegment;
 import com.wynntils.models.characterstats.type.MeterBarInfo;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class MeterBarSegmentMatcher extends AbstractMeterSegmentMatcher {
     // Number of steps in the meter bar
@@ -29,6 +30,8 @@ public class MeterBarSegmentMatcher extends AbstractMeterSegmentMatcher {
 
     private static final List<String> METER_CHARACTERS =
             List.of(DEFAULT_METER_CHARACTERS, SPRINT_METER_CHARACTERS, BREATH_METER_CHARACTERS);
+    private static final Pattern BREATH_METER_PATTERN = Pattern.compile("[" + BREATH_METER_CHARACTERS + "]");
+    private static final Pattern SPRINT_METER_PATTERN = Pattern.compile("[" + SPRINT_METER_CHARACTERS + "]");
 
     @Override
     protected List<String> getCharacterRange() {
@@ -56,10 +59,10 @@ public class MeterBarSegmentMatcher extends AbstractMeterSegmentMatcher {
             return new MeterBarInfo(MeterBarInfo.MeterActionType.BOTH, FULL_METER);
         }
 
-        if (segmentValue.matches("[" + SPRINT_METER_CHARACTERS + "]")) {
+        if (SPRINT_METER_PATTERN.matcher(segmentValue).matches()) {
             actionType = MeterBarInfo.MeterActionType.SPRINT;
             firstActionCharacter = SPRINT_METER_CHARACTERS.charAt(0);
-        } else if (segmentValue.matches("[" + BREATH_METER_CHARACTERS + "]")) {
+        } else if (BREATH_METER_PATTERN.matcher(segmentValue).matches()) {
             actionType = MeterBarInfo.MeterActionType.BREATH;
             firstActionCharacter = BREATH_METER_CHARACTERS.charAt(0);
         } else {

@@ -29,17 +29,18 @@ public class CraftedConsumableTooltipComponent extends CraftedTooltipComponent<C
         // Effects
         if (!craftedItem.getNamedEffects().isEmpty()) {
             header.add(Component.literal("Effect:").withStyle(ChatFormatting.GREEN));
-            craftedItem.getNamedEffects().forEach(effect -> {
-                header.add(Component.literal("- ")
-                        .withStyle(ChatFormatting.GREEN)
-                        .append(Component.literal(
-                                        StringUtils.capitalizeFirst(
-                                                        effect.type().name().toLowerCase(Locale.ROOT)) + ": ")
-                                .withStyle(ChatFormatting.GRAY))
-                        .append(Component.literal(String.valueOf(effect.value()))
-                                .withStyle(ChatFormatting.WHITE)
-                                .append(Component.literal(" " + effect.type().getSuffix()))));
-            });
+            craftedItem
+                    .getNamedEffects()
+                    .forEach(effect -> header.add(Component.literal("- ")
+                            .withStyle(ChatFormatting.GREEN)
+                            .append(Component.literal(
+                                            StringUtils.capitalizeFirst(
+                                                            effect.type().name().toLowerCase(Locale.ROOT)) + ": ")
+                                    .withStyle(ChatFormatting.GRAY))
+                            .append(Component.literal(String.valueOf(effect.value()))
+                                    .withStyle(ChatFormatting.WHITE)
+                                    .append(Component.literal(
+                                            " " + effect.type().getSuffix())))));
             header.add(Component.literal(""));
         }
 

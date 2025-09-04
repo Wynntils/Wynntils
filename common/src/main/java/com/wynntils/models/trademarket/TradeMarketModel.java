@@ -43,7 +43,6 @@ import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -145,7 +144,7 @@ public final class TradeMarketModel extends Model {
             if (event.getItems().get(slot).getHoverName().getString().equals(NAME_FILTER)) {
                 nameFiltersActive = true;
             } else {
-                filtersActive = filtersActive || event.getItems().get(slot).getItem() != Items.AIR;
+                filtersActive = filtersActive || !event.getItems().get(slot).isEmpty();
             }
         });
     }

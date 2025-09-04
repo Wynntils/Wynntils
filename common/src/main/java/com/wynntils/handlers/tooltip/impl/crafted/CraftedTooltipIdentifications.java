@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.crafted;
@@ -95,13 +95,11 @@ public final class CraftedTooltipIdentifications {
             craftedItem.getPossibleValues().stream()
                     .filter(possibleValues -> possibleValues.statType() == statType)
                     .findFirst()
-                    .ifPresent(possibleValues -> {
-                        line.append(Component.literal("/"
-                                        + StringUtils.toSignedString(
-                                                possibleValues.range().high())
-                                        + statType.getUnit().getDisplayName())
-                                .withStyle(ChatFormatting.DARK_GRAY));
-                    });
+                    .ifPresent(possibleValues -> line.append(Component.literal("/"
+                                    + StringUtils.toSignedString(
+                                            possibleValues.range().high())
+                                    + statType.getUnit().getDisplayName())
+                            .withStyle(ChatFormatting.DARK_GRAY)));
         }
 
         line.append(Component.literal(" "

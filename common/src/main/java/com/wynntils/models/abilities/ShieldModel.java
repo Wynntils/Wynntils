@@ -104,9 +104,7 @@ public final class ShieldModel extends Model {
             spawnedIds.stream()
                     .filter(id -> Objects.equals(id, destroyedEntityId))
                     .findFirst()
-                    .ifPresent(id -> {
-                        spawnedIds.remove(id);
-                    });
+                    .ifPresent(id -> spawnedIds.remove(id));
         }
 
         if (spawnedIds.isEmpty()) {

@@ -55,7 +55,6 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class RaidModel extends Model {
@@ -659,7 +658,7 @@ public final class RaidModel extends Model {
     }
 
     private void processAspectItemFind(ItemStack itemStack, int slotId) {
-        if (itemStack.getItem() == Items.AIR) return;
+        if (itemStack.isEmpty()) return;
 
         Optional<AspectItem> aspectOptional = Models.Item.asWynnItem(itemStack, AspectItem.class);
         if (aspectOptional.isPresent()) {
@@ -677,7 +676,7 @@ public final class RaidModel extends Model {
     }
 
     private void processRewardItemFind(ItemStack itemStack, int slotId) {
-        if (itemStack.getItem() == Items.AIR) return;
+        if (itemStack.isEmpty()) return;
 
         foundNumRewardPulls += 1;
 

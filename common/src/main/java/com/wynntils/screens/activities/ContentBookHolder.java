@@ -25,7 +25,6 @@ import java.util.TreeMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -70,7 +69,7 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
             }
         } else if (event.getContainerId()
                 == wrappedScreen.getWrappedScreenInfo().containerId()) {
-            if (event.getItemStack().getItem() == Items.AIR) {
+            if (event.getItemStack().isEmpty()) {
                 activities.remove(event.getSlot());
                 contentBookScreen.reloadContentBookWidgets(true);
                 return;
@@ -100,7 +99,7 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
                 }
 
                 if (actionSlot) continue;
-                if (item.getItem() == Items.AIR) {
+                if (item.isEmpty()) {
                     activities.remove(i);
                     continue;
                 }

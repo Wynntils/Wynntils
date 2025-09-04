@@ -28,9 +28,10 @@ public class BonusTotemLabelParser implements LabelParser<BonusTotemLabelInfo> {
         String typeStr = matcher.group("type");
         String timerString = matcher.group("timer");
 
-        BonusTotemType type = BonusTotemType.valueOf(typeStr.toUpperCase(Locale.ROOT));
-
-        if (type == null) {
+        BonusTotemType type;
+        try {
+            type = BonusTotemType.valueOf(typeStr.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
             WynntilsMod.warn("Failed to parse bonus totem type: " + typeStr);
             return null;
         }
