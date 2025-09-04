@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.wynnitem.type;
 
+import com.mojang.serialization.Codec;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.utils.mc.SkinUtils;
@@ -21,6 +22,8 @@ import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.Unbreakable;
 
 public record ItemMaterial(ItemStack itemStack) {
+    public static final Codec<ItemMaterial> CODEC = ItemStack.CODEC.xmap(ItemMaterial::new, ItemMaterial::itemStack);
+
     public static ItemMaterial getDefaultTomeItemMaterial() {
         ItemStack itemStack = createItemStack(Items.ENCHANTED_BOOK, 0);
         return new ItemMaterial(itemStack);

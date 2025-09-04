@@ -3,6 +3,7 @@
     "AbstractContainerScreenMixin",
     "AbstractRecipeBookScreenMixin",
     "BossHealthOverlayMixin",
+    "DataComponentsMixin",
     "CapeLayerMixin",
     "accessors.ChatComponentAccessor",
     "ChatComponentMixin",

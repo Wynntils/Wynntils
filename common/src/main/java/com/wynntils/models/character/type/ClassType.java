@@ -4,7 +4,11 @@
  */
 package com.wynntils.models.character.type;
 
-public enum ClassType {
+import com.mojang.serialization.Codec;
+import java.util.Locale;
+import net.minecraft.util.StringRepresentable;
+
+public enum ClassType implements StringRepresentable {
     MAGE("Mage", "Dark Wizard", 1, "\uE002", "\uE007"),
     ARCHER("Archer", "Hunter", 2, "\uE000", "\uE005"),
     WARRIOR("Warrior", "Knight", 3, "\uE004", "\uE009"),
@@ -13,6 +17,8 @@ public enum ClassType {
 
     // This represents the class selection menu, or the generic spell
     NONE("none", "none", 0, "", "");
+
+    public static final Codec<ClassType> CODEC = StringRepresentable.fromEnum(ClassType::values);
 
     private final String name;
     private final String reskinnedName;
@@ -27,6 +33,11 @@ public enum ClassType {
         this.encodingId = encodingId;
         this.cardCharacter = cardCharacter;
         this.cardCharacterReskinned = cardCharacterReskinned;
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name.toLowerCase(Locale.ROOT);
     }
 
     public static ClassType fromName(String className) {

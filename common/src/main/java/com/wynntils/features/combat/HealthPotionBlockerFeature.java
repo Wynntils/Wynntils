@@ -95,7 +95,7 @@ public class HealthPotionBlockerFeature extends Feature {
 
         // Check if potion is a healing potion
         if (potionOpt.isPresent()) {
-            return (potionOpt.get().getType() == PotionType.HEALING);
+            return (potionOpt.get().getPotionType() == PotionType.HEALING);
         }
 
         // Check if crafted potion is a health potion

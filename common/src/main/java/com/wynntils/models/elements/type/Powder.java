@@ -4,14 +4,16 @@
  */
 package com.wynntils.models.elements.type;
 
+import com.mojang.serialization.Codec;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
-public enum Powder {
+public enum Powder implements StringRepresentable {
     EARTH(Element.EARTH, Items.LIME_DYE, Items.GREEN_DYE, ChatFormatting.DARK_GREEN, ChatFormatting.GREEN, "Quake"),
     THUNDER(
             Element.THUNDER,
@@ -23,6 +25,8 @@ public enum Powder {
     WATER(Element.WATER, Items.LIGHT_BLUE_DYE, Items.CYAN_DYE, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, "Curse"),
     FIRE(Element.FIRE, Items.PINK_DYE, Items.RED_DYE, ChatFormatting.RED, ChatFormatting.DARK_RED, "Courage"),
     AIR(Element.AIR, Items.GRAY_DYE, Items.LIGHT_GRAY_DYE, ChatFormatting.WHITE, ChatFormatting.GRAY, "Wind Prison");
+
+    public static final Codec<Powder> CODEC = StringRepresentable.fromEnum(Powder::values);
 
     private final Element element;
     private final Item lowTierItem;
@@ -44,6 +48,11 @@ public enum Powder {
         this.lightColor = lightColor;
         this.darkColor = darkColor;
         this.specialName = specialName;
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public static Powder fromElement(Element element) {

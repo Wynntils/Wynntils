@@ -1,12 +1,15 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem.type;
 
+import com.mojang.serialization.Codec;
 import java.util.List;
+import java.util.Locale;
+import net.minecraft.util.StringRepresentable;
 
-public enum ItemObtainType {
+public enum ItemObtainType implements StringRepresentable {
     // From Wynncraft API
     LOOT_CHEST("lootchest", "Tier III/IV Loot Chest"), // lootchests (implies t3 or t4, afaict)
     NORMAL_MOB_DROP("normal", "Unspecified Mob Drop"), // mob drops (and any loot chest, afaict)
@@ -32,6 +35,8 @@ public enum ItemObtainType {
     SECRET_DISCOVERY("discovery", "Secret Discovery"),
     SPECIAL_MOB_DROP("specialdrop", "Specific Mob Drop"),
     UNOBTAINABLE("unobtainable", "Unobtainable");
+
+    public static final Codec<ItemObtainType> CODEC = StringRepresentable.fromEnum(ItemObtainType::values);
 
     // All sources that possibly drop boxed items
     public static final List<ItemObtainType> BOXED_ITEMS = List.of(
@@ -77,6 +82,11 @@ public enum ItemObtainType {
         this.displayName = displayName;
         this.isMerchant = isMerchant;
         this.isDungeon = isDungeon;
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public static ItemObtainType fromApiName(String apiName) {

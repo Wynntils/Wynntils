@@ -7,6 +7,7 @@ package com.wynntils.models.items;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
+import com.wynntils.models.items.codecs.CustomDataComponents;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
@@ -34,6 +35,8 @@ public class FakeItemStack extends ItemStack {
 
         this.wynnItem = wynnItem;
         this.source = source;
+
+        this.set(CustomDataComponents.WYNN_ITEM, wynnItem);
     }
 
     public FakeItemStack(GearItem gearItem, String source) {

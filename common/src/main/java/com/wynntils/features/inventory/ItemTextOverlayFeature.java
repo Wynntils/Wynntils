@@ -193,7 +193,8 @@ public class ItemTextOverlayFeature extends Feature {
         if (wynnItem instanceof SkillPointItem skillPointItem) {
             return new SkillPointOverlay(skillPointItem);
         }
-        if (wynnItem instanceof PotionItem potionItem && potionItem.getType().getSkill() != null) {
+        if (wynnItem instanceof PotionItem potionItem
+                && potionItem.getPotionType().getSkill() != null) {
             return new SkillPotionOverlay(potionItem);
         }
         if (wynnItem instanceof TeleportScrollItem teleportScrollItem) {
@@ -463,7 +464,7 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            Skill skill = item.getType().getSkill();
+            Skill skill = item.getPotionType().getSkill();
 
             StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
                     .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))));
