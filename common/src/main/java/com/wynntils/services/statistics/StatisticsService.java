@@ -20,7 +20,7 @@ import java.util.TreeMap;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class StatisticsService extends Service {
-    private static final StatisticsCollectors COLLECTORS = new StatisticsCollectors();
+    private final StatisticsCollectors collectors = new StatisticsCollectors();
 
     // All statistics, per character
     @Persisted
@@ -35,7 +35,7 @@ public final class StatisticsService extends Service {
     public StatisticsService() {
         super(List.of());
 
-        WynntilsMod.registerEventListener(COLLECTORS);
+        WynntilsMod.registerEventListener(collectors);
     }
 
     @SubscribeEvent
