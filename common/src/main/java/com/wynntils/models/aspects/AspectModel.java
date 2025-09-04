@@ -19,7 +19,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.AspectsContainer;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
-import com.wynntils.models.containers.containers.RaidRewardContainer;
+import com.wynntils.models.containers.containers.RaidRewardPreviewContainer;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
@@ -178,8 +178,8 @@ public final class AspectModel extends Model {
             return aspectsContainer.getAspectBounds().getSlots();
         } else if (container instanceof RaidRewardChestContainer rewardChestContainer) {
             return rewardChestContainer.getAspectBounds().getSlots();
-        } else if (container instanceof RaidRewardContainer rewardContainer) {
-            return rewardContainer.getRewardBounds().getSlots();
+        } else if (container instanceof RaidRewardPreviewContainer rewardPreviewContainer) {
+            return rewardPreviewContainer.getRewardBounds().getSlots();
         }
 
         return List.of();

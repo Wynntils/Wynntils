@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 /**
  * This represents the container for end raid rewards.
- * For the container that displays a preview of available rewards see {@link RaidRewardContainer}.
+ * For the container that displays a preview of available rewards see {@link RaidRewardPreviewContainer}.
  */
 public class RaidRewardChestContainer extends Container {
     private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFEA\uE00E");

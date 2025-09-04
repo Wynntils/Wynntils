@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
  * This represents the container for previewing available raid rewards.
  * For the container used to display rewards from previous raid see {@link RaidRewardChestContainer}.
  */
-public class RaidRewardContainer extends Container {
+public class RaidRewardPreviewContainer extends Container {
     private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFEA\uE00D\uDAFF\uDF6F.");
 
-    public RaidRewardContainer() {
+    public RaidRewardPreviewContainer() {
         super(TITLE_PATTERN);
     }
 
