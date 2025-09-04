@@ -57,18 +57,13 @@ public final class AspectModel extends Model {
         Container currentContainer = Models.Container.getCurrentContainer();
 
         List<Integer> equippedSlots = new ArrayList<>();
-        List<Integer> ownedSlots;
-
         if (currentContainer instanceof AspectsContainer aspectsContainer) {
             equippedSlots = new ArrayList<>(aspectsContainer.getEquippedSlots());
-            ownedSlots = new ArrayList<>(aspectsContainer.getAspectBounds().getSlots());
-        } else if (currentContainer instanceof RaidRewardChestContainer rewardChestContainer) {
-            ownedSlots = new ArrayList<>(rewardChestContainer.getAspectBounds().getSlots());
-        } else if (currentContainer instanceof RaidRewardContainer rewardContainer) {
-            ownedSlots = new ArrayList<>(rewardContainer.getRewardBounds().getSlots());
-        } else {
-            return;
         }
+
+        List<Integer> ownedSlots = getOwnedSlotsFromContainer(currentContainer);
+
+        if (ownedSlots.isEmpty()) return;
 
         List<String> characterEquippedAspects = new ArrayList<>();
         Map<String, Integer> newOwnedAspects = ownedAspects.get();
@@ -176,5 +171,17 @@ public final class AspectModel extends Model {
         }
 
         return new AspectItem(aspectInfo, tier);
+    }
+
+    private List<Integer> getOwnedSlotsFromContainer(Container container) {
+        if (container instanceof AspectsContainer aspectsContainer) {
+            return aspectsContainer.getAspectBounds().getSlots();
+        } else if (container instanceof RaidRewardChestContainer rewardChestContainer) {
+            return rewardChestContainer.getAspectBounds().getSlots();
+        } else if (container instanceof RaidRewardContainer rewardContainer) {
+            return rewardContainer.getRewardBounds().getSlots();
+        }
+
+        return List.of();
     }
 }
