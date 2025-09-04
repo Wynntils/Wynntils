@@ -189,7 +189,8 @@ public final class FunctionArguments {
 
         protected <U> U getValueChecked(Class<U> assumedType) {
             if (!assumedType.equals(type)) {
-                throw new IllegalStateException("Argument is a "+ type.getSimpleName() + ", not a " + assumedType.getSimpleName() + ".");
+                throw new IllegalStateException(
+                        "Argument is a " + type.getSimpleName() + ", not a " + assumedType.getSimpleName() + ".");
             }
 
             return assumedType.cast(getValue());
@@ -269,7 +270,7 @@ public final class FunctionArguments {
         private final Class<T> innerType;
 
         public ListArgument(String name, Class<T> innerType) {
-            super(name, List.class,null, false);
+            super(name, List.class, null, false);
 
             if (!SUPPORTED_ARGUMENT_TYPES.contains(innerType)) {
                 throw new IllegalArgumentException("Unsupported inner argument type: " + innerType);

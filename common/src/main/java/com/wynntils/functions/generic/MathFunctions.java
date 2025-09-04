@@ -12,8 +12,7 @@ public final class MathFunctions {
     public static class AddFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values =
-                    arguments.getArgument("values").getNumberList();
+            List<Number> values = arguments.getArgument("values").getNumberList();
 
             return values.stream().mapToDouble(Number::doubleValue).sum();
         }
@@ -48,8 +47,7 @@ public final class MathFunctions {
     public static class MultiplyFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values =
-                    arguments.getArgument("values").getNumberList();
+            List<Number> values = arguments.getArgument("values").getNumberList();
 
             return values.stream().mapToDouble(Number::doubleValue).reduce(1, (a, b) -> a * b);
         }
@@ -148,8 +146,7 @@ public final class MathFunctions {
     public static class MaxFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values =
-                    arguments.getArgument("values").getNumberList();
+            List<Number> values = arguments.getArgument("values").getNumberList();
             return values.stream().mapToDouble(Number::doubleValue).max().orElse(0);
             // .orElse(0) is safer because max() returns OptionalDouble, but will probably never be used
         }
@@ -164,8 +161,7 @@ public final class MathFunctions {
     public static class MinFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values =
-                    arguments.getArgument("values").getNumberList();
+            List<Number> values = arguments.getArgument("values").getNumberList();
             return values.stream().mapToDouble(Number::doubleValue).min().orElse(0);
         }
 

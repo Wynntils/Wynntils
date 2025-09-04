@@ -68,8 +68,7 @@ public class LogicFunctions {
     public static class AndFunction extends GenericFunction<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            List<Boolean> values =
-                    arguments.getArgument("values").getBooleanList();
+            List<Boolean> values = arguments.getArgument("values").getBooleanList();
 
             return values.stream().allMatch(Boolean::booleanValue);
         }
@@ -84,8 +83,7 @@ public class LogicFunctions {
     public static class OrFunction extends GenericFunction<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            List<Boolean> values =
-                    arguments.getArgument("values").getBooleanList();
+            List<Boolean> values = arguments.getArgument("values").getBooleanList();
 
             return values.stream().anyMatch(Boolean::booleanValue);
         }

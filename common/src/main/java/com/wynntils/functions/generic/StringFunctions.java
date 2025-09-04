@@ -105,8 +105,7 @@ public class StringFunctions {
     public static class ConcatFunction extends GenericFunction<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            List<String> values =
-                    arguments.getArgument("values").getStringList();
+            List<String> values = arguments.getArgument("values").getStringList();
 
             return String.join("", values);
         }
