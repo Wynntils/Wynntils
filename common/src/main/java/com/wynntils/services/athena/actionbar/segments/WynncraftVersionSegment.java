@@ -5,7 +5,7 @@
 package com.wynntils.services.athena.actionbar.segments;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
-import com.wynntils.models.worlds.type.WynncraftVersion;
+import com.wynntils.services.athena.type.WynncraftVersion;
 
 public class WynncraftVersionSegment extends ActionBarSegment {
     private final WynncraftVersion wynncraftVersion;
