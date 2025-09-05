@@ -8,6 +8,6 @@ public record WynncraftVersion(
         String versionGroup, String majorVersion, String minorVersion, String revision, boolean isBeta) {
     @Override
     public String toString() {
-        return "v" + versionGroup + "." + majorVersion + "." + minorVersion + "_" + revision + (isBeta ? " BETA" : "");
+        return "v" + versionGroup + "." + majorVersion + "." + minorVersion + "_" + revision + (isBeta ? "_BETA" : "");
     }
 }

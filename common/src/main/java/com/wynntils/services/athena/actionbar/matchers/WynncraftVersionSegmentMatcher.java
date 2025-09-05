@@ -2,12 +2,12 @@
  * Copyright © Wynntils 2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.worlds.actionbar.matchers;
+package com.wynntils.services.athena.actionbar.matchers;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
-import com.wynntils.models.worlds.actionbar.segments.WynncraftVersionSegment;
 import com.wynntils.models.worlds.type.WynncraftVersion;
+import com.wynntils.services.athena.actionbar.segments.WynncraftVersionSegment;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
