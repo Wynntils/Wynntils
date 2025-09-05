@@ -6,8 +6,8 @@ package com.wynntils.services.athena.actionbar.matchers;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
-import com.wynntils.models.worlds.type.WynncraftVersion;
 import com.wynntils.services.athena.actionbar.segments.WynncraftVersionSegment;
+import com.wynntils.services.athena.type.WynncraftVersion;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
