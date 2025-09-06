@@ -113,7 +113,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
                                         ResourceLocation.withDefaultNamespace("language/wynncraft")))),
                         this.width / 2f,
                         offsetY + 20,
-                        CommonColors.GRADIENT_2,
+                        CommonColors.RED,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
                         TextShadow.OUTLINE,
