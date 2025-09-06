@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.type.PersistedMetadata;
 import com.wynntils.utils.EnumUtils;
+import com.wynntils.utils.colors.CustomColor;
 import java.util.Objects;
 import java.util.stream.Stream;
 import net.minecraft.client.resources.language.I18n;
@@ -133,6 +134,10 @@ public class Config<T> extends PersistedValue<T> {
     public <E extends Enum<E>> T tryParseStringValue(String value) {
         if (isEnum()) {
             return (T) EnumUtils.fromJsonFormat((Class<E>) getType(), value);
+        }
+
+        if (get() instanceof CustomColor) {
+            return (T) CustomColor.fromHexString(value);
         }
 
         try {
