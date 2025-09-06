@@ -28,7 +28,13 @@ public class QuickJumpButton extends WynntilsButton {
     private final CustomColor selectedColor;
     private final PersonalStorageUtilitiesWidget parent;
 
-    public QuickJumpButton(int x, int y, int destination, CustomColor lockedColor, CustomColor selectedColor, PersonalStorageUtilitiesWidget parent) {
+    public QuickJumpButton(
+            int x,
+            int y,
+            int destination,
+            CustomColor lockedColor,
+            CustomColor selectedColor,
+            PersonalStorageUtilitiesWidget parent) {
         super(x, y, 16, 16, Component.literal("Container Quick Jump Button"));
 
         this.destination = destination;
@@ -39,7 +45,6 @@ public class QuickJumpButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-
         PoseStack poseStack = guiGraphics.pose();
 
         RenderUtils.drawHoverableTexturedRect(poseStack, Texture.QUICK_JUMP_BUTTON, getX(), getY(), isHovered);
