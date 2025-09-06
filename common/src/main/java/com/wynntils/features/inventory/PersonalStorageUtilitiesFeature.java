@@ -7,7 +7,9 @@ package com.wynntils.features.inventory;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -22,6 +24,8 @@ import com.wynntils.models.containers.containers.personal.PersonalBlockBankConta
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.containers.event.BankPageSetEvent;
 import com.wynntils.screens.container.widgets.PersonalStorageUtilitiesWidget;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -34,6 +38,12 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class PersonalStorageUtilitiesFeature extends Feature {
+    @Persisted
+    private final Config<CustomColor> SelectedQuickJumpColor = new Config<>(CommonColors.GREEN);
+
+    @Persisted
+    private final Config<CustomColor> LockedQuickJumpColor = new Config<>(CommonColors.RED);
+
     private static final int STORAGE_TYPE_SLOT = 47;
     private static final Pattern PAGE_PATTERN = Pattern.compile("§7- §f.*§8 Page (\\d+)");
 
@@ -242,5 +252,13 @@ public class PersonalStorageUtilitiesFeature extends Feature {
                 storageContainer.getContainerId(),
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
+    }
+
+    public CustomColor getSelectedQuickJumpColor() {
+        return SelectedQuickJumpColor.get();
+    }
+
+    public CustomColor getLockedQuickJumpColor() {
+        return LockedQuickJumpColor.get();
     }
 }
