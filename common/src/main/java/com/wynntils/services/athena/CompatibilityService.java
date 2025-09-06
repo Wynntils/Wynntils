@@ -22,6 +22,7 @@ import com.wynntils.utils.type.Pair;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class CompatibilityService extends Service {
@@ -43,7 +44,8 @@ public class CompatibilityService extends Service {
         event.runIfPresent(WynncraftVersionSegment.class, this::handleVersion);
     }
 
-    @SubscribeEvent
+    // Lowest so it will be the most recent message for all of the on join messages we send
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.WORLD && event.isFirstJoinWorld()) {
             if (compatibilityTier.shouldChatPrompt()) {
@@ -70,19 +72,26 @@ public class CompatibilityService extends Service {
                 && overrideIncompatibility.get().b().equals(WynntilsMod.getVersion());
     }
 
+    public void setOverrideIncompatibility() {
+        overrideIncompatibility.store(Pair.of(wynncraftVersion.toString(), WynntilsMod.getVersion()));
+        overrideIncompatibility.touched();
+    }
+
     public WynncraftVersion getWynncraftVersion() {
         return wynncraftVersion;
     }
 
     private void handleVersion(WynncraftVersionSegment segment) {
+        if (segment.getWynncraftVersion().equals(wynncraftVersion)) return;
+
         wynncraftVersion = segment.getWynncraftVersion();
 
         // TODO: Replace with Athena call
         compatibilityTier = CompatibilityTier.COMPATIBLE;
 
-        if (compatibilityTier == CompatibilityTier.INCOMPATIBLE) {
+        if (compatibilityTier.shouldScreenPrompt() && !isCompatible()) {
             // This has to be done on the main thread
-            McUtils.mc().execute(() -> McUtils.mc().setScreen(CompatibilityWarningScreen.create()));
+            McUtils.mc().execute(() -> McUtils.mc().setScreen(CompatibilityWarningScreen.create(compatibilityTier)));
         }
     }
 }
