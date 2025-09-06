@@ -2777,7 +2777,7 @@
   "screens.wynntils.compatibility.continueOutdated": "Continue using this outdated version",
   "screens.wynntils.compatibility.name": "Compatibility Warning Screen",
   "screens.wynntils.compatibility.update": "Update",
-  "screens.wynntils.compatibility.updateUnavilable": "Latest Wynntils update could not be found. The update check may have failed or there is no update available for your current Minecraft version.",
+  "screens.wynntils.compatibility.updateUnavailable": "Latest Wynntils update could not be found. The update check may have failed or there is no update available for your current Minecraft version.",
   "screens.wynntils.compatibility.useWynntils": "Use Wynntils",
   "screens.wynntils.containers.edit.description": "Right-click to reset name to default.",
   "screens.wynntils.containers.edit.name": "[>] Enter Edit mode",
