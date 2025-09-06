@@ -80,7 +80,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
 
         if (updateInfo == null) {
             updateButtonActive = false;
-            updateTooltip = Component.translatable("screens.wynntils.compatibility.updateUnavilable");
+            updateTooltip = Component.translatable("screens.wynntils.compatibility.updateUnavailable");
         }
 
         Button updateButton = new Button.Builder(
