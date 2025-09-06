@@ -12,6 +12,8 @@ import com.wynntils.core.persisted.type.PersistedMetadata;
 import com.wynntils.utils.EnumUtils;
 import java.util.Objects;
 import java.util.stream.Stream;
+
+import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -133,6 +135,10 @@ public class Config<T> extends PersistedValue<T> {
     public <E extends Enum<E>> T tryParseStringValue(String value) {
         if (isEnum()) {
             return (T) EnumUtils.fromJsonFormat((Class<E>) getType(), value);
+        }
+
+        if (get() instanceof CustomColor) {
+            return (T) CustomColor.fromHexString(value);
         }
 
         try {
