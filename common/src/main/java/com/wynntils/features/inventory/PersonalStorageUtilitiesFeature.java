@@ -42,7 +42,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
     private final Config<CustomColor> SelectedQuickJumpColor = new Config<>(CommonColors.GREEN);
 
     @Persisted
-    private final Config<CustomColor> LockedQuickJumpColor = new Config<>(CommonColors.RED);
+    private final Config<CustomColor> LockedQuickJumpColor = new Config<>(CommonColors.GRAY);
 
     private static final int STORAGE_TYPE_SLOT = 47;
     private static final Pattern PAGE_PATTERN = Pattern.compile("§7- §f.*§8 Page (\\d+)");
