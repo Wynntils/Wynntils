@@ -37,7 +37,8 @@ public class QuickJumpButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PersonalStorageUtilitiesFeature feature = Managers.Feature.getFeatureInstance(PersonalStorageUtilitiesFeature.class);
+        PersonalStorageUtilitiesFeature feature =
+                Managers.Feature.getFeatureInstance(PersonalStorageUtilitiesFeature.class);
 
         PoseStack poseStack = guiGraphics.pose();
 
