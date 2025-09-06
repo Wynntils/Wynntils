@@ -2,6 +2,7 @@
  * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
@@ -16,6 +17,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,6 +28,77 @@ public class TestStyledText {
     public static void setup() {
         SharedConstants.tryDetectVersion();
         Bootstrap.bootStrap();
+        // FIXME: This should be setup once before running any tests at all, and not per test class
+        WynntilsMod.init(null, "SNAPSHOT", true, null);
+    }
+
+    @Test
+    public void fontStyle() {
+        final Component component = Component.empty()
+                .withStyle(ChatFormatting.RED)
+                .withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "banner/pill")))
+                .append(Component.literal("inherited font"));
+        final String expected = "§c§{f:b}inherited font";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        Assertions.assertEquals(
+                expected, styledText.getString(), "StyledText for font formats returned an unexpected value.");
+
+        StyledText roundtrip = StyledText.fromString(expected);
+        String strippedFromFont = roundtrip.getStringWithoutFormatting();
+        Assertions.assertEquals(
+                "inherited font",
+                strippedFromFont,
+                "StyledText roundtrip string without formatting returned an unexpected value.");
+        String roundtripStr = roundtrip.getString();
+        Assertions.assertEquals(roundtripStr, expected, "StyledText roundtrip string returned an unexpected value.");
+
+        Assertions.assertEquals(styledText, roundtrip, "StyledText roundtrip ST returned an unexpected value.");
+    }
+
+    @Test
+    public void fontStyleInvalidFonts() {
+        final Component component = Component.empty()
+                .withStyle(ChatFormatting.RED)
+                .withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "banner/nosuchfont")))
+                .append(Component.literal("inherited font"));
+        final String expected = "§c§{f:minecraft:banner/nosuchfont}inherited font";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        Assertions.assertEquals(
+                expected, styledText.getString(), "StyledText for font formats returned an unexpected value.");
+
+        StyledText roundtrip = StyledText.fromString(expected);
+        String strippedFromFont = roundtrip.getStringWithoutFormatting();
+        Assertions.assertEquals(
+                "inherited font",
+                strippedFromFont,
+                "StyledText roundtrip string without formatting returned an unexpected value.");
+        String roundtripStr = roundtrip.getString();
+        Assertions.assertEquals(roundtripStr, expected, "StyledText roundtrip string returned an unexpected value.");
+
+        Assertions.assertEquals(styledText, roundtrip, "StyledText roundtrip ST returned an unexpected value.");
+    }
+
+    @Test
+    public void fontStyleWithWynnChars() {
+        final Component component = Component.empty()
+                .withStyle(ChatFormatting.RED)
+                .withStyle(Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "banner/pill")))
+                .append(Component.literal("inherited font \uE017"));
+        final String expected = "§c§{f:b}inherited font §({champion})";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        String actual = styledText.getString(PartStyle.StyleType.WYNNCHAR_MAPPING);
+        Assertions.assertEquals(expected, actual, "StyledText for font formats returned an unexpected value.");
+
+        final String expectedNoRemap = "§c§{f:b}inherited font \uE017";
+        String actualNoRemap = styledText.getString();
+        Assertions.assertEquals(
+                expectedNoRemap, actualNoRemap, "StyledText for font formats returned an unexpected value.");
     }
 
     @Test
