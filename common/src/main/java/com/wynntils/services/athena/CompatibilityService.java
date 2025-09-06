@@ -47,6 +47,8 @@ public class CompatibilityService extends Service {
     // Lowest so it will be the most recent message for all of the on join messages we send
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onWorldStateChange(WorldStateEvent event) {
+        if (WynntilsMod.isDevelopmentEnvironment() || WynntilsMod.isDevelopmentBuild()) return;
+
         if (event.getNewState() == WorldState.WORLD && event.isFirstJoinWorld()) {
             if (compatibilityTier.shouldChatPrompt()) {
                 McUtils.sendMessageToClientWithPillHeader(Component.translatable(
@@ -85,6 +87,11 @@ public class CompatibilityService extends Service {
         if (segment.getWynncraftVersion().equals(wynncraftVersion)) return;
 
         wynncraftVersion = segment.getWynncraftVersion();
+
+        if (WynntilsMod.isDevelopmentEnvironment() || WynntilsMod.isDevelopmentBuild()) {
+            compatibilityTier = CompatibilityTier.UNKNOWN;
+            return;
+        }
 
         // TODO: Replace with Athena call
         compatibilityTier = CompatibilityTier.COMPATIBLE;
