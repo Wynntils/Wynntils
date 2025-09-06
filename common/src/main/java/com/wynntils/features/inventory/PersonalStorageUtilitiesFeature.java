@@ -39,10 +39,10 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.INVENTORY)
 public class PersonalStorageUtilitiesFeature extends Feature {
     @Persisted
-    private final Config<CustomColor> SelectedQuickJumpColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> selectedQuickJumpColor = new Config<>(CommonColors.GREEN);
 
     @Persisted
-    private final Config<CustomColor> LockedQuickJumpColor = new Config<>(CommonColors.GRAY);
+    private final Config<CustomColor> lockedQuickJumpColor = new Config<>(CommonColors.GRAY);
 
     private static final int STORAGE_TYPE_SLOT = 47;
     private static final Pattern PAGE_PATTERN = Pattern.compile("§7- §f.*§8 Page (\\d+)");
@@ -255,10 +255,10 @@ public class PersonalStorageUtilitiesFeature extends Feature {
     }
 
     public CustomColor getSelectedQuickJumpColor() {
-        return SelectedQuickJumpColor.get();
+        return selectedQuickJumpColor.get();
     }
 
     public CustomColor getLockedQuickJumpColor() {
-        return LockedQuickJumpColor.get();
+        return lockedQuickJumpColor.get();
     }
 }

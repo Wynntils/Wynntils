@@ -6,10 +6,8 @@ package com.wynntils.screens.container.widgets;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -26,19 +24,21 @@ import net.minecraft.network.chat.Component;
 
 public class QuickJumpButton extends WynntilsButton {
     private final int destination;
+    private final CustomColor lockedColor;
+    private final CustomColor selectedColor;
     private final PersonalStorageUtilitiesWidget parent;
 
-    public QuickJumpButton(int x, int y, int destination, PersonalStorageUtilitiesWidget parent) {
+    public QuickJumpButton(int x, int y, int destination, CustomColor lockedColor, CustomColor selectedColor, PersonalStorageUtilitiesWidget parent) {
         super(x, y, 16, 16, Component.literal("Container Quick Jump Button"));
 
         this.destination = destination;
+        this.lockedColor = lockedColor;
+        this.selectedColor = selectedColor;
         this.parent = parent;
     }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PersonalStorageUtilitiesFeature feature =
-                Managers.Feature.getFeatureInstance(PersonalStorageUtilitiesFeature.class);
 
         PoseStack poseStack = guiGraphics.pose();
 
@@ -48,10 +48,10 @@ public class QuickJumpButton extends WynntilsButton {
         Component tooltip = Component.translatable(
                 "feature.wynntils.personalStorageUtilities.jumpTo", Models.Bank.getPageName(destination));
         if (Models.Bank.getCurrentPage() == destination) {
-            color = feature.getSelectedQuickJumpColor();
+            color = selectedColor;
             tooltip = Component.translatable("feature.wynntils.personalStorageUtilities.youAreHere");
         } else if (destination > Models.Bank.getFinalPage()) {
-            color = feature.getLockedQuickJumpColor();
+            color = lockedColor;
             tooltip = Component.translatable("feature.wynntils.personalStorageUtilities.unavailable", destination);
         }
 

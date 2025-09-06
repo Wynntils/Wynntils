@@ -133,7 +133,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
         int renderY = getY() + 23;
 
         for (int i = 0; i < container.getFinalPage(); i++) {
-            quickJumpButtons.add(new QuickJumpButton(renderX, renderY, i + 1, this));
+            quickJumpButtons.add(new QuickJumpButton(renderX, renderY, i + 1, this.feature.getLockedQuickJumpColor(), this.feature.getSelectedQuickJumpColor(), this));
 
             renderX += BUTTON_SPACING;
 
