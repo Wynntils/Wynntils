@@ -1670,7 +1670,7 @@
   "feature.wynntils.wynncraftButton.autoConnect.description": "Should the mod auto-connect to Wynncraft on startup?",
   "feature.wynntils.wynncraftButton.autoConnect.name": "Auto-Connect on Startup",
   "feature.wynntils.wynncraftButton.cancelAutoJoin.description": "Should auto-connect be cancelled if a download required by the mod failed to download or an update is available?",
-  "feature.wynntils.wynncraftButton.cancelAutoJoin.name": "Cancel Auto-Connect on failed download",
+  "feature.wynntils.wynncraftButton.cancelAutoJoin.name": "Cancel Auto-Connect on available prompt",
   "feature.wynntils.wynncraftButton.connect": "Click to connect to Wynncraft",
   "feature.wynntils.wynncraftButton.description": "Adds a button to the main menu to join Wynncraft.",
   "feature.wynntils.wynncraftButton.download1": "Some downloads required by Wynntils failed to download.",
