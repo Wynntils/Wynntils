@@ -50,19 +50,28 @@ public record CustomColor(int r, int g, int b, int a) {
         this(color.r, color.g, color.b, alpha);
     }
 
+    /**
+     * This String-based constructor is implicitly called from {@link Config#tryParseStringValue}.
+     */
+    public CustomColor(String toParse) {
+        // Until we upgrade to Java 23 and get https://openjdk.org/jeps/513 we need this clunky workaround
+        this(
+                fromStringWithHex(toParse).r(),
+                fromStringWithHex(toParse).g(),
+                fromStringWithHex(toParse).b(),
+                fromStringWithHex(toParse).a());
+    }
+
     public static CustomColor fromStringWithHex(String toParse) {
         String noSpace = toParse.replace(" ", "");
 
-        CustomColor parseTry = CustomColor.fromString(noSpace);
+        CustomColor fromString = CustomColor.fromString(noSpace);
+        if (fromString != CustomColor.NONE) return fromString;
 
-        if (parseTry == CustomColor.NONE) {
-            parseTry = CustomColor.fromHexString(noSpace);
+        CustomColor fromHex = CustomColor.fromHexString(noSpace);
+        if (fromHex != CustomColor.NONE) return fromHex;
 
-            if (parseTry == CustomColor.NONE) {
-                throw new RuntimeException("Failed to parse CustomColor");
-            }
-        }
-        return new CustomColor(parseTry.r, parseTry.g, parseTry.b, parseTry.a);
+        throw new RuntimeException("Failed to parse CustomColor");
     }
 
     public static CustomColor fromChatFormatting(ChatFormatting cf) {
