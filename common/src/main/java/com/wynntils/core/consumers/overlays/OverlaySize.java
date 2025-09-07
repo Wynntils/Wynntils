@@ -28,6 +28,9 @@ public class OverlaySize {
         this.height = height;
     }
 
+    /**
+     * This String-based constructor is implicitly called from {@link Config#tryParseStringValue}.
+     */
     public OverlaySize(String string) {
         Matcher matcher = SIZE_REGEX.matcher(string.replace(" ", ""));
 

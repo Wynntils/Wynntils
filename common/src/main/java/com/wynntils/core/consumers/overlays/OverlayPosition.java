@@ -37,6 +37,9 @@ public class OverlayPosition {
         this.horizontalOffset = horizontalOffset;
     }
 
+    /**
+     * This String-based constructor is implicitly called from {@link Config#tryParseStringValue}.
+     */
     public OverlayPosition(String string) {
         Matcher matcher = POSITION_PATTERN.matcher(string.replace(" ", ""));
 
