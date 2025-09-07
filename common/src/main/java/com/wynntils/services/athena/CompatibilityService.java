@@ -10,6 +10,7 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.screens.compatibility.CompatibilityWarningScreen;
@@ -17,17 +18,29 @@ import com.wynntils.services.athena.actionbar.matchers.WynncraftVersionSegmentMa
 import com.wynntils.services.athena.actionbar.segments.WynncraftVersionSegment;
 import com.wynntils.services.athena.type.CompatibilityTier;
 import com.wynntils.services.athena.type.WynncraftVersion;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
-import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 public class CompatibilityService extends Service {
+    private static final long TOAST_DISPLAY_TIME = 10000L;
+    private static final ResourceLocation WYNNTILS_KEYBIND_FONT =
+            ResourceLocation.fromNamespaceAndPath("wynntils", "keybind");
+
     private CompatibilityTier compatibilityTier = null;
     private WynncraftVersion wynncraftVersion = null;
+
+    private long toastExpire = 0L;
+    private SystemToast warningToast = null;
 
     // Wynncraft version to ignore incompatibility checks for, Wynntils version used
     @Persisted
@@ -51,13 +64,28 @@ public class CompatibilityService extends Service {
 
         if (event.getNewState() == WorldState.WORLD && event.isFirstJoinWorld()) {
             if (compatibilityTier.shouldChatPrompt()) {
-                McUtils.sendMessageToClientWithPillHeader(Component.translatable(
-                                compatibilityTier.getChatPromptKey(),
-                                WynntilsMod.getVersion(),
-                                wynncraftVersion.toString())
-                        .withStyle(ChatFormatting.RED)
-                        .withStyle(ChatFormatting.BOLD));
+                MutableComponent toastMessage = Component.empty()
+                        .append(Component.translatable("service.wynntils.compatibility.toastMessage1"))
+                        .append(Component.literal("Y").withStyle(Style.EMPTY.withFont(WYNNTILS_KEYBIND_FONT)))
+                        .append(Component.translatable("service.wynntils.compatibility.toastMessage2"));
+                warningToast = new SystemToast(
+                        new SystemToast.SystemToastId(TOAST_DISPLAY_TIME),
+                        Component.translatable("service.wynntils.compatibility.toastTitle"),
+                        toastMessage);
+                McUtils.mc().getToastManager().addToast(warningToast);
+                toastExpire = System.currentTimeMillis() + TOAST_DISPLAY_TIME;
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_Y) && System.currentTimeMillis() <= toastExpire) {
+            warningToast.forceHide();
+            toastExpire = 0L;
+            warningToast = null;
+
+            McUtils.mc().setScreen(CompatibilityWarningScreen.create(compatibilityTier));
         }
     }
 
