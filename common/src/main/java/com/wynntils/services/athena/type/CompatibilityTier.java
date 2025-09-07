@@ -9,37 +9,35 @@ package com.wynntils.services.athena.type;
  */
 public enum CompatibilityTier {
     // Majority of the mod will not function or major gameplay affecting issues
-    INCOMPATIBLE("service.wynntils.compatibility.incompatible", null),
+    INCOMPATIBLE("service.wynntils.compatibility.incompatible", true, false),
     // Not recommended for use, there are issues that can be avoided
-    MAJOR_ERRORS("service.wynntils.compatibility.majorErrors", null),
+    MAJOR_ERRORS("service.wynntils.compatibility.majorErrors", true, false),
     // Playable with a few minor issues
-    MINOR_ERRORS(null, "service.wynntils.compatibility.minorErrors"),
+    MINOR_ERRORS("service.wynntils.compatibility.minorErrors", false, true),
     // Fully compatible
-    COMPATIBLE(null, null),
+    COMPATIBLE(null, false, false),
     // Athena has no knowledge of this version or failed to check compatibility
-    UNKNOWN(null, "service.wynntils.compatibility.unknown");
+    UNKNOWN("service.wynntils.compatibility.unknown", false, true);
 
-    private final String screenPromptKey;
-    private final String chatPromptKey;
+    private final String warningKey;
+    private final boolean shouldScreenPrompt;
+    private final boolean shouldToastPrompt;
 
-    CompatibilityTier(String screenPromptKey, String chatPromptKey) {
-        this.screenPromptKey = screenPromptKey;
-        this.chatPromptKey = chatPromptKey;
+    CompatibilityTier(String warningKey, boolean shouldScreenPrompt, boolean shouldToastPrompt) {
+        this.warningKey = warningKey;
+        this.shouldScreenPrompt = shouldScreenPrompt;
+        this.shouldToastPrompt = shouldToastPrompt;
     }
 
     public boolean shouldScreenPrompt() {
-        return screenPromptKey != null;
-    }
-
-    public String getScreenPromptKey() {
-        return screenPromptKey;
+        return shouldScreenPrompt;
     }
 
     public boolean shouldChatPrompt() {
-        return chatPromptKey != null;
+        return shouldToastPrompt;
     }
 
-    public String getChatPromptKey() {
-        return chatPromptKey;
+    public String getWarningKey() {
+        return warningKey;
     }
 }

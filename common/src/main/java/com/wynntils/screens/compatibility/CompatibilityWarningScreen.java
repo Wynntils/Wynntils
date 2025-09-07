@@ -123,7 +123,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromComponent(Component.translatable(
-                                compatibilityTier.getScreenPromptKey(),
+                                compatibilityTier.getWarningKey(),
                                 WynntilsMod.getVersion(),
                                 Services.Compatibility.getWynncraftVersion().toString())),
                         this.width / 2f - 80,
