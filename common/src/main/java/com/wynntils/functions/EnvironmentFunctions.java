@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.type.CappedValue;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -127,6 +128,13 @@ public class EnvironmentFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("memorypct", "mempct");
+        }
+    }
+
+    public static class UnixTimeFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            return Instant.now().getEpochSecond();
         }
     }
 }

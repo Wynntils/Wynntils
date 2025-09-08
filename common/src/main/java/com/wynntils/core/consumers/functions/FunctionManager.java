@@ -410,6 +410,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.FormatCappedFunction());
         registerFunction(new StringFunctions.FormatDurationFunction());
         registerFunction(new StringFunctions.FormatDateFunction());
+        registerFunction(new StringFunctions.FormatDateAdvancedFunction());
         registerFunction(new StringFunctions.FormatFunction());
         registerFunction(new StringFunctions.FormatRangedFunction());
         registerFunction(new StringFunctions.LeadingZerosFunction());
@@ -525,6 +526,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
+        registerFunction(new EnvironmentFunctions.UnixTimeFunction());
 
         registerFunction(new InventoryFunctions.AccessoryDurabilityFunction());
         registerFunction(new InventoryFunctions.AllShinyStatsFunction());
