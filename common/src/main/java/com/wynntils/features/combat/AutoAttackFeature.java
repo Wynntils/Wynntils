@@ -88,6 +88,7 @@ public class AutoAttackFeature extends Feature {
             spellInputs = 0;
         }
 
+        if (Models.Raid.isParasiteOvertaken()) return;
         if (tickCount % TICKS_PER_ATTACK != 0) return;
         if (lastSpellInput + Models.Spell.SPELL_COST_RESET_TICKS > McUtils.player().tickCount) return;
 
