@@ -528,6 +528,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
         registerFunction(new EnvironmentFunctions.UnixTimeFunction());
+        registerFunction(new EnvironmentFunctions.WynntilsVersionFunction());
+        registerFunction(new EnvironmentFunctions.MinecraftVersionFunction());
+        registerFunction(new EnvironmentFunctions.WynncraftVersionFunction());
 
         registerFunction(new InventoryFunctions.AccessoryDurabilityFunction());
         registerFunction(new InventoryFunctions.AllShinyStatsFunction());

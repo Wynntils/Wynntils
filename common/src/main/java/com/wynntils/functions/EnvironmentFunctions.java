@@ -4,9 +4,12 @@
  */
 package com.wynntils.functions;
 
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.worlds.type.WynncraftVersion;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.time.Instant;
@@ -15,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
+import net.minecraft.SharedConstants;
 
 public class EnvironmentFunctions {
     public static class CappedMemFunction extends Function<CappedValue> {
@@ -135,6 +139,28 @@ public class EnvironmentFunctions {
         @Override
         public Long getValue(FunctionArguments arguments) {
             return Instant.now().getEpochSecond();
+        }
+    }
+
+    public static class WynntilsVersionFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return WynntilsMod.getVersion();
+        }
+    }
+
+    public static class MinecraftVersionFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return SharedConstants.getCurrentVersion().getName();
+        }
+    }
+
+    public static class WynncraftVersionFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            WynncraftVersion version = Models.WorldState.getWorldVersion();
+            return version != null ? version.toString() : "";
         }
     }
 }
