@@ -13,12 +13,16 @@ import java.util.regex.Pattern;
 
 public class WynncraftVersionSegmentMatcher implements ActionBarSegmentMatcher {
     private static final Pattern VERSION_PATTERN = Pattern.compile(
-            "§8(DEV|v(?<versiongroup>\\d+)\\.(?<majorversion>\\d+)\\.(?<minorversion>\\d+)_(?<revision>\\d+)(?<beta> BETA)?)");
+            "§8(?<dev>DEV|v(?<versiongroup>\\d+)\\.(?<majorversion>\\d+)\\.(?<minorversion>\\d+)_(?<revision>\\d+)(?<beta> BETA)?)");
 
     @Override
     public ActionBarSegment parse(String actionBar) {
         Matcher matcher = VERSION_PATTERN.matcher(actionBar);
         if (!matcher.find()) return null;
+
+        if (matcher.group("dev") != null) {
+            return new WynncraftVersionSegment(actionBar, WynncraftVersion.DEV);
+        }
 
         return new WynncraftVersionSegment(
                 actionBar,
