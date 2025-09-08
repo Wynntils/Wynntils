@@ -114,7 +114,9 @@ public class CompatibilityService extends Service {
 
         wynncraftVersion = segment.getWynncraftVersion();
 
-        if (WynntilsMod.isDevelopmentEnvironment() || WynntilsMod.isDevelopmentBuild()) {
+        if (WynntilsMod.isDevelopmentEnvironment()
+                || WynntilsMod.isDevelopmentBuild()
+                || wynncraftVersion.equals(WynncraftVersion.DEV)) {
             compatibilityTier = CompatibilityTier.UNKNOWN;
             return;
         }
