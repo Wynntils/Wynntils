@@ -73,6 +73,8 @@ public class CompatibilityService extends Service {
                 McUtils.mc().getToastManager().addToast(warningToast);
                 toastExpire = System.currentTimeMillis() + TOAST_DISPLAY_TIME;
             }
+        } else if (event.getNewState() == WorldState.NOT_CONNECTED) {
+            wynncraftVersion = null;
         }
     }
 
