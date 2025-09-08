@@ -323,4 +323,11 @@ public class CharacterFunctions {
             return Models.Ability.hummingBirdsState;
         }
     }
+
+    public static class OphanimHealingPercentFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ability.ophanimBar.isActive() ? Models.Ability.ophanimBar.getHealed() : -1;
+        }
+    }
 }

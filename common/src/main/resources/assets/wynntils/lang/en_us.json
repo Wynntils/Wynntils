@@ -2269,6 +2269,8 @@
   "function.wynntils.objectiveStreak.name": "Objective Streak",
   "function.wynntils.ophanimActive.description": "Is the Ophanim skill active?",
   "function.wynntils.ophanimActive.name": "Ophanim Active",
+  "function.wynntils.ophanimHealingPercent.description": "The percent of healing of your Ophanim",
+  "function.wynntils.ophanimHealingPercent.name": "Ophanim Healing Percent",
   "function.wynntils.ophanimOrb.argument.orbNumber": "Which orb's data to get (starts from 0)",
   "function.wynntils.ophanimOrb.description": "Returns the status of the given Ophanim orb. Returns -1 if the player doesn't have an orb with the given ID, otherwise, returns a number based on the color of the orb, 3 if it's blue, 2 if it's yellow, 1 if it's red and 0 if the orb is dead.",
   "function.wynntils.ophanimOrb.name": "Ophanim orb data",
