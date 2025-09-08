@@ -27,7 +27,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -57,8 +56,7 @@ public class CompatibilityService extends Service {
         event.runIfPresent(WynncraftVersionSegment.class, this::handleVersion);
     }
 
-    // Lowest so it will be the most recent message for all of the on join messages we send
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (WynntilsMod.isDevelopmentEnvironment() || WynntilsMod.isDevelopmentBuild()) return;
 
