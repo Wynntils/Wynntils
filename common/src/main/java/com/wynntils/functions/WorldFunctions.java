@@ -441,30 +441,4 @@ public class WorldFunctions {
                     new FunctionArguments.Argument<>("scale", Number.class, 1)));
         }
     }
-
-    //    public static class BombFormattedStringFunction extends Function<String>{
-    //
-    //        @Override
-    //        public String getValue(FunctionArguments arguments) {
-    //            int index = arguments.getArgument("index").getIntegerValue();
-    //            boolean group = arguments.getArgument("group").getBooleanValue();
-    //            BombSortOrder sortOrder =
-    // BombSortOrder.fromString(arguments.getArgument("sortOrder").getStringValue());
-    //            return Models.Bomb.getBombBellStream(group, sortOrder).toList().get(index).asString();
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.Builder getArgumentsBuilder(){
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of(new FunctionArguments.Argument<>("index",
-    // Integer.class, null),
-    //                    new FunctionArguments.Argument<>("group", Boolean.class, null),
-    //                    new FunctionArguments.Argument<>("sortOrder", String.class, null)));
-    //        }
-    //    }
-    //    public static class BombType extends Function<String>{}
-    //    public static class BombWorld extends Function<String>{}
-    //    public static class BombStartTime extends Function<String>{}
-    //    public static class BombLengh extends Function<String>{}
-    //    public static class BombTimeLeft extends Function<String>{}
-    //    public static class BombOwner extends Function<String>{}
 }
