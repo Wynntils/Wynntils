@@ -24,6 +24,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -62,22 +64,25 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
         this.holder = holder;
         this.searchMatch = searchMatch;
 
-        this.tooltip = LoreUtils.getTooltipLines(itemStack);
-        this.tooltip.add(Component.empty());
+        List<Component> addons = new ArrayList<>();
+
+        addons.add(Component.empty());
 
         if (canSetCompass()) {
-            this.tooltip.add(Component.translatable("screens.wynntils.contentBook.leftClickToSetCompass")
+            addons.add(Component.translatable("screens.wynntils.contentBook.leftClickToSetCompass")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.GREEN));
         }
         if (canOpenMap()) {
-            this.tooltip.add(Component.translatable("screens.wynntils.contentBook.middleClickToOpenOnMap")
+            addons.add(Component.translatable("screens.wynntils.contentBook.middleClickToOpenOnMap")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.YELLOW));
         }
-        this.tooltip.add(Component.translatable("screens.wynntils.contentBook.rightClickToOpenWiki")
+        addons.add(Component.translatable("screens.wynntils.contentBook.rightClickToOpenWiki")
                 .withStyle(ChatFormatting.BOLD)
                 .withStyle(ChatFormatting.GOLD));
+
+        this.tooltip = LoreUtils.appendTooltip(itemStack, LoreUtils.getTooltipLines(itemStack), addons);
 
         if (activityInfo.trackingState() == ActivityTrackingState.TRACKED) {
             nameStyle = nameStyle.withBold(true).withUnderlined(true);
