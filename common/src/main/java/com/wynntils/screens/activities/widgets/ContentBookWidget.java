@@ -24,7 +24,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
