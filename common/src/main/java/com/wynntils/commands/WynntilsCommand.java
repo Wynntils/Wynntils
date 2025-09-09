@@ -76,7 +76,9 @@ public class WynntilsCommand extends Command {
                         .then(Commands.literal("profile")
                                 .then(Commands.literal("reset").executes(this::profileReset))
                                 .then(Commands.literal("showAnnotations").executes(this::profileShowAnnotations))
-                                .then(Commands.literal("showOverlays").executes(this::profileShowOverlays))))
+                                .then(Commands.literal("showOverlays").executes(this::profileShowOverlays)))
+                        .then(Commands.literal("bombs")
+                                .then(Commands.literal("addDummyBombs").executes(this::addDummyBombbells))))
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
                 .then(Commands.literal("help").executes(this::help))
@@ -118,6 +120,15 @@ public class WynntilsCommand extends Command {
         Map<Class<?>, Integer> profilingCounts = Managers.Overlay.getProfilingCounts();
 
         showProfilingData(context, profilingTimes, profilingCounts);
+
+        return 1;
+    }
+
+    private int addDummyBombbells(CommandContext<CommandSourceStack> context) {
+        Models.Bomb.addDummyBombInfo();
+
+        context.getSource()
+                .sendSuccess(() -> Component.literal("Added dummy bombs").withStyle(ChatFormatting.GREEN), false);
 
         return 1;
     }

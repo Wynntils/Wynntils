@@ -15,6 +15,7 @@ import com.wynntils.core.consumers.functions.templates.parser.TemplateParser;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.functions.ActivityFunctions;
+import com.wynntils.functions.BombbellFunctions;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
@@ -431,6 +432,14 @@ public final class FunctionManager extends Manager {
         registerFunction(new ActivityFunctions.ActivityTypeFunction());
         registerFunction(new ActivityFunctions.IsTrackingActivityFunction());
         registerFunction(new ActivityFunctions.ActivityColorFunction());
+
+        registerFunction(new BombbellFunctions.BombFormattedStringFunction());
+        registerFunction(new BombbellFunctions.BombTypeFunction());
+        registerFunction(new BombbellFunctions.BombWorldFunction());
+        registerFunction(new BombbellFunctions.BombStartTimeFunction());
+        registerFunction(new BombbellFunctions.BombLenghtFunction());
+        registerFunction(new BombbellFunctions.BombRemainingTimeFunction());
+        registerFunction(new BombbellFunctions.BombOwnerFunction());
 
         registerFunction(new WorldFunctions.CurrentTerritoryFunction());
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
