@@ -12,8 +12,8 @@ import com.wynntils.models.worlds.type.BombSortOrder;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
-public class BombbellFunctions {
-    private abstract static class GenericBombFunction<T> extends Function<Object> {
+public class BombFunctions {
+    private abstract static class GenericBombFunction<T> extends Function<T> {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
@@ -23,7 +23,7 @@ public class BombbellFunctions {
         }
 
         @Override
-        public Object getValue(FunctionArguments arguments) {
+        public T getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("index").getIntegerValue();
             boolean group = arguments.getArgument("group").getBooleanValue();
             BombSortOrder sortOrder =
@@ -39,12 +39,12 @@ public class BombbellFunctions {
 
         @Override
         public String getArgumentDescription(String argumentName) {
-            return I18n.get("function.wynntils.genericBombBellFunction.argument." + argumentName);
+            return I18n.get("function.wynntils.genericBombFunction.argument." + argumentName);
         }
 
-        public abstract Object processInfo(BombInfo info);
+        public abstract T processInfo(BombInfo info);
 
-        public abstract Object invalidValue();
+        public abstract T invalidValue();
     }
 
     public static class BombFormattedStringFunction extends GenericBombFunction<String> {
@@ -78,7 +78,7 @@ public class BombbellFunctions {
         }
 
         @Override
-        public Object invalidValue() {
+        public String invalidValue() {
             return "";
         }
     }
@@ -109,24 +109,24 @@ public class BombbellFunctions {
 
     public static class BombRemainingTimeFunction extends GenericBombFunction<Long> {
         @Override
-        public Object processInfo(BombInfo info) {
+        public Long processInfo(BombInfo info) {
             return info.getRemainingLong();
         }
 
         @Override
-        public Object invalidValue() {
+        public Long invalidValue() {
             return -1L;
         }
     }
 
     public static class BombOwnerFunction extends GenericBombFunction<String> {
         @Override
-        public Object processInfo(BombInfo info) {
+        public String processInfo(BombInfo info) {
             return info.user();
         }
 
         @Override
-        public Object invalidValue() {
+        public String invalidValue() {
             return "";
         }
     }
