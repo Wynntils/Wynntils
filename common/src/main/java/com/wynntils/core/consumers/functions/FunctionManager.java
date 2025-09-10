@@ -30,6 +30,7 @@ import com.wynntils.functions.RaidFunctions;
 import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.SpellFunctions;
 import com.wynntils.functions.StatisticFunctions;
+import com.wynntils.functions.StatusEffectFunctions;
 import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldEventFunctions;
 import com.wynntils.functions.WorldFunctions;
@@ -489,10 +490,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.OphanimActive());
         registerFunction(new CharacterFunctions.OphanimOrb());
         registerFunction(new CharacterFunctions.SprintFunction());
-        registerFunction(new CharacterFunctions.StatusEffectActiveFunction());
-        registerFunction(new CharacterFunctions.StatusEffectDurationFunction());
-        registerFunction(new CharacterFunctions.StatusEffectModifierFunction());
-        registerFunction(new CharacterFunctions.StatusEffectsFunction());
         registerFunction(new CharacterFunctions.IsRidingHorseFunction());
         registerFunction(new CharacterFunctions.HasNoGuiFunction());
         registerFunction(new CharacterFunctions.HummingbirdsStateFunction());
@@ -680,6 +677,12 @@ public final class FunctionManager extends Manager {
         registerFunction(new StatisticFunctions.StatisticsFirstModifiedFunction());
         registerFunction(new StatisticFunctions.StatisticsLastModifiedFunction());
         registerFunction(new StatisticFunctions.StatisticsFormattedFunction());
+
+        registerFunction(new StatusEffectFunctions.StatusEffectActiveFunction());
+        registerFunction(new StatusEffectFunctions.StatusEffectDurationFunction());
+        registerFunction(new StatusEffectFunctions.StatusEffectModifierFunction());
+        registerFunction(new StatusEffectFunctions.StatusEffectsFunction());
+        registerFunction(new StatusEffectFunctions.StatusEffectPrefixFunction());
 
         registerFunction(new WarFunctions.AuraTimerFunction());
         registerFunction(new WarFunctions.CurrentTowerAttackSpeedFunction());

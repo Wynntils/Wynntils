@@ -13,7 +13,7 @@ import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
 public class BombFunctions {
-    private abstract static class GenericBombFunction<T> extends Function<T> {
+    private abstract static class BombFunctionBase<T> extends Function<T> {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
@@ -39,7 +39,7 @@ public class BombFunctions {
 
         @Override
         public String getArgumentDescription(String argumentName) {
-            return I18n.get("function.wynntils.genericBombFunction.argument." + argumentName);
+            return I18n.get("function.wynntils.bombFunctionBase.argument." + argumentName);
         }
 
         public abstract T processInfo(BombInfo info);
@@ -47,7 +47,7 @@ public class BombFunctions {
         public abstract T invalidValue();
     }
 
-    public static class BombFormattedStringFunction extends GenericBombFunction<String> {
+    public static class BombFormattedStringFunction extends BombFunctionBase<String> {
         @Override
         public String processInfo(BombInfo info) {
             return info.asString();
@@ -59,7 +59,7 @@ public class BombFunctions {
         }
     }
 
-    public static class BombTypeFunction extends GenericBombFunction<String> {
+    public static class BombTypeFunction extends BombFunctionBase<String> {
         @Override
         public String processInfo(BombInfo info) {
             return info.bomb().getDisplayName();
@@ -71,7 +71,7 @@ public class BombFunctions {
         }
     }
 
-    public static class BombWorldFunction extends GenericBombFunction<String> {
+    public static class BombWorldFunction extends BombFunctionBase<String> {
         @Override
         public String processInfo(BombInfo info) {
             return info.server();
@@ -83,7 +83,7 @@ public class BombFunctions {
         }
     }
 
-    public static class BombStartTimeFunction extends GenericBombFunction<Long> {
+    public static class BombStartTimeFunction extends BombFunctionBase<Long> {
         @Override
         public Long processInfo(BombInfo info) {
             return info.startTime();
@@ -95,7 +95,7 @@ public class BombFunctions {
         }
     }
 
-    public static class BombLenghtFunction extends GenericBombFunction<Float> {
+    public static class BombLenghtFunction extends BombFunctionBase<Float> {
         @Override
         public Float processInfo(BombInfo info) {
             return info.length();
@@ -107,7 +107,7 @@ public class BombFunctions {
         }
     }
 
-    public static class BombRemainingTimeFunction extends GenericBombFunction<Long> {
+    public static class BombRemainingTimeFunction extends BombFunctionBase<Long> {
         @Override
         public Long processInfo(BombInfo info) {
             return info.getRemainingLong();
@@ -119,7 +119,7 @@ public class BombFunctions {
         }
     }
 
-    public static class BombOwnerFunction extends GenericBombFunction<String> {
+    public static class BombOwnerFunction extends BombFunctionBase<String> {
         @Override
         public String processInfo(BombInfo info) {
             return info.user();
