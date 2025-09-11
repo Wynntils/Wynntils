@@ -30,6 +30,7 @@ import com.wynntils.features.chat.RemoveWynncraftChatWrapFeature;
 import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
 import com.wynntils.features.combat.AutoAttackFeature;
+import com.wynntils.features.combat.ChestBlockerFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
@@ -38,7 +39,6 @@ import com.wynntils.features.combat.HideLabelsFeature;
 import com.wynntils.features.combat.HorseMountFeature;
 import com.wynntils.features.combat.InvertAttackKeybindsFeature;
 import com.wynntils.features.combat.LowHealthVignetteFeature;
-import com.wynntils.features.combat.MythicBlockerFeature;
 import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
@@ -234,6 +234,7 @@ public final class FeatureManager extends Manager {
         // region combat
         registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new AutoAttackFeature());
+        registerFeature(new ChestBlockerFeature());
         registerFeature(new ContentTrackerFeature());
         registerFeature(new CustomLootrunBeaconsFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
@@ -242,7 +243,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new HorseMountFeature());
         registerFeature(new InvertAttackKeybindsFeature());
         registerFeature(new LowHealthVignetteFeature());
-        registerFeature(new MythicBlockerFeature());
         registerFeature(new MythicBoxScalerFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());

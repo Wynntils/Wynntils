@@ -23,6 +23,7 @@ import com.wynntils.core.persisted.upfixers.config.HideDamageLabelsToHideLabelsU
 import com.wynntils.core.persisted.upfixers.config.ItemHighlightFeatureCosmeticToStoreUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MobTotemTimerOverlayFeatureToBonusTotemTimerOverlayFeature;
+import com.wynntils.core.persisted.upfixers.config.MythicBlockerToChestBlockerUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MythicFoundToValuableFoundUpfixer;
 import com.wynntils.core.persisted.upfixers.config.NpcDialoguesOverlayConfigsMovedUpfixer;
 import com.wynntils.core.persisted.upfixers.config.NpcDialoguesRenamedUpfixer;
@@ -79,6 +80,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new ItemHighlightFeatureCosmeticToStoreUpfixer());
         registerConfigUpfixer(new HideDamageLabelsToHideLabelsUpfixer());
         registerConfigUpfixer(new MythicFoundToValuableFoundUpfixer());
+        registerConfigUpfixer(new MythicBlockerToChestBlockerUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
