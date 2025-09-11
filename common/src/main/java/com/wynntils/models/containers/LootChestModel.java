@@ -17,7 +17,7 @@ import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
-import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.gear.type.GearTier;
@@ -153,7 +153,7 @@ public final class LootChestModel extends Model {
         if (gearBoxItem.isPresent()) {
             GearBoxItem gearBox = gearBoxItem.get();
             if (gearBox.getGearTier() == GearTier.MYTHIC) {
-                WynntilsMod.postEvent(new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.LOOT_CHEST));
+                WynntilsMod.postEvent(new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.LOOT_CHEST));
 
                 if (gearBox.getGearType() != GearType.MASTERY_TOME) {
                     storeMythicFind(itemStack, gearBox.getLevelRange());
@@ -167,7 +167,7 @@ public final class LootChestModel extends Model {
         if (emeraldPouchItem.isPresent()) {
             EmeraldPouchItem emeraldPouch = emeraldPouchItem.get();
             if (emeraldPouch.getTier() >= 7) {
-                WynntilsMod.postEvent(new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.LOOT_CHEST));
+                WynntilsMod.postEvent(new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.LOOT_CHEST));
 
                 Map<Integer, Integer> pouchCount = dryEmeraldPouchCount.get();
                 pouchCount.put(emeraldPouch.getTier(), 0);

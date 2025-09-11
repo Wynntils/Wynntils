@@ -9,7 +9,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.combat.type.DamageDealtEvent;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
-import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.raids.NestOfTheGrootslangsRaid;
@@ -57,10 +57,10 @@ public final class StatisticsCollectors {
     }
 
     @SubscribeEvent
-    public void onMythicFoundEvent(MythicFoundEvent event) {
+    public void onValuableFoundEvent(ValuableFoundEvent event) {
         Services.Statistics.increaseStatistics(StatisticKind.MYTHICS_FOUND);
 
-        if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST) {
+        if (event.getItemSource() == ValuableFoundEvent.ItemSource.LOOTRUN_REWARD_CHEST) {
             Services.Statistics.addToStatistics(
                     StatisticKind.LOOTRUNS_PULLS_WITHOUT_MYTHIC, Models.Lootrun.dryPulls.get());
         }

@@ -9,7 +9,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
@@ -65,11 +65,11 @@ public class ValuableFoundFeature extends Feature {
     private final Config<EmeraldPouchTier> emeraldPouchTier = new Config<>(EmeraldPouchTier.EIGHT);
 
     @SubscribeEvent
-    public void onMythicFound(MythicFoundEvent event) {
-        ItemStack itemStack = event.getMythicBoxItem();
+    public void onValuableFound(ValuableFoundEvent event) {
+        ItemStack itemStack = event.getItem();
 
         // Normal loot chest reward
-        if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOT_CHEST) {
+        if (event.getItemSource() == ValuableFoundEvent.ItemSource.LOOT_CHEST) {
             if (showDryStreakMessage.get() || chestSound.get() != ValuableFoundSound.NONE) {
                 Optional<GearBoxItem> gearBoxItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
                 if (gearBoxItem.isPresent()) {
@@ -79,8 +79,8 @@ public class ValuableFoundFeature extends Feature {
                         }
 
                         if (!showDryStreakMessage.get()) return;
-                        sendNormalDryStreakMessage(StyledText.fromComponent(
-                                event.getMythicBoxItem().getHoverName()));
+                        sendNormalDryStreakMessage(
+                                StyledText.fromComponent(event.getItem().getHoverName()));
                     }
                     return;
                 }
@@ -98,7 +98,7 @@ public class ValuableFoundFeature extends Feature {
 
                     if (!showEmeraldPouchDryStreakMessage.get()) return;
                     sendEmeraldPouchDryStreakMessage(
-                            StyledText.fromComponent(event.getMythicBoxItem().getHoverName()),
+                            StyledText.fromComponent(event.getItem().getHoverName()),
                             emeraldPouchTier.get().getTier());
                 }
 
@@ -107,7 +107,7 @@ public class ValuableFoundFeature extends Feature {
         }
 
         // Lootrun rewards
-        if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST
+        if (event.getItemSource() == ValuableFoundEvent.ItemSource.LOOTRUN_REWARD_CHEST
                 && (showDryStreakMessage.get() || lootrunSound.get() != ValuableFoundSound.NONE)) {
             boolean validLootrunMythic = false;
             Optional<GearItem> gearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
@@ -132,12 +132,12 @@ public class ValuableFoundFeature extends Feature {
 
                 if (!showDryStreakMessage.get()) return;
                 sendLootrunDryStreakMessage(
-                        StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
+                        StyledText.fromComponent(event.getItem().getHoverName()));
             }
         }
 
         // Raid rewards
-        if (event.getMythicSource() == MythicFoundEvent.MythicSource.RAID_REWARD_CHEST) {
+        if (event.getItemSource() == ValuableFoundEvent.ItemSource.RAID_REWARD_CHEST) {
             if (showAspectDryStreakMessage.get() || aspectFoundSound.get() != ValuableFoundSound.NONE) {
                 Optional<AspectItem> aspectItem = Models.Item.asWynnItem(itemStack, AspectItem.class);
                 if (aspectItem.isPresent()) {
@@ -145,8 +145,8 @@ public class ValuableFoundFeature extends Feature {
                         McUtils.playSoundAmbient(aspectFoundSound.get().getSoundEvent());
                     }
                     if (showAspectDryStreakMessage.get()) {
-                        sendAspectDryStreakMessage(StyledText.fromComponent(
-                                event.getMythicBoxItem().getHoverName()));
+                        sendAspectDryStreakMessage(
+                                StyledText.fromComponent(event.getItem().getHoverName()));
                     }
                     return;
                 }
@@ -159,8 +159,8 @@ public class ValuableFoundFeature extends Feature {
                         McUtils.playSoundAmbient(tomeFoundSound.get().getSoundEvent());
                     }
                     if (showTomeDryStreakMessage.get()) {
-                        sendTomeDryStreakMessage(StyledText.fromComponent(
-                                event.getMythicBoxItem().getHoverName()));
+                        sendTomeDryStreakMessage(
+                                StyledText.fromComponent(event.getItem().getHoverName()));
                     }
                     return;
                 }
