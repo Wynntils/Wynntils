@@ -26,7 +26,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class MythicFoundFeature extends Feature {
+public class ValuableFoundFeature extends Feature {
     private static final ResourceLocation MYTHIC_FOUND_CLASSIC_ID =
             ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found-classic");
     private static final ResourceLocation MYTHIC_FOUND_MODERN_ID =
