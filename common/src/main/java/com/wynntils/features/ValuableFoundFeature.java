@@ -33,16 +33,16 @@ public class ValuableFoundFeature extends Feature {
             ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found-modern");
 
     @Persisted
-    private final Config<MythicSound> chestSound = new Config<>(MythicSound.MODERN);
+    private final Config<ValuableFoundSound> chestSound = new Config<>(ValuableFoundSound.MODERN);
 
     @Persisted
-    private final Config<MythicSound> lootrunSound = new Config<>(MythicSound.MODERN);
+    private final Config<ValuableFoundSound> lootrunSound = new Config<>(ValuableFoundSound.MODERN);
 
     @Persisted
-    private final Config<MythicSound> aspectFoundSound = new Config<>(MythicSound.MODERN);
+    private final Config<ValuableFoundSound> aspectFoundSound = new Config<>(ValuableFoundSound.MODERN);
 
     @Persisted
-    private final Config<MythicSound> tomeFoundSound = new Config<>(MythicSound.NONE);
+    private final Config<ValuableFoundSound> tomeFoundSound = new Config<>(ValuableFoundSound.NONE);
 
     @Persisted
     private final Config<Boolean> showDryStreakMessage = new Config<>(true);
@@ -59,11 +59,11 @@ public class ValuableFoundFeature extends Feature {
 
         // Normal loot chest reward
         if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOT_CHEST
-                && (showDryStreakMessage.get() || chestSound.get() != MythicSound.NONE)) {
+                && (showDryStreakMessage.get() || chestSound.get() != ValuableFoundSound.NONE)) {
             Optional<GearBoxItem> gearBoxItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
             if (gearBoxItem.isPresent()) {
                 if (gearBoxItem.get().getGearType() != GearType.MASTERY_TOME) {
-                    if (chestSound.get() != MythicSound.NONE) {
+                    if (chestSound.get() != ValuableFoundSound.NONE) {
                         McUtils.playSoundAmbient(chestSound.get().getSoundEvent());
                     }
 
@@ -77,7 +77,7 @@ public class ValuableFoundFeature extends Feature {
 
         // Lootrun rewards
         if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST
-                && (showDryStreakMessage.get() || lootrunSound.get() != MythicSound.NONE)) {
+                && (showDryStreakMessage.get() || lootrunSound.get() != ValuableFoundSound.NONE)) {
             boolean validLootrunMythic = false;
             Optional<GearItem> gearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
             if (gearItem.isPresent()) {
@@ -95,7 +95,7 @@ public class ValuableFoundFeature extends Feature {
             }
 
             if (validLootrunMythic) {
-                if (lootrunSound.get() != MythicSound.NONE) {
+                if (lootrunSound.get() != ValuableFoundSound.NONE) {
                     McUtils.playSoundAmbient(lootrunSound.get().getSoundEvent());
                 }
 
@@ -107,10 +107,10 @@ public class ValuableFoundFeature extends Feature {
 
         // Raid rewards
         if (event.getMythicSource() == MythicFoundEvent.MythicSource.RAID_REWARD_CHEST) {
-            if (showAspectDryStreakMessage.get() || aspectFoundSound.get() != MythicSound.NONE) {
+            if (showAspectDryStreakMessage.get() || aspectFoundSound.get() != ValuableFoundSound.NONE) {
                 Optional<AspectItem> aspectItem = Models.Item.asWynnItem(itemStack, AspectItem.class);
                 if (aspectItem.isPresent()) {
-                    if (aspectFoundSound.get() != MythicSound.NONE) {
+                    if (aspectFoundSound.get() != ValuableFoundSound.NONE) {
                         McUtils.playSoundAmbient(aspectFoundSound.get().getSoundEvent());
                     }
                     if (showAspectDryStreakMessage.get()) {
@@ -121,10 +121,10 @@ public class ValuableFoundFeature extends Feature {
                 }
             }
 
-            if (showTomeDryStreakMessage.get() || tomeFoundSound.get() != MythicSound.NONE) {
+            if (showTomeDryStreakMessage.get() || tomeFoundSound.get() != ValuableFoundSound.NONE) {
                 Optional<TomeItem> tomeItem = Models.Item.asWynnItem(itemStack, TomeItem.class);
                 if (tomeItem.isPresent()) {
-                    if (tomeFoundSound.get() != MythicSound.NONE) {
+                    if (tomeFoundSound.get() != ValuableFoundSound.NONE) {
                         McUtils.playSoundAmbient(tomeFoundSound.get().getSoundEvent());
                     }
                     if (showTomeDryStreakMessage.get()) {
@@ -195,14 +195,14 @@ public class ValuableFoundFeature extends Feature {
                 .withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 
-    private enum MythicSound {
+    private enum ValuableFoundSound {
         MODERN(SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_MODERN_ID)),
         CLASSIC(SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_CLASSIC_ID)),
         NONE(null);
 
         private final SoundEvent soundEvent;
 
-        MythicSound(SoundEvent soundEvent) {
+        ValuableFoundSound(SoundEvent soundEvent) {
             this.soundEvent = soundEvent;
         }
 
