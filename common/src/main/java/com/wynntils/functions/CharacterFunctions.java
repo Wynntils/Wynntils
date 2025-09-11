@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.character.type.VehicleType;
+import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
@@ -262,6 +263,62 @@ public class CharacterFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.Ability.ophanimBar.isActive() ? Models.Ability.ophanimBar.getHealed() : -1;
+        }
+    }
+
+    public static class GuildObjectiveScoreFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            WynnObjective weekly = Models.Objectives.getGuildObjective();
+            if (weekly == null) return CappedValue.EMPTY;
+            return weekly.getScore();
+        }
+    }
+
+    public static class GuildObjectiveGoalFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            WynnObjective weekly = Models.Objectives.getGuildObjective();
+            if (weekly == null) return "";
+            return weekly.getGoal();
+        }
+    }
+
+    public static class PersonalObjectiveScoreFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
+            try {
+                return daily.get(index).getScore();
+            } catch (RuntimeException e) {
+                return CappedValue.EMPTY;
+            }
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("index", Integer.class, 0)));
+        }
+    }
+
+    public static class PersonalObjectiveGoalFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
+            try {
+                return daily.get(index).getGoal();
+            } catch (RuntimeException e) {
+                return "";
+            }
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("index", Integer.class, 0)));
         }
     }
 }

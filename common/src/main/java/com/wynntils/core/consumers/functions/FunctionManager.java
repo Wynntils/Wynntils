@@ -495,6 +495,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.HasNoGuiFunction());
         registerFunction(new CharacterFunctions.HummingbirdsStateFunction());
         registerFunction(new CharacterFunctions.OphanimHealingPercentFunction());
+        registerFunction(new CharacterFunctions.GuildObjectiveScoreFunction());
+        registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
+        registerFunction(new CharacterFunctions.PersonalObjectiveScoreFunction());
+        registerFunction(new CharacterFunctions.PersonalObjectiveGoalFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
