@@ -12,11 +12,13 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.AspectItem;
+import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.InsulatorItem;
 import com.wynntils.models.items.items.game.SimulatorItem;
 import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -45,6 +47,9 @@ public class ValuableFoundFeature extends Feature {
     private final Config<ValuableFoundSound> tomeFoundSound = new Config<>(ValuableFoundSound.NONE);
 
     @Persisted
+    private final Config<ValuableFoundSound> emeraldPouchSound = new Config<>(ValuableFoundSound.NONE);
+
+    @Persisted
     private final Config<Boolean> showDryStreakMessage = new Config<>(true);
 
     @Persisted
@@ -53,24 +58,50 @@ public class ValuableFoundFeature extends Feature {
     @Persisted
     private final Config<Boolean> showTomeDryStreakMessage = new Config<>(false);
 
+    @Persisted
+    private final Config<Boolean> showEmeraldPouchDryStreakMessage = new Config<>(true);
+
+    @Persisted
+    private final Config<EmeraldPouchTier> emeraldPouchTier = new Config<>(EmeraldPouchTier.EIGHT);
+
     @SubscribeEvent
     public void onMythicFound(MythicFoundEvent event) {
         ItemStack itemStack = event.getMythicBoxItem();
 
         // Normal loot chest reward
-        if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOT_CHEST
-                && (showDryStreakMessage.get() || chestSound.get() != ValuableFoundSound.NONE)) {
-            Optional<GearBoxItem> gearBoxItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
-            if (gearBoxItem.isPresent()) {
-                if (gearBoxItem.get().getGearType() != GearType.MASTERY_TOME) {
-                    if (chestSound.get() != ValuableFoundSound.NONE) {
-                        McUtils.playSoundAmbient(chestSound.get().getSoundEvent());
+        if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOT_CHEST) {
+            if (showDryStreakMessage.get() || chestSound.get() != ValuableFoundSound.NONE) {
+                Optional<GearBoxItem> gearBoxItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
+                if (gearBoxItem.isPresent()) {
+                    if (gearBoxItem.get().getGearType() != GearType.MASTERY_TOME) {
+                        if (chestSound.get() != ValuableFoundSound.NONE) {
+                            McUtils.playSoundAmbient(chestSound.get().getSoundEvent());
+                        }
+
+                        if (!showDryStreakMessage.get()) return;
+                        sendNormalDryStreakMessage(StyledText.fromComponent(
+                                event.getMythicBoxItem().getHoverName()));
+                    }
+                    return;
+                }
+            }
+
+            if (emeraldPouchTier.get() != EmeraldPouchTier.NONE
+                    && (showEmeraldPouchDryStreakMessage.get() || emeraldPouchSound.get() != ValuableFoundSound.NONE)) {
+                Optional<EmeraldPouchItem> emeraldPouchItem = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
+                if (emeraldPouchItem.isPresent()
+                        && emeraldPouchItem.get().getTier()
+                                >= emeraldPouchTier.get().getTier()) {
+                    if (emeraldPouchSound.get() != ValuableFoundSound.NONE) {
+                        McUtils.playSoundAmbient(emeraldPouchSound.get().getSoundEvent());
                     }
 
-                    if (!showDryStreakMessage.get()) return;
-                    sendNormalDryStreakMessage(
-                            StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
+                    if (!showEmeraldPouchDryStreakMessage.get()) return;
+                    sendEmeraldPouchDryStreakMessage(
+                            StyledText.fromComponent(event.getMythicBoxItem().getHoverName()),
+                            emeraldPouchTier.get().getTier());
                 }
+
                 return;
             }
         }
@@ -166,6 +197,21 @@ public class ValuableFoundFeature extends Feature {
                 .append(Component.literal(" dry boxes.")));
     }
 
+    private static void sendEmeraldPouchDryStreakMessage(StyledText itemName, int tier) {
+        McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found an ")
+                .withColor(CustomColor.fromHexString("#7CFC00").asInt())
+                .append(itemName.getComponent())
+                .append(Component.literal(" in chest ")
+                        .withColor(CustomColor.fromHexString("#7CFC00").asInt())
+                        .append(Component.literal("#" + Models.LootChest.getOpenedChestCount())
+                                .withStyle(ChatFormatting.DARK_AQUA)))
+                .append(Component.literal(" after ")
+                        .withColor(CustomColor.fromHexString("#7CFC00").asInt())
+                        .append(Component.literal(String.valueOf(Models.LootChest.getDryPouchCount(tier)))
+                                .withColor(CustomColor.fromHexString("#228B22").asInt())))
+                .append(Component.literal(" dry chests.")));
+    }
+
     private static void sendAspectDryStreakMessage(StyledText itemName) {
         sendRaidDryStreakMessage(
                 itemName,
@@ -208,6 +254,24 @@ public class ValuableFoundFeature extends Feature {
 
         public SoundEvent getSoundEvent() {
             return soundEvent;
+        }
+    }
+
+    private enum EmeraldPouchTier {
+        NONE(-1),
+        SEVEN(7),
+        EIGHT(8),
+        NINE(9),
+        TEN(10);
+
+        private final int tier;
+
+        EmeraldPouchTier(int tier) {
+            this.tier = tier;
+        }
+
+        public int getTier() {
+            return tier;
         }
     }
 }
