@@ -74,6 +74,7 @@ public final class ProfessionModel extends Model {
     private final TimedSet<Integer> harvestIds = new TimedSet<>(MAX_HARVEST_LABEL_AGE, TimeUnit.MILLISECONDS, true);
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
+    private ProfessionType lastProfessionXpGain;
 
     public ProfessionModel() {
         super(List.of());
@@ -110,6 +111,7 @@ public final class ProfessionModel extends Model {
             }
             harvestIds.put(gatheringInfo.getEntity().getId());
             lastGatherTime = System.currentTimeMillis();
+            lastProfessionXpGain = gatheringInfo.getProfessionType();
             WynntilsMod.postEvent(new ProfessionXpGainEvent(
                     gatheringInfo.getProfessionType(), gatheringInfo.getXpGain(), gatheringInfo.getCurrentXp()));
         }
@@ -121,6 +123,7 @@ public final class ProfessionModel extends Model {
 
         Matcher craftMatcher = message.getMatcher(PROFESSION_CRAFT_PATTERN);
         if (craftMatcher.matches()) {
+            lastProfessionXpGain = ProfessionType.fromString(craftMatcher.group("name"));
             ProfessionXpGainEvent xpGainEvent = new ProfessionXpGainEvent(
                     ProfessionType.fromString(craftMatcher.group("name")),
                     Float.parseFloat(craftMatcher.group("gain")),
@@ -223,5 +226,9 @@ public final class ProfessionModel extends Model {
     public CappedValue getXP(ProfessionType type) {
         int maxXP = getXpPointsNeededToLevelUp(type);
         return CappedValue.fromProgress((float) (getProgress(type) / 100), maxXP);
+    }
+
+    public Optional<ProfessionType> getLastProfessionXpGain() {
+        return Optional.ofNullable(lastProfessionXpGain);
     }
 }

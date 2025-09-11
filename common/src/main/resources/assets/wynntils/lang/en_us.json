@@ -2197,6 +2197,8 @@
   "function.wynntils.lastHarvestXpGain.name": "Last Harvest XP Gain",
   "function.wynntils.lastMythic.description": "The last mythic that you found in a loot chest.",
   "function.wynntils.lastMythic.name": "Last Mythic",
+  "function.wynntils.lastProfessionXpGain.description": "The latest profession that you gained xp for",
+  "function.wynntils.lastProfessionXpGain.name": "Last Profession Xp Gain",
   "function.wynntils.lastSpellName.argument.burst": "Should only the last spell in the current burst be returned?",
   "function.wynntils.lastSpellName.description": "The name of the last spell cast",
   "function.wynntils.lastSpellName.name": "Last Spell Name",

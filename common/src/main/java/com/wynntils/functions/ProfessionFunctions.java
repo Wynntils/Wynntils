@@ -211,4 +211,13 @@ public class ProfessionFunctions {
             return List.of("mat_dry");
         }
     }
+
+    public static class LastProfessionXpGainFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<ProfessionType> profession = Models.Profession.getLastProfessionXpGain();
+            if (profession.isEmpty()) return "";
+            return profession.get().getDisplayName();
+        }
+    }
 }
