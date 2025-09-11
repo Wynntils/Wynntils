@@ -13,6 +13,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.event.MythicFoundEvent;
@@ -109,6 +110,11 @@ public final class LootChestModel extends Model {
         } else {
             lastChestPos = null;
         }
+    }
+
+    @SubscribeEvent
+    public void onScreenClose(ScreenClosedEvent e) {
+        nextExpectedLootContainerId = -2;
     }
 
     @SubscribeEvent
