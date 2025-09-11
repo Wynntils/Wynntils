@@ -34,6 +34,9 @@ public class ChestBlockerFeature extends Feature {
     @Persisted
     private final Config<Boolean> preventPouchClick = new Config<>(true);
 
+    @Persisted
+    private final Config<EmeraldPouchTier> emeraldPouchTier = new Config<>(EmeraldPouchTier.EIGHT);
+
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!Models.WorldState.onWorld()) return;
@@ -46,6 +49,20 @@ public class ChestBlockerFeature extends Feature {
                     Models.Item.asWynnItemProperty(itemStack, GearTierItemProperty.class);
             if (tieredItem.isPresent() && tieredItem.get().getGearTier() == GearTier.MYTHIC) {
                 McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chestBlocker.closingBlocked")
+                        .withStyle(ChatFormatting.RED));
+                e.setCanceled(true);
+                return;
+            }
+
+            if (emeraldPouchTier.get() == EmeraldPouchTier.NONE) continue;
+
+            Optional<EmeraldPouchItem> emeraldPouchItem = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
+            if (emeraldPouchItem.isPresent()
+                    && emeraldPouchItem.get().getTier()
+                            >= emeraldPouchTier.get().getTier()) {
+                McUtils.sendMessageToClient(Component.translatable(
+                                "feature.wynntils.chestBlocker.closingBlockedPouch",
+                                emeraldPouchItem.get().getTier())
                         .withStyle(ChatFormatting.RED));
                 e.setCanceled(true);
                 return;
@@ -73,5 +90,23 @@ public class ChestBlockerFeature extends Feature {
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chestBlocker.pouchBlocked")
                 .withStyle(ChatFormatting.RED));
         event.setCanceled(true);
+    }
+
+    private enum EmeraldPouchTier {
+        NONE(-1),
+        SEVEN(7),
+        EIGHT(8),
+        NINE(9),
+        TEN(10);
+
+        private final int tier;
+
+        EmeraldPouchTier(int tier) {
+            this.tier = tier;
+        }
+
+        public int getTier() {
+            return tier;
+        }
     }
 }
