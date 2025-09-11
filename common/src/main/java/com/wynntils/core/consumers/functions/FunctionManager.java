@@ -577,7 +577,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new HadesPartyFunctions.HadesPartyMemberManaFunction());
         registerFunction(new HadesPartyFunctions.HadesPartyMemberLocationFunction());
         registerFunction(new HadesPartyFunctions.HadesPartyMemberNameFunction());
-        registerFunction(new HadesPartyFunctions.HadesPartyMemberClassFunction());
 
         registerFunction(new HorseFunctions.CappedHorseLevelFunction());
         registerFunction(new HorseFunctions.CappedHorseTotalLevelTimeFunction());

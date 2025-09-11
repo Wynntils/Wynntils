@@ -89,16 +89,4 @@ public class HadesPartyFunctions {
             return "";
         }
     }
-
-    public static class HadesPartyMemberClassFunction extends HadesPartyFunctionBase<String> {
-        @Override
-        public String processMember(HadesUser member) {
-            return member.getClass().getName();
-        }
-
-        @Override
-        public String whenAbsent() {
-            return "";
-        }
-    }
 }
