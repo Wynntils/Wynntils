@@ -45,6 +45,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class LootChestModel extends Model {
     public static final int LOOT_CHEST_ITEM_COUNT = 27;
+    private static final int[] HIGH_TIER_EMERALD_POUCHES = {7, 8, 9, 10};
 
     @Persisted
     private final Storage<List<MythicFind>> mythicFinds = new Storage<>(new ArrayList<>());
@@ -119,10 +120,10 @@ public final class LootChestModel extends Model {
             dryCount.store(dryCount.get() + 1);
 
             Map<Integer, Integer> pouchCount = dryEmeraldPouchCount.get();
-            pouchCount.entrySet().forEach(entry -> {
-                int currentCount = entry.getValue();
-                entry.setValue(currentCount + 1);
-            });
+            for (int tier : HIGH_TIER_EMERALD_POUCHES) {
+                int currentCount = pouchCount.getOrDefault(tier, 0);
+                pouchCount.put(tier, currentCount + 1);
+            }
 
             dryEmeraldPouchCount.store(pouchCount);
             dryEmeraldPouchCount.touched();
