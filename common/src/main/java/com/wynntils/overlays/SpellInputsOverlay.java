@@ -32,7 +32,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class SpellInputsOverlay extends Overlay {
-    private static final int SMALL_CHARACTERS_LEVEL = 10;
+    // Upon reaching level 11, the spell inputs are displayed using the smaller icon
+    private static final int SMALL_CHARACTERS_LEVEL = 11;
     private static final ResourceLocation SPELL_INPUTS_FONT =
             ResourceLocation.withDefaultNamespace("hud/gameplay/default/bottom_middle");
 
