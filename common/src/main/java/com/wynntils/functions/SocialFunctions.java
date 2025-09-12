@@ -7,6 +7,7 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 
@@ -73,10 +74,9 @@ public class SocialFunctions {
     public static class WynntilsRoleFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return Models.Player.getWynntilsUser(McUtils.player())
-                    .accountType()
-                    .getComponent()
-                    .getString();
+            WynntilsUser player = Models.Player.getWynntilsUser(McUtils.player());
+            if (player == null) return "";
+            return player.accountType().getComponent().getString();
         }
     }
 
