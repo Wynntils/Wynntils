@@ -290,8 +290,8 @@ public class FunctionCommand extends Command {
                 ChatFormatting.GRAY + "Description: " + ChatFormatting.WHITE + function.getDescription() + "\n");
         helpComponent.append(ChatFormatting.GRAY + "Aliases:" + ChatFormatting.WHITE + " ["
                 + String.join(", ", function.getAliasList()) + "]\n");
-        helpComponent.append(ChatFormatting.GRAY + "Returns: " + ChatFormatting.WHITE
-                + function.getFunctionType().getSimpleName() + "\n");
+        helpComponent.append(
+                ChatFormatting.GRAY + "Returns: " + ChatFormatting.WHITE + function.getReturnTypeName() + "\n");
         helpComponent.append(ChatFormatting.GRAY + "Arguments:" + ChatFormatting.WHITE + " ("
                 + (isArgumentOptional ? "Optional" : "Required")
                 + ")");

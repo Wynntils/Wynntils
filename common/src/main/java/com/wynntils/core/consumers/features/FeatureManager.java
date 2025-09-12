@@ -556,9 +556,12 @@ public final class FeatureManager extends Manager {
         return FEATURES.keySet().stream().toList();
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends Feature> T getFeatureInstance(Class<T> featureClass) {
-        return (T) FEATURE_INSTANCES.get(featureClass);
+        Feature feature = FEATURE_INSTANCES.get(featureClass);
+        if (!featureClass.isInstance(feature)) {
+            throw new IllegalArgumentException("Feature " + featureClass + " is not registered");
+        }
+        return featureClass.cast(feature);
     }
 
     public Optional<Feature> getFeatureFromString(String featureName) {
