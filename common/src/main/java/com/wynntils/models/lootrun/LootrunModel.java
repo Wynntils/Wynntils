@@ -32,7 +32,7 @@ import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.containers.containers.LootrunRewardChestContainer;
-import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.InsulatorItem;
@@ -535,7 +535,7 @@ public final class LootrunModel extends Model {
                 if (foundMythic) {
                     foundLootrunMythic = true;
                     WynntilsMod.postEvent(
-                            new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST));
+                            new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.LOOTRUN_REWARD_CHEST));
                 }
             }
         }

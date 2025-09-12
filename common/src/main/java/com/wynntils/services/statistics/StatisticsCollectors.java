@@ -9,7 +9,9 @@ import com.wynntils.core.components.Services;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.combat.type.DamageDealtEvent;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
-import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.event.ValuableFoundEvent;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.raids.NestOfTheGrootslangsRaid;
@@ -20,6 +22,7 @@ import com.wynntils.models.raid.raids.TheNamelessAnomalyRaid;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.war.event.GuildWarEvent;
 import com.wynntils.services.statistics.type.StatisticKind;
+import java.util.Optional;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class StatisticsCollectors {
@@ -57,10 +60,14 @@ public final class StatisticsCollectors {
     }
 
     @SubscribeEvent
-    public void onMythicFoundEvent(MythicFoundEvent event) {
+    public void onValuableFoundEvent(ValuableFoundEvent event) {
+        Optional<GearTierItemProperty> tieredItem =
+                Models.Item.asWynnItemProperty(event.getItem(), GearTierItemProperty.class);
+        if (tieredItem.isEmpty() || tieredItem.get().getGearTier() != GearTier.MYTHIC) return;
+
         Services.Statistics.increaseStatistics(StatisticKind.MYTHICS_FOUND);
 
-        if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST) {
+        if (event.getItemSource() == ValuableFoundEvent.ItemSource.LOOTRUN_REWARD_CHEST) {
             Services.Statistics.addToStatistics(
                     StatisticKind.LOOTRUNS_PULLS_WITHOUT_MYTHIC, Models.Lootrun.dryPulls.get());
         }
