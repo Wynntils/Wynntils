@@ -110,6 +110,7 @@ import com.wynntils.features.overlays.ShamanTotemTimerOverlayFeature;
 import com.wynntils.features.overlays.SpellCastMessageOverlayFeature;
 import com.wynntils.features.overlays.StatusEffectsOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
+import com.wynntils.features.overlays.StreamerModeOverlayFeature;
 import com.wynntils.features.overlays.TerritoryAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.TokenBarsOverlayFeature;
 import com.wynntils.features.overlays.TowerEffectOverlayFeature;
@@ -321,6 +322,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new SpellCastMessageOverlayFeature());
         registerFeature(new StatusEffectsOverlayFeature());
         registerFeature(new StopwatchFeature());
+        registerFeature(new StreamerModeOverlayFeature());
         registerFeature(new TerritoryAttackTimerOverlayFeature());
         registerFeature(new TokenBarsOverlayFeature());
         registerFeature(new TowerEffectOverlayFeature());
