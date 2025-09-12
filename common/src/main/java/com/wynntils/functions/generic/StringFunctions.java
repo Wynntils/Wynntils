@@ -1,14 +1,16 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.RangedValue;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -81,6 +83,28 @@ public class StringFunctions {
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("timestamp", Number.class, null)));
+        }
+    }
+
+    public static class FormatDateAdvancedFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            long timestamp = arguments.getArgument("timestamp").getLongValue();
+            String format = arguments.getArgument("format").getStringValue();
+
+            try {
+                String date = new SimpleDateFormat(format).format(timestamp);
+                return date;
+            } catch (IllegalArgumentException e) {
+                return "Invalid Format";
+            }
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("timestamp", Number.class, null),
+                    new FunctionArguments.Argument<>("format", String.class, null)));
         }
     }
 
@@ -338,6 +362,20 @@ public class StringFunctions {
                     new FunctionArguments.Argument<>("source", String.class, null),
                     new FunctionArguments.Argument<>("regex", String.class, null),
                     new FunctionArguments.Argument<>("replacement", String.class, null)));
+        }
+    }
+
+    public static class ToRomanNumeralsFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int number = arguments.getArgument("number").getIntegerValue();
+            return MathUtils.toRoman(number);
+        }
+
+        @Override
+        protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("number", Integer.class, null)));
         }
     }
 }
