@@ -33,6 +33,7 @@ import com.wynntils.models.activities.type.ActivityRewardType;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.models.activities.type.WorldEventFastTravelStatus;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
@@ -87,7 +88,9 @@ public final class ActivityModel extends Model {
     private static final Pattern DIFFICULTY_PATTERN = Pattern.compile("^\uDB00\uDC0E§7Difficulty: (\\w*)$");
     private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^\uDB00\uDC0E§dRewards:$");
     private static final Pattern REWARD_PATTERN = Pattern.compile("^§d\uDB00\uDC04(- )?§7\\+?(?<reward>.+)$");
-    private static final Pattern TRACKING_PATTERN = Pattern.compile("^.*§(?:#.{8}|.)§lCLICK TO (UN)?TRACK$");
+    private static final Pattern TRACKING_PATTERN =
+            Pattern.compile(".+§f\uE000 §#[a-f0-9]{8}§lClick To (Untrack|Track)");
+    private static final Pattern REQUIRES_HERO_PLUS_PATTERN = Pattern.compile(".+§7Requires §f\uE08A");
     private static final Pattern OVERALL_PROGRESS_PATTERN = Pattern.compile("^\\S*§7(\\d+) of (\\d+) completed$");
     private static final Pattern WIKI_REDIRECT_PATTERN = Pattern.compile("#REDIRECT \\[\\[(?<redirectname>.+)\\]\\]");
 
@@ -246,6 +249,7 @@ public final class ActivityModel extends Model {
         ActivityTrackingState trackingState = ActivityTrackingState.UNTRACKABLE;
         List<Pair<Pair<ProfessionType, Integer>, Boolean>> professionLevels = new ArrayList<>();
         List<Pair<String, Boolean>> quests = new ArrayList<>();
+        WorldEventFastTravelStatus worldEventFastTravelStatus = null;
         Map<ActivityRewardType, List<StyledText>> rewards = new TreeMap<>();
         List<StyledText> descriptionLines = new ArrayList<>();
 
@@ -317,7 +321,7 @@ public final class ActivityModel extends Model {
 
             Matcher trackingMatcher = line.getMatcher(TRACKING_PATTERN);
             if (trackingMatcher.matches()) {
-                trackingState = trackingMatcher.group(1) == null
+                trackingState = trackingMatcher.group(1).equals("Track")
                         ? ActivityTrackingState.TRACKABLE
                         : ActivityTrackingState.TRACKED;
                 continue;
@@ -334,6 +338,19 @@ public final class ActivityModel extends Model {
                         " " + line.getStringWithoutFormatting().trim() + ChatFormatting.RESET);
                 rewards.get(previousRewardType)
                         .set(rewards.get(previousRewardType).size() - 1, existingReward);
+                continue;
+            }
+
+            if (type == ActivityType.WORLD_EVENT) {
+                if (worldEventFastTravelStatus == null) {
+                    worldEventFastTravelStatus = WorldEventFastTravelStatus.fromLine(line);
+
+                    if (worldEventFastTravelStatus != null) continue;
+                }
+            }
+
+            if (worldEventFastTravelStatus == WorldEventFastTravelStatus.UNAVAILABLE
+                    && line.matches(REQUIRES_HERO_PLUS_PATTERN)) {
                 continue;
             }
 
@@ -358,6 +375,7 @@ public final class ActivityModel extends Model {
                 Optional.ofNullable(distance),
                 Optional.ofNullable(distanceInfo),
                 Optional.ofNullable(difficulty),
+                Optional.ofNullable(worldEventFastTravelStatus),
                 requirements,
                 rewards,
                 trackingState);
