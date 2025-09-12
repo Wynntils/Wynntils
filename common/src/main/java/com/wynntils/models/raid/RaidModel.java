@@ -35,6 +35,7 @@ import com.wynntils.models.raid.raids.RaidKind;
 import com.wynntils.models.raid.raids.TheCanyonColossusRaid;
 import com.wynntils.models.raid.raids.TheNamelessAnomalyRaid;
 import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
+import com.wynntils.models.raid.type.HistoricRaidInfo;
 import com.wynntils.models.raid.type.RaidInfo;
 import com.wynntils.models.raid.type.RaidRoomInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -97,6 +98,9 @@ public final class RaidModel extends Model {
 
     @Persisted
     private final Storage<Integer> expectedNumRewardPulls = new Storage<>(-1);
+
+    @Persisted
+    public final Storage<List<HistoricRaidInfo>> historicRaids = new Storage<>(new ArrayList<>());
 
     private static final List<RaidKind> RAIDS = new ArrayList<>();
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
@@ -432,6 +436,8 @@ public final class RaidModel extends Model {
         if (currentRaid == null) return;
 
         WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid));
+        historicRaids.get().add(new HistoricRaidInfo(currentRaid, System.currentTimeMillis()));
+        historicRaids.touched();
 
         currentRaid = null;
         completedCurrentChallenge = false;
@@ -623,6 +629,8 @@ public final class RaidModel extends Model {
         currentRaid.completeCurrentChallenge();
 
         WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid));
+        historicRaids.get().add(new HistoricRaidInfo(currentRaid, System.currentTimeMillis()));
+        historicRaids.touched();
 
         checkForNewPersonalBest();
 

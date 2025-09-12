@@ -661,6 +661,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new RaidFunctions.RaidRoomTimeFunction());
         registerFunction(new RaidFunctions.RaidPersonalBestTimeFunction());
         registerFunction(new RaidFunctions.RaidTimeRemainingFunction());
+        registerFunction(new RaidFunctions.RaidsRunsSinceFunction());
+        registerFunction(new RaidFunctions.SpecificRaidRunsFunction());
+        registerFunction(new RaidFunctions.SpecificRaidRunsSinceFunction());
 
         registerFunction(new RangedFunctions.RangeHighFunction());
         registerFunction(new RangedFunctions.RangeLowFunction());
@@ -679,6 +682,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.FriendsFunction());
         registerFunction(new SocialFunctions.PartyMembersFunction());
         registerFunction(new SocialFunctions.PartyLeaderFunction());
+        registerFunction(new SocialFunctions.IsFriendFunction());
+        registerFunction(new SocialFunctions.IsPartyMemberFunction());
+        registerFunction(new SocialFunctions.WynntilsRoleFunction());
+        registerFunction(new SocialFunctions.PlayerNameFunction());
 
         registerFunction(new StatisticFunctions.StatisticsTotalFunction());
         registerFunction(new StatisticFunctions.StatisticsCountFunction());
