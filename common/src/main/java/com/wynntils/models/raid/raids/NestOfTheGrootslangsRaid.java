@@ -5,16 +5,18 @@
 package com.wynntils.models.raid.raids;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.colors.CustomColor;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class NestOfTheGrootslangsRaid extends RaidKind {
     private static final String RAID_NAME = "Nest of the Grootslangs";
     private static final String ABBREVIATION = "NOG";
+    private static final CustomColor RAID_COLOR = CustomColor.fromHexString("#00aa00ff");
     private static final StyledText ENTRY_TITLE = StyledText.fromString("§2Nest of The Grootslangs");
 
     public NestOfTheGrootslangsRaid() {
-        super(RAID_NAME, ABBREVIATION, ENTRY_TITLE, buildRoomMap(), buildMajorIdMap());
+        super(RAID_NAME, ABBREVIATION, RAID_COLOR, ENTRY_TITLE, buildRoomMap(), buildMajorIdMap());
     }
 
     private static Map<Integer, Map<String, String>> buildRoomMap() {

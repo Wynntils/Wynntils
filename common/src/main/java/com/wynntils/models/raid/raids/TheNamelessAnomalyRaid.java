@@ -5,16 +5,18 @@
 package com.wynntils.models.raid.raids;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.colors.CustomColor;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class TheNamelessAnomalyRaid extends RaidKind {
     private static final String RAID_NAME = "The Nameless Anomaly";
     private static final String ABBREVIATION = "TNA";
+    private static final CustomColor RAID_COLOR = CustomColor.fromHexString("#5555ffff");
     private static final StyledText ENTRY_TITLE = StyledText.fromString("§9§lThe §1§k§lNameless§9§l Anomaly");
 
     public TheNamelessAnomalyRaid() {
-        super(RAID_NAME, ABBREVIATION, ENTRY_TITLE, buildRoomMap(), buildMajorIdMap());
+        super(RAID_NAME, ABBREVIATION, RAID_COLOR, ENTRY_TITLE, buildRoomMap(), buildMajorIdMap());
     }
 
     private static Map<Integer, Map<String, String>> buildRoomMap() {
