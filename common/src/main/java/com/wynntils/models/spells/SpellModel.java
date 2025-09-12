@@ -49,7 +49,6 @@ public final class SpellModel extends Model {
     private int repeatedSpellCount = 0;
     private int ticksSinceCastBurst = 0;
     private int ticksSinceCast = 0;
-    private boolean spellSegmentPresent = false;
 
     public SpellModel() {
         super(List.of());
@@ -88,16 +87,7 @@ public final class SpellModel extends Model {
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        spellSegmentPresent = false;
-        event.runIfPresent(SpellSegment.class, this::updateFromSpellSegment);
-
-        if (!spellSegmentPresent && lastSpell.length != 0) {
-            if (lastSpell.length != 3) {
-                lastSpell = SpellDirection.NO_SPELL;
-            }
-            lastSpellTick = 0;
-            WynntilsMod.postEvent(new SpellEvent.Expired());
-        }
+        event.runIfPresentOrElse(SpellSegment.class, this::updateFromSpellSegment, this::handleExpiredSpell);
     }
 
     @SubscribeEvent
@@ -217,8 +207,6 @@ public final class SpellModel extends Model {
     }
 
     private void updateFromSpellSegment(SpellSegment spellSegment) {
-        spellSegmentPresent = true;
-
         // noop if the spell state hasn't changed
         if (Arrays.equals(spellSegment.getDirections(), lastSpell)) return;
         lastSpell = spellSegment.getDirections();
@@ -229,6 +217,16 @@ public final class SpellModel extends Model {
         if (lastSpell.length == 3) {
             WynntilsMod.postEvent(new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
             lastSpellTick = 0;
+        }
+    }
+
+    private void handleExpiredSpell() {
+        if (lastSpell.length != 0) {
+            if (lastSpell.length != 3) {
+                lastSpell = SpellDirection.NO_SPELL;
+            }
+            lastSpellTick = 0;
+            WynntilsMod.postEvent(new SpellEvent.Expired());
         }
     }
 }
