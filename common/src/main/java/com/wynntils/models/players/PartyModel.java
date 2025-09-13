@@ -40,10 +40,9 @@ import net.neoforged.bus.api.SubscribeEvent;
  * This model handles the player's party relations.
  */
 public final class PartyModel extends Model {
-    // 󏿼󏿿󏿾 is for the first line
-    // 󏿼󐀆  is for the other lines
-    private static final String PARTY_PREFIX_REGEX =
-            "(?:(?:§e)?(?:\uDAFF\uDFFC\uE005\uDAFF\uDFFF\uE002\uDAFF\uDFFE|\uDAFF\uDFFC\uE001\uDB00\uDC06)\\s)?";
+    // \uE005\uE002 is for the first line
+    // \uE001  is for the other lines
+    private static final String PARTY_PREFIX_REGEX = "§e(?:\uE005\uE002|\uE001) ";
 
     // region Party Regexes
     /*
@@ -54,7 +53,7 @@ public final class PartyModel extends Model {
     */
     // Test in PartyModel_PARTY_LIST_ALL
     private static final Pattern PARTY_LIST_ALL = Pattern.compile(PARTY_PREFIX_REGEX + "Party members: (.*)");
-    private static final Pattern PARTY_LIST_LEADER = Pattern.compile(PARTY_PREFIX_REGEX + "§b(.+?)(?:,|$)");
+    private static final Pattern PARTY_LIST_LEADER = Pattern.compile("§b([a-zA-Z0-9_]+)");
 
     // General purpose message for all party cmds executed when not in a party
     private static final Pattern PARTY_COMMAND_FAILED =
@@ -137,7 +136,8 @@ public final class PartyModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        StyledText chatMessage = event.getOriginalStyledText();
+        StyledText chatMessage =
+                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
 
         if (tryParsePartyMessages(chatMessage)) return;
 
@@ -151,8 +151,6 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParsePartyMessages(StyledText styledText) {
-        styledText = StyledTextUtils.unwrap(styledText);
-
         if (styledText.matches(PARTY_PLAYER_CREATED)) {
             WynntilsMod.info("Player created a new party.");
 
@@ -294,7 +292,7 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParsePartyList(StyledText styledText) {
-        Matcher matcher = StyledTextUtils.unwrap(styledText).getMatcher(PARTY_LIST_ALL);
+        Matcher matcher = styledText.getMatcher(PARTY_LIST_ALL);
         if (!matcher.matches()) return false;
 
         String[] partyList = StyledText.fromString(matcher.group(1))
@@ -305,7 +303,7 @@ public final class PartyModel extends Model {
 
         // Attempt to look for party leader with pattern.
         // If fail, assume we are leader (no special color will appear in list)
-        Matcher leaderMatcher = StyledTextUtils.unwrap(styledText).getMatcher(PARTY_LIST_LEADER);
+        Matcher leaderMatcher = styledText.getMatcher(PARTY_LIST_LEADER);
         String oldLeader = partyLeader;
         partyLeader = leaderMatcher.find() ? leaderMatcher.group(1) : McUtils.playerName();
         WynntilsMod.postEvent(new PartyEvent.Promoted(oldLeader, partyLeader));

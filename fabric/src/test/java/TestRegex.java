@@ -276,31 +276,27 @@ public class TestRegex {
     @Test
     public void FriendsModel_ONLINE_FRIENDS_HEADER() {
         PatternTester p = new PatternTester(FriendsModel.class, "ONLINE_FRIENDS_HEADER");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Online Friends:");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Online Friends:");
+        p.shouldMatch("§a\uE001 Online Friends:");
+        p.shouldMatch("§a\uE008\uE002 Online Friends:");
     }
 
     @Test
     public void FriendsModel_ONLINE_FRIEND() {
         PatternTester p = new PatternTester(FriendsModel.class, "ONLINE_FRIEND");
-        p.shouldMatch("§2 - §auserName914__§2 [Server: §aWC3§2]");
-        p.shouldMatch("§2 - §av8j§2 [Server: §aWC103§2]");
-        p.shouldMatch("§2 - §a__asdf__§2 [Server: §aWC91§2]");
+        p.shouldMatch("§a\uE001 §2 - §aShadowCat118§2 [Server: §aNA11§2]");
     }
 
     @Test
     public void FriendsModel_JOIN_PATTERN() {
         PatternTester p = new PatternTester(FriendsModel.class, "JOIN_PATTERN");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun§2 has logged into server §aWC1§2 as §aan Archer");
-        p.shouldMatch(
-                "§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun§2 has logged into server §aWC27§2 as §aa Mage");
+        p.shouldMatch("§aShadowCat118§2 has logged into server §aEU16§2 as §aa Shaman");
     }
 
     @Test
     public void FriendsModel_LEAVE_PATTERN() {
         PatternTester p = new PatternTester(FriendsModel.class, "LEAVE_PATTERN");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun left the game.");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun left the game.");
+        p.shouldMatch("§amag_icus left the game.");
+        p.shouldMatch("§aShadowCat118 left the game.");
     }
 
     @Test
@@ -1073,8 +1069,8 @@ public class TestRegex {
     @Test
     public void PartyModel_PARTY_LIST_ALL() {
         PatternTester p = new PatternTester(PartyModel.class, "PARTY_LIST_ALL");
-        p.shouldMatch(
-                "§e󏿼󏿿󏿾 Party members: §bbolyai, §fMrRickroll, Talkair, Angel_Pup, wluma, LaMDaKiS, Tanoranko, GebutterteWurst, kristof345, §eand §fSpeedtart");
+        p.shouldMatch("§e\uE001 Party members: §bShadowCat118, and §fShadowCat117");
+        p.shouldMatch("§e\uE005\uE002 Party members: §be_z_x, §fSaunt, Dopeul, IM_NoOne,§e §f6bccy, and ShadowCat117");
     }
 
     @Test
