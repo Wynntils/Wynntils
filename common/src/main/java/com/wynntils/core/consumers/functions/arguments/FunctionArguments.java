@@ -10,6 +10,7 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.NamedValue;
 import com.wynntils.utils.type.RangedValue;
+import com.wynntils.utils.type.Time;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -139,7 +140,8 @@ public final class FunctionArguments {
                 CappedValue.class,
                 RangedValue.class,
                 NamedValue.class,
-                Location.class);
+                Location.class,
+                Time.class);
 
         private final String name;
         private final Class<T> type;
@@ -224,6 +226,10 @@ public final class FunctionArguments {
 
         public Location getLocation() {
             return (Location) this.getValue();
+        }
+
+        public Time getTime() {
+            return (Time) this.getValue();
         }
 
         public String getStringValue() {
