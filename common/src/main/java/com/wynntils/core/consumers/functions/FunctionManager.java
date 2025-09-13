@@ -42,6 +42,7 @@ import com.wynntils.functions.generic.MathFunctions;
 import com.wynntils.functions.generic.NamedFunctions;
 import com.wynntils.functions.generic.RangedFunctions;
 import com.wynntils.functions.generic.StringFunctions;
+import com.wynntils.functions.generic.TimeFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.ErrorOr;
@@ -426,6 +427,12 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.StringEqualsFunction());
         registerFunction(new StringFunctions.StringFunction());
 
+        registerFunction(new TimeFunctions.AbsoluteTimeFunction());
+        registerFunction(new TimeFunctions.OffsetFunction());
+        registerFunction(new TimeFunctions.SecondsBetweenFunction());
+        registerFunction(new TimeFunctions.TimeFunction());
+        registerFunction(new TimeFunctions.TimestampFunction());
+
         // Regular Functions
         registerFunction(new WorldFunctions.CurrentTerritoryFunction());
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
@@ -518,6 +525,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
+        registerFunction(new EnvironmentFunctions.NowFunction());
 
         registerFunction(new InventoryFunctions.AccessoryDurabilityFunction());
         registerFunction(new InventoryFunctions.AllShinyStatsFunction());

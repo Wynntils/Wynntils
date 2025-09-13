@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 public final class StringUtils {
@@ -207,5 +208,55 @@ public final class StringUtils {
     public static String formatDateTime(long timeMillis) {
         // Format: 2023-01-01 12:00
         return DateFormatUtils.format(timeMillis, "yyyy-MM-dd HH:mm");
+    }
+
+    /**
+     * Converts a timestamp to a relative time string, e.g. "2 seconds ago", "in 5 minutes"
+     * or "now" if the timestamp is within 1 second of the current time.
+     */
+    public static String getRelativeTimeString(long timestamp) {
+        long diffInMillis = timestamp - System.currentTimeMillis();
+        if (diffInMillis > -1000 && diffInMillis < 1000) {
+            return I18n.get("utils.wynntils.time.now");
+        }
+
+        int diffInSeconds = (int) (diffInMillis / 1000);
+        int seconds = Math.abs(diffInSeconds);
+        int minutes = seconds / 60;
+        int hours = minutes / 60;
+        int days = hours / 24;
+
+        String timeStr;
+        if (seconds < 60) {
+            if (seconds == 1) {
+                timeStr = I18n.get("utils.wynntils.time.second", seconds);
+            } else {
+                timeStr = I18n.get("utils.wynntils.time.seconds", seconds);
+            }
+        } else if (minutes < 60) {
+            if (minutes == 1) {
+                timeStr = I18n.get("utils.wynntils.time.minute", minutes);
+            } else {
+                timeStr = I18n.get("utils.wynntils.time.minutes", minutes);
+            }
+        } else if (hours < 24) {
+            if (hours == 1) {
+                timeStr = I18n.get("utils.wynntils.time.hour", hours);
+            } else {
+                timeStr = I18n.get("utils.wynntils.time.hours", hours);
+            }
+        } else {
+            if (days == 1) {
+                timeStr = I18n.get("utils.wynntils.time.day", days);
+            } else {
+                timeStr = I18n.get("utils.wynntils.time.days", days);
+            }
+        }
+
+        if (diffInSeconds < 0) {
+            return I18n.get("utils.wynntils.time.past", timeStr);
+        } else {
+            return I18n.get("utils.wynntils.time.future", timeStr);
+        }
     }
 }
