@@ -17,13 +17,13 @@ public class StreamerModeBar extends TrackedBar {
 
     @Override
     public void onUpdateProgress(float progress) {
-        Models.WorldState.toggleStreamerMode();
+        Models.WorldState.setStreamerMode(true);
     }
 
     @Override
     protected void reset() {
         super.reset();
 
-        Models.WorldState.toggleStreamerMode();
+        Models.WorldState.setStreamerMode(false);
     }
 }

@@ -236,8 +236,8 @@ public final class WorldStateModel extends Model {
         return false;
     }
 
-    public void toggleStreamerMode() {
-        inStream = !inStream;
+    public void setStreamerMode(boolean inStream) {
+        this.inStream = inStream;
         WynntilsMod.postEvent(new StreamModeEvent(inStream));
     }
 
