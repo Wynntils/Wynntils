@@ -32,6 +32,7 @@ import com.wynntils.models.containers.containers.LeaderboardRewardsContainer;
 import com.wynntils.models.containers.containers.LobbyContainer;
 import com.wynntils.models.containers.containers.LootrunRewardChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
+import com.wynntils.models.containers.containers.RaidRewardPreviewContainer;
 import com.wynntils.models.containers.containers.RatingRewardsContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
@@ -149,6 +150,7 @@ public final class ContainerModel extends Model {
         registerContainer(new ObjectiveRewardContainer());
         registerContainer(new PersonalBlockBankContainer());
         registerContainer(new RaidRewardChestContainer());
+        registerContainer(new RaidRewardPreviewContainer());
         registerContainer(new RatingRewardsContainer());
         registerContainer(new ScrapMenuContainer());
         registerContainer(new SeaskipperContainer());

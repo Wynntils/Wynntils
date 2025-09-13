@@ -13,6 +13,7 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import net.minecraft.client.player.LocalPlayer;
 
 public class CharacterFunctions {
@@ -299,6 +300,54 @@ public class CharacterFunctions {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             return Models.Ability.commanderBar.isActive() && Models.Ability.commanderBar.isActivated();
+        }
+    }
+
+    public static class EquippedAspectFunction extends Function<NamedValue> {
+        @Override
+        public NamedValue getValue(FunctionArguments arguments) {
+            int aspectIndex = arguments.getArgument("index").getIntegerValue();
+            Optional<String> equippedAspectOpt = Models.Aspect.getEquippedAspect(aspectIndex);
+            if (equippedAspectOpt.isEmpty()) return NamedValue.EMPTY;
+
+            Optional<Integer> aspectTierOpt = Models.Aspect.getAspectTierByName(equippedAspectOpt.get());
+            return aspectTierOpt
+                    .map(s -> new NamedValue(equippedAspectOpt.get(), aspectTierOpt.get()))
+                    .orElse(NamedValue.EMPTY);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("index", Integer.class, null)));
+        }
+    }
+
+    public static class IsAspectEquippedFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            String aspectName = arguments.getArgument("aspectName").getStringValue();
+            return Models.Aspect.getEquippedAspectByName(aspectName).isPresent();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("aspectName", String.class, null)));
+        }
+    }
+
+    public static class AspectTierFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String aspectName = arguments.getArgument("aspectName").getStringValue();
+            return Models.Aspect.getAspectTierByName(aspectName).orElse(0);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("aspectName", String.class, null)));
         }
     }
 }
