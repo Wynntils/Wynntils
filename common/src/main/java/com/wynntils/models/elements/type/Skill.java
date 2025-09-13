@@ -4,16 +4,20 @@
  */
 package com.wynntils.models.elements.type;
 
+import com.mojang.serialization.Codec;
 import com.wynntils.utils.StringUtils;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
+import net.minecraft.util.StringRepresentable;
 
-public enum Skill {
+public enum Skill implements StringRepresentable {
     STRENGTH(Element.EARTH),
     DEXTERITY(Element.THUNDER),
     INTELLIGENCE(Element.WATER),
     DEFENCE(Element.FIRE), // Note! Must be spelled with "C" to match in-game
     AGILITY(Element.AIR);
+
+    public static final Codec<Skill> CODEC = StringRepresentable.fromEnum(Skill::values);
 
     private final Element associatedElement;
     private final String apiName;
@@ -23,6 +27,11 @@ public enum Skill {
         this.associatedElement = associatedElement;
         this.apiName = this.name().toLowerCase(Locale.ROOT);
         this.displayName = StringUtils.capitalized(this.name());
+    }
+
+    @Override
+    public String getSerializedName() {
+        return this.name().toLowerCase(Locale.ROOT);
     }
 
     public static Skill fromString(String str) {

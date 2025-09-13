@@ -4,9 +4,12 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.mojang.serialization.Codec;
 import com.wynntils.core.WynntilsMod;
+import java.util.Locale;
+import net.minecraft.util.StringRepresentable;
 
-public enum GearAttackSpeed {
+public enum GearAttackSpeed implements StringRepresentable {
     SUPER_FAST("Super Fast Attack Speed", "superFast", 0),
     VERY_FAST("Very Fast Attack Speed", "veryFast", 1),
     FAST("Fast Attack Speed", "fast", 2),
@@ -14,6 +17,8 @@ public enum GearAttackSpeed {
     SLOW("Slow Attack Speed", "slow", 4),
     VERY_SLOW("Very Slow Attack Speed", "verySlow", 5),
     SUPER_SLOW("Super Slow Attack Speed", "superSlow", 6);
+
+    public static final Codec<GearAttackSpeed> CODEC = StringRepresentable.fromEnum(GearAttackSpeed::values);
 
     private final String name;
     private final String apiName;
@@ -23,6 +28,11 @@ public enum GearAttackSpeed {
         this.name = name;
         this.apiName = apiName;
         this.encodingId = encodingId;
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public static GearAttackSpeed fromString(String str) {

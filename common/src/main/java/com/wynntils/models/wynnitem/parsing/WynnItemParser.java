@@ -452,7 +452,9 @@ public final class WynnItemParser {
                 durabilityMax,
                 shinyStat,
                 allRequirementsMet,
-                Optional.of(new SetInstance(setInfo, activeItems, setWynnCount, wynnBonuses)));
+                setInfo != null
+                        ? Optional.of(new SetInstance(setInfo, activeItems, setWynnCount, wynnBonuses))
+                        : Optional.empty());
     }
 
     public static WynnItemParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {

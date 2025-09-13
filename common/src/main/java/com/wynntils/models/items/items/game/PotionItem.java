@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -32,7 +32,7 @@ public class PotionItem extends GameItem implements UsesItemProperty, LeveledIte
         this.uses = uses;
     }
 
-    public PotionType getType() {
+    public PotionType getPotionType() {
         return type;
     }
 

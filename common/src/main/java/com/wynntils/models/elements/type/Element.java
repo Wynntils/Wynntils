@@ -4,15 +4,20 @@
  */
 package com.wynntils.models.elements.type;
 
+import com.mojang.serialization.Codec;
 import com.wynntils.utils.StringUtils;
+import java.util.Locale;
 import net.minecraft.ChatFormatting;
+import net.minecraft.util.StringRepresentable;
 
-public enum Element {
+public enum Element implements StringRepresentable {
     EARTH("\uE001", ChatFormatting.DARK_GREEN, 0),
     THUNDER("\uE003", ChatFormatting.YELLOW, 1),
     WATER("\uE004", ChatFormatting.AQUA, 2),
     FIRE("\uE002", ChatFormatting.RED, 3),
     AIR("\uE000", ChatFormatting.WHITE, 4);
+
+    public static final Codec<Element> CODEC = StringRepresentable.fromEnum(Element::values);
 
     private final String symbol;
     private final ChatFormatting colorCode;
@@ -24,6 +29,11 @@ public enum Element {
         this.colorCode = colorCode;
         this.encodingId = encodingId;
         this.displayName = StringUtils.capitalized(this.name());
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public static Element fromSymbol(String symbol) {

@@ -4,13 +4,16 @@
  */
 package com.wynntils.models.stats.type;
 
+import com.mojang.serialization.Codec;
 import com.wynntils.models.elements.type.Element;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.util.StringRepresentable;
 
-public enum DamageType {
+public enum DamageType implements StringRepresentable {
     ALL("", "❤", ChatFormatting.DARK_RED),
     NEUTRAL("Neutral", "\uE005", ChatFormatting.GOLD, 5),
     FIRE(Element.FIRE),
@@ -20,6 +23,8 @@ public enum DamageType {
     EARTH(Element.EARTH),
     RAINBOW("Elemental"),
     POISON("Poison", "☠", ChatFormatting.DARK_PURPLE);
+
+    public static final Codec<DamageType> CODEC = StringRepresentable.fromEnum(DamageType::values);
 
     private final Element element;
     private final String displayName;
@@ -70,6 +75,11 @@ public enum DamageType {
 
         // Encoding id is the element id
         this.encodingId = element.getEncodingId();
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public static List<DamageType> statValues() {

@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.mojang.serialization.Codec;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.LoreUtils;
@@ -13,12 +14,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
 
-public enum GearType {
+public enum GearType implements StringRepresentable {
     SPEAR(ClassType.WARRIOR, Items.IRON_HORSE_ARMOR, 437, 497, 0),
     WAND(ClassType.MAGE, Items.IRON_HORSE_ARMOR, 308, 372, 1),
     DAGGER(ClassType.ASSASSIN, Items.IRON_HORSE_ARMOR, 244, 307, 2),
@@ -72,6 +74,8 @@ public enum GearType {
     MASTERY_TOME(null, Items.IRON_HORSE_ARMOR, 76, 82, -1),
     CHARM(null, Items.CLAY_BALL, 0, 0, -1);
 
+    public static final Codec<GearType> CODEC = StringRepresentable.fromEnum(GearType::values);
+
     private static final Pattern SKINNED_GEAR_PATTERN = Pattern.compile("^§7\\[Active (.+) Skin: (.+)]$");
 
     private final ClassType classReq;
@@ -100,6 +104,11 @@ public enum GearType {
 
     GearType(ClassType classReq, Item defaultItem, int firstModel, int lastModel, int encodingId) {
         this(classReq, defaultItem, firstModel, lastModel, List.of(), encodingId);
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public static GearType fromString(String typeStr) {
