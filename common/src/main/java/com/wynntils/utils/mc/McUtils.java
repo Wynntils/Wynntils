@@ -41,8 +41,8 @@ public final class McUtils {
     }
 
     public static File getGameDirectory() {
-        // If we are running tests, then Minecraft is not available, so return the current directory
-        if (mc() == null) return new File(".");
+        // If we are running tests, then Minecraft is not available, so return a suitable directory
+        if (mc() == null) return new File("../build/tmp/");
 
         return mc().gameDirectory;
     }
