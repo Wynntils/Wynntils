@@ -7,6 +7,8 @@ package com.wynntils.utils.mc;
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.extension.ChatComponentExtension;
+import java.io.File;
+import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -29,6 +31,20 @@ import net.minecraft.world.inventory.InventoryMenu;
 public final class McUtils {
     public static Minecraft mc() {
         return Minecraft.getInstance();
+    }
+
+    public static UUID getUserProfileUUID() {
+        // If we are running tests, then Minecraft is not available, so return a dummy UUID
+        if (mc() == null) return UUID.fromString("00000000-0000-0000-0000-000000000000");
+
+        return mc().getUser().getProfileId();
+    }
+
+    public static File getGameDirectory() {
+        // If we are running tests, then Minecraft is not available, so return a suitable directory
+        if (mc() == null) return new File("../build/tmp/");
+
+        return mc().gameDirectory;
     }
 
     public static LocalPlayer player() {

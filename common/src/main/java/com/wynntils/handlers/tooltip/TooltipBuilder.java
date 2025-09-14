@@ -44,11 +44,8 @@ public abstract class TooltipBuilder {
 
     public List<Component> getTooltipLines(
             ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator) {
-        List<Component> tooltip = new ArrayList<>();
-
         // Header and footer are always constant
-        tooltip.addAll(header);
-
+        List<Component> tooltip = new ArrayList<>(header);
         List<Component> identifications;
 
         // Identification lines are rendered differently depending on current class, requested

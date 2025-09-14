@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.type;
@@ -43,7 +43,7 @@ public final class ErrorOr<T> {
         return error != null;
     }
 
-    public <T> ErrorOr<T> logged() {
+    public ErrorOr<T> logged() {
         if (!hasError()) {
             throw new IllegalStateException("Tried to log when no error is present.");
         }

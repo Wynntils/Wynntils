@@ -10,7 +10,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
@@ -22,6 +21,7 @@ import com.wynntils.models.worlds.actionbar.matchers.WynncraftVersionSegmentMatc
 import com.wynntils.models.worlds.actionbar.segments.CharacterWardrobeSegment;
 import com.wynntils.models.worlds.actionbar.segments.WynncraftVersionSegment;
 import com.wynntils.models.worlds.bossbars.SkipCutsceneBar;
+import com.wynntils.models.worlds.bossbars.StreamerModeBar;
 import com.wynntils.models.worlds.event.CutsceneStartedEvent;
 import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -30,7 +30,6 @@ import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.models.worlds.type.WynncraftVersion;
 import com.wynntils.utils.mc.PosUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -45,14 +44,14 @@ public final class WorldStateModel extends Model {
     private static final Pattern WORLD_NAME = Pattern.compile("^§f {2}§lGlobal \\[(.*)\\]$");
     private static final Pattern HOUSING_NAME = Pattern.compile("^§f  §l([^§\"\\\\]{1,35})$");
     private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com \n$");
-    private static final Pattern STREAMER_MESSAGE =
-            Pattern.compile("§a(?:\uE008\uE002|\uE001) Streamer mode (disabled|was enabled)\\..*", Pattern.DOTALL);
     private static final Position CHARACTER_SELECTION_POSITION = new Vec3(-1337.5, 16.2, -1120.5);
     private static final String WYNNCRAFT_BETA_NAME = "beta";
     private static final String UNKNOWN_WORLD = "WC??";
 
     private static final SkipCutsceneBar skipCutsceneBar = new SkipCutsceneBar();
     private CutsceneState cutsceneState = CutsceneState.NOT_IN_CUTSCENE;
+
+    private static final StreamerModeBar streamerModeBar = new StreamerModeBar();
 
     private StyledText currentTabListFooter = StyledText.EMPTY;
     private String currentWorldName = "";
@@ -72,6 +71,7 @@ public final class WorldStateModel extends Model {
         Handlers.ActionBar.registerSegment(new WynncraftVersionSegmentMatcher());
         Handlers.ActionBar.registerSegment(new CharacterWardrobeSegmentMacher());
         Handlers.BossBar.registerBar(skipCutsceneBar);
+        Handlers.BossBar.registerBar(streamerModeBar);
     }
 
     private WorldState currentState = WorldState.NOT_CONNECTED;
@@ -106,10 +106,6 @@ public final class WorldStateModel extends Model {
 
     private void setState(WorldState newState, String newWorldName, boolean isFirstJoinWorld) {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
-
-        // Streamer mode is always disabled upon changing world state
-        inStream = false;
-        WynntilsMod.postEvent(new StreamModeEvent(inStream));
 
         cutsceneEnded();
         WorldState oldState = currentState;
@@ -155,18 +151,6 @@ public final class WorldStateModel extends Model {
     public void remove(PlayerLogOutEvent e) {
         if (e.getId().equals(WORLD_NAME_UUID) && !currentWorldName.isEmpty()) {
             setState(WorldState.INTERIM);
-        }
-    }
-
-    @SubscribeEvent
-    public void onChatReceived(ChatMessageReceivedEvent e) {
-        StyledText styledText =
-                StyledTextUtils.unwrap(e.getOriginalStyledText()).stripAlignment();
-        Matcher matcher = styledText.getMatcher(STREAMER_MESSAGE);
-
-        if (matcher.matches()) {
-            inStream = matcher.group(1).equals("was enabled");
-            WynntilsMod.postEvent(new StreamModeEvent(inStream));
         }
     }
 
@@ -250,6 +234,11 @@ public final class WorldStateModel extends Model {
             return true;
         }
         return false;
+    }
+
+    public void setStreamerMode(boolean inStream) {
+        this.inStream = inStream;
+        WynntilsMod.postEvent(new StreamModeEvent(inStream));
     }
 
     public void cutsceneStarted(boolean groupCutscene) {

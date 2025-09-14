@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets.numeric;
@@ -91,9 +91,7 @@ public class InequalityStatValueFilterWidget extends InequalityNumericFilterWidg
                 Component.literal("%"),
                 percentage,
                 10,
-                (checkbox, button) -> {
-                    parent.updateQuery();
-                },
+                (checkbox, button) -> parent.updateQuery(),
                 List.of(Component.translatable("screens.wynntils.itemFilter.percentageTooltip")));
     }
 

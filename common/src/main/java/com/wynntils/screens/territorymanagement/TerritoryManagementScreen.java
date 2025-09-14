@@ -136,13 +136,11 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 Texture.ARROW_LEFT_ICON.width(),
                 Texture.ARROW_LEFT_ICON.height(),
                 Texture.ARROW_LEFT_ICON,
-                (button) -> {
-                    ContainerUtils.clickOnSlot(
-                            BACK_BUTTON_SLOT,
-                            wrappedScreenInfo.containerId(),
-                            button,
-                            wrappedScreenInfo.containerMenu().getItems());
-                },
+                (button) -> ContainerUtils.clickOnSlot(
+                        BACK_BUTTON_SLOT,
+                        wrappedScreenInfo.containerId(),
+                        button,
+                        wrappedScreenInfo.containerMenu().getItems()),
                 List.of(Component.translatable("gui.back").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)),
                 false));
 

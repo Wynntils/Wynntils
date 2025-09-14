@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.item;
@@ -85,7 +85,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         }
 
         DamageData damageData = itemDataMap.get(DamageData.class);
-        if (damageData != null) {
+        if (damageData != null && damageData.attackSpeed().isPresent()) {
             attackSpeed = damageData.attackSpeed().get();
             damages = damageData.damages();
         }

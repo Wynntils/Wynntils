@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.trademarket.widgets;
@@ -79,11 +79,12 @@ public class PresetButton extends WynntilsButton implements TooltipProvider {
         list.add(Component.empty());
 
         if (isSavedPreset()) {
-            String presetString = Models.TradeMarket.getPresetFilter(presetId).get();
-            list.add(Component.literal(RenderedStringUtils.getMaxFittingText(
-                            presetString, 150, FontRenderer.getInstance().getFont()))
-                    .withStyle(ChatFormatting.GRAY));
-            list.add(Component.empty());
+            Models.TradeMarket.getPresetFilter(presetId).ifPresent(presetString -> {
+                list.add(Component.literal(RenderedStringUtils.getMaxFittingText(
+                                presetString, 150, FontRenderer.getInstance().getFont()))
+                        .withStyle(ChatFormatting.GRAY));
+                list.add(Component.empty());
+            });
         }
 
         list.add(Component.translatable("screens.wynntils.tradeMarketSearchResult.button.clickToSave")

@@ -148,7 +148,6 @@ public final class InventoryModel extends Model {
 
     private void updateCache() {
         Inventory inventory = McUtils.inventory();
-        if (inventory == null) return;
 
         watchers.forEach(watcher -> {
             int slots = 0;

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells.actionbar.matchers;
@@ -32,6 +32,9 @@ public class SpellSegmentMatcher implements ActionBarSegmentMatcher {
             + "(?<first>" + LEFT_CLICK + "|" + RIGHT_CLICK + "|" + NO_CLICK + ")" + SEPARATOR
             + "(?<second>" + LEFT_CLICK + "|" + RIGHT_CLICK + "|" + NO_CLICK + ")" + SEPARATOR
             + "(?<third>" + LEFT_CLICK + "|" + RIGHT_CLICK + "|" + NO_CLICK + ")" + SEGMENT_SEPARATOR);
+    private static final Pattern NO_CLICK_PATTERN = Pattern.compile(NO_CLICK);
+    private static final Pattern RIGHT_CLICK_PATTERN = Pattern.compile(RIGHT_CLICK);
+    private static final Pattern LEFT_CLICK_PATTERN = Pattern.compile(LEFT_CLICK);
 
     @Override
     public ActionBarSegment parse(String actionBar) {
@@ -58,11 +61,11 @@ public class SpellSegmentMatcher implements ActionBarSegmentMatcher {
     }
 
     private SpellDirection fromCharacter(String spellCharacter) {
-        if (spellCharacter.matches(LEFT_CLICK)) {
+        if (LEFT_CLICK_PATTERN.matcher(spellCharacter).matches()) {
             return SpellDirection.LEFT;
-        } else if (spellCharacter.matches(RIGHT_CLICK)) {
+        } else if (RIGHT_CLICK_PATTERN.matcher(spellCharacter).matches()) {
             return SpellDirection.RIGHT;
-        } else if (spellCharacter.matches(NO_CLICK)) {
+        } else if (NO_CLICK_PATTERN.matcher(spellCharacter).matches()) {
             return null;
         }
 

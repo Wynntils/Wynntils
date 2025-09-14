@@ -303,6 +303,7 @@ public class ItemFilterService extends Service {
         // Sorted stat providers must be filtered as "any" filters
         filteredList = filteredList.filter(itemStack -> {
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+            if (wynnItemOpt.isEmpty()) return false;
 
             WynnItem wynnItem = wynnItemOpt.get();
 

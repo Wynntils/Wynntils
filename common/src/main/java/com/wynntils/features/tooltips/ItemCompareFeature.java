@@ -181,9 +181,10 @@ public class ItemCompareFeature extends Feature {
                             .filter(itemStack -> !ItemUtils.isEmptyAccessorySlot(itemStack))
                             .toList();
                     matchingAccessories.forEach(itemStack -> {
-                        itemsToCompare.add(
-                                Pair.of(Models.Item.getWynnItem(itemStack).get(), itemStack));
-                        equippedCount++;
+                        Models.Item.getWynnItem(itemStack).ifPresent(wynnItem -> {
+                            itemsToCompare.add(Pair.of(wynnItem, itemStack));
+                            equippedCount++;
+                        });
                     });
                 }
                 case SPEAR, WAND, DAGGER, BOW, RELIK -> {
