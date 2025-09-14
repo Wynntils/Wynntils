@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.actionbar.event;
@@ -26,6 +26,15 @@ public class ActionBarUpdatedEvent extends Event {
     }
 
     public <T extends ActionBarSegment> void runIfPresent(Class<T> clazz, Consumer<T> consumer) {
-        segments.stream().filter(clazz::isInstance).map(clazz::cast).findFirst().ifPresent(consumer);
+        runIfPresentOrElse(clazz, consumer, () -> {});
+    }
+
+    public <T extends ActionBarSegment> void runIfPresentOrElse(
+            Class<T> clazz, Consumer<T> consumer, Runnable ifNotPresent) {
+        segments.stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .findFirst()
+                .ifPresentOrElse(consumer, ifNotPresent);
     }
 }
