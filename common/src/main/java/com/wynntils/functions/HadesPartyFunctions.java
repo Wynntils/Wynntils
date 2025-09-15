@@ -18,12 +18,10 @@ public class HadesPartyFunctions {
         @Override
         public T getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("index").getIntegerValue();
-            try {
-                HadesUser member = Services.Hades.getHadesUsers().toList().get(index);
-                return processMember(member);
-            } catch (RuntimeException e) {
-                return whenAbsent();
-            }
+            List<HadesUser> members = Services.Hades.getHadesUsers().toList();
+            return !members.isEmpty() && index >= 0 && members.size() >= index
+                    ? processMember(members.get(index))
+                    : whenAbsent();
         }
 
         @Override
