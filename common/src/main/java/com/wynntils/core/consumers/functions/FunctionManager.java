@@ -426,30 +426,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.StringFunction());
 
         // Regular Functions
-        registerFunction(new WorldFunctions.CurrentTerritoryFunction());
-        registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
-        registerFunction(new WorldFunctions.CurrentWorldFunction());
-        registerFunction(new WorldFunctions.GatheringTotemCountFunction());
-        registerFunction(new WorldFunctions.GatheringTotemDistanceFunction());
-        registerFunction(new WorldFunctions.GatheringTotemFunction());
-        registerFunction(new WorldFunctions.GatheringTotemOwnerFunction());
-        registerFunction(new WorldFunctions.GatheringTotemTimeLeftFunction());
-        registerFunction(new WorldFunctions.InMappedAreaFunction());
-        registerFunction(new WorldFunctions.InStreamFunction());
-        registerFunction(new WorldFunctions.MobTotemCountFunction());
-        registerFunction(new WorldFunctions.MobTotemDistanceFunction());
-        registerFunction(new WorldFunctions.MobTotemFunction());
-        registerFunction(new WorldFunctions.MobTotemOwnerFunction());
-        registerFunction(new WorldFunctions.MobTotemTimeLeftFunction());
-        registerFunction(new WorldFunctions.NewestWorldFunction());
-        registerFunction(new WorldFunctions.PingFunction());
-        registerFunction(new WorldFunctions.TokenGatekeeperCountFunction());
-        registerFunction(new WorldFunctions.TokenGatekeeperDepositedFunction());
-        registerFunction(new WorldFunctions.TokenGatekeeperFunction());
-        registerFunction(new WorldFunctions.TokenGatekeeperTypeFunction());
-        registerFunction(new WorldFunctions.WorldStateFunction());
-        registerFunction(new WorldFunctions.WorldUptimeFunction());
-
         registerFunction(new CharacterFunctions.AspectTierFunction());
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
