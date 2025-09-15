@@ -371,6 +371,24 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildModel_MEMBER_LEFT() {
+        PatternTester p = new PatternTester(GuildModel.class, "MEMBER_LEFT");
+        p.shouldMatch("§b\uE006\uE002 ShadowCat118 has left the guild");
+    }
+
+    @Test
+    public void GuildModel_MEMBER_JOIN() {
+        PatternTester p = new PatternTester(GuildModel.class, "MEMBER_JOIN");
+        p.shouldMatch("§b\uE001 ShadowCat118 has joined the guild, say hello!");
+    }
+
+    @Test
+    public void GuildModel_MEMBER_KICKED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MEMBER_KICKED");
+        p.shouldMatch("§b\uE006\uE002 ShadowCat117 has kicked ShadowCat118 from the guild");
+    }
+
+    @Test
     public void GuildModel_MSG_LEFT_GUILD() {
         PatternTester p = new PatternTester(GuildModel.class, "MSG_LEFT_GUILD");
         p.shouldMatch("§3You have left §bExample Guild§3!");
@@ -385,8 +403,7 @@ public class TestRegex {
     @Test
     public void GuildModel_MSG_RANK_CHANGED() {
         PatternTester p = new PatternTester(GuildModel.class, "MSG_RANK_CHANGED");
-        p.shouldMatch("§3[INFO]§b v8j has set USERNAME's guild rank from Recruit to Chief");
-        p.shouldMatch("§3[INFO]§b v8j has set USERNAMES' guild rank from Recruiter to Chief");
+        p.shouldMatch("§b\uE006\uE002 ShadowCat117 has set ShadowCat118 guild rank from §3 Recruit§b to §3Strategist");
     }
 
     @Test
