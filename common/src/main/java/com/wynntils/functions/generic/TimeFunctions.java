@@ -54,8 +54,11 @@ public final class TimeFunctions {
     public static class SecondsBetweenFunction extends GenericFunction<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
-            return arguments.getArgument("second").getTime().timestamp()
-                    - arguments.getArgument("first").getTime().timestamp();
+            long firstTimestamp = arguments.getArgument("first").getTime().timestamp();
+            long secondTimestamp = arguments.getArgument("second").getTime().timestamp();
+
+            long diffInMillis = secondTimestamp - firstTimestamp;
+            return diffInMillis / 1000;
         }
 
         @Override

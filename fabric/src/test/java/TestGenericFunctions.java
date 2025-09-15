@@ -40,9 +40,12 @@ public class TestGenericFunctions {
         assertTemplateResult("{offset(now;1)}", "in 1 second");
         assertTemplateResult("{offset(now;-125)}", "2 minutes ago");
 
+        assertTemplateResult("{seconds_between(now;offset(now;5))}", "5.00");
+        assertTemplateResult("{seconds_between(offset(now;60);now)}", "-60.00");
+
         long then = System.currentTimeMillis() - 10000;
         assertTemplateResult("{time(" + then + ")}", "10 seconds ago");
-        long soon = System.currentTimeMillis() + 60000;
+        long soon = System.currentTimeMillis() + 60000 + 500; // add a bit of a margin
         assertTemplateResult("{time(" + soon + ")}", "in 1 minute");
     }
 }
