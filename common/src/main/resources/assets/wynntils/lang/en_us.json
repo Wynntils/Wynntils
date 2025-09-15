@@ -1278,6 +1278,8 @@
   "feature.wynntils.raidProgress.printTimes.name": "Print Raid Times",
   "feature.wynntils.rangeVisualizer.description": "Adds a visualizer for spell ranges.",
   "feature.wynntils.rangeVisualizer.name": "Major ID Range Visualizer",
+  "feature.wynntils.rangeVisualizer.renderInFirstPerson.description": "Should your own range visualizer be rendered in first person?",
+  "feature.wynntils.rangeVisualizer.renderInFirstPerson.name": "Render in First Person",
   "feature.wynntils.removeWynncraftChatWrap.description": "Removes the default Wynncraft chat wrap that's applied to most messages.",
   "feature.wynntils.removeWynncraftChatWrap.name": "Remove Wynncraft Chat Wrap",
   "feature.wynntils.revealNicknames.description": "Reveals nicknames of players in chat.",
