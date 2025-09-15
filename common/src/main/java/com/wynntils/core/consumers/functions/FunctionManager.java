@@ -432,7 +432,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.ToRomanNumeralsFunction());
 
         // Regular Functions
-        registerFunction(new CharacterFunctions.AspectTierFunction());
         registerFunction(new ActivityFunctions.ActivityColorFunction());
         registerFunction(new ActivityFunctions.ActivityNameFunction());
         registerFunction(new ActivityFunctions.ActivityTaskFunction());
@@ -447,6 +446,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new BombFunctions.BombTypeFunction());
         registerFunction(new BombFunctions.BombWorldFunction());
 
+        registerFunction(new CharacterFunctions.AspectTierFunction());
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
         registerFunction(new CharacterFunctions.CappedAwakenedProgressFunction());
