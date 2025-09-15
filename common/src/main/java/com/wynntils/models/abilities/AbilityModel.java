@@ -4,11 +4,13 @@
  */
 package com.wynntils.models.abilities;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.bossbars.AwakenedBar;
 import com.wynntils.models.abilities.bossbars.BloodPoolBar;
 import com.wynntils.models.abilities.bossbars.CommanderBar;
@@ -17,16 +19,17 @@ import com.wynntils.models.abilities.bossbars.FocusBar;
 import com.wynntils.models.abilities.bossbars.HolyPowerBar;
 import com.wynntils.models.abilities.bossbars.ManaBankBar;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class AbilityModel extends Model {
-    private static final Pattern HUMMINGBUIRD_SENT_PATTERN = Pattern.compile(
-            "§e(:?(:?\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(:?\uDAFF\uDFFC\uE001\uDB00\uDC06)) You sent your hummingbirds to attack!");
-    private static final Pattern HUMMINGBUIRD_RETURN_PATTERN = Pattern.compile(
-            "§e(:?(:?\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(:?\uDAFF\uDFFC\uE001\uDB00\uDC06)) Your hummingbirds have returned to you!");
+    private static final Pattern HUMMINGBUIRD_SENT_PATTERN =
+            Pattern.compile("§e((\uE008\uE002)|\uE001) You sent your hummingbirds to attack!$");
+    private static final Pattern HUMMINGBUIRD_RETURN_PATTERN =
+            Pattern.compile("§e((\uE008\uE002)|\uE001) Your hummingbirds have returned to you!$");
     public static final TrackedBar manaBankBar = new ManaBankBar();
 
     public static final TrackedBar bloodPoolBar = new BloodPoolBar();
@@ -56,7 +59,10 @@ public final class AbilityModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        StyledText message = event.getStyledText();
+        if (event.getRecipientType() != RecipientType.INFO || event.getRecipientType() != RecipientType.PARTY) return;
+        StyledText message =
+                StyledTextUtils.unwrap(event.getStyledText().getNormalized().stripAlignment());
+        WynntilsMod.info(event.getRecipientType().name() + "  " + message.getString());
         if (message.matches(HUMMINGBUIRD_RETURN_PATTERN)) {
             hummingBirdsState = false;
         } else if (message.matches(HUMMINGBUIRD_SENT_PATTERN)) {
