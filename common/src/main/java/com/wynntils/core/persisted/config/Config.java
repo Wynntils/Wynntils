@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -139,6 +139,7 @@ public class Config<T> extends PersistedValue<T> {
             Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) getType()));
             return (T) wrapped.getConstructor(String.class).newInstance(value);
         } catch (Exception ignored) {
+            WynntilsMod.error("Error in Config while parsing value for type " + getType() + " with value " + value);
         }
 
         // couldn't parse value

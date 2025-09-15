@@ -40,6 +40,7 @@ import com.wynntils.models.raid.type.RaidRoomInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -463,6 +464,13 @@ public final class RaidModel extends Model {
         }
 
         return majorIds;
+    }
+
+    public RaidKind getRaidFromColor(CustomColor color) {
+        return RAIDS.stream()
+                .filter(raid -> raid.getRaidColor().equals(color))
+                .findFirst()
+                .orElse(null);
     }
 
     public String getCurrentRoomName() {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
@@ -23,6 +23,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetDataPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundEntityPositionSyncPacket;
 import net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
@@ -36,10 +37,14 @@ import net.minecraft.network.protocol.game.ClientboundSetChunkCacheCenterPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
+import net.minecraft.network.protocol.game.ServerboundClientTickEndPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
@@ -55,6 +60,7 @@ public class PacketDebuggerFeature extends Feature {
     private static final List<Class<? extends Packet<?>>> IGNORE_LIST = List.of(
             // General
             ServerboundKeepAlivePacket.class,
+            ServerboundClientTickEndPacket.class,
             ClientboundKeepAlivePacket.class,
             ClientboundSetTimePacket.class,
             ClientboundUpdateAdvancementsPacket.class,
@@ -78,10 +84,18 @@ public class PacketDebuggerFeature extends Feature {
             ClientboundSetEntityDataPacket.class,
             ClientboundSetEntityMotionPacket.class,
             ClientboundTeleportEntityPacket.class,
+            ClientboundEntityPositionSyncPacket.class,
+            ClientboundSetPassengersPacket.class,
             // Client movement
             ServerboundMovePlayerPacket.Pos.class,
             ServerboundMovePlayerPacket.PosRot.class,
             ServerboundMovePlayerPacket.Rot.class);
+
+    private static final List<Class<? extends Packet<?>>> EXTENDED_IGNORE_LIST = List.of(
+            // Sound
+            ClientboundSoundPacket.class,
+            // Chat
+            ClientboundSystemChatPacket.class);
 
     private static final List<Class<? extends Packet<?>>> CONTAINER_PACKETS = List.of(
             // S2C
@@ -136,6 +150,8 @@ public class PacketDebuggerFeature extends Feature {
     private enum PacketFilterType {
         ALL(packetClass -> false),
         FILTERED(IGNORE_LIST::contains),
+        EXTENDED_FILTERED(
+                packetClass -> IGNORE_LIST.contains(packetClass) || EXTENDED_IGNORE_LIST.contains(packetClass)),
         CONTAINER_ONLY(packetClass -> !CONTAINER_PACKETS.contains(packetClass)),
         PARTICLE_ONLY(packetClass -> !PARTICLE_PACKET_CLASS.equals(packetClass)),
         ENTITY_ONLY(packetClass -> !ENTITY_PACKETS.contains(packetClass));
