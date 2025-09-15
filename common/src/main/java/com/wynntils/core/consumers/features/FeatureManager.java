@@ -14,8 +14,8 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
 import com.wynntils.features.LootrunFeature;
-import com.wynntils.features.MythicFoundFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
+import com.wynntils.features.ValuableFoundFeature;
 import com.wynntils.features.chat.BombBellRelayFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
 import com.wynntils.features.chat.ChatItemFeature;
@@ -30,6 +30,7 @@ import com.wynntils.features.chat.RemoveWynncraftChatWrapFeature;
 import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
 import com.wynntils.features.combat.AutoAttackFeature;
+import com.wynntils.features.combat.ChestBlockerFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
@@ -38,7 +39,6 @@ import com.wynntils.features.combat.HideLabelsFeature;
 import com.wynntils.features.combat.HorseMountFeature;
 import com.wynntils.features.combat.InvertAttackKeybindsFeature;
 import com.wynntils.features.combat.LowHealthVignetteFeature;
-import com.wynntils.features.combat.MythicBlockerFeature;
 import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
@@ -235,6 +235,7 @@ public final class FeatureManager extends Manager {
         // region combat
         registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new AutoAttackFeature());
+        registerFeature(new ChestBlockerFeature());
         registerFeature(new ContentTrackerFeature());
         registerFeature(new CustomLootrunBeaconsFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
@@ -243,7 +244,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new HorseMountFeature());
         registerFeature(new InvertAttackKeybindsFeature());
         registerFeature(new LowHealthVignetteFeature());
-        registerFeature(new MythicBlockerFeature());
         registerFeature(new MythicBoxScalerFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());
@@ -408,8 +408,8 @@ public final class FeatureManager extends Manager {
         // region uncategorized
         registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new ExtendedSeasonLeaderboardFeature());
-        registerFeature(new MythicFoundFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
+        registerFeature(new ValuableFoundFeature());
         // endregion
 
         // Reload Minecraft's config files so our own keybinds get loaded
