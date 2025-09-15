@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 public class TestUtils {
     @Test
     public void testTypes() {
-        var now = Time.now();
-        var offset = now.getOffset(now.offset(10));
+        Time now = Time.now();
+        long offset = now.getOffset(now.offset(10));
         Assertions.assertEquals(10, offset);
     }
 }
