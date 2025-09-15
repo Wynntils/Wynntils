@@ -2,7 +2,6 @@
  * Copyright © Wynntils 2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-
 import com.wynntils.utils.type.Time;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
