@@ -24,7 +24,20 @@ public class TestGenericFunctions {
     }
 
     @Test
-    public void math_testAddInt() {
+    public void testMathFunctions() {
         assertTemplateResult("{int(add(5;6))}", "11");
+    }
+
+    @Test
+    public void testTimeFunctions() {
+        assertTemplateResult("{now}", "now");
+        assertTemplateResult("{absolute_time(time(0))}", "1970-01-01 01:00");
+        // FIXME: why are longs returned as decimal numbers?
+        assertTemplateResult("{timestamp(time(0))}", "0.00");
+        long now = System.currentTimeMillis();
+        long then = now - 10000;
+        assertTemplateResult("{time(" + then + ")}", "10 seconds ago");
+        long soon = now + 60000;
+        assertTemplateResult("{time(" + soon + ")}", "in 1 minute");
     }
 }
