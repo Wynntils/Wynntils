@@ -55,3 +55,9 @@ jobs:
 
       - name: Test with Gradle
         run: ./gradlew test -x spotlessCheck --full-stacktrace --info
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: build/reports/tests/test
