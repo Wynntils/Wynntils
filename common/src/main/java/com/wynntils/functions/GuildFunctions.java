@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -71,6 +71,20 @@ public class GuildFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.Guild.getObjectiveStreak();
+        }
+    }
+
+    public static class IsGuildMemberFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Guild.getGuildMembers()
+                    .contains(arguments.getArgument("member").getStringValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("member", String.class, null)));
         }
     }
 }

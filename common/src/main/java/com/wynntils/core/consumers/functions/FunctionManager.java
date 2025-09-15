@@ -524,12 +524,19 @@ public final class FunctionManager extends Manager {
         registerFunction(new GuildFunctions.GuildNameFunction());
         registerFunction(new GuildFunctions.GuildRankFunction());
         registerFunction(new GuildFunctions.IsAlliedGuildFunction());
+        registerFunction(new GuildFunctions.IsGuildMemberFunction());
         registerFunction(new GuildFunctions.ObjectiveStreakFunction());
 
         registerFunction(new EnvironmentFunctions.MinecraftVersionFunction());
         registerFunction(new EnvironmentFunctions.UnixTimeFunction());
         registerFunction(new EnvironmentFunctions.WynncraftVersionFunction());
         registerFunction(new EnvironmentFunctions.WynntilsVersionFunction());
+
+        registerFunction(new HadesPartyFunctions.HadesPartyMemberHealthFunction());
+        registerFunction(new HadesPartyFunctions.HadesPartyMemberLocationFunction());
+        registerFunction(new HadesPartyFunctions.HadesPartyMemberManaFunction());
+        registerFunction(new HadesPartyFunctions.HadesPartyMemberNameFunction());
+
         registerFunction(new HorseFunctions.CappedHorseLevelFunction());
         registerFunction(new HorseFunctions.CappedHorseTotalLevelTimeFunction());
         registerFunction(new HorseFunctions.CappedHorseXpFunction());
@@ -565,29 +572,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MaterialCountFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
-
-        registerFunction(new GuildFunctions.CappedGuildLevelProgressFunction());
-        registerFunction(new GuildFunctions.CappedGuildObjectivesProgressFunction());
-        registerFunction(new GuildFunctions.GuildLevelFunction());
-        registerFunction(new GuildFunctions.GuildNameFunction());
-        registerFunction(new GuildFunctions.GuildRankFunction());
-        registerFunction(new GuildFunctions.IsAlliedGuildFunction());
-        registerFunction(new GuildFunctions.ObjectiveStreakFunction());
-
-        registerFunction(new HadesPartyFunctions.HadesPartyMemberHealthFunction());
-        registerFunction(new HadesPartyFunctions.HadesPartyMemberLocationFunction());
-        registerFunction(new HadesPartyFunctions.HadesPartyMemberManaFunction());
-        registerFunction(new HadesPartyFunctions.HadesPartyMemberNameFunction());
-
-        registerFunction(new HorseFunctions.CappedHorseLevelFunction());
-        registerFunction(new HorseFunctions.CappedHorseTotalLevelTimeFunction());
-        registerFunction(new HorseFunctions.CappedHorseXpFunction());
-        registerFunction(new HorseFunctions.HorseLevelFunction());
-        registerFunction(new HorseFunctions.HorseLevelMaxFunction());
-        registerFunction(new HorseFunctions.HorseLevelTimeFunction());
-        registerFunction(new HorseFunctions.HorseNameFunction());
-        registerFunction(new HorseFunctions.HorseTierFunction());
-        registerFunction(new HorseFunctions.HorseXpFunction());
 
         registerFunction(new LootrunFunctions.ChestOpenedFunction());
         registerFunction(new LootrunFunctions.ChestsOpenedThisSessionFunction());
@@ -666,8 +650,12 @@ public final class FunctionManager extends Manager {
         registerFunction(new RangedFunctions.RangedFunction());
 
         registerFunction(new SocialFunctions.FriendsFunction());
+        registerFunction(new SocialFunctions.IsFriendFunction());
+        registerFunction(new SocialFunctions.IsPartyMemberFunction());
         registerFunction(new SocialFunctions.PartyLeaderFunction());
         registerFunction(new SocialFunctions.PartyMembersFunction());
+        registerFunction(new SocialFunctions.PlayerNameFunction());
+        registerFunction(new SocialFunctions.WynntilsRoleFunction());
 
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
         registerFunction(new SpellFunctions.GuardianAngelsCountFunction());
@@ -679,14 +667,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
         registerFunction(new SpellFunctions.ShieldTypeNameFunction());
 
-        registerFunction(new SocialFunctions.FriendsFunction());
-        registerFunction(new SocialFunctions.IsFriendFunction());
-        registerFunction(new SocialFunctions.IsPartyMemberFunction());
-        registerFunction(new SocialFunctions.PartyLeaderFunction());
-        registerFunction(new SocialFunctions.PartyMembersFunction());
-        registerFunction(new SocialFunctions.PlayerNameFunction());
-        registerFunction(new SocialFunctions.WynntilsRoleFunction());
-
         registerFunction(new StatisticFunctions.StatisticsAverageFunction());
         registerFunction(new StatisticFunctions.StatisticsCountFunction());
         registerFunction(new StatisticFunctions.StatisticsFirstModifiedFunction());
@@ -694,7 +674,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new StatisticFunctions.StatisticsLastModifiedFunction());
         registerFunction(new StatisticFunctions.StatisticsMaxFunction());
         registerFunction(new StatisticFunctions.StatisticsMinFunction());
-        registerFunction(new StatisticFunctions.StatisticsTotalFunction());
         registerFunction(new StatisticFunctions.StatisticsTotalFunction());
 
         registerFunction(new StatusEffectFunctions.StatusEffectActiveFunction());

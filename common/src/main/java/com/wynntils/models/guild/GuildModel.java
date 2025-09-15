@@ -437,6 +437,10 @@ public final class GuildModel extends Model {
         WynntilsMod.info("Successfully parsed tributes for guild " + guildName);
     }
 
+    public Set<String> getGuildMembers() {
+        return guildMembers;
+    }
+
     private void requestGuildMembers() {
         if (guildName != null) {
             CompletableFuture<GuildInfo> completableFuture = getGuild(guildName);
