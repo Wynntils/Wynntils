@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -25,10 +25,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class CharacterSelectionUtilitiesFeature extends Feature {
     @Persisted
-    public final Config<Boolean> blockThirdPerson = new Config<>(true);
+    private final Config<Boolean> blockThirdPerson = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> hideCrosshair = new Config<>(true);
+    private final Config<Boolean> hideCrosshair = new Config<>(true);
 
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent e) {

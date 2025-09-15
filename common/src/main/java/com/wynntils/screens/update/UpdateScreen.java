@@ -33,7 +33,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.Component;
 
-public class UpdateScreen extends WynntilsScreen {
+public final class UpdateScreen extends WynntilsScreen {
     private final Screen titleScreen;
     private final ServerData serverData;
 
@@ -267,8 +267,8 @@ public class UpdateScreen extends WynntilsScreen {
         Services.Update.setHasPromptedUpdate(true);
         toggleButtons(false);
 
-        Services.Update.tryUpdate().thenAccept(updateResult -> {
-            if (updateResult == UpdateResult.SUCCESSFUL) {
+        Services.Update.tryUpdate().thenAccept(result -> {
+            if (result == UpdateResult.SUCCESSFUL) {
                 completionFinish = System.currentTimeMillis() + 3000L;
                 Executors.newSingleThreadScheduledExecutor()
                         .schedule(
@@ -288,7 +288,7 @@ public class UpdateScreen extends WynntilsScreen {
                 toggleButtons(true);
             }
 
-            this.updateResult = updateResult;
+            this.updateResult = result;
         });
     }
 

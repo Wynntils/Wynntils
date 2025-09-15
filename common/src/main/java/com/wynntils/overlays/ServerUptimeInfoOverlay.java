@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -10,13 +10,14 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class ServerUptimeInfoOverlay extends TextOverlay {
     @Persisted
-    public final Config<Boolean> showWorldInStream = new Config<>(false);
+    private final Config<Boolean> showWorldInStream = new Config<>(false);
 
     public ServerUptimeInfoOverlay() {
         super(
@@ -45,7 +46,12 @@ public class ServerUptimeInfoOverlay extends TextOverlay {
     }
 
     @Override
-    public boolean isRenderedDefault() {
-        return McUtils.mc().gui.getTabList().visible;
+    protected boolean hideWhenNoGui() {
+        return false;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return McUtils.mc().gui.getTabList().visible || Models.WorldState.getCurrentState() == WorldState.HUB;
     }
 }

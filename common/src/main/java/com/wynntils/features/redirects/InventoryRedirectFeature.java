@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.redirects;
@@ -29,13 +29,13 @@ public class InventoryRedirectFeature extends Feature {
     private MessageContainer emeraldPouchMessage = null;
 
     @Persisted
-    public final Config<Boolean> redirectIngredientPouch = new Config<>(true);
+    private final Config<Boolean> redirectIngredientPouch = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> redirectEmeraldPouch = new Config<>(true);
+    private final Config<Boolean> redirectEmeraldPouch = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> redirectPotionStack = new Config<>(true);
+    private final Config<Boolean> redirectPotionStack = new Config<>(true);
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {

@@ -40,6 +40,7 @@ import com.wynntils.models.raid.type.RaidRoomInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -55,7 +56,6 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class RaidModel extends Model {
@@ -101,7 +101,7 @@ public final class RaidModel extends Model {
     private static final List<RaidKind> RAIDS = new ArrayList<>();
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
-    private Map<String, List<String>> partyRaidBuffs = new HashMap<>();
+    private final Map<String, List<String>> partyRaidBuffs = new HashMap<>();
 
     private int foundNumRewardPulls;
     private int expectedRaidRewardChestId = -2;
@@ -466,6 +466,13 @@ public final class RaidModel extends Model {
         return majorIds;
     }
 
+    public RaidKind getRaidFromColor(CustomColor color) {
+        return RAIDS.stream()
+                .filter(raid -> raid.getRaidColor().equals(color))
+                .findFirst()
+                .orElse(null);
+    }
+
     public String getCurrentRoomName() {
         if (currentRaid == null || inIntermissionRoom || inBuffRoom) return "";
 
@@ -659,7 +666,7 @@ public final class RaidModel extends Model {
     }
 
     private void processAspectItemFind(ItemStack itemStack, int slotId) {
-        if (itemStack.getItem() == Items.AIR) return;
+        if (itemStack.isEmpty()) return;
 
         Optional<AspectItem> aspectOptional = Models.Item.asWynnItem(itemStack, AspectItem.class);
         if (aspectOptional.isPresent()) {
@@ -677,14 +684,14 @@ public final class RaidModel extends Model {
     }
 
     private void processRewardItemFind(ItemStack itemStack, int slotId) {
-        if (itemStack.getItem() == Items.AIR) return;
+        if (itemStack.isEmpty()) return;
 
         foundNumRewardPulls += 1;
 
         Optional<AspectItem> aspectOptional = Models.Item.asWynnItem(itemStack, AspectItem.class);
         if (aspectOptional.isPresent()) {
             AspectItem aspectItem = aspectOptional.get();
-            WynntilsMod.warn("[RaidModel] User found aspect item \"" + aspectItem.toString() + "\" at slot " + slotId
+            WynntilsMod.warn("[RaidModel] User found aspect item \"" + aspectItem + "\" at slot " + slotId
                     + ", but this slot should be a reward item slot.");
             return;
         }

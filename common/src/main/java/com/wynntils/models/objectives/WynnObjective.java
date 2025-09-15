@@ -23,6 +23,9 @@ public final class WynnObjective {
     private final boolean isGuildObjective;
     private final boolean hasEventBonus;
 
+    public static final WynnObjective DEMO_GUILD = new WynnObjective(
+            "Slay Loot Chests", new CappedValue(5, 15), 0, StyledText.fromString("Slay Loot Chests 5/15"), true, false);
+
     private WynnObjective(
             String goal,
             CappedValue score,
@@ -40,8 +43,6 @@ public final class WynnObjective {
 
     static WynnObjective parseObjectiveLine(StyledText objectiveLine, boolean isGuildObjective, boolean hasEventBonus) {
         String stripped = objectiveLine.getString(PartStyle.StyleType.NONE);
-
-        assert stripped != null;
 
         Matcher matcher = OBJECTIVE_PARSER_PATTERN.matcher(stripped);
         String goal = null;

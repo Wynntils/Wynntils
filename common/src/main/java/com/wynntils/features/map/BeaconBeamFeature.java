@@ -32,16 +32,16 @@ public class BeaconBeamFeature extends Feature {
             MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
     @Persisted
-    public final Config<CustomColor> waypointBeamColor = new Config<>(CommonColors.RED);
+    private final Config<CustomColor> waypointBeamColor = new Config<>(CommonColors.RED);
 
     private static final int RAINBOW_CHANGE_RATE = 10;
     private CustomColor currentRainbowColor = CommonColors.RED;
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        int r = currentRainbowColor.r;
-        int g = currentRainbowColor.g;
-        int b = currentRainbowColor.b;
+        int r = currentRainbowColor.r();
+        int g = currentRainbowColor.g();
+        int b = currentRainbowColor.b();
 
         if (r > 0 && b == 0) {
             r -= RAINBOW_CHANGE_RATE;

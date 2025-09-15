@@ -13,8 +13,10 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.items.items.gui.CharacterItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -26,6 +28,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -57,6 +62,8 @@ public final class CharacterModel extends Model {
     private String id = "-";
 
     private String previousScanId = "";
+
+    private VehicleType vehicle = VehicleType.NONE;
 
     public CharacterModel() {
         super(List.of());
@@ -156,6 +163,30 @@ public final class CharacterModel extends Model {
         previousScanId = id;
     }
 
+    public VehicleType getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(VehicleType vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    @SubscribeEvent
+    public void onVehicleSet(SetLocalPlayerVehicleEvent event) {
+        if (event.getVehicle() == null) {
+            setVehicle(VehicleType.NONE);
+            return;
+        }
+        Entity vehicle = event.getVehicle();
+        if (vehicle instanceof AbstractHorse) {
+            setVehicle(VehicleType.HORSE);
+        } else if (vehicle instanceof Display) {
+            setVehicle(VehicleType.DISPLAY);
+        } else {
+            setVehicle(VehicleType.OTHER);
+        }
+    }
+
     private void parseCharacterContainer(ContainerContent container) {
         ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
         ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
@@ -195,13 +226,13 @@ public final class CharacterModel extends Model {
     private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem) {
         List<StyledText> lore = LoreUtils.getLore(characterInfoItem);
 
-        int level = 0;
+        int foundLevel = 0;
         String className = "";
 
         for (StyledText line : lore) {
             Matcher levelMatcher = line.getMatcher(INFO_MENU_LEVEL_PATTERN);
             if (levelMatcher.matches()) {
-                level = Integer.parseInt(levelMatcher.group(1));
+                foundLevel = Integer.parseInt(levelMatcher.group(1));
                 continue;
             }
 
@@ -211,9 +242,9 @@ public final class CharacterModel extends Model {
                 className = classMatcher.group(1);
             }
         }
-        ClassType classType = ClassType.fromName(className);
+        ClassType foundClassType = ClassType.fromName(className);
 
-        updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level);
+        updateCharacterInfo(foundClassType, foundClassType != null && ClassType.isReskinned(className), foundLevel);
     }
 
     private boolean parseCharacter(ItemStack itemStack) {

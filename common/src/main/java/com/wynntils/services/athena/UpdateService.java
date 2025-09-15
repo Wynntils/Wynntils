@@ -151,9 +151,7 @@ public final class UpdateService extends Service {
                 }
             }
 
-            Executors.newSingleThreadExecutor().submit(() -> {
-                tryFetchNewUpdate(modUpdateInfo, future);
-            });
+            Executors.newSingleThreadExecutor().submit(() -> tryFetchNewUpdate(modUpdateInfo, future));
         }
 
         return future;

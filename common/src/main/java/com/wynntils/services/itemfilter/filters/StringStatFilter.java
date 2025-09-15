@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.filters;
@@ -15,7 +15,7 @@ public final class StringStatFilter extends StatFilter<String> {
     private final String searchLiteral;
     private final boolean strict;
 
-    StringStatFilter(String searchLiteral, boolean strict) {
+    private StringStatFilter(String searchLiteral, boolean strict) {
         this.searchLiteral = searchLiteral;
         this.strict = strict;
     }

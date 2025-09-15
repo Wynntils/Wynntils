@@ -91,7 +91,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
         hueSlider = new HueSlider(offsetX + 11, offsetY + 105, 420, 20, hue, this);
         this.addRenderableWidget(hueSlider);
 
-        alphaSlider = new AlphaSlider(offsetX + 11, offsetY + 133, 420, 20, color.a / 255.0, this);
+        alphaSlider = new AlphaSlider(offsetX + 11, offsetY + 133, 420, 20, color.a() / 255.0, this);
         this.addRenderableWidget(alphaSlider);
 
         this.addRenderableWidget(
@@ -156,7 +156,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
     public void setSaturation(float saturation) {
         this.saturation = saturation;
 
-        color = CustomColor.fromHSV(hue, saturation, brightness, color.a / 255f);
+        color = CustomColor.fromHSV(hue, saturation, brightness, color.a() / 255f);
 
         colorInput.setTextBoxInput(color.toHexString());
     }
@@ -164,7 +164,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
     public void setBrightness(float brightness) {
         this.brightness = brightness;
 
-        color = CustomColor.fromHSV(hue, saturation, brightness, color.a / 255f);
+        color = CustomColor.fromHSV(hue, saturation, brightness, color.a() / 255f);
 
         colorInput.setTextBoxInput(color.toHexString());
     }
@@ -174,9 +174,9 @@ public final class ColorPickerScreen extends WynntilsScreen {
 
         float[] hsbColor = color.asHSB();
 
-        color = CustomColor.fromHSV(hue, hsbColor[1], hsbColor[2], color.a / 255f);
+        color = CustomColor.fromHSV(hue, hsbColor[1], hsbColor[2], color.a() / 255f);
 
-        saturationBrightnessWidget.setColor(CustomColor.fromHSV(hue, 1.0f, 1.0f, color.a / 255f));
+        saturationBrightnessWidget.setColor(CustomColor.fromHSV(hue, 1.0f, 1.0f, color.a() / 255f));
 
         colorInput.setTextBoxInput(color.toHexString());
     }
@@ -199,9 +199,9 @@ public final class ColorPickerScreen extends WynntilsScreen {
         brightness = hsbColor[2];
 
         hueSlider.setValue(hue);
-        saturationBrightnessWidget.setColor(CustomColor.fromHSV(hue, 1.0f, 1.0f, color.a / 255f));
+        saturationBrightnessWidget.setColor(CustomColor.fromHSV(hue, 1.0f, 1.0f, color.a() / 255f));
         saturationBrightnessWidget.updateCursor(saturation, brightness);
-        alphaSlider.setValue(color.a / 255.0);
+        alphaSlider.setValue(color.a() / 255.0);
     }
 
     public CustomColor getColor() {

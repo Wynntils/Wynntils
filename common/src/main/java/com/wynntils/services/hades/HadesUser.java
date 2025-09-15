@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -38,7 +38,7 @@ public class HadesUser {
         this.y = 0;
         this.z = 0;
 
-        this.poiLocation = new PoiLocation((int) x, (int) y, (int) z);
+        this.poiLocation = new PoiLocation(0, 0, 0);
 
         this.relation = PlayerRelation.FRIEND;
 

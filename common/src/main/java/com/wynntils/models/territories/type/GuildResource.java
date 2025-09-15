@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories.type;
@@ -54,7 +54,7 @@ public enum GuildResource {
     }
 
     public String getPrettySymbol() {
-        return color + symbol + (!symbol.isEmpty() ? " " : "");
+        return color + symbol + (symbol.isEmpty() ? "" : " ");
     }
 
     public boolean isMaterialResource() {

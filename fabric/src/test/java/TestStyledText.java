@@ -2,6 +2,7 @@
  * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
@@ -26,6 +27,7 @@ public class TestStyledText {
     public static void setup() {
         SharedConstants.tryDetectVersion();
         Bootstrap.bootStrap();
+        WynntilsMod.init(null, "SNAPSHOT", true, null);
     }
 
     @Test

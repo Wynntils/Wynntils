@@ -39,10 +39,10 @@ public final class BufferedRenderUtils {
                 y1 = y2;
                 y2 = tmp;
             }
-            buffer.addVertex(matrix, x1 - halfWidth, y1, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x2 - halfWidth, y2, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x1 + halfWidth, y1, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x2 + halfWidth, y2, z).setColor(color.r, color.g, color.b, color.a);
+            buffer.addVertex(matrix, x1 - halfWidth, y1, z).setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x2 - halfWidth, y2, z).setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x1 + halfWidth, y1, z).setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x2 + halfWidth, y2, z).setColor(color.r(), color.g(), color.b(), color.a());
         } else if (y1 == y2) {
             if (x2 < x1) {
                 float tmp = x1;
@@ -50,10 +50,10 @@ public final class BufferedRenderUtils {
                 x2 = tmp;
             }
 
-            buffer.addVertex(matrix, x1, y1 - halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x1, y1 + halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x2, y2 - halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x2, y2 + halfWidth, z).setColor(color.r, color.g, color.b, color.a);
+            buffer.addVertex(matrix, x1, y1 - halfWidth, z).setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x1, y1 + halfWidth, z).setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x2, y2 - halfWidth, z).setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x2, y2 + halfWidth, z).setColor(color.r(), color.g(), color.b(), color.a());
         } else if ((x1 < x2 && y1 < y2) || (x2 < x1 && y2 < y1)) { // Top Left to Bottom Right line
             if (x2 < x1) {
                 float tmp = x1;
@@ -65,10 +65,14 @@ public final class BufferedRenderUtils {
                 y2 = tmp;
             }
 
-            buffer.addVertex(matrix, x1 + halfWidth, y1 - halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x1 - halfWidth, y1 + halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x2 + halfWidth, y2 - halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x2 - halfWidth, y2 + halfWidth, z).setColor(color.r, color.g, color.b, color.a);
+            buffer.addVertex(matrix, x1 + halfWidth, y1 - halfWidth, z)
+                    .setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x1 - halfWidth, y1 + halfWidth, z)
+                    .setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x2 + halfWidth, y2 - halfWidth, z)
+                    .setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x2 - halfWidth, y2 + halfWidth, z)
+                    .setColor(color.r(), color.g(), color.b(), color.a());
         } else { // Top Right to Bottom Left Line
             if (x1 < x2) {
                 float tmp = x1;
@@ -80,10 +84,14 @@ public final class BufferedRenderUtils {
                 y2 = tmp;
             }
 
-            buffer.addVertex(matrix, x1 + halfWidth, y1 + halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x1 - halfWidth, y1 - halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x2 + halfWidth, y2 + halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            buffer.addVertex(matrix, x2 - halfWidth, y2 - halfWidth, z).setColor(color.r, color.g, color.b, color.a);
+            buffer.addVertex(matrix, x1 + halfWidth, y1 + halfWidth, z)
+                    .setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x1 - halfWidth, y1 - halfWidth, z)
+                    .setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x2 + halfWidth, y2 + halfWidth, z)
+                    .setColor(color.r(), color.g(), color.b(), color.a());
+            buffer.addVertex(matrix, x2 - halfWidth, y2 - halfWidth, z)
+                    .setColor(color.r(), color.g(), color.b(), color.a());
         }
     }
 
@@ -116,10 +124,10 @@ public final class BufferedRenderUtils {
 
         VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
 
-        buffer.addVertex(matrix, x, y + height, z).setColor(color.r, color.g, color.b, color.a);
-        buffer.addVertex(matrix, x + width, y + height, z).setColor(color.r, color.g, color.b, color.a);
-        buffer.addVertex(matrix, x + width, y, z).setColor(color.r, color.g, color.b, color.a);
-        buffer.addVertex(matrix, x, y, z).setColor(color.r, color.g, color.b, color.a);
+        buffer.addVertex(matrix, x, y + height, z).setColor(color.r(), color.g(), color.b(), color.a());
+        buffer.addVertex(matrix, x + width, y + height, z).setColor(color.r(), color.g(), color.b(), color.a());
+        buffer.addVertex(matrix, x + width, y, z).setColor(color.r(), color.g(), color.b(), color.a());
+        buffer.addVertex(matrix, x, y, z).setColor(color.r(), color.g(), color.b(), color.a());
     }
 
     public static void drawMulticoloredRectBorders(
@@ -158,7 +166,7 @@ public final class BufferedRenderUtils {
                     rightX,
                     y,
                     z,
-                    (i != colors.size() - 1 ? internalLineWidth : externalLineWidth));
+                    (i == colors.size() - 1 ? externalLineWidth : internalLineWidth));
             // top right to top center (always drawn)
             drawLine(poseStack, bufferSource, color, rightX, y, centerX, y, z, externalLineWidth);
             // top center to bottom left (drawn on i!=0)
@@ -204,13 +212,13 @@ public final class BufferedRenderUtils {
             float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
 
             // bottom left
-            buffer.addVertex(matrix, leftX, y + height, z).setColor(color.r, color.g, color.b, color.a);
+            buffer.addVertex(matrix, leftX, y + height, z).setColor(color.r(), color.g(), color.b(), color.a());
             // bottom right
-            buffer.addVertex(matrix, centerX, y + height, z).setColor(color.r, color.g, color.b, color.a);
+            buffer.addVertex(matrix, centerX, y + height, z).setColor(color.r(), color.g(), color.b(), color.a());
             // top right
-            buffer.addVertex(matrix, rightX, y, z).setColor(color.r, color.g, color.b, color.a);
+            buffer.addVertex(matrix, rightX, y, z).setColor(color.r(), color.g(), color.b(), color.a());
             // top left
-            buffer.addVertex(matrix, centerX, y, z).setColor(color.r, color.g, color.b, color.a);
+            buffer.addVertex(matrix, centerX, y, z).setColor(color.r(), color.g(), color.b(), color.a());
         }
     }
 
@@ -432,17 +440,17 @@ public final class BufferedRenderUtils {
 
         buffer.addVertex(matrix, x, y + height, z)
                 .setUv(uOffset * uScale, (vOffset + v) * vScale)
-                .setColor(color.r, color.g, color.b, color.a);
+                .setColor(color.r(), color.g(), color.b(), color.a());
         buffer.addVertex(matrix, x + width, y + height, z)
                 .setUv((uOffset + u) * uScale, (vOffset + v) * vScale)
-                .setColor(color.r, color.g, color.b, color.a);
+                .setColor(color.r(), color.g(), color.b(), color.a());
         buffer.addVertex(matrix, x + width, y, z)
                 .setUv((uOffset + u) * uScale, vOffset * vScale)
-                .setColor(color.r, color.g, color.b, color.a);
+                .setColor(color.r(), color.g(), color.b(), color.a());
 
         buffer.addVertex(matrix, x, y, z)
                 .setUv(uOffset * uScale, vOffset * vScale)
-                .setColor(color.r, color.g, color.b, color.a);
+                .setColor(color.r(), color.g(), color.b(), color.a());
     }
 
     /**

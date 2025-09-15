@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PoiService extends Service {
-    public static final Gson GSON = new GsonBuilder()
+    private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Label.class, new Label.LabelDeserializer())
             .enableComplexMapKeySerialization()
             .create();

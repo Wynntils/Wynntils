@@ -56,19 +56,19 @@ public class WynncraftButtonFeature extends Feature {
     private boolean firstTitleScreenInit = true;
 
     @Persisted
-    public final Config<ServerType> serverType = new Config<>(ServerType.GAME);
+    private final Config<ServerType> serverType = new Config<>(ServerType.GAME);
 
     @Persisted
-    public final Config<ServerRegion> serverRegionOverride = new Config<>(ServerRegion.WC);
+    private final Config<ServerRegion> serverRegionOverride = new Config<>(ServerRegion.WC);
 
     @Persisted
-    public final Config<Boolean> autoConnect = new Config<>(false);
+    private final Config<Boolean> autoConnect = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> loadResourcePack = new Config<>(true);
+    private final Config<Boolean> loadResourcePack = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> cancelAutoJoin = new Config<>(true);
+    private final Config<Boolean> cancelAutoJoin = new Config<>(true);
 
     @Persisted
     public final Storage<Boolean> ignoreFailedDownloads = new Storage<>(false);
@@ -329,15 +329,16 @@ public class WynncraftButtonFeature extends Feature {
         // Modified from
         // net.minecraft.client.gui.screens.multiplayer.ServerSelectionList#uploadServerIcon
         private synchronized void loadServerIcon(ResourceLocation destination) {
-            ByteBuffer iconBytes = ByteBuffer.wrap(server.getIconBytes());
-            // failed to ping server or icon wasn't sent
+            byte[] iconBytes = server.getIconBytes();
             if (iconBytes == null) {
+                // failed to ping server or icon wasn't sent
                 WynntilsMod.warn("Unable to load icon");
                 serverIconLocation = FALLBACK;
                 return;
             }
+            ByteBuffer iconBytesBuffer = ByteBuffer.wrap(iconBytes);
 
-            try (NativeImage nativeImage = NativeImage.read(iconBytes)) {
+            try (NativeImage nativeImage = NativeImage.read(iconBytesBuffer)) {
                 Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
                 Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 

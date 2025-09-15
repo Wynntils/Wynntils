@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
+import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
@@ -92,10 +93,10 @@ public class MainMapFeature extends Feature {
     public final Config<Boolean> centerWhenUnmapped = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> autoWaypointChests = new Config<>(true);
+    private final Config<Boolean> autoWaypointChests = new Config<>(true);
 
     @Persisted
-    public final Config<LootChestTier> minTierForAutoWaypoint = new Config<>(LootChestTier.TIER_3);
+    private final Config<LootChestTier> minTierForAutoWaypoint = new Config<>(LootChestTier.TIER_3);
 
     @Persisted
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
@@ -142,14 +143,17 @@ public class MainMapFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onLeftClick(PlayerAttackEvent event) {
+        if (!autoWaypointChests.get()) return;
+
+        handleEntity(event.getTarget());
+    }
+
+    @SubscribeEvent
     public void onRightClick(PlayerInteractEvent.InteractAt event) {
         if (!autoWaypointChests.get()) return;
 
-        Entity entity = event.getEntityHitResult().getEntity();
-        if (entity != null && entity.getType() == EntityType.SLIME) {
-            // We don't actually know if this is a chest, but it's a good enough guess.
-            lastChestPos = entity.blockPosition();
-        }
+        handleEntity(event.getEntityHitResult().getEntity());
     }
 
     @SubscribeEvent
@@ -202,5 +206,12 @@ public class MainMapFeature extends Feature {
     public void updateWaypoints() {
         WaypointsProvider.resetFeatures();
         customPois.get().forEach(WaypointsProvider::registerFeature);
+    }
+
+    private void handleEntity(Entity entity) {
+        if (entity != null && entity.getType() == EntityType.INTERACTION) {
+            // We don't actually know if this is a chest, but it's a good enough guess.
+            lastChestPos = entity.blockPosition();
+        }
     }
 }

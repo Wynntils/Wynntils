@@ -45,7 +45,7 @@ public final class WynntilsMod {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    private static final File MOD_STORAGE_ROOT = new File(McUtils.mc().gameDirectory, MOD_ID);
+    private static final File MOD_STORAGE_ROOT = new File(McUtils.getGameDirectory(), MOD_ID);
 
     private static ModLoader modLoader;
     private static String version = "";
@@ -177,6 +177,9 @@ public final class WynntilsMod {
     }
 
     public static void init(ModLoader loader, String modVersion, boolean isDevelopmentEnvironment, File modFile) {
+        // When running tests the init function can be called multiple times
+        if (modJar != null) return;
+
         modJar = modFile;
 
         // Note that at this point, no resources (including I18n) are available, so we postpone features until then
@@ -234,11 +237,7 @@ public final class WynntilsMod {
     }
 
     private static void parseVersion(String modVersion) {
-        if (modVersion.contains("SNAPSHOT")) {
-            developmentBuild = true;
-        } else {
-            developmentBuild = false;
-        }
+        developmentBuild = modVersion.contains("SNAPSHOT");
         version = "v" + modVersion;
     }
 

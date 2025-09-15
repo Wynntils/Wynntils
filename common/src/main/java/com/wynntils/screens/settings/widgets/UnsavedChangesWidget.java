@@ -32,16 +32,12 @@ public class UnsavedChangesWidget extends AbstractWidget {
                 Texture.SETTINGS_WARNING_BACKGROUND.height(),
                 Component.literal("Unsaved Changes Widget"));
 
-        yesButton = new Button.Builder(Component.literal("Yes"), (button -> {
-                    settingsScreen.handleSaveChoice(true);
-                }))
+        yesButton = new Button.Builder(Component.literal("Yes"), (button -> settingsScreen.handleSaveChoice(true)))
                 .pos(getX() + 10, getY() + 70)
                 .size(60, 20)
                 .build();
 
-        noButton = new Button.Builder(Component.literal("No"), (button -> {
-                    settingsScreen.handleSaveChoice(false);
-                }))
+        noButton = new Button.Builder(Component.literal("No"), (button -> settingsScreen.handleSaveChoice(false)))
                 .pos(getX() + getWidth() - 70, getY() + 70)
                 .size(60, 20)
                 .build();

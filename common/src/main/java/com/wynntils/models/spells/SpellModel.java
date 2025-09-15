@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
@@ -33,10 +34,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class SpellModel extends Model {
     private static final Pattern SPELL_CAST =
             Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\](?: §4\\[§c-([0-9]+) ❤§4\\])?$");
-    private static final int SPELL_COST_RESET_TICKS = 60;
+    public static final int SPELL_COST_RESET_TICKS = 60;
     private static final int SPELL_EXPIRE_TICKS = 40;
 
     private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
+
+    private boolean hideSpellInputs = false;
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
     private String lastBurstSpellName = "";
@@ -84,7 +87,14 @@ public final class SpellModel extends Model {
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        event.runIfPresent(SpellSegment.class, this::updateFromSpellSegment);
+        event.runIfPresentOrElse(SpellSegment.class, this::updateFromSpellSegment, this::handleExpiredSpell);
+    }
+
+    @SubscribeEvent
+    public void onActionBarRender(ActionBarRenderEvent event) {
+        if (hideSpellInputs) {
+            event.setSegmentEnabled(SpellSegment.class, false);
+        }
     }
 
     @SubscribeEvent
@@ -120,13 +130,6 @@ public final class SpellModel extends Model {
             lastBurstSpellName = "";
             repeatedBurstSpellCount = 0;
             ticksSinceCastBurst = 0;
-        }
-
-        if ((lastSpell.length != 0 && lastSpell.length != 3)
-                && McUtils.player().tickCount - lastSpellTick >= SPELL_EXPIRE_TICKS) {
-            lastSpell = SpellDirection.NO_SPELL;
-            lastSpellTick = 0;
-            WynntilsMod.postEvent(new SpellEvent.Expired());
         }
     }
 
@@ -165,6 +168,10 @@ public final class SpellModel extends Model {
 
         SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
         spellDirection.getSendPacketRunnable().run();
+    }
+
+    public void setHideSpellInputs(boolean hideSpellInputs) {
+        this.hideSpellInputs = hideSpellInputs;
     }
 
     public boolean isSpellQueueEmpty() {
@@ -210,6 +217,16 @@ public final class SpellModel extends Model {
         if (lastSpell.length == 3) {
             WynntilsMod.postEvent(new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
             lastSpellTick = 0;
+        }
+    }
+
+    private void handleExpiredSpell() {
+        if (lastSpell.length != 0) {
+            if (lastSpell.length != 3) {
+                lastSpell = SpellDirection.NO_SPELL;
+            }
+            lastSpellTick = 0;
+            WynntilsMod.postEvent(new SpellEvent.Expired());
         }
     }
 }

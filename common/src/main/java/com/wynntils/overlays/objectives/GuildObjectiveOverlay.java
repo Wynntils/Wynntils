@@ -31,10 +31,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     @Persisted
-    public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
+    private final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
     @Persisted(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-    public final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
     public GuildObjectiveOverlay() {
         super(
@@ -59,12 +59,30 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
+    protected boolean isVisible() {
+        return Models.Objectives.getGuildObjective() != null;
+    }
+
+    @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         WynnObjective guildObjective = Models.Objectives.getGuildObjective();
-
         if (guildObjective == null) return;
+        renderObjective(guiGraphics, bufferSource, guildObjective);
+    }
 
+    @Override
+    public void renderPreview(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        WynnObjective guildObjective = Models.Objectives.getGuildObjective();
+        if (guildObjective == null) {
+            guildObjective = WynnObjective.DEMO_GUILD;
+        }
+        renderObjective(guiGraphics, bufferSource, guildObjective);
+    }
+
+    private void renderObjective(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, WynnObjective guildObjective) {
         PoseStack poseStack = guiGraphics.pose();
 
         if (this.hideOnInactivity.get()) {

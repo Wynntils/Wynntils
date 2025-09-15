@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.discoveries;
@@ -43,7 +43,7 @@ public record DiscoveryInfo(
                 activityInfo.status() == ActivityStatus.COMPLETED);
     }
 
-    public static List<Component> generateLore(
+    private static List<Component> generateLore(
             String name, DiscoveryType type, String description, int minLevel, boolean discovered) {
         List<Component> lore = new ArrayList<>();
 

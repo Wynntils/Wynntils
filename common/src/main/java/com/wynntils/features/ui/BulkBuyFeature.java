@@ -50,13 +50,13 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.UI)
 public class BulkBuyFeature extends Feature {
     @Persisted
-    public final Config<Integer> bulkBuyAmount = new Config<>(4);
+    private final Config<Integer> bulkBuyAmount = new Config<>(4);
 
     @Persisted
-    public final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
+    private final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
 
     @Persisted
-    public final Config<Integer> animationDuration = new Config<>(125);
+    private final Config<Integer> animationDuration = new Config<>(125);
 
     private static final String SHOP_TITLE_SUFFIX = " Shop";
     // Test in BulkBuyFeature_PRICE_PATTERN
@@ -97,10 +97,8 @@ public class BulkBuyFeature extends Feature {
         if (bulkBoughtSlotNumber != -1) return;
 
         if (!(screen instanceof ContainerScreen containerScreen)) return;
-        if (!(containerScreen.getMenu() instanceof AbstractContainerMenu acm)
-                || acm.getItems().size() != 90) {
-            return;
-        }
+        if (!(containerScreen.getMenu() instanceof AbstractContainerMenu acm)) return;
+        if (acm.getItems().size() != 90) return;
 
         StyledText title = StyledText.fromComponent(acm.getSlot(4).getItem().getHoverName());
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;

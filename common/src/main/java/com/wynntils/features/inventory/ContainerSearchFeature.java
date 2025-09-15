@@ -62,7 +62,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -70,46 +69,46 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.INVENTORY)
 public class ContainerSearchFeature extends Feature {
     @Persisted
-    public final Config<Boolean> filterInBank = new Config<>(true);
+    private final Config<Boolean> filterInBank = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInBlockBank = new Config<>(true);
+    private final Config<Boolean> filterInBlockBank = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInBookshelf = new Config<>(true);
+    private final Config<Boolean> filterInBookshelf = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInMiscBucket = new Config<>(true);
+    private final Config<Boolean> filterInMiscBucket = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildBank = new Config<>(true);
+    private final Config<Boolean> filterInGuildBank = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildMemberList = new Config<>(true);
+    private final Config<Boolean> filterInGuildMemberList = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInCosmeticMenus = new Config<>(true);
+    private final Config<Boolean> filterInCosmeticMenus = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInContentBook = new Config<>(true);
+    private final Config<Boolean> filterInContentBook = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildTerritories = new Config<>(true);
+    private final Config<Boolean> filterInGuildTerritories = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInGuildBadges = new Config<>(true);
+    private final Config<Boolean> filterInGuildBadges = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInHousingJukebox = new Config<>(true);
+    private final Config<Boolean> filterInHousingJukebox = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInHousingList = new Config<>(true);
+    private final Config<Boolean> filterInHousingList = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> filterInJukebox = new Config<>(true);
+    private final Config<Boolean> filterInJukebox = new Config<>(true);
 
     @Persisted
-    public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
+    private final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     private final Map<Class<? extends SearchableContainerProperty>, Supplier<Boolean>> searchableContainerMap =
             Map.ofEntries(
@@ -399,7 +398,7 @@ public class ContainerSearchFeature extends Feature {
             String name = StyledText.fromComponent(itemStack.getHoverName())
                     .getStringWithoutFormatting()
                     .toLowerCase(Locale.ROOT);
-            boolean filtered = !search.isEmpty() && name.contains(search) && itemStack.getItem() != Items.AIR;
+            boolean filtered = !search.isEmpty() && name.contains(search) && !itemStack.isEmpty();
 
             wynnItemOpt.get().getData().store(WynnItemData.SEARCHED_KEY, filtered);
             if (filtered) {

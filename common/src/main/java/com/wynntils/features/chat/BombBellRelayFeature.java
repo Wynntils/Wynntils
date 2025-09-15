@@ -27,7 +27,7 @@ public class BombBellRelayFeature extends Feature {
             new KeyBind("Relay Bomb to Guild", GLFW.GLFW_KEY_UNKNOWN, true, () -> relayTo("g"));
 
     @Persisted
-    public final Config<Boolean> showTime = new Config<>(true);
+    private final Config<Boolean> showTime = new Config<>(true);
 
     private String getAndFormatLastBomb() {
         BombInfo lastBomb = Models.Bomb.getLastBomb();

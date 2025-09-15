@@ -43,11 +43,9 @@ public class DefenseDataTransformer extends DataTransformer<DefenseData> {
     }
 
     private ErrorOr<UnsignedByte[]> encodeDefenseData(DefenseData data) {
-        List<UnsignedByte> bytes = new ArrayList<>();
-
         // The first bytes are the health bytes, which are assembled into an integer.
         UnsignedByte[] unsignedBytes = UnsignedByteUtils.encodeVariableSizedInteger(data.health());
-        bytes.addAll(List.of(unsignedBytes));
+        List<UnsignedByte> bytes = new ArrayList<>(List.of(unsignedBytes));
 
         // The next byte is the number of defense stats present on the item.
         bytes.add(UnsignedByte.of((byte) data.defences().size()));

@@ -21,6 +21,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.AmplifierItem;
 import com.wynntils.models.items.items.game.AspectItem;
+import com.wynntils.models.items.items.game.CrafterBagItem;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
@@ -48,82 +49,88 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class ItemTextOverlayFeature extends Feature {
     @Persisted
-    public final Config<Boolean> amplifierTierEnabled = new Config<>(true);
+    private final Config<Boolean> amplifierTierEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> amplifierTierRomanNumerals = new Config<>(true);
+    private final Config<Boolean> amplifierTierRomanNumerals = new Config<>(true);
 
     @Persisted
-    public final Config<TextShadow> amplifierTierShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> amplifierTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<Boolean> aspectEnabled = new Config<>(true);
+    private final Config<Boolean> aspectEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> aspectTierRomanNumerals = new Config<>(true);
+    private final Config<Boolean> aspectTierRomanNumerals = new Config<>(true);
 
     @Persisted
-    public final Config<TextShadow> aspectShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> aspectShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<Boolean> dungeonKeyEnabled = new Config<>(true);
+    private final Config<Boolean> crafterBagEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<TextShadow> dungeonKeyShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> crafterBagShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<Boolean> emeraldPouchTierEnabled = new Config<>(true);
+    private final Config<Boolean> dungeonKeyEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(false);
+    private final Config<TextShadow> dungeonKeyShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<TextShadow> emeraldPouchTierShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<Boolean> emeraldPouchTierEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> gatheringToolTierEnabled = new Config<>(true);
+    private final Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> gatheringToolTierRomanNumerals = new Config<>(false);
+    private final Config<TextShadow> emeraldPouchTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<Boolean> gatheringToolTierEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> horseTierEnabled = new Config<>(true);
+    private final Config<Boolean> gatheringToolTierRomanNumerals = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> horseTierRomanNumerals = new Config<>(false);
+    private final Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<Boolean> horseTierEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
+    private final Config<Boolean> horseTierRomanNumerals = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
+    private final Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<Boolean> powderTierEnabled = new Config<>(true);
+    private final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> powderTierRomanNumerals = new Config<>(true);
+    private final Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<TextShadow> powderTierShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<Boolean> powderTierEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> skillIconEnabled = new Config<>(true);
+    private final Config<Boolean> powderTierRomanNumerals = new Config<>(true);
 
     @Persisted
-    public final Config<TextShadow> skillIconShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> powderTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    public final Config<Boolean> teleportScrollEnabled = new Config<>(true);
+    private final Config<Boolean> skillIconEnabled = new Config<>(true);
 
     @Persisted
-    public final Config<TextShadow> teleportScrollShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> skillIconShadow = new Config<>(TextShadow.OUTLINE);
+
+    @Persisted
+    private final Config<Boolean> teleportScrollEnabled = new Config<>(true);
+
+    @Persisted
+    private final Config<TextShadow> teleportScrollShadow = new Config<>(TextShadow.OUTLINE);
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Post e) {
@@ -171,6 +178,9 @@ public class ItemTextOverlayFeature extends Feature {
         }
         if (wynnItem instanceof AspectItem aspectItem) {
             return new AspectOverlay(aspectItem);
+        }
+        if (wynnItem instanceof CrafterBagItem crafterBagItem) {
+            return new CrafterBagOverlay(crafterBagItem);
         }
         if (wynnItem instanceof DungeonKeyItem dungeonKeyItem) {
             return new DungeonKeyOverlay(dungeonKeyItem);
@@ -271,6 +281,28 @@ public class ItemTextOverlayFeature extends Feature {
         @Override
         public boolean isTextOverlayEnabled() {
             return amplifierTierEnabled.get();
+        }
+    }
+
+    private final class CrafterBagOverlay implements TextOverlayInfo {
+        private final CrafterBagItem item;
+
+        private CrafterBagOverlay(CrafterBagItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(item.getRaidKind().getRaidColor())
+                    .withTextShadow(crafterBagShadow.get());
+
+            return new TextOverlay(new TextRenderTask(item.getRaidKind().getAbbreviation(), style), -1, 1, 0.75f);
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return crafterBagEnabled.get();
         }
     }
 

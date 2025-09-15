@@ -17,6 +17,7 @@ import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -30,6 +31,7 @@ public final class ActionBarHandler extends Handler {
             ResourceLocation.withDefaultNamespace("hud/gameplay/default/top_right");
 
     private static final FallBackSegmentMatcher FALLBACK_SEGMENT_MATCHER = new FallBackSegmentMatcher();
+    private static final Pattern PERCENT_PATTERN = Pattern.compile("%");
 
     private final List<ActionBarSegmentMatcher> segmentMatchers = new ArrayList<>();
 
@@ -127,12 +129,12 @@ public final class ActionBarHandler extends Handler {
         lastMatchedSegments = new ArrayList<>();
     }
 
-    public List<ActionBarSegment> parseActionBarSegments(StyledText actionBarText) {
+    private List<ActionBarSegment> parseActionBarSegments(StyledText actionBarText) {
         List<ActionBarSegment> matchedSegments = new ArrayList<>();
 
         for (ActionBarSegmentMatcher segmentMatcher : segmentMatchers) {
-            ActionBarSegment parsedSegment =
-                    segmentMatcher.parse(actionBarText.getString().replaceAll("%", ""));
+            ActionBarSegment parsedSegment = segmentMatcher.parse(
+                    PERCENT_PATTERN.matcher(actionBarText.getString()).replaceAll(""));
             if (parsedSegment == null) continue;
 
             matchedSegments.add(parsedSegment);

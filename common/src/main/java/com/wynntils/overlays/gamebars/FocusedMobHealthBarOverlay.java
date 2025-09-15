@@ -31,7 +31,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
     @Persisted
-    public final Config<Boolean> abbreviateHealth = new Config<>(true);
+    private final Config<Boolean> abbreviateHealth = new Config<>(true);
 
     private StyledText barText = StyledText.EMPTY;
 
@@ -49,7 +49,7 @@ public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    public BossBarProgress progress() {
+    protected BossBarProgress progress() {
         CappedValue health = Models.Combat.getFocusedMobHealthPercent();
         return new BossBarProgress(health, (float) health.getProgress());
     }
@@ -60,7 +60,7 @@ public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isVisible() {
         return Models.Combat.getFocusedMobHealth() > 0
                 && System.currentTimeMillis() - Models.Combat.getLastDamageDealtTimestamp() < 5000;
     }

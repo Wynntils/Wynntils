@@ -17,6 +17,7 @@ import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.DynamicOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.json.JsonTypeWrapper;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.PersistedOwner;
 import com.wynntils.core.persisted.PersistedValue;
@@ -24,7 +25,9 @@ import com.wynntils.core.persisted.upfixers.UpfixerType;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class ConfigManager extends Manager {
@@ -48,8 +52,7 @@ public final class ConfigManager extends Manager {
     public ConfigManager() {
         super(List.of());
 
-        userConfigFile = new File(
-                CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
+        userConfigFile = new File(CONFIG_DIR, UndashedUuid.toString(McUtils.getUserProfileUUID()) + FILE_SUFFIX);
     }
 
     public void init() {
@@ -97,6 +100,19 @@ public final class ConfigManager extends Manager {
         List<Config<?>> configs = getConfigOptions(configurable);
         configurable.addConfigOptions(configs);
         CONFIGS.addAll(configs);
+        for (Config<?> config : configs) {
+            Type type = Managers.Persisted.getMetadata(config).valueType();
+            if (type instanceof Class<?> clazz && clazz.isEnum()) continue;
+            if (type instanceof JsonTypeWrapper wrapper) continue;
+
+            Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) type));
+            try {
+                Constructor<?> c = wrapped.getConstructor(String.class);
+            } catch (NoSuchMethodException e) {
+                WynntilsMod.error("String-based constructor is missing in type for Config: " + type);
+                throw new RuntimeException("Internal error");
+            }
+        }
     }
 
     public void reloadConfiguration(boolean initOverlayGroups) {
@@ -118,7 +134,7 @@ public final class ConfigManager extends Manager {
     //       unused configs.
     //       This means we need to save - load - save, which we should not do. initOverlayGroups is the solution to
     //       this, for now.
-    public void loadConfigOptions(boolean resetIfNotFound, boolean initOverlayGroups) {
+    private void loadConfigOptions(boolean resetIfNotFound, boolean initOverlayGroups) {
         // We have to set up the overlay groups first, so that the overlays' configs can be loaded
         JsonObject overlayGroups = JsonUtils.getNullableJsonObject(configObject, OVERLAY_GROUPS_JSON_KEY);
 

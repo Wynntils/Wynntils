@@ -93,11 +93,7 @@ public final class ClientCommandManager extends Manager {
 
         // Register the command to the server dispatcher
         wynntilsCommand.registerWithCommands(
-                builder -> {
-                    addNode(event.getRoot(), builder.build());
-                },
-                context,
-                commandInstanceSet);
+                builder -> addNode(event.getRoot(), builder.build()), context, commandInstanceSet);
     }
 
     @SuppressWarnings("unchecked")

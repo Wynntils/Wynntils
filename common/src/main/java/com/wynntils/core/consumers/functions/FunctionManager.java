@@ -55,12 +55,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends Manager {
+    private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("&(?<!\\\\)(#[0-9A-Fa-f]{8})");
+    private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("&(?<!\\\\)([0-9a-fA-Fk-oK-OrR])");
+    private static final Pattern NBSP_PATTERN = Pattern.compile("\u00A0");
     private final List<Function<?>> functions = new ArrayList<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
 
@@ -193,7 +197,7 @@ public final class FunctionManager extends Manager {
                 instance.setMinimumFractionDigits(decimals);
                 instance.setMaximumFractionDigits(decimals);
 
-                return instance.format(number).replaceAll("\u00A0", " ");
+                return NBSP_PATTERN.matcher(instance.format(number)).replaceAll(" ");
             } else {
                 if (decimals == 0) {
                     return String.valueOf(number.intValue());
@@ -291,10 +295,10 @@ public final class FunctionManager extends Manager {
     private String parseColorCodes(String toProcess) {
         // Replace &<code> with §<code> if not escaped (e.g., &a → §a, but \&\a stays unchanged)
         // doEscapeFormat preprocesses the string and replaces \& with \&\ so that it doesn't get replaced
-        String processed = toProcess.replaceAll("&(?<!\\\\)([0-9a-fA-Fk-oK-OrR])", "§$1");
+        String processed = FORMATTING_CODE_PATTERN.matcher(toProcess).replaceAll("§$1");
 
         // Replace &#AARRGGBB with §#AARRGGBB for hex colors
-        processed = processed.replaceAll("&(?<!\\\\)(#[0-9A-Fa-f]{8})", "§$1");
+        processed = HEX_COLOR_PATTERN.matcher(processed).replaceAll("§$1");
 
         return processed;
     }
@@ -564,6 +568,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LastDryStreakFunction());
         registerFunction(new LootrunFunctions.LastMythicFunction());
         registerFunction(new LootrunFunctions.LootrunBeaconCountFunction());
+        registerFunction(new LootrunFunctions.LootrunBeaconVibrantFunction());
         registerFunction(new LootrunFunctions.LootrunChallengesFunction());
         registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconColorFunction());
         registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconVibrantFunction());
@@ -572,14 +577,14 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunOrangeBeaconCountFunction());
         registerFunction(new LootrunFunctions.LootrunNextOrangeExpireFunction());
         registerFunction(new LootrunFunctions.LootrunRainbowBeaconCountFunction());
+        registerFunction(new LootrunFunctions.LootrunRerollsFunction());
+        registerFunction(new LootrunFunctions.LootrunSacrificesFunction());
         registerFunction(new LootrunFunctions.LootrunStateFunction());
         registerFunction(new LootrunFunctions.LootrunTaskLocationFunction());
         registerFunction(new LootrunFunctions.LootrunTaskNameFunction());
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
         registerFunction(new LootrunFunctions.LootrunTimeFunction());
-        registerFunction(new LootrunFunctions.LootrunBeaconVibrantFunction());
-        registerFunction(new LootrunFunctions.LootrunSacrificesFunction());
-        registerFunction(new LootrunFunctions.LootrunRerollsFunction());
+        registerFunction(new LootrunFunctions.LootrunTrialFunction());
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.commands;
@@ -27,7 +27,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.COMMANDS)
 public class CommandAliasesFeature extends Feature {
     @Persisted
-    public final HiddenConfig<List<CommandAlias>> aliases = new HiddenConfig<>(new ArrayList<>(List.of(
+    private final HiddenConfig<List<CommandAlias>> aliases = new HiddenConfig<>(new ArrayList<>(List.of(
             new CommandAlias("guild attack", List.of("gu a", "guild a")),
             new CommandAlias("guild manage", List.of("gu m", "gu man", "guild m", "guild man")),
             new CommandAlias("guild territory", List.of("gu t", "gu terr", "guild t", "guild terr")),
@@ -38,9 +38,9 @@ public class CommandAliasesFeature extends Feature {
         String message = e.getCommand();
 
         for (CommandAlias commandAlias : aliases.get()) {
-            if (commandAlias.getAliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
+            if (commandAlias.aliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
                 e.setCanceled(true);
-                Handlers.Command.sendCommandImmediately(commandAlias.getOriginalCommand());
+                Handlers.Command.sendCommandImmediately(commandAlias.originalCommand());
                 break;
             }
         }
@@ -51,7 +51,7 @@ public class CommandAliasesFeature extends Feature {
         RootCommandNode<SharedSuggestionProvider> root = event.getRoot();
 
         for (CommandAlias commandAlias : aliases.get()) {
-            for (String alias : commandAlias.getAliases()) {
+            for (String alias : commandAlias.aliases()) {
                 String[] parts = alias.split(" ");
                 LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(parts[0]);
 
@@ -64,35 +64,5 @@ public class CommandAliasesFeature extends Feature {
         }
     }
 
-    private static final class CommandAlias {
-        private final String originalCommand;
-        private final List<String> aliases;
-
-        private CommandAlias(String originalCommand, List<String> aliases) {
-            this.originalCommand = originalCommand;
-            this.aliases = aliases;
-        }
-
-        private List<String> getAliases() {
-            return aliases;
-        }
-
-        private String getOriginalCommand() {
-            return originalCommand;
-        }
-
-        @Override
-        public boolean equals(Object other) {
-            if (this == other) return true;
-            if (other == null || getClass() != other.getClass()) return false;
-
-            CommandAlias that = (CommandAlias) other;
-            return originalCommand.equals(that.originalCommand) && aliases.equals(that.aliases);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(originalCommand, aliases);
-        }
-    }
+    private record CommandAlias(String originalCommand, List<String> aliases) {}
 }

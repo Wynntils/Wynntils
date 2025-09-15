@@ -58,6 +58,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private static final double ALIGNMENT_SNAP_HARDNESS = 6;
 
     private static final int BUTTON_WIDTH = 60;
+    private static final int BUTTON_SHORT_WIDTH = 20;
     private static final int BUTTON_HEIGHT = 20;
     private static final int MAX_CLICK_DISTANCE = 5;
     private static final int ANIMATION_LENGTH = 30;
@@ -813,7 +814,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                             setupButtons();
                         })
                 .pos(this.width / 2 - 10, yPos)
-                .size(BUTTON_HEIGHT, BUTTON_HEIGHT)
+                .size(BUTTON_SHORT_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(
                         buttonsAtBottom
                                 ? Component.translatable("screens.wynntils.overlayManagement.moveButtonsUpTooltip")

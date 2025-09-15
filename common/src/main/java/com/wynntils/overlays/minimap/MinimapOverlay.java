@@ -52,40 +52,40 @@ public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
 
     @Persisted
-    public final Config<Float> zoomLevel = new Config<>(MapRenderer.DEFAULT_ZOOM_LEVEL);
+    private final Config<Float> zoomLevel = new Config<>(MapRenderer.DEFAULT_ZOOM_LEVEL);
 
     @Persisted
-    public final Config<Float> poiScale = new Config<>(0.6f);
+    private final Config<Float> poiScale = new Config<>(0.6f);
 
     @Persisted
-    public final Config<Float> pointerScale = new Config<>(0.8f);
+    private final Config<Float> pointerScale = new Config<>(0.8f);
 
     @Persisted
-    public final Config<Boolean> followPlayerRotation = new Config<>(true);
+    private final Config<Boolean> followPlayerRotation = new Config<>(true);
 
     @Persisted
     public final Config<UnmappedOption> hideWhenUnmapped = new Config<>(UnmappedOption.MINIMAP_AND_COORDS);
 
     @Persisted
-    public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
+    private final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
     @Persisted
-    public final Config<MapMaskType> maskType = new Config<>(MapMaskType.RECTANGULAR);
+    private final Config<MapMaskType> maskType = new Config<>(MapMaskType.RECTANGULAR);
 
     @Persisted
-    public final Config<MapBorderType> borderType = new Config<>(MapBorderType.WYNN);
+    private final Config<MapBorderType> borderType = new Config<>(MapBorderType.WYNN);
 
     @Persisted
-    public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
+    private final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
     @Persisted
-    public final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
+    private final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
 
     @Persisted
-    public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
+    private final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
+    private final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
     @Persisted
     public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
@@ -101,7 +101,7 @@ public class MinimapOverlay extends Overlay {
                 new OverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
     }
 
-    public void setZoomLevel(float level) {
+    private void setZoomLevel(float level) {
         // Clamp zoom levels to allowed interval
         float clampedLevel = MathUtils.clamp(level, 1, MapRenderer.ZOOM_LEVELS);
 
@@ -120,8 +120,6 @@ public class MinimapOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        if (!Models.WorldState.onWorld() || Models.WorldState.inCharacterWardrobe()) return;
-
         PoseStack poseStack = guiGraphics.pose();
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);

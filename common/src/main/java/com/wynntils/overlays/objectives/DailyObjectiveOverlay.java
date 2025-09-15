@@ -32,10 +32,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
     @Persisted
-    public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
+    private final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
     @Persisted(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-    public final Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
 
     public DailyObjectiveOverlay() {
         super(
@@ -60,11 +60,14 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
+    protected boolean isVisible() {
+        return !Models.Objectives.getPersonalObjectives().isEmpty();
+    }
+
+    @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         List<WynnObjective> objectives = Models.Objectives.getPersonalObjectives();
-
-        if (objectives.isEmpty()) return;
 
         PoseStack poseStack = guiGraphics.pose();
 

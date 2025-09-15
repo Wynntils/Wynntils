@@ -369,8 +369,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             if (mouseX < 145 + offsetX || selectedOverlay == null) {
                 int newOffset = Math.max(0, Math.min(overlayScrollOffset + scrollAmount, getMaxOverlayScrollOffset()));
                 scrollOverlays(newOffset);
-            } else if (selectedOverlay != null
-                    && selectedOverlay.getVisibleConfigOptions().size() > CONFIGS_PER_PAGE) {
+            } else if (selectedOverlay.getVisibleConfigOptions().size() > CONFIGS_PER_PAGE) {
                 int newOffset = Math.max(0, Math.min(configScrollOffset + scrollAmount, getMaxConfigScrollOffset()));
                 scrollConfigs(newOffset);
             }

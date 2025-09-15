@@ -25,10 +25,10 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     private static final int DEFAULT_SPACING = 3;
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.growDirection")
-    protected final Config<GrowDirection> growDirection = new Config<>(GrowDirection.DOWN);
+    private final Config<GrowDirection> growDirection = new Config<>(GrowDirection.DOWN);
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.spacing")
-    protected final Config<Integer> spacing = new Config<>(DEFAULT_SPACING);
+    private final Config<Integer> spacing = new Config<>(DEFAULT_SPACING);
 
     private final List<T> children = new ArrayList<>();
     private final Map<T, OverlaySize> inherentSize = new HashMap<>();
@@ -121,7 +121,7 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     }
 
     // As this is an abstract class, this event was subscribed to manually in ctor
-    public void onResizeEvent(DisplayResizeEvent event) {
+    private void onResizeEvent(DisplayResizeEvent event) {
         updateAllChildren();
     }
 

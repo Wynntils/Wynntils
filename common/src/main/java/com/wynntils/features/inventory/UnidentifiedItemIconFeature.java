@@ -39,37 +39,36 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class UnidentifiedItemIconFeature extends Feature {
-    private static final Map<GearType, Pair<Integer, Integer>> TEXTURE_COORDS =
-            new EnumMap<GearType, Pair<Integer, Integer>>(Map.ofEntries(
-                    Map.entry(GearType.SPEAR, Pair.of(16 * 1, 16 * 1)),
-                    Map.entry(GearType.WAND, Pair.of(16 * 0, 16 * 1)),
-                    Map.entry(GearType.DAGGER, Pair.of(16 * 2, 16 * 1)),
-                    Map.entry(GearType.BOW, Pair.of(16 * 3, 16 * 1)),
-                    Map.entry(GearType.RELIK, Pair.of(16 * 0, 16 * 2)),
-                    Map.entry(GearType.RING, Pair.of(16 * 1, 16 * 2)),
-                    Map.entry(GearType.BRACELET, Pair.of(16 * 2, 16 * 2)),
-                    Map.entry(GearType.NECKLACE, Pair.of(16 * 3, 16 * 2)),
-                    Map.entry(GearType.HELMET, Pair.of(16 * 0, 16 * 0)),
-                    Map.entry(GearType.CHESTPLATE, Pair.of(16 * 1, 16 * 0)),
-                    Map.entry(GearType.LEGGINGS, Pair.of(16 * 2, 16 * 0)),
-                    Map.entry(GearType.BOOTS, Pair.of(16 * 3, 16 * 0)),
-                    Map.entry(GearType.MASTERY_TOME, Pair.of(16 * 0, 16 * 3)),
-                    Map.entry(GearType.CHARM, Pair.of(16 * 1, 16 * 3))));
+    private static final Map<GearType, Pair<Integer, Integer>> TEXTURE_COORDS = new EnumMap<>(Map.ofEntries(
+            Map.entry(GearType.SPEAR, Pair.of(16 * 1, 16 * 1)),
+            Map.entry(GearType.WAND, Pair.of(16 * 0, 16 * 1)),
+            Map.entry(GearType.DAGGER, Pair.of(16 * 2, 16 * 1)),
+            Map.entry(GearType.BOW, Pair.of(16 * 3, 16 * 1)),
+            Map.entry(GearType.RELIK, Pair.of(16 * 0, 16 * 2)),
+            Map.entry(GearType.RING, Pair.of(16 * 1, 16 * 2)),
+            Map.entry(GearType.BRACELET, Pair.of(16 * 2, 16 * 2)),
+            Map.entry(GearType.NECKLACE, Pair.of(16 * 3, 16 * 2)),
+            Map.entry(GearType.HELMET, Pair.of(16 * 0, 16 * 0)),
+            Map.entry(GearType.CHESTPLATE, Pair.of(16 * 1, 16 * 0)),
+            Map.entry(GearType.LEGGINGS, Pair.of(16 * 2, 16 * 0)),
+            Map.entry(GearType.BOOTS, Pair.of(16 * 3, 16 * 0)),
+            Map.entry(GearType.MASTERY_TOME, Pair.of(16 * 0, 16 * 3)),
+            Map.entry(GearType.CHARM, Pair.of(16 * 1, 16 * 3))));
 
     @Persisted
-    public final Config<UnidentifiedItemTextures> texture = new Config<>(UnidentifiedItemTextures.WYNN);
+    private final Config<UnidentifiedItemTextures> texture = new Config<>(UnidentifiedItemTextures.WYNN);
 
     @Persisted
-    public final Config<Boolean> markRevealedItems = new Config<>(true);
+    private final Config<Boolean> markRevealedItems = new Config<>(true);
 
     @Persisted
-    public final Config<UnidentifiedItemIconLocation> markRevealedItemsLocation =
+    private final Config<UnidentifiedItemIconLocation> markRevealedItemsLocation =
             new Config<>(UnidentifiedItemIconLocation.CENTER);
 
     private static final CustomColor DEFAULT_UNID_ICON_COLOR = CommonColors.WHITE.withAlpha(0.67f);
 
     @Persisted
-    public final Config<CustomColor> markRevealedItemsIconColor = new Config<>(DEFAULT_UNID_ICON_COLOR);
+    private final Config<CustomColor> markRevealedItemsIconColor = new Config<>(DEFAULT_UNID_ICON_COLOR);
 
     private static final StyledText QUESTION_MARK_TEXT = StyledText.fromComponent(Component.literal("?"));
 

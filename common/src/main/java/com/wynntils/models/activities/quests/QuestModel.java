@@ -66,7 +66,7 @@ public final class QuestModel extends Model {
         return sortQuestInfoList(sortOrder, getQuestsRaw());
     }
 
-    public List<QuestInfo> getMiniQuestsRaw() {
+    private List<QuestInfo> getMiniQuestsRaw() {
         return Collections.unmodifiableList(questStorage
                 .getOrDefault(Models.Character.getId(), QuestStorage.EMPTY)
                 .miniQuests());
