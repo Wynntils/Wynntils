@@ -54,4 +54,4 @@ jobs:
         run: ./gradlew buildDependents -x spotlessCheck -x test
 
       - name: Test with Gradle
-        run: ./gradlew test -x spotlessCheck
+        run: ./gradlew test -x spotlessCheck --full-stacktrace --info
