@@ -129,10 +129,6 @@ public final class LootChestModel extends Model {
             dryEmeraldPouchCount.touched();
         } else {
             lastChestPos = null;
-
-            if (Models.Container.getCurrentContainer() instanceof AccountBankContainer accountBankContainer) {
-                nextExpectedLootContainerId = accountBankContainer.getContainerId();
-            }
         }
     }
 
