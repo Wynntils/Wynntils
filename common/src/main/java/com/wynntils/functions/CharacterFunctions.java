@@ -289,11 +289,9 @@ public class CharacterFunctions {
         public CappedValue getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("index").getIntegerValue();
             List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
-            try {
-                return daily.get(index).getScore();
-            } catch (RuntimeException e) {
-                return CappedValue.EMPTY;
-            }
+            return !daily.isEmpty() && index >= 0 && daily.size() >= index
+                    ? daily.get(index).getScore()
+                    : CappedValue.EMPTY;
         }
 
         @Override
@@ -308,11 +306,9 @@ public class CharacterFunctions {
         public String getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("index").getIntegerValue();
             List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
-            try {
-                return daily.get(index).getGoal();
-            } catch (RuntimeException e) {
-                return "";
-            }
+            return !daily.isEmpty() && index >= 0 && daily.size() >= index
+                    ? daily.get(index).getGoal()
+                    : "";
         }
 
         @Override
