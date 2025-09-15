@@ -60,6 +60,8 @@ public final class UpdateService extends Service {
     }
 
     public CompletableFuture<ModUpdateInfo> getLatestBuild() {
+        if (WynntilsMod.isDevelopmentEnvironment()) return CompletableFuture.completedFuture(null);
+
         CompletableFuture<ModUpdateInfo> future = new CompletableFuture<>();
 
         String stream = getStream();
@@ -194,7 +196,6 @@ public final class UpdateService extends Service {
     }
 
     public boolean shouldPromptUpdate() {
-        if (WynntilsMod.isDevelopmentEnvironment()) return false;
         return !promptedUpdate
                 && modUpdateInfo != null
                 && !modUpdateInfo.version().equals(ignoredUpdate.get());
