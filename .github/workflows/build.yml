@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-       #   token: ${{ secrets.PRIVATE_TOKEN }}
+          token: ${{ secrets.PRIVATE_TOKEN }}
           ref: ${{ github.head_ref }}
           fetch-depth: 0
 
