@@ -20,6 +20,7 @@ public record ActivityInfo(
         Optional<ActivityDistance> distance,
         Optional<String> distanceInfo,
         Optional<ActivityDifficulty> difficulty,
+        Optional<WorldEventFastTravelStatus> worldEventFastTravelStatus,
         ActivityRequirements requirements,
         Map<ActivityRewardType, List<StyledText>> rewards,
         ActivityTrackingState trackingState) {}
