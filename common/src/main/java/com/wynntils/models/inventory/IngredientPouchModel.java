@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.inventory;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.ingredients.type.IngredientInfo;
@@ -32,7 +33,10 @@ public final class IngredientPouchModel extends Model {
         Optional<IngredientPouchItem> pouchItemOpt = Models.Item.asWynnItem(itemStack, IngredientPouchItem.class);
 
         // This should never happen
-        if (pouchItemOpt.isEmpty()) return 0;
+        if (pouchItemOpt.isEmpty()) {
+            WynntilsMod.warn("Could not find Ingredient Pouch");
+            return -1;
+        }
 
         IngredientPouchItem pouchItem = pouchItemOpt.get();
         return pouchItem.getIngredients().stream()
