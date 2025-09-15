@@ -349,7 +349,6 @@ public final class FunctionManager extends Manager {
 
     private void registerAllFunctions() {
         // Generic Functions
-
         registerFunction(new CappedFunctions.AtCapFunction());
         registerFunction(new CappedFunctions.CapFunction());
         registerFunction(new CappedFunctions.CappedFunction());
@@ -435,6 +434,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new TimeFunctions.TimestampFunction());
 
         // Regular Functions
+        registerFunction(new CharacterFunctions.AspectTierFunction());
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
         registerFunction(new CharacterFunctions.CappedAwakenedProgressFunction());
@@ -449,10 +449,12 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.CommanderActivatedFunction());
         registerFunction(new CharacterFunctions.CommanderDurationFunction());
+        registerFunction(new CharacterFunctions.EquippedAspectFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
         registerFunction(new CharacterFunctions.IdFunction());
+        registerFunction(new CharacterFunctions.IsAspectEquippedFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());

@@ -186,9 +186,6 @@ public final class WynntilsMod {
     }
 
     public static void init(ModLoader loader, String modVersion, boolean isDevelopmentEnvironment, File modFile) {
-        // When running tests the init function can be called multiple times
-        if (modJar != null) return;
-
         modJar = modFile;
 
         // Note that at this point, no resources (including I18n) are available, so we postpone features until then
