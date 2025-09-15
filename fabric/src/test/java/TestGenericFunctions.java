@@ -13,6 +13,7 @@ public class TestGenericFunctions {
     @BeforeAll
     public static void setup() {
         WynntilsMod.setupTestEnv();
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("UTC"));
     }
 
     private static void assertTemplateResult(String template, String expected) {
@@ -31,8 +32,8 @@ public class TestGenericFunctions {
     @Test
     public void testTimeFunctions() {
         assertTemplateResult("{now}", "now");
-        assertTemplateResult("{absolute_time(time(0))}", "1970-01-01 01:00");
-        assertTemplateResult("{absolute_time(offset(time(0);60))}", "1970-01-01 01:01");
+        assertTemplateResult("{absolute_time(time(0))}", "1970-01-01 00:00");
+        assertTemplateResult("{absolute_time(offset(time(0);60))}", "1970-01-01 00:01");
 
         // FIXME: why are longs returned as decimal numbers?
         assertTemplateResult("{timestamp(time(0))}", "0.00");
