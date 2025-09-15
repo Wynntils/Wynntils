@@ -5,16 +5,18 @@
 package com.wynntils.models.raid.raids;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.colors.CustomColor;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class TheCanyonColossusRaid extends RaidKind {
     private static final String RAID_NAME = "The Canyon Colossus";
     private static final String ABBREVIATION = "TCC";
+    private static final CustomColor RAID_COLOR = CustomColor.fromHexString("#00aaaaff");
     private static final StyledText ENTRY_TITLE = StyledText.fromString("§#5f968bffThe Canyon Colossus");
 
     public TheCanyonColossusRaid() {
-        super(RAID_NAME, ABBREVIATION, ENTRY_TITLE, buildRoomMap(), buildMajorIdMap());
+        super(RAID_NAME, ABBREVIATION, RAID_COLOR, ENTRY_TITLE, buildRoomMap(), buildMajorIdMap());
     }
 
     private static Map<Integer, Map<String, String>> buildRoomMap() {

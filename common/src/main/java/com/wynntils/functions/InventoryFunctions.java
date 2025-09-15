@@ -269,7 +269,7 @@ public class InventoryFunctions {
         public String getValue(FunctionArguments arguments) {
             ItemStack itemInHand = InventoryUtils.getItemInHand();
 
-            if (itemInHand == null) {
+            if (itemInHand.isEmpty()) {
                 return "NONE";
             }
 

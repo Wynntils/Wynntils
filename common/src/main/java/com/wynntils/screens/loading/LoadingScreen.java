@@ -34,7 +34,7 @@ public final class LoadingScreen extends WynntilsScreen {
     private int offsetY;
 
     private String message = "";
-    private String title = "";
+    private String stageTitle = "";
     private String subtitle = "";
 
     private LoadingScreen() {
@@ -59,8 +59,8 @@ public final class LoadingScreen extends WynntilsScreen {
         this.message = message;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setStageTitle(String stageTitle) {
+        this.stageTitle = stageTitle;
     }
 
     public void setSubtitle(String subtitle) {
@@ -135,7 +135,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(title),
+                        StyledText.fromString(stageTitle),
                         centerX,
                         120 + offsetY,
                         MOSS_GREEN,

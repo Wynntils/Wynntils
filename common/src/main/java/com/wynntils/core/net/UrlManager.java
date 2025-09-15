@@ -84,6 +84,7 @@ import java.util.function.Function;
  *         <code>wynntils.url.force.type</code> - Force the source to be used, regardless of the version.
  *         Possible values are <code>bundled</code>, <code>local</code>, <code>remote</code>.
  *     </li>
+ * </ul>
  *
  * <h3>URL override</h3>
  * <p>
@@ -288,90 +289,19 @@ public final class UrlManager extends Manager {
 
             // Then check if we have a local cache
             if (urlMapperForceType.get() == null || urlMapperForceType.get() == UrlMapperType.LOCAL_CACHE) {
-                if (urlMappersByType.containsKey(UrlMapperType.LOCAL_CACHE)) {
-                    UrlMapper localCacheList = urlMappersByType.get(UrlMapperType.LOCAL_CACHE);
-
-                    // Firstly, check for version differences between the lists
-                    if (localCacheList.version() >= currentVersion) {
-                        currentVersion = localCacheList.version();
-
-                        // We do have a local cache. Let's merge it in.
-                        // Two main rules are applied:
-                        // 1. If an URL is only present in the local cache, it is added to the list, without a hash.
-                        // 2. If an URL is present in both the local cache and the bundled list, remove the hash info,
-                        // to
-                        //    ensure that the most up-to-date data is downloaded, as we have no way of knowing which one
-                        // is
-                        //    correct.
-
-                        // Add all URLs from the local cache that are not in the current list
-                        localCacheList.urls.entrySet().stream()
-                                .filter(entry -> !currentUrls.containsKey(entry.getKey()))
-                                .forEach(entry -> currentUrls.put(entry.getKey(), entry.getValue()));
-
-                        // Remove the hashes from the URLs that are in both the local cache and the bundled list
-                        localCacheList.urls().forEach((key, value) -> {
-                            if (!currentUrls.containsKey(key)) return;
-
-                            UrlInfo urlInfo = currentUrls.get(key);
-
-                            // If the hashes are different, remove the hash
-                            if (!urlInfo.md5().equals(value.md5())) {
-                                currentUrls.put(key, value.withoutMd5());
-
-                                if (debugLogs.get()) {
-                                    WynntilsMod.info("Bundled and local hashes differ for " + key + ". Removing hash. ("
-                                            + urlInfo.md5().orElse("null") + " -> null)");
-                                }
-                            }
-                        });
-                    }
-                } else {
-                    WynntilsMod.warn(
-                            "No URL cache found. This is normal if you are running Wynntils for the first time. Otherwise, this likely indicates a problem.");
-                }
+                currentVersion = checkLocalCache(currentVersion, currentUrls);
             }
 
             // Once we are done with the local cache, try to use the remote list as much as we can
             if (urlMapperForceType.get() == null || urlMapperForceType.get() == UrlMapperType.REMOTE) {
-                if (urlMappersByType.containsKey(UrlMapperType.REMOTE)) {
-                    UrlMapper remoteList = urlMappersByType.get(UrlMapperType.REMOTE);
-
-                    // Firstly, check for version differences between the lists
-                    // It's very weird for the remote list to have a lower version than the local cache, but it's
-                    // possible
-                    if (remoteList.version() < currentVersion) {
-                        throw new IllegalStateException(
-                                "Remote URL list has a lower version than the local cache. This should not happen.");
-                    }
-
-                    currentVersion = remoteList.version();
-
-                    // Use the remote list's hashes for all URLs, if they are present
-                    remoteList.urls().forEach((key, value) -> {
-                        if (currentUrls.containsKey(key)) {
-                            UrlInfo oldInfo = currentUrls.put(key, value);
-
-                            if (debugLogs.get()
-                                    && oldInfo != null
-                                    && !oldInfo.md5().equals(value.md5())) {
-                                WynntilsMod.info("Remote hash differs for " + key + ". Using remote hash. ("
-                                        + oldInfo.md5() + " -> " + value.md5().orElse("null") + ")");
-                            }
-                        } else {
-                            currentUrls.put(key, value);
-                        }
-                    });
-                } else {
-                    WynntilsMod.warn("No remote URL list available. Falling back to local sources.");
-                }
+                currentVersion = checkRemoteList(currentVersion, currentUrls);
             }
 
             // Finally, set the new URL list
             urlMapper = new UrlMapper(currentVersion, currentUrls);
         }
 
-        if (urlMapper == null || urlMapper.urls().isEmpty()) {
+        if (urlMapper.urls().isEmpty()) {
             throw new IllegalStateException(
                     """
                                  URL list is empty after merging. This means all three of the URL sources failed to load.
@@ -387,6 +317,83 @@ public final class UrlManager extends Manager {
 
         // Also trigger a reload for all components, as they might depend on the URLs which they couldn't load before
         WynntilsMod.reloadAllComponentData();
+    }
+
+    private int checkLocalCache(int currentVersion, Map<UrlId, UrlInfo> currentUrls) {
+        if (urlMappersByType.containsKey(UrlMapperType.LOCAL_CACHE)) {
+            UrlMapper localCacheList = urlMappersByType.get(UrlMapperType.LOCAL_CACHE);
+
+            // Firstly, check for version differences between the lists
+            if (localCacheList.version() >= currentVersion) {
+                currentVersion = localCacheList.version();
+
+                // We do have a local cache. Let's merge it in.
+                // Two main rules are applied:
+                // 1. If an URL is only present in the local cache, it is added to the list, without a hash.
+                // 2. If an URL is present in both the local cache and the bundled list, remove the hash info,
+                //    to ensure that the most up-to-date data is downloaded, as we have no way of knowing which one
+                //    is correct.
+
+                // Add all URLs from the local cache that are not in the current list
+                localCacheList.urls.entrySet().stream()
+                        .filter(entry -> !currentUrls.containsKey(entry.getKey()))
+                        .forEach(entry -> currentUrls.put(entry.getKey(), entry.getValue()));
+
+                // Remove the hashes from the URLs that are in both the local cache and the bundled list
+                localCacheList.urls().forEach((key, value) -> {
+                    if (!currentUrls.containsKey(key)) return;
+
+                    UrlInfo urlInfo = currentUrls.get(key);
+
+                    // If the hashes are different, remove the hash
+                    if (!urlInfo.md5().equals(value.md5())) {
+                        currentUrls.put(key, value.withoutMd5());
+
+                        if (debugLogs.get()) {
+                            WynntilsMod.info("Bundled and local hashes differ for " + key + ". Removing hash. ("
+                                    + urlInfo.md5().orElse("null") + " -> null)");
+                        }
+                    }
+                });
+            }
+        } else {
+            WynntilsMod.warn(
+                    "No URL cache found. This is normal if you are running Wynntils for the first time. Otherwise, this likely indicates a problem.");
+        }
+        return currentVersion;
+    }
+
+    private int checkRemoteList(int currentVersion, Map<UrlId, UrlInfo> currentUrls) {
+        if (urlMappersByType.containsKey(UrlMapperType.REMOTE)) {
+            UrlMapper remoteList = urlMappersByType.get(UrlMapperType.REMOTE);
+
+            // Firstly, check for version differences between the lists
+            // It's very weird for the remote list to have a lower version than the local cache, but it's
+            // possible
+            if (remoteList.version() < currentVersion) {
+                throw new IllegalStateException(
+                        "Remote URL list has a lower version than the local cache. This should not happen.");
+            }
+
+            currentVersion = remoteList.version();
+
+            // Use the remote list's hashes for all URLs, if they are present
+            remoteList.urls().forEach((key, value) -> {
+                if (currentUrls.containsKey(key)) {
+                    UrlInfo oldInfo = currentUrls.put(key, value);
+
+                    if (debugLogs.get() && oldInfo != null && !oldInfo.md5().equals(value.md5())) {
+                        WynntilsMod.info("Remote hash differs for " + key + ". Using remote hash. (" + oldInfo.md5()
+                                + " -> " + value.md5().orElse("null") + ")");
+                    }
+                } else {
+                    currentUrls.put(key, value);
+                }
+            });
+        } else {
+            WynntilsMod.warn("No remote URL list available. Falling back to local sources.");
+        }
+        return currentVersion;
     }
 
     private InputStream getBundledInputStream() {

@@ -271,9 +271,9 @@ public class WynncraftButtonFeature extends Feature {
             this.serverIconLocation = FALLBACK;
         }
 
-        @SuppressWarnings("deprecation")
         private void loadResource(boolean allowStale) {
             // Try default
+            @SuppressWarnings("deprecation")
             ResourceLocation destination = ResourceLocation.withDefaultNamespace(
                     "servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
 
@@ -329,15 +329,16 @@ public class WynncraftButtonFeature extends Feature {
         // Modified from
         // net.minecraft.client.gui.screens.multiplayer.ServerSelectionList#uploadServerIcon
         private synchronized void loadServerIcon(ResourceLocation destination) {
-            ByteBuffer iconBytes = ByteBuffer.wrap(server.getIconBytes());
-            // failed to ping server or icon wasn't sent
+            byte[] iconBytes = server.getIconBytes();
             if (iconBytes == null) {
+                // failed to ping server or icon wasn't sent
                 WynntilsMod.warn("Unable to load icon");
                 serverIconLocation = FALLBACK;
                 return;
             }
+            ByteBuffer iconBytesBuffer = ByteBuffer.wrap(iconBytes);
 
-            try (NativeImage nativeImage = NativeImage.read(iconBytes)) {
+            try (NativeImage nativeImage = NativeImage.read(iconBytesBuffer)) {
                 Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
                 Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 

@@ -71,10 +71,7 @@ public class ItemRecordService extends Service {
     public void moveSelectedItems(List<Pair<String, String>> selectedItems, String category, boolean keepOriginal) {
         for (Pair<String, String> selectedItem : selectedItems) {
             SavedItem savedItem = Services.ItemRecord.getItem(selectedItem.b());
-
-            if (selectedItem != null) {
-                moveItemCategory(savedItem, category, selectedItem.a(), keepOriginal);
-            }
+            moveItemCategory(savedItem, category, selectedItem.a(), keepOriginal);
         }
     }
 

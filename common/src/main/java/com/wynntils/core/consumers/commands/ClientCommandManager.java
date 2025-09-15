@@ -10,7 +10,6 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.commands.BombBellCommand;
 import com.wynntils.commands.CompassCommand;
@@ -93,17 +92,12 @@ public final class ClientCommandManager extends Manager {
 
         // Register the command to the server dispatcher
         wynntilsCommand.registerWithCommands(
-                builder -> {
-                    addNode(event.getRoot(), builder.build());
-                },
-                context,
-                commandInstanceSet);
+                builder -> addNode(event.getRoot(), builder.build()), context, commandInstanceSet);
     }
 
-    @SuppressWarnings("unchecked")
     public void addNode(
             RootCommandNode<SharedSuggestionProvider> root, CommandNode<? extends SharedSuggestionProvider> node) {
-        root.addChild((LiteralCommandNode<SharedSuggestionProvider>) node);
+        root.addChild((CommandNode<SharedSuggestionProvider>) node);
     }
 
     public void addNodeToClientDispatcher(LiteralArgumentBuilder<CommandSourceStack> nodeBuilder) {

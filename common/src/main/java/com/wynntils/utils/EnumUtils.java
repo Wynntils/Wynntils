@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
@@ -17,9 +17,12 @@ import com.wynntils.core.persisted.config.NullableConfig;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.text.WordUtils;
 
 public final class EnumUtils {
+    private static final Pattern NUM_AFTER_ALPHA_PATTERN = Pattern.compile("([a-z])(\\d)");
+
     public static List<? extends Enum<?>> getEnumConstants(Class<?> clazz) {
         if (Enum.class.isAssignableFrom(clazz)) {
             Class<? extends Enum<?>> enumClazz = (Class<? extends Enum<?>>) clazz;
@@ -47,7 +50,8 @@ public final class EnumUtils {
         // replaceAll
         // We have to account for CHEST_T1, which works fine with CaseFormat, hence the [a-z] regex
         String enumName = CaseFormat.LOWER_CAMEL.to(
-                CaseFormat.UPPER_UNDERSCORE, jsonFormattedName.replaceAll("([a-z])(\\d)", "$1_$2"));
+                CaseFormat.UPPER_UNDERSCORE,
+                NUM_AFTER_ALPHA_PATTERN.matcher(jsonFormattedName).replaceAll("$1_$2"));
 
         try {
             return Enum.valueOf(enumClazz, enumName);

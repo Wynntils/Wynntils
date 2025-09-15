@@ -261,7 +261,7 @@ public class NpcDialogueFeature extends Feature {
             screenLines.addAll(confirmationlessDialogue.dialogueComponent());
         }
 
-        if (currentDialogue != null && !currentDialogue.isEmpty()) {
+        if (!currentDialogue.isEmpty()) {
             screenLines.add(Component.empty());
             screenLines.addAll(currentDialogue.currentDialogue().stream()
                     .map(StyledText::getComponent)

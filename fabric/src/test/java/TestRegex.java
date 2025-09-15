@@ -2,6 +2,7 @@
  * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
@@ -45,8 +46,6 @@ import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
-import net.minecraft.SharedConstants;
-import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -54,8 +53,7 @@ import org.junit.jupiter.api.Test;
 public class TestRegex {
     @BeforeAll
     public static void setup() {
-        SharedConstants.tryDetectVersion();
-        Bootstrap.bootStrap();
+        WynntilsMod.setupTestEnv();
     }
 
     public static final class PatternTester {
@@ -276,31 +274,27 @@ public class TestRegex {
     @Test
     public void FriendsModel_ONLINE_FRIENDS_HEADER() {
         PatternTester p = new PatternTester(FriendsModel.class, "ONLINE_FRIENDS_HEADER");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Online Friends:");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Online Friends:");
+        p.shouldMatch("§a\uE001 Online Friends:");
+        p.shouldMatch("§a\uE008\uE002 Online Friends:");
     }
 
     @Test
     public void FriendsModel_ONLINE_FRIEND() {
         PatternTester p = new PatternTester(FriendsModel.class, "ONLINE_FRIEND");
-        p.shouldMatch("§2 - §auserName914__§2 [Server: §aWC3§2]");
-        p.shouldMatch("§2 - §av8j§2 [Server: §aWC103§2]");
-        p.shouldMatch("§2 - §a__asdf__§2 [Server: §aWC91§2]");
+        p.shouldMatch("§a\uE001 §2 - §aShadowCat118§2 [Server: §aNA11§2]");
     }
 
     @Test
     public void FriendsModel_JOIN_PATTERN() {
         PatternTester p = new PatternTester(FriendsModel.class, "JOIN_PATTERN");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun§2 has logged into server §aWC1§2 as §aan Archer");
-        p.shouldMatch(
-                "§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun§2 has logged into server §aWC27§2 as §aa Mage");
+        p.shouldMatch("§aShadowCat118§2 has logged into server §aEU16§2 as §aa Shaman");
     }
 
     @Test
     public void FriendsModel_LEAVE_PATTERN() {
         PatternTester p = new PatternTester(FriendsModel.class, "LEAVE_PATTERN");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun left the game.");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun left the game.");
+        p.shouldMatch("§amag_icus left the game.");
+        p.shouldMatch("§aShadowCat118 left the game.");
     }
 
     @Test
@@ -377,6 +371,24 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildModel_MEMBER_LEFT() {
+        PatternTester p = new PatternTester(GuildModel.class, "MEMBER_LEFT");
+        p.shouldMatch("§b\uE006\uE002 ShadowCat118 has left the guild");
+    }
+
+    @Test
+    public void GuildModel_MEMBER_JOIN() {
+        PatternTester p = new PatternTester(GuildModel.class, "MEMBER_JOIN");
+        p.shouldMatch("§b\uE001 ShadowCat118 has joined the guild, say hello!");
+    }
+
+    @Test
+    public void GuildModel_MEMBER_KICKED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MEMBER_KICKED");
+        p.shouldMatch("§b\uE006\uE002 ShadowCat117 has kicked ShadowCat118 from the guild");
+    }
+
+    @Test
     public void GuildModel_MSG_LEFT_GUILD() {
         PatternTester p = new PatternTester(GuildModel.class, "MSG_LEFT_GUILD");
         p.shouldMatch("§3You have left §bExample Guild§3!");
@@ -391,8 +403,7 @@ public class TestRegex {
     @Test
     public void GuildModel_MSG_RANK_CHANGED() {
         PatternTester p = new PatternTester(GuildModel.class, "MSG_RANK_CHANGED");
-        p.shouldMatch("§3[INFO]§b v8j has set USERNAME's guild rank from Recruit to Chief");
-        p.shouldMatch("§3[INFO]§b v8j has set USERNAMES' guild rank from Recruiter to Chief");
+        p.shouldMatch("§b\uE006\uE002 ShadowCat117 has set ShadowCat118 guild rank from §3 Recruit§b to §3Strategist");
     }
 
     @Test
@@ -1073,8 +1084,8 @@ public class TestRegex {
     @Test
     public void PartyModel_PARTY_LIST_ALL() {
         PatternTester p = new PatternTester(PartyModel.class, "PARTY_LIST_ALL");
-        p.shouldMatch(
-                "§e󏿼󏿿󏿾 Party members: §bbolyai, §fMrRickroll, Talkair, Angel_Pup, wluma, LaMDaKiS, Tanoranko, GebutterteWurst, kristof345, §eand §fSpeedtart");
+        p.shouldMatch("§e\uE001 Party members: §bShadowCat118, and §fShadowCat117");
+        p.shouldMatch("§e\uE005\uE002 Party members: §be_z_x, §fSaunt, Dopeul, IM_NoOne,§e §f6bccy, and ShadowCat117");
     }
 
     @Test

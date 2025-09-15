@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
@@ -68,8 +68,7 @@ public class LogicFunctions {
     public static class AndFunction extends GenericFunction<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            List<Boolean> values =
-                    arguments.<Boolean>getArgument("values").asList().getValues();
+            List<Boolean> values = arguments.getArgument("values").getBooleanList();
 
             return values.stream().allMatch(Boolean::booleanValue);
         }
@@ -84,8 +83,7 @@ public class LogicFunctions {
     public static class OrFunction extends GenericFunction<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            List<Boolean> values =
-                    arguments.<Boolean>getArgument("values").asList().getValues();
+            List<Boolean> values = arguments.getArgument("values").getBooleanList();
 
             return values.stream().anyMatch(Boolean::booleanValue);
         }

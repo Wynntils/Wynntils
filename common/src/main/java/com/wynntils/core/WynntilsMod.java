@@ -4,6 +4,7 @@
  */
 package com.wynntils.core;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.components.CoreComponent;
@@ -22,6 +23,11 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.io.InputStream;
+import java.io.Reader;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,6 +36,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.SharedConstants;
+import net.minecraft.client.resources.language.ClientLanguage;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.server.Bootstrap;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.IEventBus;
@@ -45,7 +54,7 @@ public final class WynntilsMod {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    private static final File MOD_STORAGE_ROOT = new File(McUtils.mc().gameDirectory, MOD_ID);
+    private static final File MOD_STORAGE_ROOT = new File(McUtils.getGameDirectory(), MOD_ID);
 
     private static ModLoader modLoader;
     private static String version = "";
@@ -212,6 +221,39 @@ public final class WynntilsMod {
         addCrashCallbacks();
 
         WynntilsMod.postEvent(new WynntilsInitEvent.ModInitFinished());
+    }
+
+    public static void setupTestEnv() {
+        if (initCompleted) return;
+
+        SharedConstants.tryDetectVersion();
+        Bootstrap.bootStrap();
+
+        init(null, "SNAPSHOT", true, null);
+
+        loadI18n();
+
+        Managers.Function.init();
+        Managers.Config.init();
+        Managers.Storage.initFeatures();
+        Services.Statistics.init();
+
+        initCompleted = true;
+    }
+
+    private static void loadI18n() {
+        // Assume tests are run in the fabric directory
+        Path langFile = Path.of("../common/src/main/resources/assets/wynntils/lang/en_us.json");
+        Type type = new TypeToken<Map<String, String>>() {}.getType();
+        Map<String, String> langMap;
+
+        try (Reader reader = Files.newBufferedReader(langFile, StandardCharsets.UTF_8)) {
+            langMap = GSON.fromJson(reader, type);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load " + langFile, e);
+        }
+        ClientLanguage language = new ClientLanguage(langMap, false);
+        I18n.setLanguage(language);
     }
 
     private static void registerComponents(Class<?> registryClass, Class<? extends CoreComponent> componentClass) {

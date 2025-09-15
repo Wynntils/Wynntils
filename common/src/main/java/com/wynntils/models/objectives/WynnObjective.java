@@ -44,8 +44,6 @@ public final class WynnObjective {
     static WynnObjective parseObjectiveLine(StyledText objectiveLine, boolean isGuildObjective, boolean hasEventBonus) {
         String stripped = objectiveLine.getString(PartStyle.StyleType.NONE);
 
-        assert stripped != null;
-
         Matcher matcher = OBJECTIVE_PARSER_PATTERN.matcher(stripped);
         String goal = null;
         int score = 0;
