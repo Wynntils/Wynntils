@@ -88,7 +88,7 @@ public class ContentBookDumpFeature extends Feature {
 
         Location currentTracker = spawnLocationOpt.get();
 
-        if (lastTrackedLocation != currentTracker && currentTracker != null) {
+        if (lastTrackedLocation != currentTracker) {
             currentDump.remove(currentlyTracking);
 
             currentDump.add(new DumpableActivityInfo(

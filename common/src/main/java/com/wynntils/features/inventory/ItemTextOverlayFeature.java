@@ -21,6 +21,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.AmplifierItem;
 import com.wynntils.models.items.items.game.AspectItem;
+import com.wynntils.models.items.items.game.CrafterBagItem;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
@@ -64,6 +65,12 @@ public class ItemTextOverlayFeature extends Feature {
 
     @Persisted
     private final Config<TextShadow> aspectShadow = new Config<>(TextShadow.OUTLINE);
+
+    @Persisted
+    private final Config<Boolean> crafterBagEnabled = new Config<>(true);
+
+    @Persisted
+    private final Config<TextShadow> crafterBagShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
     private final Config<Boolean> dungeonKeyEnabled = new Config<>(true);
@@ -172,6 +179,9 @@ public class ItemTextOverlayFeature extends Feature {
         if (wynnItem instanceof AspectItem aspectItem) {
             return new AspectOverlay(aspectItem);
         }
+        if (wynnItem instanceof CrafterBagItem crafterBagItem) {
+            return new CrafterBagOverlay(crafterBagItem);
+        }
         if (wynnItem instanceof DungeonKeyItem dungeonKeyItem) {
             return new DungeonKeyOverlay(dungeonKeyItem);
         }
@@ -271,6 +281,28 @@ public class ItemTextOverlayFeature extends Feature {
         @Override
         public boolean isTextOverlayEnabled() {
             return amplifierTierEnabled.get();
+        }
+    }
+
+    private final class CrafterBagOverlay implements TextOverlayInfo {
+        private final CrafterBagItem item;
+
+        private CrafterBagOverlay(CrafterBagItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(item.getRaidKind().getRaidColor())
+                    .withTextShadow(crafterBagShadow.get());
+
+            return new TextOverlay(new TextRenderTask(item.getRaidKind().getAbbreviation(), style), -1, 1, 0.75f);
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return crafterBagEnabled.get();
         }
     }
 

@@ -226,13 +226,13 @@ public final class CharacterModel extends Model {
     private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem) {
         List<StyledText> lore = LoreUtils.getLore(characterInfoItem);
 
-        int level = 0;
+        int foundLevel = 0;
         String className = "";
 
         for (StyledText line : lore) {
             Matcher levelMatcher = line.getMatcher(INFO_MENU_LEVEL_PATTERN);
             if (levelMatcher.matches()) {
-                level = Integer.parseInt(levelMatcher.group(1));
+                foundLevel = Integer.parseInt(levelMatcher.group(1));
                 continue;
             }
 
@@ -242,9 +242,9 @@ public final class CharacterModel extends Model {
                 className = classMatcher.group(1);
             }
         }
-        ClassType classType = ClassType.fromName(className);
+        ClassType foundClassType = ClassType.fromName(className);
 
-        updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level);
+        updateCharacterInfo(foundClassType, foundClassType != null && ClassType.isReskinned(className), foundLevel);
     }
 
     private boolean parseCharacter(ItemStack itemStack) {

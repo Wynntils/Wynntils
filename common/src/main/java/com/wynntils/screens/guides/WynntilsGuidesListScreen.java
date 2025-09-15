@@ -104,7 +104,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         ArrayList<String> names = new ArrayList<>(Arrays.asList(clipboard.split(",")));
         names.removeFirst(); // Remove the "wynntilsFavorites," part
         names.forEach(name -> {
-            if (name.isBlank() || name.isEmpty()) return;
+            if (name.isBlank()) return;
             Services.Favorites.addFavorite(name);
         });
         McUtils.sendMessageToClient(

@@ -14,12 +14,14 @@ import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class MobTotemTimerOverlay extends TextOverlay {
     private static final String TEMPLATE =
             "{MOB_TOTEM_OWNER(%d)}'s Mob Totem [{MOB_TOTEM_DISTANCE(%d):0} m] ({MOB_TOTEM_TIME_LEFT(%d)})";
+    private static final Pattern DIGIT_PATTERN = Pattern.compile("%d");
 
     public MobTotemTimerOverlay() {
         super(
@@ -38,7 +40,7 @@ public class MobTotemTimerOverlay extends TextOverlay {
                         1,
                         Models.BonusTotem.getBonusTotemsByType(BonusTotemType.MOB)
                                 .size())
-                .mapToObj(i -> TEMPLATE.replaceAll("%d", String.valueOf(i)))
+                .mapToObj(i -> DIGIT_PATTERN.matcher(TEMPLATE).replaceAll(String.valueOf(i)))
                 .collect(Collectors.joining("\n"));
     }
 

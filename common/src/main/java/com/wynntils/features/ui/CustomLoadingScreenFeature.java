@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -75,7 +75,7 @@ public class CustomLoadingScreenFeature extends Feature {
     public void onTitleSetText(TitleSetTextEvent e) {
         if (loadingScreen == null) return;
 
-        loadingScreen.setTitle(e.getComponent().getString());
+        loadingScreen.setStageTitle(e.getComponent().getString());
     }
 
     @SubscribeEvent

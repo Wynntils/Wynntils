@@ -65,10 +65,10 @@ public final class RenderUtils {
                 y1 = y2;
                 y2 = tmp;
             }
-            bufferBuilder.addVertex(matrix, x1 - halfWidth, y1, z).setColor(color.r, color.g, color.b, color.a);
-            bufferBuilder.addVertex(matrix, x2 - halfWidth, y2, z).setColor(color.r, color.g, color.b, color.a);
-            bufferBuilder.addVertex(matrix, x1 + halfWidth, y1, z).setColor(color.r, color.g, color.b, color.a);
-            bufferBuilder.addVertex(matrix, x2 + halfWidth, y2, z).setColor(color.r, color.g, color.b, color.a);
+            bufferBuilder.addVertex(matrix, x1 - halfWidth, y1, z).setColor(color.r(), color.g(), color.b(), color.a());
+            bufferBuilder.addVertex(matrix, x2 - halfWidth, y2, z).setColor(color.r(), color.g(), color.b(), color.a());
+            bufferBuilder.addVertex(matrix, x1 + halfWidth, y1, z).setColor(color.r(), color.g(), color.b(), color.a());
+            bufferBuilder.addVertex(matrix, x2 + halfWidth, y2, z).setColor(color.r(), color.g(), color.b(), color.a());
         } else if (y1 == y2) {
             if (x2 < x1) {
                 float tmp = x1;
@@ -76,10 +76,10 @@ public final class RenderUtils {
                 x2 = tmp;
             }
 
-            bufferBuilder.addVertex(matrix, x1, y1 - halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            bufferBuilder.addVertex(matrix, x1, y1 + halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            bufferBuilder.addVertex(matrix, x2, y2 - halfWidth, z).setColor(color.r, color.g, color.b, color.a);
-            bufferBuilder.addVertex(matrix, x2, y2 + halfWidth, z).setColor(color.r, color.g, color.b, color.a);
+            bufferBuilder.addVertex(matrix, x1, y1 - halfWidth, z).setColor(color.r(), color.g(), color.b(), color.a());
+            bufferBuilder.addVertex(matrix, x1, y1 + halfWidth, z).setColor(color.r(), color.g(), color.b(), color.a());
+            bufferBuilder.addVertex(matrix, x2, y2 - halfWidth, z).setColor(color.r(), color.g(), color.b(), color.a());
+            bufferBuilder.addVertex(matrix, x2, y2 + halfWidth, z).setColor(color.r(), color.g(), color.b(), color.a());
         } else if ((x1 < x2 && y1 < y2) || (x2 < x1 && y2 < y1)) { // Top Left to Bottom Right line
             if (x2 < x1) {
                 float tmp = x1;
@@ -93,16 +93,16 @@ public final class RenderUtils {
 
             bufferBuilder
                     .addVertex(matrix, x1 + halfWidth, y1 - halfWidth, z)
-                    .setColor(color.r, color.g, color.b, color.a);
+                    .setColor(color.r(), color.g(), color.b(), color.a());
             bufferBuilder
                     .addVertex(matrix, x1 - halfWidth, y1 + halfWidth, z)
-                    .setColor(color.r, color.g, color.b, color.a);
+                    .setColor(color.r(), color.g(), color.b(), color.a());
             bufferBuilder
                     .addVertex(matrix, x2 + halfWidth, y2 - halfWidth, z)
-                    .setColor(color.r, color.g, color.b, color.a);
+                    .setColor(color.r(), color.g(), color.b(), color.a());
             bufferBuilder
                     .addVertex(matrix, x2 - halfWidth, y2 + halfWidth, z)
-                    .setColor(color.r, color.g, color.b, color.a);
+                    .setColor(color.r(), color.g(), color.b(), color.a());
         } else { // Top Right to Bottom Left Line
             if (x1 < x2) {
                 float tmp = x1;
@@ -116,16 +116,16 @@ public final class RenderUtils {
 
             bufferBuilder
                     .addVertex(matrix, x1 + halfWidth, y1 + halfWidth, z)
-                    .setColor(color.r, color.g, color.b, color.a);
+                    .setColor(color.r(), color.g(), color.b(), color.a());
             bufferBuilder
                     .addVertex(matrix, x1 - halfWidth, y1 - halfWidth, z)
-                    .setColor(color.r, color.g, color.b, color.a);
+                    .setColor(color.r(), color.g(), color.b(), color.a());
             bufferBuilder
                     .addVertex(matrix, x2 + halfWidth, y2 + halfWidth, z)
-                    .setColor(color.r, color.g, color.b, color.a);
+                    .setColor(color.r(), color.g(), color.b(), color.a());
             bufferBuilder
                     .addVertex(matrix, x2 - halfWidth, y2 - halfWidth, z)
-                    .setColor(color.r, color.g, color.b, color.a);
+                    .setColor(color.r(), color.g(), color.b(), color.a());
         }
 
         BufferUploader.drawWithShader(bufferBuilder.build());
@@ -237,10 +237,10 @@ public final class RenderUtils {
         RenderSystem.setShader(CoreShaders.POSITION_COLOR);
         BufferBuilder bufferBuilder =
                 Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        bufferBuilder.addVertex(matrix, x, y + height, z).setColor(color.r, color.g, color.b, color.a);
-        bufferBuilder.addVertex(matrix, x + width, y + height, z).setColor(color.r, color.g, color.b, color.a);
-        bufferBuilder.addVertex(matrix, x + width, y, z).setColor(color.r, color.g, color.b, color.a);
-        bufferBuilder.addVertex(matrix, x, y, z).setColor(color.r, color.g, color.b, color.a);
+        bufferBuilder.addVertex(matrix, x, y + height, z).setColor(color.r(), color.g(), color.b(), color.a());
+        bufferBuilder.addVertex(matrix, x + width, y + height, z).setColor(color.r(), color.g(), color.b(), color.a());
+        bufferBuilder.addVertex(matrix, x + width, y, z).setColor(color.r(), color.g(), color.b(), color.a());
+        bufferBuilder.addVertex(matrix, x, y, z).setColor(color.r(), color.g(), color.b(), color.a());
 
         BufferUploader.drawWithShader(bufferBuilder.build());
         RenderSystem.disableBlend();
@@ -404,19 +404,19 @@ public final class RenderUtils {
         bufferBuilder
                 .addVertex(matrix, x, y + height, z)
                 .setUv(uOffset * uScale, (vOffset + v) * vScale)
-                .setColor(color.r, color.g, color.b, color.a);
+                .setColor(color.r(), color.g(), color.b(), color.a());
         bufferBuilder
                 .addVertex(matrix, x + width, y + height, z)
                 .setUv((uOffset + u) * uScale, (vOffset + v) * vScale)
-                .setColor(color.r, color.g, color.b, color.a);
+                .setColor(color.r(), color.g(), color.b(), color.a());
         bufferBuilder
                 .addVertex(matrix, x + width, y, z)
                 .setUv((uOffset + u) * uScale, vOffset * vScale)
-                .setColor(color.r, color.g, color.b, color.a);
+                .setColor(color.r(), color.g(), color.b(), color.a());
         bufferBuilder
                 .addVertex(matrix, x, y, z)
                 .setUv(uOffset * uScale, vOffset * vScale)
-                .setColor(color.r, color.g, color.b, color.a);
+                .setColor(color.r(), color.g(), color.b(), color.a());
         BufferUploader.drawWithShader(bufferBuilder.build());
         RenderSystem.disableBlend();
     }
@@ -465,10 +465,10 @@ public final class RenderUtils {
 
             bufferBuilder
                     .addVertex(matrix, midX + sinAngle * outerRadius, midY - cosAngle * outerRadius, z)
-                    .setColor(color.r, color.g, color.b, color.a);
+                    .setColor(color.r(), color.g(), color.b(), color.a());
             bufferBuilder
                     .addVertex(matrix, midX + sinAngle * innerRadius, midY - cosAngle * innerRadius, z)
-                    .setColor(color.r, color.g, color.b, color.a);
+                    .setColor(color.r(), color.g(), color.b(), color.a());
         }
 
         BufferUploader.drawWithShader(bufferBuilder.build());
@@ -778,10 +778,10 @@ public final class RenderUtils {
         BufferBuilder bufferBuilder =
                 Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
-        bufferBuilder.addVertex(matrix, x2, y1, blitOffset).setColor(colorA.r, colorA.g, colorA.b, colorA.a);
-        bufferBuilder.addVertex(matrix, x1, y1, blitOffset).setColor(colorA.r, colorA.g, colorA.b, colorA.a);
-        bufferBuilder.addVertex(matrix, x1, y2, blitOffset).setColor(colorB.r, colorB.g, colorB.b, colorB.a);
-        bufferBuilder.addVertex(matrix, x2, y2, blitOffset).setColor(colorB.r, colorB.g, colorB.b, colorB.a);
+        bufferBuilder.addVertex(matrix, x2, y1, blitOffset).setColor(colorA.r(), colorA.g(), colorA.b(), colorA.a());
+        bufferBuilder.addVertex(matrix, x1, y1, blitOffset).setColor(colorA.r(), colorA.g(), colorA.b(), colorA.a());
+        bufferBuilder.addVertex(matrix, x1, y2, blitOffset).setColor(colorB.r(), colorB.g(), colorB.b(), colorB.a());
+        bufferBuilder.addVertex(matrix, x2, y2, blitOffset).setColor(colorB.r(), colorB.g(), colorB.b(), colorB.a());
 
         BufferUploader.drawWithShader(bufferBuilder.build());
 
@@ -808,10 +808,10 @@ public final class RenderUtils {
         BufferBuilder bufferBuilder =
                 Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
-        bufferBuilder.addVertex(matrix, x1, y1, blitOffset).setColor(colorA.r, colorA.g, colorA.b, colorA.a);
-        bufferBuilder.addVertex(matrix, x1, y2, blitOffset).setColor(colorA.r, colorA.g, colorA.b, colorA.a);
-        bufferBuilder.addVertex(matrix, x2, y2, blitOffset).setColor(colorB.r, colorB.g, colorB.b, colorB.a);
-        bufferBuilder.addVertex(matrix, x2, y1, blitOffset).setColor(colorB.r, colorB.g, colorB.b, colorB.a);
+        bufferBuilder.addVertex(matrix, x1, y1, blitOffset).setColor(colorA.r(), colorA.g(), colorA.b(), colorA.a());
+        bufferBuilder.addVertex(matrix, x1, y2, blitOffset).setColor(colorA.r(), colorA.g(), colorA.b(), colorA.a());
+        bufferBuilder.addVertex(matrix, x2, y2, blitOffset).setColor(colorB.r(), colorB.g(), colorB.b(), colorB.a());
+        bufferBuilder.addVertex(matrix, x2, y1, blitOffset).setColor(colorB.r(), colorB.g(), colorB.b(), colorB.a());
 
         BufferUploader.drawWithShader(bufferBuilder.build());
 
@@ -999,13 +999,15 @@ public final class RenderUtils {
             float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
 
             // bottom left
-            bufferBuilder.addVertex(matrix, leftX, y + height, z).setColor(color.r, color.g, color.b, color.a);
+            bufferBuilder.addVertex(matrix, leftX, y + height, z).setColor(color.r(), color.g(), color.b(), color.a());
             // bottom right
-            bufferBuilder.addVertex(matrix, centerX, y + height, z).setColor(color.r, color.g, color.b, color.a);
+            bufferBuilder
+                    .addVertex(matrix, centerX, y + height, z)
+                    .setColor(color.r(), color.g(), color.b(), color.a());
             // top right
-            bufferBuilder.addVertex(matrix, rightX, y, z).setColor(color.r, color.g, color.b, color.a);
+            bufferBuilder.addVertex(matrix, rightX, y, z).setColor(color.r(), color.g(), color.b(), color.a());
             // top left
-            bufferBuilder.addVertex(matrix, centerX, y, z).setColor(color.r, color.g, color.b, color.a);
+            bufferBuilder.addVertex(matrix, centerX, y, z).setColor(color.r(), color.g(), color.b(), color.a());
         }
 
         BufferUploader.drawWithShader(bufferBuilder.build());

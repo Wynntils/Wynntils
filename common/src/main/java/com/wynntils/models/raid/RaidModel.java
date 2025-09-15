@@ -20,7 +20,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.combat.type.DamageDealtEvent;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
-import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.models.items.items.game.EmeraldItem;
@@ -40,6 +40,7 @@ import com.wynntils.models.raid.type.RaidRoomInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -55,7 +56,6 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class RaidModel extends Model {
@@ -466,6 +466,13 @@ public final class RaidModel extends Model {
         return majorIds;
     }
 
+    public RaidKind getRaidFromColor(CustomColor color) {
+        return RAIDS.stream()
+                .filter(raid -> raid.getRaidColor().equals(color))
+                .findFirst()
+                .orElse(null);
+    }
+
     public String getCurrentRoomName() {
         if (currentRaid == null || inIntermissionRoom || inBuffRoom) return "";
 
@@ -659,14 +666,15 @@ public final class RaidModel extends Model {
     }
 
     private void processAspectItemFind(ItemStack itemStack, int slotId) {
-        if (itemStack.getItem() == Items.AIR) return;
+        if (itemStack.isEmpty()) return;
 
         Optional<AspectItem> aspectOptional = Models.Item.asWynnItem(itemStack, AspectItem.class);
         if (aspectOptional.isPresent()) {
             AspectItem aspectItem = aspectOptional.get();
             if (aspectItem.getGearTier() == GearTier.MYTHIC) {
                 foundMythicAspect = true;
-                WynntilsMod.postEvent(new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.RAID_REWARD_CHEST));
+                WynntilsMod.postEvent(
+                        new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.RAID_REWARD_CHEST));
             }
             return;
         }
@@ -677,7 +685,7 @@ public final class RaidModel extends Model {
     }
 
     private void processRewardItemFind(ItemStack itemStack, int slotId) {
-        if (itemStack.getItem() == Items.AIR) return;
+        if (itemStack.isEmpty()) return;
 
         foundNumRewardPulls += 1;
 
@@ -700,7 +708,8 @@ public final class RaidModel extends Model {
             TomeItem tomeItem = tomeItemOptional.get();
             if (tomeItem.getGearTier() == GearTier.MYTHIC) {
                 foundMythicTome = true;
-                WynntilsMod.postEvent(new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.RAID_REWARD_CHEST));
+                WynntilsMod.postEvent(
+                        new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.RAID_REWARD_CHEST));
             }
             return;
         }
