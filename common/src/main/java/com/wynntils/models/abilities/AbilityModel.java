@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.abilities;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
@@ -62,7 +61,6 @@ public final class AbilityModel extends Model {
         if (event.getRecipientType() != RecipientType.INFO || event.getRecipientType() != RecipientType.PARTY) return;
         StyledText message =
                 StyledTextUtils.unwrap(event.getStyledText().getNormalized().stripAlignment());
-        WynntilsMod.info(event.getRecipientType().name() + "  " + message.getString());
         if (message.matches(HUMMINGBUIRD_RETURN_PATTERN)) {
             hummingBirdsState = false;
         } else if (message.matches(HUMMINGBUIRD_SENT_PATTERN)) {
