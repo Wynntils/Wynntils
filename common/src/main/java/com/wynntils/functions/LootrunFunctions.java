@@ -11,7 +11,6 @@ import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.utils.EnumUtils;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Comparator;
@@ -312,7 +311,7 @@ public class LootrunFunctions {
     public static class ChestsOpenedThisSessionFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            int tier = MathUtils.clamp(arguments.getArgument("tier").getIntegerValue(), 1, 4);
+            int tier = arguments.getArgument("tier").getIntegerValue();
             boolean exact = arguments.getArgument("exact").getBooleanValue();
 
             return Models.LootChest.getLootChestOpenedThisSession(tier, exact);
