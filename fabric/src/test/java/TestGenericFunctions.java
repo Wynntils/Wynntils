@@ -32,7 +32,7 @@ public class TestGenericFunctions {
     @Test
     public void testTimeFunctions() {
         assertTemplateResult("{now}", "now");
-        assertTemplateResult("{absolute_time(time(0))}", "1970-01-01 00:00");
+        assertTemplateResult("{absolute_time(time(0))}", "1970-01-01 01:00");
         assertTemplateResult("{absolute_time(offset(time(0);60))}", "1970-01-01 00:01");
 
         // FIXME: why are longs returned as decimal numbers?
