@@ -7,7 +7,6 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.models.raid.raids.RaidKind;
 import com.wynntils.models.raid.type.RaidInfo;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
@@ -278,13 +277,10 @@ public class RaidFunctions {
             String raidName = arguments.getArgument("raidName").getStringValue();
             int sinceDays = arguments.getArgument("sinceDays").getIntegerValue();
             return Math.toIntExact(Models.Raid.historicRaids.get().stream()
-                    .filter(historicRaidInfo -> {
-                        RaidKind raid = historicRaidInfo.raidInfo().getRaidKind();
-                        return (raid.getRaidName().equalsIgnoreCase(raidName)
-                                        || raid.getAbbreviation().equalsIgnoreCase(raidName))
-                                && historicRaidInfo.endedTimestamp()
-                                        >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays);
-                    })
+                    .filter(historicRaidInfo -> (historicRaidInfo.name().equalsIgnoreCase(raidName)
+                                    || historicRaidInfo.abbreviation().equalsIgnoreCase(raidName))
+                            && historicRaidInfo.endedTimestamp()
+                                    >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays))
                     .count());
         }
 

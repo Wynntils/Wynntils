@@ -69,6 +69,10 @@ public class RaidInfo {
         return challenges.size();
     }
 
+    public Map<Integer, RaidRoomInfo> getChallenges() {
+        return challenges;
+    }
+
     private long getTimeInRooms() {
         return challenges.values().stream()
                 .mapToLong(RaidRoomInfo::getRoomTotalTime)

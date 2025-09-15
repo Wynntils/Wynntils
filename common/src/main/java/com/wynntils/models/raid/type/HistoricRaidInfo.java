@@ -4,4 +4,7 @@
  */
 package com.wynntils.models.raid.type;
 
-public record HistoricRaidInfo(RaidInfo raidInfo, long endedTimestamp) {}
+import java.util.Map;
+
+public record HistoricRaidInfo(
+        String name, String abbreviation, Map<Integer, RaidRoomInfo> challenges, long endedTimestamp) {}

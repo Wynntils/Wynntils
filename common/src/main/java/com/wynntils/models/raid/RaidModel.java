@@ -436,7 +436,13 @@ public final class RaidModel extends Model {
         if (currentRaid == null) return;
 
         WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid));
-        historicRaids.get().add(new HistoricRaidInfo(currentRaid, System.currentTimeMillis()));
+        historicRaids
+                .get()
+                .add(new HistoricRaidInfo(
+                        currentRaid.getRaidKind().getRaidName(),
+                        currentRaid.getRaidKind().getAbbreviation(),
+                        currentRaid.getChallenges(),
+                        System.currentTimeMillis()));
         historicRaids.touched();
 
         currentRaid = null;
@@ -629,7 +635,13 @@ public final class RaidModel extends Model {
         currentRaid.completeCurrentChallenge();
 
         WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid));
-        historicRaids.get().add(new HistoricRaidInfo(currentRaid, System.currentTimeMillis()));
+        historicRaids
+                .get()
+                .add(new HistoricRaidInfo(
+                        currentRaid.getRaidKind().getRaidName(),
+                        currentRaid.getRaidKind().getAbbreviation(),
+                        currentRaid.getChallenges(),
+                        System.currentTimeMillis()));
         historicRaids.touched();
 
         checkForNewPersonalBest();
