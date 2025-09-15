@@ -432,6 +432,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.ToRomanNumeralsFunction());
 
         // Regular Functions
+        registerFunction(new CharacterFunctions.AspectTierFunction());
         registerFunction(new ActivityFunctions.ActivityColorFunction());
         registerFunction(new ActivityFunctions.ActivityNameFunction());
         registerFunction(new ActivityFunctions.ActivityTaskFunction());
@@ -460,6 +461,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.CommanderActivatedFunction());
         registerFunction(new CharacterFunctions.CommanderDurationFunction());
+        registerFunction(new CharacterFunctions.EquippedAspectFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.HasNoGuiFunction());
@@ -468,6 +470,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.HealthPctFunction());
         registerFunction(new CharacterFunctions.HummingbirdsStateFunction());
         registerFunction(new CharacterFunctions.IdFunction());
+        registerFunction(new CharacterFunctions.IsAspectEquippedFunction());
         registerFunction(new CharacterFunctions.IsRidingHorseFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());

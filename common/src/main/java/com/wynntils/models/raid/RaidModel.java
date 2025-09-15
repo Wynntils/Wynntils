@@ -25,6 +25,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.models.raid.bossbar.ParasiteOvertakenBar;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
@@ -78,6 +79,10 @@ public final class RaidModel extends Model {
     private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
             "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff((§o)?(\\w+))§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
 
+    private static final ParasiteOvertakenBar PARASITE_OVERTAKEN_BAR = new ParasiteOvertakenBar();
+    private static final Pattern PARASITE_OVERTAKEN_PATTERN = Pattern.compile(
+            "§#d6401eff(?:\uE009\uE002|\uE001) §#fa7f63ff(?<player>.+?)§#d6401eff has been overtaken! Keep attacking §#ffc85fffThe Parasite§#d6401eff to save them!");
+
     @Persisted
     private final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
 
@@ -118,6 +123,7 @@ public final class RaidModel extends Model {
     private boolean completedCurrentChallenge = false;
     private boolean inBuffRoom = false;
     private boolean inIntermissionRoom = false;
+    private boolean parasiteOvertaken = false;
     private CappedValue challenges = CappedValue.EMPTY;
     private int timeLeft = 0;
     private RaidInfo currentRaid;
@@ -125,6 +131,7 @@ public final class RaidModel extends Model {
     public RaidModel() {
         super(List.of());
 
+        Handlers.BossBar.registerBar(PARASITE_OVERTAKEN_BAR);
         Handlers.Scoreboard.addPart(RAID_SCOREBOARD_PART);
 
         registerRaids();
@@ -141,6 +148,7 @@ public final class RaidModel extends Model {
             if (raidKind != null) {
                 currentRaid = new RaidInfo(raidKind);
                 completedCurrentChallenge = false;
+                parasiteOvertaken = false;
 
                 WynntilsMod.postEvent(new RaidStartedEvent(raidKind));
             }
@@ -168,8 +176,10 @@ public final class RaidModel extends Model {
             return;
         }
 
+        StyledText unwrapped = StyledTextUtils.unwrap(styledText).stripAlignment();
+
         if (inBuffRoom) {
-            Matcher matcher = event.getOriginalStyledText().stripAlignment().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
+            Matcher matcher = unwrapped.getMatcher(RAID_CHOOSE_BUFF_PATTERN);
             if (matcher.matches()) {
                 String playerName = matcher.group(4);
                 // if the player is nicknamed
@@ -186,6 +196,12 @@ public final class RaidModel extends Model {
                         .add(buff);
             }
 
+            return;
+        }
+
+        Matcher matcher = unwrapped.getMatcher(PARASITE_OVERTAKEN_PATTERN);
+        if (matcher.matches()) {
+            parasiteOvertaken = matcher.group("player").equals(McUtils.playerName());
             return;
         }
 
@@ -216,6 +232,7 @@ public final class RaidModel extends Model {
             timeLeft = 0;
             challenges = CappedValue.EMPTY;
             partyRaidBuffs.clear();
+            parasiteOvertaken = false;
 
             McUtils.sendMessageToClient(Component.literal(
                             "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
@@ -450,6 +467,15 @@ public final class RaidModel extends Model {
         timeLeft = 0;
         challenges = CappedValue.EMPTY;
         partyRaidBuffs.clear();
+        parasiteOvertaken = false;
+    }
+
+    public boolean isParasiteOvertaken() {
+        return parasiteOvertaken;
+    }
+
+    public void resetParasiteOvertaken() {
+        parasiteOvertaken = false;
     }
 
     public RaidInfo getCurrentRaid() {
@@ -658,6 +684,7 @@ public final class RaidModel extends Model {
         timeLeft = 0;
         challenges = CappedValue.EMPTY;
         partyRaidBuffs.clear();
+        parasiteOvertaken = false;
     }
 
     private void checkForNewPersonalBest() {
