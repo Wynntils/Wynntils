@@ -137,11 +137,7 @@ public final class InventoryModel extends Model {
                     if (materialItemOpt.isEmpty()) return false;
                     MaterialItem materialItem = materialItemOpt.get();
                     if (!itemStack.getCustomName().getString().startsWith(name)) return false;
-                    if (exact) {
-                        return materialItem.getQualityTier() == tier;
-                    } else {
-                        return materialItem.getQualityTier() >= tier;
-                    }
+                    return exact ? materialItem.getQualityTier() == tier : materialItem.getQualityTier() >= tier;
                 })
                 .mapToInt(itemStack -> itemStack.count)
                 .sum();
