@@ -47,7 +47,7 @@ public class RaidFunctions {
 
         @Override
         protected List<String> getAliases() {
-            return List.of("raid_time");
+            return List.of("raid_start");
         }
     }
 
