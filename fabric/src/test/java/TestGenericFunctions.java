@@ -5,6 +5,7 @@
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.type.Time;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,10 @@ public class TestGenericFunctions {
     @Test
     public void testTimeFunctions() {
         assertTemplateResult("{now}", "now");
+
+        // Test Time.NONE
+        assertTemplateResult("{absolute_time(time(-1))}", "");
+
         assertTemplateResult("{absolute_time(time(0))}", "1970-01-01 00:00");
         assertTemplateResult("{absolute_time(offset(time(0);60))}", "1970-01-01 00:01");
 
@@ -43,6 +48,8 @@ public class TestGenericFunctions {
 
         assertTemplateResult("{seconds_between(now;offset(now;5))}", "5.00");
         assertTemplateResult("{seconds_between(offset(now;60);now)}", "-60.00");
+
+        assertTemplateResult("{seconds_since(offset(now;-17))}", "17.00");
 
         long then = System.currentTimeMillis() - 10000;
         assertTemplateResult("{time(" + then + ")}", "10 seconds ago");

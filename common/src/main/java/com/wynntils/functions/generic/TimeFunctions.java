@@ -6,7 +6,6 @@ package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Time;
 import java.util.List;
 
@@ -40,8 +39,8 @@ public final class TimeFunctions {
     public static class AbsoluteTimeFunction extends GenericFunction<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return StringUtils.formatDateTime(
-                    arguments.getArgument("time").getTime().timestamp());
+            Time time = arguments.getArgument("time").getTime();
+            return time.toAbsoluteString();
         }
 
         @Override
@@ -54,11 +53,10 @@ public final class TimeFunctions {
     public static class SecondsBetweenFunction extends GenericFunction<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
-            long firstTimestamp = arguments.getArgument("first").getTime().timestamp();
-            long secondTimestamp = arguments.getArgument("second").getTime().timestamp();
+            Time firstTime = arguments.getArgument("first").getTime();
+            Time secondTime = arguments.getArgument("second").getTime();
 
-            long diffInMillis = secondTimestamp - firstTimestamp;
-            return diffInMillis / 1000;
+            return firstTime.getOffset(secondTime);
         }
 
         @Override
@@ -69,12 +67,27 @@ public final class TimeFunctions {
         }
     }
 
+    public static class SecondsSinceFunction extends GenericFunction<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            Time time = arguments.getArgument("time").getTime();
+
+            return time.getOffset(Time.now());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("time", Time.class, null)));
+        }
+    }
+
     public static class OffsetFunction extends GenericFunction<Time> {
         @Override
         public Time getValue(FunctionArguments arguments) {
-            long baseTime = arguments.getArgument("time").getTime().timestamp();
-            long offsetInSeconds = arguments.getArgument("offset").getLongValue() * 1000;
-            return Time.of(baseTime + offsetInSeconds);
+            Time baseTime = arguments.getArgument("time").getTime();
+            int offsetInSeconds = arguments.getArgument("offset").getIntegerValue();
+            return baseTime.offset(offsetInSeconds);
         }
 
         @Override

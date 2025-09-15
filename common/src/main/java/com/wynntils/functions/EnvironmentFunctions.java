@@ -33,7 +33,7 @@ public class EnvironmentFunctions {
     public static class NowFunction extends Function<Time> {
         @Override
         public Time getValue(FunctionArguments arguments) {
-            return Time.of(System.currentTimeMillis());
+            return Time.now();
         }
     }
 

@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.Time;
 import java.util.List;
 
 public class CombatFunctions {
@@ -188,6 +189,18 @@ public class CombatFunctions {
         }
     }
 
+    public static class LastDamageDealtFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            return Time.of(Models.Combat.getLastDamageDealtTimestamp());
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("last_dam");
+        }
+    }
+
     public static class TimeSinceLastDamageDealtFunction extends Function<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
@@ -197,6 +210,25 @@ public class CombatFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("last_dam_ms");
+        }
+    }
+
+    public static class LastKillFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            return Time.of(Models.Combat.getLastKillTimestamp(
+                    arguments.getArgument("includeShared").getBooleanValue()));
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("includeShared", Boolean.class, false)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("last_kill");
         }
     }
 
