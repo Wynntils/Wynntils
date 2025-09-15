@@ -439,7 +439,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new BombFunctions.BombTypeFunction());
         registerFunction(new BombFunctions.BombWorldFunction());
         registerFunction(new BombFunctions.BombStartTimeFunction());
-        registerFunction(new BombFunctions.BombLenghtFunction());
+        registerFunction(new BombFunctions.BombLengthFunction());
         registerFunction(new BombFunctions.BombRemainingTimeFunction());
         registerFunction(new BombFunctions.BombOwnerFunction());
 

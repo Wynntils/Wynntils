@@ -28,13 +28,12 @@ public class BombFunctions {
             boolean group = arguments.getArgument("group").getBooleanValue();
             BombSortOrder sortOrder =
                     BombSortOrder.fromString(arguments.getArgument("sortOrder").getStringValue());
-            try {
-                BombInfo bombInfo =
-                        Models.Bomb.getBombBellStream(group, sortOrder).toList().get(index);
-                return processInfo(bombInfo);
-            } catch (RuntimeException e) {
-                return invalidValue();
-            }
+            List<BombInfo> bombInfo =
+                    Models.Bomb.getBombBellStream(group, sortOrder).toList();
+
+            return (!bombInfo.isEmpty() && index >= 0 && index <= bombInfo.size())
+                    ? processInfo(bombInfo.get(index))
+                    : invalidValue();
         }
 
         @Override
@@ -95,7 +94,7 @@ public class BombFunctions {
         }
     }
 
-    public static class BombLenghtFunction extends BombFunctionBase<Float> {
+    public static class BombLengthFunction extends BombFunctionBase<Float> {
         @Override
         public Float processInfo(BombInfo info) {
             return info.length();
