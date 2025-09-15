@@ -69,15 +69,16 @@ public final class TimeFunctions {
     public static class OffsetFunction extends GenericFunction<Time> {
         @Override
         public Time getValue(FunctionArguments arguments) {
-            return Time.of(arguments.getArgument("time").getTime().timestamp()
-                    + arguments.getArgument("offset").getLongValue());
+            long baseTime = arguments.getArgument("time").getTime().timestamp();
+            long offsetInSeconds = arguments.getArgument("offset").getLongValue() * 1000;
+            return Time.of(baseTime + offsetInSeconds);
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("time", Time.class, null),
-                    new FunctionArguments.Argument<>("offset", Long.class, null)));
+                    new FunctionArguments.Argument<>("offset", Number.class, null)));
         }
     }
 }

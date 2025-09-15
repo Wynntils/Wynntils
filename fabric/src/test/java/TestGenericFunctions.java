@@ -32,12 +32,17 @@ public class TestGenericFunctions {
     public void testTimeFunctions() {
         assertTemplateResult("{now}", "now");
         assertTemplateResult("{absolute_time(time(0))}", "1970-01-01 01:00");
+        assertTemplateResult("{absolute_time(offset(time(0);60))}", "1970-01-01 01:01");
+
         // FIXME: why are longs returned as decimal numbers?
         assertTemplateResult("{timestamp(time(0))}", "0.00");
-        long now = System.currentTimeMillis();
-        long then = now - 10000;
+
+        assertTemplateResult("{offset(now;1)}", "in 1 second");
+        assertTemplateResult("{offset(now;-125)}", "2 minutes ago");
+
+        long then = System.currentTimeMillis() - 10000;
         assertTemplateResult("{time(" + then + ")}", "10 seconds ago");
-        long soon = now + 60000;
+        long soon = System.currentTimeMillis() + 60000;
         assertTemplateResult("{time(" + soon + ")}", "in 1 minute");
     }
 }
