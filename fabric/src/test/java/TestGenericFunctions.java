@@ -37,6 +37,7 @@ public class TestGenericFunctions {
         // FIXME: why are longs returned as decimal numbers?
         assertTemplateResult("{timestamp(time(0))}", "0.00");
 
+        // test
         assertTemplateResult("{offset(now;1)}", "in 1 second");
         assertTemplateResult("{offset(now;-125)}", "2 minutes ago");
 
