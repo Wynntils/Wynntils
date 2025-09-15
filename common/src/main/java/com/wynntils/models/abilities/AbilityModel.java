@@ -9,7 +9,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.bossbars.AwakenedBar;
 import com.wynntils.models.abilities.bossbars.BloodPoolBar;
 import com.wynntils.models.abilities.bossbars.CommanderBar;
@@ -58,7 +57,6 @@ public final class AbilityModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        if (event.getRecipientType() != RecipientType.INFO || event.getRecipientType() != RecipientType.PARTY) return;
         StyledText message =
                 StyledTextUtils.unwrap(event.getStyledText().getNormalized().stripAlignment());
         if (message.matches(HUMMINGBUIRD_RETURN_PATTERN)) {
