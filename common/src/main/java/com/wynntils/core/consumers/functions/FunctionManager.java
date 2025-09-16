@@ -514,12 +514,16 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
+        registerFunction(new EnvironmentFunctions.MinecraftVersionFunction());
         registerFunction(new EnvironmentFunctions.StopwatchHoursFunction());
         registerFunction(new EnvironmentFunctions.StopwatchMillisecondsFunction());
         registerFunction(new EnvironmentFunctions.StopwatchMinutesFunction());
         registerFunction(new EnvironmentFunctions.StopwatchRunningFunction());
         registerFunction(new EnvironmentFunctions.StopwatchSecondsFunction());
         registerFunction(new EnvironmentFunctions.StopwatchZero());
+        registerFunction(new EnvironmentFunctions.UnixTimeFunction());
+        registerFunction(new EnvironmentFunctions.WynncraftVersionFunction());
+        registerFunction(new EnvironmentFunctions.WynntilsVersionFunction());
 
         registerFunction(new GuildFunctions.CappedGuildLevelProgressFunction());
         registerFunction(new GuildFunctions.CappedGuildObjectivesProgressFunction());
@@ -529,11 +533,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new GuildFunctions.IsAlliedGuildFunction());
         registerFunction(new GuildFunctions.IsGuildMemberFunction());
         registerFunction(new GuildFunctions.ObjectiveStreakFunction());
-
-        registerFunction(new EnvironmentFunctions.MinecraftVersionFunction());
-        registerFunction(new EnvironmentFunctions.UnixTimeFunction());
-        registerFunction(new EnvironmentFunctions.WynncraftVersionFunction());
-        registerFunction(new EnvironmentFunctions.WynntilsVersionFunction());
 
         registerFunction(new HadesPartyFunctions.HadesPartyMemberHealthFunction());
         registerFunction(new HadesPartyFunctions.HadesPartyMemberLocationFunction());
