@@ -16,7 +16,6 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.event.ValuableFoundEvent;
@@ -132,10 +131,6 @@ public final class LootChestModel extends Model {
             dryEmeraldPouchCount.touched();
         } else {
             lastChestPos = null;
-
-            if (Models.Container.getCurrentContainer() instanceof AccountBankContainer accountBankContainer) {
-                nextExpectedLootContainerId = accountBankContainer.getContainerId();
-            }
         }
     }
 
