@@ -69,11 +69,6 @@ public final class JsonManager extends Manager {
 
         File tempFile = new File(jsonFile.getPath() + ".tmp");
 
-        if (tempFile.exists()) {
-            // Clear an old temp file if it exists
-            FileUtils.deleteFile(tempFile);
-        }
-
         // Write the temp file
         try (OutputStreamWriter fileWriter =
                 new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8)) {
