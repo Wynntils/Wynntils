@@ -126,15 +126,6 @@ public class WynntilsCommand extends Command {
         return 1;
     }
 
-    private int addDummyBombbells(CommandContext<CommandSourceStack> context) {
-        Models.Bomb.addDummyBombInfo();
-
-        context.getSource()
-                .sendSuccess(() -> Component.literal("Added dummy bombs").withStyle(ChatFormatting.GREEN), false);
-
-        return 1;
-    }
-
     private void showProfilingData(
             CommandContext<CommandSourceStack> context,
             Map<Class<?>, Integer> profilingTimes,
