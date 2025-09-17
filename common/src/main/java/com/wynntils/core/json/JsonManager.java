@@ -106,11 +106,9 @@ public final class JsonManager extends Manager {
             }
 
             FileUtils.moveFile(tempFile, jsonFile);
-        } finally {
-            // Remove the temp file
-            if (tempFile.exists()) {
-                FileUtils.deleteFile(tempFile);
-            }
+            FileUtils.deleteFile(tempFile);
+        } catch (Exception e) {
+            WynntilsMod.error("Failed to replace temp file " + jsonFile, e);
         }
     }
 
