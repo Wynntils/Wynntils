@@ -225,11 +225,6 @@ public class CombatFunctions {
             return new FunctionArguments.OptionalArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("includeShared", Boolean.class, false)));
         }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("last_kill");
-        }
     }
 
     public static class TimeSinceLastKillFunction extends Function<Long> {
