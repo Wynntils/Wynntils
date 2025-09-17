@@ -36,7 +36,7 @@ public class RaidFunctions {
             return Models.Raid.getCurrentRoomName();
         }
     }
-    // getRaidStartTime
+
     public static class CurrentRaidStartFunction extends Function<Time> {
         @Override
         public Time getValue(FunctionArguments arguments) {
