@@ -77,8 +77,7 @@ public class GuildFunctions {
     public static class IsGuildMemberFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Guild.getGuildMembers()
-                    .contains(arguments.getArgument("member").getStringValue());
+            return Models.Guild.isGuildMember(arguments.getArgument("member").getStringValue());
         }
 
         @Override

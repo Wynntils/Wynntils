@@ -5,6 +5,7 @@
 package com.wynntils.models.raid.type;
 
 import com.wynntils.models.raid.raids.RaidKind;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -70,7 +71,7 @@ public class RaidInfo {
     }
 
     public Map<Integer, RaidRoomInfo> getChallenges() {
-        return challenges;
+        return Collections.unmodifiableMap(challenges);
     }
 
     private long getTimeInRooms() {
