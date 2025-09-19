@@ -9,7 +9,9 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.raid.type.RaidInfo;
+import com.wynntils.models.raid.type.RaidRoomInfo;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.Time;
 import java.util.List;
 
 public class RaidFunctions {
@@ -33,6 +35,20 @@ public class RaidFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             return Models.Raid.getCurrentRoomName();
+        }
+    }
+
+    public static class CurrentRaidStartFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            RaidInfo currentRaid = Models.Raid.getCurrentRaid();
+            if (currentRaid == null) return Time.NONE;
+            return Time.of(currentRaid.getRaidStartTime());
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("raid_start");
         }
     }
 
@@ -61,6 +77,18 @@ public class RaidFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("raid_damage");
+        }
+    }
+
+    public static class CurrentRaidRoomStartFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            RaidInfo currentRaid = Models.Raid.getCurrentRaid();
+            if (currentRaid == null) return Time.NONE;
+            RaidRoomInfo currentRoom = currentRaid.getCurrentRoom();
+            if (currentRoom == null) return Time.NONE;
+
+            return Time.of(currentRoom.getRoomStartTime());
         }
     }
 
@@ -124,6 +152,26 @@ public class RaidFunctions {
             int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
 
             return Models.Raid.getRoomName(roomNum);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("roomNumber", Integer.class, null)));
+        }
+    }
+
+    public static class RaidRoomStartFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            RaidInfo currentRaid = Models.Raid.getCurrentRaid();
+            if (currentRaid == null) return Time.NONE;
+
+            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
+            RaidRoomInfo room = currentRaid.getRoomByNumber(roomNum);
+            if (room == null) return Time.NONE;
+
+            return Time.of(room.getRoomStartTime());
         }
 
         @Override
