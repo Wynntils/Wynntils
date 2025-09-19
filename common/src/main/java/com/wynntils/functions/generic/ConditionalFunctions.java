@@ -24,6 +24,16 @@ public class ConditionalFunctions {
         }
     }
 
+    public static class IfFunction extends IfFunctionBase<Object> {
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("condition", Boolean.class, null),
+                    new Argument<>("ifTrue", null),
+                    new Argument<>("ifFalse", null)));
+        }
+    }
+
     public static class IfStringFunction extends IfFunctionBase<String> {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
