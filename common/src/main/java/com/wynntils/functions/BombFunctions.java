@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombSortOrder;
@@ -17,9 +18,9 @@ public class BombFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("index", Integer.class, null),
-                    new FunctionArguments.Argument<>("group", Boolean.class, null),
-                    new FunctionArguments.Argument<>("sortOrder", String.class, null)));
+                    new Argument<>("index", Integer.class, null),
+                    new Argument<>("group", Boolean.class, null),
+                    new Argument<>("sortOrder", String.class, null)));
         }
 
         @Override

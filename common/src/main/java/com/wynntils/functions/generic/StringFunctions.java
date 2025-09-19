@@ -104,8 +104,7 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("timestamp", Number.class, null),
-                    new FunctionArguments.Argument<>("format", String.class, null)));
+                    new Argument<>("timestamp", Number.class, null), new Argument<>("format", String.class, null)));
         }
     }
 
@@ -363,7 +362,7 @@ public class StringFunctions {
         @Override
         protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("number", Integer.class, null)));
+                    List.of(new Argument<>("number", Integer.class, null)));
         }
     }
 }

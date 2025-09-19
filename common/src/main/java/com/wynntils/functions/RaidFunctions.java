@@ -316,7 +316,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("sinceDays", Integer.class, 7)));
+                    List.of(new Argument<>("sinceDays", Integer.class, 7)));
         }
     }
 
@@ -336,8 +336,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("raidName", String.class, null),
-                    new FunctionArguments.Argument<>("sinceDays", Integer.class, null)));
+                    new Argument<>("raidName", String.class, null), new Argument<>("sinceDays", Integer.class, null)));
         }
     }
 }

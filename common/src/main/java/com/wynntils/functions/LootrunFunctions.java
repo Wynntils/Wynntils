@@ -313,9 +313,8 @@ public class LootrunFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("tier", Integer.class, 1),
-                    new FunctionArguments.Argument<>("exact", Boolean.class, false)));
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("tier", Integer.class, 1), new Argument<>("exact", Boolean.class, false)));
         }
 
         @Override

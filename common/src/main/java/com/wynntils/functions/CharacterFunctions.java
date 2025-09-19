@@ -299,8 +299,7 @@ public class CharacterFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("index", Integer.class, 0)));
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("index", Integer.class, 0)));
         }
     }
 
@@ -316,8 +315,7 @@ public class CharacterFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("index", Integer.class, 0)));
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("index", Integer.class, 0)));
         }
     }
 

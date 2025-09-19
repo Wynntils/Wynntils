@@ -351,8 +351,7 @@ public class InventoryFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("name", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("name", String.class, null)));
         }
     }
 
@@ -366,8 +365,7 @@ public class InventoryFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("name", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("name", String.class, null)));
         }
     }
 
@@ -383,9 +381,9 @@ public class InventoryFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("name", String.class, null),
-                    new FunctionArguments.Argument<>("tier", Integer.class, null),
-                    new FunctionArguments.Argument<>("exact", Boolean.class, null)));
+                    new Argument<>("name", String.class, null),
+                    new Argument<>("tier", Integer.class, null),
+                    new Argument<>("exact", Boolean.class, null)));
         }
     }
 }

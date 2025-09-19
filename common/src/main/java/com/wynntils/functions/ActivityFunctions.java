@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.models.activities.type.ActivityType;
@@ -31,7 +32,7 @@ public class ActivityFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("formatted", Boolean.class, true)));
+                    List.of(new Argument<>("formatted", Boolean.class, true)));
         }
     }
 
