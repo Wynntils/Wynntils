@@ -177,7 +177,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomNumber", Integer.class, null)));
+                    List.of(new Argument<>("roomNumber", Integer.class, null)));
         }
     }
 

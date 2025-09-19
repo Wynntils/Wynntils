@@ -222,7 +222,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("includeShared", Boolean.class, false)));
+                    List.of(new Argument<>("includeShared", Boolean.class, false)));
         }
     }
 

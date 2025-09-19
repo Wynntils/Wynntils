@@ -5,6 +5,7 @@
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.type.Time;
 import java.util.List;
@@ -19,7 +20,7 @@ public final class TimeFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("time", Time.class, null)));
+                    List.of(new Argument<>("time", Time.class, null)));
         }
     }
 
@@ -32,7 +33,7 @@ public final class TimeFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("timestamp", Number.class, null)));
+                    List.of(new Argument<>("timestamp", Number.class, null)));
         }
     }
 
@@ -45,7 +46,7 @@ public final class TimeFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("time", Time.class, null)));
+                    List.of(new Argument<>("time", Time.class, null)));
         }
 
         @Override
@@ -64,7 +65,7 @@ public final class TimeFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("time", Time.class, null)));
+                    List.of(new Argument<>("time", Time.class, null)));
         }
     }
 
@@ -80,8 +81,8 @@ public final class TimeFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Time.class, null),
-                    new FunctionArguments.Argument<>("second", Time.class, null)));
+                    new Argument<>("first", Time.class, null),
+                    new Argument<>("second", Time.class, null)));
         }
     }
 
@@ -96,7 +97,7 @@ public final class TimeFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("time", Time.class, null)));
+                    List.of(new Argument<>("time", Time.class, null)));
         }
     }
 
@@ -111,8 +112,8 @@ public final class TimeFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("time", Time.class, null),
-                    new FunctionArguments.Argument<>("offset", Number.class, null)));
+                    new Argument<>("time", Time.class, null),
+                    new Argument<>("offset", Number.class, null)));
         }
 
         @Override
