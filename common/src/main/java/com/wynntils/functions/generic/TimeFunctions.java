@@ -100,7 +100,7 @@ public final class TimeFunctions {
         }
     }
 
-    public static class OffsetFunction extends GenericFunction<Time> {
+    public static class TimeOffsetFunction extends GenericFunction<Time> {
         @Override
         public Time getValue(FunctionArguments arguments) {
             Time baseTime = arguments.getArgument("time").getTime();
@@ -113,6 +113,11 @@ public final class TimeFunctions {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("time", Time.class, null),
                     new FunctionArguments.Argument<>("offset", Number.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("offset");
         }
     }
 }

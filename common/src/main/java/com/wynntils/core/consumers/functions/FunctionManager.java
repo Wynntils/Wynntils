@@ -427,7 +427,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.StringFunction());
 
         registerFunction(new TimeFunctions.AbsoluteTimeFunction());
-        registerFunction(new TimeFunctions.OffsetFunction());
+        registerFunction(new TimeFunctions.TimeOffsetFunction());
         registerFunction(new TimeFunctions.SecondsBetweenFunction());
         registerFunction(new TimeFunctions.SecondsSinceFunction());
         registerFunction(new TimeFunctions.TimeFunction());
