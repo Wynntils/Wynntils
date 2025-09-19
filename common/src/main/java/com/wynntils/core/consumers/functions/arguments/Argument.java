@@ -31,11 +31,6 @@ public class Argument<T> {
 
     private T value;
 
-    /* Create an Argument matching any type. */
-    public Argument(String name, T defaultValue) {
-        this(name, (Class<T>) Object.class, defaultValue, false);
-    }
-
     public Argument(String name, Class<T> type, T defaultValue) {
         this(name, type, defaultValue, true);
     }
