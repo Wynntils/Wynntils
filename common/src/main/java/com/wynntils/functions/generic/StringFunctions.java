@@ -7,6 +7,7 @@ package com.wynntils.functions.generic;
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.arguments.ListArgument;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.RangedValue;
@@ -111,8 +112,7 @@ public class StringFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument<>("values", String.class)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", String.class)));
         }
     }
 
