@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombSortOrder;
+import com.wynntils.utils.type.Time;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
@@ -83,15 +84,15 @@ public class BombFunctions {
         }
     }
 
-    public static class BombStartTimeFunction extends BombFunctionBase<Long> {
+    public static class BombStartTimeFunction extends BombFunctionBase<Time> {
         @Override
-        public Long processInfo(BombInfo info) {
-            return info.startTime();
+        public Time processInfo(BombInfo info) {
+            return Time.of(info.startTime());
         }
 
         @Override
-        public Long invalidValue() {
-            return -1L;
+        public Time invalidValue() {
+            return Time.of(-1);
         }
     }
 

@@ -13,7 +13,6 @@ import com.wynntils.models.worlds.type.WynncraftVersion;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -140,13 +139,6 @@ public class EnvironmentFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("memorypct", "mempct");
-        }
-    }
-
-    public static class UnixTimeFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            return Instant.now().getEpochSecond();
         }
     }
 

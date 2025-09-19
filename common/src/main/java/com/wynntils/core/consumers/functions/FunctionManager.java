@@ -534,7 +534,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.StopwatchRunningFunction());
         registerFunction(new EnvironmentFunctions.StopwatchSecondsFunction());
         registerFunction(new EnvironmentFunctions.StopwatchZero());
-        registerFunction(new EnvironmentFunctions.UnixTimeFunction());
         registerFunction(new EnvironmentFunctions.WynncraftVersionFunction());
         registerFunction(new EnvironmentFunctions.WynntilsVersionFunction());
 
