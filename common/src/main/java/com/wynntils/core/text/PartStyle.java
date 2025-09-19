@@ -467,6 +467,12 @@ public final class PartStyle {
         if (oldStyle.italic && !this.italic) return null;
         if (!oldStyle.italic && this.italic) add.append(ChatFormatting.ITALIC);
 
+        if (oldStyle.font != null && this.font == null) return null;
+        if (this.font != null) {
+            String fontCode = Models.WynnChar.getFontCodeFromFont(font);
+            add.append(STYLE_PREFIX).append("{f:").append(fontCode).append("}");
+        }
+
         if (includeEvents) {
             // If there is a click event in the old style, but not in the new one, we can't construct a difference.
             // Otherwise, if the old style and the new style has different events, add the new event.

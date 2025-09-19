@@ -71,6 +71,8 @@ public final class StyledTextPart {
         // {}
         boolean specialPrefix = false;
         StringBuilder specialString = new StringBuilder();
+        boolean wynncharPrefix = false;
+        StringBuilder wynncharString = new StringBuilder();
 
         String eventIndexString = "";
 
@@ -92,6 +94,10 @@ public final class StyledTextPart {
 
                 if (current == '{') {
                     specialPrefix = true;
+                    continue;
+                }
+                if (current == '(') {
+                    wynncharPrefix = true;
                     continue;
                 }
                 // It looks like we have a hex color code
@@ -129,11 +135,9 @@ public final class StyledTextPart {
                 // Color formatting resets the style
                 if (formatting.isColor()) {
                     currentStyle = Style.EMPTY.withColor(formatting);
-                    continue;
+                } else {
+                    currentStyle = currentStyle.applyFormat(formatting);
                 }
-
-                currentStyle = currentStyle.applyFormat(formatting);
-
                 continue;
             }
 
@@ -147,7 +151,27 @@ public final class StyledTextPart {
                     // But this is a placeholder for future features
                     specialPrefix = false;
                     String special = specialString.toString();
+                    specialString = new StringBuilder();
                     if (special.startsWith("f:")) {
+                        // FIXME: Duplication!
+                        // If we already had some text with the current style
+                        // Append it before modifying the style
+                        if (!currentString.isEmpty()) {
+                            if (style != Style.EMPTY) {
+                                // We might have lost an event, so we need to add it back
+                                currentStyle = currentStyle
+                                        .withClickEvent(style.getClickEvent())
+                                        .withHoverEvent(style.getHoverEvent());
+                            }
+                            // But if the style is empty, we might have parsed events from the string itself
+
+                            parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, parentStyle));
+
+                            // reset string
+                            // style is not reset, because we want to keep the formatting
+                            currentString = new StringBuilder();
+                        }
+
                         String fontCode = special.substring(2);
                         ResourceLocation font = Models.WynnChar.getFontFromFromFontCode(fontCode);
                         if (font != null) {
@@ -156,6 +180,24 @@ public final class StyledTextPart {
                     } else {
                         // Unknown special code, just ignore it for now
                     }
+                    continue;
+                }
+            }
+
+            if (wynncharPrefix) {
+                if (current != ')') {
+                    // Keep appending until we find the closing bracket
+                    wynncharString.append(current);
+                    continue;
+                } else {
+                    wynncharPrefix = false;
+                    String wynncharStr = wynncharString.toString();
+                    wynncharString = new StringBuilder();
+                    WynnCharModel.WynnCharMapper mapper = Models.WynnChar.getMapperFromFontName(currentStyle.getFont().toString());
+                    // Assume the string can have been created used a wrapping mappper, so always encode using a wrapper
+                    WynnCharModel.WynnCharMapper wrappedMapper = new WynnCharModel.WrappingMapper(mapper);
+                    String encoded = Models.WynnChar.encodeString(wynncharStr, wrappedMapper);
+                    currentString.append(encoded);
                     continue;
                 }
             }

@@ -120,29 +120,38 @@ public final class WynnCharModel extends Model {
 
     public String encodeWynnChars(String input, String fontName) {
         WynnCharMapper mapper = getMapperFromFontName(fontName);
+        return encodeWynnChars(input, mapper);
+    }
 
+    public String encodeWynnChars(String input, WynnCharMapper mapper) {
         StringBuffer sb = new StringBuffer(input.length());
         Matcher segmentMatcher = SEGMENT.matcher(input);
 
         while (segmentMatcher.find()) {
             String segment = segmentMatcher.group(1);
-            StringBuilder replacement = new StringBuilder(segment.length());
-            Matcher tokenMatcher = TOKEN.matcher(segment);
-
-            // Look for next {...} token, or a single character
-            while (tokenMatcher.find()) {
-                String token = tokenMatcher.group(1) != null ? tokenMatcher.group(1) : tokenMatcher.group(0);
-                Optional<Integer> codePointOpt = mapper.getCodePoint(token);
-                if (codePointOpt.isPresent()) {
-                    replacement.appendCodePoint(codePointOpt.get());
-                } else {
-                    // Unknown token, ignore it
-                }
-            }
-            segmentMatcher.appendReplacement(sb, Matcher.quoteReplacement(replacement.toString()));
+            String replacementString = encodeString(segment, mapper);
+            segmentMatcher.appendReplacement(sb, Matcher.quoteReplacement(replacementString));
         }
         segmentMatcher.appendTail(sb);
         return sb.toString();
+    }
+
+    public String encodeString(String decodedStr, WynnCharMapper mapper) {
+        StringBuilder replacement = new StringBuilder(decodedStr.length());
+        Matcher tokenMatcher = TOKEN.matcher(decodedStr);
+
+        // Look for next {...} token, or a single character
+        while (tokenMatcher.find()) {
+            String token = tokenMatcher.group(1) != null ? tokenMatcher.group(1) : tokenMatcher.group(0);
+            Optional<Integer> codePointOpt = mapper.getCodePoint(token);
+            if (codePointOpt.isPresent()) {
+                replacement.appendCodePoint(codePointOpt.get());
+            } else {
+                // Unknown token, ignore it
+            }
+        }
+        String replacementString = replacement.toString();
+        return replacementString;
     }
 
     public String getFontCodeFromFont(ResourceLocation font) {
