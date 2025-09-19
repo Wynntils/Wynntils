@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.raid.type.RaidInfo;
 import com.wynntils.models.raid.type.RaidRoomInfo;
@@ -156,7 +157,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomNumber", Integer.class, null)));
+                    List.of(new Argument<>("roomNumber", Integer.class, null)));
         }
     }
 
@@ -193,7 +194,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomNumber", Integer.class, null)));
+                    List.of(new Argument<>("roomNumber", Integer.class, null)));
         }
     }
 
@@ -210,7 +211,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomNumber", Integer.class, null)));
+                    List.of(new Argument<>("roomNumber", Integer.class, null)));
         }
     }
 
@@ -227,7 +228,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomNumber", Integer.class, null)));
+                    List.of(new Argument<>("roomNumber", Integer.class, null)));
         }
     }
 
@@ -244,7 +245,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("roomNumber", Integer.class, null)));
+                    List.of(new Argument<>("roomNumber", Integer.class, null)));
         }
     }
 
@@ -257,7 +258,7 @@ public class RaidFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("raidName", String.class, null)));
+                    List.of(new Argument<>("raidName", String.class, null)));
         }
 
         @Override

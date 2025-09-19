@@ -5,6 +5,7 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -62,7 +63,7 @@ public class MinecraftFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("keyCode", Integer.class, null)));
+                    List.of(new Argument<>("keyCode", Integer.class, null)));
         }
     }
 
@@ -97,7 +98,7 @@ public class MinecraftFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("effectName", String.class, null)));
+                    List.of(new Argument<>("effectName", String.class, null)));
         }
     }
 }

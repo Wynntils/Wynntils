@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.services.statistics.type.StatisticEntry;
 import com.wynntils.services.statistics.type.StatisticKind;
@@ -120,8 +121,7 @@ public final class StatisticFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("statisticKey", String.class, null),
-                    new FunctionArguments.Argument<>("value", Number.class, null)));
+                    new Argument<>("statisticKey", String.class, null), new Argument<>("value", Number.class, null)));
         }
     }
 
@@ -131,8 +131,8 @@ public final class StatisticFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("statisticKey", String.class, null),
-                    new FunctionArguments.Argument<>("overall", Boolean.class, null)));
+                    new Argument<>("statisticKey", String.class, null),
+                    new Argument<>("overall", Boolean.class, null)));
         }
 
         @Override

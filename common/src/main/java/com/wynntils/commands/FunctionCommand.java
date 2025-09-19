@@ -13,6 +13,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.text.StyledText;
 import java.util.Arrays;
@@ -296,8 +297,7 @@ public class FunctionCommand extends Command {
                 + (isArgumentOptional ? "Optional" : "Required")
                 + ")");
 
-        for (FunctionArguments.Argument<?> argument :
-                function.getArgumentsBuilder().getArguments()) {
+        for (Argument<?> argument : function.getArgumentsBuilder().getArguments()) {
             String type;
 
             if (isArgumentOptional) {

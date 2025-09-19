@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.List;
@@ -20,8 +21,7 @@ public class WynnFontFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("text", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("text", String.class, null)));
         }
     }
 
@@ -41,11 +41,11 @@ public class WynnFontFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("text", String.class, null),
-                    new FunctionArguments.Argument<>("textColor", CustomColor.class, null),
-                    new FunctionArguments.Argument<>("backgroundColor", CustomColor.class, null),
-                    new FunctionArguments.Argument<>("leftEdge", String.class, null),
-                    new FunctionArguments.Argument<>("rightEdge", String.class, null)));
+                    new Argument<>("text", String.class, null),
+                    new Argument<>("textColor", CustomColor.class, null),
+                    new Argument<>("backgroundColor", CustomColor.class, null),
+                    new Argument<>("leftEdge", String.class, null),
+                    new Argument<>("rightEdge", String.class, null)));
         }
     }
 }
