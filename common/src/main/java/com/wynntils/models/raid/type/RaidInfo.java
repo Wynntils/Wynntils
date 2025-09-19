@@ -48,12 +48,16 @@ public class RaidInfo {
         return challenges.get(roomNum);
     }
 
+    public long getRaidStartTime() {
+        return raidStartTime;
+    }
+
     public long getTimeInRaid() {
         return System.currentTimeMillis() - raidStartTime;
     }
 
     public long getIntermissionTime() {
-        return System.currentTimeMillis() - raidStartTime - getTimeInRooms();
+        return getTimeInRaid() - getTimeInRooms();
     }
 
     public long getRaidDamage() {

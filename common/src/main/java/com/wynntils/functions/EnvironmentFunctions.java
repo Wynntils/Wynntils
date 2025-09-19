@@ -12,6 +12,7 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.worlds.type.WynncraftVersion;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.Time;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +32,13 @@ public class EnvironmentFunctions {
         protected List<String> getAliases() {
             // FIXME: These aliases are a bit backwards, let's clean it up in the future
             return List.of("capped_memory");
+        }
+    }
+
+    public static class NowFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            return Time.now();
         }
     }
 

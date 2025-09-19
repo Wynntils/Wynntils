@@ -4,12 +4,7 @@
  */
 package com.wynntils.core.consumers.functions.arguments;
 
-import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
-import com.wynntils.utils.type.NamedValue;
-import com.wynntils.utils.type.RangedValue;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +18,7 @@ public final class FunctionArguments {
     private FunctionArguments(List<Argument<?>> arguments) {
         this.arguments = arguments;
 
-        this.lookupMap =
-                this.arguments.stream().collect(Collectors.toMap(argument -> argument.name, argument -> argument));
+        this.lookupMap = this.arguments.stream().collect(Collectors.toMap(Argument::getName, argument -> argument));
     }
 
     public Argument<?> getArgument(String name) {
@@ -123,175 +117,6 @@ public final class FunctionArguments {
 
         public List<Object> getDefaults() {
             return this.arguments.stream().map(Argument::getDefaultValue).collect(Collectors.toList());
-        }
-    }
-
-    public static class Argument<T> {
-        protected static final List<Class<?>> SUPPORTED_ARGUMENT_TYPES = List.of(
-                String.class,
-                Boolean.class,
-                Integer.class,
-                Long.class,
-                Double.class,
-                Number.class,
-                CustomColor.class,
-                CappedValue.class,
-                RangedValue.class,
-                NamedValue.class,
-                Location.class);
-
-        private final String name;
-        private final Class<T> type;
-        private final T defaultValue;
-
-        private T value;
-
-        public Argument(String name, Class<T> type, T defaultValue) {
-            this(name, type, defaultValue, true);
-        }
-
-        protected Argument(String name, Class<T> type, T defaultValue, boolean check) {
-            if (check) {
-                if (!SUPPORTED_ARGUMENT_TYPES.contains(type)) {
-                    throw new IllegalArgumentException("Unsupported argument type: " + type);
-                }
-            }
-
-            this.name = name;
-            this.type = type;
-            this.defaultValue = defaultValue;
-        }
-
-        @SuppressWarnings("unchecked")
-        protected void setValue(Object value) {
-            if (!type.isInstance(value)) {
-                throw new IllegalArgumentException("Value is not of type " + type.getSimpleName() + ".");
-            }
-
-            this.value = (T) value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Class<T> getType() {
-            return type;
-        }
-
-        public T getValue() {
-            return this.value == null ? this.defaultValue : this.value;
-        }
-
-        public T getDefaultValue() {
-            return this.defaultValue;
-        }
-
-        protected <U> U getValueChecked(Class<U> assumedType) {
-            if (!assumedType.equals(type)) {
-                throw new IllegalStateException(
-                        "Argument is a " + type.getSimpleName() + ", not a " + assumedType.getSimpleName() + ".");
-            }
-
-            return assumedType.cast(getValue());
-        }
-
-        public Boolean getBooleanValue() {
-            return getValueChecked(Boolean.class);
-        }
-
-        public Integer getIntegerValue() {
-            if (this.type == Number.class) {
-                return getValueChecked(Number.class).intValue();
-            }
-
-            return getValueChecked(Integer.class);
-        }
-
-        public Long getLongValue() {
-            if (this.type == Number.class) {
-                return getValueChecked(Number.class).longValue();
-            }
-
-            return getValueChecked(Long.class);
-        }
-
-        public Double getDoubleValue() {
-            if (this.type == Number.class) {
-                return getValueChecked(Number.class).doubleValue();
-            }
-
-            return getValueChecked(Double.class);
-        }
-
-        public CappedValue getCappedValue() {
-            return getValueChecked(CappedValue.class);
-        }
-
-        public CustomColor getColorValue() {
-            return getValueChecked(CustomColor.class);
-        }
-
-        public RangedValue getRangedValue() {
-            return getValueChecked(RangedValue.class);
-        }
-
-        public NamedValue getNamedValue() {
-            return getValueChecked(NamedValue.class);
-        }
-
-        public Location getLocation() {
-            return getValueChecked(Location.class);
-        }
-
-        public String getStringValue() {
-            return getValueChecked(String.class);
-        }
-
-        protected <U> List<U> getList(Class<U> assumedType) {
-            // To store a list, ListArgument must be used
-            throw new IllegalStateException("Argument is not a List.");
-        }
-
-        public List<Boolean> getBooleanList() {
-            return getList(Boolean.class);
-        }
-
-        public List<Number> getNumberList() {
-            return getList(Number.class);
-        }
-
-        public List<String> getStringList() {
-            return getList(String.class);
-        }
-    }
-
-    public static class ListArgument<T> extends Argument<List> {
-        private final Class<T> innerType;
-
-        public ListArgument(String name, Class<T> innerType) {
-            super(name, List.class, null, false);
-
-            if (!SUPPORTED_ARGUMENT_TYPES.contains(innerType)) {
-                throw new IllegalArgumentException("Unsupported inner argument type: " + innerType);
-            }
-
-            this.innerType = innerType;
-        }
-
-        public Class<T> getInnerType() {
-            return innerType;
-        }
-
-        @SuppressWarnings("unchecked")
-        public <U> List<U> getList(Class<U> assumedType) {
-            if (!assumedType.equals(this.innerType)) {
-                throw new IllegalStateException("List argument is not a " + assumedType.getSimpleName() + ".");
-            }
-
-            // Due to type erasure, we cannot check the type parameter of ListArgument
-            // We can just cast it and hope for the best
-            return (List<U>) getValueChecked(List.class);
         }
     }
 }

@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.objectives.WynnObjective;
@@ -80,8 +81,8 @@ public class CharacterFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("uppercase", Boolean.class, false),
-                    new FunctionArguments.Argument<>("showReskinnedName", Boolean.class, true)));
+                    new Argument<>("uppercase", Boolean.class, false),
+                    new Argument<>("showReskinnedName", Boolean.class, true)));
         }
     }
 
@@ -200,7 +201,7 @@ public class CharacterFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("orbNumber", Integer.class, null)));
+                    List.of(new Argument<>("orbNumber", Integer.class, null)));
         }
     }
 
@@ -335,8 +336,7 @@ public class CharacterFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("index", Integer.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
         }
     }
 
@@ -350,7 +350,7 @@ public class CharacterFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("aspectName", String.class, null)));
+                    List.of(new Argument<>("aspectName", String.class, null)));
         }
     }
 
@@ -364,7 +364,7 @@ public class CharacterFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("aspectName", String.class, null)));
+                    List.of(new Argument<>("aspectName", String.class, null)));
         }
     }
 }

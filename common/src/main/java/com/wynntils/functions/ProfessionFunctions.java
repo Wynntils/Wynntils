@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -27,7 +28,7 @@ public class ProfessionFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
+                    List.of(new Argument<>("profession", String.class, null)));
         }
 
         @Override
@@ -49,7 +50,7 @@ public class ProfessionFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
+                    List.of(new Argument<>("profession", String.class, null)));
         }
 
         @Override
@@ -71,7 +72,7 @@ public class ProfessionFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
+                    List.of(new Argument<>("profession", String.class, null)));
         }
 
         @Override
@@ -95,7 +96,7 @@ public class ProfessionFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
+                    List.of(new Argument<>("profession", String.class, null)));
         }
 
         @Override
@@ -120,7 +121,7 @@ public class ProfessionFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
+                    List.of(new Argument<>("profession", String.class, null)));
         }
 
         @Override

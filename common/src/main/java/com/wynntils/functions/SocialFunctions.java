@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.utils.mc.McUtils;
@@ -33,7 +34,7 @@ public class SocialFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("includeOffline", Boolean.class, true)));
+                    List.of(new Argument<>("includeOffline", Boolean.class, true)));
         }
     }
 

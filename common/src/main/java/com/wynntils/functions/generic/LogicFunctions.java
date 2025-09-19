@@ -5,7 +5,9 @@
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.arguments.ListArgument;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,9 +22,8 @@ public class LogicFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
         }
 
         @Override
@@ -41,9 +42,8 @@ public class LogicFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
         }
 
         @Override
@@ -60,8 +60,7 @@ public class LogicFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("value", Boolean.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Boolean.class, null)));
         }
     }
 
@@ -75,8 +74,7 @@ public class LogicFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument<>("values", Boolean.class)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Boolean.class)));
         }
     }
 
@@ -90,8 +88,7 @@ public class LogicFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument<>("values", Boolean.class)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Boolean.class)));
         }
     }
 
@@ -104,9 +101,8 @@ public class LogicFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
         }
 
         @Override
@@ -124,9 +120,8 @@ public class LogicFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
         }
 
         @Override
@@ -144,9 +139,8 @@ public class LogicFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
         }
 
         @Override
@@ -164,9 +158,8 @@ public class LogicFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
         }
 
         @Override

@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
@@ -19,7 +20,7 @@ public final class LocationFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("location", Location.class, null)));
+                    List.of(new Argument<>("location", Location.class, null)));
         }
     }
 
@@ -32,7 +33,7 @@ public final class LocationFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("location", Location.class, null)));
+                    List.of(new Argument<>("location", Location.class, null)));
         }
     }
 
@@ -45,7 +46,7 @@ public final class LocationFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("location", Location.class, null)));
+                    List.of(new Argument<>("location", Location.class, null)));
         }
     }
 
@@ -61,9 +62,9 @@ public final class LocationFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("x", Number.class, null),
-                    new FunctionArguments.Argument<>("y", Number.class, null),
-                    new FunctionArguments.Argument<>("z", Number.class, null)));
+                    new Argument<>("x", Number.class, null),
+                    new Argument<>("y", Number.class, null),
+                    new Argument<>("z", Number.class, null)));
         }
 
         @Override
@@ -83,8 +84,7 @@ public final class LocationFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Location.class, null),
-                    new FunctionArguments.Argument<>("second", Location.class, null)));
+                    new Argument<>("first", Location.class, null), new Argument<>("second", Location.class, null)));
         }
     }
 }
