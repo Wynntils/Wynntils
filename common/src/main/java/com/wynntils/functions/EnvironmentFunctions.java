@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.Time;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -26,6 +27,13 @@ public class EnvironmentFunctions {
         protected List<String> getAliases() {
             // FIXME: These aliases are a bit backwards, let's clean it up in the future
             return List.of("capped_memory");
+        }
+    }
+
+    public static class NowFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            return Time.now();
         }
     }
 

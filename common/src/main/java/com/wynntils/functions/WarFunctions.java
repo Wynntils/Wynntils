@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.war.type.WarBattleInfo;
 import com.wynntils.utils.type.RangedValue;
+import com.wynntils.utils.type.Time;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -145,6 +146,16 @@ public class WarFunctions {
         }
     }
 
+    public static class WarStartFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+            if (warBattleInfoOpt.isEmpty()) return Time.NONE;
+
+            return Time.of(warBattleInfoOpt.get().getInitialState().timestamp());
+        }
+    }
+
     public static class TimeInWarFunction extends Function<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
@@ -194,6 +205,17 @@ public class WarFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
                     List.of(new Argument<>("seconds", Long.class, Long.MAX_VALUE)));
+        }
+    }
+
+    public static class EstimatedWarEndFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+            if (warBattleInfoOpt.isEmpty()) return Time.NONE;
+
+            int timeRemaining = (int) warBattleInfoOpt.get().getEstimatedTimeRemaining();
+            return Time.now().offset(timeRemaining);
         }
     }
 

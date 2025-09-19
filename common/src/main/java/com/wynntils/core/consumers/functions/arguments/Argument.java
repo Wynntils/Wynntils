@@ -9,6 +9,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
 import com.wynntils.utils.type.RangedValue;
+import com.wynntils.utils.type.Time;
 import java.util.List;
 
 public class Argument<T> {
@@ -23,7 +24,8 @@ public class Argument<T> {
             CappedValue.class,
             RangedValue.class,
             NamedValue.class,
-            Location.class);
+            Location.class,
+            Time.class);
 
     private final String name;
     private final Class<T> type;
@@ -127,6 +129,10 @@ public class Argument<T> {
 
     public Location getLocation() {
         return getValueChecked(Location.class);
+    }
+
+    public Time getTime() {
+        return (Time) this.getValue();
     }
 
     public String getStringValue() {
