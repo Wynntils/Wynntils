@@ -6,6 +6,7 @@ package com.wynntils.core.consumers.functions;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.parser.ArgumentParser;
 import com.wynntils.core.consumers.functions.expressions.Expression;
@@ -339,8 +340,7 @@ public final class FunctionManager extends Manager {
                 : "Fix i18n name for " + function.getTranslatedName();
         assert !function.getDescription().startsWith("function.wynntils.")
                 : "Fix i18n description for " + function.getDescription();
-        for (FunctionArguments.Argument<?> argument :
-                function.getArgumentsBuilder().getArguments()) {
+        for (Argument<?> argument : function.getArgumentsBuilder().getArguments()) {
             assert !function.getArgumentDescription(argument.getName()).startsWith("function.wynntils.")
                     : "Fix i18n argument description for " + function.getArgumentDescription(argument.getName());
         }

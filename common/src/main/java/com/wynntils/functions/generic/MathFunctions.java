@@ -5,6 +5,7 @@
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import java.util.List;
 
@@ -33,9 +34,8 @@ public final class MathFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
         }
 
         @Override
@@ -74,8 +74,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("dividend", Number.class, null),
-                    new FunctionArguments.Argument<>("divisor", Number.class, null)));
+                    new Argument<>("dividend", Number.class, null), new Argument<>("divisor", Number.class, null)));
         }
 
         @Override
@@ -94,8 +93,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("dividend", Number.class, null),
-                    new FunctionArguments.Argument<>("divisor", Number.class, null)));
+                    new Argument<>("dividend", Number.class, null), new Argument<>("divisor", Number.class, null)));
         }
 
         @Override
@@ -115,8 +113,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("base", Number.class, null),
-                    new FunctionArguments.Argument<>("exponent", Number.class, null)));
+                    new Argument<>("base", Number.class, null), new Argument<>("exponent", Number.class, null)));
         }
 
         @Override
@@ -133,8 +130,7 @@ public final class MathFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
         }
 
         @Override
@@ -183,8 +179,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("value", Number.class, null),
-                    new FunctionArguments.Argument<>("decimals", Integer.class, null)));
+                    new Argument<>("value", Number.class, null), new Argument<>("decimals", Integer.class, null)));
         }
     }
 
@@ -196,8 +191,7 @@ public final class MathFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
         }
 
         @Override
@@ -214,8 +208,7 @@ public final class MathFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
         }
     }
 
@@ -229,9 +222,8 @@ public final class MathFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("min", Number.class, null),
-                    new FunctionArguments.Argument<>("max", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("min", Number.class, null), new Argument<>("max", Number.class, null)));
         }
 
         @Override

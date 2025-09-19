@@ -5,6 +5,7 @@
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.CappedValue;
@@ -27,9 +28,9 @@ public class ConditionalFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("condition", Boolean.class, null),
-                    new FunctionArguments.Argument<>("ifTrue", String.class, null),
-                    new FunctionArguments.Argument<>("ifFalse", String.class, null)));
+                    new Argument<>("condition", Boolean.class, null),
+                    new Argument<>("ifTrue", String.class, null),
+                    new Argument<>("ifFalse", String.class, null)));
         }
 
         @Override
@@ -42,9 +43,9 @@ public class ConditionalFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("condition", Boolean.class, null),
-                    new FunctionArguments.Argument<>("ifTrue", Number.class, null),
-                    new FunctionArguments.Argument<>("ifFalse", Number.class, null)));
+                    new Argument<>("condition", Boolean.class, null),
+                    new Argument<>("ifTrue", Number.class, null),
+                    new Argument<>("ifFalse", Number.class, null)));
         }
 
         @Override
@@ -57,9 +58,9 @@ public class ConditionalFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("condition", Boolean.class, null),
-                    new FunctionArguments.Argument<>("ifTrue", CappedValue.class, null),
-                    new FunctionArguments.Argument<>("ifFalse", CappedValue.class, null)));
+                    new Argument<>("condition", Boolean.class, null),
+                    new Argument<>("ifTrue", CappedValue.class, null),
+                    new Argument<>("ifFalse", CappedValue.class, null)));
         }
 
         @Override
@@ -72,9 +73,9 @@ public class ConditionalFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("condition", Boolean.class, null),
-                    new FunctionArguments.Argument<>("ifTrue", CustomColor.class, null),
-                    new FunctionArguments.Argument<>("ifFalse", CustomColor.class, null)));
+                    new Argument<>("condition", Boolean.class, null),
+                    new Argument<>("ifTrue", CustomColor.class, null),
+                    new Argument<>("ifFalse", CustomColor.class, null)));
         }
 
         @Override

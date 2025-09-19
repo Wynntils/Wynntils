@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -88,8 +89,7 @@ public class FunctionDumpFeature extends Feature {
 
         for (int i = 0; i < Managers.Function.getFunctions().size(); i++) {
             Function<?> function = Managers.Function.getFunctions().get(i);
-            for (FunctionArguments.Argument<?> argument :
-                    function.getArgumentsBuilder().getArguments()) {
+            for (Argument<?> argument : function.getArgumentsBuilder().getArguments()) {
                 String[] dataLine = {
                     String.valueOf(dataLines.size()),
                     argument.getName(),

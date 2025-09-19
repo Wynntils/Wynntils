@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
@@ -19,7 +20,7 @@ public final class CappedFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("capped", CappedValue.class, null)));
+                    List.of(new Argument<>("capped", CappedValue.class, null)));
         }
 
         @Override
@@ -37,7 +38,7 @@ public final class CappedFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("capped", CappedValue.class, null)));
+                    List.of(new Argument<>("capped", CappedValue.class, null)));
         }
     }
 
@@ -50,7 +51,7 @@ public final class CappedFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("capped", CappedValue.class, null)));
+                    List.of(new Argument<>("capped", CappedValue.class, null)));
         }
 
         @Override
@@ -68,7 +69,7 @@ public final class CappedFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("capped", CappedValue.class, null)));
+                    List.of(new Argument<>("capped", CappedValue.class, null)));
         }
 
         @Override
@@ -86,7 +87,7 @@ public final class CappedFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("capped", CappedValue.class, null)));
+                    List.of(new Argument<>("capped", CappedValue.class, null)));
         }
     }
 
@@ -100,9 +101,8 @@ public final class CappedFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("current", Number.class, null),
-                    new FunctionArguments.Argument<>("cap", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("current", Number.class, null), new Argument<>("cap", Number.class, null)));
         }
     }
 }
