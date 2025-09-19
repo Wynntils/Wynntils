@@ -431,6 +431,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new TimeFunctions.SecondsBetweenFunction());
         registerFunction(new TimeFunctions.SecondsSinceFunction());
         registerFunction(new TimeFunctions.TimeFunction());
+        registerFunction(new TimeFunctions.TimeStringFunction());
         registerFunction(new TimeFunctions.TimestampFunction());
 
         // Regular Functions

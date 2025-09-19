@@ -54,5 +54,7 @@ public class TestGenericFunctions {
         assertTemplateResult("{time(" + then + ")}", "10 seconds ago");
         long soon = System.currentTimeMillis() + 60000 + 500; // add a bit of a margin
         assertTemplateResult("{time(" + soon + ")}", "in 1 minute");
+
+        assertTemplateResult("{concat(time_str(now);time_str(now))}", "nownow");
     }
 }

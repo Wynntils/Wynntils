@@ -36,6 +36,24 @@ public final class TimeFunctions {
         }
     }
 
+    public static class TimeStringFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return arguments.getArgument("time").getTime().toString();
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("time", Time.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("time_str");
+        }
+    }
+
     public static class AbsoluteTimeFunction extends GenericFunction<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
