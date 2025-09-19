@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
@@ -32,8 +33,7 @@ public class CombatFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("seconds", Integer.class, 10)));
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("seconds", Integer.class, 10)));
         }
 
         @Override
@@ -51,8 +51,7 @@ public class CombatFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("seconds", Integer.class, 10)));
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("seconds", Integer.class, 10)));
         }
 
         @Override
@@ -83,7 +82,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("includeShared", Boolean.class, true)));
+                    List.of(new Argument<>("includeShared", Boolean.class, true)));
         }
 
         @Override
@@ -103,7 +102,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, false)));
+                    List.of(new Argument<>("burst", Boolean.class, false)));
         }
 
         @Override
@@ -123,7 +122,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, false)));
+                    List.of(new Argument<>("burst", Boolean.class, false)));
         }
 
         @Override
@@ -143,7 +142,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, false)));
+                    List.of(new Argument<>("burst", Boolean.class, false)));
         }
 
         @Override
@@ -211,7 +210,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("includeShared", Boolean.class, false)));
+                    List.of(new Argument<>("includeShared", Boolean.class, false)));
         }
 
         @Override

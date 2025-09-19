@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
@@ -42,7 +43,7 @@ public class InventoryFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("accessory", String.class, null)));
+                    List.of(new Argument<>("accessory", String.class, null)));
         }
     }
 
@@ -73,8 +74,7 @@ public class InventoryFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("armor", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("armor", String.class, null)));
         }
     }
 
@@ -115,7 +115,7 @@ public class InventoryFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("zeros", Boolean.class, false)));
+                    List.of(new Argument<>("zeros", Boolean.class, false)));
         }
 
         @Override
@@ -302,7 +302,7 @@ public class InventoryFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("formatted", Boolean.class, false)));
+                    List.of(new Argument<>("formatted", Boolean.class, false)));
         }
 
         @Override
@@ -332,8 +332,7 @@ public class InventoryFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("name", String.class, "")));
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("name", String.class, "")));
         }
 
         @Override

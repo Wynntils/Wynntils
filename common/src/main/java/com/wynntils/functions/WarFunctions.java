@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.war.type.WarBattleInfo;
 import com.wynntils.utils.type.RangedValue;
@@ -192,7 +193,7 @@ public class WarFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("seconds", Long.class, Long.MAX_VALUE)));
+                    List.of(new Argument<>("seconds", Long.class, Long.MAX_VALUE)));
         }
     }
 
@@ -224,7 +225,7 @@ public class WarFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("territoryName", String.class, null)));
+                    List.of(new Argument<>("territoryName", String.class, null)));
         }
     }
 
@@ -242,7 +243,7 @@ public class WarFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("sinceDays", Integer.class, 7)));
+                    List.of(new Argument<>("sinceDays", Integer.class, 7)));
         }
     }
 }

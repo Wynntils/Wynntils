@@ -6,6 +6,7 @@ package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -24,9 +25,9 @@ public final class ColorFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("r", Integer.class, null),
-                    new FunctionArguments.Argument<>("g", Integer.class, null),
-                    new FunctionArguments.Argument<>("b", Integer.class, null)));
+                    new Argument<>("r", Integer.class, null),
+                    new Argument<>("g", Integer.class, null),
+                    new Argument<>("b", Integer.class, null)));
         }
     }
 
@@ -42,9 +43,9 @@ public final class ColorFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("r", Number.class, null),
-                    new FunctionArguments.Argument<>("g", Number.class, null),
-                    new FunctionArguments.Argument<>("b", Number.class, null)));
+                    new Argument<>("r", Number.class, null),
+                    new Argument<>("g", Number.class, null),
+                    new Argument<>("b", Number.class, null)));
         }
     }
 
@@ -56,8 +57,7 @@ public final class ColorFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("hex", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("hex", String.class, null)));
         }
     }
 
@@ -72,8 +72,7 @@ public final class ColorFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("color", CustomColor.class, null),
-                    new FunctionArguments.Argument<>("degree", Number.class, null)));
+                    new Argument<>("color", CustomColor.class, null), new Argument<>("degree", Number.class, null)));
         }
     }
 
@@ -88,8 +87,7 @@ public final class ColorFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("color", CustomColor.class, null),
-                    new FunctionArguments.Argument<>("degree", Number.class, null)));
+                    new Argument<>("color", CustomColor.class, null), new Argument<>("degree", Number.class, null)));
         }
     }
 
@@ -104,8 +102,7 @@ public final class ColorFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("color", CustomColor.class, null),
-                    new FunctionArguments.Argument<>("degree", Number.class, null)));
+                    new Argument<>("color", CustomColor.class, null), new Argument<>("degree", Number.class, null)));
         }
     }
 
@@ -127,8 +124,7 @@ public final class ColorFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("style", Integer.class, 1)));
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("style", Integer.class, 1)));
         }
     }
 
@@ -162,7 +158,7 @@ public final class ColorFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("color", CustomColor.class, null)));
+                    List.of(new Argument<>("color", CustomColor.class, null)));
         }
     }
 }
