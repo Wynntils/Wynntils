@@ -5,6 +5,7 @@
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.AnyArgument;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.colors.CustomColor;
@@ -21,6 +22,16 @@ public class ConditionalFunctions {
             } else {
                 return arguments.getArgument("ifFalse").getValue();
             }
+        }
+    }
+
+    public static class IfFunction extends IfFunctionBase<Object> {
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("condition", Boolean.class, null),
+                    new AnyArgument("ifTrue"),
+                    new AnyArgument("ifFalse")));
         }
     }
 

@@ -58,4 +58,12 @@ public class TestGenericFunctions {
 
         assertTemplateResult("{concat(time_str(now);time_str(now))}", "nownow");
     }
+
+    @Test
+    public void testConditions() {
+        assertTemplateResult("{if(equals(3;3);add(1;1);add(2;2))}", "2.00");
+        assertTemplateResult("{if(equals(2;3);add(1;1);add(2;2))}", "4.00");
+        assertTemplateResult("{if(equals(3;3);\"hej\";add(2;2))}", "hej");
+        assertTemplateResult("{cap(if(equals(3;3);capped(1;2);capped(3;4)))}", "2");
+    }
 }

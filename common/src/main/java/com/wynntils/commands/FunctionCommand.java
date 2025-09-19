@@ -15,6 +15,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.arguments.ListArgument;
 import com.wynntils.core.text.StyledText;
 import java.util.Arrays;
 import java.util.Collection;
@@ -305,7 +306,7 @@ public class FunctionCommand extends Command {
                         .formatted(
                                 argument.getType().getSimpleName(),
                                 argument.getDefaultValue().toString());
-            } else if (argument instanceof FunctionArguments.ListArgument<?>) {
+            } else if (argument instanceof ListArgument<?>) {
                 type = "(List<" + argument.getType().getSimpleName() + ">)";
             } else {
                 type = ("(" + argument.getType().getSimpleName() + ")");
