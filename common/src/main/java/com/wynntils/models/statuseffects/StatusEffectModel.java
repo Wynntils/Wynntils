@@ -94,7 +94,8 @@ public final class StatusEffectModel extends Model {
             String color = ChatFormatting.GRAY.toString();
 
             Style prefixStyle = effect.getFirstPart().getPartStyle().getStyle();
-            StyledText prefix = StyledText.fromComponent(Component.literal(m.group("prefix").trim()).withStyle(prefixStyle));
+            StyledText prefix = StyledText.fromComponent(
+                    Component.literal(m.group("prefix").trim()).withStyle(prefixStyle));
             StyledText name = StyledText.fromString(color + m.group("name").trim());
             StyledText minutes = StyledText.fromString(m.group("minutes")).trim();
             StyledText seconds = StyledText.fromString(m.group("seconds")).trim();
