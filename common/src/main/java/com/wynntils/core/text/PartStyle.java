@@ -531,6 +531,7 @@ public final class PartStyle {
 
     public enum StyleType {
         WYNNCHAR_MAPPING,
+        WYNNCHAR_MAPPING_ALL,
         INCLUDE_EVENTS, // Includes click and hover events
         DEFAULT, // The most minimal way to represent a style
         NONE // No styling

@@ -52,9 +52,18 @@ public final class WynnCharModel extends Model {
                         0xE017, "champion",
                         0xE026, "+"));
 
-        registerWynnCharMapping(defaultMapping);
+        registerWynnCharMapper("minecraft:default","d", defaultMapping);
         registerWynnCharMapper("minecraft:banner/pill", "b", new WrappingMapper(defaultMapping));
         registerWynnCharMapper("default-wrapped", "w", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("minecraft:hud/selector/default/top_left", "tl", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("minecraft:hud/selector/default/top_middle", "tm", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("minecraft:hud/selector/default/top_right", "tr", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("minecraft:hud/selector/default/center_left", "cl", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("minecraft:hud/selector/default/center_middle", "cm", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("minecraft:hud/selector/default/center_right", "cr", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("minecraft:hud/selector/default/bottom_left", "bl", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("minecraft:hud/selector/default/bottom_middle", "bm", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("minecraft:hud/selector/default/bottom_right", "br", new WrappingMapper(defaultMapping));
     }
 
     public static void registerWynnCharMapper(String font, String code, WynnCharMapper mapper) {
@@ -72,7 +81,10 @@ public final class WynnCharModel extends Model {
 
     public String decodeWynnChars(String str, String fontName) {
         WynnCharMapper mapper = getMapperFromFontName(fontName);
+        return decodeWynnChars(str, mapper);
+    }
 
+    public String decodeWynnChars(String str, WynnCharMapper mapper) {
         StringBuilder sb = new StringBuilder();
         boolean isEncoding = false;
 
@@ -230,7 +242,7 @@ public final class WynnCharModel extends Model {
             Optional<String> delegateToken = delegate.getToken(codepoint);
             if (delegateToken.isPresent()) return delegateToken;
 
-            if (0 <= codepoint && codepoint <= 0x00FF) return Optional.empty();
+            if (0x0020 <= codepoint && codepoint <= 0x00FF) return Optional.empty();
 
             return Optional.of(String.format(Locale.ROOT, "+%04X", codepoint));
         }
