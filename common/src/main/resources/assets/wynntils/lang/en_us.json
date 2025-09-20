@@ -685,6 +685,8 @@
   "feature.wynntils.horseMount.summonAttempts.name": "Summon Attempts",
   "feature.wynntils.infoBox.description": "Adds the ability to add custom info boxes to the screen as overlays. Info boxes can display custom functions.",
   "feature.wynntils.infoBox.name": "Info Boxes",
+  "feature.wynntils.infoBox.overlay.infoBox.colorTemplate.description": "The template that determines the color of the text. Must be a CustomColor. This template should not have curly brackets.",
+  "feature.wynntils.infoBox.overlay.infoBox.colorTemplate.name": "Color Template",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "What should be displayed in the info box?",
   "feature.wynntils.infoBox.overlay.infoBox.content.name": "Info Box Content",
   "feature.wynntils.infoBox.overlay.infoBox.name": "Info Box %d",
