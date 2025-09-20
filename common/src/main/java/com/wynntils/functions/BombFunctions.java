@@ -92,7 +92,7 @@ public class BombFunctions {
 
         @Override
         public Time invalidValue() {
-            return Time.of(-1);
+            return Time.NONE;
         }
     }
 
@@ -116,7 +116,7 @@ public class BombFunctions {
 
         @Override
         public Time invalidValue() {
-            return Time.of(-1L);
+            return Time.NONE;
         }
     }
 

@@ -132,8 +132,8 @@ public final class TimeFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("timestamp", Time.class, null), new Argument<>("format", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("time", Time.class, null), new Argument<>("format", String.class, null)));
         }
 
         @Override
