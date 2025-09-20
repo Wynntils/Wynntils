@@ -15,8 +15,10 @@ import com.wynntils.models.worlds.bossbars.InfoBar;
 import com.wynntils.models.worlds.event.BombEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.BombInfo;
+import com.wynntils.models.worlds.type.BombSortOrder;
 import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.mc.StyledTextUtils;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
@@ -26,6 +28,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -143,8 +147,33 @@ public final class BombModel extends Model {
         return BOMBS.asSet();
     }
 
+    public Stream<BombInfo> getBombBellStream(boolean group, BombSortOrder sortOrder) {
+        Stream<BombInfo> stream = getBombBells().stream();
+        Comparator<BombInfo> comparator = sortOrder == BombSortOrder.NEWEST
+                ? Comparator.comparing(BombInfo::getRemainingLong).reversed()
+                : Comparator.comparing(BombInfo::getRemainingLong);
+
+        stream = stream.sorted(comparator);
+
+        if (group) {
+            stream = stream.collect(Collectors.groupingBy(BombInfo::bomb)).values().stream()
+                    .flatMap(Collection::stream);
+        }
+
+        return stream;
+    }
+
     public BombInfo getLastBomb() {
         return BOMBS.getLastBomb();
+    }
+
+    public void addDummyBombInfo() {
+        BOMBS.forceAdd(new BombInfo("Wanytails", BombType.COMBAT_XP, "EU052", System.currentTimeMillis(), 1));
+        BOMBS.forceAdd(new BombInfo("Wanytails", BombType.PROFESSION_SPEED, "EU052", System.currentTimeMillis(), 1.2f));
+        BOMBS.forceAdd(new BombInfo("Wyntil", BombType.PROFESSION_SPEED, "US152", System.currentTimeMillis(), 0.8f));
+        BOMBS.forceAdd(new BombInfo("Wyntil", BombType.DUNGEON, "EU152", System.currentTimeMillis(), 0.6f));
+        BOMBS.forceAdd(new BombInfo("Player 0", BombType.PROFESSION_XP, "AS558", System.currentTimeMillis(), 1));
+        BOMBS.forceAdd(new BombInfo("Player 0", BombType.COMBAT_XP, "AS558", System.currentTimeMillis(), 0.5f));
     }
 
     private static final class ActiveBombContainer {

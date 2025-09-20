@@ -38,6 +38,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -435,6 +436,14 @@ public final class GuildModel extends Model {
         }
 
         WynntilsMod.info("Successfully parsed tributes for guild " + guildName);
+    }
+
+    public Set<String> getGuildMembers() {
+        return Collections.unmodifiableSet(guildMembers);
+    }
+
+    public boolean isGuildMember(String username) {
+        return guildMembers.contains(username);
     }
 
     private void requestGuildMembers() {

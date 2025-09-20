@@ -8,6 +8,7 @@ import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.type.Time;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public final class TimeFunctions {
@@ -113,6 +114,31 @@ public final class TimeFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("offset");
+        }
+    }
+
+    public static class FormatTimeAdvancedFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Time timestamp = arguments.getArgument("timestamp").getTime();
+            String format = arguments.getArgument("format").getStringValue();
+
+            try {
+                return new SimpleDateFormat(format).format(timestamp.timestamp());
+            } catch (IllegalArgumentException e) {
+                return "Invalid Format";
+            }
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("time", Time.class, null), new Argument<>("format", String.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("format_date_advanced");
         }
     }
 }

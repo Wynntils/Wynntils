@@ -11,6 +11,8 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.IngredientItem;
+import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -115,6 +117,30 @@ public final class InventoryModel extends Model {
         }
 
         return amount;
+    }
+
+    public int getIngredientAmountInInventory(String name) {
+        return McUtils.inventory().items.stream()
+                .filter(itemStack -> {
+                    Optional<IngredientItem> ingredientItem = Models.Item.asWynnItem(itemStack, IngredientItem.class);
+                    if (ingredientItem.isEmpty()) return false;
+                    return ingredientItem.get().getName().startsWith(name);
+                })
+                .mapToInt(itemStack -> itemStack.count)
+                .sum();
+    }
+
+    public int getMaterialsAmountInInventory(String name, int tier, boolean exact) {
+        return McUtils.inventory().items.stream()
+                .filter(itemStack -> {
+                    Optional<MaterialItem> materialItemOpt = Models.Item.asWynnItem(itemStack, MaterialItem.class);
+                    if (materialItemOpt.isEmpty()) return false;
+                    MaterialItem materialItem = materialItemOpt.get();
+                    if (!itemStack.getCustomName().getString().startsWith(name)) return false;
+                    return exact ? materialItem.getQualityTier() == tier : materialItem.getQualityTier() >= tier;
+                })
+                .mapToInt(itemStack -> itemStack.count)
+                .sum();
     }
 
     @SubscribeEvent

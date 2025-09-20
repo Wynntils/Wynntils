@@ -15,6 +15,8 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.containers.type.LootChestTier;
@@ -69,6 +71,7 @@ public final class LootChestModel extends Model {
 
     private BlockPos lastChestPos;
     private int nextExpectedLootContainerId = -2;
+    private final List<LootChestTier> sessionChests = new ArrayList<>();
 
     public LootChestModel() {
         super(List.of());
@@ -173,8 +176,26 @@ public final class LootChestModel extends Model {
         }
     }
 
+    @SubscribeEvent
+    public void onScreenOpened(ScreenOpenedEvent.Post event) {
+        if (Models.Container.getCurrentContainer() instanceof LootChestContainer) {
+            LootChestTier tier = getChestType(event.getScreen());
+            if (tier != null) {
+                WynntilsMod.info("Found Loot Chest with tier: " + tier.getWaypointTier());
+                sessionChests.add(tier);
+            }
+        }
+    }
+
     public LootChestTier getChestType(Screen screen) {
         return LootChestTier.fromTitle(screen);
+    }
+
+    public int getLootChestOpenedThisSession(int tier, boolean exact) {
+        return (int) sessionChests.stream()
+                .filter(lootChestTier ->
+                        exact ? lootChestTier.getWaypointTier() == tier : lootChestTier.getWaypointTier() >= tier)
+                .count();
     }
 
     private void processItemFind(ItemStack itemStack) {
