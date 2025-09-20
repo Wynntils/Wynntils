@@ -1113,4 +1113,11 @@ public class TestRegex {
         p.shouldMatch("§#54fffcff§lIngenuous Mage's Gambit");
         p.shouldMatch("§#ac2c01ff§lArcane Incontinent's Gambit");
     }
+
+    @Test
+    public void TradeMarketModel_PRICE_INPUT_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_INPUT_PATTERN");
+        p.shouldMatch(
+                "§5\uE00A\uE002 Type the price in emeralds or formatted (e.g '10eb', '10stx 5eb') or type 'cancel' to cancel:");
+    }
 }
