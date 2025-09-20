@@ -1568,6 +1568,8 @@
   "feature.wynntils.valuablesProtection.mythicWarningNPCs.description": "Which NPC types should trigger the mythic warning?",
   "feature.wynntils.valuablesProtection.mythicWarningNPCs.name": "Mythic Warning NPCs",
   "feature.wynntils.valuablesProtection.name": "Valuables Protection",
+  "feature.wynntils.valuablesProtection.requireCtrlToSell.description": "Should holding ctrl be required to sell valuable items?.",
+  "feature.wynntils.valuablesProtection.requireCtrlToSell.name": "Require Ctrl to Sell",
   "feature.wynntils.valuablesProtection.selling": "selling",
   "feature.wynntils.valuablesProtection.settingsHint": "Modify this threshold in the Wynntils Valuables Protection Feature settings.",
   "feature.wynntils.valuablesProtection.tmWarning": "Set price %s is below %d%% of the cheapest price %s on the trade market!",
