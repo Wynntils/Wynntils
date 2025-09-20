@@ -101,6 +101,10 @@ public final class EmeraldModel extends Model {
         }
     }
 
+    public String getEmeraldCountString(int emeralds, boolean includeSymbol) {
+        return String.format(Locale.ROOT, "%,d" + (includeSymbol ? EmeraldUnits.EMERALD.getSymbol() : ""), emeralds);
+    }
+
     public String getFormattedString(int emeralds, boolean appendZeros) {
         StringBuilder builder = new StringBuilder();
 
@@ -191,6 +195,14 @@ public final class EmeraldModel extends Model {
         }
 
         return (emeralds > 0) ? String.valueOf(emeralds) : "";
+    }
+
+    public int getWithoutTax(int taxedValue) {
+        return (int) Math.ceil(taxedValue / Models.Emerald.getTaxAmount());
+    }
+
+    public int getWithTax(int untaxedValue) {
+        return (int) Math.floor(untaxedValue * Models.Emerald.getTaxAmount());
     }
 
     public double getTaxAmount() {

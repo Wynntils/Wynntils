@@ -1221,7 +1221,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "Dodaje przyciski do dopasowania najniższej oferty sprzedaży i najwyższej oferty kupna w interfejsie rynku handlowego",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "Najwyższa Oferta Kupna",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "Dopasowuje się do ceny obecnej najwyższej oferty kupna.",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "Przebija cenę obecnej najwyższej oferty kupna o %s szmaragdów.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "Najniższa Oferta Sprzedaży",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "Dopasowuje się do ceny obecnej najniższej oferty sprzedaży.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "Przebija cenę obecnej najniższej oferty sprzedaży o %s szmaragdów.",

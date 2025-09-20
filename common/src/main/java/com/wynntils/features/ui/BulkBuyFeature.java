@@ -29,7 +29,6 @@ import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -250,7 +249,7 @@ public class BulkBuyFeature extends Feature {
                 if (part.getString(null, PartStyle.StyleType.NONE).startsWith(priceMatcher.group(1))) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
-                            String.format(Locale.ROOT, "%,d² ", newPrice),
+                            Models.Emerald.getEmeraldCountString(newPrice, true) + " ",
                             part.getPartStyle().getStyle(),
                             null,
                             Style.EMPTY);
