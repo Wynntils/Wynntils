@@ -190,6 +190,17 @@ public class ProfessionFunctions {
         }
     }
 
+    public static class LastHarvestXpGainFunction extends Function<Float> {
+        @Override
+        public Float getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return -1f;
+
+            return lastHarvest.get().xpGain();
+        }
+    }
+
     public static class MaterialDryStreak extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
@@ -199,6 +210,15 @@ public class ProfessionFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("mat_dry");
+        }
+    }
+
+    public static class LastProfessionXpGainFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<ProfessionType> profession = Models.Profession.getLastProfessionXpGain();
+            if (profession.isEmpty()) return "";
+            return profession.get().getDisplayName();
         }
     }
 }

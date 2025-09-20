@@ -13,6 +13,7 @@ import com.wynntils.models.raid.type.RaidRoomInfo;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class RaidFunctions {
     public static class CurrentRaidFunction extends Function<String> {
@@ -299,6 +300,43 @@ public class RaidFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.Raid.getRaidsWithoutMythicTome();
+        }
+    }
+
+    public static class RaidsRunsSinceFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int sinceDays = arguments.getArgument("sinceDays").getIntegerValue();
+            return Math.toIntExact(Models.Raid.historicRaids.get().stream()
+                    .filter(historicRaidInfo -> historicRaidInfo.endedTimestamp()
+                            >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays))
+                    .count());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("sinceDays", Integer.class, 7)));
+        }
+    }
+
+    public static class SpecificRaidRunsSinceFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String raidName = arguments.getArgument("raidName").getStringValue();
+            int sinceDays = arguments.getArgument("sinceDays").getIntegerValue();
+            return Math.toIntExact(Models.Raid.historicRaids.get().stream()
+                    .filter(historicRaidInfo -> (historicRaidInfo.name().equalsIgnoreCase(raidName)
+                                    || historicRaidInfo.abbreviation().equalsIgnoreCase(raidName))
+                            && historicRaidInfo.endedTimestamp()
+                                    >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays))
+                    .count());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("raidName", String.class, null), new Argument<>("sinceDays", Integer.class, null)));
         }
     }
 }

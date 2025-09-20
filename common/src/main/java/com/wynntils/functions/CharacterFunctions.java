@@ -8,7 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.models.statuseffects.type.StatusEffect;
+import com.wynntils.models.character.type.VehicleType;
+import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
@@ -57,67 +58,6 @@ public class CharacterFunctions {
             double dX = player.getX() - player.xOld;
             double dZ = player.getZ() - player.zOld;
             return Math.sqrt((dX * dX) + (dZ * dZ)) * 20;
-        }
-    }
-
-    public static class StatusEffectsFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            List<String> statusEffectsList = Models.StatusEffect.getStatusEffects().stream()
-                    .map(statusEffect -> statusEffect.asString().getString())
-                    .toList();
-
-            return String.join("\n", statusEffectsList);
-        }
-    }
-
-    public static class StatusEffectActiveFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            String query = arguments.getArgument("query").getStringValue();
-            return Models.StatusEffect.getStatusEffects().stream()
-                    .anyMatch(statusEffect ->
-                            statusEffect.getName().getStringWithoutFormatting().equals(query));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("contains_effect");
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("query", String.class, null)));
-        }
-    }
-
-    public static class StatusEffectDurationFunction extends Function<NamedValue> {
-        @Override
-        public NamedValue getValue(FunctionArguments arguments) {
-            String query = arguments.getArgument("query").getStringValue();
-            StatusEffect effect = Models.StatusEffect.searchStatusEffectByName(query);
-            if (effect == null) return NamedValue.EMPTY;
-            return new NamedValue(effect.getName().getString(), effect.getDuration());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("query", String.class, null)));
-        }
-    }
-
-    public static class StatusEffectModifierFunction extends Function<NamedValue> {
-        @Override
-        public NamedValue getValue(FunctionArguments arguments) {
-            String query = arguments.getArgument("query").getStringValue();
-            StatusEffect effect = Models.StatusEffect.searchStatusEffectByName(query);
-            if (effect == null || !effect.hasModifierValue()) return NamedValue.EMPTY;
-            return new NamedValue(effect.getModifierSuffix().getString(), effect.getModifierValue());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("query", String.class, null)));
         }
     }
 
@@ -298,6 +238,84 @@ public class CharacterFunctions {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             return Models.Ability.commanderBar.isActive() && Models.Ability.commanderBar.isActivated();
+        }
+    }
+
+    public static class IsRidingHorseFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Character.getVehicle() == VehicleType.HORSE;
+        }
+    }
+
+    public static class HasNoGuiFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Character.getVehicle() == VehicleType.DISPLAY;
+        }
+    }
+
+    public static class HummingbirdsStateFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Ability.hummingBirdsState;
+        }
+    }
+
+    public static class OphanimHealingPercentFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ability.ophanimBar.isActive() ? Models.Ability.ophanimBar.getHealed() : -1;
+        }
+    }
+
+    public static class GuildObjectiveScoreFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            WynnObjective weekly = Models.Objectives.getGuildObjective();
+            if (weekly == null) return CappedValue.EMPTY;
+            return weekly.getScore();
+        }
+    }
+
+    public static class GuildObjectiveGoalFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            WynnObjective weekly = Models.Objectives.getGuildObjective();
+            if (weekly == null) return "";
+            return weekly.getGoal();
+        }
+    }
+
+    public static class PersonalObjectiveScoreFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
+            return !daily.isEmpty() && index >= 0 && daily.size() >= index
+                    ? daily.get(index).getScore()
+                    : CappedValue.EMPTY;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("index", Integer.class, 0)));
+        }
+    }
+
+    public static class PersonalObjectiveGoalFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
+            return !daily.isEmpty() && index >= 0 && daily.size() >= index
+                    ? daily.get(index).getGoal()
+                    : "";
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("index", Integer.class, 0)));
         }
     }
 

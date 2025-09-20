@@ -73,4 +73,16 @@ public class GuildFunctions {
             return Models.Guild.getObjectiveStreak();
         }
     }
+
+    public static class IsGuildMemberFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Guild.isGuildMember(arguments.getArgument("member").getStringValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("member", String.class, null)));
+        }
+    }
 }

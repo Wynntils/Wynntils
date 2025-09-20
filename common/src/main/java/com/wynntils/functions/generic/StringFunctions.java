@@ -8,6 +8,7 @@ import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.ListArgument;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.RangedValue;
@@ -326,6 +327,20 @@ public class StringFunctions {
                     new Argument<>("source", String.class, null),
                     new Argument<>("regex", String.class, null),
                     new Argument<>("replacement", String.class, null)));
+        }
+    }
+
+    public static class ToRomanNumeralsFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int number = arguments.getArgument("number").getIntegerValue();
+            return MathUtils.toRoman(number);
+        }
+
+        @Override
+        protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("number", Integer.class, null)));
         }
     }
 }
