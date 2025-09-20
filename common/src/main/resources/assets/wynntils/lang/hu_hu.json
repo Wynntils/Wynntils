@@ -1221,7 +1221,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "Gombok hozzáadása a legalacsonyabb eladási ajánlat és a legmagasabb vásárlási ajánlat egyeztetéséhez a kereskedelmi piaci felületen",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "Legmagasabb Vásárlási Ajánlat",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "Egyezik a jelenlegi legmagasabb vásárlási ajánlat árával.",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "Alákínál a jelenlegi legmagasabb vásárlási ajánlat árának %s smaragddal.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "Legalacsonyabb Eladási Ajánlat",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "Egyezik a jelenlegi legalacsonyabb eladási ajánlat árával.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "Alákínál a jelenlegi legalacsonyabb eladási ajánlat árának %s smaragddal.",
