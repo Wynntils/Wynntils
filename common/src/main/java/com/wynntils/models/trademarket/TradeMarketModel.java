@@ -37,6 +37,7 @@ import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,7 +76,10 @@ public final class TradeMarketModel extends Model {
     private static final StyledText TM_SELL_SET_PRICE_PATTERN = StyledText.fromString("§a§lSet Price");
 
     private static final int PRICE_CHECK_SLOT = 51;
-    private static final String MISSING_PRICE_DATA = " §7Price data is only availableafter an item is added";
+    private static final Set<String> MISSING_PRICE_DATA = Set.of(
+            " §7Price data is only availableafter an item is added",
+            " §7There is no price informationabout this item at the moment"
+    );
     // Tests at TradeMarketModel_PRICE_CHECK_BID_PATTERN/TradeMarketModel_PRICE_CHECK_ASK_PATTERN
     private static final Pattern PRICE_CHECK_BID_PATTERN =
             Pattern.compile("§7Highest Buy Offer: §f([\\d,]+) §8\\(.+\\)");
@@ -280,7 +284,7 @@ public final class TradeMarketModel extends Model {
         if (priceCheckItem.isEmpty()) return TradeMarketPriceCheckInfo.EMPTY;
 
         String lore = LoreUtils.getStringLore(priceCheckItem).getString();
-        if (lore.equals(MISSING_PRICE_DATA)) {
+        if (MISSING_PRICE_DATA.contains(lore)) {
             return TradeMarketPriceCheckInfo.EMPTY;
         }
 
