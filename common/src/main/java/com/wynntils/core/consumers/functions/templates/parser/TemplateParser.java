@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.templates.parser;
@@ -31,7 +31,8 @@ public final class TemplateParser {
         for (int i = 0; i < templateString.length(); i++) {
             char current = templateString.charAt(i);
 
-            if (current == '{') {
+            // §{} indicates font formatting instead of a template
+            if (current == '{' && (i == 0 || templateString.charAt(i - 1) != '§')) {
                 // Handle if we are already in an expression
                 if (expressionContextStart != -1) {
                     expressionNestLevel++;
