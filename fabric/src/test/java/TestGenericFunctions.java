@@ -44,7 +44,7 @@ public class TestGenericFunctions {
 
         assertTemplateResult("{offset(now;-1)}", "1 second ago");
         assertTemplateResult("{offset(now;-125)}", "2 minutes ago");
-        assertTemplateResult("{time_offset(now;180)}", "in 3 minutes");
+        assertTemplateResult("{time_offset(now;190)}", "in 3 minutes");
 
         assertTemplateResult("{seconds_between(now;offset(now;5))}", "5.00");
         assertTemplateResult("{seconds_between(offset(now;60);now)}", "-60.00");

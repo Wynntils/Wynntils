@@ -1221,7 +1221,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "在交易市場介面中添加按鈕以匹配最低賣出報價和最高買入報價",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "最高買入報價",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "匹配當前最高買入報價的價格。",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "將當前最高買入報價的價格降低%s綠寶石。",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "最低賣出報價",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "匹配當前最低賣出報價的價格。",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "將當前最低賣出報價的價格降低%s綠寶石。",
