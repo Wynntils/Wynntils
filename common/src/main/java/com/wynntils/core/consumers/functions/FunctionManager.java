@@ -451,7 +451,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new BombFunctions.BombFormattedStringFunction());
         registerFunction(new BombFunctions.BombLengthFunction());
         registerFunction(new BombFunctions.BombOwnerFunction());
-        registerFunction(new BombFunctions.BombRemainingTimeFunction());
+        registerFunction(new BombFunctions.BombEndTimeFunction());
         registerFunction(new BombFunctions.BombStartTimeFunction());
         registerFunction(new BombFunctions.BombTypeFunction());
         registerFunction(new BombFunctions.BombWorldFunction());

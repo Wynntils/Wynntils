@@ -108,15 +108,15 @@ public class BombFunctions {
         }
     }
 
-    public static class BombRemainingTimeFunction extends BombFunctionBase<Long> {
+    public static class BombEndTimeFunction extends BombFunctionBase<Time> {
         @Override
-        public Long processInfo(BombInfo info) {
-            return info.getRemainingLong();
+        public Time processInfo(BombInfo info) {
+            return Time.of(info.endTime());
         }
 
         @Override
-        public Long invalidValue() {
-            return -1L;
+        public Time invalidValue() {
+            return Time.of(-1L);
         }
     }
 
