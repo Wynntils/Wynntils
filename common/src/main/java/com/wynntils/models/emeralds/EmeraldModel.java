@@ -33,7 +33,7 @@ public final class EmeraldModel extends Model {
     private static final Pattern EB_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(b|eb)");
     private static final Pattern K_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(k|thousand)");
     private static final Pattern M_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(m|million)");
-    private static final Pattern E_PATTERN = Pattern.compile("(\\d+)($|\\s|\\s*e|\\s*em)(?![^\\d\\s-])");
+    private static final Pattern E_PATTERN = Pattern.compile("(\\d+)($|-t|\\s|\\s*e|\\s*em)(?![^\\d\\s-])");
     private static final Pattern RAW_PRICE_PATTERN = Pattern.compile("\\d+");
     private static final double SILVERBULL_TAX_AMOUNT = 1.03;
     private static final double NORMAL_TAX_AMOUNT = 1.05;

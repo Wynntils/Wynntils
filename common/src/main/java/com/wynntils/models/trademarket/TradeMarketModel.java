@@ -60,6 +60,7 @@ public final class TradeMarketModel extends Model {
             Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the item name or type 'cancel' to cancel:$");
     private static final Pattern AMOUNT_INPUT_PATTERN = Pattern.compile(
             "^§5(\uE00A\uE002|\uE001) Type the amount you wish to (buy|sell) or type 'cancel' to cancel:$");
+    // Test in TradeMarketModel_PRICE_INPUT_PATTERN
     private static final Pattern PRICE_INPUT_PATTERN = Pattern.compile(
             "^§5(\uE00A\uE002|\uE001) Type the price in emeralds or formatted \\(e\\.g '10eb', '10stx 5eb'\\) or type 'cancel' to cancel:$");
     private static final Pattern CANCELLED_PATTERN =
