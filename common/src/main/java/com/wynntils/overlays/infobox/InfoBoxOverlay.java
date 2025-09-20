@@ -23,7 +23,7 @@ public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
     private final Config<String> content = new Config<>("");
 
     @Persisted
-    final Config<String> colorTemplate = new Config<>("");
+    private final Config<String> colorTemplate = new Config<>("");
 
     private CustomColor colorCache = CommonColors.WHITE;
 
