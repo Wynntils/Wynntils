@@ -416,7 +416,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.CappedStringFunction());
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatCappedFunction());
-        registerFunction(new StringFunctions.FormatDateAdvancedFunction());
         registerFunction(new StringFunctions.FormatDateFunction());
         registerFunction(new StringFunctions.FormatDurationFunction());
         registerFunction(new StringFunctions.FormatFunction());
@@ -434,6 +433,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.ToRomanNumeralsFunction());
 
         registerFunction(new TimeFunctions.AbsoluteTimeFunction());
+        registerFunction(new TimeFunctions.FormatTimeAdvancedFunction());
         registerFunction(new TimeFunctions.SecondsBetweenFunction());
         registerFunction(new TimeFunctions.SecondsSinceFunction());
         registerFunction(new TimeFunctions.TimeFunction());
