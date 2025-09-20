@@ -52,6 +52,23 @@ public final class WynnCharModel extends Model {
                         0xE017, "champion",
                         0xE026, "+"));
 
+        WynnCharMapping topRightMapping = new WynnCharMapping(
+                "minecraft:hud/selector/default/top_right",
+                "tr",
+                List.of( //E000 A0 B1 C2 D3 E4 E026
+                        new WynnCharRange(0xE000, 0xE019, "A"),
+                        new WynnCharRange(0xE020, 0xE029, "0")),
+                Map.of(
+                        0xE060, ">",
+                        0xE061, " ",
+                        0xE063, "-",
+                        0xE064, "@",
+                        0xCFFFF, "ns_A",
+                        0xCFF8D, "ns_large",
+                        0x0001, "ns_mini",
+                        0xD000A, "sp_end")
+                );
+
         registerWynnCharMapper("minecraft:default","d", defaultMapping);
         registerWynnCharMapper("minecraft:banner/pill", "b", new WrappingMapper(defaultMapping));
         registerWynnCharMapper("default-wrapped", "w", new WrappingMapper(defaultMapping));
@@ -64,6 +81,8 @@ public final class WynnCharModel extends Model {
         registerWynnCharMapper("minecraft:hud/selector/default/bottom_left", "bl", new WrappingMapper(defaultMapping));
         registerWynnCharMapper("minecraft:hud/selector/default/bottom_middle", "bm", new WrappingMapper(defaultMapping));
         registerWynnCharMapper("minecraft:hud/selector/default/bottom_right", "br", new WrappingMapper(defaultMapping));
+        registerWynnCharMapper("minecraft:hud/gameplay/default/top_right", "gtr", topRightMapping);
+        registerWynnCharMapper("minecraft:hud/gameplay/default/bottom_middle", "gbm", new WrappingMapper(defaultMapping));
     }
 
     public static void registerWynnCharMapper(String font, String code, WynnCharMapper mapper) {
