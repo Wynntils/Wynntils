@@ -129,7 +129,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
     }
 
     private MutableComponent getPriceComponent(int price) {
-        return Component.literal(Integer.toString(price))
+        return Component.literal(Models.Emerald.getEmeraldCountString(price, false))
                 .withStyle(ChatFormatting.WHITE)
                 .append(Component.literal(" (" + Models.Emerald.getFormattedString(price, false) + ")")
                         .withStyle(ChatFormatting.GRAY));

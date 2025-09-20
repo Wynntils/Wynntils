@@ -250,7 +250,7 @@ public class BulkBuyFeature extends Feature {
                 if (part.getString(null, PartStyle.StyleType.NONE).startsWith(priceMatcher.group(1))) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
-                            String.format(Locale.ROOT, "%,d² ", newPrice),
+                            Models.Emerald.getEmeraldCountString(newPrice, true) + " ",
                             part.getPartStyle().getStyle(),
                             null,
                             Style.EMPTY);

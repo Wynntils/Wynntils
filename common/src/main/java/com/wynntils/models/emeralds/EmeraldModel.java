@@ -101,6 +101,10 @@ public final class EmeraldModel extends Model {
         }
     }
 
+    public String getEmeraldCountString(int emeralds, boolean includeSymbol) {
+        return String.format(Locale.ROOT, "%,d" + (includeSymbol ? EmeraldUnits.EMERALD.getSymbol() : ""), emeralds);
+    }
+
     public String getFormattedString(int emeralds, boolean appendZeros) {
         StringBuilder builder = new StringBuilder();
 
