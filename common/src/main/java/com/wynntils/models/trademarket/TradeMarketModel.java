@@ -75,12 +75,14 @@ public final class TradeMarketModel extends Model {
     private static final StyledText TM_SELL_SET_PRICE_PATTERN = StyledText.fromString("§a§lSet Price");
 
     private static final int PRICE_CHECK_SLOT = 51;
+    private static final String MISSING_PRICE_DATA = " §7Price data is only availableafter an item is added";
     // Tests at TradeMarketModel_PRICE_CHECK_BID_PATTERN/TradeMarketModel_PRICE_CHECK_ASK_PATTERN
     private static final Pattern PRICE_CHECK_BID_PATTERN =
             Pattern.compile("§7Highest Buy Offer: §f([\\d,]+) §8\\(.+\\)");
     private static final Pattern PRICE_CHECK_ASK_PATTERN =
             Pattern.compile("§7Cheapest Sell Offer: §f([\\d,]+) §8\\(.+\\)");
-
+    private static final Pattern PRICE_CHECK_RECOMMENDED_PATTERN =
+            Pattern.compile("§dRecommended Price:§f\\s*([\\d,]+) §8\\(.+\\)");
     // Test in TradeMarketModel_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile(
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
@@ -278,6 +280,18 @@ public final class TradeMarketModel extends Model {
         if (priceCheckItem.isEmpty()) return TradeMarketPriceCheckInfo.EMPTY;
 
         String lore = LoreUtils.getStringLore(priceCheckItem).getString();
+        if (lore.equals(MISSING_PRICE_DATA)) {
+            return TradeMarketPriceCheckInfo.EMPTY;
+        }
+
+        Matcher recommendedMatcher = PRICE_CHECK_RECOMMENDED_PATTERN.matcher(lore);
+        int recommendedPrice = 0;
+        if (recommendedMatcher.find()) {
+            String priceCheckString = recommendedMatcher.group(1);
+            recommendedPrice = Integer.parseInt(priceCheckString.replace(",", ""));
+        } else {
+            WynntilsMod.warn("Cannot find recommended price in price check item lore: " + lore);
+        }
 
         Matcher bidMatcher = PRICE_CHECK_BID_PATTERN.matcher(lore);
         int bidPrice = -1;
@@ -293,7 +307,7 @@ public final class TradeMarketModel extends Model {
             askPrice = Integer.parseInt(priceCheckString.replace(",", ""));
         }
 
-        return new TradeMarketPriceCheckInfo(bidPrice, askPrice);
+        return new TradeMarketPriceCheckInfo(recommendedPrice, bidPrice, askPrice);
     }
 
     public String getSoldItemName() {

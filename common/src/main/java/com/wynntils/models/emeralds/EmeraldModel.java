@@ -193,6 +193,14 @@ public final class EmeraldModel extends Model {
         return (emeralds > 0) ? String.valueOf(emeralds) : "";
     }
 
+    public int getWithoutTax(int taxedValue) {
+        return (int) Math.ceil(taxedValue / Models.Emerald.getTaxAmount());
+    }
+
+    public int getWithTax(int untaxedValue) {
+        return (int) Math.floor(untaxedValue * Models.Emerald.getTaxAmount());
+    }
+
     public double getTaxAmount() {
         return Models.Account.isSilverbullSubscriber() ? SILVERBULL_TAX_AMOUNT : NORMAL_TAX_AMOUNT;
     }
