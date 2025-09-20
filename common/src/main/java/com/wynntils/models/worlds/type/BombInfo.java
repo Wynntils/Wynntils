@@ -24,6 +24,10 @@ public record BombInfo(String user, BombType bomb, String server, long startTime
         return startTime + getLength() - System.currentTimeMillis();
     }
 
+    public long endTime() {
+        return startTime + getLength();
+    }
+
     public String asString() {
         return ChatFormatting.GOLD + bomb.getDisplayName()
                 + ChatFormatting.GRAY

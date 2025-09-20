@@ -10,10 +10,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerRenderEvent;
+import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.models.gear.type.GearInfo;
@@ -53,10 +56,16 @@ public class RangeVisualizerFeature extends Feature {
     private final Map<Player, List<Pair<CustomColor, Float>>> circlesToRender = new HashMap<>();
     private final Set<Player> detectedPlayers = new HashSet<>();
 
+    @Persisted
+    private final Config<Boolean> renderInFirstPerson = new Config<>(true);
+
+    // Handles rendering for other players and ourselves in third person
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
         Entity entity = ((EntityRenderStateExtension) e.getPlayerRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
+        // We render the circle for ourselves in onRenderLevelLast if first person rendering is enabled
+        if (player.equals(McUtils.player()) && renderInFirstPerson.get()) return;
 
         detectedPlayers.add(player);
 
@@ -69,6 +78,43 @@ public class RangeVisualizerFeature extends Feature {
 
             renderCircle(e.getPoseStack(), player.position(), radius, color);
         });
+    }
+
+    // Handles first person rendering for ourself
+    @SubscribeEvent
+    public void onRenderLevelLast(RenderTileLevelLastEvent event) {
+        if (!Models.WorldState.onWorld()) return;
+        if (!renderInFirstPerson.get()) return;
+
+        Player player = McUtils.player();
+        if (player == null) return;
+
+        detectedPlayers.add(player);
+
+        List<Pair<CustomColor, Float>> circles = circlesToRender.get(player);
+        if (circles == null || circles.isEmpty()) return;
+
+        PoseStack poseStack = event.getPoseStack();
+        float partialTick = event.getDeltaTracker().getGameTimeDeltaPartialTick(true);
+
+        double interpX = player.xo + (player.getX() - player.xo) * partialTick;
+        double interpY = player.yo + (player.getY() - player.yo) * partialTick;
+        double interpZ = player.zo + (player.getZ() - player.zo) * partialTick;
+
+        poseStack.pushPose();
+        poseStack.translate(
+                interpX - event.getCamera().getPosition().x,
+                interpY - event.getCamera().getPosition().y,
+                interpZ - event.getCamera().getPosition().z);
+
+        for (Pair<CustomColor, Float> circle : circles) {
+            float radius = circle.b();
+            int color = circle.a().asInt();
+
+            renderCircle(poseStack, player.position(), radius, color);
+        }
+
+        poseStack.popPose();
     }
 
     @SubscribeEvent
@@ -146,7 +192,7 @@ public class RangeVisualizerFeature extends Feature {
     private Pair<CustomColor, Float> getCircleFromMajorId(String majorIdName) {
         return switch (majorIdName) {
             case "Taunt" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
-            case "Saviour’s Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
+            case "Saviour's Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
             case "Altruism" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 12f);
             case "Guardian" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 7.9f);
             default -> null;

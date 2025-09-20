@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
@@ -42,7 +43,7 @@ public class InventoryFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("accessory", String.class, null)));
+                    List.of(new Argument<>("accessory", String.class, null)));
         }
     }
 
@@ -73,8 +74,7 @@ public class InventoryFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("armor", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("armor", String.class, null)));
         }
     }
 
@@ -115,7 +115,7 @@ public class InventoryFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("zeros", Boolean.class, false)));
+                    List.of(new Argument<>("zeros", Boolean.class, false)));
         }
 
         @Override
@@ -302,7 +302,7 @@ public class InventoryFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("formatted", Boolean.class, false)));
+                    List.of(new Argument<>("formatted", Boolean.class, false)));
         }
 
         @Override
@@ -332,13 +332,58 @@ public class InventoryFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("name", String.class, "")));
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("name", String.class, "")));
         }
 
         @Override
         protected List<String> getAliases() {
             return List.of("item_amount");
+        }
+    }
+
+    public static class InventoryIngredientsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String name = arguments.getArgument("name").getStringValue();
+
+            return Models.Inventory.getIngredientAmountInInventory(name);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("name", String.class, null)));
+        }
+    }
+
+    public static class IngredientPouchIngredientsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String name = arguments.getArgument("name").getStringValue();
+
+            return Models.IngredientPouch.getIngredientAmountInPouch(name);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("name", String.class, null)));
+        }
+    }
+
+    public static class MaterialCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String name = arguments.getArgument("name").getStringValue();
+            int tier = arguments.getArgument("tier").getIntegerValue();
+            boolean exact = arguments.getArgument("exact").getBooleanValue();
+            return Models.Inventory.getMaterialsAmountInInventory(name, tier, exact);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("name", String.class, null),
+                    new Argument<>("tier", Integer.class, null),
+                    new Argument<>("exact", Boolean.class, null)));
         }
     }
 }

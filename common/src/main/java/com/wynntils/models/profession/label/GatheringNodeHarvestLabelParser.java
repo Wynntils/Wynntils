@@ -44,7 +44,7 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
                 if (materialMatcher.matches()) {
                     String type = materialMatcher.group("type");
                     String material = materialMatcher.group("material");
-                    String tierGroup = materialMatcher.group(3);
+                    String tierGroup = materialMatcher.group(8);
 
                     gatheredMaterial = Optional.ofNullable(MaterialProfile.lookup(type, material, tierGroup));
                 }

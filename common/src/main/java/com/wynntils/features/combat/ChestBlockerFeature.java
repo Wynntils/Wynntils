@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -27,12 +27,15 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
-public class MythicBlockerFeature extends Feature {
+public class ChestBlockerFeature extends Feature {
     // Note: At the time of adding this, opening the emerald/ingredient pouch while a reward container is open
     //       will cause the container to exit (without the pouch opening, in the ingredient pouch case).
     //       This is a bug in the game.
     @Persisted
     private final Config<Boolean> preventPouchClick = new Config<>(true);
+
+    @Persisted
+    private final Config<EmeraldPouchTier> emeraldPouchTier = new Config<>(EmeraldPouchTier.EIGHT);
 
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
@@ -45,7 +48,21 @@ public class MythicBlockerFeature extends Feature {
             Optional<GearTierItemProperty> tieredItem =
                     Models.Item.asWynnItemProperty(itemStack, GearTierItemProperty.class);
             if (tieredItem.isPresent() && tieredItem.get().getGearTier() == GearTier.MYTHIC) {
-                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.mythicBlocker.closingBlocked")
+                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chestBlocker.closingBlocked")
+                        .withStyle(ChatFormatting.RED));
+                e.setCanceled(true);
+                return;
+            }
+
+            if (emeraldPouchTier.get() == EmeraldPouchTier.NONE) continue;
+
+            Optional<EmeraldPouchItem> emeraldPouchItem = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
+            if (emeraldPouchItem.isPresent()
+                    && emeraldPouchItem.get().getTier()
+                            >= emeraldPouchTier.get().getTier()) {
+                McUtils.sendMessageToClient(Component.translatable(
+                                "feature.wynntils.chestBlocker.closingBlockedPouch",
+                                emeraldPouchItem.get().getTier())
                         .withStyle(ChatFormatting.RED));
                 e.setCanceled(true);
                 return;
@@ -70,8 +87,26 @@ public class MythicBlockerFeature extends Feature {
             return;
         }
 
-        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.mythicBlocker.pouchBlocked")
+        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chestBlocker.pouchBlocked")
                 .withStyle(ChatFormatting.RED));
         event.setCanceled(true);
+    }
+
+    private enum EmeraldPouchTier {
+        NONE(-1),
+        SEVEN(7),
+        EIGHT(8),
+        NINE(9),
+        TEN(10);
+
+        private final int tier;
+
+        EmeraldPouchTier(int tier) {
+            this.tier = tier;
+        }
+
+        public int getTier() {
+            return tier;
+        }
     }
 }

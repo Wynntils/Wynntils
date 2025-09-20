@@ -20,11 +20,12 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.combat.type.DamageDealtEvent;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
-import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.models.raid.bossbar.ParasiteOvertakenBar;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
@@ -35,6 +36,7 @@ import com.wynntils.models.raid.raids.RaidKind;
 import com.wynntils.models.raid.raids.TheCanyonColossusRaid;
 import com.wynntils.models.raid.raids.TheNamelessAnomalyRaid;
 import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
+import com.wynntils.models.raid.type.HistoricRaidInfo;
 import com.wynntils.models.raid.type.RaidInfo;
 import com.wynntils.models.raid.type.RaidRoomInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -77,6 +79,10 @@ public final class RaidModel extends Model {
     private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
             "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff((§o)?(\\w+))§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
 
+    private static final ParasiteOvertakenBar PARASITE_OVERTAKEN_BAR = new ParasiteOvertakenBar();
+    private static final Pattern PARASITE_OVERTAKEN_PATTERN = Pattern.compile(
+            "§#d6401eff(?:\uE009\uE002|\uE001) §#fa7f63ff(?<player>.+?)§#d6401eff has been overtaken! Keep attacking §#ffc85fffThe Parasite§#d6401eff to save them!");
+
     @Persisted
     private final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
 
@@ -98,6 +104,9 @@ public final class RaidModel extends Model {
     @Persisted
     private final Storage<Integer> expectedNumRewardPulls = new Storage<>(-1);
 
+    @Persisted
+    public final Storage<List<HistoricRaidInfo>> historicRaids = new Storage<>(new ArrayList<>());
+
     private static final List<RaidKind> RAIDS = new ArrayList<>();
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
@@ -114,6 +123,7 @@ public final class RaidModel extends Model {
     private boolean completedCurrentChallenge = false;
     private boolean inBuffRoom = false;
     private boolean inIntermissionRoom = false;
+    private boolean parasiteOvertaken = false;
     private CappedValue challenges = CappedValue.EMPTY;
     private int timeLeft = 0;
     private RaidInfo currentRaid;
@@ -121,6 +131,7 @@ public final class RaidModel extends Model {
     public RaidModel() {
         super(List.of());
 
+        Handlers.BossBar.registerBar(PARASITE_OVERTAKEN_BAR);
         Handlers.Scoreboard.addPart(RAID_SCOREBOARD_PART);
 
         registerRaids();
@@ -137,6 +148,7 @@ public final class RaidModel extends Model {
             if (raidKind != null) {
                 currentRaid = new RaidInfo(raidKind);
                 completedCurrentChallenge = false;
+                parasiteOvertaken = false;
 
                 WynntilsMod.postEvent(new RaidStartedEvent(raidKind));
             }
@@ -164,8 +176,10 @@ public final class RaidModel extends Model {
             return;
         }
 
+        StyledText unwrapped = StyledTextUtils.unwrap(styledText).stripAlignment();
+
         if (inBuffRoom) {
-            Matcher matcher = event.getOriginalStyledText().stripAlignment().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
+            Matcher matcher = unwrapped.getMatcher(RAID_CHOOSE_BUFF_PATTERN);
             if (matcher.matches()) {
                 String playerName = matcher.group(4);
                 // if the player is nicknamed
@@ -182,6 +196,12 @@ public final class RaidModel extends Model {
                         .add(buff);
             }
 
+            return;
+        }
+
+        Matcher matcher = unwrapped.getMatcher(PARASITE_OVERTAKEN_PATTERN);
+        if (matcher.matches()) {
+            parasiteOvertaken = matcher.group("player").equals(McUtils.playerName());
             return;
         }
 
@@ -212,6 +232,7 @@ public final class RaidModel extends Model {
             timeLeft = 0;
             challenges = CappedValue.EMPTY;
             partyRaidBuffs.clear();
+            parasiteOvertaken = false;
 
             McUtils.sendMessageToClient(Component.literal(
                             "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
@@ -432,12 +453,29 @@ public final class RaidModel extends Model {
         if (currentRaid == null) return;
 
         WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid));
+        historicRaids
+                .get()
+                .add(new HistoricRaidInfo(
+                        currentRaid.getRaidKind().getRaidName(),
+                        currentRaid.getRaidKind().getAbbreviation(),
+                        currentRaid.getChallenges(),
+                        System.currentTimeMillis()));
+        historicRaids.touched();
 
         currentRaid = null;
         completedCurrentChallenge = false;
         timeLeft = 0;
         challenges = CappedValue.EMPTY;
         partyRaidBuffs.clear();
+        parasiteOvertaken = false;
+    }
+
+    public boolean isParasiteOvertaken() {
+        return parasiteOvertaken;
+    }
+
+    public void resetParasiteOvertaken() {
+        parasiteOvertaken = false;
     }
 
     public RaidInfo getCurrentRaid() {
@@ -630,6 +668,14 @@ public final class RaidModel extends Model {
         currentRaid.completeCurrentChallenge();
 
         WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid));
+        historicRaids
+                .get()
+                .add(new HistoricRaidInfo(
+                        currentRaid.getRaidKind().getRaidName(),
+                        currentRaid.getRaidKind().getAbbreviation(),
+                        currentRaid.getChallenges(),
+                        System.currentTimeMillis()));
+        historicRaids.touched();
 
         checkForNewPersonalBest();
 
@@ -638,6 +684,7 @@ public final class RaidModel extends Model {
         timeLeft = 0;
         challenges = CappedValue.EMPTY;
         partyRaidBuffs.clear();
+        parasiteOvertaken = false;
     }
 
     private void checkForNewPersonalBest() {
@@ -673,7 +720,8 @@ public final class RaidModel extends Model {
             AspectItem aspectItem = aspectOptional.get();
             if (aspectItem.getGearTier() == GearTier.MYTHIC) {
                 foundMythicAspect = true;
-                WynntilsMod.postEvent(new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.RAID_REWARD_CHEST));
+                WynntilsMod.postEvent(
+                        new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.RAID_REWARD_CHEST));
             }
             return;
         }
@@ -707,7 +755,8 @@ public final class RaidModel extends Model {
             TomeItem tomeItem = tomeItemOptional.get();
             if (tomeItem.getGearTier() == GearTier.MYTHIC) {
                 foundMythicTome = true;
-                WynntilsMod.postEvent(new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.RAID_REWARD_CHEST));
+                WynntilsMod.postEvent(
+                        new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.RAID_REWARD_CHEST));
             }
             return;
         }
