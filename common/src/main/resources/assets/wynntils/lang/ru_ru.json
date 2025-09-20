@@ -1239,7 +1239,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "Добавляет кнопки для сопоставления самого низкого предложения на продажу и самого высокого предложения на покупку в интерфейсе торгового рынка",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "Самое Высокое Предложение на Покупку",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "Соответствует цене текущего самого высокого предложения на покупку.",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "Снижает цену текущего самого высокого предложения на покупку на %s изумрудов.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "Самое Низкое Предложение на Продажу",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "Соответствует цене текущего самого низкого предложения на продажу.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "Снижает цену текущего самого низкого предложения на продажу на %s изумрудов.",

@@ -1225,7 +1225,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "Adiciona botões para igualar a oferta de venda mais baixa e a oferta de compra mais alta na interface do mercado de comércio",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "Oferta de Compra Mais Alta",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "Iguala o preço da oferta de compra mais alta atual.",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "Reduz o preço da oferta de compra mais alta atual em %s esmeraldas.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "Oferta de Venda Mais Baixa",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "Iguala o preço da oferta de venda mais baixa atual.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "Reduz o preço da oferta de venda mais baixa atual em %s esmeraldas.",

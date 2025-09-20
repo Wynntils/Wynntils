@@ -1397,7 +1397,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "거래소 UI에 현재 최고 구매가와 최저 판매가를 자동으로 입력하는 버튼을 제공합니다.",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "최고 구매가",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "현재 최고 구매 주문 가격으로 가격을 설정합니다.",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "현재 최고 구매 주문 가격보다 %s 에메랄드 상향하여 가격을 설정합니다.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "최저 판매가",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "현재 최저 판매 주문 가격으로 가격을 설정합니다.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "현재 최저 판매 주문 가격보다 %s 에메랄드 하향하여 가격을 설정합니다.",

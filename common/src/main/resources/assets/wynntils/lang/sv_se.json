@@ -1239,7 +1239,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "Lägger till knappar för att matcha lägsta säljbud och högsta köpbjudande i handelsmarknadens gränssnitt",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "Högsta Köpbjudande",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "Matchar priset på det nuvarande högsta köpbjudandet.",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "Underskrider priset på det nuvarande högsta köpbjudandet med %s smaragder.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "Lägsta Säljbud",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "Matchar priset på det nuvarande lägsta säljbudet.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "Underskrider priset på det nuvarande lägsta säljbudet med %s smaragder.",

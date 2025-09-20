@@ -1225,7 +1225,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "取引市場UIで最安売りオファーと最高買いオファーを一致させるボタンを追加",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "最高買いオファー",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "現在の最高買いオファーの価格に一致します。",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "現在の最高買いオファーの価格を%sエメラルド下回ります。",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "最安売りオファー",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "現在の最安売りオファーの価格に一致します。",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "現在の最安売りオファーの価格を%sエメラルド下回ります。",

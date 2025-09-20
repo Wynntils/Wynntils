@@ -1225,7 +1225,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "Ajoute des boutons pour égaler l'offre de vente la plus basse et l'offre d'achat la plus haute dans l'interface du marché",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "Offre d'Achat la Plus Haute",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "Égalise le prix de l'offre d'achat la plus haute actuelle.",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "Réduit le prix de l'offre d'achat la plus haute actuelle de %s émeraudes.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "Offre de Vente la Plus Basse",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "Égalise le prix de l'offre de vente la plus basse actuelle.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "Réduit le prix de l'offre de vente la plus basse actuelle de %s émeraudes.",

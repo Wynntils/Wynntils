@@ -1225,7 +1225,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "Aggiunge pulsanti per abbinare l'offerta di vendita più bassa e l'offerta di acquisto più alta nell'interfaccia del mercato",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "Offerta di Acquisto Più Alta",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "Abbina il prezzo dell'offerta di acquisto più alta attuale.",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "Riduce il prezzo dell'offerta di acquisto più alta attuale di %s smeraldi.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "Offerta di Vendita Più Bassa",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "Abbina il prezzo dell'offerta di vendita più bassa attuale.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "Riduce il prezzo dell'offerta di vendita più bassa attuale di %s smeraldi.",

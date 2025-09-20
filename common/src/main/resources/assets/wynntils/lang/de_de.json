@@ -1228,7 +1228,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "Fügt Schaltflächen hinzu, um das niedrigste Verkaufsangebot und das höchste Kaufangebot im Handelsmarkt-UI abzugleichen",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "Höchstes Kaufangebot",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "Gleicht den Preis des aktuellen höchsten Kaufangebots an.",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "Unterbietet den Preis des aktuellen höchsten Kaufangebots um %s Smaragde.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "Niedrigstes Verkaufsangebot",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "Gleicht den Preis des aktuellen niedrigsten Verkaufsangebots an.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "Unterbietet den Preis des aktuellen niedrigsten Verkaufsangebots um %s Smaragde.",

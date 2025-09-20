@@ -1225,7 +1225,6 @@
   "feature.wynntils.tradeMarketPriceMatch.description": "Voegt knoppen toe om de laagste verkoopaanbieding en hoogste koopaanbieding in de handelsmarktinterface te matchen",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "Hoogste Koopaanbieding",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferMatchesTooltip": "Komt overeen met de prijs van de huidige hoogste koopaanbieding.",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferUndercutTooltip": "Onderbiedt de prijs van de huidige hoogste koopaanbieding met %s smaragden.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "Laagste Verkoopaanbieding",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip": "Komt overeen met de prijs van de huidige laagste verkoopaanbieding.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip": "Onderbiedt de prijs van de huidige laagste verkoopaanbieding met %s smaragden.",

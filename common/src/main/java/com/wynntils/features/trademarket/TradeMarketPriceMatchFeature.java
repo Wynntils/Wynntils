@@ -129,8 +129,10 @@ public class TradeMarketPriceMatchFeature extends Feature {
     }
 
     private MutableComponent getPriceComponent(int price) {
-        return Component.literal(Integer.toString(price)).withStyle(ChatFormatting.WHITE).append(Component.literal(" (" + Models.Emerald.getFormattedString(price, false) + ")")
-                .withStyle(ChatFormatting.GRAY));
+        return Component.literal(Integer.toString(price))
+                .withStyle(ChatFormatting.WHITE)
+                .append(Component.literal(" (" + Models.Emerald.getFormattedString(price, false) + ")")
+                        .withStyle(ChatFormatting.GRAY));
     }
 
     private void removePriceButtons(ContainerScreen containerScreen) {
