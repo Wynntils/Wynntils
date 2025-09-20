@@ -84,6 +84,7 @@ public class StatusEffectFunctions {
     public static class StatusEffectModifierFunction extends StatusEffectFunctionBase<NamedValue> {
         @Override
         public NamedValue processEffect(StatusEffect effect) {
+            if (!effect.hasModifierValue()) return whenNotFound();
             return new NamedValue(effect.getModifierSuffix().getString(), effect.getModifierValue());
         }
 
