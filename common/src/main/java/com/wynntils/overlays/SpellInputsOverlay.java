@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -83,6 +84,11 @@ public class SpellInputsOverlay extends Overlay {
 
     @SubscribeEvent
     public void onSpellExpired(SpellEvent.Expired event) {
+        spellText = StyledText.EMPTY;
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChanged(WorldStateEvent event) {
         spellText = StyledText.EMPTY;
     }
 
