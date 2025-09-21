@@ -93,6 +93,7 @@ public final class ConnectionManager extends Manager {
     private void doConnecting(String hostName) {
         connectionState = ConnectionState.CONNECTING;
         connectedHost = hostName;
+        WynntilsMod.postEvent(new WynncraftConnectionEvent.Connecting(connectedHost));
     }
 
     private void doConnected() {
@@ -102,10 +103,11 @@ public final class ConnectionManager extends Manager {
 
     private void doDisconnect() {
         ConnectionState oldState = connectionState;
+        String oldHostName = connectedHost;
         connectionState = ConnectionState.DISCONNECTED;
         connectedHost = null;
         if (oldState == ConnectionState.CONNECTED) {
-            WynntilsMod.postEvent(new WynncraftConnectionEvent.Disconnected());
+            WynntilsMod.postEvent(new WynncraftConnectionEvent.Disconnected(oldHostName));
         }
     }
 
