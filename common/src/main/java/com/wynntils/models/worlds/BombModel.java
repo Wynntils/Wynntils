@@ -18,7 +18,6 @@ import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombSortOrder;
 import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.mc.StyledTextUtils;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
@@ -148,19 +147,21 @@ public final class BombModel extends Model {
     }
 
     public Stream<BombInfo> getBombBellStream(boolean group, BombSortOrder sortOrder) {
+        return getBombBellStream(group, sortOrder, getBombBells().size());
+    }
+
+    public Stream<BombInfo> getBombBellStream(boolean group, BombSortOrder sortOrder, int maxPerGroup) {
         Stream<BombInfo> stream = getBombBells().stream();
         Comparator<BombInfo> comparator = sortOrder == BombSortOrder.NEWEST
                 ? Comparator.comparing(BombInfo::getRemainingLong).reversed()
                 : Comparator.comparing(BombInfo::getRemainingLong);
 
-        stream = stream.sorted(comparator);
-
         if (group) {
-            stream = stream.collect(Collectors.groupingBy(BombInfo::bomb)).values().stream()
-                    .flatMap(Collection::stream);
+            return stream.collect(Collectors.groupingBy(BombInfo::bomb)).values().stream()
+                    .flatMap(list -> list.stream().sorted(comparator).limit(maxPerGroup));
+        } else {
+            return stream.sorted(comparator).limit(maxPerGroup);
         }
-
-        return stream;
     }
 
     public BombInfo getLastBomb() {
