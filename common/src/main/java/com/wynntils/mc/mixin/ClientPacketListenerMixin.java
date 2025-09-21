@@ -657,7 +657,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void handleLoginPost(ClientboundLoginPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new ConnectionEvent.ConnectedEvent());
+        MixinHelper.postAlways(new ConnectionEvent.ConnectedEvent());
     }
 
     @Inject(
