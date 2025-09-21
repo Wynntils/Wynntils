@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem.type;
@@ -7,81 +7,47 @@ package com.wynntils.models.wynnitem.type;
 import java.util.List;
 
 public enum ItemObtainType {
-    // From Wynncraft API
-    LOOT_CHEST("lootchest", "Tier III/IV Loot Chest"), // lootchests (implies t3 or t4, afaict)
-    NORMAL_MOB_DROP("normal", "Unspecified Mob Drop"), // mob drops (and any loot chest, afaict)
-    MINIBOSS("miniboss", "Miniboss"), // miniboss
-    CHALLENGE("challenge", "Challenge"), // at the moment, only Legendary Island
-    EVENT("event", "Event"), // like Bonfire, Heroes, etc.
-    LOOTRUN("lootrun", "Lootrun"), // lootrun
-    GUILD("guild", "Guild"), // guild
-    UNKNOWN("never", "Unknown"), // more information is needed
-
-    // From crowd sourced data or Wynncraft API
-    BOSS_ALTAR(List.of("bossaltar", "altar"), "Boss Altar"),
-    DISCONTINUED("discontinued", "Discontinued"),
-    DUNGEON_MERCHANT(List.of("dungeonmerchant", "dungeonMerchant"), "Dungeon Merchant", true),
-    DUNGEON_RAIN("dungeon", "Dungeon Rain"),
-    FORGERY_CHEST("forgerychest", "Forgery Chest", false, true),
-    GATHERING("gathering", "Gathering"),
-    LEGENDARY_ISLAND_MERCHANT("legendaryisland", "Legendary Island Merchant", true),
-    MERCHANT("merchant", "Merchant", true),
-    QIRA_HIVE_MERCHANT("hive", "Qira Hive Merchant", true),
+    // From Wynncraft API or crowd sourced
+    BOSS_ALTAR("altar", "Boss Altar"),
+    CHALLENGE("challenge", "Challenge"),
+    DUNGEON("dungeon", "Dungeon Rain"),
+    DUNGEON_MERCHANT("dungeonMerchant", "Dungeon Merchant"),
+    EVENT("event", "Event"),
+    GUILD("guild", "Guild"),
+    LOOTRUN("lootrun", "Lootrun"),
+    MERCHANT("merchant", "Merchant"),
+    MINIBOSS("miniboss", "Miniboss"),
     QUEST("quest", "Quest"),
     RAID("raid", "Raid"),
-    SECRET_DISCOVERY("discovery", "Secret Discovery"),
-    SPECIAL_MOB_DROP("specialdrop", "Specific Mob Drop"),
-    UNOBTAINABLE("unobtainable", "Unobtainable");
+
+    // Crowd sourced or determined via drop restriction
+    CAVE_LOOT_CHEST("caveLootChest", "Tier 3/4 Loot Chest"),
+    DISCOVERY("discovery", "Discovery"),
+    FORGERY_CHEST("forgeryChest", "Forgery Chest"),
+    GATHERING("gathering", "Gathering"),
+    LOOT_CHEST("lootChest", "Any Loot Chest"),
+    NORMAL_MOB_DROP("normalMobDrop", "Normal Mob Drop"),
+    SPECIFIC_MOB_DROP("specificMobDrop", "Specific Mob Drop"),
+    WORLD_EVENT("worldEvent", "World Event"),
+
+    UNAVAILABLE("unavailable", "Unavailable"),
+    UNKNOWN("unknown", "Unknown");
 
     // All sources that possibly drop boxed items
     public static final List<ItemObtainType> BOXED_ITEMS = List.of(
-            LOOT_CHEST,
-            NORMAL_MOB_DROP,
-            BOSS_ALTAR,
-            MINIBOSS,
-            LOOTRUN, // some items are boxed, some are not
-            DUNGEON_RAIN,
-            FORGERY_CHEST,
-            RAID,
-            SECRET_DISCOVERY,
-            SPECIAL_MOB_DROP,
-            UNKNOWN); // API does not specify drops for many old boxed items yet
+            BOSS_ALTAR, DISCOVERY, DUNGEON, FORGERY_CHEST, LOOT_CHEST, MINIBOSS, NORMAL_MOB_DROP, RAID, UNKNOWN);
 
-    private final List<String> apiNames;
+    private final String apiName;
     private final String displayName;
-    private final boolean isMerchant;
-    private final boolean isDungeon;
 
     ItemObtainType(String apiName, String displayName) {
-        this(List.of(apiName), displayName, false, false);
-    }
-
-    ItemObtainType(List<String> apiNames, String displayName) {
-        this(apiNames, displayName, false, false);
-    }
-
-    ItemObtainType(String apiName, String displayName, boolean isMerchant) {
-        this(List.of(apiName), displayName, isMerchant, false);
-    }
-
-    ItemObtainType(List<String> apiNames, String displayName, boolean isMerchant) {
-        this(apiNames, displayName, isMerchant, false);
-    }
-
-    ItemObtainType(String apiName, String displayName, boolean isMerchant, boolean isDungeon) {
-        this(List.of(apiName), displayName, isMerchant, isDungeon);
-    }
-
-    ItemObtainType(List<String> apiNames, String displayName, boolean isMerchant, boolean isDungeon) {
-        this.apiNames = apiNames;
+        this.apiName = apiName;
         this.displayName = displayName;
-        this.isMerchant = isMerchant;
-        this.isDungeon = isDungeon;
     }
 
     public static ItemObtainType fromApiName(String apiName) {
         for (ItemObtainType source : ItemObtainType.values()) {
-            if (source.apiNames.contains(apiName)) return source;
+            if (source.apiName.equals(apiName)) return source;
         }
 
         return null;
@@ -89,13 +55,5 @@ public enum ItemObtainType {
 
     public String getDisplayName() {
         return displayName;
-    }
-
-    public boolean isMerchant() {
-        return isMerchant;
-    }
-
-    public boolean isDungeon() {
-        return isDungeon;
     }
 }

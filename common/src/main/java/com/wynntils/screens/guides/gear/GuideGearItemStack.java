@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.gear;
@@ -44,7 +44,7 @@ public final class GuideGearItemStack extends GuideItemStack {
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag flag) {
         List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
 
-        appendObtainInfo(tooltipLines, gearInfo.metaInfo().obtainInfo());
+        appendObtainInfo(tooltipLines, Models.Gear.getObtainInfo(gearInfo));
 
         tooltipLines.add(Component.empty());
         if (Services.Favorites.isFavorite(this)) {
