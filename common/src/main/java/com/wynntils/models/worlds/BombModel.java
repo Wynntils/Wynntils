@@ -18,7 +18,6 @@ import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombSortOrder;
 import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.mc.StyledTextUtils;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
@@ -159,9 +158,7 @@ public final class BombModel extends Model {
 
         if (group) {
             return stream.collect(Collectors.groupingBy(BombInfo::bomb)).values().stream()
-                    .flatMap(list -> list.stream()
-                            .sorted(comparator)
-                            .limit(maxPerGroup));
+                    .flatMap(list -> list.stream().sorted(comparator).limit(maxPerGroup));
         } else {
             return stream.sorted(comparator).limit(maxPerGroup);
         }
