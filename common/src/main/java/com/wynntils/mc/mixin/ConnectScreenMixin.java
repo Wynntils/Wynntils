@@ -28,6 +28,8 @@ public abstract class ConnectScreenMixin {
             ServerData serverData,
             TransferState transferState,
             CallbackInfo ci) {
+        if (transferState != null) return;
+
         MixinHelper.postAlways(new ConnectionEvent.ConnectingEvent(serverAddress.getHost(), serverAddress.getPort()));
     }
 }

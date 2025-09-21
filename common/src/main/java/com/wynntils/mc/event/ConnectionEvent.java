@@ -7,7 +7,6 @@ package com.wynntils.mc.event;
 import com.wynntils.core.events.EventThread;
 import net.neoforged.bus.api.Event;
 
-/** Fired on connection to a server */
 public abstract class ConnectionEvent extends Event {
     @EventThread(EventThread.Type.RENDER)
     public static class ConnectingEvent extends ConnectionEvent {
@@ -37,8 +36,15 @@ public abstract class ConnectionEvent extends Event {
     public static final class ConnectedEvent extends Event {}
 
     @EventThread(EventThread.Type.RENDER)
-    public static class DisconnectedEvent extends ConnectionEvent {}
+    public static class DisconnectedEvent extends ConnectionEvent {
+        private final String reason;
 
-    @EventThread(EventThread.Type.RENDER)
-    public static class UnexpectedDisconnectedEvent extends DisconnectedEvent {}
+        public DisconnectedEvent(String reason) {
+            this.reason = reason;
+        }
+
+        public String getReason() {
+            return reason;
+        }
+    }
 }
