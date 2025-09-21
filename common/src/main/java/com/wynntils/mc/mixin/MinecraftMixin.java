@@ -50,7 +50,7 @@ public abstract class MinecraftMixin implements MinecraftExtension {
 
         if (screen == null) return;
 
-        ScreenOpenedEvent.Pre event = new ScreenOpenedEvent.Pre(screen);
+        ScreenOpenedEvent.Pre event = new ScreenOpenedEvent.Pre(screen, oldScreen.get());
         MixinHelper.postAlways(event);
         if (event.isCanceled()) {
             ci.cancel();

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.resourcepack;
@@ -115,7 +115,7 @@ public final class ResourcePackService extends Service {
     }
 
     @SubscribeEvent
-    public void onConnect(ConnectionEvent.ConnectedEvent event) {
+    public void onConnect(ConnectionEvent.ConnectingEvent event) {
         // Reset the flag, as we are connecting to a new server
         serverHasResourcePack = false;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -28,6 +28,6 @@ public abstract class ConnectScreenMixin {
             ServerData serverData,
             TransferState transferState,
             CallbackInfo ci) {
-        MixinHelper.postAlways(new ConnectionEvent.ConnectedEvent(serverAddress.getHost(), serverAddress.getPort()));
+        MixinHelper.postAlways(new ConnectionEvent.ConnectingEvent(serverAddress.getHost(), serverAddress.getPort()));
     }
 }

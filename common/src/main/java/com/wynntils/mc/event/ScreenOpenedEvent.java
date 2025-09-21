@@ -21,8 +21,15 @@ public abstract class ScreenOpenedEvent extends Event {
     }
 
     public static class Pre extends ScreenOpenedEvent implements ICancellableEvent {
-        public Pre(Screen screen) {
+        private final Screen oldScreen;
+
+        public Pre(Screen screen, Screen oldScreen) {
             super(screen);
+            this.oldScreen = oldScreen;
+        }
+
+        public Screen getOldScreen() {
+            return oldScreen;
         }
     }
 

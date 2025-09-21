@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.ConnectionEvent.ConnectedEvent;
 import com.wynntils.mc.event.ConnectionEvent.DisconnectedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -51,7 +52,7 @@ public final class ConnectionManager extends Manager {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onConnected(ConnectedEvent e) {
+    public void onConnected(ConnectionEvent.ConnectingEvent e) {
         if (isConnected) {
             WynntilsMod.error("Got connected event while already connected to server: " + e);
             disconnect();
