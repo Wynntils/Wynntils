@@ -148,13 +148,13 @@ public class BombBellOverlay extends Overlay {
 
     @Override
     public void tick() {
-        Stream<BombInfo> bombsToRender = Models.Bomb.getBombBellStream(groupBombs.get(), sortOrder.get())
+        Stream<BombInfo> bombsToRender = Models.Bomb.getBombBellStream(
+                        groupBombs.get(), sortOrder.get(), maxBombs.get())
                 .filter(bombInfo -> {
                     BombType bombType = bombInfo.bomb();
-                    Supplier<Boolean> bombTypeSuplier = bombTypeMap.get(bombType);
-                    return bombTypeSuplier != null && bombTypeSuplier.get();
-                })
-                .limit(maxBombs.get());
+                    Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
+                    return bombTypeSupplier != null && bombTypeSupplier.get();
+                });
 
         renderTasks = bombsToRender
                 .map(bombInfo -> new TextRenderTask(bombInfo.asString(), textRenderSetting))
