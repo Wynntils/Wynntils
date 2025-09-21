@@ -9,10 +9,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
-import com.wynntils.models.wynnitem.type.ItemObtainType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 
@@ -47,10 +46,14 @@ public final class IngredientModel extends Model {
     }
 
     public List<ItemObtainInfo> getObtainInfo(IngredientInfo ingredientInfo) {
-        List<ItemObtainInfo> obtainInfo = Models.WynnItem.getObtainInfo(ingredientInfo.name());
-        if (obtainInfo == null) {
-            return List.of(new ItemObtainInfo(ItemObtainType.UNKNOWN, Optional.empty()));
+        List<ItemObtainInfo> obtainInfo = new ArrayList<>(ingredientInfo.obtainInfo());
+
+        // If the API gave no info, then use the crowd sourced info
+        if (obtainInfo.size() == 1 && obtainInfo.getFirst().equals(ItemObtainInfo.UNKNOWN)) {
+            obtainInfo.clear();
         }
+
+        obtainInfo.addAll(Models.WynnItem.getObtainInfo(ingredientInfo.name()));
         return obtainInfo;
     }
 
