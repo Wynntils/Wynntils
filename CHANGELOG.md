@@ -1,6 +1,3 @@
-Valuables Protection
-- New config Require Ctrl to Sell, whether or not holding ctrl is required to sell valuable items to the blacksmith, default disabled
-
 Fixes
-- Fixed undercutting in trade market price match buttons
-- Fixed `status_effect_modifier` function crashing for status effects that have no modifier
+- Fix `personal_objective_goal` and `personal_objective_score` crashing when checking for an index that doesn't exist
+- Fix bomb bell overlay Max Bombs config applying to all bombs even when Group Bombs enabled
