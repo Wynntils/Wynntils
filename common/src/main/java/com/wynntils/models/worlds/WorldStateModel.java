@@ -13,7 +13,6 @@ import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
-import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionSegment;
 import com.wynntils.models.worlds.actionbar.matchers.CharacterWardrobeSegmentMacher;
@@ -30,16 +29,13 @@ import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.models.worlds.type.WynncraftVersion;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.PosUtils;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class WorldStateModel extends Model {
@@ -48,7 +44,6 @@ public final class WorldStateModel extends Model {
     private static final Pattern HOUSING_NAME = Pattern.compile("^§f  §l([^§\"\\\\]{1,35})$");
     private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com \n$");
     private static final Pattern QUICK_CONNECT_PATTERN = Pattern.compile("§aQuick Connect");
-    private static final Position CHARACTER_SELECTION_POSITION = new Vec3(-1337.5, 16.2, -1120.5);
     private static final String WYNNCRAFT_BETA_NAME = "beta";
     private static final String UNKNOWN_WORLD = "WC??";
 
@@ -170,13 +165,6 @@ public final class WorldStateModel extends Model {
     public void remove(PlayerLogOutEvent e) {
         if (e.getId().equals(WORLD_NAME_UUID) && !currentWorldName.isEmpty()) {
             setState(WorldState.INTERIM);
-        }
-    }
-
-    @SubscribeEvent
-    public void onTeleport(PlayerTeleportEvent e) {
-        if (PosUtils.isSame(e.getNewPosition(), CHARACTER_SELECTION_POSITION)) {
-            setState(WorldState.CHARACTER_SELECTION);
         }
     }
 
