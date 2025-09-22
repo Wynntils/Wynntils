@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.DisconnectedScreen;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -76,6 +79,13 @@ public final class ConnectionManager extends Manager {
     // ScreenOpenedEvent.Pre is used, because it is always posted
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenOpened(ScreenOpenedEvent.Pre e) {
+        if (e.getOldScreen() instanceof ConnectScreen) {
+            if (e.getScreen() instanceof JoinMultiplayerScreen || e.getScreen() instanceof TitleScreen) {
+                // This is the only way we get notified if the user aborts while connecting
+                doDisconnect();
+            }
+        }
+
         // Sometimes the only notice we get about a disconnect is through
         // a screen. Typically this happens if a connection fails before
         // it is fully connected.

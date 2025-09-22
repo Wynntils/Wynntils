@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.PacketEvent;
+import com.wynntils.utils.mc.McUtils;
 import io.netty.channel.ChannelHandlerContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ConnectionMixin {
     @Shadow
     private volatile PacketListener packetListener;
+
+    @Unique
+    private static boolean isRenderThread() {
+        return McUtils.mc().isSameThread();
+    }
 
     @WrapMethod(
             method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V")
@@ -81,6 +87,7 @@ public abstract class ConnectionMixin {
     @Inject(method = "disconnect(Lnet/minecraft/network/DisconnectionDetails;)V", at = @At("RETURN"))
     private void disconnectPost(DisconnectionDetails disconnectionDetails, CallbackInfo ci) {
         if (!(this.packetListener instanceof ClientPacketListener)) return;
+        if (!isRenderThread()) return;
 
         String reason = disconnectionDetails.reason().getContents() instanceof TranslatableContents tc
                 ? tc.getKey()

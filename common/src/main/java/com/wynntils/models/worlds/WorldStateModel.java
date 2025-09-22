@@ -110,7 +110,7 @@ public final class WorldStateModel extends Model {
     private void setState(WorldState newState, String newWorldName, boolean isFirstJoinWorld) {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
 
-        System.out.println("CHANGING STATE TO: " + newState + " (" + newWorldName + ")");
+        WynntilsMod.info("Changing world state to " + newState);
         cutsceneEnded();
         WorldState oldState = currentState;
         // Switch state before sending event
@@ -138,7 +138,7 @@ public final class WorldStateModel extends Model {
     }
 
     @SubscribeEvent
-    public void conectionAborted(WynncraftConnectionEvent.ConnectingAborted e) {
+    public void connectionAborted(WynncraftConnectionEvent.ConnectingAborted e) {
         setState(WorldState.NOT_CONNECTED);
     }
 
