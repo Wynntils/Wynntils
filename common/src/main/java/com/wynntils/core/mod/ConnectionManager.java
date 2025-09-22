@@ -19,6 +19,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ConnectionManager extends Manager {
+    private static final String TRANSFER_REASON = "disconnect.transfer";
     private static final Pattern WYNNCRAFT_SERVER_PATTERN =
             Pattern.compile("^(?:(.*)\\.)?wynncraft\\.(?:com|net|org)$");
 
@@ -67,7 +68,7 @@ public final class ConnectionManager extends Manager {
     public void onDisconnected(ConnectionEvent.DisconnectedEvent e) {
         // If we are transferred to another server, it acts as a disconnect but
         // we should ignore it.
-        if (e.getReason().equals("disconnect.transfer")) return;
+        if (e.getReason().equals(TRANSFER_REASON)) return;
 
         doDisconnect();
     }
@@ -85,7 +86,7 @@ public final class ConnectionManager extends Manager {
                 : "unknown";
         // If we are transferred to another server, it acts as a disconnect but
         // we should ignore it.
-        if (reason.equals("disconnect.transfer")) return;
+        if (reason.equals(TRANSFER_REASON)) return;
 
         doDisconnect();
     }
