@@ -88,6 +88,9 @@ public class MinimapOverlay extends Overlay {
     private final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
     @Persisted
+    private final Config<Boolean> renderRemoteGuildPlayers = new Config<>(true);
+
+    @Persisted
     public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
 
     public MinimapOverlay() {
@@ -269,7 +272,11 @@ public class MinimapOverlay extends Overlay {
         poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
         poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
         poisToRender = Stream.concat(
-                poisToRender, getMiniPlayerPois(renderRemotePartyPlayers.get(), renderRemoteFriendPlayers.get()));
+                poisToRender,
+                getMiniPlayerPois(
+                        renderRemotePartyPlayers.get(),
+                        renderRemoteFriendPlayers.get(),
+                        renderRemoteGuildPlayers.get()));
 
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
@@ -429,10 +436,11 @@ public class MinimapOverlay extends Overlay {
     }
 
     private Stream<PlayerMiniMapPoi> getMiniPlayerPois(
-            boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers) {
+            boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers, boolean renderRemoteGuildPlayers) {
         return Services.Hades.getHadesUsers()
                 .filter(hadesUser -> (hadesUser.getRelation() == PlayerRelation.PARTY && renderRemotePartyPlayers)
-                        || (hadesUser.getRelation() == PlayerRelation.FRIEND && renderRemoteFriendPlayers))
+                        || (hadesUser.getRelation() == PlayerRelation.FRIEND && renderRemoteFriendPlayers)
+                        || (hadesUser.getRelation() == PlayerRelation.GUILD && renderRemoteGuildPlayers))
                 .map(PlayerMiniMapPoi::new);
     }
 
