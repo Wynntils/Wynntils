@@ -109,6 +109,8 @@ public final class ConnectionManager extends Manager {
         connectedHost = null;
         if (oldState == ConnectionState.CONNECTED) {
             WynntilsMod.postEvent(new WynncraftConnectionEvent.Disconnected(oldHostName));
+        } else if (oldState == ConnectionState.CONNECTING) {
+            WynntilsMod.postEvent(new WynncraftConnectionEvent.ConnectingAborted(oldHostName));
         }
     }
 

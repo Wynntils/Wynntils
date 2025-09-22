@@ -34,4 +34,10 @@ public abstract class WynncraftConnectionEvent extends Event {
             super(host);
         }
     }
+
+    public static final class ConnectingAborted extends WynncraftConnectionEvent {
+        public ConnectingAborted(String host) {
+            super(host);
+        }
+    }
 }

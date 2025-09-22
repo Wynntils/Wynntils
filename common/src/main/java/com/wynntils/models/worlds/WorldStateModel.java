@@ -110,6 +110,7 @@ public final class WorldStateModel extends Model {
     private void setState(WorldState newState, String newWorldName, boolean isFirstJoinWorld) {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
 
+        System.out.println("CHANGING STATE TO: " + newState + " (" + newWorldName + ")");
         cutsceneEnded();
         WorldState oldState = currentState;
         // Switch state before sending event
@@ -133,6 +134,11 @@ public final class WorldStateModel extends Model {
 
     @SubscribeEvent
     public void disconnected(WynncraftConnectionEvent.Disconnected e) {
+        setState(WorldState.NOT_CONNECTED);
+    }
+
+    @SubscribeEvent
+    public void conectionAborted(WynncraftConnectionEvent.ConnectingAborted e) {
         setState(WorldState.NOT_CONNECTED);
     }
 
