@@ -4,13 +4,10 @@
  */
 package com.wynntils.models.gear.type;
 
-import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.utils.mc.LoreUtils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
@@ -19,60 +16,73 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
 
 public enum GearType {
-    SPEAR(ClassType.WARRIOR, Items.IRON_HORSE_ARMOR, 437, 497, 0),
-    WAND(ClassType.MAGE, Items.IRON_HORSE_ARMOR, 308, 372, 1),
-    DAGGER(ClassType.ASSASSIN, Items.IRON_HORSE_ARMOR, 244, 307, 2),
-    BOW(ClassType.ARCHER, Items.IRON_HORSE_ARMOR, 182, 243, 3),
-    RELIK(ClassType.SHAMAN, Items.IRON_HORSE_ARMOR, 373, 436, 4),
+    SPEAR(ClassType.WARRIOR, 1565, 1642, 0),
+    WAND(ClassType.MAGE, 1403, 1484, 1),
+    DAGGER(ClassType.ASSASSIN, 1323, 1402, 2),
+    BOW(ClassType.ARCHER, 1245, 1322, 3),
+    RELIK(ClassType.SHAMAN, 1485, 1564, 4),
     // This is a fallback for signed, crafted gear with a skin
-    WEAPON(null, Items.IRON_HORSE_ARMOR, 0, 0, 12),
+    WEAPON(null, 0, 0, 12),
     // Note: This fallback should basically be never be matched, but we use it in item encoding
     //       (as it's the same as WEAPON, and we have no other info)
-    ACCESSORY(null, Items.IRON_HORSE_ARMOR, 0, 0, 13),
-    RING(null, Items.IRON_HORSE_ARMOR, 134, 150, 5),
-    BRACELET(null, Items.IRON_HORSE_ARMOR, 151, 164, 6),
-    NECKLACE(null, Items.IRON_HORSE_ARMOR, 165, 181, 7),
+    ACCESSORY(null, 0, 0, 13),
+    RING(null, 1197, 1213, 5),
+    BRACELET(null, 1214, 1227, 6),
+    NECKLACE(null, 1228, 1244, 7),
     HELMET(
             null,
-            Items.IRON_HORSE_ARMOR,
-            498,
-            629,
+            Items.LEATHER_HELMET,
+            1,
+            18,
+            1643,
+            1813,
             List.of(
                     Items.LEATHER_HELMET,
                     Items.CHAINMAIL_HELMET,
                     Items.IRON_HELMET,
                     Items.GOLDEN_HELMET,
-                    Items.DIAMOND_HELMET),
+                    Items.DIAMOND_HELMET,
+                    Items.NETHERITE_HELMET,
+                    Items.POTION),
             8),
     CHESTPLATE(
             null,
             Items.LEATHER_CHESTPLATE,
-            0,
-            0,
+            1,
+            18,
             List.of(
                     Items.CHAINMAIL_CHESTPLATE,
                     Items.IRON_CHESTPLATE,
                     Items.GOLDEN_CHESTPLATE,
-                    Items.DIAMOND_CHESTPLATE),
+                    Items.DIAMOND_CHESTPLATE,
+                    Items.NETHERITE_CHESTPLATE),
             9),
     LEGGINGS(
             null,
             Items.LEATHER_LEGGINGS,
-            0,
-            0,
-            List.of(Items.CHAINMAIL_LEGGINGS, Items.IRON_LEGGINGS, Items.GOLDEN_LEGGINGS, Items.DIAMOND_LEGGINGS),
+            1,
+            18,
+            List.of(
+                    Items.CHAINMAIL_LEGGINGS,
+                    Items.IRON_LEGGINGS,
+                    Items.GOLDEN_LEGGINGS,
+                    Items.DIAMOND_LEGGINGS,
+                    Items.NETHERITE_LEGGINGS),
             10),
     BOOTS(
             null,
             Items.LEATHER_BOOTS,
-            0,
-            0,
-            List.of(Items.CHAINMAIL_BOOTS, Items.IRON_BOOTS, Items.GOLDEN_BOOTS, Items.DIAMOND_BOOTS),
+            1,
+            18,
+            List.of(
+                    Items.CHAINMAIL_BOOTS,
+                    Items.IRON_BOOTS,
+                    Items.GOLDEN_BOOTS,
+                    Items.DIAMOND_BOOTS,
+                    Items.NETHERITE_BOOTS),
             11),
-    MASTERY_TOME(null, Items.IRON_HORSE_ARMOR, 76, 82, -1),
-    CHARM(null, Items.CLAY_BALL, 0, 0, -1);
-
-    private static final Pattern SKINNED_GEAR_PATTERN = Pattern.compile("^§7\\[Active (.+) Skin: (.+)]$");
+    MASTERY_TOME(null, 83, 89, -1),
+    CHARM(null, 1080, 1083, -1);
 
     private final ClassType classReq;
     private final Item defaultItem;
@@ -85,21 +95,43 @@ public enum GearType {
             Item defaultItem,
             int firstModel,
             int lastModel,
+            int firstSkinModel,
+            int lastSkinModel,
             List<Item> otherItems,
             int encodingId) {
         this.classReq = classReq;
         this.defaultItem = defaultItem;
-        this.models = firstModel == 0 && lastModel == 0
-                ? List.of()
-                : IntStream.rangeClosed(firstModel, lastModel)
-                        .mapToObj(i -> (float) i)
-                        .toList();
+        List<Float> modelList = new ArrayList<>();
+
+        if (!(firstModel == 0 && lastModel == 0)) {
+            IntStream.rangeClosed(firstModel, lastModel)
+                    .mapToObj(i -> (float) i)
+                    .forEach(modelList::add);
+        }
+
+        if (!(firstSkinModel == 0 && lastSkinModel == 0)) {
+            IntStream.rangeClosed(firstSkinModel, lastSkinModel)
+                    .mapToObj(i -> (float) i)
+                    .forEach(modelList::add);
+        }
+
+        this.models = List.copyOf(modelList);
         this.otherItems = otherItems;
         this.encodingId = encodingId;
     }
 
-    GearType(ClassType classReq, Item defaultItem, int firstModel, int lastModel, int encodingId) {
-        this(classReq, defaultItem, firstModel, lastModel, List.of(), encodingId);
+    GearType(
+            ClassType classReq,
+            Item defaultItem,
+            int firstModel,
+            int lastModel,
+            List<Item> otherItems,
+            int encodingId) {
+        this(classReq, defaultItem, firstModel, lastModel, 0, 0, otherItems, encodingId);
+    }
+
+    GearType(ClassType classReq, int firstModel, int lastModel, int encodingId) {
+        this(classReq, Items.POTION, firstModel, lastModel, List.of(), encodingId);
     }
 
     public static GearType fromString(String typeStr) {
@@ -112,35 +144,20 @@ public enum GearType {
 
     public static GearType fromItemStack(ItemStack itemStack) {
         Item item = itemStack.getItem();
-        for (GearType gearType : values()) {
-            // We only want to match for proper gear, not rewards
-            if (gearType.isReward()) continue;
+        CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
 
-            CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+        if (customModelData != null) {
+            for (GearType gearType : values()) {
+                // We only want to match for proper gear, not rewards
+                if (gearType.isReward()) continue;
 
-            // Special case for armor gear
-            // Only check for the models in case the item is the default item, otherwise accept any item
-            if (customModelData == null && (gearType.defaultItem.equals(item) && gearType.models.isEmpty())
-                    || gearType.otherItems.contains(item)) {
-                return gearType;
-            }
-
-            if (customModelData != null) {
                 List<Float> customModelDataValue = customModelData.floats();
                 for (Float modelValue : customModelDataValue) {
-                    if (gearType.defaultItem.equals(item) && gearType.models.contains(modelValue)) {
+                    if ((gearType.defaultItem.equals(item) || gearType.otherItems.contains(item))
+                            && gearType.models.contains(modelValue)) {
                         return gearType;
                     }
                 }
-            }
-        }
-
-        // Gears have a lot of different skinned items, checking for the string in lore is more reliable
-        List<StyledText> lore = LoreUtils.getLore(itemStack);
-        if (!lore.isEmpty()) {
-            Matcher matcher = lore.getLast().getMatcher(SKINNED_GEAR_PATTERN);
-            if (matcher.matches()) {
-                return GearType.fromString(matcher.group(1));
             }
         }
 
