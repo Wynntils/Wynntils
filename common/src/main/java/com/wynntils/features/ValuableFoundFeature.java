@@ -12,6 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.AspectItem;
+import com.wynntils.models.items.items.game.CorruptedCacheItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -33,6 +34,8 @@ public class ValuableFoundFeature extends Feature {
             ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found-classic");
     private static final ResourceLocation MYTHIC_FOUND_MODERN_ID =
             ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found-modern");
+    private static final ResourceLocation CACHE_FOUND_ID =
+            ResourceLocation.fromNamespaceAndPath("wynntils", "misc.cache-found");
 
     @Persisted
     private final Config<ValuableFoundSound> chestSound = new Config<>(ValuableFoundSound.MODERN);
@@ -45,6 +48,9 @@ public class ValuableFoundFeature extends Feature {
 
     @Persisted
     private final Config<ValuableFoundSound> tomeFoundSound = new Config<>(ValuableFoundSound.NONE);
+
+    @Persisted
+    private final Config<ValuableFoundSound> cacheFoundSound = new Config<>(ValuableFoundSound.CACHE);
 
     @Persisted
     private final Config<ValuableFoundSound> emeraldPouchSound = new Config<>(ValuableFoundSound.NONE);
@@ -166,6 +172,16 @@ public class ValuableFoundFeature extends Feature {
                 }
             }
         }
+
+        // World Event Cache
+        if (event.getItemSource() == ValuableFoundEvent.ItemSource.WORLD_EVENT) {
+            Optional<CorruptedCacheItem> cacheItem = Models.Item.asWynnItem(itemStack, CorruptedCacheItem.class);
+            if (cacheItem.isPresent()) {
+                if (cacheFoundSound.get() != ValuableFoundSound.NONE) {
+                    McUtils.playSoundAmbient(cacheFoundSound.get().getSoundEvent());
+                }
+            }
+        }
     }
 
     private void sendLootrunDryStreakMessage(StyledText itemName) {
@@ -244,6 +260,7 @@ public class ValuableFoundFeature extends Feature {
     private enum ValuableFoundSound {
         MODERN(SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_MODERN_ID)),
         CLASSIC(SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_CLASSIC_ID)),
+        CACHE(SoundEvent.createVariableRangeEvent(CACHE_FOUND_ID)),
         NONE(null);
 
         private final SoundEvent soundEvent;

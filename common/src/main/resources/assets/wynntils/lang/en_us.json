@@ -1536,6 +1536,8 @@
   "feature.wynntils.userFeature.userEnabled.name": "Enabled",
   "feature.wynntils.valuableFound.aspectFoundSound.description": "What sound should be played upon finding a mythic aspect in the raid reward chest?",
   "feature.wynntils.valuableFound.aspectFoundSound.name": "Mythic Aspect Found Sound",
+  "feature.wynntils.valuableFound.cacheFoundSound.description": "What sound should be played upon finding a corrupted cache in the event reward chest?",
+  "feature.wynntils.valuableFound.cacheFoundSound.name": "Corrupted Cache Found Sound",
   "feature.wynntils.valuableFound.chestSound.description": "What sound should be played upon finding a mythic in a chest?",
   "feature.wynntils.valuableFound.chestSound.name": "Chest Sound",
   "feature.wynntils.valuableFound.description": "Do various things when a valuable item is found.",
