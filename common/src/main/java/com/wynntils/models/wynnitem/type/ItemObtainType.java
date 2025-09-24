@@ -29,6 +29,9 @@ public enum ItemObtainType {
     NORMAL_MOB_DROP("normalMobDrop", "Normal Mob Drop"),
     SPECIFIC_MOB_DROP("specificMobDrop", "Specific Mob Drop"),
     WORLD_EVENT("worldEvent", "World Event"),
+    MOB_REGION("mobDropRegion", "Mobs in Region"),
+    RARE_MOB_REGION("rareMobDropRegion", "Rare Mobs in Region"),
+    ENVIRONMENT("environment", "Environment"),
 
     UNAVAILABLE("unavailable", "Unavailable"),
     UNKNOWN("unknown", "Unknown");
