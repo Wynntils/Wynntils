@@ -84,7 +84,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private boolean instantSearching = false;
 
     @SubscribeEvent
-    public void onScreenClosed(ScreenClosedEvent event) {
+    public void onScreenClosed(ScreenClosedEvent.Post event) {
         if (Models.TradeMarket.inChatInput() && event.getScreen() instanceof ChatScreen) {
             if (autoCancel.get() && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 McUtils.sendChat("cancel");
