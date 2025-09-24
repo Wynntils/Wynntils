@@ -75,7 +75,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenClose(ScreenClosedEvent e) {
+    public void onScreenClose(ScreenClosedEvent.Post e) {
         pageDestination = 1;
         quickJumping = false;
     }

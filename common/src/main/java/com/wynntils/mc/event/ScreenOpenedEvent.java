@@ -8,36 +8,32 @@ import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-/** Fired on setting the active screen */
 public abstract class ScreenOpenedEvent extends Event {
     private final Screen screen;
+    private final Screen oldScreen;
 
-    protected ScreenOpenedEvent(Screen screen) {
+    protected ScreenOpenedEvent(Screen screen, Screen oldScreen) {
         this.screen = screen;
+        this.oldScreen = oldScreen;
     }
 
     public Screen getScreen() {
         return screen;
     }
 
-    public static class Pre extends ScreenOpenedEvent implements ICancellableEvent {
-        private final Screen oldScreen;
+    public Screen getOldScreen() {
+        return oldScreen;
+    }
 
+    public static final class Pre extends ScreenOpenedEvent implements ICancellableEvent {
         public Pre(Screen screen, Screen oldScreen) {
-            super(screen);
-            this.oldScreen = oldScreen;
-        }
-
-        public Screen getOldScreen() {
-            return oldScreen;
+            super(screen, oldScreen);
         }
     }
 
-    // NOTE: This event is not actually cancelable, but it is marked as such to make higher priority listeners cancel
-    //       the event for lower priorities
-    public static class Post extends ScreenOpenedEvent implements ICancellableEvent {
-        public Post(Screen screen) {
-            super(screen);
+    public static final class Post extends ScreenOpenedEvent {
+        public Post(Screen screen, Screen oldScreen) {
+            super(screen, oldScreen);
         }
     }
 }
