@@ -103,13 +103,13 @@ public enum GearType {
         this.defaultItem = defaultItem;
         List<Float> modelList = new ArrayList<>();
 
-        if (!(firstModel == 0 && lastModel == 0)) {
+        if (firstModel != 0) {
             IntStream.rangeClosed(firstModel, lastModel)
                     .mapToObj(i -> (float) i)
                     .forEach(modelList::add);
         }
 
-        if (!(firstSkinModel == 0 && lastSkinModel == 0)) {
+        if (firstSkinModel != 0) {
             IntStream.rangeClosed(firstSkinModel, lastSkinModel)
                     .mapToObj(i -> (float) i)
                     .forEach(modelList::add);
