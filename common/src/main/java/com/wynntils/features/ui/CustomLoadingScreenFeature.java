@@ -9,6 +9,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.LoadingProgressEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
@@ -16,78 +17,120 @@ import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.loading.LoadingScreen;
+import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.McUtils;
+import java.util.concurrent.Future;
 import net.minecraft.client.gui.screens.ConnectScreen;
+import net.minecraft.client.gui.screens.DisconnectedScreen;
 import net.minecraft.client.gui.screens.ProgressScreen;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomLoadingScreenFeature extends Feature {
+    private static final String IGNORED_TITLE = "\uE000\uE001\uE000";
     private LoadingScreen loadingScreen;
-    private ConnectScreen baseConnectScreen;
-    // Minecraft does some of its connection logic in ConnectScreen which is strange
-    // We need to be able to tell our custom loading screen to work with it in the background
+    private Screen replacedScreen;
+    private Future<?> delayedRemoval;
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onScreenOpenPre(ScreenOpenedEvent.Pre event) {
-        if (event.getScreen() instanceof ConnectScreen cs) {
-            baseConnectScreen = cs;
-        } else if (!(event.getScreen() instanceof LoadingScreen)) {
-            // Ensures baseConnectScreen is cleared after the initial handshake occurs
-            // Only our LoadingScreen and ConnectScreen should be able to work with baseConnectScreen
-            baseConnectScreen = null;
+    @SubscribeEvent
+    public void onTickAlways(TickAlwaysEvent e) {
+        // Minecraft does connection logic work every tick, propagate tick to keep this behaviour
+        if (replacedScreen != null) {
+            replacedScreen.tick();
         }
+    }
 
-        if (loadingScreen == null) return;
-
-        if (event.getScreen() instanceof ProgressScreen) {
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onScreenClosed(ScreenClosedEvent.Pre event) {
+        // Don't allow screens to close when they are "faked"
+        if (isCustomScreenVisible()) {
             event.setCanceled(true);
-            loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.working"));
         }
-        if (event.getScreen() instanceof ReceivingLevelScreen) {
-            event.setCanceled(true);
-            loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.receivingTerrain"));
+        // But update our knowledge of what screen Minecraft thinks it is showing
+        if (replacedScreen != null) {
+            replacedScreen.removed();
+            replacedScreen = null;
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onScreenOpened(ScreenOpenedEvent.Pre event) {
+        if (event.getScreen() instanceof LoadingScreen) return;
+
+        if (replacedScreen != null) {
+            replacedScreen.removed();
+            replacedScreen = null;
+        }
+        if (!isCustomScreenVisible()) return;
+
+        // Make the screen think it is showing, but really don't let it show
+        Screen screen = event.getScreen();
+        replacedScreen = screen;
+        screen.init(McUtils.mc(), 1, 1);
+        event.setCanceled(true);
+
+        String messageUpdate = null;
+        if (screen instanceof ProgressScreen ps) {
+            messageUpdate = "feature.wynntils.customLoadingScreen.working";
+        }
+        if (screen instanceof ConnectScreen cs) {
+            if (cs.status.getContents() instanceof TranslatableContents tc
+                    && tc.getKey().equals("connect.transferring")) {
+                messageUpdate = "feature.wynntils.customLoadingScreen.transferConnecting";
+            }
+        }
+        if (screen instanceof DisconnectedScreen ds) {
+            if (ds.details.reason().getContents() instanceof TranslatableContents tc
+                    && tc.getKey().equals("disconnect.transfer")) {
+                messageUpdate = "feature.wynntils.customLoadingScreen.transferRequest";
+            }
+        }
+        if (screen instanceof ReceivingLevelScreen) {
+            messageUpdate = "feature.wynntils.customLoadingScreen.receivingTerrain";
+        }
+        if (messageUpdate != null) {
+            loadingScreen.setMessage(I18n.get(messageUpdate));
         }
     }
 
     @SubscribeEvent
     public void onLoadingProgress(LoadingProgressEvent event) {
-        if (loadingScreen == null) {
-            loadingScreen = LoadingScreen.create();
-            loadingScreen.setMessage(event.getMessage());
-            McUtils.mc().setScreen(loadingScreen);
-        }
+        if (!isCustomScreenVisible()) return;
 
         loadingScreen.setMessage(event.getMessage());
     }
 
     @SubscribeEvent
     public void onResourcePack(ServerResourcePackEvent.Load e) {
-        if (loadingScreen == null) return;
+        if (!isCustomScreenVisible()) return;
 
         loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.resourcePack"));
     }
 
     @SubscribeEvent
     public void onTitleSetText(TitleSetTextEvent e) {
-        if (loadingScreen == null) return;
+        if (!isCustomScreenVisible()) return;
+
+        if (e.getComponent().getString().equals(IGNORED_TITLE)) return;
 
         loadingScreen.setStageTitle(e.getComponent().getString());
     }
 
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent e) {
-        if (loadingScreen == null) return;
+        if (!isCustomScreenVisible()) return;
 
         loadingScreen.setSubtitle(e.getComponent().getString());
     }
 
     @SubscribeEvent
     public void onPlayerSound(LocalSoundEvent.Client event) {
-        if (loadingScreen == null) return;
+        if (!isCustomScreenVisible()) return;
 
         // Silence all player sounds while loading (falling and equip sounds)
         event.setCanceled(true);
@@ -95,7 +138,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
     @SubscribeEvent
     public void onPlayerSound(LocalSoundEvent.Player event) {
-        if (loadingScreen == null) return;
+        if (!isCustomScreenVisible()) return;
 
         // Silence all player sounds while loading (falling and equip sounds)
         event.setCanceled(true);
@@ -103,7 +146,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
     @SubscribeEvent
     public void onPlayerSound(LocalSoundEvent.LocalEntity event) {
-        if (loadingScreen == null) return;
+        if (!isCustomScreenVisible()) return;
 
         // Silence all player sounds while loading (falling and equip sounds)
         event.setCanceled(true);
@@ -113,31 +156,56 @@ public class CustomLoadingScreenFeature extends Feature {
     public void onWorldStateChange(WorldStateEvent event) {
         switch (event.getNewState()) {
             case CONNECTING -> {
-                loadingScreen = LoadingScreen.create();
+                createCustomScreen();
                 loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.connecting"));
-                McUtils.mc().setScreen(loadingScreen);
             }
             case INTERIM -> {
-                if (loadingScreen == null) {
-                    loadingScreen = LoadingScreen.create();
-                    McUtils.mc().setScreen(loadingScreen);
-                }
+                if (!isCustomScreenVisible()) return;
+
+                // The HUB was just temporary
+                cancelDelayedRemoval();
 
                 loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.joiningWorld"));
             }
-            case WORLD, HUB, NOT_CONNECTED, CHARACTER_SELECTION -> {
-                if (loadingScreen == null) return;
+            case HUB -> {
+                if (!isCustomScreenVisible()) return;
 
-                loadingScreen = null;
-                McUtils.mc().setScreen(null);
+                // Unless connecting to lobby.wynncraft.com (or some odd situation occurs),
+                // the hub will just flash by. Don't remove our custom loading screen for that.
+                delayedRemoval = TaskUtils.schedule(this::removeCustomScreen, 1);
+            }
+            case WORLD, NOT_CONNECTED, CHARACTER_SELECTION -> {
+                if (!isCustomScreenVisible()) return;
+
+                // We might have a delayed removal from HUB, remove it first
+                cancelDelayedRemoval();
+
+                // Give some time for the world to fully load to avoid flickering
+                // before removing our custom loading screen
+                delayedRemoval = TaskUtils.schedule(this::removeCustomScreen, 1);
             }
         }
     }
 
-    @SubscribeEvent
-    public void onTickAlways(TickAlwaysEvent e) {
-        // Minecraft does connection logic work every tick, do not remove this behaviour when cancelling ConnectScreens
-        if (baseConnectScreen == null) return;
-        baseConnectScreen.tick();
+    private boolean isCustomScreenVisible() {
+        return loadingScreen != null;
+    }
+
+    private void createCustomScreen() {
+        loadingScreen = LoadingScreen.create();
+        McUtils.mc().setScreen(loadingScreen);
+    }
+
+    private void removeCustomScreen() {
+        delayedRemoval = null;
+        loadingScreen = null;
+        McUtils.mc().setScreen(null);
+    }
+
+    private void cancelDelayedRemoval() {
+        if (delayedRemoval != null) {
+            delayedRemoval.cancel(false);
+            delayedRemoval = null;
+        }
     }
 }
