@@ -201,7 +201,7 @@ public class CustomLoadingScreenFeature extends Feature {
         delayedRemoval = null;
         loadingScreen = null;
         if (McUtils.mc().screen == null) {
-            WynntilsMod.error("The custom LoadingScreen has disappaeared");
+            WynntilsMod.error("The custom LoadingScreen has disappeared");
         } else {
             McUtils.mc().setScreen(null);
         }
