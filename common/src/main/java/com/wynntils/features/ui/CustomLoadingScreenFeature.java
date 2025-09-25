@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -192,14 +193,18 @@ public class CustomLoadingScreenFeature extends Feature {
     }
 
     private void createCustomScreen() {
-        loadingScreen = LoadingScreen.create();
+        loadingScreen = LoadingScreen.create(this::removeCustomScreen);
         McUtils.mc().setScreen(loadingScreen);
     }
 
     private void removeCustomScreen() {
         delayedRemoval = null;
         loadingScreen = null;
-        McUtils.mc().setScreen(null);
+        if (McUtils.mc().screen == null) {
+            WynntilsMod.error("The custom LoadingScreen has disappaeared");
+        } else {
+            McUtils.mc().setScreen(null);
+        }
     }
 
     private void cancelDelayedRemoval() {

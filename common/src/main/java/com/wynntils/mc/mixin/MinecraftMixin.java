@@ -48,6 +48,10 @@ public abstract class MinecraftMixin implements MinecraftExtension {
     private void setScreenPre(Screen screen, CallbackInfo ci, @Share("oldScreen") LocalRef<Screen> oldScreen) {
         oldScreen.set(((Minecraft) (Object) this).screen);
 
+        // MouseHandler can do setScreen(null) even if there is no screen,
+        // do not post events for those
+        if (screen == null && oldScreen.get() == null) return;
+
         // "var" is needed since there is no specific enough common supertype between ScreenOpenedEvent.Pre and
         // ScreenClosedEvent.Pre
         var event = (screen == null)
