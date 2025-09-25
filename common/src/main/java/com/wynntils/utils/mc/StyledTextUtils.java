@@ -138,12 +138,6 @@ public final class StyledTextUtils {
                 // Continue with execution, a part may have a wrap before and after it
             }
 
-            // If the part ends with a newline, it may be a preparation for a wrap
-            if (partString.endsWith(NEWLINE_PREPARATION)) {
-                lastWrappedPart = part;
-                continue;
-            }
-
             // Confirm whether the last part was wrapped
             if (lastWrappedPart != null) {
                 if (NEWLINE_WRAP_PATTERN.matcher(partString).matches()) {
@@ -189,6 +183,12 @@ public final class StyledTextUtils {
                 }
 
                 lastWrappedPart = null;
+                continue;
+            }
+
+            // If the part ends with a newline, it may be a preparation for a wrap
+            if (partString.endsWith(NEWLINE_PREPARATION)) {
+                lastWrappedPart = part;
                 continue;
             }
 
