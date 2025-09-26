@@ -26,6 +26,7 @@ import com.wynntils.models.containers.containers.HousingJukeboxContainer;
 import com.wynntils.models.containers.containers.HousingListContainer;
 import com.wynntils.models.containers.containers.IngredientPouchContainer;
 import com.wynntils.models.containers.containers.InventoryContainer;
+import com.wynntils.models.containers.containers.ItemIdentifierAugmentsContainer;
 import com.wynntils.models.containers.containers.ItemIdentifierContainer;
 import com.wynntils.models.containers.containers.JukeboxContainer;
 import com.wynntils.models.containers.containers.LeaderboardRewardsContainer;
@@ -139,6 +140,7 @@ public final class ContainerModel extends Model {
         registerContainer(new IngredientPouchContainer());
         registerContainer(new IslandBlockBankContainer());
         registerContainer(new ItemBombRewardContainer());
+        registerContainer(new ItemIdentifierAugmentsContainer());
         registerContainer(new ItemIdentifierContainer());
         registerContainer(new InventoryContainer());
         registerContainer(new JukeboxContainer());
