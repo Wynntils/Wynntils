@@ -110,6 +110,8 @@ public class CustomLoadingScreenFeature extends Feature {
             // If we get one of our special screens during gameplay, show our custom loading screen
             createCustomScreen();
         }
+
+        // We have a custom loading screen showing, maybe update it?
         if (messageUpdate != null) {
             loadingScreen.setMessage(I18n.get(messageUpdate));
         }
