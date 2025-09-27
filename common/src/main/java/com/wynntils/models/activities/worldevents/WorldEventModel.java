@@ -181,11 +181,11 @@ public final class WorldEventModel extends Model {
                 return;
             }
 
-            currentWorldEvent = null;
-
             if (currentWorldEvent.getName().equals(ANNIHILATION_WORLD_EVENT_NAME)) {
                 nextEventRewardIsAnnihilation = true;
             }
+
+            currentWorldEvent = null;
 
             return;
         } else if (styledText.matches(WORLD_EVENT_FAIl_PATTERN)) {
