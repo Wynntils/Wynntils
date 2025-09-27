@@ -5,6 +5,7 @@
 package com.wynntils.features.ui;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -80,7 +81,17 @@ public class CustomLoadingScreenFeature extends Feature {
             replacedScreen.removed();
             replacedScreen = null;
         }
-        if (!isCustomScreenVisible()) return;
+        if (!isCustomScreenVisible()) {
+            if (!Managers.Connection.onServer()) return;
+
+            if (event.getScreen() instanceof ReceivingLevelScreen) {
+                // If we're getting a ReceivingLevelScreen while on Wynncraft, it can be e.g. a
+                // transfer to or from the hub.
+                createCustomScreen();
+                event.setCanceled(true);
+            }
+            return;
+        }
 
         // Make the screen think it is showing, but really don't let it show
         Screen screen = event.getScreen();
@@ -174,7 +185,9 @@ public class CustomLoadingScreenFeature extends Feature {
                 loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.connecting"));
             }
             case INTERIM -> {
-                if (!isCustomScreenVisible()) return;
+                if (!isCustomScreenVisible()) {
+                    createCustomScreen();
+                }
 
                 // The HUB was just temporary
                 cancelDelayedRemoval();
