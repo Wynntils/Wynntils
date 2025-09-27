@@ -75,29 +75,14 @@ public class CustomLoadingScreenFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onScreenOpened(ScreenOpenedEvent.Pre event) {
-        if (event.getScreen() instanceof LoadingScreen) return;
+        Screen screen = event.getScreen();
+
+        if (screen instanceof LoadingScreen) return;
 
         if (replacedScreen != null) {
             replacedScreen.removed();
             replacedScreen = null;
         }
-        if (!isCustomScreenVisible()) {
-            if (!Managers.Connection.onServer()) return;
-
-            if (event.getScreen() instanceof ReceivingLevelScreen) {
-                // If we're getting a ReceivingLevelScreen while on Wynncraft, it can be e.g. a
-                // transfer to or from the hub.
-                createCustomScreen();
-                event.setCanceled(true);
-            }
-            return;
-        }
-
-        // Make the screen think it is showing, but really don't let it show
-        Screen screen = event.getScreen();
-        replacedScreen = screen;
-        screen.init(McUtils.mc(), 1, 1);
-        event.setCanceled(true);
 
         String messageUpdate = null;
         if (screen instanceof ProgressScreen ps) {
@@ -118,9 +103,22 @@ public class CustomLoadingScreenFeature extends Feature {
         if (screen instanceof ReceivingLevelScreen) {
             messageUpdate = "feature.wynntils.customLoadingScreen.receivingTerrain";
         }
+        
+        if (!isCustomScreenVisible()) {
+            if (!Managers.Connection.onServer()) return;
+            if (messageUpdate == null) return;
+
+            // If we get one of our special screens during gameplay, show our custom loading screen
+            createCustomScreen();
+        }
         if (messageUpdate != null) {
             loadingScreen.setMessage(I18n.get(messageUpdate));
         }
+
+        // Make the screen think it is showing, but really don't let it show
+        replacedScreen = screen;
+        screen.init(McUtils.mc(), 1, 1);
+        event.setCanceled(true);
     }
 
     @SubscribeEvent
