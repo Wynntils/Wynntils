@@ -38,7 +38,7 @@ public final class WynnItemModel extends Model {
 
     @Override
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_ITEM_OBTAIN).handleReader(this::handleObtainData);
+        registry.registerDownload(UrlId.DATA_STATIC_ITEM_OBTAIN_V2).handleReader(this::handleObtainData);
         registry.registerDownload(UrlId.DATA_STATIC_MATERIAL_CONVERSION)
                 .handleReader(this::handleMaterialConversionData);
     }
@@ -90,6 +90,12 @@ public final class WynnItemModel extends Model {
             JsonObject json = jsonElement.getAsJsonObject();
             String sourceTypeStr = json.get("type").getAsString();
             ItemObtainType sourceType = ItemObtainType.fromApiName(sourceTypeStr);
+
+            if (sourceType == null) {
+                WynntilsMod.warn("Unknown item obtain type: " + sourceTypeStr);
+                sourceType = ItemObtainType.UNKNOWN;
+            }
+
             String name = JsonUtils.getNullableJsonString(json, "name");
 
             // FIXME: We are ignoring the details field for now...

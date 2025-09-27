@@ -23,12 +23,15 @@ import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.AbstractItemInfoDeserializer;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
+import com.wynntils.models.wynnitem.type.ItemObtainInfo;
+import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -50,7 +53,7 @@ public class IngredientInfoRegistry {
                         UrlId.DATA_STATIC_INGREDIENTS,
                         Dependency.multi(
                                 Models.WynnItem,
-                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
+                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN_V2, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
                 .handleJsonObject(this::handleIngredients);
     }
 
@@ -119,6 +122,8 @@ public class IngredientInfoRegistry {
 
             ItemMaterial material = parseMaterial(json, displayName);
 
+            List<ItemObtainInfo> obtainInfo = parseDroppedBy(json);
+
             // Get consumables-only parts
             JsonObject consumableIdsJson = JsonUtils.getNullableJsonObject(json, "consumableOnlyIDs");
             int duration = JsonUtils.getNullableJsonInt(consumableIdsJson, "duration");
@@ -145,6 +150,7 @@ public class IngredientInfoRegistry {
                     professions,
                     skillRequirements,
                     positionModifiers,
+                    obtainInfo,
                     duration,
                     charges,
                     durabilityModifier,
@@ -173,6 +179,29 @@ public class IngredientInfoRegistry {
             }
 
             return material;
+        }
+
+        private List<ItemObtainInfo> parseDroppedBy(JsonObject json) {
+            List<ItemObtainInfo> obtainInfo = new ArrayList<>();
+            Set<String> mobNames = new HashSet<>();
+
+            if (json.has("droppedBy")) {
+                JsonArray droppedBy = json.getAsJsonArray("droppedBy");
+                for (JsonElement droppedByElement : droppedBy) {
+                    JsonObject droppedByJson = droppedByElement.getAsJsonObject();
+                    String mobName = droppedByJson.get("name").getAsString();
+
+                    // Placeholder name, has no use
+                    if (mobName.equals("Ingredient Dummy")) continue;
+
+                    mobNames.add(mobName);
+                }
+            }
+
+            mobNames.forEach(mobName ->
+                    obtainInfo.add(new ItemObtainInfo(ItemObtainType.SPECIFIC_MOB_DROP, Optional.of(mobName))));
+
+            return obtainInfo;
         }
 
         private List<Pair<Skill, Integer>> getSkillRequirements(JsonObject itemIdsJson) {
