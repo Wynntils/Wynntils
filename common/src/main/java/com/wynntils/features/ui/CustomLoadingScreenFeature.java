@@ -103,7 +103,7 @@ public class CustomLoadingScreenFeature extends Feature {
         if (screen instanceof ReceivingLevelScreen) {
             messageUpdate = "feature.wynntils.customLoadingScreen.receivingTerrain";
         }
-        
+
         if (!isCustomScreenVisible()) {
             if (!Managers.Connection.onServer()) return;
             if (messageUpdate == null) return;
