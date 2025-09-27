@@ -213,6 +213,8 @@ public class CustomLoadingScreenFeature extends Feature {
     private void removeCustomScreen() {
         delayedRemoval = null;
         loadingScreen = null;
+        // We might have lost the mouse grab when suppressing screens
+        McUtils.mc().mouseHandler.grabMouse();
         if (McUtils.mc().screen == null) {
             WynntilsMod.error("The custom LoadingScreen has disappeared");
         } else {
