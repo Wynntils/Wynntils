@@ -1550,6 +1550,8 @@
   "feature.wynntils.valuableFound.name": "Valuable Found",
   "feature.wynntils.valuableFound.showAspectDryStreakMessage.description": "Should a message be displayed when a mythic aspect is found after a dry streak?",
   "feature.wynntils.valuableFound.showAspectDryStreakMessage.name": "Show Mythic Aspect Dry Streak Message",
+  "feature.wynntils.valuableFound.showCacheDryStreakMessage.description": "Should a message be displayed when a corrupted cache is found after a dry streak?",
+  "feature.wynntils.valuableFound.showCacheDryStreakMessage.name": "Show Cache Dry Streak Message",
   "feature.wynntils.valuableFound.showDryStreakMessage.description": "Should a message be displayed when a mythic item is found after a dry streak?",
   "feature.wynntils.valuableFound.showDryStreakMessage.name": "Show Dry Streak Message",
   "feature.wynntils.valuableFound.showEmeraldPouchDryStreakMessage.description": "Should a message be displayed when an emerald pouch is found after a dry streak?",

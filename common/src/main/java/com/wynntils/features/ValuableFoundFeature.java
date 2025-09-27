@@ -65,6 +65,9 @@ public class ValuableFoundFeature extends Feature {
     private final Config<Boolean> showTomeDryStreakMessage = new Config<>(false);
 
     @Persisted
+    private final Config<Boolean> showCacheDryStreakMessage = new Config<>(true);
+
+    @Persisted
     private final Config<Boolean> showEmeraldPouchDryStreakMessage = new Config<>(true);
 
     @Persisted
@@ -175,10 +178,17 @@ public class ValuableFoundFeature extends Feature {
 
         // World Event Cache
         if (event.getItemSource() == ValuableFoundEvent.ItemSource.WORLD_EVENT) {
-            Optional<CorruptedCacheItem> cacheItem = Models.Item.asWynnItem(itemStack, CorruptedCacheItem.class);
-            if (cacheItem.isPresent()) {
-                if (cacheFoundSound.get() != ValuableFoundSound.NONE) {
-                    McUtils.playSoundAmbient(cacheFoundSound.get().getSoundEvent());
+            if (showCacheDryStreakMessage.get() || cacheFoundSound.get() != ValuableFoundSound.NONE) {
+                Optional<CorruptedCacheItem> cacheItem = Models.Item.asWynnItem(itemStack, CorruptedCacheItem.class);
+                if (cacheItem.isPresent()) {
+                    if (cacheFoundSound.get() != ValuableFoundSound.NONE) {
+                        McUtils.playSoundAmbient(cacheFoundSound.get().getSoundEvent());
+                    }
+                    if (showCacheDryStreakMessage.get()) {
+                        sendCacheDryStreakMessage(
+                                StyledText.fromComponent(event.getItem().getHoverName()));
+                    }
+                    return;
                 }
             }
         }
@@ -211,6 +221,18 @@ public class ValuableFoundFeature extends Feature {
                 .append(Component.literal(String.valueOf(Models.LootChest.getDryBoxes()))
                         .withStyle(ChatFormatting.DARK_PURPLE))
                 .append(Component.literal(" dry boxes.")));
+    }
+
+    private static void sendCacheDryStreakMessage(StyledText itemName) {
+        McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found a ")
+                .withColor(CustomColor.fromHexString("#800080").asInt())
+                .append(itemName.getComponent())
+                .append(Component.literal(" after ")
+                        .withColor(CustomColor.fromHexString("#800080").asInt())
+                        .append(Component.literal(String.valueOf(Models.WorldEvent.dryAnnihilations.get()))
+                                .withColor(CustomColor.fromHexString("#FFD700").asInt())))
+                .append(Component.literal(" dry Annihilations.")
+                        .withColor(CustomColor.fromHexString("#800080").asInt())));
     }
 
     private static void sendEmeraldPouchDryStreakMessage(StyledText itemName, int tier) {
