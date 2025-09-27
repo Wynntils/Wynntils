@@ -20,6 +20,7 @@ import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.activities.bossbars.AnnihilationSunBar;
+import com.wynntils.models.activities.event.AnnihilationEvent;
 import com.wynntils.models.activities.label.WorldEventCountdownInfo;
 import com.wynntils.models.activities.label.WorldEventCountdownParser;
 import com.wynntils.models.activities.label.WorldEventNameInfo;
@@ -183,6 +184,7 @@ public final class WorldEventModel extends Model {
 
             if (currentWorldEvent.getName().equals(ANNIHILATION_WORLD_EVENT_NAME)) {
                 nextEventRewardIsAnnihilation = true;
+                WynntilsMod.postEvent(new AnnihilationEvent.Completed());
             }
 
             currentWorldEvent = null;
@@ -190,6 +192,7 @@ public final class WorldEventModel extends Model {
             return;
         } else if (styledText.matches(WORLD_EVENT_FAIl_PATTERN)) {
             currentWorldEvent = null;
+            WynntilsMod.postEvent(new AnnihilationEvent.Failed());
             return;
         }
 
