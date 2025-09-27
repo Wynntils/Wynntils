@@ -36,7 +36,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UI)
 public class CustomLoadingScreenFeature extends Feature {
     private static final String IGNORED_TITLE = "\uE000\uE001\uE000";
-    private static final Pattern SERVER_SWITCH_PATTERN = Pattern.compile("§7Saving your player data before switching to §f(.*)§7...");
+    private static final Pattern SERVER_SWITCH_PATTERN =
+            Pattern.compile("§7Saving your player data before switching to §f(.*)§7...");
 
     private LoadingScreen loadingScreen;
     private Screen replacedScreen;
