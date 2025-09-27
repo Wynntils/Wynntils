@@ -27,6 +27,7 @@ public class ValuableFoundEvent extends Event {
     public enum ItemSource {
         LOOT_CHEST,
         LOOTRUN_REWARD_CHEST,
-        RAID_REWARD_CHEST
+        RAID_REWARD_CHEST,
+        WORLD_EVENT
     }
 }
