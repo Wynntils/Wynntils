@@ -7,6 +7,7 @@ package com.wynntils.features.ui;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -42,7 +43,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
     private LoadingScreen loadingScreen;
     private Screen replacedScreen;
-    private Future<?> delayedRemoval;
+    private TickSchedulerManager.ScheduledTask delayedRemoval;
 
     @SubscribeEvent
     public void onTickAlways(TickAlwaysEvent e) {
@@ -197,7 +198,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
                 // Unless connecting to lobby.wynncraft.com (or some odd situation occurs),
                 // the hub will just flash by. Don't remove our custom loading screen for that.
-                delayedRemoval = TaskUtils.schedule(this::removeCustomScreen, 1);
+                delayedRemoval = Managers.TickScheduler.scheduleLater(this::removeCustomScreen, 20);
             }
             case WORLD, NOT_CONNECTED, CHARACTER_SELECTION -> {
                 if (!isCustomScreenVisible()) return;
@@ -207,7 +208,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
                 // Give some time for the world to fully load to avoid flickering
                 // before removing our custom loading screen
-                delayedRemoval = TaskUtils.schedule(this::removeCustomScreen, 1);
+                delayedRemoval = Managers.TickScheduler.scheduleLater(this::removeCustomScreen, 20);
             }
         }
     }
@@ -224,8 +225,6 @@ public class CustomLoadingScreenFeature extends Feature {
     private void removeCustomScreen() {
         delayedRemoval = null;
         loadingScreen = null;
-        // We might have lost the mouse grab when suppressing screens
-        McUtils.mc().mouseHandler.grabMouse();
         if (McUtils.mc().screen == null) {
             WynntilsMod.error("The custom LoadingScreen has disappeared");
         } else {
@@ -235,7 +234,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
     private void cancelDelayedRemoval() {
         if (delayedRemoval != null) {
-            delayedRemoval.cancel(false);
+            Managers.TickScheduler.cancel(delayedRemoval);
             delayedRemoval = null;
         }
     }
