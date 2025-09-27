@@ -435,6 +435,7 @@
   "feature.wynntils.customLoadingScreen.name": "Custom Loading Screen",
   "feature.wynntils.customLoadingScreen.receivingTerrain": "Receiving terrain...",
   "feature.wynntils.customLoadingScreen.resourcePack": "Downloading resource pack...",
+  "feature.wynntils.customLoadingScreen.switchingServer": "Switching servers...",
   "feature.wynntils.customLoadingScreen.transferConnecting": "Connecting to transferred server...",
   "feature.wynntils.customLoadingScreen.transferRequest": "Transfer requested...",
   "feature.wynntils.customLoadingScreen.working": "Working...",
