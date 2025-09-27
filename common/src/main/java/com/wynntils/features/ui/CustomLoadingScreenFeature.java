@@ -69,6 +69,11 @@ public class CustomLoadingScreenFeature extends Feature {
             replacedScreen.removed();
             replacedScreen = null;
         }
+
+        if (McUtils.mc().level == null) {
+            // Vanilla will interpret this as it should show the title menu, so cancel it
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
