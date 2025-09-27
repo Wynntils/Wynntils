@@ -5,6 +5,7 @@
 package com.wynntils.models.gear.type;
 
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.services.custommodel.ModelSupplier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -16,26 +17,26 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
 
 public enum GearType {
-    SPEAR(ClassType.WARRIOR, 1565, 1642, 0),
-    WAND(ClassType.MAGE, 1403, 1484, 1),
-    DAGGER(ClassType.ASSASSIN, 1323, 1402, 2),
-    BOW(ClassType.ARCHER, 1245, 1322, 3),
-    RELIK(ClassType.SHAMAN, 1485, 1564, 4),
+    SPEAR(ClassType.WARRIOR, ModelSupplier.forKey("spear_min"), ModelSupplier.forKey("spear_max"), 0),
+    WAND(ClassType.MAGE, ModelSupplier.forKey("wand_min"), ModelSupplier.forKey("wand_max"), 1),
+    DAGGER(ClassType.ASSASSIN, ModelSupplier.forKey("dagger_min"), ModelSupplier.forKey("dagger_max"), 2),
+    BOW(ClassType.ARCHER, ModelSupplier.forKey("bow_min"), ModelSupplier.forKey("bow_max"), 3),
+    RELIK(ClassType.SHAMAN, ModelSupplier.forKey("relik_min"), ModelSupplier.forKey("relik_max"), 4),
     // This is a fallback for signed, crafted gear with a skin
-    WEAPON(null, 0, 0, 12),
+    WEAPON(null, null, null, 12),
     // Note: This fallback should basically be never be matched, but we use it in item encoding
     //       (as it's the same as WEAPON, and we have no other info)
-    ACCESSORY(null, 0, 0, 13),
-    RING(null, 1197, 1213, 5),
-    BRACELET(null, 1214, 1227, 6),
-    NECKLACE(null, 1228, 1244, 7),
+    ACCESSORY(null, null, null, 13),
+    RING(null, ModelSupplier.forKey("ring_min"), ModelSupplier.forKey("ring_max"), 5),
+    BRACELET(null, ModelSupplier.forKey("bracelet_min"), ModelSupplier.forKey("bracelet_max"), 6),
+    NECKLACE(null, ModelSupplier.forKey("necklace_min"), ModelSupplier.forKey("necklace_max"), 7),
     HELMET(
             null,
             Items.LEATHER_HELMET,
-            1,
-            18,
-            1643,
-            1813,
+            ModelSupplier.forKey("helmet_min"),
+            ModelSupplier.forKey("helmet_max"),
+            ModelSupplier.forKey("helmet_skin_min"),
+            ModelSupplier.forKey("helmet_skin_min"),
             List.of(
                     Items.LEATHER_HELMET,
                     Items.CHAINMAIL_HELMET,
@@ -48,8 +49,8 @@ public enum GearType {
     CHESTPLATE(
             null,
             Items.LEATHER_CHESTPLATE,
-            1,
-            18,
+            ModelSupplier.forKey("chestplate_min"),
+            ModelSupplier.forKey("chestplate_max"),
             List.of(
                     Items.CHAINMAIL_CHESTPLATE,
                     Items.IRON_CHESTPLATE,
@@ -60,8 +61,8 @@ public enum GearType {
     LEGGINGS(
             null,
             Items.LEATHER_LEGGINGS,
-            1,
-            18,
+            ModelSupplier.forKey("leggings_min"),
+            ModelSupplier.forKey("leggings_max"),
             List.of(
                     Items.CHAINMAIL_LEGGINGS,
                     Items.IRON_LEGGINGS,
@@ -72,8 +73,8 @@ public enum GearType {
     BOOTS(
             null,
             Items.LEATHER_BOOTS,
-            1,
-            18,
+            ModelSupplier.forKey("boots_min"),
+            ModelSupplier.forKey("boots_max"),
             List.of(
                     Items.CHAINMAIL_BOOTS,
                     Items.IRON_BOOTS,
@@ -81,41 +82,35 @@ public enum GearType {
                     Items.DIAMOND_BOOTS,
                     Items.NETHERITE_BOOTS),
             11),
-    MASTERY_TOME(null, 83, 89, -1),
-    CHARM(null, 1080, 1083, -1);
+    MASTERY_TOME(null, ModelSupplier.forKey("tome_min"), ModelSupplier.forKey("tome_max"), -1),
+    CHARM(null, ModelSupplier.forKey("charm_min"), ModelSupplier.forKey("charm_max"), -1);
 
     private final ClassType classReq;
     private final Item defaultItem;
-    private final List<Float> models;
+    private final ModelSupplier minModelSupplier;
+    private final ModelSupplier maxModelSupplier;
+    private final ModelSupplier minSkinModelSupplier;
+    private final ModelSupplier maxSkinModelSupplier;
     private final List<Item> otherItems;
     private final int encodingId;
+
+    private List<Float> modelList = new ArrayList<>();
 
     GearType(
             ClassType classReq,
             Item defaultItem,
-            int firstModel,
-            int lastModel,
-            int firstSkinModel,
-            int lastSkinModel,
+            ModelSupplier minModelSupplier,
+            ModelSupplier maxModelSupplier,
+            ModelSupplier minSkinModelSupplier,
+            ModelSupplier maxSkinModelSupplier,
             List<Item> otherItems,
             int encodingId) {
         this.classReq = classReq;
         this.defaultItem = defaultItem;
-        List<Float> modelList = new ArrayList<>();
-
-        if (firstModel != 0) {
-            IntStream.rangeClosed(firstModel, lastModel)
-                    .mapToObj(i -> (float) i)
-                    .forEach(modelList::add);
-        }
-
-        if (firstSkinModel != 0) {
-            IntStream.rangeClosed(firstSkinModel, lastSkinModel)
-                    .mapToObj(i -> (float) i)
-                    .forEach(modelList::add);
-        }
-
-        this.models = List.copyOf(modelList);
+        this.minModelSupplier = minModelSupplier;
+        this.maxModelSupplier = maxModelSupplier;
+        this.minSkinModelSupplier = minSkinModelSupplier;
+        this.maxSkinModelSupplier = maxSkinModelSupplier;
         this.otherItems = otherItems;
         this.encodingId = encodingId;
     }
@@ -123,15 +118,15 @@ public enum GearType {
     GearType(
             ClassType classReq,
             Item defaultItem,
-            int firstModel,
-            int lastModel,
+            ModelSupplier minModelSupplier,
+            ModelSupplier maxModelSupplier,
             List<Item> otherItems,
             int encodingId) {
-        this(classReq, defaultItem, firstModel, lastModel, 0, 0, otherItems, encodingId);
+        this(classReq, defaultItem, minModelSupplier, maxModelSupplier, null, null, otherItems, encodingId);
     }
 
-    GearType(ClassType classReq, int firstModel, int lastModel, int encodingId) {
-        this(classReq, Items.POTION, firstModel, lastModel, List.of(), encodingId);
+    GearType(ClassType classReq, ModelSupplier minModelSupplier, ModelSupplier maxModelSupplier, int encodingId) {
+        this(classReq, Items.POTION, minModelSupplier, maxModelSupplier, List.of(), encodingId);
     }
 
     public static GearType fromString(String typeStr) {
@@ -154,7 +149,7 @@ public enum GearType {
                 List<Float> customModelDataValue = customModelData.floats();
                 for (Float modelValue : customModelDataValue) {
                     if ((gearType.defaultItem.equals(item) || gearType.otherItems.contains(item))
-                            && gearType.models.contains(modelValue)) {
+                            && gearType.getModelList().contains(modelValue)) {
                         return gearType;
                     }
                 }
@@ -187,7 +182,7 @@ public enum GearType {
     }
 
     public float getDefaultModel() {
-        return models.getFirst();
+        return minModelSupplier.get().orElse(-1f);
     }
 
     public int getEncodingId() {
@@ -220,5 +215,34 @@ public enum GearType {
         if (this == WEAPON) return true;
 
         return classReq == classType;
+    }
+
+    private List<Float> getModelList() {
+        if (modelList == null) {
+            List<Float> tmp = new ArrayList<>();
+
+            if (minModelSupplier != null
+                    && maxModelSupplier != null
+                    && minModelSupplier.get().isPresent()
+                    && maxModelSupplier.get().isPresent()) {
+                int min = minModelSupplier.get().get().intValue();
+                int max = maxModelSupplier.get().get().intValue();
+
+                IntStream.rangeClosed(min, max).mapToObj(i -> (float) i).forEach(tmp::add);
+            }
+
+            if (minSkinModelSupplier != null
+                    && maxSkinModelSupplier != null
+                    && minSkinModelSupplier.get().isPresent()
+                    && maxSkinModelSupplier.get().isPresent()) {
+                int min = minSkinModelSupplier.get().get().intValue();
+                int max = maxSkinModelSupplier.get().get().intValue();
+
+                IntStream.rangeClosed(min, max).mapToObj(i -> (float) i).forEach(tmp::add);
+            }
+
+            modelList = List.copyOf(tmp);
+        }
+        return modelList;
     }
 }
