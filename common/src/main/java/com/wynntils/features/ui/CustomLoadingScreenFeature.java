@@ -153,30 +153,6 @@ public class CustomLoadingScreenFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onPlayerSound(LocalSoundEvent.Client event) {
-        if (!isCustomScreenVisible()) return;
-
-        // Silence all player sounds while loading (falling and equip sounds)
-        event.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    public void onPlayerSound(LocalSoundEvent.Player event) {
-        if (!isCustomScreenVisible()) return;
-
-        // Silence all player sounds while loading (falling and equip sounds)
-        event.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    public void onPlayerSound(LocalSoundEvent.LocalEntity event) {
-        if (!isCustomScreenVisible()) return;
-
-        // Silence all player sounds while loading (falling and equip sounds)
-        event.setCanceled(true);
-    }
-
-    @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         switch (event.getNewState()) {
             case CONNECTING -> {
