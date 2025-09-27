@@ -88,6 +88,8 @@ public final class ActionBarHandler extends Handler {
             renderedText = renderedText.append(coordinatesText);
         }
 
+        if (packetText.equals(renderedText)) return;
+
         event.setMessage(renderedText.getComponent());
     }
 
