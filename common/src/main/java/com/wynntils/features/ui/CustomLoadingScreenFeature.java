@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.LoadingProgressEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -21,6 +22,7 @@ import com.wynntils.screens.loading.LoadingScreen;
 import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.concurrent.Future;
+import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.DisconnectedScreen;
 import net.minecraft.client.gui.screens.ProgressScreen;
@@ -34,6 +36,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UI)
 public class CustomLoadingScreenFeature extends Feature {
     private static final String IGNORED_TITLE = "\uE000\uE001\uE000";
+    private static final Pattern SERVER_SWITCH_PATTERN = Pattern.compile("§7Saving your player data before switching to §f(.*)§7...");
+
     private LoadingScreen loadingScreen;
     private Screen replacedScreen;
     private Future<?> delayedRemoval;
@@ -43,6 +47,14 @@ public class CustomLoadingScreenFeature extends Feature {
         // Minecraft does connection logic work every tick, propagate tick to keep this behaviour
         if (replacedScreen != null) {
             replacedScreen.tick();
+        }
+    }
+
+    @SubscribeEvent
+    public void onChatMessageReceived(ChatMessageReceivedEvent e) {
+        if (e.getStyledText().matches(SERVER_SWITCH_PATTERN)) {
+            createCustomScreen();
+            loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.switchingServer"));
         }
     }
 
