@@ -8,12 +8,24 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.models.activities.worldevents.WorldEvent;
+import com.wynntils.models.activities.type.WorldEvent;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
 import java.util.List;
 
 public class WorldEventFunctions {
+    public static class AnnihilationDryCount extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.WorldEvent.dryAnnihilations.get();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("dry_annis", "dry_anni_count");
+        }
+    }
+
     public static class AnnihilationSunProgressFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {

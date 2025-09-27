@@ -8,6 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
@@ -26,6 +28,7 @@ import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityDistance;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityLength;
+import com.wynntils.models.activities.type.WorldEvent;
 import com.wynntils.models.containers.containers.reward.EventContainer;
 import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.items.items.game.CorruptedCacheItem;
@@ -52,26 +55,36 @@ public final class WorldEventModel extends Model {
     private static final Position ANNIHILATION_WORLD_EVENT_LOCATION = new Vec3(315.5, 29.0, -1291.5);
     private static final Integer ANNIHILATION_WORLD_EVENT_RADIUS = 50;
 
-    private static final Pattern ANNIHILATION_TIMER_PATTERN = Pattern.compile(
-            "§#00bdbfff(\uE00D\uE002|\uE001) §cPrepare to defend the province at the Corruption Portal in(?: (?<hour>\\d+)h)?(?: (?<minute>\\d+)m)?(?: (?<second>\\d+)s)?!");
+    @Persisted
+    public final Storage<Integer> dryAnnihilations = new Storage<>(0);
+
+    // Handles whether you are in the world event or not
     private static final Pattern IN_RADIUS_PATTERN =
             Pattern.compile("§#00bdbfff(\uE00D\uE002|\uE001) You are now within the event radius");
     private static final Pattern OUT_OF_RADIUS_PATTERN =
             Pattern.compile("§#00bdbfff(\uE00D\uE002|\uE001) You are no longer within the event radius");
     private static final Pattern DID_NOT_ENTER_PATTERN =
             Pattern.compile("§#00bdbfff(\uE00D\uE002|\uE001) You did not enter the event radius in time");
+
+    // Handles parsing timers from chat
+    private static final Pattern ANNIHILATION_TIMER_PATTERN = Pattern.compile(
+            "§#00bdbfff(\uE00D\uE002|\uE001) §cPrepare to defend the province at the Corruption Portal in(?: (?<hour>\\d+)h)?(?: (?<minute>\\d+)m)?(?: (?<second>\\d+)s)?!");
     private static final Pattern WORLD_EVENT_PATTERN = Pattern.compile(
             "§#00bdbfff(\uE00D\uE002|\uE001) (?<worldEventName>.+?) World Event starts in(?: (?<hour>\\d+)h)?(?: (?<minute>\\d+)m)?(?: (?<second>\\d+)s)?! §7\\(\\d+ blocks away\\) §d§nClick to track");
+
+    // Handles completion/failure
+    private static final Pattern WORLD_EVENT_COMPLETE_PATTERN = Pattern.compile("§#00bdbfff\uE001 §fEvent Completed");
+    private static final Pattern WORLD_EVENT_FAIl_PATTERN = Pattern.compile("§#00bdbfff\uE001 §fEvent Failed");
 
     private final Map<String, WorldEvent> activeWorldEvents = new HashMap<>();
 
     private boolean inWorldEventRadius = false;
-
     private String nearestWorldEventName = "";
     private Time nearestWorldEventStartTime = Time.NONE;
     private WorldEvent currentWorldEvent = null;
     private WorldEvent nearestWorldEvent = null;
 
+    private boolean nextEventRewardIsAnnihilation = false;
     private int nextExpectedRewardContainerId = -2;
 
     public WorldEventModel() {
@@ -162,6 +175,22 @@ public final class WorldEventModel extends Model {
             nearestWorldEvent = null;
             nearestWorldEventStartTime = Time.NONE;
             return;
+        } else if (styledText.matches(WORLD_EVENT_COMPLETE_PATTERN)) {
+            if (currentWorldEvent == null) {
+                WynntilsMod.warn("Completed a world event but current world event was unknown");
+                return;
+            }
+
+            currentWorldEvent = null;
+
+            if (currentWorldEvent.getName().equals(ANNIHILATION_WORLD_EVENT_NAME)) {
+                nextEventRewardIsAnnihilation = true;
+            }
+
+            return;
+        } else if (styledText.matches(WORLD_EVENT_FAIl_PATTERN)) {
+            currentWorldEvent = null;
+            return;
         }
 
         Matcher matcher = styledText.getMatcher(ANNIHILATION_TIMER_PATTERN);
@@ -183,6 +212,7 @@ public final class WorldEventModel extends Model {
                     parseWorldEventStartTime(matcher.group("hour"), matcher.group("minute"), matcher.group("second"));
 
             activeWorldEvents.put(worldEventName, new WorldEvent(worldEventName, startTime));
+            return;
         }
     }
 
@@ -211,6 +241,11 @@ public final class WorldEventModel extends Model {
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent e) {
+        if (nextEventRewardIsAnnihilation) {
+            dryAnnihilations.store(dryAnnihilations.get() + 1);
+            nextEventRewardIsAnnihilation = false;
+        }
+
         nextExpectedRewardContainerId = -2;
     }
 
@@ -224,6 +259,11 @@ public final class WorldEventModel extends Model {
         Optional<CorruptedCacheItem> cacheItem = Models.Item.asWynnItem(itemStack, CorruptedCacheItem.class);
         if (cacheItem.isPresent()) {
             WynntilsMod.postEvent(new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.WORLD_EVENT));
+
+            dryAnnihilations.store(0);
+            // You can only get 1 cache so we can stop checking if we find one
+            nextExpectedRewardContainerId = -2;
+            nextEventRewardIsAnnihilation = false;
             return;
         }
     }
