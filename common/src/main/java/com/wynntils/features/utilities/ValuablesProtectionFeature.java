@@ -20,6 +20,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.BlacksmithContainer;
+import com.wynntils.models.containers.containers.ItemIdentifierAugmentsContainer;
 import com.wynntils.models.containers.containers.ItemIdentifierContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.type.BoundedContainerProperty;
@@ -127,7 +128,10 @@ public class ValuablesProtectionFeature extends Feature {
         Container currentContainer = Models.Container.getCurrentContainer();
         if (currentContainer == null) return;
 
-        if (currentContainer instanceof ItemIdentifierContainer) {
+        boolean isIdentifier = ProtectableNPCs.IDENTIFIER.getContainers().stream()
+                .anyMatch(container -> container.equals(currentContainer.getClass()));
+
+        if (isIdentifier) {
             if (StyledText.fromComponent(cs.getMenu()
                             .getSlot(BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT)
                             .getItem()
@@ -193,7 +197,9 @@ public class ValuablesProtectionFeature extends Feature {
                     I18n.get(
                             "feature.wynntils.valuablesProtection.ctrlClick",
                             I18n.get("feature.wynntils.valuablesProtection."
-                                    + (currentContainerType == ItemIdentifierContainer.class
+                                    + (ProtectableNPCs.IDENTIFIER
+                                                    .getContainers()
+                                                    .contains(currentContainerType)
                                             ? "identifying"
                                             : "selling"))),
                     HorizontalAlignment.CENTER,
@@ -378,11 +384,17 @@ public class ValuablesProtectionFeature extends Feature {
         NONE(List.of()),
         BLACKSMITH(List.of(BlacksmithContainer.class)),
         TRADE_MARKET(List.of(TradeMarketSellContainer.class)),
-        IDENTIFIER(List.of(ItemIdentifierContainer.class)),
+        IDENTIFIER(List.of(ItemIdentifierContainer.class, ItemIdentifierAugmentsContainer.class)),
         BLACKSMITH_AND_TRADE_MARKET(List.of(BlacksmithContainer.class, TradeMarketSellContainer.class)),
-        BLACKSMITH_AND_IDENTIFIER(List.of(BlacksmithContainer.class, ItemIdentifierContainer.class)),
-        TRADE_MARKET_AND_IDENTIFIER(List.of(TradeMarketSellContainer.class, ItemIdentifierContainer.class)),
-        ALL(List.of(BlacksmithContainer.class, TradeMarketSellContainer.class, ItemIdentifierContainer.class));
+        BLACKSMITH_AND_IDENTIFIER(List.of(
+                BlacksmithContainer.class, ItemIdentifierContainer.class, ItemIdentifierAugmentsContainer.class)),
+        TRADE_MARKET_AND_IDENTIFIER(List.of(
+                TradeMarketSellContainer.class, ItemIdentifierContainer.class, ItemIdentifierAugmentsContainer.class)),
+        ALL(List.of(
+                BlacksmithContainer.class,
+                TradeMarketSellContainer.class,
+                ItemIdentifierContainer.class,
+                ItemIdentifierAugmentsContainer.class));
 
         private final List<Class<? extends BoundedContainerProperty>> containers;
 
