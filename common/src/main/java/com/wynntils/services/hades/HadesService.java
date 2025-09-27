@@ -154,6 +154,19 @@ public final class HadesService extends Service {
     }
 
     @SubscribeEvent
+    public void onGuildMemberListUpdate(HadesRelationsUpdateEvent.GuildMemberList event) {
+        if (!isConnected()) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                .shareWithGuild
+                .get()) return;
+
+        hadesConnection.sendPacket(new HCPacketSocialUpdate(
+                event.getChangedPlayers().stream().toList(),
+                event.getChangeType().getPacketAction(),
+                SocialType.GUILD));
+    }
+
+    @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.NOT_CONNECTED && Services.WynntilsAccount.isLoggedIn()) {
             connect();

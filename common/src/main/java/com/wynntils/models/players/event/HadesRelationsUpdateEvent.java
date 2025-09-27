@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players.event;
@@ -33,6 +33,12 @@ public abstract class HadesRelationsUpdateEvent extends Event {
 
     public static class PartyList extends HadesRelationsUpdateEvent {
         public PartyList(Set<String> changedPlayers, ChangeType changeType) {
+            super(changedPlayers, changeType);
+        }
+    }
+
+    public static class GuildMemberList extends HadesRelationsUpdateEvent {
+        public GuildMemberList(Set<String> changedPlayers, ChangeType changeType) {
             super(changedPlayers, changeType);
         }
     }

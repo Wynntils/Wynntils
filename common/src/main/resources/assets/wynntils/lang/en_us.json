@@ -1093,6 +1093,8 @@
   "feature.wynntils.minimap.overlay.minimap.remotePlayersHeadScale.name": "Remote Players Head Scale",
   "feature.wynntils.minimap.overlay.minimap.renderRemoteFriendPlayers.description": "Should remote friends be rendered? This requires HadesFeature to be turned on.",
   "feature.wynntils.minimap.overlay.minimap.renderRemoteFriendPlayers.name": "Render Remote Friends",
+  "feature.wynntils.minimap.overlay.minimap.renderRemoteGuildPlayers.description": "Should remote guild players be rendered? This requires HadesFeature to be turned on.",
+  "feature.wynntils.minimap.overlay.minimap.renderRemoteGuildPlayers.name": "Render Remote Guild Players",
   "feature.wynntils.minimap.overlay.minimap.renderRemotePartyPlayers.description": "Should remote party players be rendered? This requires HadesFeature to be turned on.",
   "feature.wynntils.minimap.overlay.minimap.renderRemotePartyPlayers.name": "Render Remote Party Players",
   "feature.wynntils.minimap.overlay.minimap.showCompass.description": "How should the cardinal directions (N/E/S/W) be displayed on the minimap?",
