@@ -76,6 +76,9 @@ public class WynncraftButtonFeature extends Feature {
     @Persisted
     public final Storage<Boolean> ignoreFailedDownloads = new Storage<>(false);
 
+    @Persisted
+    private final Config<Boolean> returnToTitle = new Config<>(true);
+
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post event) {
         TitleScreen titleScreen = event.getTitleScreen();
@@ -93,8 +96,10 @@ public class WynncraftButtonFeature extends Feature {
         }
         if (event.getScreen() instanceof JoinMultiplayerScreen) {
             hasUsedButton = false;
-            event.setCanceled(true);
-            McUtils.mc().setScreen(new TitleScreen());
+            if (returnToTitle.get()) {
+                event.setCanceled(true);
+                McUtils.mc().setScreen(new TitleScreen());
+            }
         }
     }
 

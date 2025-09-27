@@ -1622,6 +1622,8 @@
   "feature.wynntils.wynncraftButton.loadResourcePack.description": "Should the Wynncraft resource pack be loaded?",
   "feature.wynntils.wynncraftButton.loadResourcePack.name": "Load Resource Pack",
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button",
+  "feature.wynntils.wynncraftButton.returnToTitle.description": "Should you return to the title screen, instead of the server screen, after disconnecting when having connected using the button?",
+  "feature.wynntils.wynncraftButton.returnToTitle.name": "Return to title screen after disconnect",
   "feature.wynntils.wynncraftButton.serverRegionOverride.description": "Which server region should the button and auto-connect join? Wc will connect to your default region",
   "feature.wynntils.wynncraftButton.serverRegionOverride.name": "Server Region Override",
   "feature.wynntils.wynncraftButton.serverType.description": "Which server should the button and auto-connect join?",
