@@ -22,6 +22,7 @@ accessible field net/minecraft/client/gui/components/BossHealthOverlay events Lj
 accessible field net/minecraft/client/gui/components/PlayerTabOverlay visible Z
 accessible field net/minecraft/client/gui/screens/ChatScreen commandSuggestions Lnet/minecraft/client/gui/components/CommandSuggestions;
 accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraft/client/gui/components/EditBox;
+accessible field net/minecraft/client/gui/screens/ConnectScreen status Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/screens/DisconnectedScreen details Lnet/minecraft/network/DisconnectionDetails;
 accessible field net/minecraft/client/gui/screens/Screen children Ljava/util/List;
 accessible field net/minecraft/client/gui/screens/Screen deferredTooltipRendering Lnet/minecraft/client/gui/screens/Screen$DeferredTooltipRendering;

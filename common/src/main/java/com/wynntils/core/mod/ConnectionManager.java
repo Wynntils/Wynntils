@@ -9,6 +9,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.screens.loading.LoadingScreen;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -79,7 +80,7 @@ public final class ConnectionManager extends Manager {
     // ScreenOpenedEvent.Pre is used, because it is always posted
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenOpened(ScreenOpenedEvent.Pre e) {
-        if (e.getOldScreen() instanceof ConnectScreen) {
+        if (e.getOldScreen() instanceof ConnectScreen || e.getOldScreen() instanceof LoadingScreen) {
             if (e.getScreen() instanceof JoinMultiplayerScreen || e.getScreen() instanceof TitleScreen) {
                 // This is the only way we get notified if the user aborts while connecting
                 doDisconnect();
