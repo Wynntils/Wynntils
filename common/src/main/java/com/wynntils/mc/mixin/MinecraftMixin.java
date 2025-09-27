@@ -55,15 +55,8 @@ public abstract class MinecraftMixin implements MinecraftExtension {
                 : new ScreenOpenedEvent.Pre(screen, oldScreen.get());
         MixinHelper.postAlways(event);
         if (event.isCanceled()) {
-            System.out.println(
-                    "canceled: " + (screen != null ? screen.getClass().getSimpleName() : "null"));
             ci.cancel();
-        } else {
-            System.out.println(
-                    "not canceled: " + (screen != null ? screen.getClass().getSimpleName() : "null"));
         }
-        System.out.println("old screen: "
-                + (oldScreen.get() != null ? oldScreen.get().getClass().getSimpleName() : "null"));
     }
 
     @Inject(method = "tick()V", at = @At("HEAD"))
