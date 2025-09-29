@@ -18,7 +18,6 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent.ChatReceivedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatScreenSendEvent;
-import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenFocusEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
@@ -63,7 +62,9 @@ public class ChatTabsFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onClientsideChat(ClientsideMessageEvent event) {
+    public void onClientsideChat(ChatReceivedEvent event) {
+        if (Services.ChatTab.getFocusedTab() == null) return;
+
         // We will send this message to every matching tab, so we can cancel it.
         event.setCanceled(true);
 
@@ -165,14 +166,6 @@ public class ChatTabsFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatScreenSend(ChatScreenSendEvent event) {
         Services.ChatTab.sendChat(event.getInput());
-        event.setCanceled(true);
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onChatPacket(ChatReceivedEvent event) {
-        if (Services.ChatTab.getFocusedTab() == null) return;
-
-        // Cancel all remaining messages, if we have a focused tab, we will handle it.
         event.setCanceled(true);
     }
 

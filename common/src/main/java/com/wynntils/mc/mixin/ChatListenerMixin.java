@@ -8,7 +8,6 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
-import com.wynntils.mc.event.ClientsideMessageEvent;
 import net.minecraft.client.multiplayer.chat.ChatListener;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,10 +25,7 @@ public abstract class ChatListenerMixin {
 
         Component newMessage = event.isMessageChanged() ? event.getMessage() : message;
 
-        ClientsideMessageEvent event2 = new ClientsideMessageEvent(newMessage);
-        MixinHelper.post(event);
-
-        if (!event.isCanceled() && !event2.isCanceled()) {
+        if (!event.isCanceled()) {
             original.call(newMessage, overlay);
         }
     }
