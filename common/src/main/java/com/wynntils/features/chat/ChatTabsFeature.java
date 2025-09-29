@@ -112,7 +112,7 @@ public class ChatTabsFeature extends Feature {
             return;
         }
 
-        if (event.getNewState() == WorldState.WORLD && Services.ChatTab.getFocusedTab() == null) {
+        if (Services.ChatTab.getFocusedTab() == null) {
             Services.ChatTab.refocusFirstTab();
         }
     }
