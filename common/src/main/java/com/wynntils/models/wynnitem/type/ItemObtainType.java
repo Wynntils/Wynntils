@@ -21,24 +21,39 @@ public enum ItemObtainType {
     RAID("raid", "Raid"),
 
     // Crowd sourced or determined via drop restriction
+    CAVE_COMPLETION("caveCompletion", "Cave Completion"),
     CAVE_LOOT_CHEST("caveLootChest", "Tier 3/4 Loot Chest"),
     DISCOVERY("discovery", "Discovery"),
+    ENVIRONMENT("environment", "Environment"),
     FORGERY_CHEST("forgeryChest", "Forgery Chest"),
     GATHERING("gathering", "Gathering"),
+    INTERACTION("interaction", "World Interaction"),
     LOOT_CHEST("lootChest", "Any Loot Chest"),
-    NORMAL_MOB_DROP("normalMobDrop", "Normal Mob Drop"),
-    SPECIFIC_MOB_DROP("specificMobDrop", "Specific Mob Drop"),
-    WORLD_EVENT("worldEvent", "World Event"),
     MOB_REGION("mobDropRegion", "Mobs in Region"),
+    NORMAL_MOB_DROP("normalMobDrop", "Normal Mob Drop"),
     RARE_MOB_REGION("rareMobDropRegion", "Rare Mobs in Region"),
-    ENVIRONMENT("environment", "Environment"),
+    SPECIFIC_MOB_DROP("specificMobDrop", "Specific Mob Drop"),
+    TINKERING("tinkering", "Tinkering"),
+    WORLD_EVENT("worldEvent", "World Event"),
 
     UNAVAILABLE("unavailable", "Unavailable"),
     UNKNOWN("unknown", "Unknown");
 
     // All sources that possibly drop boxed items
     public static final List<ItemObtainType> BOXED_ITEMS = List.of(
-            BOSS_ALTAR, DISCOVERY, DUNGEON, FORGERY_CHEST, LOOT_CHEST, MINIBOSS, NORMAL_MOB_DROP, RAID, UNKNOWN);
+            BOSS_ALTAR,
+            CAVE_LOOT_CHEST,
+            DISCOVERY,
+            DUNGEON,
+            ENVIRONMENT,
+            FORGERY_CHEST,
+            GUILD,
+            LOOT_CHEST,
+            MINIBOSS,
+            MOB_REGION,
+            NORMAL_MOB_DROP,
+            SPECIFIC_MOB_DROP,
+            UNKNOWN);
 
     private final String apiName;
     private final String displayName;
