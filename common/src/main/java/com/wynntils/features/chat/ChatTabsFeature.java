@@ -58,7 +58,7 @@ public class ChatTabsFeature extends Feature {
         // We will send this message to every matching tab, so we can cancel it.
         event.setCanceled(true);
 
-        Services.ChatTab.handleIncomingMessage(event);
+        Services.ChatTab.handleIncomingMessage(event.getRecipientType(), event.getOriginalStyledText(), event.getStyledText());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -70,12 +70,12 @@ public class ChatTabsFeature extends Feature {
 
         boolean isRenderThread = McUtils.mc().isSameThread();
         if (isRenderThread) {
-            Services.ChatTab.handleIncomingMessage(event);
+            Services.ChatTab.handleIncomingMessage(RecipientType.CLIENTSIDE, event.getOriginalStyledText(), event.getStyledText());
         } else {
             // It can happen that client-side messages are sent from some other thread
             // That will cause race conditions with vanilla ChatComponent code, so
             // schedule this update by the renderer thread instead
-            Managers.TickScheduler.scheduleNextTick(() -> Services.ChatTab.handleIncomingMessage(event));
+            Managers.TickScheduler.scheduleNextTick(() -> Services.ChatTab.handleIncomingMessage(RecipientType.CLIENTSIDE, event.getOriginalStyledText(), event.getStyledText()));
         }
     }
 
