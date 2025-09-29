@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.chat;
@@ -10,9 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.chat.ChatTabsFeature;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -137,13 +135,13 @@ public final class ChatTabService extends Service {
         return unreadMessages.getOrDefault(tab, false);
     }
 
-    public void matchMessage(ClientsideMessageEvent event) {
+    public void handleIncomingMessage(RecipientType event, StyledText originalStyledText, StyledText styledText) {
         // Firstly, find the FIRST matching tab with high priority
         for (ChatTab chatTab : getChatTabs()) {
             if (!chatTab.isConsuming()) continue;
 
-            if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getStyledText().getComponent());
+            if (matchMessage(chatTab, event, originalStyledText)) {
+                addMessageToTab(chatTab, styledText.getComponent());
                 return;
             }
         }
@@ -152,29 +150,8 @@ public final class ChatTabService extends Service {
         for (ChatTab chatTab : getChatTabs()) {
             if (chatTab.isConsuming()) continue;
 
-            if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getStyledText().getComponent());
-            }
-        }
-    }
-
-    public void matchMessage(ChatMessageReceivedEvent event) {
-        // Firstly, find the FIRST matching tab with high priority
-        for (ChatTab chatTab : getChatTabs()) {
-            if (!chatTab.isConsuming()) continue;
-
-            if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getStyledText().getComponent());
-                return;
-            }
-        }
-
-        // Secondly, match ALL tabs with low priority
-        for (ChatTab chatTab : getChatTabs()) {
-            if (chatTab.isConsuming()) continue;
-
-            if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getStyledText().getComponent());
+            if (matchMessage(chatTab, event, originalStyledText)) {
+                addMessageToTab(chatTab, styledText.getComponent());
             }
         }
     }
@@ -204,28 +181,17 @@ public final class ChatTabService extends Service {
         }
     }
 
-    private boolean matchMessageFromEvent(ChatTab chatTab, ChatMessageReceivedEvent event) {
+    private boolean matchMessage(ChatTab chatTab, RecipientType recipientType, StyledText originalStyledText) {
         if (chatTab.getFilteredTypes() != null
                 && !chatTab.getFilteredTypes().isEmpty()
-                && !chatTab.getFilteredTypes().contains(event.getRecipientType())) {
-            return false;
-        }
-
-        Optional<Pattern> regex = chatTab.getCustomRegex();
-        return regex.isEmpty() || event.getOriginalStyledText().matches(regex.get());
-    }
-
-    private boolean matchMessageFromEvent(ChatTab chatTab, ClientsideMessageEvent event) {
-        if (chatTab.getFilteredTypes() != null
-                && !chatTab.getFilteredTypes().isEmpty()
-                && !chatTab.getFilteredTypes().contains(RecipientType.CLIENTSIDE)) {
+                && !chatTab.getFilteredTypes().contains(recipientType)) {
             return false;
         }
 
         Optional<Pattern> regex = chatTab.getCustomRegex();
         if (regex.isEmpty()) return true;
 
-        return event.getOriginalStyledText().matches(regex.get());
+        return originalStyledText.matches(regex.get());
     }
 
     /**

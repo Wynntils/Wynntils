@@ -129,7 +129,7 @@ public final class TradeMarketModel extends Model {
     }
 
     @SubscribeEvent
-    public void onScreenClose(ScreenClosedEvent event) {
+    public void onScreenClose(ScreenClosedEvent.Post event) {
         if (inChatInput()) return;
 
         tradeMarketState = TradeMarketState.NOT_ACTIVE;

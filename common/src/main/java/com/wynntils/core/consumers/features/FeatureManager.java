@@ -51,7 +51,6 @@ import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
 import com.wynntils.features.commands.FilterAdminCommandsFeature;
 import com.wynntils.features.debug.AbilityTreeDataDumpFeature;
-import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.ContentBookDumpFeature;
 import com.wynntils.features.debug.FunctionDumpFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
@@ -170,8 +169,8 @@ import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.features.wynntils.WeeklyConfigBackupFeature;
 import com.wynntils.features.wynntils.WynntilsHintMessagesFeature;
-import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
+import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -206,7 +205,6 @@ public final class FeatureManager extends Manager {
     public void init() {
         // debug
         registerFeature(new AbilityTreeDataDumpFeature());
-        registerFeature(new ConnectionProgressFeature());
         registerFeature(new ContentBookDumpFeature());
         registerFeature(new FunctionDumpFeature());
         registerFeature(new ItemDebugTooltipsFeature());
@@ -587,7 +585,7 @@ public final class FeatureManager extends Manager {
 
         // If a crash happens in a client-side message event, and we send a new message about disabling X feature,
         // we will cause a new exception and an endless recursion.
-        boolean shouldSendChat = !(event instanceof ClientsideMessageEvent);
+        boolean shouldSendChat = !(event instanceof SystemMessageEvent.ChatReceivedEvent);
 
         WynntilsMod.reportCrash(
                 CrashType.FEATURE,

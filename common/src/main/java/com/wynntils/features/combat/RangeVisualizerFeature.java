@@ -193,8 +193,8 @@ public class RangeVisualizerFeature extends Feature {
         return switch (majorIdName) {
             case "Taunt" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
             case "Saviour's Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
-            case "Altruism" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 12f);
-            case "Guardian" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 7.9f);
+            case "Altruism" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 16f);
+            case "Guardian" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 12f);
             default -> null;
         };
     }
