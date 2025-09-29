@@ -21,4 +21,8 @@ public final class TaskUtils {
     public static Future<?> schedule(Runnable r, int delay) {
         return EXECUTOR_SERVICE.schedule(r, delay, TimeUnit.SECONDS);
     }
+
+    public static Future<?> schedule(Runnable r, int delay, TimeUnit unit) {
+        return EXECUTOR_SERVICE.schedule(r, delay, unit);
+    }
 }
