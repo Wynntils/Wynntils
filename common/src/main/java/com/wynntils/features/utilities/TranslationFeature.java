@@ -57,19 +57,19 @@ public class TranslationFeature extends Feature {
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
 
-        StyledText originalText = e.getStyledText();
-        String codedString = wrapCoding(originalText);
+        StyledText originalMessage = e.getMessage();
+        String codedString = wrapCoding(originalMessage);
         Services.Translation.getTranslator(translationService.get())
                 .translate(List.of(codedString), languageName.get(), translatedMsgList -> {
                     StyledText messageToSend;
                     if (!translatedMsgList.isEmpty()) {
                         String result = translatedMsgList.getFirst();
-                        messageToSend = unwrapCoding(result, originalText);
+                        messageToSend = unwrapCoding(result, originalMessage);
                     } else {
                         if (keepOriginal.get()) return;
 
                         // We failed to get a translation; send the original message so it's not lost
-                        messageToSend = originalText;
+                        messageToSend = originalMessage;
                     }
                     McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(messageToSend.getComponent()));
                 });

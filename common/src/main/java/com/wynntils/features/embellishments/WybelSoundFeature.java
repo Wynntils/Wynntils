@@ -34,14 +34,14 @@ public class WybelSoundFeature extends Feature {
     public void onChat(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.PETS) return;
 
-        StyledText msg = event.getStyledText();
-        if (msg.contains("squeak")) {
+        StyledText message = event.getMessage();
+        if (message.contains("squeak")) {
             McUtils.playSoundAmbient(WYBEL_SQUEAK_SOUND);
             if (hideText.get()) {
                 event.setCanceled(true);
             }
         }
-        if (msg.contains("purr")) {
+        if (message.contains("purr")) {
             McUtils.playSoundAmbient(WYBEL_PURR_SOUND);
             if (hideText.get()) {
                 event.setCanceled(true);

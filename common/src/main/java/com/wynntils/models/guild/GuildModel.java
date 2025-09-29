@@ -170,7 +170,7 @@ public final class GuildModel extends Model {
     // This needs to run before any chat modifications (eg. chat mentions, filter, etc)
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessage(ChatMessageReceivedEvent e) {
-        StyledText message = e.getOriginalStyledText();
+        StyledText message = e.getMessage();
 
         if (message.matches(MSG_LEFT_GUILD)) {
             leaveGuild();

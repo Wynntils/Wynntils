@@ -54,7 +54,7 @@ public final class AccountModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        StyledText message = e.getOriginalStyledText().trim();
+        StyledText message = e.getMessage().trim();
 
         if (message.matches(SILVERBULL_JOIN_PATTERN) || message.matches(SILVERBULL_UPDATE_PATTERN)) {
             silverbullSubscriber.store(ConfirmedBoolean.TRUE);

@@ -161,7 +161,7 @@ public final class RaidModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        StyledText styledText = event.getOriginalStyledText();
+        StyledText styledText = event.getMessage();
 
         Matcher rewardPullMatcher = styledText.getMatcher(REWARD_PULLS_PATTERN);
         if (rewardPullMatcher.find()) {
@@ -184,7 +184,7 @@ public final class RaidModel extends Model {
                 String playerName = matcher.group(4);
                 // if the player is nicknamed
                 if (matcher.group(3) != null) {
-                    playerName = StyledTextUtils.extractNameAndNick(event.getOriginalStyledText())
+                    playerName = StyledTextUtils.extractNameAndNick(event.getMessage())
                             .key();
                     if (playerName == null) return;
                 }

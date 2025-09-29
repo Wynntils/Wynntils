@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.redirects;
@@ -20,9 +20,9 @@ public class AbilityRefreshRedirectFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
-        if (event.getOriginalStyledText().matches(REFRESH_PATTERN, PartStyle.StyleType.NONE)) {
+        if (event.getMessage().matches(REFRESH_PATTERN, PartStyle.StyleType.NONE)) {
             event.setCanceled(true);
-            Managers.Notification.queueMessage(event.getOriginalStyledText());
+            Managers.Notification.queueMessage(event.getMessage());
         }
     }
 }

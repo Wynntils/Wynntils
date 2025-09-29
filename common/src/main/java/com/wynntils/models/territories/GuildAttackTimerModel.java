@@ -76,8 +76,7 @@ public final class GuildAttackTimerModel extends Model {
     public void onMessage(ChatMessageReceivedEvent event) {
         // TODO: Once RecipientType supports Wynncraft 2.1 messages, we can check for RecipientType.GUILD
 
-        StyledText cleanMessaage =
-                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
+        StyledText cleanMessaage = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
         Matcher matcher = cleanMessaage.getMatcher(WAR_MESSAGE_PATTERN);
         if (matcher.matches()) {
             long timerEnd = System.currentTimeMillis();

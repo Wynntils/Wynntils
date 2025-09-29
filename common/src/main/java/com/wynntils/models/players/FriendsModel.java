@@ -106,8 +106,7 @@ public final class FriendsModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        StyledText styledText =
-                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
+        StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
         String unformatted = styledText.getStringWithoutFormatting();
 
         Matcher joinMatcher = styledText.getMatcher(JOIN_PATTERN);

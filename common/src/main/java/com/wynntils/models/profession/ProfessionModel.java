@@ -119,7 +119,7 @@ public final class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        StyledText message = event.getOriginalStyledText();
+        StyledText message = event.getMessage();
 
         Matcher craftMatcher = message.getMatcher(PROFESSION_CRAFT_PATTERN);
         if (craftMatcher.matches()) {

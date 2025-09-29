@@ -144,7 +144,7 @@ public class ChatRedirectFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatMessage(ChatMessageReceivedEvent e) {
-        StyledText message = StyledTextUtils.unwrap(e.getOriginalStyledText()).stripAlignment();
+        StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
         MessageType messageType = e.getMessageType();
 
         for (Redirector redirector : redirectors) {

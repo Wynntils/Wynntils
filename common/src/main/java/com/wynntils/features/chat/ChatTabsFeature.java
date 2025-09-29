@@ -58,8 +58,7 @@ public class ChatTabsFeature extends Feature {
         // We will send this message to every matching tab, so we can cancel it.
         event.setCanceled(true);
 
-        Services.ChatTab.handleIncomingMessage(
-                event.getRecipientType(), event.getOriginalStyledText(), event.getStyledText());
+        Services.ChatTab.handleIncomingMessage(event.getRecipientType(), event.getMessage(), event.getMessage());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

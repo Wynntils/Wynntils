@@ -57,7 +57,7 @@ public final class AbilityModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        StyledText message = StyledTextUtils.unwrap(event.getStyledText().stripAlignment());
+        StyledText message = StyledTextUtils.unwrap(event.getMessage().stripAlignment());
         if (message.matches(HUMMINGBUIRD_RETURN_PATTERN)) {
             hummingBirdsState = false;
         } else if (message.matches(HUMMINGBUIRD_SENT_PATTERN)) {

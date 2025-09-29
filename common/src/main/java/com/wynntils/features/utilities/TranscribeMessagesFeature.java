@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageRewriteEvent;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
@@ -54,9 +54,9 @@ public class TranscribeMessagesFeature extends Feature {
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChat(ChatMessageReceivedEvent event) {
+    public void onChat(ChatMessageRewriteEvent event) {
         if (!transcribeChat.get()) return;
-        if (!Models.WynnAlphabet.hasWynnicOrGavellian(event.getStyledText().getString())) return;
+        if (!Models.WynnAlphabet.hasWynnicOrGavellian(event.getMessage().getString())) return;
 
         boolean transcribeWynnic = Models.WynnAlphabet.shouldTranscribe(transcribeCondition.get(), WynnAlphabet.WYNNIC);
         boolean transcribeGavellian =
@@ -64,11 +64,11 @@ public class TranscribeMessagesFeature extends Feature {
 
         if (!transcribeWynnic && !transcribeGavellian) return;
 
-        StyledText styledText = event.getStyledText();
+        StyledText message = event.getMessage();
 
-        StyledText modified = getStyledTextWithTranscription(styledText, transcribeWynnic, transcribeGavellian, false);
+        StyledText modified = getStyledTextWithTranscription(message, transcribeWynnic, transcribeGavellian, false);
 
-        if (styledText.equals(modified)) return;
+        if (message.equals(modified)) return;
 
         event.setMessage(modified);
     }

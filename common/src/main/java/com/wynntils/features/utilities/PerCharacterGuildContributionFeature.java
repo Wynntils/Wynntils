@@ -56,7 +56,7 @@ public class PerCharacterGuildContributionFeature extends Feature {
         if (Models.Guild.getGuildName().isEmpty()) return;
         if (!Models.Character.hasCharacter()) return;
 
-        StyledText message = event.getOriginalStyledText();
+        StyledText message = event.getMessage();
 
         Matcher contributionMatcher = message.getMatcher(CONTRIBUTION_PATTERN);
 

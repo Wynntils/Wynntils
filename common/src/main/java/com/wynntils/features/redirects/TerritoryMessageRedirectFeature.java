@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.redirects;
@@ -53,7 +53,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
     // text event.
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {
-        if (event.getOriginalStyledText().getMatcher(TERRITORY_MESSAGE_PATTERN).matches()) {
+        if (event.getMessage().getMatcher(TERRITORY_MESSAGE_PATTERN).matches()) {
             event.setCanceled(true);
         }
     }

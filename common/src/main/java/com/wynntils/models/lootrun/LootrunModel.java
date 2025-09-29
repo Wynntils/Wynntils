@@ -311,7 +311,7 @@ public final class LootrunModel extends Model {
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.INFO) return;
-        StyledText styledText = event.getOriginalStyledText();
+        StyledText styledText = event.getMessage();
 
         if (styledText.matches(LOOTRUN_COMPLETED_PATTERN)) {
             lootrunCompletedBuilder = new LootrunFinishedEventBuilder.Completed();

@@ -75,7 +75,7 @@ public class MessageFilterFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onMessage(ChatMessageReceivedEvent e) {
-        StyledText msg = e.getOriginalStyledText();
+        StyledText msg = e.getMessage();
         MessageType messageType = e.getMessageType();
 
         if (hideWelcome.get() && processFilter(msg, messageType, WELCOME)) {

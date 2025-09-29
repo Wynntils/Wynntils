@@ -167,8 +167,7 @@ public final class TradeMarketModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
-        StyledText styledText =
-                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
+        StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
 
         if (styledText.matches(SEARCH_INPUT_PATTERN)) {
             tradeMarketState = TradeMarketState.SEARCH_CHAT_INPUT;

@@ -11,6 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageRewriteEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -544,10 +545,13 @@ public final class ChatHandler extends Handler {
             }
         }
 
-        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(styledText, messageType, recipientType);
-        WynntilsMod.postEvent(event);
-        if (event.isCanceled()) return null;
-        return event.getStyledText();
+        ChatMessageReceivedEvent receivedEvent = new ChatMessageReceivedEvent(styledText, messageType, recipientType);
+        WynntilsMod.postEvent(receivedEvent);
+        if (receivedEvent.isCanceled()) return null;
+
+        ChatMessageRewriteEvent rewriteEvent = new ChatMessageRewriteEvent(styledText, messageType, recipientType);
+        WynntilsMod.postEvent(rewriteEvent);
+        return rewriteEvent.getMessage();
     }
 
     private void handleNpcDialogue(List<StyledText> dialogue, NpcDialogueType type, boolean isProtected) {

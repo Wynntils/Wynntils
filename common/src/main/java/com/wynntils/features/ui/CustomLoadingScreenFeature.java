@@ -52,7 +52,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
     @SubscribeEvent
     public void onChatMessageReceived(ChatMessageReceivedEvent e) {
-        if (e.getStyledText().matches(SERVER_SWITCH_PATTERN)) {
+        if (e.getMessage().matches(SERVER_SWITCH_PATTERN)) {
             createCustomScreen();
             loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.switchingServer"));
         }
