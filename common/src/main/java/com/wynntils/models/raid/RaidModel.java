@@ -483,6 +483,7 @@ public final class RaidModel extends Model {
     }
 
     public List<String> getRaidMajorIds(String playerName) {
+        if (this.currentRaid == null) return List.of();
         if (!partyRaidBuffs.containsKey(playerName)) return List.of();
 
         List<String> rawBuffNames = partyRaidBuffs.get(playerName);
