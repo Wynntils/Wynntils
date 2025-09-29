@@ -416,26 +416,6 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         }
     }
 
-    @WrapOperation(
-            method = "handleSystemChat(Lnet/minecraft/network/protocol/game/ClientboundSystemChatPacket;)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/multiplayer/chat/ChatListener;handleSystemMessage(Lnet/minecraft/network/chat/Component;Z)V"))
-    private void handleSystemChatWrap(
-            ChatListener instance, Component message, boolean overlay, Operation<Void> original) {
-        ChatPacketReceivedEvent event = overlay
-                ? new ChatPacketReceivedEvent.GameInfoReceivedEvent(message)
-                : new ChatPacketReceivedEvent.ChatReceivedEvent(message);
-        MixinHelper.post(event);
-
-        Component newMessage = event.isMessageChanged() ? event.getMessage() : message;
-        if (!event.isCanceled()) {
-            original.call(instance, newMessage, overlay);
-        }
-    }
-
     @Inject(
             method = "handleAddObjective(Lnet/minecraft/network/protocol/game/ClientboundSetObjectivePacket;)V",
             at = @At("RETURN"))
