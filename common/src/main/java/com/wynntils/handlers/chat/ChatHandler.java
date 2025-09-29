@@ -14,8 +14,8 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.mc.event.ChatPacketReceivedEvent.ChatReceivedEvent;
 import com.wynntils.mc.event.MobEffectEvent;
+import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -129,7 +129,7 @@ public final class ChatHandler extends Handler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onSystemChatReceived(ChatReceivedEvent event) {
+    public void onSystemChatReceived(SystemMessageEvent.ChatReceivedEvent event) {
         if (shouldSeparateNPC()) {
             handleWithSeparation(event);
         } else {
@@ -168,7 +168,7 @@ public final class ChatHandler extends Handler {
         return lastSlowdownApplied != 0;
     }
 
-    private void handleIncomingChatLine(ChatReceivedEvent event) {
+    private void handleIncomingChatLine(SystemMessageEvent.ChatReceivedEvent event) {
         StyledText styledText = StyledText.fromComponent(event.getMessage());
 
         // This is a normal one line chat, or we pass a chat screen through
@@ -181,7 +181,7 @@ public final class ChatHandler extends Handler {
         }
     }
 
-    private void handleWithSeparation(ChatReceivedEvent event) {
+    private void handleWithSeparation(SystemMessageEvent.ChatReceivedEvent event) {
         StyledText styledText = StyledText.fromComponent(event.getMessage());
 
         long currentTicks = McUtils.mc().level.getGameTime();

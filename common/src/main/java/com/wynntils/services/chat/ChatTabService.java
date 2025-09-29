@@ -12,7 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -137,7 +137,7 @@ public final class ChatTabService extends Service {
         return unreadMessages.getOrDefault(tab, false);
     }
 
-    public void handleIncomingMessage(ChatPacketReceivedEvent.ChatReceivedEvent event) {
+    public void handleIncomingMessage(SystemMessageEvent.ChatReceivedEvent event) {
         // Firstly, find the FIRST matching tab with high priority
         for (ChatTab chatTab : getChatTabs()) {
             if (!chatTab.isConsuming()) continue;
@@ -215,7 +215,7 @@ public final class ChatTabService extends Service {
         return regex.isEmpty() || event.getOriginalStyledText().matches(regex.get());
     }
 
-    private boolean matchMessageFromEvent(ChatTab chatTab, ChatPacketReceivedEvent.ChatReceivedEvent event) {
+    private boolean matchMessageFromEvent(ChatTab chatTab, SystemMessageEvent.ChatReceivedEvent event) {
         if (chatTab.getFilteredTypes() != null
                 && !chatTab.getFilteredTypes().isEmpty()
                 && !chatTab.getFilteredTypes().contains(RecipientType.CLIENTSIDE)) {

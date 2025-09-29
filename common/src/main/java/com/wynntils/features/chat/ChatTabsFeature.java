@@ -15,12 +15,12 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.mc.event.ChatPacketReceivedEvent.ChatReceivedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatScreenSendEvent;
 import com.wynntils.mc.event.ScreenFocusEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
+import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.screens.chattabs.widgets.ChatTabButton;
@@ -62,7 +62,7 @@ public class ChatTabsFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onClientsideChat(ChatReceivedEvent event) {
+    public void onClientsideChat(SystemMessageEvent.ChatReceivedEvent event) {
         if (Services.ChatTab.getFocusedTab() == null) return;
 
         // We will send this message to every matching tab, so we can cancel it.

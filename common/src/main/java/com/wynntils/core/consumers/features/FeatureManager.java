@@ -169,7 +169,7 @@ import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.features.wynntils.WeeklyConfigBackupFeature;
 import com.wynntils.features.wynntils.WynntilsHintMessagesFeature;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.LinkedHashMap;
@@ -585,7 +585,7 @@ public final class FeatureManager extends Manager {
 
         // If a crash happens in a client-side message event, and we send a new message about disabling X feature,
         // we will cause a new exception and an endless recursion.
-        boolean shouldSendChat = !(event instanceof ChatPacketReceivedEvent.ChatReceivedEvent);
+        boolean shouldSendChat = !(event instanceof SystemMessageEvent.ChatReceivedEvent);
 
         WynntilsMod.reportCrash(
                 CrashType.FEATURE,
