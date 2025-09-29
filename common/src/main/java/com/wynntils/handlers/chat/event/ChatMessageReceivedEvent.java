@@ -11,7 +11,7 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 /**
- * This event is what most models and features should use to listen to chat messsages.
+ * This event is what models and features should use to listen to chat messsages.
  */
 public class ChatMessageReceivedEvent extends Event implements ICancellableEvent {
     private final StyledText message;

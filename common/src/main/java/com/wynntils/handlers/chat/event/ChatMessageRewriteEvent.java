@@ -10,7 +10,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import net.neoforged.bus.api.Event;
 
 /**
- * This event is what most models and features should use if they want to rewrite chat messsages.
+ * This event is what features should use if they want to rewrite chat messsages.
  */
 public class ChatMessageRewriteEvent extends Event {
     private StyledText message;
