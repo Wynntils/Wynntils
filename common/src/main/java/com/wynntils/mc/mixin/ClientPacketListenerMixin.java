@@ -14,8 +14,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
-import com.wynntils.mc.event.ChatPacketReceivedEvent.GameInfoReceivedEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent.ChatReceivedEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent.GameInfoReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChunkReceivedEvent;
 import com.wynntils.mc.event.CommandSentEvent;
@@ -428,9 +428,8 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (!isRenderThread()) return;
 
         Component message = packet.content();
-        ChatPacketReceivedEvent event = packet.overlay()
-                ? new GameInfoReceivedEvent(message)
-                : new ChatReceivedEvent(message);
+        ChatPacketReceivedEvent event =
+                packet.overlay() ? new GameInfoReceivedEvent(message) : new ChatReceivedEvent(message);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
