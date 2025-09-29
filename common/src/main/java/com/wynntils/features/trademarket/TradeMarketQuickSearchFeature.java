@@ -15,7 +15,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
@@ -112,7 +112,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatMessageReceive(ChatMessageReceivedEvent event) {
+    public void onChatMessageReceive(ChatMessageEvent.Match event) {
         if (!Models.WorldState.onWorld()) return;
         if (!Models.TradeMarket.inChatInput()) return;
 
