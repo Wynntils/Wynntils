@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.chat;
@@ -137,7 +137,7 @@ public final class ChatTabService extends Service {
         return unreadMessages.getOrDefault(tab, false);
     }
 
-    public void matchMessage(ClientsideMessageEvent event) {
+    public void handleIncomingMessage(ClientsideMessageEvent event) {
         // Firstly, find the FIRST matching tab with high priority
         for (ChatTab chatTab : getChatTabs()) {
             if (!chatTab.isConsuming()) continue;
@@ -158,7 +158,7 @@ public final class ChatTabService extends Service {
         }
     }
 
-    public void matchMessage(ChatMessageReceivedEvent event) {
+    public void handleIncomingMessage(ChatMessageReceivedEvent event) {
         // Firstly, find the FIRST matching tab with high priority
         for (ChatTab chatTab : getChatTabs()) {
             if (!chatTab.isConsuming()) continue;

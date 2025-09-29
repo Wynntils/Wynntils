@@ -15,7 +15,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent.ChatReceivedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatScreenSendEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
@@ -39,7 +39,7 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.CHAT)
 public class ChatTabsFeature extends Feature {
-    // These should move to ChatTabManager, as Storage
+    // These should move to ChatTabService, as Storage
     @Persisted
     public final HiddenConfig<List<ChatTab>> chatTabs = new HiddenConfig<>(new ArrayList<>(List.of(
             new ChatTab("All", false, null, null, null),
@@ -56,25 +56,25 @@ public class ChatTabsFeature extends Feature {
     // We do this here, and not in Services.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatReceived(ChatMessageReceivedEvent event) {
-        // We are already sending this message to every matching tab, so we can cancel it.
+        // We will send this message to every matching tab, so we can cancel it.
         event.setCanceled(true);
 
-        Services.ChatTab.matchMessage(event);
+        Services.ChatTab.handleIncomingMessage(event);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onClientsideChat(ClientsideMessageEvent event) {
-        // We've already sent this message to every matching tab, so we can cancel it.
+        // We will send this message to every matching tab, so we can cancel it.
         event.setCanceled(true);
 
         boolean isRenderThread = McUtils.mc().isSameThread();
         if (isRenderThread) {
-            Services.ChatTab.matchMessage(event);
+            Services.ChatTab.handleIncomingMessage(event);
         } else {
             // It can happen that client-side messages are sent from some other thread
             // That will cause race conditions with vanilla ChatComponent code, so
             // schedule this update by the renderer thread instead
-            Managers.TickScheduler.scheduleNextTick(() -> Services.ChatTab.matchMessage(event));
+            Managers.TickScheduler.scheduleNextTick(() -> Services.ChatTab.handleIncomingMessage(event));
         }
     }
 
@@ -169,15 +169,7 @@ public class ChatTabsFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onChatPacket(ChatPacketReceivedEvent.Player event) {
-        if (Services.ChatTab.getFocusedTab() == null) return;
-
-        // Cancel all remaining messages, if we have a focused tab, we will handle it.
-        event.setCanceled(true);
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onChatPacket(ChatPacketReceivedEvent.System event) {
+    public void onChatPacket(ChatReceivedEvent event) {
         if (Services.ChatTab.getFocusedTab() == null) return;
 
         // Cancel all remaining messages, if we have a focused tab, we will handle it.

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.chat;
@@ -14,7 +14,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent.ChatReceivedEvent;
 import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -129,16 +129,7 @@ public final class ChatHandler extends Handler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPlayerChatReceived(ChatPacketReceivedEvent.Player event) {
-        if (shouldSeparateNPC()) {
-            handleWithSeparation(event);
-        } else {
-            handleIncomingChatLine(event);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onSystemChatReceived(ChatPacketReceivedEvent.System event) {
+    public void onSystemChatReceived(ChatReceivedEvent event) {
         if (shouldSeparateNPC()) {
             handleWithSeparation(event);
         } else {
@@ -177,7 +168,7 @@ public final class ChatHandler extends Handler {
         return lastSlowdownApplied != 0;
     }
 
-    private void handleIncomingChatLine(ChatPacketReceivedEvent event) {
+    private void handleIncomingChatLine(ChatReceivedEvent event) {
         StyledText styledText = StyledText.fromComponent(event.getMessage());
 
         // This is a normal one line chat, or we pass a chat screen through
@@ -190,7 +181,7 @@ public final class ChatHandler extends Handler {
         }
     }
 
-    private void handleWithSeparation(ChatPacketReceivedEvent event) {
+    private void handleWithSeparation(ChatReceivedEvent event) {
         StyledText styledText = StyledText.fromComponent(event.getMessage());
 
         long currentTicks = McUtils.mc().level.getGameTime();

@@ -9,7 +9,7 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.ChatPacketReceivedEvent.GameInfoReceivedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public final class ActionBarHandler extends Handler {
     }
 
     @SubscribeEvent
-    public void onActionBarUpdate(ChatPacketReceivedEvent.GameInfo event) {
+    public void onActionBarUpdate(GameInfoReceivedEvent event) {
         StyledText packetText = StyledText.fromComponent(event.getMessage());
 
         // Separate the action bar text from the coordinates

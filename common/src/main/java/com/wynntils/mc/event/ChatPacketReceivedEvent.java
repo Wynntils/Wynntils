@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -29,20 +29,14 @@ public abstract class ChatPacketReceivedEvent extends Event implements ICancella
         return messageChanged;
     }
 
-    public static final class GameInfo extends ChatPacketReceivedEvent {
-        public GameInfo(Component message) {
+    public static final class GameInfoReceivedEvent extends ChatPacketReceivedEvent {
+        public GameInfoReceivedEvent(Component message) {
             super(message);
         }
     }
 
-    public static final class System extends ChatPacketReceivedEvent {
-        public System(Component message) {
-            super(message);
-        }
-    }
-
-    public static final class Player extends ChatPacketReceivedEvent {
-        public Player(Component message) {
+    public static final class ChatReceivedEvent extends ChatPacketReceivedEvent {
+        public ChatReceivedEvent(Component message) {
             super(message);
         }
     }
