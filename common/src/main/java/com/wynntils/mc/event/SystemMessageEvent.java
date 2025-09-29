@@ -37,7 +37,6 @@ public abstract class SystemMessageEvent extends Event implements ICancellableEv
         this.message = message;
         this.messageChanged = true;
         this.styledText = StyledText.fromComponent(message);
-        ;
     }
 
     public boolean isMessageChanged() {
