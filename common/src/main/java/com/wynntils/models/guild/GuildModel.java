@@ -466,7 +466,7 @@ public final class GuildModel extends Model {
     }
 
     public void requestGuildMembers() {
-        if (guildName != null) {
+        if (guildName != null && !guildName.isEmpty()) {
             if (System.currentTimeMillis() - lastGuildRequest > REQUEST_RATELIMIT || guildMembers.isEmpty()) {
                 CompletableFuture<GuildInfo> completableFuture = getGuild(guildName);
 
@@ -483,7 +483,9 @@ public final class GuildModel extends Model {
                     }
                 });
             } else {
-                WynntilsMod.info("Skipping guild member list request because it was requested recently.");
+                WynntilsMod.info("Skipping guild member list update request because it was requested recently.");
+                WynntilsMod.postEvent(new HadesRelationsUpdateEvent.GuildMemberList(
+                        guildMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
             }
         }
     }
