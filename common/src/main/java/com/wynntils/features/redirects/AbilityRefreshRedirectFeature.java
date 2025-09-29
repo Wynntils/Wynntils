@@ -19,7 +19,7 @@ public class AbilityRefreshRedirectFeature extends Feature {
     private static final Pattern REFRESH_PATTERN = Pattern.compile("\\[⬤\\] (.+) has been refreshed!");
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChat(ChatMessageEvent.MatchingEvent event) {
+    public void onChat(ChatMessageEvent.Match event) {
         if (event.getMessage().matches(REFRESH_PATTERN, PartStyle.StyleType.NONE)) {
             event.setCanceled(true);
             Managers.Notification.queueMessage(event.getMessage());

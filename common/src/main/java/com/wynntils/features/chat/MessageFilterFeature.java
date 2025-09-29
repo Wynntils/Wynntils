@@ -74,7 +74,7 @@ public class MessageFilterFeature extends Feature {
     private final Config<Boolean> hidePartyFinder = new Config<>(false);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onMessage(ChatMessageEvent.MatchingEvent e) {
+    public void onMessage(ChatMessageEvent.Match e) {
         StyledText msg = e.getMessage();
         MessageType messageType = e.getMessageType();
 

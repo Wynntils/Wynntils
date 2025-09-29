@@ -143,7 +143,7 @@ public class ChatRedirectFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChatMessage(ChatMessageEvent.MatchingEvent e) {
+    public void onChatMessage(ChatMessageEvent.Match e) {
         StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
         MessageType messageType = e.getMessageType();
 

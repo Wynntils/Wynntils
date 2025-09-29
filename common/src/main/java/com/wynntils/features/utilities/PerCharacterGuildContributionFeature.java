@@ -52,7 +52,7 @@ public class PerCharacterGuildContributionFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatReceived(ChatMessageEvent.MatchingEvent event) {
+    public void onChatReceived(ChatMessageEvent.Match event) {
         if (Models.Guild.getGuildName().isEmpty()) return;
         if (!Models.Character.hasCharacter()) return;
 

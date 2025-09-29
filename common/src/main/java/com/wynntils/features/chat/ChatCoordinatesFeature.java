@@ -28,7 +28,7 @@ public class ChatCoordinatesFeature extends Feature {
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChatReceived(ChatMessageEvent.MatchingEvent.EditableEvent e) {
+    public void onChatReceived(ChatMessageEvent.Edit e) {
         if (!Models.WorldState.onWorld()) return;
 
         StyledText message = e.getMessage();

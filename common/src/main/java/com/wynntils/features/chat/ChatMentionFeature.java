@@ -85,7 +85,7 @@ public class ChatMentionFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChat(ChatMessageEvent.MatchingEvent.EditableEvent e) {
+    public void onChat(ChatMessageEvent.Edit e) {
         if (e.getRecipientType() == RecipientType.INFO && suppressMentionsInInfo.get()) return;
 
         StyledText message = e.getMessage();

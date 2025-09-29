@@ -17,7 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.CHAT)
 public class RemoveWynncraftChatWrapFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onChatReceived(ChatMessageEvent.MatchingEvent.EditableEvent event) {
+    public void onChatReceived(ChatMessageEvent.Edit event) {
         event.setMessage(StyledTextUtils.unwrap(event.getMessage()));
     }
 }

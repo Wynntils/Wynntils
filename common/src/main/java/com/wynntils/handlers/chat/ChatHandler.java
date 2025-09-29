@@ -544,13 +544,11 @@ public final class ChatHandler extends Handler {
             }
         }
 
-        ChatMessageEvent.MatchingEvent receivedEvent =
-                new ChatMessageEvent.MatchingEvent(styledText, messageType, recipientType);
+        ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(styledText, messageType, recipientType);
         WynntilsMod.postEvent(receivedEvent);
         if (receivedEvent.isCanceled()) return null;
 
-        ChatMessageEvent.MatchingEvent.EditableEvent rewriteEvent =
-                new ChatMessageEvent.MatchingEvent.EditableEvent(styledText, messageType, recipientType);
+        ChatMessageEvent.Edit rewriteEvent = new ChatMessageEvent.Edit(styledText, messageType, recipientType);
         WynntilsMod.postEvent(rewriteEvent);
         return rewriteEvent.getMessage();
     }

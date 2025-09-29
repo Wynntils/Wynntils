@@ -36,8 +36,8 @@ public abstract class ChatMessageEvent extends Event implements ICancellableEven
     /**
      * This event is what models and features should use to listen to chat messsages.
      */
-    public static class MatchingEvent extends ChatMessageEvent {
-        public MatchingEvent(StyledText message, MessageType messageType, RecipientType recipientType) {
+    public static class Match extends ChatMessageEvent {
+        public Match(StyledText message, MessageType messageType, RecipientType recipientType) {
             super(message, messageType, recipientType);
         }
     }
@@ -45,10 +45,10 @@ public abstract class ChatMessageEvent extends Event implements ICancellableEven
     /**
      * This event is what features should use if they want to rewrite chat messsages.
      */
-    public static class EditableEvent extends ChatMessageEvent {
+    public static class Edit extends ChatMessageEvent {
         private StyledText editedMessage = null;
 
-        public EditableEvent(StyledText message, MessageType messageType, RecipientType recipientType) {
+        public Edit(StyledText message, MessageType messageType, RecipientType recipientType) {
             super(message, messageType, recipientType);
         }
 

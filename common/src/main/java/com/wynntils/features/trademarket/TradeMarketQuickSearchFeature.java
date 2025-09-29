@@ -112,7 +112,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatMessageReceive(ChatMessageEvent.MatchingEvent event) {
+    public void onChatMessageReceive(ChatMessageEvent.Match event) {
         if (!Models.WorldState.onWorld()) return;
         if (!Models.TradeMarket.inChatInput()) return;
 

@@ -160,7 +160,7 @@ public final class RaidModel extends Model {
     }
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageEvent.MatchingEvent event) {
+    public void onChatMessage(ChatMessageEvent.Match event) {
         StyledText styledText = event.getMessage();
 
         Matcher rewardPullMatcher = styledText.getMatcher(REWARD_PULLS_PATTERN);

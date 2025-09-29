@@ -53,7 +53,7 @@ public final class AccountModel extends Model {
     }
 
     @SubscribeEvent
-    public void onChatReceived(ChatMessageEvent.MatchingEvent e) {
+    public void onChatReceived(ChatMessageEvent.Match e) {
         StyledText message = e.getMessage().trim();
 
         if (message.matches(SILVERBULL_JOIN_PATTERN) || message.matches(SILVERBULL_UPDATE_PATTERN)) {

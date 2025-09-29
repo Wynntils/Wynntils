@@ -58,7 +58,7 @@ public final class BombModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChat(ChatMessageEvent.MatchingEvent event) {
+    public void onChat(ChatMessageEvent.Match event) {
         StyledText message = event.getMessage();
         StyledText unwrapped = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
 

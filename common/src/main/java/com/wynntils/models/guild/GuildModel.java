@@ -169,7 +169,7 @@ public final class GuildModel extends Model {
 
     // This needs to run before any chat modifications (eg. chat mentions, filter, etc)
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatMessage(ChatMessageEvent.MatchingEvent e) {
+    public void onChatMessage(ChatMessageEvent.Match e) {
         StyledText message = e.getMessage();
 
         if (message.matches(MSG_LEFT_GUILD)) {

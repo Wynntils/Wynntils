@@ -35,7 +35,7 @@ public class RevealNicknamesFeature extends Feature {
             new Config<>(NicknameReplaceOption.PREPEND_USERNAME);
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onPlayerChat(ChatMessageEvent.MatchingEvent.EditableEvent event) {
+    public void onPlayerChat(ChatMessageEvent.Edit event) {
         StyledText styledText = event.getMessage().iterate((currentPart, changes) -> {
             HoverEvent hoverEvent = currentPart.getPartStyle().getStyle().getHoverEvent();
 

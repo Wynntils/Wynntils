@@ -51,7 +51,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageEvent.MatchingEvent e) {
+    public void onChatMessage(ChatMessageEvent.Match e) {
         if (!sendAmountMessage) return;
         if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.AMOUNT_CHAT_INPUT) return;
 

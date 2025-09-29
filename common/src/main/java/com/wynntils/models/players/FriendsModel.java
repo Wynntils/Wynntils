@@ -103,7 +103,7 @@ public final class FriendsModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatReceived(ChatMessageEvent.MatchingEvent event) {
+    public void onChatReceived(ChatMessageEvent.Match event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
         StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();

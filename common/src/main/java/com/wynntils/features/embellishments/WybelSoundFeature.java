@@ -31,7 +31,7 @@ public class WybelSoundFeature extends Feature {
     private final Config<Boolean> hideText = new Config<>(false);
 
     @SubscribeEvent
-    public void onChat(ChatMessageEvent.MatchingEvent event) {
+    public void onChat(ChatMessageEvent.Match event) {
         if (event.getRecipientType() != RecipientType.PETS) return;
 
         StyledText message = event.getMessage();

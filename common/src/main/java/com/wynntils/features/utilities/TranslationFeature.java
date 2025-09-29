@@ -51,7 +51,7 @@ public class TranslationFeature extends Feature {
             new Config<>(TranslationService.TranslationServices.GOOGLEAPI);
 
     @SubscribeEvent
-    public void onChat(ChatMessageEvent.MatchingEvent e) {
+    public void onChat(ChatMessageEvent.Match e) {
         if (languageName.get().isEmpty()) return;
 
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;

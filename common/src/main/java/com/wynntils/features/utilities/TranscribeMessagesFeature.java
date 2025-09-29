@@ -54,7 +54,7 @@ public class TranscribeMessagesFeature extends Feature {
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChat(ChatMessageEvent.MatchingEvent.EditableEvent event) {
+    public void onChat(ChatMessageEvent.Edit event) {
         if (!transcribeChat.get()) return;
         if (!Models.WynnAlphabet.hasWynnicOrGavellian(event.getMessage().getString())) return;
 

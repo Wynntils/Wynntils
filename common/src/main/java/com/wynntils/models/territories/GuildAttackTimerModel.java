@@ -73,7 +73,7 @@ public final class GuildAttackTimerModel extends Model {
     }
 
     @SubscribeEvent
-    public void onMessage(ChatMessageEvent.MatchingEvent event) {
+    public void onMessage(ChatMessageEvent.Match event) {
         // TODO: Once RecipientType supports Wynncraft 2.1 messages, we can check for RecipientType.GUILD
 
         StyledText cleanMessaage = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();

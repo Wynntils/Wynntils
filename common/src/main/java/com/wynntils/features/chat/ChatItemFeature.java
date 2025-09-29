@@ -133,7 +133,7 @@ public class ChatItemFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatReceived(ChatMessageEvent.MatchingEvent.EditableEvent e) {
+    public void onChatReceived(ChatMessageEvent.Edit e) {
         if (!Models.WorldState.onWorld()) return;
 
         StyledText message = e.getMessage();

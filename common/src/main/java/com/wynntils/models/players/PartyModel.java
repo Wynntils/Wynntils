@@ -133,7 +133,7 @@ public final class PartyModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatReceived(ChatMessageEvent.MatchingEvent event) {
+    public void onChatReceived(ChatMessageEvent.Match event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
         StyledText chatMessage = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();

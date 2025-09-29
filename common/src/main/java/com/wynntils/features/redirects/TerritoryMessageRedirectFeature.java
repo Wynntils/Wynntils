@@ -52,7 +52,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
     // Handles the chat log message event, we don't want a duplicate so just cancel the event and rely on the subtitle
     // text event.
     @SubscribeEvent
-    public void onChat(ChatMessageEvent.MatchingEvent event) {
+    public void onChat(ChatMessageEvent.Match event) {
         if (event.getMessage().getMatcher(TERRITORY_MESSAGE_PATTERN).matches()) {
             event.setCanceled(true);
         }
