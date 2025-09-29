@@ -14,10 +14,8 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ChatListener.class)
 public abstract class ChatListenerMixin {
-    @WrapMethod(
-            method = "handleSystemMessage(Lnet/minecraft/network/chat/Component;Z)V")
-    private void handleSystemMessageWrap(
-            Component message, boolean overlay, Operation<Void> original) {
+    @WrapMethod(method = "handleSystemMessage(Lnet/minecraft/network/chat/Component;Z)V")
+    private void handleSystemMessageWrap(Component message, boolean overlay, Operation<Void> original) {
         SystemMessageEvent event = overlay
                 ? new SystemMessageEvent.GameInfoReceivedEvent(message)
                 : new SystemMessageEvent.ChatReceivedEvent(message);
