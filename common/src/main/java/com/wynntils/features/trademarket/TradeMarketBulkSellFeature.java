@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
@@ -51,7 +51,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageReceivedEvent e) {
+    public void onChatMessage(ChatMessageEvent.MatchingEvent e) {
         if (!sendAmountMessage) return;
         if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.AMOUNT_CHAT_INPUT) return;
 

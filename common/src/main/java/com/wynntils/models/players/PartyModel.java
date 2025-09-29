@@ -9,7 +9,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
@@ -133,7 +133,7 @@ public final class PartyModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatReceived(ChatMessageReceivedEvent event) {
+    public void onChatReceived(ChatMessageEvent.MatchingEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
         StyledText chatMessage = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();

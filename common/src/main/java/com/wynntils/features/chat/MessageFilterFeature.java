@@ -10,7 +10,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
@@ -74,7 +74,7 @@ public class MessageFilterFeature extends Feature {
     private final Config<Boolean> hidePartyFinder = new Config<>(false);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onMessage(ChatMessageReceivedEvent e) {
+    public void onMessage(ChatMessageEvent.MatchingEvent e) {
         StyledText msg = e.getMessage();
         MessageType messageType = e.getMessageType();
 

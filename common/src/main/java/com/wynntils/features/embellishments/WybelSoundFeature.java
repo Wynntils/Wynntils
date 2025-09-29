@@ -10,7 +10,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -31,7 +31,7 @@ public class WybelSoundFeature extends Feature {
     private final Config<Boolean> hideText = new Config<>(false);
 
     @SubscribeEvent
-    public void onChat(ChatMessageReceivedEvent event) {
+    public void onChat(ChatMessageEvent.MatchingEvent event) {
         if (event.getRecipientType() != RecipientType.PETS) return;
 
         StyledText message = event.getMessage();

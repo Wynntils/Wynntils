@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.trademarket.TradeMarketModel;
@@ -47,7 +47,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onChatMessage(ChatMessageReceivedEvent e) {
+    public void onChatMessage(ChatMessageEvent.MatchingEvent e) {
         if (!sendPriceMessage) return;
         if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.PRICE_CHAT_INPUT) return;
 

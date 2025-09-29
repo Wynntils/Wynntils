@@ -11,7 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -166,7 +166,7 @@ public final class TradeMarketModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChatMessageReceive(ChatMessageReceivedEvent event) {
+    public void onChatMessageReceive(ChatMessageEvent.MatchingEvent event) {
         StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
 
         if (styledText.matches(SEARCH_INPUT_PATTERN)) {

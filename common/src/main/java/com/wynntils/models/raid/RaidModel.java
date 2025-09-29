@@ -11,7 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -160,7 +160,7 @@ public final class RaidModel extends Model {
     }
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageReceivedEvent event) {
+    public void onChatMessage(ChatMessageEvent.MatchingEvent event) {
         StyledText styledText = event.getMessage();
 
         Matcher rewardPullMatcher = styledText.getMatcher(REWARD_PULLS_PATTERN);

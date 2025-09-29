@@ -10,7 +10,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.LoadingProgressEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -51,7 +51,7 @@ public class CustomLoadingScreenFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatMessageReceived(ChatMessageReceivedEvent e) {
+    public void onChatMessageReceived(ChatMessageEvent.MatchingEvent e) {
         if (e.getMessage().matches(SERVER_SWITCH_PATTERN)) {
             createCustomScreen();
             loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.switchingServer"));

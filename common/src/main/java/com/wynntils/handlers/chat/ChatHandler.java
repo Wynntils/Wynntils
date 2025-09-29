@@ -10,8 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.chat.event.ChatMessageRewriteEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -545,11 +544,13 @@ public final class ChatHandler extends Handler {
             }
         }
 
-        ChatMessageReceivedEvent receivedEvent = new ChatMessageReceivedEvent(styledText, messageType, recipientType);
+        ChatMessageEvent.MatchingEvent receivedEvent =
+                new ChatMessageEvent.MatchingEvent(styledText, messageType, recipientType);
         WynntilsMod.postEvent(receivedEvent);
         if (receivedEvent.isCanceled()) return null;
 
-        ChatMessageRewriteEvent rewriteEvent = new ChatMessageRewriteEvent(styledText, messageType, recipientType);
+        ChatMessageEvent.MatchingEvent.EditableEvent rewriteEvent =
+                new ChatMessageEvent.MatchingEvent.EditableEvent(styledText, messageType, recipientType);
         WynntilsMod.postEvent(rewriteEvent);
         return rewriteEvent.getMessage();
     }

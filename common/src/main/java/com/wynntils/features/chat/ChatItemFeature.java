@@ -17,7 +17,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
-import com.wynntils.handlers.chat.event.ChatMessageRewriteEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
@@ -133,7 +133,7 @@ public class ChatItemFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatReceived(ChatMessageRewriteEvent e) {
+    public void onChatReceived(ChatMessageEvent.MatchingEvent.EditableEvent e) {
         if (!Models.WorldState.onWorld()) return;
 
         StyledText message = e.getMessage();

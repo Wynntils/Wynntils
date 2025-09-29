@@ -8,7 +8,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.handlers.chat.event.ChatMessageRewriteEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -17,7 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.CHAT)
 public class RemoveWynncraftChatWrapFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onChatReceived(ChatMessageRewriteEvent event) {
+    public void onChatReceived(ChatMessageEvent.MatchingEvent.EditableEvent event) {
         event.setMessage(StyledTextUtils.unwrap(event.getMessage()));
     }
 }

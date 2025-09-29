@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
-import com.wynntils.handlers.chat.event.ChatMessageRewriteEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.IterationDecision;
@@ -28,7 +28,7 @@ public class ChatCoordinatesFeature extends Feature {
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChatReceived(ChatMessageRewriteEvent e) {
+    public void onChatReceived(ChatMessageEvent.MatchingEvent.EditableEvent e) {
         if (!Models.WorldState.onWorld()) return;
 
         StyledText message = e.getMessage();

@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
-import com.wynntils.handlers.chat.event.ChatMessageRewriteEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class RevealNicknamesFeature extends Feature {
             new Config<>(NicknameReplaceOption.PREPEND_USERNAME);
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onPlayerChat(ChatMessageRewriteEvent event) {
+    public void onPlayerChat(ChatMessageEvent.MatchingEvent.EditableEvent event) {
         StyledText styledText = event.getMessage().iterate((currentPart, changes) -> {
             HoverEvent hoverEvent = currentPart.getPartStyle().getStyle().getHoverEvent();
 

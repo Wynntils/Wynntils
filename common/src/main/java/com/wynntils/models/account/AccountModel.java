@@ -9,7 +9,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
@@ -53,7 +53,7 @@ public final class AccountModel extends Model {
     }
 
     @SubscribeEvent
-    public void onChatReceived(ChatMessageReceivedEvent e) {
+    public void onChatReceived(ChatMessageEvent.MatchingEvent e) {
         StyledText message = e.getMessage().trim();
 
         if (message.matches(SILVERBULL_JOIN_PATTERN) || message.matches(SILVERBULL_UPDATE_PATTERN)) {

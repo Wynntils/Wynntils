@@ -10,7 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.worlds.bossbars.InfoBar;
 import com.wynntils.models.worlds.event.BombEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -58,7 +58,7 @@ public final class BombModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChat(ChatMessageReceivedEvent event) {
+    public void onChat(ChatMessageEvent.MatchingEvent event) {
         StyledText message = event.getMessage();
         StyledText unwrapped = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
 

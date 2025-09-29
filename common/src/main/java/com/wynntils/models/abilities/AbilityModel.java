@@ -8,7 +8,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.abilities.bossbars.AwakenedBar;
 import com.wynntils.models.abilities.bossbars.BloodPoolBar;
 import com.wynntils.models.abilities.bossbars.CommanderBar;
@@ -56,7 +56,7 @@ public final class AbilityModel extends Model {
     }
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageReceivedEvent event) {
+    public void onChatMessage(ChatMessageEvent.MatchingEvent event) {
         StyledText message = StyledTextUtils.unwrap(event.getMessage().stripAlignment());
         if (message.matches(HUMMINGBUIRD_RETURN_PATTERN)) {
             hummingBirdsState = false;

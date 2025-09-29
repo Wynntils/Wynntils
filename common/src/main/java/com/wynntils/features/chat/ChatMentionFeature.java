@@ -12,7 +12,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
-import com.wynntils.handlers.chat.event.ChatMessageRewriteEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
@@ -85,7 +85,7 @@ public class ChatMentionFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChat(ChatMessageRewriteEvent e) {
+    public void onChat(ChatMessageEvent.MatchingEvent.EditableEvent e) {
         if (e.getRecipientType() == RecipientType.INFO && suppressMentionsInInfo.get()) return;
 
         StyledText message = e.getMessage();

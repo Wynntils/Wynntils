@@ -10,7 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.models.profession.event.ProfessionXpGainEvent;
 import com.wynntils.models.profession.label.CraftingStationLabelParser;
@@ -118,7 +118,7 @@ public final class ProfessionModel extends Model {
     }
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageReceivedEvent event) {
+    public void onChatMessage(ChatMessageEvent.MatchingEvent event) {
         StyledText message = event.getMessage();
 
         Matcher craftMatcher = message.getMatcher(PROFESSION_CRAFT_PATTERN);

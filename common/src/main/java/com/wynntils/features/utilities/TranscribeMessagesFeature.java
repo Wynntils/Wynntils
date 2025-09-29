@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
-import com.wynntils.handlers.chat.event.ChatMessageRewriteEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
@@ -54,7 +54,7 @@ public class TranscribeMessagesFeature extends Feature {
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChat(ChatMessageRewriteEvent event) {
+    public void onChat(ChatMessageEvent.MatchingEvent.EditableEvent event) {
         if (!transcribeChat.get()) return;
         if (!Models.WynnAlphabet.hasWynnicOrGavellian(event.getMessage().getString())) return;
 

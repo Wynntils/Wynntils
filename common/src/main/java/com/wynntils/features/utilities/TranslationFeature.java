@@ -14,7 +14,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.services.translation.TranslationService;
@@ -51,7 +51,7 @@ public class TranslationFeature extends Feature {
             new Config<>(TranslationService.TranslationServices.GOOGLEAPI);
 
     @SubscribeEvent
-    public void onChat(ChatMessageReceivedEvent e) {
+    public void onChat(ChatMessageEvent.MatchingEvent e) {
         if (languageName.get().isEmpty()) return;
 
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
