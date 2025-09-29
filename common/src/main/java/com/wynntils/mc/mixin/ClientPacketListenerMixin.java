@@ -13,9 +13,6 @@ import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
-import com.wynntils.mc.event.ChatPacketReceivedEvent.ChatReceivedEvent;
-import com.wynntils.mc.event.ChatPacketReceivedEvent.GameInfoReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChunkReceivedEvent;
 import com.wynntils.mc.event.CommandSentEvent;
@@ -55,7 +52,6 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.Connection;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
@@ -82,7 +78,6 @@ import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
-import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
@@ -412,32 +407,6 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         SubtitleSetTextEvent event = new SubtitleSetTextEvent(packet.text());
         MixinHelper.post(event);
         if (event.isCanceled()) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(
-            method = "handleSystemChat(Lnet/minecraft/network/protocol/game/ClientboundSystemChatPacket;)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/multiplayer/chat/ChatListener;handleSystemMessage(Lnet/minecraft/network/chat/Component;Z)V"),
-            cancellable = true)
-    private void handleSystemChat(ClientboundSystemChatPacket packet, CallbackInfo ci) {
-        if (!isRenderThread()) return;
-
-        Component message = packet.content();
-        ChatPacketReceivedEvent event =
-                packet.overlay() ? new GameInfoReceivedEvent(message) : new ChatReceivedEvent(message);
-        MixinHelper.post(event);
-        if (event.isCanceled()) {
-            ci.cancel();
-            return;
-        }
-
-        if (event.isMessageChanged()) {
-            this.minecraft.getChatListener().handleSystemMessage(event.getMessage(), packet.overlay());
             ci.cancel();
         }
     }

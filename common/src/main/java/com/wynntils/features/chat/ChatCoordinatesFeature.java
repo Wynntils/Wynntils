@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -12,7 +12,6 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.IterationDecision;
@@ -30,20 +29,6 @@ public class ChatCoordinatesFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        if (!Models.WorldState.onWorld()) return;
-
-        StyledText styledText = e.getStyledText();
-
-        StyledText modified = getStyledTextWithCoordinatesInserted(styledText);
-
-        // No changes were made, there were no coordinates.
-        if (styledText.equals(modified)) return;
-
-        e.setMessage(modified);
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onClientsideMessage(ClientsideMessageEvent e) {
         if (!Models.WorldState.onWorld()) return;
 
         StyledText styledText = e.getStyledText();
