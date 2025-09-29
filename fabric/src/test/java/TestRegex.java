@@ -7,7 +7,7 @@ import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
-import com.wynntils.handlers.chat.ChatHandler;
+import com.wynntils.handlers.chat.ChatPageProcessor;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
@@ -180,15 +180,15 @@ public class TestRegex {
     }
 
     @Test
-    public void ChatHandler_NPC_CONFIRM_PATTERN() {
-        PatternTester p = new PatternTester(ChatHandler.class, "NPC_CONFIRM_PATTERN");
+    public void ChatPageProcessor_NPC_CONFIRM_PATTERN() {
+        PatternTester p = new PatternTester(ChatPageProcessor.class, "NPC_CONFIRM_PATTERN");
         p.shouldMatch("§7Press §fSHIFT §7to continue");
         p.shouldMatch("§4Press §cSNEAK §4to continue");
     }
 
     @Test
-    public void ChatHandler_NPC_SELECT_PATTERN() {
-        PatternTester p = new PatternTester(ChatHandler.class, "NPC_SELECT_PATTERN");
+    public void ChatPageProcessor_NPC_SELECT_PATTERN() {
+        PatternTester p = new PatternTester(ChatPageProcessor.class, "NPC_SELECT_PATTERN");
         p.shouldMatch("§7Select §fan option §7to continue");
         p.shouldMatch("§cCLICK §4an option to continue");
     }
