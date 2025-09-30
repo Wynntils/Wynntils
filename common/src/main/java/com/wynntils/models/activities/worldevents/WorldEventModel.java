@@ -75,7 +75,7 @@ public final class WorldEventModel extends Model {
 
     // Handles completion/failure
     private static final Pattern WORLD_EVENT_COMPLETE_PATTERN = Pattern.compile("§#00bdbfff\uE001 §fEvent Completed");
-    private static final Pattern WORLD_EVENT_FAIl_PATTERN = Pattern.compile("§#00bdbfff\uE001 §fEvent Failed");
+    private static final Pattern WORLD_EVENT_FAIL_PATTERN = Pattern.compile("§#00bdbfff\uE001 §fEvent Failed");
 
     private final Map<String, WorldEvent> activeWorldEvents = new HashMap<>();
 
@@ -190,7 +190,7 @@ public final class WorldEventModel extends Model {
             currentWorldEvent = null;
 
             return;
-        } else if (styledText.matches(WORLD_EVENT_FAIl_PATTERN)) {
+        } else if (styledText.matches(WORLD_EVENT_FAIL_PATTERN)) {
             currentWorldEvent = null;
 
             if (currentWorldEvent.getName().equals(ANNIHILATION_WORLD_EVENT_NAME)) {
