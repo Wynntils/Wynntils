@@ -16,12 +16,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
-import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
-import com.wynntils.models.npcdialogue.event.NpcDialogueRemoved;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
@@ -39,9 +36,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public class NpcDialogueOverlay extends Overlay {
     private static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromString("§cPress SNEAK to continue");

@@ -198,10 +198,14 @@ public final class ChatPageDetector {
 
     private Pair<List<StyledText>, List<StyledText>> splitPage(Deque<Component> collectedMessages) {
         // The first four messages are always background, and the rest is page content
-        List<StyledText> background =
-                collectedMessages.stream().limit(4).flatMap(this::getStrippedLines).toList();
-        List<StyledText> pageContent =
-                collectedMessages.stream().skip(4).flatMap(this::getStrippedLines).toList();
+        List<StyledText> background = collectedMessages.stream()
+                .limit(4)
+                .flatMap(this::getStrippedLines)
+                .toList();
+        List<StyledText> pageContent = collectedMessages.stream()
+                .skip(4)
+                .flatMap(this::getStrippedLines)
+                .toList();
 
         return Pair.of(background, pageContent);
     }
