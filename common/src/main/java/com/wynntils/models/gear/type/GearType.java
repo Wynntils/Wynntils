@@ -20,11 +20,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
 
 public enum GearType {
-    SPEAR(ClassType.WARRIOR, "spear", 0),
-    WAND(ClassType.MAGE, "wand", 1),
-    DAGGER(ClassType.ASSASSIN, "dagger", 2),
-    BOW(ClassType.ARCHER, "bow", 3),
-    RELIK(ClassType.SHAMAN, "relik", 4),
+    SPEAR(ClassType.WARRIOR, "spear", Items.IRON_SHOVEL, 0),
+    WAND(ClassType.MAGE, "wand", Items.WOODEN_SHOVEL, 1),
+    DAGGER(ClassType.ASSASSIN, "dagger", Items.SHEARS, 2),
+    BOW(ClassType.ARCHER, "bow", Items.BOW, 3),
+    RELIK(ClassType.SHAMAN, "relik", Items.STONE_SHOVEL, 4),
+
     // This is a fallback for signed, crafted gear with a skin
     WEAPON(null, null, 12),
     // Note: This fallback should basically be never be matched, but we use it in item encoding
@@ -112,6 +113,10 @@ public enum GearType {
         this(classReq, defaultItem, modelKey, null, otherItems, encodingId);
     }
 
+    GearType(ClassType classReq, String modelKey, Item craftedItem, int encodingId) {
+        this(classReq, Items.POTION, modelKey, List.of(craftedItem), encodingId);
+    }
+
     GearType(ClassType classReq, String modelKey, int encodingId) {
         this(classReq, Items.POTION, modelKey, List.of(), encodingId);
     }
@@ -124,11 +129,11 @@ public enum GearType {
         }
     }
 
-    public static GearType fromItemStack(ItemStack itemStack) {
+    public static GearType fromItemStack(ItemStack itemStack, boolean crafted) {
         Item item = itemStack.getItem();
         CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
 
-        if (customModelData != null) {
+        if (customModelData != null && !customModelData.floats().isEmpty()) {
             for (GearType gearType : values()) {
                 // We only want to match for proper gear, not rewards
                 if (gearType.isReward()) continue;
@@ -140,6 +145,26 @@ public enum GearType {
                         return gearType;
                     }
                 }
+            }
+        } else if (crafted) {
+            // Crafted items still use the old textures, they have no custom model data but we can still
+            // match them based on the item itself
+
+            // For armor and weapons we can just match based on the item itself
+            for (GearType gearType : values()) {
+                if ((gearType.isArmor() && (gearType.defaultItem.equals(item) || gearType.otherItems.contains(item)))
+                        || (gearType.isWeapon() && gearType.otherItems.contains(item))) {
+                    return gearType;
+                }
+            }
+
+            // For accessories, we use the damage value
+            if (item == Items.FLINT_AND_STEEL) {
+                int damage = itemStack.getDamageValue();
+
+                if (damage >= 1 && damage <= 17) return RING;
+                if (damage >= 18 && damage <= 34) return NECKLACE;
+                if (damage >= 35 && damage <= 49) return BRACELET;
             }
         }
 
@@ -190,7 +215,7 @@ public enum GearType {
 
     public boolean isAccessory() {
         // Flint and steel is used for crafted items, normal items are horse armor
-        return defaultItem == Items.FLINT_AND_STEEL || defaultItem == Items.IRON_HORSE_ARMOR;
+        return defaultItem == Items.FLINT_AND_STEEL || defaultItem == Items.POTION;
     }
 
     public boolean isArmor() {
