@@ -25,9 +25,12 @@ public final class ChatPageDetector {
     private static final int NORMAL_PAGE_WAIT = 20;
     private static final int PARTIAL_PAGE_WAIT = 60;
 
-    private List<Runnable> tasksAtNextTick = new ArrayList<>();
-    private Future<?> pageFinishedTask;
+    // These must only be accessed while synchronized on 'this'
+    private int lastPartialLinesCount = 0;
+    private Future<?> pageFinishedTask = null;
     private Deque<Component> collectedMessages = new ArrayDeque<>();
+
+    private List<Runnable> tasksAtNextTick = new ArrayList<>();
     private List<StyledText> pageBackground = null;
     private List<StyledText> pageContent = List.of();
     private List<StyledText> sentBackgroundLines = new ArrayList<>();
@@ -81,13 +84,16 @@ public final class ChatPageDetector {
 
         synchronized (this) {
             // Do we have a partial page that might get more messages?
-            if (isPartialPage(collectedMessages)) {
+            if (isPartialPage(collectedMessages) && collectedMessages.size() != lastPartialLinesCount) {
+                // Make sure we don't end up back here if no new messages arrive
+                lastPartialLinesCount = collectedMessages.size();
                 // In this case, the rest of the page will likely be sent the next tick,
-                // so we need to wait longer.
+                // so we need to wait a longer time than normal.
                 pageFinishedTask = TaskUtils.schedule(
                         this::onPotentialPageFinished, PARTIAL_PAGE_WAIT, java.util.concurrent.TimeUnit.MILLISECONDS);
                 return;
             }
+            lastPartialLinesCount = 0;
 
             // Reset message collection
             pageMessages = collectedMessages;
