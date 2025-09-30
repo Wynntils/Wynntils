@@ -112,6 +112,7 @@ public final class WorldEventModel extends Model {
                 nearestWorldEvent.setStartTime(nearestWorldEventStartTime);
             } else if (!nearestWorldEventName.isEmpty()) {
                 nearestWorldEvent = new WorldEvent(nearestWorldEventName, nearestWorldEventStartTime);
+                activeWorldEvents.put(nearestWorldEventName, nearestWorldEvent);
             }
         } else if (event.getLabelInfo() instanceof WorldEventNameInfo labelInfo) {
             if (currentWorldEvent != null) return;
