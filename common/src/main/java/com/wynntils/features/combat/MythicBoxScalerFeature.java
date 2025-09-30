@@ -5,13 +5,15 @@
 package com.wynntils.features.combat;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.GroundItemEntityTransformEvent;
-import com.wynntils.services.custommodel.ModelSupplier;
+import java.util.Optional;
+import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -19,7 +21,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class MythicBoxScalerFeature extends Feature {
-    private static final ModelSupplier MYTHIC_BOX_CUSTOM_MODEL_DATA_SUPPLIER = ModelSupplier.forKey("mythic_box");
+    private static final Supplier<Optional<Float>> MYTHIC_BOX_CUSTOM_MODEL_DATA_SUPPLIER =
+            () -> Services.CustomModel.getFloatSupplierForKey("mythic_box").get();
 
     @Persisted
     private final Config<Float> scale = new Config<>(1.5f);
