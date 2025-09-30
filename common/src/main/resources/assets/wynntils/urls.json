@@ -162,6 +162,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_ingredients.json"
   },
   {
+    "id": "dataStaticItemObtain",
+    "md5": "20e9a265f5e2ed91b02d80623b3765bd",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_obtain.json"
+  },
+  {
     "id": "dataStaticItemObtainV2",
     "md5": "4f3c92acadb5c1331b5886f6e397baa8",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_obtain_v2.json"
@@ -248,7 +253,7 @@
   },
   {
     "id": "dataStaticTomes",
-    "md5": "5cd87e3ead6b0152d321e81dc1d3326b",
+    "md5": "da29a5d92bb365de21e33364ed655cbb",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/tomes.json"
   },
   {
