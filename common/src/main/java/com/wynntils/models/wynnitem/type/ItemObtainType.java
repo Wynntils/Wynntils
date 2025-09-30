@@ -52,6 +52,7 @@ public enum ItemObtainType {
             MINIBOSS,
             MOB_REGION,
             NORMAL_MOB_DROP,
+            RAID,
             SPECIFIC_MOB_DROP,
             UNKNOWN);
 
