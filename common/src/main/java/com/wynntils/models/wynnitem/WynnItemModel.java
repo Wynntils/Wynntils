@@ -16,6 +16,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.festival.type.FestivalType;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.models.wynnitem.type.MaterialConversionInfo;
@@ -24,6 +25,7 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -91,14 +93,17 @@ public final class WynnItemModel extends Model {
             String sourceTypeStr = json.get("type").getAsString();
             ItemObtainType sourceType = ItemObtainType.fromApiName(sourceTypeStr);
 
+            String name = JsonUtils.getNullableJsonString(json, "name");
+
             if (sourceType == null) {
                 WynntilsMod.warn("Unknown item obtain type: " + sourceTypeStr);
                 sourceType = ItemObtainType.UNKNOWN;
+            } else if (sourceType == ItemObtainType.EVENT && name != null) {
+                // Name should never be null here but check anyway
+                FestivalType festivalType = FestivalType.valueOf(
+                        name.toUpperCase(Locale.ROOT));
+                return new ItemObtainInfo(ItemObtainType.EVENT, Optional.of(festivalType.getFullName()));
             }
-
-            String name = JsonUtils.getNullableJsonString(json, "name");
-
-            // FIXME: We are ignoring the details field for now...
 
             return new ItemObtainInfo(sourceType, Optional.ofNullable(name));
         }
