@@ -10,6 +10,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.utils.mc.McUtils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.world.effect.MobEffects;
@@ -43,9 +44,10 @@ public final class ChatPageProcessor {
         }
     }
 
-    public void handlePage(List<StyledText> pageContent, boolean lastPage) {
+    public void handlePage(List<StyledText> page, boolean lastPage) {
         // First we trim the empty lines at the start and end
         NpcDialogueType type = NpcDialogueType.NONE;
+        ArrayList<StyledText> pageContent = new ArrayList<>(page);
 
         if (!pageContent.isEmpty()) {
             while (pageContent.getFirst().isBlank()) {
