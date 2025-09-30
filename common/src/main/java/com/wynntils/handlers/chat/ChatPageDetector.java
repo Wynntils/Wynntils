@@ -12,22 +12,26 @@ import com.wynntils.utils.ListUtils;
 import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.stream.Stream;
 import net.minecraft.network.chat.Component;
 
 public final class ChatPageDetector {
     private static final int MIN_MATCHING_LINES = 5;
+    private static final int NORMAL_PAGE_WAIT = 20;
+    private static final int PARTIAL_PAGE_WAIT = 60;
 
     private List<Runnable> tasksAtNextTick = new ArrayList<>();
     private Future<?> pageFinishedTask;
-    private Deque<Component> collectedMessages = new LinkedList<>();
+    private Deque<Component> collectedMessages = new ArrayDeque<>();
     private List<StyledText> pageBackground = null;
     private List<StyledText> pageContent = List.of();
     private List<StyledText> sentBackgroundLines = new ArrayList<>();
+    private List<StyledText> lastForegroundLines = null;
 
     public boolean isInPageMode() {
         return pageBackground != null;
@@ -39,7 +43,7 @@ public final class ChatPageDetector {
 
     public void reset() {
         // Reset in case of world state change
-        collectedMessages = new LinkedList<>();
+        collectedMessages = new ArrayDeque<>();
         pageBackground = null;
         pageContent = List.of();
         sentBackgroundLines = new ArrayList<>();
@@ -54,28 +58,42 @@ public final class ChatPageDetector {
         Component message = event.getMessage();
         StyledText styledText = StyledText.fromComponent(message);
 
-        if (pageFinishedTask == null) {
-            // Normal single line chat messages will just be passed through
-            if (StyledTextUtils.getLineCount(styledText) == 1) return;
+        int lineCount = StyledTextUtils.getLineCount(styledText);
+        synchronized (this) {
+            if (pageFinishedTask == null) {
+                // Normal single line chat messages will just be passed through
+                if (lineCount == 1) return;
 
-            // Sometimes a new page is started in as little as 45 ms after the previous one.
-            // But the maximum time between two messages in a screen I have seen is 1 ms.
-            // So lets say we wait 5 ms and then we either have a screen or a message we need to pass through.
+                // Wait a reasonable amount of time for all messages in the page to arrive
+                pageFinishedTask = TaskUtils.schedule(
+                        this::onPotentialPageFinished, NORMAL_PAGE_WAIT, java.util.concurrent.TimeUnit.MILLISECONDS);
+            }
 
-            pageFinishedTask =
-                    TaskUtils.schedule(this::onPotentialPageFinished, 5, java.util.concurrent.TimeUnit.MILLISECONDS);
+            // Once we started collecting messages, collect them all, so as not to change order
+            // in chat, even if they are single line
+            collectedMessages.addLast(message);
         }
-
-        // Once we started collecting messages, collect them all, so as not to change order
-        // in chat, even if they are single line
-        collectedMessages.addLast(message);
         event.setCanceled(true);
     }
 
     private void onPotentialPageFinished() {
-        pageFinishedTask = null;
-        Deque<Component> pageMessages = collectedMessages;
-        collectedMessages = new LinkedList<>();
+        Deque<Component> pageMessages;
+
+        synchronized (this) {
+            // Do we have a partial page that might get more messages?
+            if (isPartialPage(collectedMessages)) {
+                // In this case, the rest of the page will likely be sent the next tick,
+                // so we need to wait longer.
+                pageFinishedTask = TaskUtils.schedule(
+                        this::onPotentialPageFinished, PARTIAL_PAGE_WAIT, java.util.concurrent.TimeUnit.MILLISECONDS);
+                return;
+            }
+
+            // Reset message collection
+            pageMessages = collectedMessages;
+            collectedMessages = new ArrayDeque<>();
+            pageFinishedTask = null;
+        }
 
         // We've held back some multi-line messages. They can either be a page, or not.
         if (!isPage(pageMessages)) {
@@ -84,8 +102,33 @@ public final class ChatPageDetector {
                 enqueueSendDelayedChat(message);
             }
         } else {
-            handlePageOrPages(pageMessages);
+            // We might have multiple pages; split them up and handle each of them
+            splitMultiplePages(pageMessages).forEach(this::handlePage);
         }
+    }
+
+    private boolean isPartialPage(Deque<Component> collectedMessages) {
+        // We deeem it to be a partial page if there are less than 4 messages, and none of them are single-line,
+        // and they all match the beginning of the page background. This is not perfect, but it is an
+        // acceptable heuristic that will catch most of these odd cases.
+        if (collectedMessages.size() >= 4) return false;
+        if (pageBackground == null) return false;
+
+        List<StyledText> partialPage = new ArrayList<>();
+        for (Component message : collectedMessages) {
+            StyledText styledText = StyledText.fromComponent(message);
+
+            List<StyledText> lines = List.of(styledText.split("\n", true));
+            // If single-line items are included, it's not a partial page
+            if (lines.size() == 1) return false;
+
+            // We need to strip lines to match the background properly
+            List<StyledText> strippedLines = StyledTextUtils.stripEventsAndLinks(lines);
+            partialPage.addAll(strippedLines);
+        }
+
+        int matchingLines = ListUtils.countMatchingElements(pageBackground, 0, partialPage, 0);
+        return matchingLines == partialPage.size();
     }
 
     private boolean isPage(Deque<Component> collectedMessages) {
@@ -100,30 +143,41 @@ public final class ChatPageDetector {
         return true;
     }
 
-    private void handlePageOrPages(Deque<Component> collectedMessages) {
-        if (collectedMessages.size() <= 6) {
-            handlePage(collectedMessages);
-        } else {
-            // We might have gotten two pages in a row without a tick inbetween
-            List<Component> messages = new ArrayList<>(collectedMessages);
-            int matchCount = ListUtils.countMatchingElements(messages, 0, messages, collectedMessages.size() / 2);
-            if (matchCount == collectedMessages.size() / 2) {
-                // We have two identical halves, so just keep one half
-                Deque<Component> oneHalf = new LinkedList<>(messages.subList(0, collectedMessages.size() / 2));
-                handlePage(oneHalf);
-            } else {
-                if (matchCount == 4) {
-                    Deque<Component> firstHalf = new LinkedList<>(messages.subList(0, collectedMessages.size() / 2));
-                    Deque<Component> secondHalf =
-                            new LinkedList<>(messages.subList(collectedMessages.size() / 2, collectedMessages.size()));
-                    handlePage(firstHalf);
-                    handlePage(secondHalf);
-                } else {
-                    // This is weird, but maybe we just have a lot of page content messages?
-                    handlePage(collectedMessages);
-                }
+    public List<Deque<Component>> splitMultiplePages(Deque<Component> collectedMessages) {
+        // If there is not at least 4 messages, there cannot be multiple pages
+        if (collectedMessages.size() < 4) return List.of(new ArrayDeque<>(collectedMessages));
+
+        // We might have two pages in a row where the first is background, and the
+        // second is foreground, so we need to ignore colors and styles when comparing,
+        // thus the need for a parallel stripped list.
+        List<Component> formattedList = new ArrayList<>(collectedMessages);
+        List<String> strippedList = collectedMessages.stream()
+                .map(c -> StyledText.fromComponent(c).getStringWithoutFormatting())
+                .toList();
+        // We use this as a marker to determine where a new page starts
+        List<String> strippedBackground = List.copyOf(strippedList.subList(0, 4));
+
+        List<Deque<Component>> separatedPages = new ArrayList<>();
+        int collectedMessagesCount = collectedMessages.size();
+
+        int i = 0;
+        while (i < collectedMessagesCount) {
+            // Start by copying the background
+            Deque<Component> page = new ArrayDeque<>(formattedList.subList(i, i + 4));
+            i += 4;
+
+            while (i < collectedMessagesCount) {
+                boolean nextIsBackground = (i <= (collectedMessagesCount - 4))
+                        && (ListUtils.countMatchingElements(strippedBackground, 0, strippedList, i) >= 4);
+                if (nextIsBackground) break;
+
+                // Add content line
+                page.add(formattedList.get(i));
+                i++;
             }
+            separatedPages.add(page);
         }
+        return separatedPages;
     }
 
     private void handlePage(Deque<Component> collectedMessages) {
@@ -138,28 +192,35 @@ public final class ChatPageDetector {
 
     private Pair<List<StyledText>, List<StyledText>> splitPage(Deque<Component> collectedMessages) {
         // The first four messages are always background, and the rest is page content
-        List<StyledText> background = new ArrayList<>();
-        List<StyledText> pageContent = new ArrayList<>();
-        int count = 0;
-        for (Component message : collectedMessages) {
-            StyledText styledText = StyledText.fromComponent(message);
+        List<StyledText> background =
+                collectedMessages.stream().limit(4).flatMap(this::getStrippedLines).toList();
+        List<StyledText> pageContent =
+                collectedMessages.stream().skip(4).flatMap(this::getStrippedLines).toList();
 
-            List<StyledText> lines = List.of(styledText.split("\n", true));
-            // Unfortunately, Wynn sends text alternatingly with and without click links and hover,
-            // and to be able to compare them properly, we need to strip those out.
-            List<StyledText> strippedLines = StyledTextUtils.stripEventsAndLinks(lines);
-
-            if (count < 4) {
-                background.addAll(strippedLines);
-            } else {
-                pageContent.addAll(strippedLines);
-            }
-            count++;
-        }
         return Pair.of(background, pageContent);
     }
 
+    private Stream<StyledText> getStrippedLines(Component message) {
+        StyledText styledText = StyledText.fromComponent(message);
+
+        List<StyledText> lines = List.of(styledText.split("\n", true));
+        // Unfortunately, Wynn sends text alternatingly with and without click links and hover,
+        // and to be able to compare them properly, we need to strip those out.
+        Stream<StyledText> strippedLines = StyledTextUtils.stripEventsAndLinks(lines).stream();
+        return strippedLines;
+    }
+
     private void handleBackground(List<StyledText> background, int numCollectedMessages) {
+        if (lastForegroundLines != null) {
+            int matchingLines = ListUtils.countMatchingElements(lastForegroundLines, 0, background, 0);
+            if (matchingLines == background.size()) {
+                // We got a repeated foreground screen. This apparently happens from time to time.
+                // Just ignore it.
+                return;
+            }
+        }
+        lastForegroundLines = null;
+
         List<StyledText> oldBackground = pageBackground;
         pageBackground = background;
 
@@ -167,7 +228,13 @@ public final class ChatPageDetector {
         if (oldBackground == null) return;
 
         List<StyledText> newBackgroundMessages = getMessageDiff(oldBackground, background);
-        if (newBackgroundMessages == null) {
+        if (newBackgroundMessages != null) {
+            for (StyledText message : newBackgroundMessages) {
+                // Handle new messages that arrived in the background
+                sentBackgroundLines.add(message);
+                enqueueSendBackgroundLine(message);
+            }
+        } else {
             // We failed to calculate a diff.
             if (numCollectedMessages == 4) {
                 // This was the last page, and the "background" is actually a redraw
@@ -177,21 +244,19 @@ public final class ChatPageDetector {
                 pageBackground = null;
                 pageContent = List.of();
                 sentBackgroundLines.clear();
+                lastForegroundLines = background;
 
-                enqueueSendPageContent(List.of(), true);
                 enqueueSendForegroundReplacements(background, oldBackground, sentLines);
-                return;
             } else {
                 // We could not calculate a diff, and it is not a foreground page. This is bad.
                 // To not lose any messages, just resend all.
                 WynntilsMod.error("Could not calculate updated background messages");
+                for (StyledText message : background) {
+                    // Handle new messages that arrived in the background
+                    sentBackgroundLines.add(message);
+                    enqueueSendBackgroundLine(message);
+                }
             }
-        }
-
-        for (StyledText message : newBackgroundMessages) {
-            // Handle new messages that arrived in the background
-            sentBackgroundLines.add(message);
-            enqueueSendBackgroundLine(message);
         }
     }
 
