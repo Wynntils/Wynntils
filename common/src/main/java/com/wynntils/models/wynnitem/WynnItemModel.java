@@ -100,8 +100,7 @@ public final class WynnItemModel extends Model {
                 sourceType = ItemObtainType.UNKNOWN;
             } else if (sourceType == ItemObtainType.EVENT && name != null) {
                 // Name should never be null here but check anyway
-                FestivalType festivalType = FestivalType.valueOf(
-                        name.toUpperCase(Locale.ROOT));
+                FestivalType festivalType = FestivalType.valueOf(name.toUpperCase(Locale.ROOT));
                 return new ItemObtainInfo(ItemObtainType.EVENT, Optional.of(festivalType.getFullName()));
             }
 
