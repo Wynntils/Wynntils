@@ -60,8 +60,6 @@ public class NpcDialogueOverlay extends Overlay {
 
     private TextRenderSetting renderSetting;
 
-    private Component selectionComponents = null;
-
     public NpcDialogueOverlay() {
         super(
                 new OverlayPosition(
@@ -74,36 +72,6 @@ public class NpcDialogueOverlay extends Overlay {
                 HorizontalAlignment.CENTER,
                 VerticalAlignment.MIDDLE);
         updateTextRenderSettings();
-    }
-
-    @SubscribeEvent
-    public void onNpcDialoguePost(NpcDialogueProcessingEvent.Post event) {
-        NpcDialogue dialogue = event.getDialogue();
-
-        // This is specific to the overlay, so we don't want to handle it in the feature
-        // (when we display the dialogues in the chat, we don't need to duplicate the message)
-        if (dialogue.dialogueType() == NpcDialogueType.SELECTION) {
-            // This is a bit of a workaround to be able to select the options
-            MutableComponent clickMsg =
-                    Component.literal("Select an option to continue:").withStyle(ChatFormatting.AQUA);
-            event.getPostProcessedDialogue()
-                    .forEach(line -> clickMsg.append(Component.literal("\n").append(line.getComponent())));
-            McUtils.sendMessageToClient(clickMsg);
-
-            // Save the selection components so we can remove it later
-            selectionComponents = clickMsg;
-        }
-    }
-
-    @SubscribeEvent
-    public void onNpcDialogueRemoved(NpcDialogueRemoved event) {
-        if (event.getRemovedDialogue().dialogueType() == NpcDialogueType.SELECTION) {
-            // Remove the selection components if it exists
-            if (selectionComponents != null) {
-                McUtils.removeMessageFromChat(selectionComponents);
-                selectionComponents = null;
-            }
-        }
     }
 
     @Override
