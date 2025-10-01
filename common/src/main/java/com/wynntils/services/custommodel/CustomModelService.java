@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 
 public class CustomModelService extends Service {
     private Map<String, Float> floatData = new ConcurrentHashMap<>();
@@ -29,12 +28,16 @@ public class CustomModelService extends Service {
         registry.registerDownload(UrlId.DATA_STATIC_MODEL_DATA).handleJsonObject(this::handleModelData);
     }
 
-    public Supplier<Optional<Float>> getFloatSupplierForKey(String key) {
-        return () -> getFloat(key);
+    public Optional<Float> getFloat(String key) {
+        if (key == null) return Optional.empty();
+
+        return Optional.ofNullable(floatData.get(key));
     }
 
-    public Supplier<Optional<Pair<Float, Float>>> getRangeSupplierForKey(String key) {
-        return () -> getRange(key);
+    public Optional<Pair<Float, Float>> getRange(String key) {
+        if (key == null) return Optional.empty();
+
+        return Optional.ofNullable(rangeData.get(key));
     }
 
     private void handleModelData(JsonObject jsonObject) {
@@ -65,13 +68,5 @@ public class CustomModelService extends Service {
 
         floatData = newFloatData;
         rangeData = newRangeData;
-    }
-
-    private Optional<Float> getFloat(String key) {
-        return Optional.ofNullable(floatData.get(key));
-    }
-
-    private Optional<Pair<Float, Float>> getRange(String key) {
-        return Optional.ofNullable(rangeData.get(key));
     }
 }

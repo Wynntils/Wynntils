@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
@@ -86,8 +85,8 @@ public enum GearType {
 
     private final ClassType classReq;
     private final Item defaultItem;
-    private final Supplier<Optional<Pair<Float, Float>>> modelRange;
-    private final Supplier<Optional<Pair<Float, Float>>> skinModelRange;
+    private final String modelKey;
+    private final String skinModelKey;
     private final List<Item> otherItems;
     private final int encodingId;
 
@@ -102,9 +101,8 @@ public enum GearType {
             int encodingId) {
         this.classReq = classReq;
         this.defaultItem = defaultItem;
-        this.modelRange = modelKey == null ? Optional::empty : Services.CustomModel.getRangeSupplierForKey(modelKey);
-        this.skinModelRange =
-                skinModelKey == null ? Optional::empty : Services.CustomModel.getRangeSupplierForKey(skinModelKey);
+        this.modelKey = modelKey;
+        this.skinModelKey = skinModelKey;
         this.otherItems = otherItems;
         this.encodingId = encodingId;
     }
@@ -194,8 +192,8 @@ public enum GearType {
     }
 
     public float getDefaultModel() {
-        if (modelRange.get().isPresent()) {
-            return modelRange.get().get().a();
+        if (Services.CustomModel.getRange(modelKey).isPresent()) {
+            return Services.CustomModel.getRange(modelKey).get().a();
         } else {
             return -1f;
         }
@@ -237,8 +235,8 @@ public enum GearType {
         if (modelList.isEmpty()) {
             List<Float> tempModelList = new ArrayList<>();
 
-            addRangeToList(modelRange, tempModelList);
-            addRangeToList(skinModelRange, tempModelList);
+            addRangeToList(Services.CustomModel.getRange(modelKey), tempModelList);
+            addRangeToList(Services.CustomModel.getRange(skinModelKey), tempModelList);
 
             modelList = List.copyOf(tempModelList);
         }
@@ -246,8 +244,8 @@ public enum GearType {
         return modelList;
     }
 
-    private static void addRangeToList(Supplier<Optional<Pair<Float, Float>>> supplier, List<Float> out) {
-        supplier.get().ifPresent(range -> {
+    private static void addRangeToList(Optional<Pair<Float, Float>> modelRange, List<Float> out) {
+        modelRange.ifPresent(range -> {
             int min = range.a().intValue();
             int max = range.b().intValue();
             IntStream.rangeClosed(min, max).mapToObj(i -> (float) i).forEach(out::add);

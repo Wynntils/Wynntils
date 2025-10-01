@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -53,8 +52,7 @@ public final class BeaconModel extends Model {
     private final Map<Integer, Beacon> beacons = new Int2ObjectArrayMap<>();
     private final Map<Integer, BeaconMarker> beaconMarkers = new Int2ObjectArrayMap<>();
 
-    public static final Supplier<Optional<Float>> BEACON_COLOR_CUSTOM_MODEL_DATA_SUPPLIER =
-            () -> Services.CustomModel.getFloatSupplierForKey("beacon_color").get();
+    public static final String BEACON_COLOR_CUSTOM_MODEL_DATA_KEY = "beacon_color";
 
     public BeaconModel() {
         super(List.of());
@@ -153,7 +151,8 @@ public final class BeaconModel extends Model {
         if (WynntilsMod.isDevelopmentEnvironment()) {
             if (itemStack.getItem() != Items.POTION) return null;
 
-            Optional<Float> beaconColorCustomModelData = BEACON_COLOR_CUSTOM_MODEL_DATA_SUPPLIER.get();
+            Optional<Float> beaconColorCustomModelData = Services.CustomModel.getFloat(
+                            BEACON_COLOR_CUSTOM_MODEL_DATA_KEY);
             if (beaconColorCustomModelData.isEmpty()) return null;
 
             // Extract custom color from potion
