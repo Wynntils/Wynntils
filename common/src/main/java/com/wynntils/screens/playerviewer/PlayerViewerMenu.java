@@ -16,9 +16,18 @@ public final class PlayerViewerMenu extends AbstractContainerMenu {
     private PlayerViewerMenu(Container container) {
         super(null, 100);
 
-        this.addSlot(new Slot(container, 0, 78, 67));
-        for (int i = 0; i < 4; i++) {
-            this.addSlot(new Slot(container, i + 1, 11, 11 + i * 18));
+        this.addSlot(new Slot(container, 0, 100, 63));
+        int x = 28;
+        int y = 9;
+        for (int i = 0; i < 8; i++) {
+            this.addSlot(new Slot(container, i + 1, x, y));
+
+            if (i == 3) {
+                x = 10;
+                y = 9;
+            } else {
+                y += 18;
+            }
         }
     }
 
@@ -28,16 +37,26 @@ public final class PlayerViewerMenu extends AbstractContainerMenu {
 
     private void setArmorItems(List<ItemStack> armorItems) {
         for (int i = 0; i < 4; i++) {
-            if (i > armorItems.size()) break;
+            if (i >= armorItems.size()) break;
 
             this.getSlot(i + 1).set(armorItems.get(i));
         }
     }
 
-    public static PlayerViewerMenu create(ItemStack heldItem, List<ItemStack> armorItems) {
-        PlayerViewerMenu menu = new PlayerViewerMenu(new SimpleContainer(5));
+    private void setAccessoryItems(List<ItemStack> accessoryItems) {
+        for (int i = 0; i < 4; i++) {
+            if (i >= accessoryItems.size()) break;
+
+            this.getSlot(i + 5).set(accessoryItems.get(i));
+        }
+    }
+
+    public static PlayerViewerMenu create(
+            ItemStack heldItem, List<ItemStack> armorItems, List<ItemStack> accessoryItems) {
+        PlayerViewerMenu menu = new PlayerViewerMenu(new SimpleContainer(9));
         menu.setHeldItem(heldItem);
         menu.setArmorItems(armorItems);
+        menu.setAccessoryItems(accessoryItems);
         return menu;
     }
 

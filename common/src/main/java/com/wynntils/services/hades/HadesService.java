@@ -19,19 +19,32 @@ import com.wynntils.hades.protocol.packets.client.HCPacketPing;
 import com.wynntils.hades.protocol.packets.client.HCPacketSocialUpdate;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateStatus;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.inventory.type.InventoryAccessory;
+import com.wynntils.models.inventory.type.InventoryArmor;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.athena.event.AthenaLoginEvent;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.type.PlayerStatus;
+import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.ErrorOr;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -50,6 +63,8 @@ public final class HadesService extends Service {
     private static final int TICKS_PER_UPDATE = 2;
     private static final int MS_PER_PING = 1000;
 
+    private static final EncodingSettings HADES_ENCODING_SETTINGS = new EncodingSettings(false, false);
+
     private final HadesUserRegistry userRegistry = new HadesUserRegistry();
 
     private CompletableFuture<Void> connectionFuture;
@@ -58,12 +73,25 @@ public final class HadesService extends Service {
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
 
+    // Original WynnItem cache to avoid unnecessary encoding
+    private NavigableMap<InventoryArmor, WynnItem> armorCache = new TreeMap<>();
+    private NavigableMap<InventoryAccessory, WynnItem> accessoriesCache = new TreeMap<>();
+    private WynnItem heldItemCache = null;
+    // Encoded items to be sent
+    private final Map<InventoryArmor, String> armor = new TreeMap<>();
+    private final Map<InventoryAccessory, String> accessories = new TreeMap<>();
+    private String heldItem = "";
+
     public HadesService() {
         super(List.of());
     }
 
     public Stream<HadesUser> getHadesUsers() {
         return userRegistry.getHadesUserMap().values().stream();
+    }
+
+    public Optional<HadesUser> getHadesUser(UUID uuid) {
+        return userRegistry.getUser(uuid);
     }
 
     private void login() {
@@ -195,6 +223,8 @@ public final class HadesService extends Service {
         }
 
         tryResendWorldData();
+
+        refreshGear();
     }
 
     @SubscribeEvent
@@ -209,6 +239,37 @@ public final class HadesService extends Service {
     @SubscribeEvent
     public void onClassChange(CharacterUpdateEvent event) {
         tryResendWorldData();
+    }
+
+    @SubscribeEvent
+    public void onSetSlot(SetSlotEvent.Post event) {
+        if (!event.getContainer().equals(McUtils.inventory())) return;
+        if (Managers.Feature.getFeatureInstance(HadesFeature.class).shareGear.get()) {
+            for (InventoryAccessory accessory : InventoryAccessory.values()) {
+                if (event.getSlot() == accessory.getSlot()) {
+                    updateAccessoryCache(accessory);
+                    return;
+                }
+            }
+
+            for (InventoryArmor armorSlot : InventoryArmor.values()) {
+                if (event.getSlot() == armorSlot.getInventorySlot()) {
+                    updateArmorCache(armorSlot);
+                    return;
+                }
+            }
+
+            if (event.getSlot() == McUtils.player().getInventory().selected) {
+                updateHeldItemCache();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onSwappedItem(ChangeCarriedItemEvent event) {
+        if (Managers.Feature.getFeatureInstance(HadesFeature.class).shareGear.get()) {
+            updateHeldItemCache();
+        }
     }
 
     @SubscribeEvent
@@ -234,12 +295,34 @@ public final class HadesService extends Service {
             float pY = (float) player.getY();
             float pZ = (float) player.getZ();
 
-            PlayerStatus newStatus = new PlayerStatus(
-                    pX,
-                    pY,
-                    pZ,
-                    Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY),
-                    Models.CharacterStats.getMana().orElse(CappedValue.EMPTY));
+            PlayerStatus newStatus;
+
+            if (Managers.Feature.getFeatureInstance(HadesFeature.class)
+                    .shareGear
+                    .get()) {
+                newStatus = new PlayerStatus(
+                        pX,
+                        pY,
+                        pZ,
+                        Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY),
+                        Models.CharacterStats.getMana().orElse(CappedValue.EMPTY),
+                        armor.getOrDefault(InventoryArmor.HELMET, ""),
+                        armor.getOrDefault(InventoryArmor.CHESTPLATE, ""),
+                        armor.getOrDefault(InventoryArmor.LEGGINGS, ""),
+                        armor.getOrDefault(InventoryArmor.BOOTS, ""),
+                        accessories.getOrDefault(InventoryAccessory.RING_1, ""),
+                        accessories.getOrDefault(InventoryAccessory.RING_2, ""),
+                        accessories.getOrDefault(InventoryAccessory.BRACELET, ""),
+                        accessories.getOrDefault(InventoryAccessory.NECKLACE, ""),
+                        heldItem);
+            } else {
+                newStatus = new PlayerStatus(
+                        pX,
+                        pY,
+                        pZ,
+                        Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY),
+                        Models.CharacterStats.getMana().orElse(CappedValue.EMPTY));
+            }
 
             if (newStatus.equals(lastSentStatus)) {
                 tickCountUntilUpdate = 1;
@@ -257,7 +340,16 @@ public final class HadesService extends Service {
                     lastSentStatus.health().current(),
                     lastSentStatus.health().max(),
                     lastSentStatus.mana().current(),
-                    lastSentStatus.mana().max()));
+                    lastSentStatus.mana().max(),
+                    lastSentStatus.helmet(),
+                    lastSentStatus.chestplate(),
+                    lastSentStatus.leggings(),
+                    lastSentStatus.boots(),
+                    lastSentStatus.ringOne(),
+                    lastSentStatus.ringTwo(),
+                    lastSentStatus.bracelet(),
+                    lastSentStatus.necklace(),
+                    lastSentStatus.heldItem()));
         }
     }
 
@@ -279,7 +371,88 @@ public final class HadesService extends Service {
         userRegistry.getHadesUserMap().clear();
     }
 
+    public void refreshGear() {
+        if (McUtils.player() == null) return;
+
+        if (Managers.Feature.getFeatureInstance(HadesFeature.class).shareGear.get()) {
+            for (InventoryArmor inventoryArmor : InventoryArmor.values()) {
+                updateArmorCache(inventoryArmor);
+            }
+
+            for (InventoryAccessory inventoryAccessory : InventoryAccessory.values()) {
+                updateAccessoryCache(inventoryAccessory);
+            }
+
+            updateHeldItemCache();
+        }
+    }
+
+    public void clearGearCache() {
+        armor.clear();
+        armorCache.clear();
+        accessories.clear();
+        accessoriesCache.clear();
+        heldItem = "";
+        heldItemCache = null;
+    }
+
     private boolean isConnected() {
         return hadesConnection != null && hadesConnection.isOpen();
+    }
+
+    private void updateArmorCache(InventoryArmor inventoryArmor) {
+        Optional<WynnItem> armorItemOpt =
+                Models.Item.getWynnItem(McUtils.inventory().armor.get(inventoryArmor.getArmorSlot()));
+
+        if (armorItemOpt.isEmpty()) {
+            armor.remove(inventoryArmor);
+            armorCache.remove(inventoryArmor);
+            return;
+        } else if (!armorCache.containsKey(inventoryArmor)
+                || !armorCache.get(inventoryArmor).equals(armorItemOpt.get())) {
+            this.armor.put(inventoryArmor, encodeItem(armorItemOpt));
+            this.armorCache.put(inventoryArmor, armorItemOpt.get());
+        }
+    }
+
+    private void updateAccessoryCache(InventoryAccessory inventoryAccessory) {
+        Optional<WynnItem> accessoryItemOpt =
+                Models.Item.getWynnItem(McUtils.inventory().getItem(inventoryAccessory.getSlot()));
+
+        if (accessoryItemOpt.isEmpty()) {
+            accessories.remove(inventoryAccessory);
+            accessoriesCache.remove(inventoryAccessory);
+            return;
+        } else if (!accessoriesCache.containsKey(inventoryAccessory)
+                || !accessoriesCache.get(inventoryAccessory).equals(accessoryItemOpt.get())) {
+            this.accessories.put(inventoryAccessory, encodeItem(accessoryItemOpt));
+            this.accessoriesCache.put(inventoryAccessory, accessoryItemOpt.get());
+        }
+    }
+
+    private void updateHeldItemCache() {
+        Optional<WynnItem> heldItemOpt =
+                Models.Item.getWynnItem(McUtils.player().getMainHandItem());
+
+        if (heldItemOpt.isEmpty()) {
+            heldItem = "";
+            heldItemCache = null;
+        } else if (heldItemCache == null || !heldItemCache.equals(heldItemOpt.get())) {
+            heldItem = encodeItem(heldItemOpt);
+            heldItemCache = heldItemOpt.get();
+        }
+    }
+
+    private String encodeItem(Optional<WynnItem> item) {
+        if (item.isPresent() && Models.ItemEncoding.canEncodeItem(item.get())) {
+            ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer =
+                    Models.ItemEncoding.encodeItem(item.get(), HADES_ENCODING_SETTINGS);
+
+            if (!errorOrEncodedByteBuffer.hasError()) {
+                return errorOrEncodedByteBuffer.getValue().toBase64String();
+            }
+        }
+
+        return "";
     }
 }
