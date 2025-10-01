@@ -122,11 +122,11 @@ public class RangeVisualizerFeature extends Feature {
         // Once every tick, calculate circles for all players that were detected (i.e. rendered)
         // since the previous tick
         circlesToRender.clear();
-        detectedPlayers.forEach(this::checkMajorIdCircles);
+        detectedPlayers.forEach(this::checkCircles);
         detectedPlayers.clear();
     }
 
-    private void checkMajorIdCircles(Player player) {
+    private void checkCircles(Player player) {
         // Don't render for ghost/npc
         if (!Models.Player.isLocalPlayer(player)) return;
 
@@ -176,8 +176,16 @@ public class RangeVisualizerFeature extends Feature {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        // add circles gained from raid major id buffs
+        // add circles gained from raid major id buffs and gambits
         if (Models.Raid.getCurrentRaid() != null) {
+            // only show our own gambit circles
+            if (player == McUtils.player()) {
+                Models.Gambit.getActiveGambits().stream()
+                        .map(this::getCircleFromGambit)
+                        .filter(Objects::nonNull)
+                        .forEach(circles::add);
+            }
+
             Models.Raid.getRaidMajorIds(player.getName().getString()).stream()
                     .map(this::getCircleFromMajorId)
                     .filter(Objects::nonNull)
@@ -195,6 +203,15 @@ public class RangeVisualizerFeature extends Feature {
             case "Saviour's Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
             case "Altruism" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 16f);
             case "Guardian" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 12f);
+            default -> null;
+        };
+    }
+
+    private Pair<CustomColor, Float> getCircleFromGambit(String gambitName) {
+        return switch (gambitName) {
+            case "Farsighted's" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 3f);
+            case "Myopic's" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 12f);
+            case "Glutton's" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 4f);
             default -> null;
         };
     }
