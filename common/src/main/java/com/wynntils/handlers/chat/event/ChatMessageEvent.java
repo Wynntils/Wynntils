@@ -10,7 +10,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class ChatMessageEvent extends Event implements ICancellableEvent {
+public abstract class ChatMessageEvent extends Event {
     protected final StyledText message;
     private final MessageType messageType;
     private final RecipientType recipientType;
@@ -36,7 +36,7 @@ public abstract class ChatMessageEvent extends Event implements ICancellableEven
     /**
      * This event is what models and features should use to listen to chat messsages.
      */
-    public static class Match extends ChatMessageEvent {
+    public static class Match extends ChatMessageEvent implements ICancellableEvent {
         public Match(StyledText message, MessageType messageType, RecipientType recipientType) {
             super(message, messageType, recipientType);
         }
@@ -58,6 +58,12 @@ public abstract class ChatMessageEvent extends Event implements ICancellableEven
 
         public void setMessage(StyledText message) {
             this.editedMessage = message;
+        }
+    }
+
+    public static class Discard extends ChatMessageEvent implements ICancellableEvent {
+        public Discard(StyledText message, MessageType messageType, RecipientType recipientType) {
+            super(message, messageType, recipientType);
         }
     }
 }
