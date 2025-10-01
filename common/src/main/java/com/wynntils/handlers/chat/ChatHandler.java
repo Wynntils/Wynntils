@@ -577,7 +577,7 @@ public final class ChatHandler extends Handler {
         Models.NpcDialogue.handleDialogue(dialogue, isProtected, type);
     }
 
-    private RecipientType getRecipientType(StyledText codedMessage, MessageType messageType) {
+    public RecipientType getRecipientType(StyledText codedMessage, MessageType messageType) {
         // Check if message match a recipient category
         for (RecipientType recipientType : RecipientType.values()) {
             if (recipientType.matchPattern(codedMessage, messageType)) {

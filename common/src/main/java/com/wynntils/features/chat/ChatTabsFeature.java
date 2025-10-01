@@ -5,7 +5,6 @@
 package com.wynntils.features.chat;
 
 import com.google.common.collect.Sets;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -13,28 +12,19 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
-import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
+import com.wynntils.mc.event.ChatScreenCreateEvent;
 import com.wynntils.mc.event.ChatScreenSendEvent;
-import com.wynntils.mc.event.ScreenFocusEvent;
-import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.mc.event.ScreenRenderEvent;
-import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.screens.chattabs.widgets.ChatTabButton;
-import com.wynntils.screens.chattabs.widgets.ChatTabSettingsButton;
-import com.wynntils.services.chat.ChatTab;
-import com.wynntils.utils.mc.KeyboardUtils;
+import com.wynntils.screens.chattabs.ChatTabsScreen;
+import com.wynntils.services.chat.type.ChatTab;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.CHAT)
 public class ChatTabsFeature extends Feature {
@@ -52,116 +42,20 @@ public class ChatTabsFeature extends Feature {
     @Persisted
     private final Config<Boolean> oldTabHotkey = new Config<>(false);
 
-    // We do this here, and not in Services.ChatTab to not introduce a feature-model dependency.
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onChatReceived(ChatMessageEvent.Match event) {
-        // We will send this message to every matching tab, so we can cancel it.
-        event.setCanceled(true);
-
-        Services.ChatTab.handleIncomingMessage(event.getRecipientType(), event.getMessage(), event.getMessage());
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onClientsideChat(SystemMessageEvent.ChatReceivedEvent event) {
-        if (Services.ChatTab.getFocusedTab() == null) return;
-
-        // We will send this message to every matching tab, so we can cancel it.
-        event.setCanceled(true);
-
-        boolean isRenderThread = McUtils.mc().isSameThread();
-        if (isRenderThread) {
-            Services.ChatTab.handleIncomingMessage(
-                    RecipientType.CLIENTSIDE, event.getOriginalStyledText(), event.getStyledText());
-        } else {
-            // It can happen that client-side messages are sent from some other thread
-            // That will cause race conditions with vanilla ChatComponent code, so
-            // schedule this update by the renderer thread instead
-            Managers.TickScheduler.scheduleNextTick(() -> Services.ChatTab.handleIncomingMessage(
-                    RecipientType.CLIENTSIDE, event.getOriginalStyledText(), event.getStyledText()));
-        }
-    }
-
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent.Pre event) {
-        if (event.getScreen() instanceof ChatScreen chatScreen) {
-            int xOffset = 0;
-
-            chatScreen.addRenderableWidget(new ChatTabSettingsButton(xOffset + 2, chatScreen.height - 35, 12, 13));
-            xOffset += 15;
-
-            for (ChatTab chatTab : Services.ChatTab.getTabs().toList()) {
-                chatScreen.addRenderableWidget(new ChatTabButton(xOffset + 2, chatScreen.height - 35, 40, 13, chatTab));
-                xOffset += 43;
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onScreenFocusChange(ScreenFocusEvent event) {
-        if (!(event.getScreen() instanceof ChatScreen)) return;
-
-        GuiEventListener guiEventListener = event.getGuiEventListener();
-
-        // These should not be focused
-        if (guiEventListener instanceof ChatTabButton || guiEventListener instanceof ChatTabSettingsButton) {
-            event.setCanceled(true);
-        }
+    public void onChatScreenCreate(ChatScreenCreateEvent event) {
+        event.setScreen(new ChatTabsScreen(event.getDefaultText(), oldTabHotkey.get()));
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.NOT_CONNECTED) {
-            Services.ChatTab.resetFocusedTab();
+            Services.ChatTab.disable();
             return;
         }
 
-        if (Services.ChatTab.getFocusedTab() == null) {
-            Services.ChatTab.refocusFirstTab();
-        }
-    }
-
-    @SubscribeEvent
-    public void onScreenRender(ScreenRenderEvent event) {
-        if (!(event.getScreen() instanceof ChatScreen chatScreen)) return;
-
-        // We render this twice for chat screen, but it is not heavy and this is a simple and least conflicting way of
-        // rendering command suggestions on top of chat tab buttons.
-        chatScreen.commandSuggestions.render(event.getGuiGraphics(), event.getMouseX(), event.getMouseY());
-    }
-
-    @SubscribeEvent
-    public void onChatScreenKeyTyped(ChatScreenKeyTypedEvent event) {
-        if (!(McUtils.mc().screen instanceof ChatScreen)) return;
-
-        int keyCode = event.getKeyCode();
-        if (keyCode == GLFW.GLFW_KEY_TAB) {
-            int newTab = -1;
-            if (oldTabHotkey.get()) {
-                if (KeyboardUtils.isShiftDown()) {
-                    newTab = Services.ChatTab.getNextFocusedTab();
-                }
-            } else {
-                if (KeyboardUtils.isControlDown()) {
-                    newTab = KeyboardUtils.isShiftDown()
-                            ? Services.ChatTab.getPreviousFocusedTab()
-                            : Services.ChatTab.getNextFocusedTab();
-                }
-            }
-
-            if (newTab == -1) return;
-
-            Services.ChatTab.setFocusedTab(newTab);
-            event.setCanceled(true);
-            return;
-        }
-
-        if (KeyboardUtils.isControlDown() && keyCode >= GLFW.GLFW_KEY_1 && keyCode <= GLFW.GLFW_KEY_9) {
-            ChatTab newTab = Services.ChatTab.getTab(keyCode - GLFW.GLFW_KEY_1);
-            if (newTab != null) {
-                Services.ChatTab.setFocusedTab(newTab);
-            }
-            event.setCanceled(true);
-            return;
+        if (!Services.ChatTab.isEnabled()) {
+            Services.ChatTab.enable();
         }
     }
 
@@ -173,26 +67,22 @@ public class ChatTabsFeature extends Feature {
 
     @Override
     public void onEnable() {
-        Services.ChatTab.refocusFirstTab();
+        Services.ChatTab.enable();
     }
 
     @Override
     public void onDisable() {
-        Services.ChatTab.resetFocusedTab();
+        Services.ChatTab.disable();
     }
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
         if (!isEnabled()) return;
 
-        Services.ChatTab.refocusFirstTab();
+        Services.ChatTab.enable();
 
         if ((McUtils.mc().screen instanceof ChatScreen chatScreen)) {
-            // Reload chat tab buttons
-            chatScreen.init(
-                    McUtils.mc(),
-                    McUtils.window().getGuiScaledWidth(),
-                    McUtils.window().getGuiScaledHeight());
+            McUtils.mc().setScreen(new ChatTabsScreen("", oldTabHotkey.get()));
         }
     }
 }
