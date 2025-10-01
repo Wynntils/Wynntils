@@ -5,13 +5,13 @@
 package com.wynntils.features.combat;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.GroundItemEntityTransformEvent;
-import com.wynntils.services.custommodel.ModelSupplier;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -19,7 +19,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class MythicBoxScalerFeature extends Feature {
-    private static final ModelSupplier MYTHIC_BOX_CUSTOM_MODEL_DATA_SUPPLIER = ModelSupplier.forKey("mythic_box");
+    private static final String MYTHIC_BOX_CUSTOM_MODEL_DATA_KEY = "mythic_box";
 
     @Persisted
     private final Config<Float> scale = new Config<>(1.5f);
@@ -50,6 +50,7 @@ public class MythicBoxScalerFeature extends Feature {
                 && itemStack
                         .get(DataComponents.CUSTOM_MODEL_DATA)
                         .floats()
-                        .contains(MYTHIC_BOX_CUSTOM_MODEL_DATA_SUPPLIER.get().orElse(-1f));
+                        .contains(Services.CustomModel.getFloat(MYTHIC_BOX_CUSTOM_MODEL_DATA_KEY)
+                                .orElse(-1f));
     }
 }
