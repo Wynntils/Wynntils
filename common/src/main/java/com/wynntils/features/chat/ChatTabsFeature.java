@@ -54,7 +54,7 @@ public class ChatTabsFeature extends Feature {
 
     // We do this here, and not in Services.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onChatReceived(ChatMessageEvent.Match event) {
+    public void onChatReceived(ChatMessageEvent.Discard event) {
         // We will send this message to every matching tab, so we can cancel it.
         event.setCanceled(true);
 
