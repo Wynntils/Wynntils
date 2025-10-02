@@ -10,7 +10,6 @@ import com.wynntils.screens.chattabs.widgets.ChatTabSettingsButton;
 import com.wynntils.services.chat.type.ChatTab;
 import com.wynntils.utils.mc.KeyboardUtils;
 import net.minecraft.client.gui.ComponentPath;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.lwjgl.glfw.GLFW;
