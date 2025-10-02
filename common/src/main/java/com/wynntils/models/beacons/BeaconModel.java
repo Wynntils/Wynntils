@@ -151,8 +151,8 @@ public final class BeaconModel extends Model {
         if (WynntilsMod.isDevelopmentEnvironment()) {
             if (itemStack.getItem() != Items.POTION) return null;
 
-            Optional<Float> beaconColorCustomModelData = Services.CustomModel.getFloat(
-                            BEACON_COLOR_CUSTOM_MODEL_DATA_KEY);
+            Optional<Float> beaconColorCustomModelData =
+                    Services.CustomModel.getFloat(BEACON_COLOR_CUSTOM_MODEL_DATA_KEY);
             if (beaconColorCustomModelData.isEmpty()) return null;
 
             // Extract custom color from potion
