@@ -57,7 +57,7 @@ public final class ChatPageDetector {
         tasksAtNextTick.clear();
     }
 
-    public void handleIncomingChatMessage(SystemMessageEvent.ChatReceivedEvent event) {
+    public boolean processIncomingChatMessage(SystemMessageEvent.ChatReceivedEvent event) {
         Component message = event.getMessage();
         StyledText styledText = StyledText.fromComponent(message);
 
@@ -65,7 +65,7 @@ public final class ChatPageDetector {
         synchronized (this) {
             if (pageFinishedTask == null) {
                 // Normal single line chat messages will just be passed through
-                if (lineCount == 1) return;
+                if (lineCount == 1) return false;
 
                 // Wait a reasonable amount of time for all messages in the page to arrive
                 pageFinishedTask = TaskUtils.schedule(
@@ -77,6 +77,7 @@ public final class ChatPageDetector {
             collectedMessages.addLast(message);
         }
         event.setCanceled(true);
+        return true;
     }
 
     private void onPotentialPageFinished() {

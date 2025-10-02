@@ -78,10 +78,11 @@ public final class ChatHandler extends Handler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSystemChatReceived(SystemMessageEvent.ChatReceivedEvent event) {
         if (needPageDetector()) {
-            pageDetector.handleIncomingChatMessage(event);
-        } else {
-            handleIncomingChatMessage(event);
+            boolean handled = pageDetector.processIncomingChatMessage(event);
+            if (handled) return;
         }
+
+        handleIncomingChatMessage(event);
     }
 
     @SubscribeEvent
