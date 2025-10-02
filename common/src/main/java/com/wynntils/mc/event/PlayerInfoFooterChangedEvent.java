@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.text.StyledText;
 
 /** Fires on change to footer of scoreboard */
-public class PlayerInfoFooterChangedEvent extends BaseEvent {
+public final class PlayerInfoFooterChangedEvent extends BaseEvent {
     private final StyledText footer;
 
     public StyledText getFooter() {

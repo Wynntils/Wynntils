@@ -14,7 +14,7 @@ public abstract class ServerResourcePackEvent extends BaseEvent {
      * Fired on receiving {@link net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket}
      */
     @EventThread(EventThread.Type.ANY)
-    public static class Load extends ServerResourcePackEvent implements CancelRequestable {
+    public static final class Load extends ServerResourcePackEvent implements CancelRequestable {
         private final UUID id;
         private final String url;
         private final String hash;
@@ -45,5 +45,5 @@ public abstract class ServerResourcePackEvent extends BaseEvent {
     }
 
     @EventThread(EventThread.Type.ANY)
-    public static class Clear extends ServerResourcePackEvent {}
+    public static final class Clear extends ServerResourcePackEvent {}
 }

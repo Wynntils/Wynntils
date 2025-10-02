@@ -7,7 +7,7 @@ package com.wynntils.models.character.event;
 import com.wynntils.core.events.BaseEvent;
 import net.minecraft.core.Position;
 
-public class CharacterMovedEvent extends BaseEvent {
+public final class CharacterMovedEvent extends BaseEvent {
     private final Position position;
 
     public CharacterMovedEvent(Position position) {

@@ -42,19 +42,19 @@ public abstract class HotbarSlotRenderEvent extends BaseEvent {
         return y;
     }
 
-    public static class Pre extends HotbarSlotRenderEvent {
+    public static final class Pre extends HotbarSlotRenderEvent {
         public Pre(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
             super(guiGraphics, itemStack, x, y);
         }
     }
 
-    public static class CountPre extends HotbarSlotRenderEvent {
+    public static final class CountPre extends HotbarSlotRenderEvent {
         public CountPre(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
             super(guiGraphics, itemStack, x, y);
         }
     }
 
-    public static class Post extends HotbarSlotRenderEvent {
+    public static final class Post extends HotbarSlotRenderEvent {
         public Post(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
             super(guiGraphics, itemStack, x, y);
         }

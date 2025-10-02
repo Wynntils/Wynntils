@@ -11,7 +11,7 @@ import java.util.UUID;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 
-public class BossHealthUpdateEvent extends BaseEvent implements CancelRequestable {
+public final class BossHealthUpdateEvent extends BaseEvent implements CancelRequestable {
     private final ClientboundBossEventPacket packet;
     private final Map<UUID, LerpingBossEvent> bossEvents;
 

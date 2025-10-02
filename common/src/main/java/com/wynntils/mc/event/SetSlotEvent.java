@@ -39,7 +39,7 @@ public abstract class SetSlotEvent extends BaseEvent {
      * seeing the same items being set multiple times,
      * when listening to both of these events, consider using {@link ContainerSetContentEvent.Post}
      */
-    public static class Pre extends SetSlotEvent {
+    public static final class Pre extends SetSlotEvent {
         public Pre(Container container, int slot, ItemStack itemStack) {
             super(container, slot, itemStack);
         }
@@ -49,7 +49,7 @@ public abstract class SetSlotEvent extends BaseEvent {
         }
     }
 
-    public static class Post extends SetSlotEvent {
+    public static final class Post extends SetSlotEvent {
         private final ItemStack oldItemStack;
 
         public Post(Container container, int slot, ItemStack newItemStack, ItemStack oldItemStack) {

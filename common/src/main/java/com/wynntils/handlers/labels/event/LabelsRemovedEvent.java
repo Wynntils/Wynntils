@@ -9,7 +9,7 @@ import com.wynntils.handlers.labels.type.LabelInfo;
 import java.util.Collections;
 import java.util.List;
 
-public class LabelsRemovedEvent extends BaseEvent {
+public final class LabelsRemovedEvent extends BaseEvent {
     private final List<LabelInfo> removedLabels;
 
     public LabelsRemovedEvent(List<LabelInfo> removedLabels) {

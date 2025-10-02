@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.type.ActivityType;
 
-public class ActivityTrackerUpdatedEvent extends BaseEvent {
+public final class ActivityTrackerUpdatedEvent extends BaseEvent {
     private final ActivityType type;
     private final String name;
     private final StyledText task;

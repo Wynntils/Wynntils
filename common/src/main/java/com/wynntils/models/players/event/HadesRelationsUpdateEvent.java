@@ -25,13 +25,13 @@ public abstract class HadesRelationsUpdateEvent extends BaseEvent {
         return changeType;
     }
 
-    public static class FriendList extends HadesRelationsUpdateEvent {
+    public static final class FriendList extends HadesRelationsUpdateEvent {
         public FriendList(Set<String> changedPlayers, ChangeType changeType) {
             super(changedPlayers, changeType);
         }
     }
 
-    public static class PartyList extends HadesRelationsUpdateEvent {
+    public static final class PartyList extends HadesRelationsUpdateEvent {
         public PartyList(Set<String> changedPlayers, ChangeType changeType) {
             super(changedPlayers, changeType);
         }

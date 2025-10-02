@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData;
 import net.minecraft.network.protocol.game.ClientboundLightUpdatePacketData;
 
-public class ChunkReceivedEvent extends BaseEvent {
+public final class ChunkReceivedEvent extends BaseEvent {
     private final int chunkX;
     private final int chunkZ;
     private final ClientboundLevelChunkPacketData chunkData;

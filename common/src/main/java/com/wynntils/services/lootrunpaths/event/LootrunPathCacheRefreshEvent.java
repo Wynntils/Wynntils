@@ -6,4 +6,4 @@ package com.wynntils.services.lootrunpaths.event;
 
 import com.wynntils.core.events.BaseEvent;
 
-public class LootrunPathCacheRefreshEvent extends BaseEvent {}
+public final class LootrunPathCacheRefreshEvent extends BaseEvent {}

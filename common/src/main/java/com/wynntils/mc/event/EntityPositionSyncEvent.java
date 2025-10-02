@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
-public class EntityPositionSyncEvent extends BaseEvent {
+public final class EntityPositionSyncEvent extends BaseEvent {
     private final Entity entity;
     private final Vec3 newPosition;
 

@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-public class ItemTooltipFlagsEvent extends BaseEvent {
+public final class ItemTooltipFlagsEvent extends BaseEvent {
     private final ItemStack itemStack;
     private TooltipFlag flags;
 

@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 
 public abstract class ContainerCloseEvent extends BaseEvent {
-    public static class Pre extends ContainerCloseEvent implements CancelRequestable {}
+    public static final class Pre extends ContainerCloseEvent implements CancelRequestable {}
 
-    public static class Post extends ContainerCloseEvent {}
+    public static final class Post extends ContainerCloseEvent {}
 }

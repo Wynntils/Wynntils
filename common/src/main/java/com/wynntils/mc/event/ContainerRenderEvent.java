@@ -11,7 +11,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
 
 /** Fired on inventory render */
-public class ContainerRenderEvent extends BaseEvent {
+public final class ContainerRenderEvent extends BaseEvent {
     private final AbstractContainerScreen<?> screen;
     private final GuiGraphics guiGraphics;
     private final int mouseX;

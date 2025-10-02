@@ -6,4 +6,4 @@ package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
 
-public class TickAlwaysEvent extends BaseEvent {}
+public final class TickAlwaysEvent extends BaseEvent {}

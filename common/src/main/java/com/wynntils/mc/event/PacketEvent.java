@@ -27,14 +27,15 @@ public abstract class PacketEvent<T extends Packet<?>> extends BaseEvent {
     }
 
     @EventThread(EventThread.Type.ANY)
-    public static class PacketSentEvent<T extends Packet<?>> extends PacketEvent<T> implements CancelRequestable {
+    public static final class PacketSentEvent<T extends Packet<?>> extends PacketEvent<T> implements CancelRequestable {
         public PacketSentEvent(T packet) {
             super(packet);
         }
     }
 
     @EventThread(EventThread.Type.ANY)
-    public static class PacketReceivedEvent<T extends Packet<?>> extends PacketEvent<T> implements CancelRequestable {
+    public static final class PacketReceivedEvent<T extends Packet<?>> extends PacketEvent<T>
+            implements CancelRequestable {
         public PacketReceivedEvent(T packet) {
             super(packet);
         }

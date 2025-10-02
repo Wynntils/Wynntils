@@ -13,5 +13,5 @@ public abstract class WynntilsInitEvent extends BaseEvent {
      * Warning: This event being fired does not mean that the mod is fully loaded. Some components, such as features
      *          are loaded only after i18n initialization by Minecraft, as they depend on resources loaded by Minecraft.
      */
-    public static class ModInitFinished extends WynntilsInitEvent {}
+    public static final class ModInitFinished extends WynntilsInitEvent {}
 }

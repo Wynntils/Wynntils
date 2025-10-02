@@ -7,5 +7,5 @@ package com.wynntils.models.profession.event;
 import com.wynntils.core.events.BaseEvent;
 
 public abstract class ProfessionNodeGatheredEvent extends BaseEvent {
-    public static class LabelShown extends ProfessionNodeGatheredEvent {}
+    public static final class LabelShown extends ProfessionNodeGatheredEvent {}
 }

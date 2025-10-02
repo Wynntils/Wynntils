@@ -7,7 +7,7 @@ package com.wynntils.mc.event;
 import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.GuiMessage;
 
-public class AddGuiMessageLineEvent extends BaseEvent {
+public final class AddGuiMessageLineEvent extends BaseEvent {
     private final GuiMessage message;
     private final GuiMessage.Line line;
     private final int index;

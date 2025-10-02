@@ -20,7 +20,7 @@ public abstract class NpcDialogueProcessingEvent extends BaseEvent {
      * Event that is fired before processing an NPC dialogue.
      * This event can be used to add any pre-processing to the dialogue.
      */
-    public static class Pre extends NpcDialogueProcessingEvent {
+    public static final class Pre extends NpcDialogueProcessingEvent {
         private final NpcDialogue dialogue;
 
         // This is a future that can be used to add any post-processing to the dialogue.
@@ -42,7 +42,7 @@ public abstract class NpcDialogueProcessingEvent extends BaseEvent {
         }
     }
 
-    public static class Post extends NpcDialogueProcessingEvent {
+    public static final class Post extends NpcDialogueProcessingEvent {
         private final NpcDialogue dialogue;
         private final List<StyledText> postProcessedDialogue;
         private final List<Component> postProcessedDialogueComponent;

@@ -20,7 +20,7 @@ public abstract class PlayerRenderLayerEvent extends BaseEvent {
         return playerRenderState;
     }
 
-    public static class Armor extends PlayerRenderLayerEvent implements CancelRequestable {
+    public static final class Armor extends PlayerRenderLayerEvent implements CancelRequestable {
         private final EquipmentSlot slot;
 
         public Armor(PlayerRenderState playerRenderState, EquipmentSlot slot) {
@@ -33,13 +33,13 @@ public abstract class PlayerRenderLayerEvent extends BaseEvent {
         }
     }
 
-    public static class Cape extends PlayerRenderLayerEvent implements CancelRequestable {
+    public static final class Cape extends PlayerRenderLayerEvent implements CancelRequestable {
         public Cape(PlayerRenderState playerRenderState) {
             super(playerRenderState);
         }
     }
 
-    public static class Elytra extends PlayerRenderLayerEvent implements CancelRequestable {
+    public static final class Elytra extends PlayerRenderLayerEvent implements CancelRequestable {
         public Elytra(PlayerRenderState playerRenderState) {
             super(playerRenderState);
         }

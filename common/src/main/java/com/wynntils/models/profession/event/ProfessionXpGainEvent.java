@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.models.profession.type.ProfessionType;
 
-public class ProfessionXpGainEvent extends BaseEvent implements CancelRequestable {
+public final class ProfessionXpGainEvent extends BaseEvent implements CancelRequestable {
     private final ProfessionType profession;
     private final float gainedXpRaw;
     private final float currentXpPercentage;

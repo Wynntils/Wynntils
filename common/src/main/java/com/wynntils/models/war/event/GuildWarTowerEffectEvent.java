@@ -7,7 +7,7 @@ package com.wynntils.models.war.event;
 import com.wynntils.core.events.BaseEvent;
 
 public abstract class GuildWarTowerEffectEvent extends BaseEvent {
-    public static class AuraSpawned extends GuildWarTowerEffectEvent {}
+    public static final class AuraSpawned extends GuildWarTowerEffectEvent {}
 
-    public static class VolleySpawned extends GuildWarTowerEffectEvent {}
+    public static final class VolleySpawned extends GuildWarTowerEffectEvent {}
 }

@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.inventory.Slot;
 
-public class InventoryMouseClickedEvent extends BaseEvent implements CancelRequestable {
+public final class InventoryMouseClickedEvent extends BaseEvent implements CancelRequestable {
     private final double mouseX;
     private final double mouseY;
     private final int button;

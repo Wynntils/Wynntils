@@ -23,7 +23,7 @@ public abstract class LootrunFinishedEvent extends BaseEvent {
         return timeElapsed;
     }
 
-    public static class Completed extends LootrunFinishedEvent {
+    public static final class Completed extends LootrunFinishedEvent {
         protected final int rewardPulls;
         protected final int rewardRerolls;
         protected final int rewardSacrifices;
@@ -74,7 +74,7 @@ public abstract class LootrunFinishedEvent extends BaseEvent {
         }
     }
 
-    public static class Failed extends LootrunFinishedEvent {
+    public static final class Failed extends LootrunFinishedEvent {
         public Failed(int challengesCompleted, int timeElapsed) {
             super(challengesCompleted, timeElapsed);
         }

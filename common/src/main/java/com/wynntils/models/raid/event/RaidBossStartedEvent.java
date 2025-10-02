@@ -7,7 +7,7 @@ package com.wynntils.models.raid.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.raid.raids.RaidKind;
 
-public class RaidBossStartedEvent extends BaseEvent {
+public final class RaidBossStartedEvent extends BaseEvent {
     private final RaidKind raidKind;
 
     public RaidBossStartedEvent(RaidKind raidKind) {

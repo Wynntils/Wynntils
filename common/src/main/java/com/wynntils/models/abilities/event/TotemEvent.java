@@ -23,7 +23,7 @@ public abstract class TotemEvent extends BaseEvent {
     /**
      * Fired when the totem's timer ArmorStand is bound to the visible totem
      */
-    public static class Activated extends TotemEvent {
+    public static final class Activated extends TotemEvent {
         private final Position position;
 
         public Activated(int totemNumber, Position position) {
@@ -39,7 +39,7 @@ public abstract class TotemEvent extends BaseEvent {
     /**
      * Fired when the totem's timer is updated (when it decreases by 1 sec)
      */
-    public static class Updated extends TotemEvent {
+    public static final class Updated extends TotemEvent {
         private final int time;
         private final Position position;
 
@@ -61,7 +61,7 @@ public abstract class TotemEvent extends BaseEvent {
     /**
      * Fired when a totem is removed in-game
      */
-    public static class Removed extends TotemEvent {
+    public static final class Removed extends TotemEvent {
         private final ShamanTotem totem;
 
         public Removed(int totemNumber, ShamanTotem totem) {
@@ -77,7 +77,7 @@ public abstract class TotemEvent extends BaseEvent {
     /**
      * Fired when totem is initially summoned by spell cast
      */
-    public static class Summoned extends TotemEvent {
+    public static final class Summoned extends TotemEvent {
         private final ArmorStand totemEntity;
 
         public Summoned(int totemNumber, ArmorStand totemEntity) {

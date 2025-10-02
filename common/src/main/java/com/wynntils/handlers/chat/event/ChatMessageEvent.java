@@ -36,7 +36,7 @@ public abstract class ChatMessageEvent extends BaseEvent {
     /**
      * This event is what models and features should use to listen to chat messsages.
      */
-    public static class Match extends ChatMessageEvent implements CancelRequestable {
+    public static final class Match extends ChatMessageEvent implements CancelRequestable {
         public Match(StyledText message, MessageType messageType, RecipientType recipientType) {
             super(message, messageType, recipientType);
         }
@@ -45,7 +45,7 @@ public abstract class ChatMessageEvent extends BaseEvent {
     /**
      * This event is what features should use if they want to rewrite chat messsages.
      */
-    public static class Edit extends ChatMessageEvent {
+    public static final class Edit extends ChatMessageEvent {
         private StyledText editedMessage = null;
 
         public Edit(StyledText message, MessageType messageType, RecipientType recipientType) {
@@ -63,7 +63,7 @@ public abstract class ChatMessageEvent extends BaseEvent {
 
     // This is a temporary measure to workaround a regression with chat tabs,
     // while we await the proper chat overhaul.
-    public static class Discard extends ChatMessageEvent implements CancelRequestable {
+    public static final class Discard extends ChatMessageEvent implements CancelRequestable {
         public Discard(StyledText message, MessageType messageType, RecipientType recipientType) {
             super(message, messageType, recipientType);
         }

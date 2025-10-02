@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 
-public class ScoreboardSegmentAdditionEvent extends BaseEvent implements CancelRequestable {
+public final class ScoreboardSegmentAdditionEvent extends BaseEvent implements CancelRequestable {
     private final ScoreboardSegment segment;
 
     public ScoreboardSegmentAdditionEvent(ScoreboardSegment segment) {

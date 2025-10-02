@@ -11,7 +11,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.LevelRenderer;
 import org.joml.Matrix4f;
 
-public class RenderTileLevelLastEvent extends BaseEvent {
+public final class RenderTileLevelLastEvent extends BaseEvent {
     private final LevelRenderer levelRenderer;
     private final PoseStack poseStack;
     private final DeltaTracker deltaTracker;

@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.EventThread;
 
 @EventThread(EventThread.Type.IO)
-public class PongReceivedEvent extends BaseEvent {
+public final class PongReceivedEvent extends BaseEvent {
     private final long time;
 
     public PongReceivedEvent(long time) {

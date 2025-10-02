@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import net.minecraft.core.Position;
 
 /** Fires when player is teleported */
-public class PlayerTeleportEvent extends BaseEvent {
+public final class PlayerTeleportEvent extends BaseEvent {
     private final Position newPosition;
 
     public PlayerTeleportEvent(Position newPosition) {

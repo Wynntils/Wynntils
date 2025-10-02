@@ -8,7 +8,7 @@ import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
-public class PlayerAttackEvent extends PlayerEvent implements CancelRequestable {
+public final class PlayerAttackEvent extends PlayerEvent implements CancelRequestable {
     private final Entity target;
 
     public PlayerAttackEvent(Player player, Entity target) {

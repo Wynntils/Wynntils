@@ -6,4 +6,4 @@ package com.wynntils.models.trademarket.event;
 
 import com.wynntils.core.events.BaseEvent;
 
-public class TradeMarketSellDialogueUpdatedEvent extends BaseEvent {}
+public final class TradeMarketSellDialogueUpdatedEvent extends BaseEvent {}

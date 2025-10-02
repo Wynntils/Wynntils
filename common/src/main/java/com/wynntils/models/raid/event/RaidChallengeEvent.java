@@ -18,13 +18,13 @@ public abstract class RaidChallengeEvent extends BaseEvent {
         return raidInfo;
     }
 
-    public static class Started extends RaidChallengeEvent {
+    public static final class Started extends RaidChallengeEvent {
         public Started(RaidInfo raidInfo) {
             super(raidInfo);
         }
     }
 
-    public static class Completed extends RaidChallengeEvent {
+    public static final class Completed extends RaidChallengeEvent {
         public Completed(RaidInfo raidInfo) {
             super(raidInfo);
         }

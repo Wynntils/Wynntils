@@ -38,13 +38,13 @@ public abstract class ContainerSetContentEvent extends BaseEvent {
         return stateId;
     }
 
-    public static class Pre extends ContainerSetContentEvent implements CancelRequestable {
+    public static final class Pre extends ContainerSetContentEvent implements CancelRequestable {
         public Pre(List<ItemStack> items, ItemStack carriedItem, int containerId, int stateId) {
             super(items, carriedItem, containerId, stateId);
         }
     }
 
-    public static class Post extends ContainerSetContentEvent {
+    public static final class Post extends ContainerSetContentEvent {
         public Post(List<ItemStack> items, ItemStack carriedItem, int containerId, int stateId) {
             super(items, carriedItem, containerId, stateId);
         }

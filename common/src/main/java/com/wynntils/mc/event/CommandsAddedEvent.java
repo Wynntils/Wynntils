@@ -9,7 +9,7 @@ import com.wynntils.core.events.BaseEvent;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
 
-public class CommandsAddedEvent extends BaseEvent {
+public final class CommandsAddedEvent extends BaseEvent {
     private final CommandBuildContext context;
 
     private RootCommandNode<SharedSuggestionProvider> root;

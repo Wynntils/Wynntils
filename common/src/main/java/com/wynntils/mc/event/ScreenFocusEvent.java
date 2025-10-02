@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.Screen;
 /**
  * Fired when the screen changes its focused widget.
  */
-public class ScreenFocusEvent extends BaseEvent implements CancelRequestable {
+public final class ScreenFocusEvent extends BaseEvent implements CancelRequestable {
     private final Screen screen;
     private final GuiEventListener guiEventListener;
 

@@ -10,7 +10,7 @@ import com.wynntils.models.npcdialogue.type.NpcDialogue;
 /**
  * Note that currently this event is only fired for non-confirmationless dialogues.
  */
-public class NpcDialogueRemoved extends BaseEvent {
+public final class NpcDialogueRemoved extends BaseEvent {
     private final NpcDialogue removedDialogue;
 
     public NpcDialogueRemoved(NpcDialogue removedDialogue) {

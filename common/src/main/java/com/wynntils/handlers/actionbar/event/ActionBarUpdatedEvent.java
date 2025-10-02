@@ -14,7 +14,7 @@ import java.util.function.Consumer;
  * Fired when the action bar is updated. This event can be used for update hooks for various segments.
  * Check out {@link ActionBarRenderEvent} for changing what is displayed on the action bar.
  */
-public class ActionBarUpdatedEvent extends BaseEvent {
+public final class ActionBarUpdatedEvent extends BaseEvent {
     private final List<ActionBarSegment> segments;
 
     public ActionBarUpdatedEvent(List<ActionBarSegment> segments) {

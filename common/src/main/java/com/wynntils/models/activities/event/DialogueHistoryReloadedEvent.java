@@ -6,4 +6,4 @@ package com.wynntils.models.activities.event;
 
 import com.wynntils.core.events.BaseEvent;
 
-public class DialogueHistoryReloadedEvent extends BaseEvent {}
+public final class DialogueHistoryReloadedEvent extends BaseEvent {}

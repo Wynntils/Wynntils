@@ -7,7 +7,7 @@ package com.wynntils.models.territories.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.territories.TerritoryAttackTimer;
 
-public class GuildWarQueuedEvent extends BaseEvent {
+public final class GuildWarQueuedEvent extends BaseEvent {
     private final TerritoryAttackTimer attackTimer;
 
     public GuildWarQueuedEvent(TerritoryAttackTimer attackTimer) {

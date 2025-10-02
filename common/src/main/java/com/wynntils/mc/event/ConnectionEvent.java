@@ -9,7 +9,7 @@ import com.wynntils.core.events.EventThread;
 
 public abstract class ConnectionEvent extends BaseEvent {
     @EventThread(EventThread.Type.RENDER)
-    public static class ConnectingEvent extends ConnectionEvent {
+    public static final class ConnectingEvent extends ConnectionEvent {
         private final String host;
         private final int port;
 
@@ -36,7 +36,7 @@ public abstract class ConnectionEvent extends BaseEvent {
     public static final class ConnectedEvent extends ConnectionEvent {}
 
     @EventThread(EventThread.Type.RENDER)
-    public static class DisconnectedEvent extends ConnectionEvent {
+    public static final class DisconnectedEvent extends ConnectionEvent {
         private final String reason;
 
         public DisconnectedEvent(String reason) {

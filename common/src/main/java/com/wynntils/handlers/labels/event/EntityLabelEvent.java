@@ -26,7 +26,7 @@ public abstract class EntityLabelEvent extends BaseEvent {
     /**
      * Event fired when the label of an entity changes.
      */
-    public static class Changed extends EntityLabelEvent {
+    public static final class Changed extends EntityLabelEvent {
         private final StyledText name;
 
         public Changed(Entity entity, StyledText name) {
@@ -42,7 +42,7 @@ public abstract class EntityLabelEvent extends BaseEvent {
     /**
      * Event fired when the visibility of an entity label changes.
      */
-    public static class Visibility extends EntityLabelEvent {
+    public static final class Visibility extends EntityLabelEvent {
         private final boolean value;
 
         public Visibility(Entity entity, boolean value) {

@@ -7,7 +7,7 @@ package com.wynntils.models.containers.event;
 import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.item.ItemStack;
 
-public class ValuableFoundEvent extends BaseEvent {
+public final class ValuableFoundEvent extends BaseEvent {
     private final ItemStack item;
     private final ItemSource itemSource;
 

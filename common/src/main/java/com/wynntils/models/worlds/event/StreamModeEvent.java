@@ -6,7 +6,7 @@ package com.wynntils.models.worlds.event;
 
 import com.wynntils.core.events.BaseEvent;
 
-public class StreamModeEvent extends BaseEvent {
+public final class StreamModeEvent extends BaseEvent {
     private final boolean enabled;
 
     public StreamModeEvent(boolean enabled) {

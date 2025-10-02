@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 
-public class ParticleAddedEvent extends BaseEvent {
+public final class ParticleAddedEvent extends BaseEvent {
     private final double x;
     private final double y;
     private final double z;

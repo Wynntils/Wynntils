@@ -7,7 +7,7 @@ package com.wynntils.mc.event;
 import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.entity.player.Player;
 
-public class PlayerJoinedWorldEvent extends BaseEvent {
+public final class PlayerJoinedWorldEvent extends BaseEvent {
     private final Player player;
 
     public PlayerJoinedWorldEvent(Player player) {

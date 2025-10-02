@@ -37,19 +37,19 @@ public abstract class SlotRenderEvent extends BaseEvent {
         return slot;
     }
 
-    public static class Pre extends SlotRenderEvent {
+    public static final class Pre extends SlotRenderEvent {
         public Pre(GuiGraphics guiGraphics, Screen screen, Slot slot) {
             super(guiGraphics, screen, slot);
         }
     }
 
-    public static class CountPre extends SlotRenderEvent {
+    public static final class CountPre extends SlotRenderEvent {
         public CountPre(GuiGraphics guiGraphics, Screen screen, Slot slot) {
             super(guiGraphics, screen, slot);
         }
     }
 
-    public static class Post extends SlotRenderEvent {
+    public static final class Post extends SlotRenderEvent {
         public Post(GuiGraphics guiGraphics, Screen screen, Slot slot) {
             super(guiGraphics, screen, slot);
         }

@@ -7,7 +7,7 @@ package com.wynntils.core.notifications.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.notifications.MessageContainer;
 
-public class NotificationEvent extends BaseEvent {
+public abstract class NotificationEvent extends BaseEvent {
     private final MessageContainer messageContainer;
 
     private NotificationEvent(MessageContainer messageContainer) {
@@ -18,19 +18,19 @@ public class NotificationEvent extends BaseEvent {
         return messageContainer;
     }
 
-    public static class Queue extends NotificationEvent {
+    public static final class Queue extends NotificationEvent {
         public Queue(MessageContainer messageContainer) {
             super(messageContainer);
         }
     }
 
-    public static class Edit extends NotificationEvent {
+    public static final class Edit extends NotificationEvent {
         public Edit(MessageContainer messageContainer) {
             super(messageContainer);
         }
     }
 
-    public static class Remove extends NotificationEvent {
+    public static final class Remove extends NotificationEvent {
         public Remove(MessageContainer messageContainer) {
             super(messageContainer);
         }

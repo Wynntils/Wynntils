@@ -52,13 +52,13 @@ public abstract class RenderEvent extends BaseEvent {
         PLAYER_TAB_LIST
     }
 
-    public static class Pre extends RenderEvent implements CancelRequestable {
+    public static final class Pre extends RenderEvent implements CancelRequestable {
         public Pre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window, ElementType type) {
             super(guiGraphics, deltaTracker, window, type);
         }
     }
 
-    public static class Post extends RenderEvent {
+    public static final class Post extends RenderEvent {
         public Post(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window, ElementType type) {
             super(guiGraphics, deltaTracker, window, type);
         }

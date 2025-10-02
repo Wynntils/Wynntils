@@ -9,7 +9,7 @@ import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
 import com.wynntils.models.lootrun.type.TaskLocation;
 
-public class LootrunBeaconSelectedEvent extends BaseEvent {
+public final class LootrunBeaconSelectedEvent extends BaseEvent {
     private final Beacon beacon;
     private final TaskLocation taskLocation;
     private final LootrunTaskType taskType;

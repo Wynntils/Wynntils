@@ -40,7 +40,7 @@ public abstract class RenderTranslucentCheckEvent extends BaseEvent {
      * Fired when {@link net.minecraft.client.renderer.entity.LivingEntityRenderer} checks whether an
      * entity should be rendered translucent or not
      */
-    public static class Body extends RenderTranslucentCheckEvent {
+    public static final class Body extends RenderTranslucentCheckEvent {
         public Body(boolean translucent, LivingEntityRenderState entityRenderState, float translucence) {
             super(translucent, entityRenderState, translucence);
         }
@@ -50,7 +50,7 @@ public abstract class RenderTranslucentCheckEvent extends BaseEvent {
      * Fired when {@link net.minecraft.client.renderer.entity.layers.CapeLayer} checks whether a living
      * entity cape should be rendered translucent or not
      */
-    public static class Cape extends RenderTranslucentCheckEvent {
+    public static final class Cape extends RenderTranslucentCheckEvent {
         public Cape(boolean translucent, LivingEntityRenderState entityRenderState, float translucence) {
             super(translucent, entityRenderState, translucence);
         }

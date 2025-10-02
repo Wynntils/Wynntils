@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 
-public class ScoreboardSetObjectiveEvent extends BaseEvent {
+public final class ScoreboardSetObjectiveEvent extends BaseEvent {
     public static final int METHOD_ADD = 0;
     public static final int METHOD_REMOVE = 1;
     public static final int METHOD_CHANGE = 2;

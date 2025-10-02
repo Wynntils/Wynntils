@@ -55,7 +55,7 @@ public abstract class ItemTooltipRenderEvent extends BaseEvent {
         return mouseY;
     }
 
-    public static class Pre extends ItemTooltipRenderEvent implements CancelRequestable {
+    public static final class Pre extends ItemTooltipRenderEvent implements CancelRequestable {
         private List<Component> tooltips;
 
         public Pre(GuiGraphics guiGraphics, ItemStack itemStack, List<Component> tooltips, int mouseX, int mouseY) {
@@ -84,7 +84,7 @@ public abstract class ItemTooltipRenderEvent extends BaseEvent {
         }
     }
 
-    public static class Post extends ItemTooltipRenderEvent {
+    public static final class Post extends ItemTooltipRenderEvent {
         public Post(GuiGraphics guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {
             super(guiGraphics, itemStack, mouseX, mouseY);
         }

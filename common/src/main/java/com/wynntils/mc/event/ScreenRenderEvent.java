@@ -9,7 +9,7 @@ import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 
-public class ScreenRenderEvent extends BaseEvent {
+public final class ScreenRenderEvent extends BaseEvent {
     private final Screen screen;
     private final GuiGraphics guiGraphics;
     private final int mouseX;

@@ -6,7 +6,7 @@ package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
 
-public class ChestMenuQuickMoveEvent extends BaseEvent {
+public final class ChestMenuQuickMoveEvent extends BaseEvent {
     private final int containerId;
 
     public ChestMenuQuickMoveEvent(int containerId) {

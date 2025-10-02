@@ -7,7 +7,7 @@ package com.wynntils.handlers.particle.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.handlers.particle.type.Particle;
 
-public class ParticleVerifiedEvent extends BaseEvent {
+public final class ParticleVerifiedEvent extends BaseEvent {
     private final Particle particle;
 
     public ParticleVerifiedEvent(Particle particle) {

@@ -7,7 +7,7 @@ package com.wynntils.core.mod.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.mod.type.CrashType;
 
-public class WynntilsCrashEvent extends BaseEvent {
+public final class WynntilsCrashEvent extends BaseEvent {
     private final String name;
     private final CrashType type;
     private final Throwable throwable;

@@ -8,4 +8,4 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.EventThread;
 
 @EventThread(EventThread.Type.WORKER)
-public class AthenaLoginEvent extends BaseEvent {}
+public final class AthenaLoginEvent extends BaseEvent {}

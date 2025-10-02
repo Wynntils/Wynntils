@@ -12,7 +12,7 @@ import com.wynntils.handlers.wrappedscreen.WrappedScreen;
  * Consumers can listen to this event to allow opening the wrapped screen.
  * If the event is explicitly accepted, the wrapped screen will not be opened.
  */
-public class WrappedScreenOpenEvent extends BaseEvent {
+public final class WrappedScreenOpenEvent extends BaseEvent {
     private final Class<? extends WrappedScreen> wrappedScreenClass;
 
     private boolean openScreen = false;

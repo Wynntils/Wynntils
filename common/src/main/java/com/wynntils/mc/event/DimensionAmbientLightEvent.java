@@ -7,4 +7,4 @@ package com.wynntils.mc.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 
-public class DimensionAmbientLightEvent extends BaseEvent implements CancelRequestable {}
+public final class DimensionAmbientLightEvent extends BaseEvent implements CancelRequestable {}

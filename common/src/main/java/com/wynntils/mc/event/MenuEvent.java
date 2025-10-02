@@ -49,7 +49,7 @@ public abstract class MenuEvent extends BaseEvent {
     }
 
     /** Fired for Menu closed events */
-    public static class MenuClosedEvent extends MenuEvent implements CancelRequestable {
+    public static final class MenuClosedEvent extends MenuEvent implements CancelRequestable {
         private final int containerId;
 
         public MenuClosedEvent(int containerId) {

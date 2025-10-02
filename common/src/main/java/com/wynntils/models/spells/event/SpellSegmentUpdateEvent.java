@@ -7,7 +7,7 @@ package com.wynntils.models.spells.event;
 import com.wynntils.core.events.BaseEvent;
 import java.util.regex.Matcher;
 
-public class SpellSegmentUpdateEvent extends BaseEvent {
+public final class SpellSegmentUpdateEvent extends BaseEvent {
     private final Matcher matcher;
 
     public SpellSegmentUpdateEvent(Matcher matcher) {

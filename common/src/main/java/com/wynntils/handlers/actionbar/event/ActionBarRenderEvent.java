@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * It allows for the modification of the action bar segments that are displayed to the player.
  * If you want to listen to segment changes, you should use {@link ActionBarUpdatedEvent}.
  */
-public class ActionBarRenderEvent extends BaseEvent {
+public final class ActionBarRenderEvent extends BaseEvent {
     private final Map<ActionBarSegment, Boolean> segments;
     private boolean renderCoordinates = true;
 

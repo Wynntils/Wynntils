@@ -6,7 +6,7 @@ package com.wynntils.models.characterstats.event;
 
 import com.wynntils.core.events.BaseEvent;
 
-public class CombatXpGainEvent extends BaseEvent {
+public final class CombatXpGainEvent extends BaseEvent {
     private final float gainedXpRaw;
     private final float gainedXpPercentage;
 

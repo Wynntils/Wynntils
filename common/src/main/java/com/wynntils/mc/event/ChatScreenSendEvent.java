@@ -7,7 +7,7 @@ package com.wynntils.mc.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 
-public class ChatScreenSendEvent extends BaseEvent implements CancelRequestable {
+public final class ChatScreenSendEvent extends BaseEvent implements CancelRequestable {
     private final String input;
     private final boolean addToRecentChat;
 

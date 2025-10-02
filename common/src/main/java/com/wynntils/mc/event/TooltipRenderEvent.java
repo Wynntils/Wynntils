@@ -11,7 +11,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositione
  * This event is fired when a tooltip is about to be rendered, when calculating the position of the tooltip.
  * You can use this event to change the positioner of the tooltip.
  */
-public class TooltipRenderEvent extends BaseEvent {
+public final class TooltipRenderEvent extends BaseEvent {
     private ClientTooltipPositioner positioner;
 
     public TooltipRenderEvent() {

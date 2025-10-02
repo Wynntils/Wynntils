@@ -9,7 +9,7 @@ import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.core.text.StyledText;
 import net.minecraft.world.item.ItemStack;
 
-public class ItemRenamedEvent extends BaseEvent implements CancelRequestable {
+public final class ItemRenamedEvent extends BaseEvent implements CancelRequestable {
     private final ItemStack itemStack;
     private final StyledText oldName;
     private final StyledText newName;

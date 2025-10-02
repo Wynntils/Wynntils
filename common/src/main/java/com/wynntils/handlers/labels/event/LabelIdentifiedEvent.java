@@ -7,7 +7,7 @@ package com.wynntils.handlers.labels.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.handlers.labels.type.LabelInfo;
 
-public class LabelIdentifiedEvent extends BaseEvent {
+public final class LabelIdentifiedEvent extends BaseEvent {
     private final LabelInfo labelInfo;
 
     public LabelIdentifiedEvent(LabelInfo labelInfo) {

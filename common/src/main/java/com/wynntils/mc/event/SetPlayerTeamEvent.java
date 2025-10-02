@@ -7,7 +7,7 @@ package com.wynntils.mc.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 
-public class SetPlayerTeamEvent extends BaseEvent implements CancelRequestable {
+public final class SetPlayerTeamEvent extends BaseEvent implements CancelRequestable {
     private final int method;
     private final String teamName;
 

@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import java.util.List;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 
-public class RemoveEntitiesEvent extends BaseEvent {
+public final class RemoveEntitiesEvent extends BaseEvent {
     private final List<Integer> entityIds;
 
     public RemoveEntitiesEvent(ClientboundRemoveEntitiesPacket packet) {

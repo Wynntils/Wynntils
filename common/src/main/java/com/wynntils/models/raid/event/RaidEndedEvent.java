@@ -18,13 +18,13 @@ public abstract class RaidEndedEvent extends BaseEvent {
         return raidInfo;
     }
 
-    public static class Completed extends RaidEndedEvent {
+    public static final class Completed extends RaidEndedEvent {
         public Completed(RaidInfo raidInfo) {
             super(raidInfo);
         }
     }
 
-    public static class Failed extends RaidEndedEvent {
+    public static final class Failed extends RaidEndedEvent {
         public Failed(RaidInfo raidInfo) {
             super(raidInfo);
         }

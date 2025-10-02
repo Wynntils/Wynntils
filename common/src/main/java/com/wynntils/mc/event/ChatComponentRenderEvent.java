@@ -21,7 +21,7 @@ public abstract class ChatComponentRenderEvent extends BaseEvent {
         return chatComponent;
     }
 
-    public static class Pre extends ChatComponentRenderEvent {
+    public static final class Pre extends ChatComponentRenderEvent {
         private final GuiGraphics guiGraphics;
 
         public Pre(ChatComponent chatComponent, GuiGraphics guiGraphics) {
@@ -35,7 +35,7 @@ public abstract class ChatComponentRenderEvent extends BaseEvent {
         }
     }
 
-    public static class Translate extends ChatComponentRenderEvent {
+    public static final class Translate extends ChatComponentRenderEvent {
         private float x;
 
         public Translate(ChatComponent chatComponent, float x) {
@@ -53,7 +53,7 @@ public abstract class ChatComponentRenderEvent extends BaseEvent {
         }
     }
 
-    public static class MapMouseX extends ChatComponentRenderEvent {
+    public static final class MapMouseX extends ChatComponentRenderEvent {
         private double x;
 
         public MapMouseX(ChatComponent chatComponent, double x) {
@@ -71,7 +71,7 @@ public abstract class ChatComponentRenderEvent extends BaseEvent {
         }
     }
 
-    public static class Background extends ChatComponentRenderEvent {
+    public static final class Background extends ChatComponentRenderEvent {
         private final GuiGraphics guiGraphics;
         private final int renderX;
         private final int lineHeight;
@@ -104,7 +104,7 @@ public abstract class ChatComponentRenderEvent extends BaseEvent {
         }
     }
 
-    public static class Text extends ChatComponentRenderEvent {
+    public static final class Text extends ChatComponentRenderEvent {
         private final GuiGraphics guiGraphics;
         private final GuiMessage.Line line;
         private final Font font;

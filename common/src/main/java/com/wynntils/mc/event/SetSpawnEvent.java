@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.core.BlockPos;
 
-public class SetSpawnEvent extends BaseEvent implements CancelRequestable {
+public final class SetSpawnEvent extends BaseEvent implements CancelRequestable {
     private final BlockPos spawnPos;
 
     public SetSpawnEvent(BlockPos spawnPos) {

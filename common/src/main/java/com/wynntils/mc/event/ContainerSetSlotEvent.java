@@ -41,7 +41,7 @@ public abstract class ContainerSetSlotEvent extends BaseEvent {
      * Note: This event goes through {@link com.wynntils.handlers.item.ItemHandler},
      *       so you can use it to get {@link com.wynntils.models.items.WynnItem}s.
      */
-    public static class Pre extends ContainerSetSlotEvent implements CancelRequestable {
+    public static final class Pre extends ContainerSetSlotEvent implements CancelRequestable {
         public Pre(int containerId, int stateId, int slot, ItemStack itemStack) {
             super(containerId, stateId, slot, itemStack);
         }
@@ -50,7 +50,7 @@ public abstract class ContainerSetSlotEvent extends BaseEvent {
     /**
      * Note: This is called after {@link SetSlotEvent.Pre}, so you can use it to get {@link com.wynntils.models.items.WynnItem}s.
      */
-    public static class Post extends ContainerSetSlotEvent {
+    public static final class Post extends ContainerSetSlotEvent {
         public Post(int containerId, int stateId, int slot, ItemStack itemStack) {
             super(containerId, stateId, slot, itemStack);
         }

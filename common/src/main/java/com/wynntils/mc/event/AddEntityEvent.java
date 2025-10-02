@@ -10,7 +10,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 
-public class AddEntityEvent extends BaseEvent {
+public final class AddEntityEvent extends BaseEvent {
     private final int id;
     private final UUID uuid;
     private final EntityType<?> type;

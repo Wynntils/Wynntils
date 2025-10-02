@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.item.ItemStack;
 
-public class GroundItemEntityTransformEvent extends BaseEvent {
+public final class GroundItemEntityTransformEvent extends BaseEvent {
     private final PoseStack poseStack;
     private final ItemStack itemStack;
 

@@ -6,4 +6,4 @@ package com.wynntils.models.statuseffects.event;
 
 import com.wynntils.core.events.BaseEvent;
 
-public class StatusEffectsChangedEvent extends BaseEvent {}
+public final class StatusEffectsChangedEvent extends BaseEvent {}

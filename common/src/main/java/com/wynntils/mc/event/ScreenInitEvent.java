@@ -27,13 +27,13 @@ public abstract class ScreenInitEvent extends BaseEvent {
         return firstInit;
     }
 
-    public static class Pre extends ScreenInitEvent {
+    public static final class Pre extends ScreenInitEvent {
         public Pre(Screen screen, boolean firstInit) {
             super(screen, firstInit);
         }
     }
 
-    public static class Post extends ScreenInitEvent {
+    public static final class Post extends ScreenInitEvent {
         public Post(Screen screen, boolean firstInit) {
             super(screen, firstInit);
         }

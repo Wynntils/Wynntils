@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.network.chat.Component;
 
-public class TitleSetTextEvent extends BaseEvent implements CancelRequestable {
+public final class TitleSetTextEvent extends BaseEvent implements CancelRequestable {
     private final Component component;
 
     public TitleSetTextEvent(Component component) {

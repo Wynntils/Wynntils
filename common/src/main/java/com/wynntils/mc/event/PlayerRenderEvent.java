@@ -9,7 +9,7 @@ import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 
-public class PlayerRenderEvent extends BaseEvent {
+public final class PlayerRenderEvent extends BaseEvent {
     private final PlayerRenderState playerRenderState;
     private final PoseStack poseStack;
     private final MultiBufferSource buffer;

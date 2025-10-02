@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.handlers.bossbar.TrackedBar;
 
-public class BossBarAddedEvent extends BaseEvent implements CancelRequestable {
+public final class BossBarAddedEvent extends BaseEvent implements CancelRequestable {
     private final TrackedBar trackedBar;
 
     public BossBarAddedEvent(TrackedBar trackedBar) {

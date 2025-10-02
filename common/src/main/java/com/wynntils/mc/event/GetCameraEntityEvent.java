@@ -7,7 +7,7 @@ package com.wynntils.mc.event;
 import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.entity.Entity;
 
-public class GetCameraEntityEvent extends BaseEvent {
+public final class GetCameraEntityEvent extends BaseEvent {
     private Entity entity;
 
     public GetCameraEntityEvent(Entity entity) {

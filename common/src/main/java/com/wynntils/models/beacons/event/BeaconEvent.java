@@ -19,7 +19,7 @@ public abstract class BeaconEvent extends BaseEvent {
         return beacon;
     }
 
-    public static class Added extends BeaconEvent {
+    public static final class Added extends BeaconEvent {
         private final Entity entity;
 
         public Added(Beacon verifiedBeacon, Entity entities) {
@@ -32,7 +32,7 @@ public abstract class BeaconEvent extends BaseEvent {
         }
     }
 
-    public static class Moved extends BeaconEvent {
+    public static final class Moved extends BeaconEvent {
         private final Beacon newBeacon;
 
         public Moved(Beacon oldBeacon, Beacon newBeacon) {
@@ -54,7 +54,7 @@ public abstract class BeaconEvent extends BaseEvent {
         }
     }
 
-    public static class Removed extends BeaconEvent {
+    public static final class Removed extends BeaconEvent {
         public Removed(Beacon beacon) {
             super(beacon);
         }

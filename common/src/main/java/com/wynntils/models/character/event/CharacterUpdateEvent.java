@@ -6,4 +6,4 @@ package com.wynntils.models.character.event;
 
 import com.wynntils.core.events.BaseEvent;
 
-public class CharacterUpdateEvent extends BaseEvent {}
+public final class CharacterUpdateEvent extends BaseEvent {}

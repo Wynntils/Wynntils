@@ -7,7 +7,7 @@ package com.wynntils.models.character.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.utils.mc.type.Location;
 
-public class CharacterDeathEvent extends BaseEvent {
+public final class CharacterDeathEvent extends BaseEvent {
     private final Location location;
 
     public CharacterDeathEvent(Location location) {

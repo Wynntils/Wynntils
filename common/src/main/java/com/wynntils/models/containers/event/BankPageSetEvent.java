@@ -9,4 +9,4 @@ import com.wynntils.core.events.BaseEvent;
 /**
  * Fires when a bank page has been fully loaded
  */
-public class BankPageSetEvent extends BaseEvent {}
+public final class BankPageSetEvent extends BaseEvent {}

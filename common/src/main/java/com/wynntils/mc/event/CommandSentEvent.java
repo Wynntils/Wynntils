@@ -7,7 +7,7 @@ package com.wynntils.mc.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 
-public class CommandSentEvent extends BaseEvent implements CancelRequestable {
+public final class CommandSentEvent extends BaseEvent implements CancelRequestable {
     private final String command;
     private final boolean signed;
 

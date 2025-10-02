@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 
 /** Fired on click in a container */
-public class ContainerClickEvent extends BaseEvent implements CancelRequestable {
+public final class ContainerClickEvent extends BaseEvent implements CancelRequestable {
     private final AbstractContainerMenu containerMenu;
     private final int slotNum;
     private final ClickType clickType;

@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.inventory.Slot;
 
-public class InventoryKeyPressEvent extends BaseEvent implements CancelRequestable {
+public final class InventoryKeyPressEvent extends BaseEvent implements CancelRequestable {
     private final int keyCode;
     private final int scanCode;
     private final int modifiers;

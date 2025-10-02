@@ -21,7 +21,7 @@ public abstract class PlayerInfoEvent extends BaseEvent {
     }
 
     /** Fires on change to name in scoreboard */
-    public static class PlayerDisplayNameChangeEvent extends PlayerInfoEvent {
+    public static final class PlayerDisplayNameChangeEvent extends PlayerInfoEvent {
         private final Component displayName;
 
         public PlayerDisplayNameChangeEvent(UUID id, Component displayName) {
@@ -35,7 +35,7 @@ public abstract class PlayerInfoEvent extends BaseEvent {
     }
 
     /** Fires on addition of name to scoreboard */
-    public static class PlayerLogInEvent extends PlayerInfoEvent {
+    public static final class PlayerLogInEvent extends PlayerInfoEvent {
         private final String name;
 
         public PlayerLogInEvent(UUID id, String name) {
@@ -49,7 +49,7 @@ public abstract class PlayerInfoEvent extends BaseEvent {
     }
 
     /** Fires on removal of name to scoreboard */
-    public static class PlayerLogOutEvent extends PlayerInfoEvent {
+    public static final class PlayerLogOutEvent extends PlayerInfoEvent {
         public PlayerLogOutEvent(UUID id) {
             super(id);
         }

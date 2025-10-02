@@ -7,7 +7,7 @@ package com.wynntils.core.net.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.net.UrlId;
 
-public class NetResultProcessedEvent extends BaseEvent {
+public abstract class NetResultProcessedEvent extends BaseEvent {
     public static final class ForUrlId extends NetResultProcessedEvent {
         private final UrlId urlId;
 

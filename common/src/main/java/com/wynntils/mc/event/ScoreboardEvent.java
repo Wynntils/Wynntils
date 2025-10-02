@@ -24,7 +24,7 @@ public abstract class ScoreboardEvent extends BaseEvent {
         return objectiveName;
     }
 
-    public static class Set extends ScoreboardEvent {
+    public static final class Set extends ScoreboardEvent {
         private final int score;
 
         public Set(StyledText owner, String objectiveName, int score) {
@@ -37,7 +37,7 @@ public abstract class ScoreboardEvent extends BaseEvent {
         }
     }
 
-    public static class Reset extends ScoreboardEvent {
+    public static final class Reset extends ScoreboardEvent {
         public Reset(StyledText owner, String objectiveName) {
             super(owner, objectiveName);
         }

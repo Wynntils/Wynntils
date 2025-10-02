@@ -41,13 +41,13 @@ public abstract class RenderLevelEvent extends BaseEvent {
         return camera;
     }
 
-    public static class Pre extends RenderLevelEvent {
+    public static final class Pre extends RenderLevelEvent {
         public Pre(LevelRenderer levelRenderer, DeltaTracker deltaTracker, Matrix4f projectionMatrix, Camera camera) {
             super(levelRenderer, deltaTracker, projectionMatrix, camera);
         }
     }
 
-    public static class Post extends RenderLevelEvent {
+    public static final class Post extends RenderLevelEvent {
         public Post(LevelRenderer levelRenderer, DeltaTracker deltaTracker, Matrix4f projectionMatrix, Camera camera) {
             super(levelRenderer, deltaTracker, projectionMatrix, camera);
         }

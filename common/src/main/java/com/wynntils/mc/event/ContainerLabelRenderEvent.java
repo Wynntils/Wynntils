@@ -57,7 +57,7 @@ public abstract class ContainerLabelRenderEvent extends BaseEvent {
         this.color = color;
     }
 
-    public static class ContainerLabel extends ContainerLabelRenderEvent implements CancelRequestable {
+    public static final class ContainerLabel extends ContainerLabelRenderEvent implements CancelRequestable {
         private Component containerLabel;
 
         public ContainerLabel(
@@ -80,7 +80,7 @@ public abstract class ContainerLabelRenderEvent extends BaseEvent {
         }
     }
 
-    public static class InventoryLabel extends ContainerLabelRenderEvent implements CancelRequestable {
+    public static final class InventoryLabel extends ContainerLabelRenderEvent implements CancelRequestable {
         private Component inventoryLabel;
 
         public InventoryLabel(

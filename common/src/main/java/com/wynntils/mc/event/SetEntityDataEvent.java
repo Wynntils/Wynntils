@@ -11,7 +11,7 @@ import java.util.List;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 
-public class SetEntityDataEvent extends BaseEvent {
+public final class SetEntityDataEvent extends BaseEvent {
     private final int id;
     private final List<SynchedEntityData.DataValue<?>> packedItems;
 

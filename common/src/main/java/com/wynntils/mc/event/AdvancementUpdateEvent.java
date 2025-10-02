@@ -12,7 +12,7 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.resources.ResourceLocation;
 
-public class AdvancementUpdateEvent extends BaseEvent {
+public final class AdvancementUpdateEvent extends BaseEvent {
     private final boolean reset;
     private final List<AdvancementHolder> added;
     private final Set<ResourceLocation> removed;

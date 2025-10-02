@@ -8,7 +8,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 
-public class KeyMappingEvent extends BaseEvent implements CancelRequestable {
+public final class KeyMappingEvent extends BaseEvent implements CancelRequestable {
     private final InputConstants.Key key;
     private final Operation operation;
 

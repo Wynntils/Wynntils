@@ -7,7 +7,7 @@ package com.wynntils.models.worlds.event;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.worlds.type.WorldState;
 
-public class WorldStateEvent extends BaseEvent {
+public final class WorldStateEvent extends BaseEvent {
     private final WorldState newState;
     private final WorldState oldState;
     private final String worldName;

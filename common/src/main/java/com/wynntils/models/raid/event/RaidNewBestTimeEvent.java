@@ -6,7 +6,7 @@ package com.wynntils.models.raid.event;
 
 import com.wynntils.core.events.BaseEvent;
 
-public class RaidNewBestTimeEvent extends BaseEvent {
+public final class RaidNewBestTimeEvent extends BaseEvent {
     private final String raidName;
     private final long time;
 

@@ -19,7 +19,7 @@ public abstract class BeaconMarkerEvent extends BaseEvent {
         return beaconMarker;
     }
 
-    public static class Added extends BeaconMarkerEvent {
+    public static final class Added extends BeaconMarkerEvent {
         private final Entity entity;
 
         public Added(BeaconMarker verifiedBeaconMarker, Entity entities) {
@@ -32,7 +32,7 @@ public abstract class BeaconMarkerEvent extends BaseEvent {
         }
     }
 
-    public static class Moved extends BeaconMarkerEvent {
+    public static final class Moved extends BeaconMarkerEvent {
         private final BeaconMarker newMarker;
 
         public Moved(BeaconMarker oldMarker, BeaconMarker newMarker) {
@@ -54,7 +54,7 @@ public abstract class BeaconMarkerEvent extends BaseEvent {
         }
     }
 
-    public static class Removed extends BeaconMarkerEvent {
+    public static final class Removed extends BeaconMarkerEvent {
         public Removed(BeaconMarker beaconMarker) {
             super(beaconMarker);
         }
