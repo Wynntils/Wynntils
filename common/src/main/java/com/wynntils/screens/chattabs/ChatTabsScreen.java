@@ -39,15 +39,6 @@ public class ChatTabsScreen extends ChatScreen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-
-        // We render this twice for chat screen, but it is not heavy and this is a simple and least conflicting way of
-        // rendering command suggestions on top of chat tab buttons.
-        this.commandSuggestions.render(guiGraphics, mouseX, mouseY);
-    }
-
-    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_TAB) {
             int newTab = -1;
@@ -63,10 +54,10 @@ public class ChatTabsScreen extends ChatScreen {
                 }
             }
 
-            if (newTab == -1) return false;
-
-            Services.ChatTab.setFocusedTab(newTab);
-            return true;
+            if (newTab != -1) {
+                Services.ChatTab.setFocusedTab(newTab);
+                return true;
+            }
         }
 
         if (KeyboardUtils.isControlDown() && keyCode >= GLFW.GLFW_KEY_1 && keyCode <= GLFW.GLFW_KEY_9) {
