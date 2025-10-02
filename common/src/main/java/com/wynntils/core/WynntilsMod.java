@@ -18,7 +18,6 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.EventBusWrapper;
-import com.wynntils.core.events.OperationCancelable;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.mod.type.CrashType;
@@ -80,13 +79,11 @@ public final class WynntilsMod {
         eventBus.addListener(eventConsumer);
     }
 
-    public static boolean postEvent(BaseEvent event) {
+    public static void postEvent(BaseEvent event) {
         try {
             eventBus.post(event);
-            return event instanceof OperationCancelable cancellableEvent && cancellableEvent.isCancelRequested();
         } catch (Throwable t) {
             handleExceptionInEventListener(t, event);
-            return false;
         }
     }
 

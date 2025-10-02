@@ -295,9 +295,10 @@ public final class ScoreboardHandler extends Handler {
             }
 
             ScoreboardSegment segment = new ScoreboardSegment(calculatedPart, headerLine.line(), contentLines);
-            boolean eventCanceled = WynntilsMod.postEvent(new ScoreboardSegmentAdditionEvent(segment));
+            ScoreboardSegmentAdditionEvent event = new ScoreboardSegmentAdditionEvent(segment);
+            WynntilsMod.postEvent(event);
 
-            segment.setVisibility(!eventCanceled);
+            segment.setVisibility(!event.isCancelRequested());
             scoreboardSegments.add(new Pair<>(calculatedPart, segment));
         }
 
