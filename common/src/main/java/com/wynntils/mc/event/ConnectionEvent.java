@@ -33,7 +33,7 @@ public abstract class ConnectionEvent extends Event {
     }
 
     @EventThread(EventThread.Type.RENDER)
-    public static final class ConnectedEvent extends Event {}
+    public static final class ConnectedEvent extends ConnectionEvent {}
 
     @EventThread(EventThread.Type.RENDER)
     public static class DisconnectedEvent extends ConnectionEvent {
