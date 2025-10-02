@@ -146,7 +146,8 @@ public final class ChatHandler extends Handler {
         RecipientType recipientType = getRecipientType(message, messageType);
 
         // Normally § codes are stripped from the log; need this to be able to debug chat formatting
-        WynntilsMod.info("[CHAT/" + recipientType + (messageType == MessageType.BACKGROUND ? "/bg" : "") + "] " + message.getString(StyleType.COMPLETE).replace("§", "&"));
+        WynntilsMod.info("[CHAT/" + recipientType + (messageType == MessageType.BACKGROUND ? "/bg" : "") + "] "
+                + message.getString(StyleType.COMPLETE).replace("§", "&"));
 
         ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(message, messageType, recipientType);
         WynntilsMod.postEvent(receivedEvent);
