@@ -19,6 +19,7 @@ import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
+import com.wynntils.models.gambits.type.Gambit;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -207,11 +208,12 @@ public class RangeVisualizerFeature extends Feature {
         };
     }
 
-    private Pair<CustomColor, Float> getCircleFromGambit(String gambitName) {
-        return switch (gambitName) {
-            case "Farsighted's" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 3f);
-            case "Myopic's" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 12f);
-            case "Glutton's" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 4f);
+    private Pair<CustomColor, Float> getCircleFromGambit(Gambit gambit) {
+        return switch (gambit) {
+            case FARSIGHTED -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 3f);
+            case MYOPIC -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 12f);
+            // glutton is only for testing, remove it later!!!
+            case GLUTTON -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 4f);
             default -> null;
         };
     }
