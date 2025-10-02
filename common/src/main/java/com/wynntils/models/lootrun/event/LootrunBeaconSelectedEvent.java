@@ -4,12 +4,12 @@
  */
 package com.wynntils.models.lootrun.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
 import com.wynntils.models.lootrun.type.TaskLocation;
-import net.neoforged.bus.api.Event;
 
-public class LootrunBeaconSelectedEvent extends Event {
+public class LootrunBeaconSelectedEvent extends BaseEvent {
     private final Beacon beacon;
     private final TaskLocation taskLocation;
     private final LootrunTaskType taskType;

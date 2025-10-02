@@ -4,12 +4,12 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class PlayerRenderLayerEvent extends Event implements ICancellableEvent {
+public abstract class PlayerRenderLayerEvent extends BaseEvent implements ICancellableEvent {
     private final PlayerRenderState playerRenderState;
 
     protected PlayerRenderLayerEvent(PlayerRenderState playerRenderState) {

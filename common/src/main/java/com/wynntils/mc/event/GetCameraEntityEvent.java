@@ -4,10 +4,10 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.bus.api.Event;
 
-public class GetCameraEntityEvent extends Event {
+public class GetCameraEntityEvent extends BaseEvent {
     private Entity entity;
 
     public GetCameraEntityEvent(Entity entity) {

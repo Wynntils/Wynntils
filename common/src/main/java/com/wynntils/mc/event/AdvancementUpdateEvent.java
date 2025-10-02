@@ -1,18 +1,18 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.Event;
 
-public class AdvancementUpdateEvent extends Event {
+public class AdvancementUpdateEvent extends BaseEvent {
     private final boolean reset;
     private final List<AdvancementHolder> added;
     private final Set<ResourceLocation> removed;

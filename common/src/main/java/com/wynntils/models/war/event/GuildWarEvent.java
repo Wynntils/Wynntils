@@ -4,10 +4,10 @@
  */
 package com.wynntils.models.war.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.war.type.WarBattleInfo;
-import net.neoforged.bus.api.Event;
 
-public abstract class GuildWarEvent extends Event {
+public abstract class GuildWarEvent extends BaseEvent {
     private final WarBattleInfo warBattleInfo;
 
     protected GuildWarEvent(WarBattleInfo warBattleInfo) {

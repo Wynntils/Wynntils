@@ -4,17 +4,17 @@
  */
 package com.wynntils.handlers.actionbar.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-import net.neoforged.bus.api.Event;
 
 /**
  * Fired when the action bar is updated. This event can be used for update hooks for various segments.
  * Check out {@link ActionBarRenderEvent} for changing what is displayed on the action bar.
  */
-public class ActionBarUpdatedEvent extends Event {
+public class ActionBarUpdatedEvent extends BaseEvent {
     private final List<ActionBarSegment> segments;
 
     public ActionBarUpdatedEvent(List<ActionBarSegment> segments) {

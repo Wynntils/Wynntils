@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.mod.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.mod.type.CrashType;
-import net.neoforged.bus.api.Event;
 
-public class WynntilsCrashEvent extends Event {
+public class WynntilsCrashEvent extends BaseEvent {
     private final String name;
     private final CrashType type;
     private final Throwable throwable;

@@ -1,17 +1,17 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.BaseEvent;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 /**
@@ -22,7 +22,7 @@ import net.neoforged.bus.api.ICancellableEvent;
  * This leads to us having to call this event from 3 locations, which the secondary location being {@link net.minecraft.client.gui.screens.inventory.AbstractContainerScreen#renderTooltip(GuiGraphics, int, int)}.`
  * The third location is patched in by Forge, handled in {@link ForgeGuiGraphicsMixin}.
  */
-public abstract class ItemTooltipRenderEvent extends Event {
+public abstract class ItemTooltipRenderEvent extends BaseEvent {
     private final GuiGraphics guiGraphics;
     protected ItemStack itemStack;
     protected int mouseX;

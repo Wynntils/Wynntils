@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.EventThread;
-import net.neoforged.bus.api.Event;
 
-public abstract class HadesEvent extends Event {
+public abstract class HadesEvent extends BaseEvent {
     @EventThread(EventThread.Type.IO)
     public static class Authenticated extends HadesEvent {}
 

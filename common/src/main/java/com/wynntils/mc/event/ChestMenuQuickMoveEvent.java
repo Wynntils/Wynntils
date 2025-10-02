@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
-public class ChestMenuQuickMoveEvent extends Event {
+public class ChestMenuQuickMoveEvent extends BaseEvent {
     private final int containerId;
 
     public ChestMenuQuickMoveEvent(int containerId) {

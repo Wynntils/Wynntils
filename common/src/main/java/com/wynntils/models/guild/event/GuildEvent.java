@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.guild.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
-public class GuildEvent extends Event {
+public class GuildEvent extends BaseEvent {
     /**
      * Fired upon the user joining a guild
      * @field guildName the name of the guild joined

@@ -1,17 +1,17 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class ContainerLabelRenderEvent extends Event implements ICancellableEvent {
+public abstract class ContainerLabelRenderEvent extends BaseEvent implements ICancellableEvent {
     private final AbstractContainerScreen<?> screen;
     private final GuiGraphics guiGraphics;
     private final float x;

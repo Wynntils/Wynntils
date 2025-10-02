@@ -1,17 +1,17 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 /** Fired on click in a container */
-public class ContainerClickEvent extends Event implements ICancellableEvent {
+public class ContainerClickEvent extends BaseEvent implements ICancellableEvent {
     private final AbstractContainerMenu containerMenu;
     private final int slotNum;
     private final ClickType clickType;

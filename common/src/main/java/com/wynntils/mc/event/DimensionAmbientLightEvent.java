@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public class DimensionAmbientLightEvent extends Event implements ICancellableEvent {}
+public class DimensionAmbientLightEvent extends BaseEvent implements ICancellableEvent {}

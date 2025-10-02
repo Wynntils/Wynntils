@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.combat.type;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
 /**
  * These events are sent when Wynncraft sets up a boss bar for the mob which
@@ -15,7 +15,7 @@ import net.neoforged.bus.api.Event;
  * health, so the difference in health for MobDamaged might not be due to the current
  * player.
  */
-public abstract class FocusedDamageEvent extends Event {
+public abstract class FocusedDamageEvent extends BaseEvent {
     private final String mobName;
     private final MobElementals mobElementals;
     private final long health;

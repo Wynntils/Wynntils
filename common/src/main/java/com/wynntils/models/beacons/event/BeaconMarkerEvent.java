@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.beacons.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.bus.api.Event;
 
-public abstract class BeaconMarkerEvent extends Event {
+public abstract class BeaconMarkerEvent extends BaseEvent {
     protected final BeaconMarker beaconMarker;
 
     protected BeaconMarkerEvent(BeaconMarker beaconMarker) {

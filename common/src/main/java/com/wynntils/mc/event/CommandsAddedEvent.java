@@ -1,15 +1,15 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.mojang.brigadier.tree.RootCommandNode;
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.neoforged.bus.api.Event;
 
-public class CommandsAddedEvent extends Event {
+public class CommandsAddedEvent extends BaseEvent {
     private final CommandBuildContext context;
 
     private RootCommandNode<SharedSuggestionProvider> root;

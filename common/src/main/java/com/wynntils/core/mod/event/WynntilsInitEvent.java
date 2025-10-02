@@ -4,9 +4,9 @@
  */
 package com.wynntils.core.mod.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
-public abstract class WynntilsInitEvent extends Event {
+public abstract class WynntilsInitEvent extends BaseEvent {
     /**
      * This event is fired when the mod finishes initializing, and all core components are ready to be used.
      * This event is the last step of the mod initialization process and is called once during the lifetime of the game.

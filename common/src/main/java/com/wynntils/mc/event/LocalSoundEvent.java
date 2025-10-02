@@ -1,16 +1,16 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class LocalSoundEvent extends Event implements ICancellableEvent {
+public abstract class LocalSoundEvent extends BaseEvent implements ICancellableEvent {
     private final SoundEvent sound;
 
     protected LocalSoundEvent(SoundEvent sound) {

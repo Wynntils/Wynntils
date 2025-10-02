@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.labels.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelInfo;
 import java.util.Optional;
 import net.minecraft.world.entity.Display;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 /**
@@ -16,7 +16,7 @@ import net.neoforged.bus.api.ICancellableEvent;
  * <p>
  * The various events are cancellable.
  */
-public abstract class TextDisplayChangedEvent extends Event implements ICancellableEvent {
+public abstract class TextDisplayChangedEvent extends BaseEvent implements ICancellableEvent {
     private final Display.TextDisplay textDisplay;
     private final LabelInfo labelInfo;
 

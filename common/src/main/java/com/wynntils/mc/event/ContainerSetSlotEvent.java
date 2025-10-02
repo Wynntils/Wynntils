@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class ContainerSetSlotEvent extends Event {
+public abstract class ContainerSetSlotEvent extends BaseEvent {
     private final int containerId;
     private final int stateId;
     private final int slot;

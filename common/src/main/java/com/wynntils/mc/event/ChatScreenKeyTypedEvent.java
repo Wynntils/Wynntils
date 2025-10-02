@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public class ChatScreenKeyTypedEvent extends Event implements ICancellableEvent {
+public class ChatScreenKeyTypedEvent extends BaseEvent implements ICancellableEvent {
     private final int keyCode;
     private final int scanCode;
     private final int modifiers;

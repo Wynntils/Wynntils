@@ -1,15 +1,15 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
-import net.neoforged.bus.api.Event;
 
-public abstract class SpellEvent extends Event {
+public abstract class SpellEvent extends BaseEvent {
     public abstract static class Casting extends SpellEvent {
         private final SpellDirection[] spellDirectionArray;
 

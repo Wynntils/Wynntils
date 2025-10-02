@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.core.BlockPos;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public class SetSpawnEvent extends Event implements ICancellableEvent {
+public class SetSpawnEvent extends BaseEvent implements ICancellableEvent {
     private final BlockPos spawnPos;
 
     public SetSpawnEvent(BlockPos spawnPos) {

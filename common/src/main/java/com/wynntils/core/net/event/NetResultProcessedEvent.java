@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.net.UrlId;
-import net.neoforged.bus.api.Event;
 
-public class NetResultProcessedEvent extends Event {
+public class NetResultProcessedEvent extends BaseEvent {
     public static final class ForUrlId extends NetResultProcessedEvent {
         private final UrlId urlId;
 

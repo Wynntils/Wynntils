@@ -4,13 +4,13 @@
  */
 package com.wynntils.handlers.chat.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class ChatMessageEvent extends Event {
+public abstract class ChatMessageEvent extends BaseEvent {
     protected final StyledText message;
     private final MessageType messageType;
     private final RecipientType recipientType;

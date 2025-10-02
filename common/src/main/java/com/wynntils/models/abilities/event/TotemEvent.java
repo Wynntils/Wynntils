@@ -1,15 +1,15 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.abilities.type.ShamanTotem;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.neoforged.bus.api.Event;
 
-public abstract class TotemEvent extends Event {
+public abstract class TotemEvent extends BaseEvent {
     private final int totemNumber;
 
     protected TotemEvent(int totemNumber) {

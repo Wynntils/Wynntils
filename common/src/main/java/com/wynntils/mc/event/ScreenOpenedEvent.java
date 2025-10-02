@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.gui.screens.Screen;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class ScreenOpenedEvent extends Event {
+public abstract class ScreenOpenedEvent extends BaseEvent {
     private final Screen screen;
     private final Screen oldScreen;
 

@@ -4,10 +4,10 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.neoforged.bus.api.Event;
 
-public abstract class RenderTranslucentCheckEvent extends Event {
+public abstract class RenderTranslucentCheckEvent extends BaseEvent {
     private boolean translucent;
     private final LivingEntityRenderState entityRenderState;
     private float translucence;

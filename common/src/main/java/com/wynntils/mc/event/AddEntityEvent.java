@@ -1,16 +1,16 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import java.util.UUID;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.neoforged.bus.api.Event;
 
-public class AddEntityEvent extends Event {
+public class AddEntityEvent extends BaseEvent {
     private final int id;
     private final UUID uuid;
     private final EntityType<?> type;

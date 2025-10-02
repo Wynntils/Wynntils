@@ -4,12 +4,12 @@
  */
 package com.wynntils.models.players.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
 /**
  * These events correspond to data from PartyModel
  */
-public abstract class PartyEvent extends Event {
+public abstract class PartyEvent extends BaseEvent {
     /**
      * Fired upon obtaining a new party list.
      * Get the party list from the party model manually if required.

@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
-import net.neoforged.bus.api.Event;
 
-public class ScoreboardSetObjectiveEvent extends Event {
+public class ScoreboardSetObjectiveEvent extends BaseEvent {
     public static final int METHOD_ADD = 0;
     public static final int METHOD_REMOVE = 1;
     public static final int METHOD_CHANGE = 2;

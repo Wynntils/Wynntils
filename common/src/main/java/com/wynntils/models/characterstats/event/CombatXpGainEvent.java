@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
-public class CombatXpGainEvent extends Event {
+public class CombatXpGainEvent extends BaseEvent {
     private final float gainedXpRaw;
     private final float gainedXpPercentage;
 
