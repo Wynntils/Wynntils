@@ -54,7 +54,6 @@ public final class WynntilsMod {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     private static final File MOD_STORAGE_ROOT = new File(McUtils.getGameDirectory(), MOD_ID);
-    private static final Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap = new HashMap<>();
     private static ModLoader modLoader;
     private static String version = "";
     private static boolean developmentBuild = false;
@@ -62,6 +61,7 @@ public final class WynntilsMod {
     private static IEventBus eventBus;
     private static File modJar;
     private static boolean initCompleted = false;
+    private static final Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap = new HashMap<>();
 
     public static ModLoader getModLoader() {
         return modLoader;
