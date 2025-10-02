@@ -12,6 +12,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.annotations.OverlayGroup;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.events.OperationCancelable;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Config;
@@ -37,7 +38,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.profiling.Profiler;
-import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -260,7 +260,7 @@ public final class OverlayManager extends Manager {
                 if (renderState != RenderState.PRE) {
                     continue;
                 }
-                if (event instanceof ICancellableEvent cancellableEvent) {
+                if (event instanceof OperationCancelable cancellableEvent) {
                     cancellableEvent.setCanceled(true);
                 }
             } else {

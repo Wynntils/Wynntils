@@ -18,6 +18,7 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.EventBusWrapper;
+import com.wynntils.core.events.OperationCancelable;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.mod.type.CrashType;
@@ -40,7 +41,6 @@ import net.minecraft.SharedConstants;
 import net.minecraft.client.resources.language.ClientLanguage;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.server.Bootstrap;
-import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.IEventBus;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ public final class WynntilsMod {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     private static final File MOD_STORAGE_ROOT = new File(McUtils.getGameDirectory(), MOD_ID);
-
+    private static final Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap = new HashMap<>();
     private static ModLoader modLoader;
     private static String version = "";
     private static boolean developmentBuild = false;
@@ -63,7 +63,6 @@ public final class WynntilsMod {
     private static IEventBus eventBus;
     private static File modJar;
     private static boolean initCompleted = false;
-    private static final Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap = new HashMap<>();
 
     public static ModLoader getModLoader() {
         return modLoader;
@@ -84,7 +83,7 @@ public final class WynntilsMod {
     public static boolean postEvent(BaseEvent event) {
         try {
             eventBus.post(event);
-            return event instanceof ICancellableEvent cancellableEvent && cancellableEvent.isCanceled();
+            return event instanceof OperationCancelable cancellableEvent && cancellableEvent.isCanceled();
         } catch (Throwable t) {
             handleExceptionInEventListener(t, event);
             return false;
