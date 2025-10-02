@@ -5,13 +5,13 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 
-public class BossHealthUpdateEvent extends BaseEvent implements OperationCancelable {
+public class BossHealthUpdateEvent extends BaseEvent implements CancelRequestable {
     private final ClientboundBossEventPacket packet;
     private final Map<UUID, LerpingBossEvent> bossEvents;
 

@@ -5,12 +5,12 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.world.level.entity.EntityAccess;
 
-public class AddEntityLookupEvent extends BaseEvent implements OperationCancelable {
+public class AddEntityLookupEvent extends BaseEvent implements CancelRequestable {
     private final UUID uuid;
     private final Map<UUID, EntityAccess> entityMap;
 

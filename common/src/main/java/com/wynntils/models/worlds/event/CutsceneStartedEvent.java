@@ -5,9 +5,9 @@
 package com.wynntils.models.worlds.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 
-public class CutsceneStartedEvent extends BaseEvent implements OperationCancelable {
+public class CutsceneStartedEvent extends BaseEvent implements CancelRequestable {
     private final boolean groupCutscene;
 
     public CutsceneStartedEvent(boolean groupCutscene) {

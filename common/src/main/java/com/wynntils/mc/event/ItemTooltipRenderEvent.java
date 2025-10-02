@@ -6,7 +6,7 @@ package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.Font;
@@ -55,7 +55,7 @@ public abstract class ItemTooltipRenderEvent extends BaseEvent {
         return mouseY;
     }
 
-    public static class Pre extends ItemTooltipRenderEvent implements OperationCancelable {
+    public static class Pre extends ItemTooltipRenderEvent implements CancelRequestable {
         private List<Component> tooltips;
 
         public Pre(GuiGraphics guiGraphics, ItemStack itemStack, List<Component> tooltips, int mouseX, int mouseY) {

@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 
-public class DropHeldItemEvent extends BaseEvent implements OperationCancelable {
+public class DropHeldItemEvent extends BaseEvent implements CancelRequestable {
     private final boolean fullStack;
 
     public DropHeldItemEvent(boolean fullStack) {

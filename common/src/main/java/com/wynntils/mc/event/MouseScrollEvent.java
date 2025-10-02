@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 
-public class MouseScrollEvent extends BaseEvent implements OperationCancelable {
+public class MouseScrollEvent extends BaseEvent implements CancelRequestable {
     private final double windowPointer;
     private final double xOffset;
     private final double yOffset;

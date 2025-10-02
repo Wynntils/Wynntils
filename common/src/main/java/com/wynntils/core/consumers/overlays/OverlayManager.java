@@ -12,7 +12,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.annotations.OverlayGroup;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Config;
@@ -260,7 +260,7 @@ public final class OverlayManager extends Manager {
                 if (renderState != RenderState.PRE) {
                     continue;
                 }
-                if (event instanceof OperationCancelable cancellableEvent) {
+                if (event instanceof CancelRequestable cancellableEvent) {
                     cancellableEvent.requestCancel();
                 }
             } else {

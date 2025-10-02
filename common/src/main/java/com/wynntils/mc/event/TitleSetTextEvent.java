@@ -5,10 +5,10 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.network.chat.Component;
 
-public class TitleSetTextEvent extends BaseEvent implements OperationCancelable {
+public class TitleSetTextEvent extends BaseEvent implements CancelRequestable {
     private final Component component;
 
     public TitleSetTextEvent(Component component) {

@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 
-public class ChatScreenKeyTypedEvent extends BaseEvent implements OperationCancelable {
+public class ChatScreenKeyTypedEvent extends BaseEvent implements CancelRequestable {
     private final int keyCode;
     private final int scanCode;
     private final int modifiers;

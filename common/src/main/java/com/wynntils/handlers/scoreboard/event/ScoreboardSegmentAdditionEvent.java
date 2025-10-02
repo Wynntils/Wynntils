@@ -5,10 +5,10 @@
 package com.wynntils.handlers.scoreboard.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 
-public class ScoreboardSegmentAdditionEvent extends BaseEvent implements OperationCancelable {
+public class ScoreboardSegmentAdditionEvent extends BaseEvent implements CancelRequestable {
     private final ScoreboardSegment segment;
 
     public ScoreboardSegmentAdditionEvent(ScoreboardSegment segment) {

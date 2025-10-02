@@ -5,7 +5,7 @@
 package com.wynntils.handlers.labels.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelInfo;
 import java.util.Optional;
@@ -16,7 +16,7 @@ import net.minecraft.world.entity.Display;
  * <p>
  * The various events are cancellable.
  */
-public abstract class TextDisplayChangedEvent extends BaseEvent implements OperationCancelable {
+public abstract class TextDisplayChangedEvent extends BaseEvent implements CancelRequestable {
     private final Display.TextDisplay textDisplay;
     private final LabelInfo labelInfo;
 

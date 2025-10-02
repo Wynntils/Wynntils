@@ -6,7 +6,7 @@ package com.wynntils.features.ui;
 
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -182,7 +182,7 @@ public class WynntilsContentBookFeature extends Feature {
         }
     }
 
-    private void handleClick(OperationCancelable cancellableEvent) {
+    private void handleClick(CancelRequestable cancellableEvent) {
         shiftClickedBookItem = McUtils.player().isShiftKeyDown();
 
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);

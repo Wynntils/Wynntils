@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.events;
 
-public interface OperationCancelable {
+public interface CancelRequestable {
     default void requestCancel() {
         ((BaseEvent) this).cancelRequested = true;
     }

@@ -6,9 +6,9 @@ package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 
-public class KeyMappingEvent extends BaseEvent implements OperationCancelable {
+public class KeyMappingEvent extends BaseEvent implements CancelRequestable {
     private final InputConstants.Key key;
     private final Operation operation;
 

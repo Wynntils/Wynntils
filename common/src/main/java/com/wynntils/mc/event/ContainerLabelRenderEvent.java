@@ -6,12 +6,12 @@ package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 
-public abstract class ContainerLabelRenderEvent extends BaseEvent implements OperationCancelable {
+public abstract class ContainerLabelRenderEvent extends BaseEvent implements CancelRequestable {
     private final AbstractContainerScreen<?> screen;
     private final GuiGraphics guiGraphics;
     private final float x;

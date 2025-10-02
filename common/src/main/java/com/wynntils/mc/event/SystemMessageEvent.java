@@ -5,11 +5,11 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.core.text.StyledText;
 import net.minecraft.network.chat.Component;
 
-public abstract class SystemMessageEvent extends BaseEvent implements OperationCancelable {
+public abstract class SystemMessageEvent extends BaseEvent implements CancelRequestable {
     private Component message;
     private boolean messageChanged;
     private final StyledText originalStyledText;

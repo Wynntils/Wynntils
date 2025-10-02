@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 
-public class EditBoxInsertEvent extends BaseEvent implements OperationCancelable {
+public class EditBoxInsertEvent extends BaseEvent implements CancelRequestable {
     private final String textToWrite;
 
     public EditBoxInsertEvent(String textToWrite) {

@@ -5,11 +5,11 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.world.entity.EquipmentSlot;
 
-public abstract class PlayerRenderLayerEvent extends BaseEvent implements OperationCancelable {
+public abstract class PlayerRenderLayerEvent extends BaseEvent implements CancelRequestable {
     private final PlayerRenderState playerRenderState;
 
     protected PlayerRenderLayerEvent(PlayerRenderState playerRenderState) {

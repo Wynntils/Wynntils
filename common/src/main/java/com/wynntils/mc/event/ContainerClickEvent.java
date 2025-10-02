@@ -5,13 +5,13 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 
 /** Fired on click in a container */
-public class ContainerClickEvent extends BaseEvent implements OperationCancelable {
+public class ContainerClickEvent extends BaseEvent implements CancelRequestable {
     private final AbstractContainerMenu containerMenu;
     private final int slotNum;
     private final ClickType clickType;

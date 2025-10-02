@@ -7,7 +7,7 @@ package com.wynntils.features.combat;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -43,7 +43,7 @@ public class PreventTradesDuelsFeature extends Feature {
         handlePlayerClick(event, event.getPlayer(), event.getPlayer().getMainHandItem(), event.getTarget());
     }
 
-    private void handlePlayerClick(OperationCancelable event, Player player, ItemStack itemStack, Entity target) {
+    private void handlePlayerClick(CancelRequestable event, Player player, ItemStack itemStack, Entity target) {
         if (!player.isShiftKeyDown() || !(target instanceof Player p) || !Models.Player.isLocalPlayer(p)) return;
 
         int timeSinceLastFight =

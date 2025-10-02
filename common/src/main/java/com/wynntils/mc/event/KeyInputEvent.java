@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 
-public class KeyInputEvent extends BaseEvent implements OperationCancelable {
+public class KeyInputEvent extends BaseEvent implements CancelRequestable {
     private final int action;
     private final int key;
     private final int modifiers;

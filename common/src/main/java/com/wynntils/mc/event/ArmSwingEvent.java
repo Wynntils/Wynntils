@@ -5,10 +5,10 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.InteractionHand;
 
-public class ArmSwingEvent extends BaseEvent implements OperationCancelable {
+public class ArmSwingEvent extends BaseEvent implements CancelRequestable {
     private final ArmSwingContext actionContext;
 
     private final InteractionHand hand;

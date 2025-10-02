@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 
-public class SetEntityPassengersEvent extends BaseEvent implements OperationCancelable {
+public class SetEntityPassengersEvent extends BaseEvent implements CancelRequestable {
     private final int vehicle;
 
     public SetEntityPassengersEvent(int vehicle) {

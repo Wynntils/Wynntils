@@ -4,12 +4,12 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public class UseItemEvent extends PlayerEvent implements OperationCancelable {
+public class UseItemEvent extends PlayerEvent implements CancelRequestable {
     private final Level level;
     private final InteractionHand hand;
 

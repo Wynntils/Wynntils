@@ -5,7 +5,7 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
 
@@ -35,7 +35,7 @@ public abstract class MenuEvent extends BaseEvent {
             return containerId;
         }
 
-        public static final class Pre extends MenuOpenedEvent implements OperationCancelable {
+        public static final class Pre extends MenuOpenedEvent implements CancelRequestable {
             public Pre(MenuType<?> menuType, Component title, int containerId) {
                 super(menuType, title, containerId);
             }
@@ -49,7 +49,7 @@ public abstract class MenuEvent extends BaseEvent {
     }
 
     /** Fired for Menu closed events */
-    public static class MenuClosedEvent extends MenuEvent implements OperationCancelable {
+    public static class MenuClosedEvent extends MenuEvent implements CancelRequestable {
         private final int containerId;
 
         public MenuClosedEvent(int containerId) {

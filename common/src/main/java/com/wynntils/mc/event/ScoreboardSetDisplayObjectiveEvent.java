@@ -5,10 +5,10 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.scores.DisplaySlot;
 
-public class ScoreboardSetDisplayObjectiveEvent extends BaseEvent implements OperationCancelable {
+public class ScoreboardSetDisplayObjectiveEvent extends BaseEvent implements CancelRequestable {
     private final DisplaySlot slot;
     private final String objectiveName;
 

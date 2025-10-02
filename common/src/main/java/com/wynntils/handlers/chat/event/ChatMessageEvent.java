@@ -5,7 +5,7 @@
 package com.wynntils.handlers.chat.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -36,7 +36,7 @@ public abstract class ChatMessageEvent extends BaseEvent {
     /**
      * This event is what models and features should use to listen to chat messsages.
      */
-    public static class Match extends ChatMessageEvent implements OperationCancelable {
+    public static class Match extends ChatMessageEvent implements CancelRequestable {
         public Match(StyledText message, MessageType messageType, RecipientType recipientType) {
             super(message, messageType, recipientType);
         }
@@ -63,7 +63,7 @@ public abstract class ChatMessageEvent extends BaseEvent {
 
     // This is a temporary measure to workaround a regression with chat tabs,
     // while we await the proper chat overhaul.
-    public static class Discard extends ChatMessageEvent implements OperationCancelable {
+    public static class Discard extends ChatMessageEvent implements CancelRequestable {
         public Discard(StyledText message, MessageType messageType, RecipientType recipientType) {
             super(message, messageType, recipientType);
         }

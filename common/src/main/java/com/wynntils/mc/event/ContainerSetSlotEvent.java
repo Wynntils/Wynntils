@@ -5,7 +5,7 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class ContainerSetSlotEvent extends BaseEvent {
@@ -41,7 +41,7 @@ public abstract class ContainerSetSlotEvent extends BaseEvent {
      * Note: This event goes through {@link com.wynntils.handlers.item.ItemHandler},
      *       so you can use it to get {@link com.wynntils.models.items.WynnItem}s.
      */
-    public static class Pre extends ContainerSetSlotEvent implements OperationCancelable {
+    public static class Pre extends ContainerSetSlotEvent implements CancelRequestable {
         public Pre(int containerId, int stateId, int slot, ItemStack itemStack) {
             super(containerId, stateId, slot, itemStack);
         }

@@ -5,7 +5,7 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import com.wynntils.core.events.OperationCancelable;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.client.gui.screens.Screen;
 
 public abstract class ScreenOpenedEvent extends BaseEvent {
@@ -25,7 +25,7 @@ public abstract class ScreenOpenedEvent extends BaseEvent {
         return oldScreen;
     }
 
-    public static final class Pre extends ScreenOpenedEvent implements OperationCancelable {
+    public static final class Pre extends ScreenOpenedEvent implements CancelRequestable {
         public Pre(Screen screen, Screen oldScreen) {
             super(screen, oldScreen);
         }
