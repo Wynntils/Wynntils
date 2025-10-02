@@ -15,9 +15,9 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -112,13 +112,10 @@ public class TradeMarketQuickSearchFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatMessageReceive(ChatMessageEvent.Match event) {
-        if (!Models.WorldState.onWorld()) return;
-        if (!Models.TradeMarket.inChatInput()) return;
-
-        if (Models.TradeMarket.getTradeMarketState() == TradeMarketState.SEARCH_CHAT_INPUT && instantSearching) {
+    public void onTradeMarketChatInput(TradeMarketChatInputEvent event) {
+        if (event.getState() == TradeMarketState.SEARCH_CHAT_INPUT && instantSearching) {
+            event.setResponse(searchQuery);
             event.cancelChat();
-            McUtils.sendChat(searchQuery);
             return;
         }
 
