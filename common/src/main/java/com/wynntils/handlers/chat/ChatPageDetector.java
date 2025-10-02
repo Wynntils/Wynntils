@@ -129,9 +129,7 @@ public final class ChatPageDetector {
             // If single-line items are included, it's not a partial page
             if (lines.size() == 1) return false;
 
-            // We need to strip lines to match the background properly
-            List<StyledText> strippedLines = StyledTextUtils.stripEventsAndLinks(lines);
-            partialPage.addAll(strippedLines);
+            partialPage.addAll(lines);
         }
 
         int matchingLines = ListUtils.countMatchingElements(pageBackground, 0, partialPage, 0);
@@ -201,24 +199,18 @@ public final class ChatPageDetector {
         // The first four messages are always background, and the rest is page content
         List<StyledText> background = collectedMessages.stream()
                 .limit(4)
-                .flatMap(this::getStrippedLines)
+                .flatMap(this::splitIntoLines)
                 .toList();
-        List<StyledText> pageContent = collectedMessages.stream()
-                .skip(4)
-                .flatMap(this::getStrippedLines)
-                .toList();
+        List<StyledText> pageContent =
+                collectedMessages.stream().skip(4).flatMap(this::splitIntoLines).toList();
 
         return Pair.of(background, pageContent);
     }
 
-    private Stream<StyledText> getStrippedLines(Component message) {
+    private Stream<StyledText> splitIntoLines(Component message) {
         StyledText styledText = StyledText.fromComponent(message);
-
         List<StyledText> lines = List.of(styledText.split("\n", true));
-        // Unfortunately, Wynn sends text alternatingly with and without click links and hover,
-        // and to be able to compare them properly, we need to strip those out.
-        Stream<StyledText> strippedLines = StyledTextUtils.stripEventsAndLinks(lines).stream();
-        return strippedLines;
+        return lines.stream();
     }
 
     private void handleBackground(List<StyledText> background, int numCollectedMessages) {

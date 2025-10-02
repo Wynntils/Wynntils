@@ -78,14 +78,6 @@ public final class StyledTextUtils {
         return styledText.replaceAll("\n", "");
     }
 
-    public static List<StyledText> stripEventsAndLinks(List<StyledText> lines) {
-        List<StyledText> linesWithoutEvents = lines.stream()
-                .map(s -> s.getString())
-                .map(str -> StyledText.fromString(str))
-                .toList();
-        return linesWithoutEvents;
-    }
-
     /**
      * Removes the soft-wrap Wynn gives to all messages post 2.1.
      *
