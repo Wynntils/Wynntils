@@ -32,9 +32,9 @@ public class AutoSkipCutscenesFeature extends Feature {
             shouldSkip = true;
         }
 
-        e.setCanceled(shouldSkip);
-
         if (shouldSkip) {
+            e.cancelOperation();
+
             McUtils.mc()
                     .getConnection()
                     .send(new ServerboundPlayerActionPacket(

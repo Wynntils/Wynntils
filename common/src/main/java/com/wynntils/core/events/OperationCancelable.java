@@ -5,12 +5,8 @@
 package com.wynntils.core.events;
 
 public interface OperationCancelable {
-    default void setCanceled(boolean canceled) {
-        ((BaseEvent) this).isOperationCanceled = canceled;
-    }
-
     default void cancelOperation() {
-        this.setCanceled(true);
+        ((BaseEvent) this).isOperationCanceled = true;
     }
 
     default boolean isCanceled() {
