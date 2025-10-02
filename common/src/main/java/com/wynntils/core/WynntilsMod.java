@@ -54,6 +54,7 @@ public final class WynntilsMod {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     private static final File MOD_STORAGE_ROOT = new File(McUtils.getGameDirectory(), MOD_ID);
+
     private static ModLoader modLoader;
     private static String version = "";
     private static boolean developmentBuild = false;
