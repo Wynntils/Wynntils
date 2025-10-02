@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.combat.type;
+package com.wynntils.models.combat.event;
 
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.stats.type.DamageType;

@@ -14,7 +14,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.models.combat.bossbar.DamageBar;
-import com.wynntils.models.combat.type.FocusedDamageEvent;
+import com.wynntils.models.combat.event.FocusedDamageEvent;
 import com.wynntils.models.combat.type.MobElementals;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;

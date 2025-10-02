@@ -2,9 +2,10 @@
  * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.combat.type;
+package com.wynntils.models.combat.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.models.combat.type.MobElementals;
 
 /**
  * These events are sent when Wynncraft sets up a boss bar for the mob which
