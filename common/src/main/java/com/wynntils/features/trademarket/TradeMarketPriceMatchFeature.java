@@ -54,7 +54,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         WynntilsMod.info("Trying to set trade market price to " + priceToSend);
 
         McUtils.sendChat(String.valueOf(priceToSend));
-        e.setCanceled(true);
+        e.cancelOperation();
 
         sendPriceMessage = false;
     }

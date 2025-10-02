@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.scoreboard;
@@ -91,7 +91,7 @@ public final class ScoreboardHandler extends Handler {
         currentScoreboardName = event.getObjectiveName();
         handleUpdate();
 
-        event.setCanceled(true);
+        event.cancelOperation();
     }
 
     @SubscribeEvent

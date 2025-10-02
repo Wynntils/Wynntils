@@ -45,7 +45,7 @@ public class ShamanMaskOverlay extends TextOverlay {
     @SubscribeEvent
     public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
         if (hideMaskTitles.get()) {
-            event.setCanceled(true);
+            event.cancelOperation();
         }
     }
 

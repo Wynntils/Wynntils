@@ -39,7 +39,7 @@ public class ContainerScrollFeature extends Feature {
             if (slot.isEmpty()) return;
 
             // Prevent the scroll from being handled by the game
-            event.setCanceled(true);
+            event.cancelOperation();
 
             ContainerUtils.clickOnSlot(
                     slot.get(),

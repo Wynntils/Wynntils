@@ -100,7 +100,7 @@ public class XpGainMessageFeature extends Feature {
         lastProfessionXpDisplayTimes.put(profession, System.currentTimeMillis());
 
         if (filterChat.get()) {
-            event.setCanceled(true);
+            event.cancelOperation();
         }
     }
 

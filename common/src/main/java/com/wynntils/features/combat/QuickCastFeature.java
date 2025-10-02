@@ -82,7 +82,7 @@ public class QuickCastFeature extends Feature {
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
         if (Models.Spell.isSpellQueueEmpty()) return;
 
-        event.setCanceled(true);
+        event.cancelOperation();
     }
 
     @SubscribeEvent
@@ -92,7 +92,7 @@ public class QuickCastFeature extends Feature {
         if (!blockAttacks.get()) return;
         if (Models.Spell.isSpellQueueEmpty()) return;
 
-        event.setCanceled(true);
+        event.cancelOperation();
     }
 
     @SubscribeEvent

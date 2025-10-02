@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.trademarket;
@@ -78,7 +78,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
 
         // We only use set slot events to get the items,
         // but we don't want the items to be set on our custom screen
-        event.setCanceled(true);
+        event.cancelOperation();
 
         // Reset the empty item count,
         // set content packets mean we are on a new page
@@ -101,7 +101,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         int slot = event.getSlot();
 
         // We don't want the items to be set on our custom screen
-        event.setCanceled(true);
+        event.cancelOperation();
 
         ItemStack itemStack = event.getItemStack();
 

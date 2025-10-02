@@ -175,7 +175,7 @@ public final class ChatHandler extends Handler {
         StyledText updatedMessage = postChatLine(styledText, MessageType.FOREGROUND);
 
         if (updatedMessage == null) {
-            event.setCanceled(true);
+            event.cancelOperation();
         } else if (!updatedMessage.equals(styledText)) {
             event.setMessage(updatedMessage.getComponent());
         }
@@ -211,7 +211,7 @@ public final class ChatHandler extends Handler {
             }
 
             // For all those cases, we will collect the lines and thus need to cancel the event
-            event.setCanceled(true);
+            event.cancelOperation();
         } else {
             if (chatScreenTicks != 0) {
                 // We got a normal line while collecting chat screen lines. This means the screen is

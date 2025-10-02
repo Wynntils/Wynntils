@@ -188,7 +188,7 @@ public class WynntilsContentBookFeature extends Feature {
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
         if (openWynntilsMenuInstead.get()
                 && StyledText.fromComponent(itemInHand.getHoverName()).equals(CONTENT_BOOK_NAME)) {
-            cancellableEvent.setCanceled(true);
+            cancellableEvent.cancelOperation();
             WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create());
         }
     }

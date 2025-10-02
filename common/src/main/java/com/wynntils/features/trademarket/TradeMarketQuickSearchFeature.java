@@ -106,7 +106,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         if (!Models.TradeMarket.inTradeMarket()) return;
 
         if (instantSearching) {
-            event.setCanceled(true);
+            event.cancelOperation();
             instantSearching = false;
         }
     }
@@ -117,14 +117,14 @@ public class TradeMarketQuickSearchFeature extends Feature {
         if (!Models.TradeMarket.inChatInput()) return;
 
         if (Models.TradeMarket.getTradeMarketState() == TradeMarketState.SEARCH_CHAT_INPUT && instantSearching) {
-            event.setCanceled(true);
+            event.cancelOperation();
             McUtils.sendChat(searchQuery);
             return;
         }
 
         openChatWhenContainerClosed = true;
         if (hidePrompt.get()) {
-            event.setCanceled(true);
+            event.cancelOperation();
         }
     }
 

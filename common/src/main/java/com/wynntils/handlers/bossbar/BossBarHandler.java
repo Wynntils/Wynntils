@@ -74,7 +74,7 @@ public final class BossBarHandler extends Handler {
 
             if (barAddEvent.isCanceled()) {
                 trackedBar.setRendered(false);
-                event.setCanceled(true);
+                event.cancelOperation();
             } else {
                 trackedBar.setRendered(true);
             }
@@ -90,7 +90,7 @@ public final class BossBarHandler extends Handler {
 
             if (trackedBar != null) {
                 if (!trackedBar.isRendered()) {
-                    event.setCanceled(true);
+                    event.cancelOperation();
                 }
 
                 consumer.accept(trackedBar);

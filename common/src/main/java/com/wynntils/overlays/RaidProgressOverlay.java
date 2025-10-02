@@ -73,7 +73,7 @@ public class RaidProgressOverlay extends TextOverlay {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableRaidInfoOnScoreboard.get() && event.getSegment().getScoreboardPart() instanceof RaidScoreboardPart) {
-            event.setCanceled(true);
+            event.cancelOperation();
         }
     }
 

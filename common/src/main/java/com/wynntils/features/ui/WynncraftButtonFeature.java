@@ -97,7 +97,7 @@ public class WynncraftButtonFeature extends Feature {
         if (event.getScreen() instanceof JoinMultiplayerScreen) {
             hasUsedButton = false;
             if (returnToTitle.get()) {
-                event.setCanceled(true);
+                event.cancelOperation();
                 McUtils.mc().setScreen(new TitleScreen());
             }
         }

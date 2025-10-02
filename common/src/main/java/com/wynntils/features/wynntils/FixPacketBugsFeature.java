@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -28,7 +28,7 @@ public class FixPacketBugsFeature extends Feature {
         // Work around bug in Wynncraft that causes a lot of NPEs in Vanilla
         if (event.getMethod() != METHOD_ADD
                 && McUtils.mc().level.getScoreboard().getPlayerTeam(event.getTeamName()) == null) {
-            event.setCanceled(true);
+            event.cancelOperation();
         }
     }
 
@@ -39,7 +39,7 @@ public class FixPacketBugsFeature extends Feature {
         // Work around bug in Wynncraft that causes NPEs in Vanilla
         PlayerTeam playerTeamFromUserName = McUtils.mc().level.getScoreboard().getPlayersTeam(event.getUsername());
         if (playerTeamFromUserName != event.getPlayerTeam()) {
-            event.setCanceled(true);
+            event.cancelOperation();
         }
     }
 
@@ -50,7 +50,7 @@ public class FixPacketBugsFeature extends Feature {
         // Work around bug in Wynncraft that causes a lot of warnings in Vanilla
         Entity entity = McUtils.mc().level.getEntity(event.getVehicle());
         if (entity == null) {
-            event.setCanceled(true);
+            event.cancelOperation();
         }
     }
 
@@ -58,7 +58,7 @@ public class FixPacketBugsFeature extends Feature {
     public void onAddEntityLookup(AddEntityLookupEvent event) {
         // Work around bug in Wynncraft that causes a lot of warnings in Vanilla
         if (event.getEntityMap().containsKey(event.getUUID())) {
-            event.setCanceled(true);
+            event.cancelOperation();
         }
     }
 }

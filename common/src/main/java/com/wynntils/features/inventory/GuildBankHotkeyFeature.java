@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -39,7 +39,7 @@ public class GuildBankHotkeyFeature extends Feature {
         // We cannot use ContainerModel here, as it is too early in the event chain.
         StyledText title = StyledText.fromComponent(event.getTitle());
         if (title.matches(MANAGE_TITLE_PATTERN)) {
-            event.setCanceled(true);
+            event.cancelOperation();
 
             AbstractContainerMenu container = event.getMenuType().create(event.getContainerId(), McUtils.inventory());
             ContainerUtils.clickOnSlot(GUILD_BANK_SLOT, event.getContainerId(), 0, container.getItems());

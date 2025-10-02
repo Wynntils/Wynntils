@@ -109,7 +109,7 @@ public class InputTranscriptionFeature extends Feature {
         String backspacedNum = String.valueOf(wynnicNum);
 
         if (backspacedNum.length() > 1) {
-            event.setCanceled(true);
+            event.cancelOperation();
 
             backspacedNum = backspacedNum.substring(0, backspacedNum.length() - 1);
 
@@ -133,7 +133,7 @@ public class InputTranscriptionFeature extends Feature {
         updatedMessage = updatedMessage.substring(0, Math.min(updatedMessage.length(), MAX_CHAT_LENGTH));
         if (updatedMessage.equals(message)) return; // No changes, we can pretend nothing happened.
 
-        event.setCanceled(true);
+        event.cancelOperation();
         Services.ChatTab.sendChat(updatedMessage);
 
         Models.WynnAlphabet.setSelectedAlphabet(WynnAlphabet.DEFAULT);
@@ -149,7 +149,7 @@ public class InputTranscriptionFeature extends Feature {
             updatedCommand = updatedCommand.substring(0, Math.min(updatedCommand.length(), MAX_CHAT_LENGTH));
 
             if (!updatedCommand.equals(command)) {
-                event.setCanceled(true);
+                event.cancelOperation();
                 Handlers.Command.sendCommandImmediately(updatedCommand);
             }
         }
@@ -171,7 +171,7 @@ public class InputTranscriptionFeature extends Feature {
 
         String replaced = String.valueOf(replacementList.get(engIndex));
 
-        event.setCanceled(true);
+        event.cancelOperation();
 
         chatScreen.input.insertText(replaced);
     }
@@ -189,7 +189,7 @@ public class InputTranscriptionFeature extends Feature {
 
             if (numIndex == -1) return;
 
-            event.setCanceled(true);
+            event.cancelOperation();
 
             String replaced = String.valueOf(replacementList.get(numIndex));
 
@@ -198,7 +198,7 @@ public class InputTranscriptionFeature extends Feature {
             return;
         }
 
-        event.setCanceled(true);
+        event.cancelOperation();
 
         String currentNumsStr = getWynnicNumBeforeCursor(beforeCursor);
 

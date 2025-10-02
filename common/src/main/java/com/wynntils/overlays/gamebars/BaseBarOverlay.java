@@ -70,7 +70,7 @@ public abstract class BaseBarOverlay extends Overlay {
         if (!event.getTrackedBar().getClass().equals(getTrackedBarClass())) return;
 
         if (!shouldDisplayOriginal.get()) {
-            event.setCanceled(true);
+            event.cancelOperation();
         }
     }
 

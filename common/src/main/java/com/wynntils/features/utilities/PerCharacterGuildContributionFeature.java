@@ -61,7 +61,7 @@ public class PerCharacterGuildContributionFeature extends Feature {
         Matcher contributionMatcher = message.getMatcher(CONTRIBUTION_PATTERN);
 
         if (contributionMatcher.matches()) {
-            event.setCanceled(true);
+            event.cancelOperation();
 
             if (waitingForCommandResponse) {
                 waitingForCommandResponse = false;

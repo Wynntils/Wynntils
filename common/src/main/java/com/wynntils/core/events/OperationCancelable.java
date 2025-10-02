@@ -9,6 +9,10 @@ public interface OperationCancelable {
         ((BaseEvent) this).isOperationCanceled = canceled;
     }
 
+    default void cancelOperation() {
+        this.setCanceled(true);
+    }
+
     default boolean isCanceled() {
         return ((BaseEvent) this).isOperationCanceled;
     }

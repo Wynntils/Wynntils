@@ -46,7 +46,7 @@ public class SpellCastMessageOverlay extends Overlay {
         if (!ItemUtils.isWeapon(event.getItemStack())) return;
 
         // Hide vanilla item rename popup
-        event.setCanceled(true);
+        event.cancelOperation();
     }
 
     @SubscribeEvent

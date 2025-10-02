@@ -33,7 +33,7 @@ public class WynntilsCosmeticsFeature extends Feature {
 
         if (Services.Cosmetics.shouldRenderCape(player, false)) {
             // Cancel default cape rendering, so ours doesn't cause a double up of capes
-            event.setCanceled(true);
+            event.cancelOperation();
         }
     }
 
@@ -47,7 +47,7 @@ public class WynntilsCosmeticsFeature extends Feature {
 
         if (Services.Cosmetics.shouldRenderCape(player, true)) {
             // This might not be necessary?
-            event.setCanceled(true);
+            event.cancelOperation();
         }
     }
 }

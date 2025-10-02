@@ -78,7 +78,7 @@ public class HorseMountFeature extends Feature {
         if (horseItemOpt.isEmpty()) return;
 
         mountHorse();
-        event.setCanceled(true);
+        event.cancelOperation();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST) // this needs to run before ChatRedirectFeature cancels the event

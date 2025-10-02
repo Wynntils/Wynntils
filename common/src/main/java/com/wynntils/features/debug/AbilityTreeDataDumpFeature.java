@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
@@ -42,7 +42,7 @@ public class AbilityTreeDataDumpFeature extends Feature {
 
         if (abilityTreeItem.isEmpty()) return;
 
-        event.setCanceled(true);
+        event.cancelOperation();
         McUtils.player().closeContainer();
 
         // Wait for the container to close

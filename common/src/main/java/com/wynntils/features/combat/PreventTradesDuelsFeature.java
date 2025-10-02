@@ -51,13 +51,13 @@ public class PreventTradesDuelsFeature extends Feature {
 
         if (ItemUtils.isWeapon(itemStack) && onlyWhileFighting.get() && timeSinceLastFight < fightingTimeCutoff.get()) {
             // stops interact packet from going out
-            event.setCanceled(true);
+            event.cancelOperation();
 
             Managers.Notification.queueMessage(StyledText.fromString(ChatFormatting.BLUE + "Trade/Duel blocked for "
                     + (fightingTimeCutoff.get() - timeSinceLastFight) + " s"));
         } else if (ItemUtils.isGatheringTool(itemStack) && whenHoldingGatheringTool.get()) {
             // stops interact packet from going out
-            event.setCanceled(true);
+            event.cancelOperation();
 
             Managers.Notification.queueMessage(
                     StyledText.fromString(ChatFormatting.BLUE + "Trade/Duel blocked whilst holding gathering tool"));

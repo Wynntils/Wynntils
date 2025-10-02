@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities;
@@ -47,7 +47,7 @@ public final class ShamanMaskModel extends Model {
             WynntilsMod.postEvent(maskEvent);
 
             if (maskEvent.isCanceled()) {
-                event.setCanceled(true);
+                event.cancelOperation();
             }
         }
     }
@@ -65,7 +65,7 @@ public final class ShamanMaskModel extends Model {
             WynntilsMod.postEvent(maskEvent);
 
             if (maskEvent.isCanceled()) {
-                event.setCanceled(true);
+                event.cancelOperation();
             }
         }
     }
