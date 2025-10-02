@@ -5,9 +5,9 @@
 package com.wynntils.models.worlds.event;
 
 import com.wynntils.core.events.BaseEvent;
-import net.neoforged.bus.api.ICancellableEvent;
+import com.wynntils.core.events.OperationCancelable;
 
-public class CutsceneStartedEvent extends BaseEvent implements ICancellableEvent {
+public class CutsceneStartedEvent extends BaseEvent implements OperationCancelable {
     private final boolean groupCutscene;
 
     public CutsceneStartedEvent(boolean groupCutscene) {

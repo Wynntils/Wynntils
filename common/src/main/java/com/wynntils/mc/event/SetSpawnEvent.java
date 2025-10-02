@@ -5,10 +5,10 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import net.minecraft.core.BlockPos;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public class SetSpawnEvent extends BaseEvent implements ICancellableEvent {
+public class SetSpawnEvent extends BaseEvent implements OperationCancelable {
     private final BlockPos spawnPos;
 
     public SetSpawnEvent(BlockPos spawnPos) {

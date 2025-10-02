@@ -5,10 +5,10 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import net.minecraft.world.inventory.Slot;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public class InventoryMouseClickedEvent extends BaseEvent implements ICancellableEvent {
+public class InventoryMouseClickedEvent extends BaseEvent implements OperationCancelable {
     private final double mouseX;
     private final double mouseY;
     private final int button;

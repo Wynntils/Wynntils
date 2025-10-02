@@ -5,10 +5,10 @@
 package com.wynntils.handlers.scoreboard.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public class ScoreboardSegmentAdditionEvent extends BaseEvent implements ICancellableEvent {
+public class ScoreboardSegmentAdditionEvent extends BaseEvent implements OperationCancelable {
     private final ScoreboardSegment segment;
 
     public ScoreboardSegmentAdditionEvent(ScoreboardSegment segment) {

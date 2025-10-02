@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import net.neoforged.bus.api.ICancellableEvent;
+import com.wynntils.core.events.OperationCancelable;
 
-public class KeyInputEvent extends BaseEvent implements ICancellableEvent {
+public class KeyInputEvent extends BaseEvent implements OperationCancelable {
     private final int action;
     private final int key;
     private final int modifiers;

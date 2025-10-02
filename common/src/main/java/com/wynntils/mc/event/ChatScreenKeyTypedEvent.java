@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import net.neoforged.bus.api.ICancellableEvent;
+import com.wynntils.core.events.OperationCancelable;
 
-public class ChatScreenKeyTypedEvent extends BaseEvent implements ICancellableEvent {
+public class ChatScreenKeyTypedEvent extends BaseEvent implements OperationCancelable {
     private final int keyCode;
     private final int scanCode;
     private final int modifiers;

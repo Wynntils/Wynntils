@@ -5,10 +5,10 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import net.neoforged.bus.api.ICancellableEvent;
+import com.wynntils.core.events.OperationCancelable;
 
 public abstract class ContainerCloseEvent extends BaseEvent {
-    public static class Pre extends ContainerCloseEvent implements ICancellableEvent {}
+    public static class Pre extends ContainerCloseEvent implements OperationCancelable {}
 
     public static class Post extends ContainerCloseEvent {}
 }

@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
-import net.neoforged.bus.api.ICancellableEvent;
 
 /** Fired for Menu events */
 public abstract class MenuEvent extends BaseEvent {
@@ -35,7 +35,7 @@ public abstract class MenuEvent extends BaseEvent {
             return containerId;
         }
 
-        public static final class Pre extends MenuOpenedEvent implements ICancellableEvent {
+        public static final class Pre extends MenuOpenedEvent implements OperationCancelable {
             public Pre(MenuType<?> menuType, Component title, int containerId) {
                 super(menuType, title, containerId);
             }
@@ -49,7 +49,7 @@ public abstract class MenuEvent extends BaseEvent {
     }
 
     /** Fired for Menu closed events */
-    public static class MenuClosedEvent extends MenuEvent implements ICancellableEvent {
+    public static class MenuClosedEvent extends MenuEvent implements OperationCancelable {
         private final int containerId;
 
         public MenuClosedEvent(int containerId) {

@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class ContainerSetContentEvent extends BaseEvent {
     private final List<ItemStack> items;
@@ -38,7 +38,7 @@ public abstract class ContainerSetContentEvent extends BaseEvent {
         return stateId;
     }
 
-    public static class Pre extends ContainerSetContentEvent implements ICancellableEvent {
+    public static class Pre extends ContainerSetContentEvent implements OperationCancelable {
         public Pre(List<ItemStack> items, ItemStack carriedItem, int containerId, int stateId) {
             super(items, carriedItem, containerId, stateId);
         }

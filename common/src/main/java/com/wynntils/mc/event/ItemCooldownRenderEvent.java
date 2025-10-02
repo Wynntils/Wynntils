@@ -5,10 +5,10 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public class ItemCooldownRenderEvent extends BaseEvent implements ICancellableEvent {
+public class ItemCooldownRenderEvent extends BaseEvent implements OperationCancelable {
     private final ItemStack itemStack;
 
     public ItemCooldownRenderEvent(ItemStack itemStack) {

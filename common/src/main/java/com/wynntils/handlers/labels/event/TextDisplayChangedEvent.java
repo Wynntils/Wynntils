@@ -5,18 +5,18 @@
 package com.wynntils.handlers.labels.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelInfo;
 import java.util.Optional;
 import net.minecraft.world.entity.Display;
-import net.neoforged.bus.api.ICancellableEvent;
 
 /**
  * This event is called when data of a {@link net.minecraft.world.entity.Display.TextDisplay} is changed.
  * <p>
  * The various events are cancellable.
  */
-public abstract class TextDisplayChangedEvent extends BaseEvent implements ICancellableEvent {
+public abstract class TextDisplayChangedEvent extends BaseEvent implements OperationCancelable {
     private final Display.TextDisplay textDisplay;
     private final LabelInfo labelInfo;
 

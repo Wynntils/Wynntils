@@ -7,9 +7,9 @@ package com.wynntils.mc.event;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class RenderEvent extends BaseEvent {
     private final GuiGraphics guiGraphics;
@@ -52,7 +52,7 @@ public abstract class RenderEvent extends BaseEvent {
         PLAYER_TAB_LIST
     }
 
-    public static class Pre extends RenderEvent implements ICancellableEvent {
+    public static class Pre extends RenderEvent implements OperationCancelable {
         public Pre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window, ElementType type) {
             super(guiGraphics, deltaTracker, window, type);
         }

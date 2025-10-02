@@ -5,10 +5,10 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import net.minecraft.world.scores.PlayerTeam;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class PlayerTeamEvent extends BaseEvent implements ICancellableEvent {
+public abstract class PlayerTeamEvent extends BaseEvent implements OperationCancelable {
     private final String username;
     private final PlayerTeam playerTeam;
 

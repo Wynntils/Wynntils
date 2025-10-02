@@ -5,10 +5,10 @@
 package com.wynntils.models.profession.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import com.wynntils.models.profession.type.ProfessionType;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public class ProfessionXpGainEvent extends BaseEvent implements ICancellableEvent {
+public class ProfessionXpGainEvent extends BaseEvent implements OperationCancelable {
     private final ProfessionType profession;
     private final float gainedXpRaw;
     private final float currentXpPercentage;

@@ -6,8 +6,8 @@ package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.EventThread;
+import com.wynntils.core.events.OperationCancelable;
 import net.minecraft.network.protocol.Packet;
-import net.neoforged.bus.api.ICancellableEvent;
 
 /**
  * Fires on packet sending or receiving
@@ -27,14 +27,14 @@ public abstract class PacketEvent<T extends Packet<?>> extends BaseEvent {
     }
 
     @EventThread(EventThread.Type.ANY)
-    public static class PacketSentEvent<T extends Packet<?>> extends PacketEvent<T> implements ICancellableEvent {
+    public static class PacketSentEvent<T extends Packet<?>> extends PacketEvent<T> implements OperationCancelable {
         public PacketSentEvent(T packet) {
             super(packet);
         }
     }
 
     @EventThread(EventThread.Type.ANY)
-    public static class PacketReceivedEvent<T extends Packet<?>> extends PacketEvent<T> implements ICancellableEvent {
+    public static class PacketReceivedEvent<T extends Packet<?>> extends PacketEvent<T> implements OperationCancelable {
         public PacketReceivedEvent(T packet) {
             super(packet);
         }

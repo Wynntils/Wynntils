@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import net.neoforged.bus.api.ICancellableEvent;
+import com.wynntils.core.events.OperationCancelable;
 
-public class EditBoxInsertEvent extends BaseEvent implements ICancellableEvent {
+public class EditBoxInsertEvent extends BaseEvent implements OperationCancelable {
     private final String textToWrite;
 
     public EditBoxInsertEvent(String textToWrite) {

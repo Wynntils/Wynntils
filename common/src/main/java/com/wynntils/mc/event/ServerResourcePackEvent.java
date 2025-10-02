@@ -6,15 +6,15 @@ package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.EventThread;
+import com.wynntils.core.events.OperationCancelable;
 import java.util.UUID;
-import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class ServerResourcePackEvent extends BaseEvent {
     /**
      * Fired on receiving {@link net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket}
      */
     @EventThread(EventThread.Type.ANY)
-    public static class Load extends ServerResourcePackEvent implements ICancellableEvent {
+    public static class Load extends ServerResourcePackEvent implements OperationCancelable {
         private final UUID id;
         private final String url;
         private final String hash;

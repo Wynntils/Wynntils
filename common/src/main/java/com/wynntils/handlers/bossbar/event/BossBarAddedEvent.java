@@ -5,10 +5,10 @@
 package com.wynntils.handlers.bossbar.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public class BossBarAddedEvent extends BaseEvent implements ICancellableEvent {
+public class BossBarAddedEvent extends BaseEvent implements OperationCancelable {
     private final TrackedBar trackedBar;
 
     public BossBarAddedEvent(TrackedBar trackedBar) {

@@ -5,9 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
-import net.neoforged.bus.api.ICancellableEvent;
+import com.wynntils.core.events.OperationCancelable;
 
-public class MouseScrollEvent extends BaseEvent implements ICancellableEvent {
+public class MouseScrollEvent extends BaseEvent implements OperationCancelable {
     private final double windowPointer;
     private final double xOffset;
     private final double yOffset;

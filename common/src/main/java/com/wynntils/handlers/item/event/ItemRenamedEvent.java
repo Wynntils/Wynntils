@@ -5,11 +5,11 @@
 package com.wynntils.handlers.item.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import com.wynntils.core.text.StyledText;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public class ItemRenamedEvent extends BaseEvent implements ICancellableEvent {
+public class ItemRenamedEvent extends BaseEvent implements OperationCancelable {
     private final ItemStack itemStack;
     private final StyledText oldName;
     private final StyledText newName;

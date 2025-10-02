@@ -5,14 +5,14 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
-import net.neoforged.bus.api.ICancellableEvent;
 
 /**
  * Fired when the screen changes its focused widget.
  */
-public class ScreenFocusEvent extends BaseEvent implements ICancellableEvent {
+public class ScreenFocusEvent extends BaseEvent implements OperationCancelable {
     private final Screen screen;
     private final GuiEventListener guiEventListener;
 

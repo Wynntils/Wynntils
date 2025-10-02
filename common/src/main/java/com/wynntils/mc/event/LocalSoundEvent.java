@@ -5,12 +5,12 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class LocalSoundEvent extends BaseEvent implements ICancellableEvent {
+public abstract class LocalSoundEvent extends BaseEvent implements OperationCancelable {
     private final SoundEvent sound;
 
     protected LocalSoundEvent(SoundEvent sound) {

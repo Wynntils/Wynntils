@@ -6,13 +6,13 @@ package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.OperationCancelable;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.ICancellableEvent;
 
 /**
  * This event is fired when an item tooltip is rendered.
@@ -55,7 +55,7 @@ public abstract class ItemTooltipRenderEvent extends BaseEvent {
         return mouseY;
     }
 
-    public static class Pre extends ItemTooltipRenderEvent implements ICancellableEvent {
+    public static class Pre extends ItemTooltipRenderEvent implements OperationCancelable {
         private List<Component> tooltips;
 
         public Pre(GuiGraphics guiGraphics, ItemStack itemStack, List<Component> tooltips, int mouseX, int mouseY) {
