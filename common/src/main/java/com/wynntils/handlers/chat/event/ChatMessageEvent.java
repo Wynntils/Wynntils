@@ -8,9 +8,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
 import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class ChatMessageEvent extends Event implements ICancellableEvent {
+public abstract class ChatMessageEvent extends Event {
     protected final StyledText message;
     private final MessageType messageType;
     private final RecipientType recipientType;
@@ -35,10 +34,22 @@ public abstract class ChatMessageEvent extends Event implements ICancellableEven
 
     /**
      * This event is what models and features should use to listen to chat messsages.
+     * Any listener can request to cancel the chat, but it will still be sent to all
+     * other listeners for matching, even if it is going to be canceled.
      */
     public static class Match extends ChatMessageEvent {
+        private boolean chatCanceled = false;
+
         public Match(StyledText message, MessageType messageType, RecipientType recipientType) {
             super(message, messageType, recipientType);
+        }
+
+        public boolean isChatCanceled() {
+            return chatCanceled;
+        }
+
+        public void cancelChat() {
+            this.chatCanceled = true;
         }
     }
 

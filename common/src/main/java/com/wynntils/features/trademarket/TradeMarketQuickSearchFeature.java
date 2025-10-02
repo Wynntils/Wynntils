@@ -117,14 +117,14 @@ public class TradeMarketQuickSearchFeature extends Feature {
         if (!Models.TradeMarket.inChatInput()) return;
 
         if (Models.TradeMarket.getTradeMarketState() == TradeMarketState.SEARCH_CHAT_INPUT && instantSearching) {
-            event.setCanceled(true);
+            event.cancelChat();
             McUtils.sendChat(searchQuery);
             return;
         }
 
         openChatWhenContainerClosed = true;
         if (hidePrompt.get()) {
-            event.setCanceled(true);
+            event.cancelChat();
         }
     }
 

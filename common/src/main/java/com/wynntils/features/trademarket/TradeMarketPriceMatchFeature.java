@@ -46,7 +46,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         addPriceButtons(containerScreen);
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
+    @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match e) {
         if (!sendPriceMessage) return;
         if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.PRICE_CHAT_INPUT) return;
@@ -54,7 +54,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         WynntilsMod.info("Trying to set trade market price to " + priceToSend);
 
         McUtils.sendChat(String.valueOf(priceToSend));
-        e.setCanceled(true);
+        e.cancelChat();
 
         sendPriceMessage = false;
     }

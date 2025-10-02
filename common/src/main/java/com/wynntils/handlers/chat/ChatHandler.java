@@ -148,7 +148,7 @@ public final class ChatHandler extends Handler {
 
         ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(message, messageType, recipientType);
         WynntilsMod.postEvent(receivedEvent);
-        if (receivedEvent.isCanceled()) return null;
+        if (receivedEvent.isChatCanceled()) return null;
 
         ChatMessageEvent.Edit rewriteEvent = new ChatMessageEvent.Edit(message, messageType, recipientType);
         WynntilsMod.postEvent(rewriteEvent);

@@ -132,7 +132,7 @@ public final class PartyModel extends Model {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onChatReceived(ChatMessageEvent.Match event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
@@ -142,7 +142,7 @@ public final class PartyModel extends Model {
 
         if (expectingPartyMessage) {
             if (tryParseNoPartyMessage(chatMessage) || tryParsePartyList(chatMessage)) {
-                event.setCanceled(true);
+                event.cancelChat();
                 expectingPartyMessage = false;
                 return;
             }

@@ -167,8 +167,7 @@ public final class GuildModel extends Model {
         registry.registerDownload(UrlId.DATA_ATHENA_GUILD_LIST).handleJsonArray(this::handleGuildList);
     }
 
-    // This needs to run before any chat modifications (eg. chat mentions, filter, etc)
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match e) {
         StyledText message = e.getMessage();
 
