@@ -112,8 +112,12 @@ public final class ProfessionModel extends Model {
             harvestIds.put(gatheringInfo.getEntity().getId());
             lastGatherTime = System.currentTimeMillis();
             lastProfessionXpGain = gatheringInfo.getProfessionType();
-            WynntilsMod.postEvent(new ProfessionXpGainEvent(
-                    gatheringInfo.getProfessionType(), gatheringInfo.getXpGain(), gatheringInfo.getCurrentXp()));
+            ProfessionXpGainEvent xpGainEvent = new ProfessionXpGainEvent(
+                    gatheringInfo.getProfessionType(), gatheringInfo.getXpGain(), gatheringInfo.getCurrentXp());
+            WynntilsMod.postEvent(xpGainEvent);
+            if (xpGainEvent.isCancelRequested()) {
+                // FIXME: What to do?
+            }
         }
     }
 

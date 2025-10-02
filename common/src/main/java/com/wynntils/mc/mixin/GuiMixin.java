@@ -85,8 +85,12 @@ public abstract class GuiMixin {
     private void onRenderGuiPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         // FIXME: This is a temporary fix. We should integrate overlays into Gui's LayeredDraw order
         if (McUtils.options().hideGui) return;
-        MixinHelper.post(new RenderEvent.Pre(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI);
+        MixinHelper.post(event);
+        if (event.isCancelRequested()) {
+            // FIXME: What to do?
+        }
     }
 
     @Inject(

@@ -8,7 +8,7 @@ import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.scores.PlayerTeam;
 
-public abstract class PlayerTeamEvent extends BaseEvent implements CancelRequestable {
+public abstract class PlayerTeamEvent extends BaseEvent {
     private final String username;
     private final PlayerTeam playerTeam;
 
@@ -31,7 +31,7 @@ public abstract class PlayerTeamEvent extends BaseEvent implements CancelRequest
         }
     }
 
-    public static final class Removed extends PlayerTeamEvent {
+    public static final class Removed extends PlayerTeamEvent implements CancelRequestable {
         public Removed(String username, PlayerTeam playerTeam) {
             super(username, playerTeam);
         }

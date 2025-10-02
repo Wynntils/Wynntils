@@ -16,7 +16,7 @@ import net.minecraft.world.entity.Display;
  * <p>
  * The various events are cancellable.
  */
-public abstract class TextDisplayChangedEvent extends BaseEvent implements CancelRequestable {
+public abstract class TextDisplayChangedEvent extends BaseEvent {
     private final Display.TextDisplay textDisplay;
     private final LabelInfo labelInfo;
 
@@ -33,7 +33,7 @@ public abstract class TextDisplayChangedEvent extends BaseEvent implements Cance
         return Optional.ofNullable(labelInfo);
     }
 
-    public static class Text extends TextDisplayChangedEvent {
+    public static final class Text extends TextDisplayChangedEvent implements CancelRequestable {
         private StyledText text;
 
         public Text(Display.TextDisplay textDisplay, LabelInfo labelInfo, StyledText text) {

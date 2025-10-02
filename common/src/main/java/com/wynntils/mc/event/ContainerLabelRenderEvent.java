@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 
-public abstract class ContainerLabelRenderEvent extends BaseEvent implements CancelRequestable {
+public abstract class ContainerLabelRenderEvent extends BaseEvent {
     private final AbstractContainerScreen<?> screen;
     private final GuiGraphics guiGraphics;
     private final float x;
@@ -57,7 +57,7 @@ public abstract class ContainerLabelRenderEvent extends BaseEvent implements Can
         this.color = color;
     }
 
-    public static class ContainerLabel extends ContainerLabelRenderEvent {
+    public static class ContainerLabel extends ContainerLabelRenderEvent implements CancelRequestable {
         private Component containerLabel;
 
         public ContainerLabel(
@@ -80,7 +80,7 @@ public abstract class ContainerLabelRenderEvent extends BaseEvent implements Can
         }
     }
 
-    public static class InventoryLabel extends ContainerLabelRenderEvent {
+    public static class InventoryLabel extends ContainerLabelRenderEvent implements CancelRequestable {
         private Component inventoryLabel;
 
         public InventoryLabel(
