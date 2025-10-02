@@ -6,7 +6,6 @@ package com.wynntils.mc.event;
 
 import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.EventThread;
-import net.neoforged.bus.api.Event;
 
 public abstract class ConnectionEvent extends BaseEvent {
     @EventThread(EventThread.Type.RENDER)
