@@ -122,6 +122,10 @@ public final class PartStyle {
         // 4. Hover events are wrapped in angle brackets, and is represented as an id.
         //    The parent of this style's owner is responsible for keeping track of hover events.
         //    Example: §<1> -> (1st hover event)
+        // 5. Additional formatting support is expressed with §{...}. The currently only supported such
+        //    formatting is font style, which is represented as §{f:X}, where X is a short code given to the
+        //    font, if such is present, or the full resource location if not.
+        //    Example: §{f:d} or §{f:minecraft:default}
 
         if (!type.includeBasicFormatting()) return "";
 
@@ -134,7 +138,7 @@ public final class PartStyle {
         // If the current color is NONE, we NEED to try to construct a difference,
         // since there will be no color formatting resetting the formatting afterwards.
         if (previousStyle != null && (color == CustomColor.NONE || previousStyle.color.equals(color))) {
-            String differenceString = this.tryConstructDifference(previousStyle, type.includeEvents());
+            String differenceString = this.tryConstructDifference(previousStyle, type);
 
             if (differenceString != null) {
                 styleString.append(differenceString);
@@ -171,6 +175,16 @@ public final class PartStyle {
             }
             if (italic) {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
+            }
+            if (type.includeFonts()) {
+                if (font != null && !font.toString().equals("minecraft:default")) {
+                    String fontCode = FontLookup.getFontCodeFromFont(font);
+                    styleString
+                            .append(STYLE_PREFIX)
+                            .append("{f:")
+                            .append(fontCode)
+                            .append("}");
+                }
             }
 
             if (type.includeEvents()) {
@@ -427,7 +441,7 @@ public final class PartStyle {
                 font);
     }
 
-    private String tryConstructDifference(PartStyle oldStyle, boolean includeEvents) {
+    private String tryConstructDifference(PartStyle oldStyle, StyleType type) {
         StringBuilder add = new StringBuilder();
 
         int oldColorInt = oldStyle.color.asInt();
@@ -459,7 +473,15 @@ public final class PartStyle {
         if (oldStyle.italic && !this.italic) return null;
         if (!oldStyle.italic && this.italic) add.append(ChatFormatting.ITALIC);
 
-        if (includeEvents) {
+        if (type.includeFonts()) {
+            if (oldStyle.font != null && this.font == null) return null;
+            if (this.font != null) {
+                String fontCode = FontLookup.getFontCodeFromFont(font);
+                add.append(STYLE_PREFIX).append("{f:").append(fontCode).append("}");
+            }
+        }
+
+        if (type.includeEvents()) {
             // If there is a click event in the old style, but not in the new one, we can't construct a difference.
             // Otherwise, if the old style and the new style has different events, add the new event.
             // This can happen in two cases:

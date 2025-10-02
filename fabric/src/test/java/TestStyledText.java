@@ -15,7 +15,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,72 @@ public class TestStyledText {
     @BeforeAll
     public static void setup() {
         WynntilsMod.setupTestEnv();
+    }
+
+    @Test
+    public void fontStyle() {
+        ResourceLocation bannerPillFont = ResourceLocation.fromNamespaceAndPath("minecraft", "banner/pill");
+        final Component component = Component.empty()
+                .withStyle(ChatFormatting.RED)
+                .withStyle(Style.EMPTY.withFont(bannerPillFont))
+                .append(Component.literal("inherited font"));
+        final String expected = "§c§{f:bp}inherited font";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        Assertions.assertEquals(
+                expected,
+                styledText.getString(StyleType.INCLUDE_FONTS),
+                "StyledText for font formats returned an unexpected value.");
+
+        StyledText roundtrip = StyledText.fromString(expected);
+        String strippedFromFont = roundtrip.getStringWithoutFormatting();
+        Assertions.assertEquals(
+                "inherited font",
+                strippedFromFont,
+                "StyledText roundtrip string without formatting returned an unexpected value.");
+        String roundtripStr = roundtrip.getString(StyleType.INCLUDE_FONTS);
+        Assertions.assertEquals(roundtripStr, expected, "StyledText roundtrip string returned an unexpected value.");
+
+        Assertions.assertEquals(styledText, roundtrip, "StyledText roundtrip ST returned an unexpected value.");
+
+        Component roundtripComp = roundtrip.getComponent();
+        if (roundtripComp instanceof MutableComponent mutableComponent) {
+            Assertions.assertEquals(
+                    mutableComponent.getSiblings().getFirst().getStyle().getFont(),
+                    bannerPillFont,
+                    "Component roundtrip contained an unexpected font.");
+        } else {
+            Assertions.fail("StyledText roundtrip Component was not a MutableComponent.");
+        }
+    }
+
+    @Test
+    public void fontStyleInvalidFonts() {
+        final Component component = Component.empty()
+                .withStyle(ChatFormatting.RED)
+                .withStyle(
+                        Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "banner/nosuchfont")))
+                .append(Component.literal("inherited font"));
+        final String expected = "§c§{f:minecraft:banner/nosuchfont}inherited font";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        Assertions.assertEquals(
+                expected,
+                styledText.getString(StyleType.INCLUDE_FONTS),
+                "StyledText for font formats returned an unexpected value.");
+
+        StyledText roundtrip = StyledText.fromString(expected);
+        String strippedFromFont = roundtrip.getStringWithoutFormatting();
+        Assertions.assertEquals(
+                "inherited font",
+                strippedFromFont,
+                "StyledText roundtrip string without formatting returned an unexpected value.");
+        String roundtripStr = roundtrip.getString(StyleType.INCLUDE_FONTS);
+        Assertions.assertEquals(roundtripStr, expected, "StyledText roundtrip string returned an unexpected value.");
+
+        Assertions.assertEquals(styledText, roundtrip, "StyledText roundtrip ST returned an unexpected value.");
     }
 
     @Test

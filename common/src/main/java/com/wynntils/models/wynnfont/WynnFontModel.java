@@ -5,11 +5,13 @@
 package com.wynntils.models.wynnfont;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.FontLookup;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
 
 public final class WynnFontModel extends Model {
     private static final char NEGATIVE_SPACE = '\uE012';
@@ -34,6 +36,7 @@ public final class WynnFontModel extends Model {
         super(List.of());
 
         createFontMaps();
+        registerFontsForLookup();
     }
 
     public String toBackgroundFont(
@@ -123,5 +126,32 @@ public final class WynnFontModel extends Model {
         for (int i = 0; i < fancySpecialCharacters.size(); i++) {
             normalToFancy.put(normalSpecialCharacters.get(i), fancySpecialCharacters.get(i));
         }
+    }
+
+    private void registerWynnFont(String fontName, String code) {
+        FontLookup.registerFontCode(ResourceLocation.tryParse(fontName), code);
+    }
+
+    private void registerFontsForLookup() {
+        registerWynnFont("minecraft:default", "d");
+        registerWynnFont("minecraft:banner/pill", "bp");
+        registerWynnFont("minecraft:hud/gameplay/default/top_left", "gtl");
+        registerWynnFont("minecraft:hud/gameplay/default/top_middle", "gtm");
+        registerWynnFont("minecraft:hud/gameplay/default/top_right", "gtr");
+        registerWynnFont("minecraft:hud/gameplay/default/center_left", "gcl");
+        registerWynnFont("minecraft:hud/gameplay/default/center_middle", "gcm");
+        registerWynnFont("minecraft:hud/gameplay/default/center_right", "gcr");
+        registerWynnFont("minecraft:hud/gameplay/default/bottom_left", "gbl");
+        registerWynnFont("minecraft:hud/gameplay/default/bottom_middle", "gbm");
+        registerWynnFont("minecraft:hud/gameplay/default/bottom_right", "gbr");
+        registerWynnFont("minecraft:hud/selector/default/top_left", "stl");
+        registerWynnFont("minecraft:hud/selector/default/top_middle", "stm");
+        registerWynnFont("minecraft:hud/selector/default/top_right", "str");
+        registerWynnFont("minecraft:hud/selector/default/center_left", "scl");
+        registerWynnFont("minecraft:hud/selector/default/center_middle", "scm");
+        registerWynnFont("minecraft:hud/selector/default/center_right", "scr");
+        registerWynnFont("minecraft:hud/selector/default/bottom_left", "sbl");
+        registerWynnFont("minecraft:hud/selector/default/bottom_middle", "sbm");
+        registerWynnFont("minecraft:hud/selector/default/bottom_right", "sbr");
     }
 }
