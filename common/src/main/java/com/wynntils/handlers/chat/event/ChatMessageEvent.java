@@ -61,6 +61,8 @@ public abstract class ChatMessageEvent extends Event {
         }
     }
 
+    // This is a temporary measure to workaround a regression with chat tabs,
+    // while we await the proper chat overhaul.
     public static class Discard extends ChatMessageEvent implements ICancellableEvent {
         public Discard(StyledText message, MessageType messageType, RecipientType recipientType) {
             super(message, messageType, recipientType);
