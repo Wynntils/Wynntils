@@ -9,6 +9,7 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -145,7 +146,7 @@ public final class ChatHandler extends Handler {
         RecipientType recipientType = getRecipientType(message, messageType);
 
         // Normally § codes are stripped from the log; need this to be able to debug chat formatting
-        WynntilsMod.info("[CHAT/" + recipientType + "] " + message.getString().replace("§", "&"));
+        WynntilsMod.info("[CHAT/" + recipientType + (messageType == MessageType.BACKGROUND ? "/bg" : "") + "] " + message.getString(StyleType.COMPLETE).replace("§", "&"));
 
         ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(message, messageType, recipientType);
         WynntilsMod.postEvent(receivedEvent);
