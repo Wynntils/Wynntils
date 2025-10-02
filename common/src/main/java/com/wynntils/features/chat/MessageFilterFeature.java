@@ -16,7 +16,6 @@ import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.regex.Pattern;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
