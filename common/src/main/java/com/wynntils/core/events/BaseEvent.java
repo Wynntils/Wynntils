@@ -9,6 +9,6 @@ import net.neoforged.bus.api.Event;
 /**
  * This is the base event that all Wynntils events should extend.
  */
-public class BaseEvent extends Event {
+public abstract class BaseEvent extends Event {
     protected boolean cancelRequested = false;
 }
