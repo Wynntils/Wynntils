@@ -11,7 +11,6 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import java.util.regex.Pattern;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)

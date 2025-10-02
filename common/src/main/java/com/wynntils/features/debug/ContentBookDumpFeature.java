@@ -47,7 +47,6 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.stream.Collectors;
 import net.minecraft.network.chat.Component;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 

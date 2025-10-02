@@ -53,7 +53,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class GuildModel extends Model {
