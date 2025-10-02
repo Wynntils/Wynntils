@@ -46,7 +46,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         addPriceButtons(containerScreen);
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
+    @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match e) {
         if (!sendPriceMessage) return;
         if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.PRICE_CHAT_INPUT) return;

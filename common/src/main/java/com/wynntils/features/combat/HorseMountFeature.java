@@ -81,7 +81,7 @@ public class HorseMountFeature extends Feature {
         event.requestCancel();
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST) // this needs to run before ChatRedirectFeature cancels the event
+    @SubscribeEvent
     public void onChatReceived(ChatMessageEvent.Match e) {
         cancelMountingHorse = HORSE_ERROR_MESSAGES.stream()
                 .anyMatch(msg -> e.getMessage().getString().contains(msg));

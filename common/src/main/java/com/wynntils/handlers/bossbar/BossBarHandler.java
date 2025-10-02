@@ -33,8 +33,7 @@ public final class BossBarHandler extends Handler {
         knownBars.add(trackedBar);
     }
 
-    // FixPacketBugsFeature gets in the way if receiveCanceled is not set
-    @SubscribeEvent(receiveCanceled = true)
+    @SubscribeEvent
     public void onHealthBarEvent(BossHealthUpdateEvent event) {
         ClientboundBossEventPacket packet = event.getPacket();
 

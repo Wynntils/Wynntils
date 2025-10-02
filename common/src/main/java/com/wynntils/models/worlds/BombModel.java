@@ -57,7 +57,7 @@ public final class BombModel extends Model {
         Handlers.BossBar.registerBar(InfoBar);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onChat(ChatMessageEvent.Match event) {
         StyledText message = event.getMessage();
         StyledText unwrapped = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();

@@ -53,7 +53,7 @@ public class ChatTabsFeature extends Feature {
     private final Config<Boolean> oldTabHotkey = new Config<>(false);
 
     // We do this here, and not in Services.ChatTab to not introduce a feature-model dependency.
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent
     public void onChatReceived(ChatMessageEvent.Discard event) {
         // We will send this message to every matching tab, so we can cancel it.
         event.requestCancel();
@@ -61,7 +61,7 @@ public class ChatTabsFeature extends Feature {
         Services.ChatTab.handleIncomingMessage(event.getRecipientType(), event.getMessage(), event.getMessage());
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent
     public void onClientsideChat(SystemMessageEvent.ChatReceivedEvent event) {
         if (Services.ChatTab.getFocusedTab() == null) return;
 
@@ -165,7 +165,7 @@ public class ChatTabsFeature extends Feature {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent
     public void onChatScreenSend(ChatScreenSendEvent event) {
         Services.ChatTab.sendChat(event.getInput());
         event.requestCancel();

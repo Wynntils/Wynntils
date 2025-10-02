@@ -76,7 +76,7 @@ public class ContentBookDumpFeature extends Feature {
     private DumpableActivityInfo currentlyTracking = null;
     private Queue<DumpableActivityInfo> manualTrackingRequired = new LinkedList<>();
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent
     public void onSetSpawn(SetSpawnEvent event) {
         if (currentlyTracking == null) return;
 

@@ -18,7 +18,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class AbilityRefreshRedirectFeature extends Feature {
     private static final Pattern REFRESH_PATTERN = Pattern.compile("\\[⬤\\] (.+) has been refreshed!");
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onChat(ChatMessageEvent.Match event) {
         if (event.getMessage().matches(REFRESH_PATTERN, PartStyle.StyleType.NONE)) {
             event.requestCancel();
