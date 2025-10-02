@@ -123,7 +123,7 @@ public final class PartStyle {
         //    The parent of this style's owner is responsible for keeping track of hover events.
         //    Example: §<1> -> (1st hover event)
 
-        if (type == StyleType.NONE) return "";
+        if (!type.includeBasicFormatting()) return "";
 
         StringBuilder styleString = new StringBuilder();
 
@@ -134,7 +134,7 @@ public final class PartStyle {
         // If the current color is NONE, we NEED to try to construct a difference,
         // since there will be no color formatting resetting the formatting afterwards.
         if (previousStyle != null && (color == CustomColor.NONE || previousStyle.color.equals(color))) {
-            String differenceString = this.tryConstructDifference(previousStyle, type == StyleType.INCLUDE_EVENTS);
+            String differenceString = this.tryConstructDifference(previousStyle, type.includeEvents());
 
             if (differenceString != null) {
                 styleString.append(differenceString);
@@ -173,7 +173,7 @@ public final class PartStyle {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
             }
 
-            if (type == StyleType.INCLUDE_EVENTS) {
+            if (type.includeEvents()) {
                 // 3. Click event
                 if (clickEvent != null) {
                     styleString
