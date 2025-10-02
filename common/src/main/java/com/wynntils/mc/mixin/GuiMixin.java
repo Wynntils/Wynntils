@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -119,7 +119,7 @@ public abstract class GuiMixin {
         RenderEvent.Pre event = new RenderEvent.Pre(
                 guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.CROSSHAIR);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -148,7 +148,7 @@ public abstract class GuiMixin {
                 guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.HEALTH_BAR);
         MixinHelper.post(event);
 
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

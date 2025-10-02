@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -20,7 +20,7 @@ public abstract class ChatScreenMixin {
     private void onKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         ChatScreenKeyTypedEvent event = new ChatScreenKeyTypedEvent(keyCode, scanCode, modifiers);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             cir.setReturnValue(true);
             cir.cancel();
         }
@@ -37,7 +37,7 @@ public abstract class ChatScreenMixin {
     private void onPlayerChatSend(String message, boolean addToRecentChat, CallbackInfo ci) {
         ChatScreenSendEvent event = new ChatScreenSendEvent(message, addToRecentChat);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

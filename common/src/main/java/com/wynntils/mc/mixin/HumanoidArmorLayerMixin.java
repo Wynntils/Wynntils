@@ -58,6 +58,6 @@ public abstract class HumanoidArmorLayerMixin<T extends HumanoidRenderState, A e
 
         PlayerRenderLayerEvent.Armor event = new PlayerRenderLayerEvent.Armor(playerRenderState, slot);
         MixinHelper.post(event);
-        if (event.isCanceled()) ci.cancel();
+        if (event.isCancelRequested()) ci.cancel();
     }
 }

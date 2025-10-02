@@ -49,7 +49,7 @@ public class InvertAttackKeybindsFeature extends Feature {
             case SET -> {
                 InputConstants.Key target = remapKey(event.getKey());
                 if (target != null) {
-                    event.cancelOperation();
+                    event.requestCancel();
                     KeyMapping.set(target, true);
                     activeRemappings.put(event.getKey(), target);
                 }
@@ -57,14 +57,14 @@ public class InvertAttackKeybindsFeature extends Feature {
             case UNSET -> {
                 InputConstants.Key target = activeRemappings.remove(event.getKey());
                 if (target != null) {
-                    event.cancelOperation();
+                    event.requestCancel();
                     KeyMapping.set(target, false);
                 }
             }
             case CLICK -> {
                 InputConstants.Key target = activeRemappings.get(event.getKey());
                 if (target != null) {
-                    event.cancelOperation();
+                    event.requestCancel();
                     KeyMapping.click(target);
                 }
             }

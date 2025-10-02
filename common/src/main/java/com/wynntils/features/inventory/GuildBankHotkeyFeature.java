@@ -39,7 +39,7 @@ public class GuildBankHotkeyFeature extends Feature {
         // We cannot use ContainerModel here, as it is too early in the event chain.
         StyledText title = StyledText.fromComponent(event.getTitle());
         if (title.matches(MANAGE_TITLE_PATTERN)) {
-            event.cancelOperation();
+            event.requestCancel();
 
             AbstractContainerMenu container = event.getMenuType().create(event.getContainerId(), McUtils.inventory());
             ContainerUtils.clickOnSlot(GUILD_BANK_SLOT, event.getContainerId(), 0, container.getItems());

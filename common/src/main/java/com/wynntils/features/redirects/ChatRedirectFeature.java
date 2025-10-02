@@ -157,7 +157,7 @@ public class ChatRedirectFeature extends Feature {
             Matcher matcher = message.getMatcher(pattern);
 
             if (matcher.find()) {
-                e.cancelOperation();
+                e.requestCancel();
                 if (redirector.getAction() == RedirectAction.HIDE) continue;
 
                 for (StyledText notification : redirector.getNotifications(matcher)) {

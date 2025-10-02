@@ -93,7 +93,7 @@ public abstract class ScreenMixin implements ScreenExtension {
         ScreenFocusEvent event = new ScreenFocusEvent((Screen) (Object) this, guiEventListener);
         MixinHelper.post(event);
 
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

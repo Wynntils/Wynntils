@@ -91,7 +91,7 @@ public final class ScoreboardHandler extends Handler {
         currentScoreboardName = event.getObjectiveName();
         handleUpdate();
 
-        event.cancelOperation();
+        event.requestCancel();
     }
 
     @SubscribeEvent

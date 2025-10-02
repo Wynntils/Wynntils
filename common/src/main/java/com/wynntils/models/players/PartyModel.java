@@ -142,7 +142,7 @@ public final class PartyModel extends Model {
 
         if (expectingPartyMessage) {
             if (tryParseNoPartyMessage(chatMessage) || tryParsePartyList(chatMessage)) {
-                event.cancelOperation();
+                event.requestCancel();
                 expectingPartyMessage = false;
                 return;
             }

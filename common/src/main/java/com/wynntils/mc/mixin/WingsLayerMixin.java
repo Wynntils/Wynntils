@@ -36,7 +36,7 @@ public abstract class WingsLayerMixin<T extends HumanoidRenderState, M extends E
 
         PlayerRenderLayerEvent.Elytra event = new PlayerRenderLayerEvent.Elytra(playerRenderState);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

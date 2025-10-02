@@ -42,7 +42,7 @@ public class PlayerArmorHidingFeature extends Feature {
             case HEAD -> {
                 if (!hideHelmets.get()) return;
                 if (!showCosmetics.get()) { // helmet is hidden regardless, no extra logic needed
-                    event.cancelOperation();
+                    event.requestCancel();
                     return;
                 }
 
@@ -52,22 +52,22 @@ public class PlayerArmorHidingFeature extends Feature {
                 // Only cancel if the helmet item isn't cosmetic.
                 ItemStack headItem = player.getItemBySlot(event.getSlot());
                 if (headItem.getItem() != Items.POTION) {
-                    event.cancelOperation();
+                    event.requestCancel();
                 }
             }
             case CHEST -> {
                 if (hideChestplates.get()) {
-                    event.cancelOperation();
+                    event.requestCancel();
                 }
             }
             case LEGS -> {
                 if (hideLeggings.get()) {
-                    event.cancelOperation();
+                    event.requestCancel();
                 }
             }
             case FEET -> {
                 if (hideBoots.get()) {
-                    event.cancelOperation();
+                    event.requestCancel();
                 }
             }
         }

@@ -50,7 +50,7 @@ public abstract class FabricAbstractContainerScreenMixin {
         ItemTooltipRenderEvent.Pre event =
                 new ItemTooltipRenderEvent.Pre(instance, itemStack, tooltipLines, mouseX, mouseY);
         MixinHelper.post(event);
-        if (event.isCanceled()) return;
+        if (event.isCancelRequested()) return;
 
         operation.call(
                 instance,

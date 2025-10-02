@@ -33,7 +33,7 @@ public class AutoSkipCutscenesFeature extends Feature {
         }
 
         if (shouldSkip) {
-            e.cancelOperation();
+            e.requestCancel();
 
             McUtils.mc()
                     .getConnection()

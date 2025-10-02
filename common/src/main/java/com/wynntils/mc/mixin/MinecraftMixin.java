@@ -54,7 +54,7 @@ public abstract class MinecraftMixin implements MinecraftExtension {
                 ? new ScreenClosedEvent.Pre(oldScreen.get())
                 : new ScreenOpenedEvent.Pre(screen, oldScreen.get());
         MixinHelper.postAlways(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -113,7 +113,7 @@ public abstract class MinecraftMixin implements MinecraftExtension {
         ArmSwingEvent event = new ArmSwingEvent(ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK, hand);
         MixinHelper.post(event);
 
-        return !event.isCanceled();
+        return !event.isCancelRequested();
     }
 
     @WrapMethod(method = "getMainRenderTarget()Lcom/mojang/blaze3d/pipeline/RenderTarget;")

@@ -79,24 +79,24 @@ public class MessageFilterFeature extends Feature {
         MessageType messageType = e.getMessageType();
 
         if (hideWelcome.get() && processFilter(msg, messageType, WELCOME)) {
-            e.cancelOperation();
+            e.requestCancel();
             return;
         }
 
         if (hideLevelUp.get() && processFilter(msg, messageType, LEVEL_UP)) {
-            e.cancelOperation();
+            e.requestCancel();
             return;
         }
 
         StyledText unwrapped = StyledTextUtils.unwrap(msg).stripAlignment();
 
         if (hideSystemInfo.get() && processFilter(unwrapped, messageType, SYSTEM_INFO)) {
-            e.cancelOperation();
+            e.requestCancel();
             return;
         }
 
         if (hidePartyFinder.get() && processFilter(unwrapped, messageType, PARTY_FINDER)) {
-            e.cancelOperation();
+            e.requestCancel();
             return;
         }
     }

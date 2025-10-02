@@ -78,7 +78,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
 
         // We only use set slot events to get the items,
         // but we don't want the items to be set on our custom screen
-        event.cancelOperation();
+        event.requestCancel();
 
         // Reset the empty item count,
         // set content packets mean we are on a new page
@@ -101,7 +101,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         int slot = event.getSlot();
 
         // We don't want the items to be set on our custom screen
-        event.cancelOperation();
+        event.requestCancel();
 
         ItemStack itemStack = event.getItemStack();
 

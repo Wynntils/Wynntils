@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -68,7 +68,7 @@ public abstract class AbstractContainerScreenMixin {
                 (AbstractContainerScreen<?>) (Object) this, instance, color, x, y, text);
         MixinHelper.post(event);
 
-        if (event.isCanceled()) return 0;
+        if (event.isCancelRequested()) return 0;
 
         return original.call(instance, font, event.getContainerLabel(), x, y, event.getColor(), dropShadow);
     }
@@ -94,7 +94,7 @@ public abstract class AbstractContainerScreenMixin {
                 (AbstractContainerScreen<?>) (Object) this, instance, color, x, y, text);
         MixinHelper.post(event);
 
-        if (event.isCanceled()) return 0;
+        if (event.isCancelRequested()) return 0;
 
         return original.call(instance, font, event.getInventoryLabel(), x, y, event.getColor(), dropShadow);
     }
@@ -117,7 +117,7 @@ public abstract class AbstractContainerScreenMixin {
     private void keyPressedPre(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         InventoryKeyPressEvent event = new InventoryKeyPressEvent(keyCode, scanCode, modifiers, this.hoveredSlot);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             cir.setReturnValue(true);
             cir.cancel();
         }
@@ -127,7 +127,7 @@ public abstract class AbstractContainerScreenMixin {
     private void mousePressedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         InventoryMouseClickedEvent event = new InventoryMouseClickedEvent(mouseX, mouseY, button, this.hoveredSlot);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             cir.setReturnValue(true);
             cir.cancel();
         }
@@ -161,7 +161,7 @@ public abstract class AbstractContainerScreenMixin {
     private void onCloseContainerPre(CallbackInfo ci) {
         ContainerCloseEvent.Pre event = new ContainerCloseEvent.Pre();
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

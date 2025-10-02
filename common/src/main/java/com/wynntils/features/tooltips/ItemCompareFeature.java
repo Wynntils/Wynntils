@@ -340,7 +340,7 @@ public class ItemCompareFeature extends Feature {
         tooltips.forEach(tooltip -> tooltip.offsetX(offsetX));
         hoveredX += offsetX;
 
-        event.cancelOperation();
+        event.requestCancel();
 
         changePositioner = true;
         poseStack.pushPose();

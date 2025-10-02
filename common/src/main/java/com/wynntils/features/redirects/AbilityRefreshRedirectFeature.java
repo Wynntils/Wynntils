@@ -21,7 +21,7 @@ public class AbilityRefreshRedirectFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageEvent.Match event) {
         if (event.getMessage().matches(REFRESH_PATTERN, PartStyle.StyleType.NONE)) {
-            event.cancelOperation();
+            event.requestCancel();
             Managers.Notification.queueMessage(event.getMessage());
         }
     }

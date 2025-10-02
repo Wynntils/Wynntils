@@ -261,7 +261,7 @@ public final class OverlayManager extends Manager {
                     continue;
                 }
                 if (event instanceof OperationCancelable cancellableEvent) {
-                    cancellableEvent.cancelOperation();
+                    cancellableEvent.requestCancel();
                 }
             } else {
                 if (renderInfo.renderState() != renderState) {

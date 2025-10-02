@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -23,7 +23,7 @@ public abstract class SoundManagerMixin {
     private void onSoundPlayed(SoundInstance sound, CallbackInfo ci) {
         SoundPlayedEvent event = new SoundPlayedEvent(sound);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

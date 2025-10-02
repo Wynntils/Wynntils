@@ -56,7 +56,7 @@ public class TerritoryAttackTimerOverlay extends Overlay {
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableAttackTimersOnScoreboard.get()
                 && event.getSegment().getScoreboardPart() instanceof GuildAttackScoreboardPart) {
-            event.cancelOperation();
+            event.requestCancel();
         }
     }
 

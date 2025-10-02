@@ -77,7 +77,7 @@ public class ItemFavoriteFeature extends Feature {
 
         if (lootChestCloseOverride.get() == 0) { // never allow user to close
             McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemFavorite.closingBlocked"));
-            e.cancelOperation();
+            e.requestCancel();
             return;
         }
 
@@ -87,7 +87,7 @@ public class ItemFavoriteFeature extends Feature {
         McUtils.sendErrorToClient(I18n.get(
                 "feature.wynntils.itemFavorite.closingBlockedOverride",
                 lootChestCloseOverride.get() - lootChestCloseOverrideCounter));
-        e.cancelOperation();
+        e.requestCancel();
     }
 
     @SubscribeEvent

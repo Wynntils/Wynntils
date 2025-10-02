@@ -56,7 +56,7 @@ public class ChatTabsFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatReceived(ChatMessageEvent.Discard event) {
         // We will send this message to every matching tab, so we can cancel it.
-        event.cancelOperation();
+        event.requestCancel();
 
         Services.ChatTab.handleIncomingMessage(event.getRecipientType(), event.getMessage(), event.getMessage());
     }
@@ -66,7 +66,7 @@ public class ChatTabsFeature extends Feature {
         if (Services.ChatTab.getFocusedTab() == null) return;
 
         // We will send this message to every matching tab, so we can cancel it.
-        event.cancelOperation();
+        event.requestCancel();
 
         boolean isRenderThread = McUtils.mc().isSameThread();
         if (isRenderThread) {
@@ -104,7 +104,7 @@ public class ChatTabsFeature extends Feature {
 
         // These should not be focused
         if (guiEventListener instanceof ChatTabButton || guiEventListener instanceof ChatTabSettingsButton) {
-            event.cancelOperation();
+            event.requestCancel();
         }
     }
 
@@ -151,7 +151,7 @@ public class ChatTabsFeature extends Feature {
             if (newTab == -1) return;
 
             Services.ChatTab.setFocusedTab(newTab);
-            event.cancelOperation();
+            event.requestCancel();
             return;
         }
 
@@ -160,7 +160,7 @@ public class ChatTabsFeature extends Feature {
             if (newTab != null) {
                 Services.ChatTab.setFocusedTab(newTab);
             }
-            event.cancelOperation();
+            event.requestCancel();
             return;
         }
     }
@@ -168,7 +168,7 @@ public class ChatTabsFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatScreenSend(ChatScreenSendEvent event) {
         Services.ChatTab.sendChat(event.getInput());
-        event.cancelOperation();
+        event.requestCancel();
     }
 
     @Override

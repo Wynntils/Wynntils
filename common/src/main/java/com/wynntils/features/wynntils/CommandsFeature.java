@@ -19,7 +19,7 @@ public class CommandsFeature extends Feature {
         String command = e.getCommand();
 
         if (Managers.Command.handleCommand(command)) {
-            e.cancelOperation();
+            e.requestCancel();
         }
     }
 }

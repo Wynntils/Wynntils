@@ -125,7 +125,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void onChatPre(String string, CallbackInfo ci) {
         ChatSentEvent event = new ChatSentEvent(string);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -134,7 +134,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void onSignedCommandPre(String string, CallbackInfo ci) {
         CommandSentEvent event = new CommandSentEvent(string, true);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -143,7 +143,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void onUnsignedCommandPre(String command, CallbackInfoReturnable<Boolean> cir) {
         CommandSentEvent event = new CommandSentEvent(command, false);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             // Return true here, to signal to MC that we handled the command.
             cir.setReturnValue(true);
             cir.cancel();
@@ -236,7 +236,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         MenuEvent.MenuOpenedEvent.Pre event =
                 new MenuEvent.MenuOpenedEvent.Pre(packet.getType(), packet.getTitle(), packet.getContainerId());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -261,7 +261,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 
         MenuEvent.MenuClosedEvent event = new MenuEvent.MenuClosedEvent(packet.getContainerId());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -277,7 +277,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         ContainerSetContentEvent.Pre event = new ContainerSetContentEvent.Pre(
                 packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
 
@@ -318,7 +318,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
                 packet.getContainerId(), packet.getStateId(), packet.getSlot(), packet.getItem());
         MixinHelper.post(event);
 
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -343,7 +343,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         SetPlayerTeamEvent event =
                 new SetPlayerTeamEvent(((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -358,7 +358,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 
         SetEntityPassengersEvent event = new SetEntityPassengersEvent(packet.getVehicle());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -372,7 +372,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 
         SetSpawnEvent event = new SetSpawnEvent(packet.getPos());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
 
             // Signal loading complete to the loading screen,
@@ -392,7 +392,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 
         TitleSetTextEvent event = new TitleSetTextEvent(packet.text());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -406,7 +406,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 
         SubtitleSetTextEvent event = new SubtitleSetTextEvent(packet.text());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -455,7 +455,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         ScoreboardSetDisplayObjectiveEvent event =
                 new ScoreboardSetDisplayObjectiveEvent(packet.getSlot(), packet.getObjectiveName());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -563,7 +563,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
                 new LocalSoundEvent.Client(packet.getSound().value(), packet.getSource());
 
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

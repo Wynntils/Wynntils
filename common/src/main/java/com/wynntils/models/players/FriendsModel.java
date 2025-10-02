@@ -132,14 +132,14 @@ public final class FriendsModel extends Model {
 
         if (friendMessageStatus == ListStatus.EXPECTING) {
             if (tryParseFriendList(unformatted) || tryParseNoFriendList(styledText)) {
-                event.cancelOperation();
+                event.requestCancel();
                 friendMessageStatus = ListStatus.IDLE;
                 return;
             }
 
             // Skip first message of two, but still expect more messages
             if (styledText.getMatcher(FRIEND_LIST_FAIL_1).matches()) {
-                event.cancelOperation();
+                event.requestCancel();
                 return;
             }
         }
@@ -150,7 +150,7 @@ public final class FriendsModel extends Model {
             // When we detect the first message indicating the start of the friends list, we set a flag
             onlineMessageStatus = ListStatus.PROCESSING;
             onlineFriends.clear();
-            event.cancelOperation();
+            event.requestCancel();
             return;
         }
         if (onlineMessageStatus == ListStatus.PROCESSING) {
@@ -163,7 +163,7 @@ public final class FriendsModel extends Model {
 
                 onlineFriends.put(username, server);
                 WynntilsMod.info("Friend " + username + " is online on " + server);
-                event.cancelOperation();
+                event.requestCancel();
                 return;
             } else {
                 onlineMessageStatus = ListStatus.IDLE;

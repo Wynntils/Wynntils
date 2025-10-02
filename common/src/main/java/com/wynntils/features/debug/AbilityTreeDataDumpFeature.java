@@ -42,7 +42,7 @@ public class AbilityTreeDataDumpFeature extends Feature {
 
         if (abilityTreeItem.isEmpty()) return;
 
-        event.cancelOperation();
+        event.requestCancel();
         McUtils.player().closeContainer();
 
         // Wait for the container to close

@@ -38,13 +38,13 @@ public class WybelSoundFeature extends Feature {
         if (message.contains("squeak")) {
             McUtils.playSoundAmbient(WYBEL_SQUEAK_SOUND);
             if (hideText.get()) {
-                event.cancelOperation();
+                event.requestCancel();
             }
         }
         if (message.contains("purr")) {
             McUtils.playSoundAmbient(WYBEL_PURR_SOUND);
             if (hideText.get()) {
-                event.cancelOperation();
+                event.requestCancel();
             }
         }
     }

@@ -43,7 +43,7 @@ public class StreamerModeOverlay extends TextOverlay {
         if (!event.getTrackedBar().getClass().equals(StreamerModeBar.class)) return;
 
         if (!shouldDisplayOriginal.get()) {
-            event.cancelOperation();
+            event.requestCancel();
         }
     }
 

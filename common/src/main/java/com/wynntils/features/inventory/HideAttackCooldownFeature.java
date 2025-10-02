@@ -16,7 +16,7 @@ public class HideAttackCooldownFeature extends Feature {
     @SubscribeEvent
     public void onCooldownRender(ItemCooldownRenderEvent event) {
         if (ItemUtils.isWeapon(event.getItemStack())) {
-            event.cancelOperation();
+            event.requestCancel();
         }
     }
 }

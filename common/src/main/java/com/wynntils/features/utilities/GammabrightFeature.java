@@ -27,7 +27,7 @@ public class GammabrightFeature extends Feature {
     @SubscribeEvent
     public void onGetDimensionAmbientLight(DimensionAmbientLightEvent event) {
         if (gammabrightEnabled.get()) {
-            event.cancelOperation();
+            event.requestCancel();
         }
     }
 

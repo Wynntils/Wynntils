@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -22,7 +22,7 @@ public abstract class KeyboardHandlerMixin {
     private void keyPressPre(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
         KeyInputEvent event = new KeyInputEvent(key, scanCode, action, modifiers);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -39,7 +39,7 @@ public abstract class KeyboardHandlerMixin {
                 new KeyMappingEvent(key, held ? KeyMappingEvent.Operation.SET : KeyMappingEvent.Operation.UNSET);
         MixinHelper.post(event);
 
-        if (!event.isCanceled()) {
+        if (!event.isCancelRequested()) {
             original.call(key, held);
         }
     }
@@ -55,7 +55,7 @@ public abstract class KeyboardHandlerMixin {
         KeyMappingEvent event = new KeyMappingEvent(key, KeyMappingEvent.Operation.CLICK);
         MixinHelper.post(event);
 
-        if (!event.isCanceled()) {
+        if (!event.isCancelRequested()) {
             original.call(key);
         }
     }

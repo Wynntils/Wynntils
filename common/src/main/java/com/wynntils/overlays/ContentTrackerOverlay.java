@@ -76,7 +76,7 @@ public class ContentTrackerOverlay extends Overlay {
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableTrackerOnScoreboard.get()
                 && event.getSegment().getScoreboardPart() instanceof ActivityTrackerScoreboardPart) {
-            event.cancelOperation();
+            event.requestCancel();
         }
     }
 

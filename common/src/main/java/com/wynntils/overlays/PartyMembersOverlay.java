@@ -133,7 +133,7 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disablePartyMembersOnScoreboard.get()
                 && event.getSegment().getScoreboardPart() instanceof PartyScoreboardPart) {
-            event.cancelOperation();
+            event.requestCancel();
         }
     }
 

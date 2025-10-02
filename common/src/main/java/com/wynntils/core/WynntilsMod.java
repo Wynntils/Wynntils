@@ -83,7 +83,7 @@ public final class WynntilsMod {
     public static boolean postEvent(BaseEvent event) {
         try {
             eventBus.post(event);
-            return event instanceof OperationCancelable cancellableEvent && cancellableEvent.isCanceled();
+            return event instanceof OperationCancelable cancellableEvent && cancellableEvent.isCancelRequested();
         } catch (Throwable t) {
             handleExceptionInEventListener(t, event);
             return false;

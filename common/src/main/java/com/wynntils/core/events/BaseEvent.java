@@ -6,6 +6,9 @@ package com.wynntils.core.events;
 
 import net.neoforged.bus.api.Event;
 
+/**
+ * This is the base event that all Wynntils events should extend.
+ */
 public class BaseEvent extends Event {
-    protected boolean isOperationCanceled = false;
+    protected boolean cancelRequested = false;
 }

@@ -72,7 +72,7 @@ public class CustomPlayerListOverlay extends Overlay {
     @SubscribeEvent
     public void onRender(RenderEvent.Pre event) {
         if (event.getType() == RenderEvent.ElementType.PLAYER_TAB_LIST) {
-            event.cancelOperation();
+            event.requestCancel();
         }
     }
 

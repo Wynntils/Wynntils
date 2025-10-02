@@ -46,8 +46,8 @@ public final class ShamanMaskModel extends Model {
             ShamanMaskTitlePacketEvent maskEvent = new ShamanMaskTitlePacketEvent();
             WynntilsMod.postEvent(maskEvent);
 
-            if (maskEvent.isCanceled()) {
-                event.cancelOperation();
+            if (maskEvent.isCancelRequested()) {
+                event.requestCancel();
             }
         }
     }
@@ -64,8 +64,8 @@ public final class ShamanMaskModel extends Model {
             ShamanMaskTitlePacketEvent maskEvent = new ShamanMaskTitlePacketEvent();
             WynntilsMod.postEvent(maskEvent);
 
-            if (maskEvent.isCanceled()) {
-                event.cancelOperation();
+            if (maskEvent.isCancelRequested()) {
+                event.requestCancel();
             }
         }
     }

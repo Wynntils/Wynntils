@@ -56,7 +56,7 @@ public abstract class CapeLayerMixin {
             CallbackInfo ci) {
         PlayerRenderLayerEvent.Cape event = new PlayerRenderLayerEvent.Cape(playerRenderState);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

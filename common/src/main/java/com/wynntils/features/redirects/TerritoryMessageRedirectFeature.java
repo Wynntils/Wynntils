@@ -27,7 +27,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
         Matcher matcher = styledText.getMatcher(TERRITORY_MESSAGE_PATTERN);
         if (!matcher.matches()) return;
 
-        event.cancelOperation();
+        event.requestCancel();
 
         String rawDirection = matcher.group(1);
         String rawTerritoryName = matcher.group(2);
@@ -54,7 +54,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
     @SubscribeEvent
     public void onChat(ChatMessageEvent.Match event) {
         if (event.getMessage().getMatcher(TERRITORY_MESSAGE_PATTERN).matches()) {
-            event.cancelOperation();
+            event.requestCancel();
         }
     }
 }

@@ -21,7 +21,7 @@ public class FixCastingSpellsFromInventoryFeature extends Feature {
     public void onSetSlot(ArmSwingEvent event) {
         if (event.getActionContext() == ArmSwingEvent.ArmSwingContext.DROP_ITEM_FROM_INVENTORY_SCREEN
                 && event.getHand() == InteractionHand.MAIN_HAND) {
-            event.cancelOperation();
+            event.requestCancel();
         }
     }
 }

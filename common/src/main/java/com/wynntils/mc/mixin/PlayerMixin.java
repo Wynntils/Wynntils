@@ -25,6 +25,6 @@ public abstract class PlayerMixin {
         ArmSwingEvent event = new ArmSwingEvent(ArmSwingEvent.ArmSwingContext.DROP_ITEM_FROM_INVENTORY_SCREEN, hand);
         MixinHelper.post(event);
 
-        return !event.isCanceled();
+        return !event.isCancelRequested();
     }
 }

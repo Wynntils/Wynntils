@@ -39,7 +39,7 @@ public class CommandAliasesFeature extends Feature {
 
         for (CommandAlias commandAlias : aliases.get()) {
             if (commandAlias.aliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
-                e.cancelOperation();
+                e.requestCancel();
                 Handlers.Command.sendCommandImmediately(commandAlias.originalCommand());
                 break;
             }

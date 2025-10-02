@@ -72,9 +72,9 @@ public final class BossBarHandler extends Handler {
             BossBarAddedEvent barAddEvent = new BossBarAddedEvent(trackedBar);
             WynntilsMod.postEvent(barAddEvent);
 
-            if (barAddEvent.isCanceled()) {
+            if (barAddEvent.isCancelRequested()) {
                 trackedBar.setRendered(false);
-                event.cancelOperation();
+                event.requestCancel();
             } else {
                 trackedBar.setRendered(true);
             }
@@ -90,7 +90,7 @@ public final class BossBarHandler extends Handler {
 
             if (trackedBar != null) {
                 if (!trackedBar.isRendered()) {
-                    event.cancelOperation();
+                    event.requestCancel();
                 }
 
                 consumer.accept(trackedBar);

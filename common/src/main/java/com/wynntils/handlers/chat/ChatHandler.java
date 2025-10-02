@@ -175,7 +175,7 @@ public final class ChatHandler extends Handler {
         StyledText updatedMessage = postChatLine(styledText, MessageType.FOREGROUND);
 
         if (updatedMessage == null) {
-            event.cancelOperation();
+            event.requestCancel();
         } else if (!updatedMessage.equals(styledText)) {
             event.setMessage(updatedMessage.getComponent());
         }
@@ -211,7 +211,7 @@ public final class ChatHandler extends Handler {
             }
 
             // For all those cases, we will collect the lines and thus need to cancel the event
-            event.cancelOperation();
+            event.requestCancel();
         } else {
             if (chatScreenTicks != 0) {
                 // We got a normal line while collecting chat screen lines. This means the screen is
@@ -546,7 +546,7 @@ public final class ChatHandler extends Handler {
 
         ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(styledText, messageType, recipientType);
         WynntilsMod.postEvent(receivedEvent);
-        if (receivedEvent.isCanceled()) return null;
+        if (receivedEvent.isCancelRequested()) return null;
 
         ChatMessageEvent.Edit rewriteEvent = new ChatMessageEvent.Edit(styledText, messageType, recipientType);
         WynntilsMod.postEvent(rewriteEvent);
@@ -554,7 +554,7 @@ public final class ChatHandler extends Handler {
         ChatMessageEvent.Discard discardEvent =
                 new ChatMessageEvent.Discard(rewriteEvent.getMessage(), messageType, recipientType);
         WynntilsMod.postEvent(discardEvent);
-        if (discardEvent.isCanceled()) return null;
+        if (discardEvent.isCancelRequested()) return null;
 
         return rewriteEvent.getMessage();
     }

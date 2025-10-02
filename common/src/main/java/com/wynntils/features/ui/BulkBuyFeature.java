@@ -145,7 +145,7 @@ public class BulkBuyFeature extends Feature {
         }
         bulkBuyWidget.setBulkBoughtItem(new BulkBoughtItem(bulkBoughtItemStack, bulkBoughtAmount, bulkBoughtPrice));
 
-        e.cancelOperation();
+        e.requestCancel();
     }
 
     @SubscribeEvent

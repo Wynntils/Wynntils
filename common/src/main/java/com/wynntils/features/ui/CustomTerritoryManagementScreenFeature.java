@@ -134,12 +134,12 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
         // We cannot use ContainerModel here, as it is too early in the event chain.
         StyledText title = StyledText.fromComponent(event.getTitle());
         if (title.matches(MANAGE_TITLE_PATTERN)) {
-            event.cancelOperation();
+            event.requestCancel();
 
             AbstractContainerMenu container = event.getMenuType().create(event.getContainerId(), McUtils.inventory());
             ContainerUtils.clickOnSlot(TERRITORY_MANAGEMENT_SLOT, event.getContainerId(), 0, container.getItems());
         } else if (title.equalsString(Models.Container.CHARACTER_INFO_NAME)) {
-            event.cancelOperation();
+            event.requestCancel();
 
             // We still need to do a second click to open the territory management screen
             openTerritoryManagement = true;

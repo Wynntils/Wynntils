@@ -281,7 +281,7 @@ public class ValuablesProtectionFeature extends Feature {
             return;
         }
 
-        e.cancelOperation();
+        e.requestCancel();
         for (int i = 0; i < 12; i += 6) {
             Managers.TickScheduler.scheduleLater(
                     () -> {

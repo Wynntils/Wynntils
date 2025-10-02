@@ -21,7 +21,7 @@ public class TradeMarketPriceConversionFeature extends Feature {
 
         String price = Models.Emerald.convertEmeraldPrice(event.getMessage());
         if (!price.isEmpty()) {
-            event.cancelOperation();
+            event.requestCancel();
             McUtils.sendChat(price);
         }
     }

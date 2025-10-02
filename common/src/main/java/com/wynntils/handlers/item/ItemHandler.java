@@ -205,7 +205,7 @@ public final class ItemHandler extends Handler {
             // Notify about the new name
             ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName, newName);
             WynntilsMod.postEvent(event);
-            if (event.isCanceled()) {
+            if (event.isCancelRequested()) {
                 newItem.set(DataComponents.CUSTOM_NAME, existingItem.getHoverName());
             }
         } else {
