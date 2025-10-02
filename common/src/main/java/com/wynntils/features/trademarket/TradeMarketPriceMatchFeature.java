@@ -26,7 +26,6 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TRADEMARKET)
@@ -46,7 +45,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         addPriceButtons(containerScreen);
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
+    @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match e) {
         if (!sendPriceMessage) return;
         if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.PRICE_CHAT_INPUT) return;
@@ -54,7 +53,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         WynntilsMod.info("Trying to set trade market price to " + priceToSend);
 
         McUtils.sendChat(String.valueOf(priceToSend));
-        e.setCanceled(true);
+        e.cancelChat();
 
         sendPriceMessage = false;
     }

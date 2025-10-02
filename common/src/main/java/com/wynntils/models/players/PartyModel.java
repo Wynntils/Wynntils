@@ -33,7 +33,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 /**
@@ -132,7 +131,7 @@ public final class PartyModel extends Model {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onChatReceived(ChatMessageEvent.Match event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
@@ -142,7 +141,7 @@ public final class PartyModel extends Model {
 
         if (expectingPartyMessage) {
             if (tryParseNoPartyMessage(chatMessage) || tryParsePartyList(chatMessage)) {
-                event.setCanceled(true);
+                event.cancelChat();
                 expectingPartyMessage = false;
                 return;
             }

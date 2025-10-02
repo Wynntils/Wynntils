@@ -54,7 +54,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
     @SubscribeEvent
     public void onChat(ChatMessageEvent.Match event) {
         if (event.getMessage().getMatcher(TERRITORY_MESSAGE_PATTERN).matches()) {
-            event.setCanceled(true);
+            event.cancelChat();
         }
     }
 }

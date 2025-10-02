@@ -74,7 +74,7 @@ public class TranslationFeature extends Feature {
                     McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(messageToSend.getComponent()));
                 });
         if (!keepOriginal.get()) {
-            e.setCanceled(true);
+            e.cancelChat();
         }
     }
 
