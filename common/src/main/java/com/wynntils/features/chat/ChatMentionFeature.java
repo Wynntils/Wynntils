@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.colors.ColorChatFormatting;
@@ -93,17 +94,17 @@ public class ChatMentionFeature extends Feature {
             // We have reached the end of the message content,
             // we don't want to highlight our own name in our own message
             if (END_OF_HEADER_PATTERN
-                    .matcher(part.getString(null, PartStyle.StyleType.NONE))
+                    .matcher(part.getString(null, StyleType.NONE))
                     .matches()) {
                 return IterationDecision.BREAK;
             }
 
             StyledTextPart partToReplace = part;
             for (Pattern pattern : mentionPatterns) {
-                Matcher matcher = pattern.matcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
+                Matcher matcher = pattern.matcher(partToReplace.getString(null, StyleType.NONE));
 
                 while (matcher.find()) {
-                    String match = partToReplace.getString(null, PartStyle.StyleType.NONE);
+                    String match = partToReplace.getString(null, StyleType.NONE);
 
                     String firstPart = match.substring(0, matcher.start());
                     String mentionPart = match.substring(matcher.start(), matcher.end());

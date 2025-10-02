@@ -7,6 +7,7 @@ package com.wynntils.core.text;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
@@ -309,7 +310,7 @@ public final class StyledTextPart {
         return parts;
     }
 
-    public String getString(PartStyle previousStyle, PartStyle.StyleType type) {
+    public String getString(PartStyle previousStyle, StyleType type) {
         return style.asString(previousStyle, type) + text;
     }
 

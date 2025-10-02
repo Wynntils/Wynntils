@@ -7,8 +7,8 @@ package com.wynntils.screens.territorymanagement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.wrappedscreen.WrappedScreenHolder;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -235,7 +235,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         // Update the selection mode
         selectionMode = StyledText.fromComponent(
                         wrappedScreen.getWrappedScreenInfo().screen().getTitle())
-                .equalsString(SELECT_TERRITORIES_TITLE, PartStyle.StyleType.NONE);
+                .equalsString(SELECT_TERRITORIES_TITLE, StyleType.NONE);
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
@@ -194,15 +195,15 @@ public class ChatItemFeature extends Feature {
     }
 
     private void decodeChatEncoding(List<StyledTextPart> changes, StyledTextPart partToReplace) {
-        Matcher matcher = Models.ItemEncoding.getEncodedDataPattern()
-                .matcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
+        Matcher matcher =
+                Models.ItemEncoding.getEncodedDataPattern().matcher(partToReplace.getString(null, StyleType.NONE));
 
         while (matcher.find()) {
             String itemName = matcher.group("name");
             EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group("data"));
             ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
 
-            String unformattedString = partToReplace.getString(null, PartStyle.StyleType.NONE);
+            String unformattedString = partToReplace.getString(null, StyleType.NONE);
 
             String firstPart = unformattedString.substring(0, matcher.start());
             String lastPart = unformattedString.substring(matcher.end());

@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.text;
 
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.colors.CustomColor;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -518,11 +519,5 @@ public final class PartStyle {
     @Override
     public int hashCode() {
         return Objects.hash(color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent, font);
-    }
-
-    public enum StyleType {
-        INCLUDE_EVENTS, // Includes click and hover events
-        DEFAULT, // The most minimal way to represent a style
-        NONE // No styling
     }
 }
