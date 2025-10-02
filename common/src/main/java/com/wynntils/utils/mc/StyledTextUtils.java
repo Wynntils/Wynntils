@@ -80,7 +80,7 @@ public final class StyledTextUtils {
 
     public static List<StyledText> stripEventsAndLinks(List<StyledText> lines) {
         List<StyledText> linesWithoutEvents = lines.stream()
-                .map(s -> s.getString())
+                .map(s -> s.getString(StyleType.INCLUDE_FONTS))
                 .map(str -> StyledText.fromString(str))
                 .toList();
         return linesWithoutEvents;
