@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -8,10 +8,14 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.AddEntityLookupEvent;
+import com.wynntils.mc.event.PlayerInfoUpdateEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.scores.PlayerTeam;
 import net.neoforged.bus.api.EventPriority;
@@ -60,5 +64,21 @@ public class FixPacketBugsFeature extends Feature {
         if (event.getEntityMap().containsKey(event.getUUID())) {
             event.setCanceled(true);
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onPlayerInfoUpdate(PlayerInfoUpdateEvent event) {
+        // Work around bug in Wynncraft that causes a lot of warnings in Vanilla
+        // "Ignoring player info update for unknown player ..."
+        ClientPacketListener connection = McUtils.mc().getConnection();
+
+        // Just keep entries for existing players or new players being added in this packet
+        List<ClientboundPlayerInfoUpdatePacket.Entry> replacementEntries = event.getEntries().stream()
+                .filter(entry -> (connection.getPlayerInfo(entry.profileId()) != null)
+                        || event.getNewEntries().stream()
+                                .anyMatch(newEntry -> newEntry.profileId().equals(entry.profileId())))
+                .toList();
+        if (replacementEntries.size() == event.getEntries().size()) return;
+        event.setEntries(replacementEntries);
     }
 }
