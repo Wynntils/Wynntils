@@ -320,7 +320,8 @@ public final class ChatPageDetector {
         return replacements;
     }
 
-    private static void processChatComponentReplacements(ChatComponent chatComponent, List<Pair<StyledText, StyledText>> replacements) {
+    private static void processChatComponentReplacements(
+            ChatComponent chatComponent, List<Pair<StyledText, StyledText>> replacements) {
         List<GuiMessage> allMessages = chatComponent.allMessages;
         List<Pair<StyledText, StyledText>> remainingReplacements = new LinkedList<>(replacements);
 
