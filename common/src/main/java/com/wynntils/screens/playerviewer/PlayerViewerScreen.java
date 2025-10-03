@@ -33,6 +33,8 @@ import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -58,6 +60,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     private final PlayerTeam oldTeam;
     private final List<PlayerInteractionButton> interactionButtons = new ArrayList<>();
 
+    private Button settingsButton;
     private FriendButton friendButton;
     private InfoButton infoButton;
     private PartyButton partyButton;
@@ -214,6 +217,15 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                     McUtils.mc().setScreen(new ChatScreen("/msg " + playerName + " "));
                 }));
 
+        settingsButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.playerViewer.sharingSettings"), (b) -> {
+                            McUtils.mc().setScreen(GearSharingSettingsScreen.create(this));
+                        })
+                .pos(leftPos + 1, topPos - 21)
+                .size(Texture.PLAYER_VIEWER_BACKGROUND.width() - 23, 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.playerViewer.sharingSettingsTooltip")))
+                .build();
+
         if (noGear) {
             infoButton = new InfoButton(
                     leftPos + Texture.PLAYER_VIEWER_BACKGROUND.width() - 21,
@@ -222,10 +234,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                             .append(Component.translatable("screens.wynntils.playerViewer.helpTitle")
                                     .withStyle(ChatFormatting.UNDERLINE))
                             .append(Component.literal("\n"))
-                            .append(Component.translatable("screens.wynntils.playerViewer.help1")
-                                    .withStyle(ChatFormatting.GRAY))
-                            .append(Component.literal("\n"))
-                            .append(Component.translatable("screens.wynntils.playerViewer.help2")
+                            .append(Component.translatable("screens.wynntils.playerViewer.help")
                                     .withStyle(ChatFormatting.GRAY)));
         }
     }
@@ -239,6 +248,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
         interactionButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
+        settingsButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
         if (infoButton == null) return;
 
@@ -287,7 +297,8 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                 return true;
             }
         }
-        return false;
+
+        return settingsButton.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override

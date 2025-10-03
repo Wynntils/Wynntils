@@ -9,6 +9,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -27,11 +29,13 @@ import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.athena.event.AthenaLoginEvent;
 import com.wynntils.services.hades.event.HadesEvent;
+import com.wynntils.services.hades.type.GearShareOptions;
 import com.wynntils.services.hades.type.PlayerStatus;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.McUtils;
@@ -72,6 +76,9 @@ public final class HadesService extends Service {
     private int tickCountUntilUpdate = 0;
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
+
+    @Persisted
+    private final Storage<GearShareOptions> gearShareOptions = new Storage<>(new GearShareOptions());
 
     // Original WynnItem cache to avoid unnecessary encoding
     private NavigableMap<InventoryArmor, WynnItem> armorCache = new TreeMap<>();
@@ -244,7 +251,7 @@ public final class HadesService extends Service {
     @SubscribeEvent
     public void onSetSlot(SetSlotEvent.Post event) {
         if (!event.getContainer().equals(McUtils.inventory())) return;
-        if (Managers.Feature.getFeatureInstance(HadesFeature.class).shareGear.get()) {
+        if (gearShareOptions.get().shouldShare()) {
             for (InventoryAccessory accessory : InventoryAccessory.values()) {
                 if (event.getSlot() == accessory.getSlot()) {
                     updateAccessoryCache(accessory);
@@ -267,7 +274,7 @@ public final class HadesService extends Service {
 
     @SubscribeEvent
     public void onSwappedItem(ChangeCarriedItemEvent event) {
-        if (Managers.Feature.getFeatureInstance(HadesFeature.class).shareGear.get()) {
+        if (gearShareOptions.get().shouldShare()) {
             updateHeldItemCache();
         }
     }
@@ -297,9 +304,7 @@ public final class HadesService extends Service {
 
             PlayerStatus newStatus;
 
-            if (Managers.Feature.getFeatureInstance(HadesFeature.class)
-                    .shareGear
-                    .get()) {
+            if (gearShareOptions.get().shouldShare()) {
                 newStatus = new PlayerStatus(
                         pX,
                         pY,
@@ -371,10 +376,18 @@ public final class HadesService extends Service {
         userRegistry.getHadesUserMap().clear();
     }
 
-    public void refreshGear() {
+    public GearShareOptions getGearShareOptions() {
+        return gearShareOptions.get();
+    }
+
+    public void saveGearShareOptions() {
+        gearShareOptions.touched();
+    }
+
+    private void refreshGear() {
         if (McUtils.player() == null) return;
 
-        if (Managers.Feature.getFeatureInstance(HadesFeature.class).shareGear.get()) {
+        if (gearShareOptions.get().shouldShare()) {
             for (InventoryArmor inventoryArmor : InventoryArmor.values()) {
                 updateArmorCache(inventoryArmor);
             }
@@ -384,16 +397,14 @@ public final class HadesService extends Service {
             }
 
             updateHeldItemCache();
+        } else {
+            armor.clear();
+            armorCache.clear();
+            accessories.clear();
+            accessoriesCache.clear();
+            heldItem = "";
+            heldItemCache = null;
         }
-    }
-
-    public void clearGearCache() {
-        armor.clear();
-        armorCache.clear();
-        accessories.clear();
-        accessoriesCache.clear();
-        heldItem = "";
-        heldItemCache = null;
     }
 
     private boolean isConnected() {
@@ -404,12 +415,14 @@ public final class HadesService extends Service {
         Optional<WynnItem> armorItemOpt =
                 Models.Item.getWynnItem(McUtils.inventory().armor.get(inventoryArmor.getArmorSlot()));
 
-        if (armorItemOpt.isEmpty()) {
+        if (armorItemOpt.isEmpty()
+                || !(armorItemOpt.get() instanceof CraftedGearItem
+                        && gearShareOptions.get().shareCraftedItems())) {
             armor.remove(inventoryArmor);
             armorCache.remove(inventoryArmor);
-            return;
-        } else if (!armorCache.containsKey(inventoryArmor)
-                || !armorCache.get(inventoryArmor).equals(armorItemOpt.get())) {
+        } else if (gearShareOptions.get().shouldShareArmor(inventoryArmor)
+                && (!armorCache.containsKey(inventoryArmor)
+                        || !armorCache.get(inventoryArmor).equals(armorItemOpt.get()))) {
             this.armor.put(inventoryArmor, encodeItem(armorItemOpt));
             this.armorCache.put(inventoryArmor, armorItemOpt.get());
         }
@@ -419,12 +432,14 @@ public final class HadesService extends Service {
         Optional<WynnItem> accessoryItemOpt =
                 Models.Item.getWynnItem(McUtils.inventory().getItem(inventoryAccessory.getSlot()));
 
-        if (accessoryItemOpt.isEmpty()) {
+        if (accessoryItemOpt.isEmpty()
+                || !(accessoryItemOpt.get() instanceof CraftedGearItem
+                        && gearShareOptions.get().shareCraftedItems())) {
             accessories.remove(inventoryAccessory);
             accessoriesCache.remove(inventoryAccessory);
-            return;
-        } else if (!accessoriesCache.containsKey(inventoryAccessory)
-                || !accessoriesCache.get(inventoryAccessory).equals(accessoryItemOpt.get())) {
+        } else if (gearShareOptions.get().shouldShareAccessory(inventoryAccessory)
+                && (!accessoriesCache.containsKey(inventoryAccessory)
+                        || !accessoriesCache.get(inventoryAccessory).equals(accessoryItemOpt.get()))) {
             this.accessories.put(inventoryAccessory, encodeItem(accessoryItemOpt));
             this.accessoriesCache.put(inventoryAccessory, accessoryItemOpt.get());
         }
@@ -434,10 +449,13 @@ public final class HadesService extends Service {
         Optional<WynnItem> heldItemOpt =
                 Models.Item.getWynnItem(McUtils.player().getMainHandItem());
 
-        if (heldItemOpt.isEmpty()) {
+        if (heldItemOpt.isEmpty()
+                || !(heldItemOpt.get() instanceof CraftedGearItem
+                        && gearShareOptions.get().shareCraftedItems())) {
             heldItem = "";
             heldItemCache = null;
-        } else if (heldItemCache == null || !heldItemCache.equals(heldItemOpt.get())) {
+        } else if (gearShareOptions.get().shouldShareHeldItem() && heldItemCache == null
+                || !heldItemCache.equals(heldItemOpt.get())) {
             heldItem = encodeItem(heldItemOpt);
             heldItemCache = heldItemOpt.get();
         }
@@ -449,7 +467,14 @@ public final class HadesService extends Service {
                     Models.ItemEncoding.encodeItem(item.get(), HADES_ENCODING_SETTINGS);
 
             if (!errorOrEncodedByteBuffer.hasError()) {
-                return errorOrEncodedByteBuffer.getValue().toBase64String();
+                String itemName = "";
+
+                if (gearShareOptions.get().shareCraftedNames()
+                        && item.get() instanceof CraftedGearItem craftedGearItem) {
+                    itemName = " \"" + craftedGearItem.getName() + "\"";
+                }
+
+                return errorOrEncodedByteBuffer.getValue().toUtf16String() + itemName;
             }
         }
 
