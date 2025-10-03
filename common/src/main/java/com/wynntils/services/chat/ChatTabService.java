@@ -34,7 +34,9 @@ public final class ChatTabService extends Service {
     private ChatComponent vanillaChatComponent;
     private WrappingChatComponent wrappingChatComponent;
 
-    private final Map<ChatTab, ChatTabData> chatTabs = new HashMap<>();
+    private final Map<ChatTab, ChatTabData> tabDataMap = new HashMap<>();
+    // This is a copy of the config in ChatTabsFeature, stored there for persistence.
+    private final List<ChatTab> chatTabs = new ArrayList<>();
 
     public ChatTabService() {
         super(List.of());
@@ -42,9 +44,7 @@ public final class ChatTabService extends Service {
 
     // region Chat Tab list and index
     public List<ChatTab> getChatTabs() {
-        return Managers.Feature.getFeatureInstance(ChatTabsFeature.class)
-                .chatTabs
-                .get();
+        return chatTabs;
     }
 
     public ChatTab getTab(int index) {
@@ -72,22 +72,22 @@ public final class ChatTabService extends Service {
         getChatTabs().add(insertIndex, chatTab);
         Managers.Feature.getFeatureInstance(ChatTabsFeature.class).chatTabs.touched();
 
-        chatTabs.put(chatTab, new ChatTabData(new ChatComponent(McUtils.mc()), false, chatTab.customRegexString()));
+        tabDataMap.put(chatTab, new ChatTabData(new ChatComponent(McUtils.mc()), false, chatTab.customRegexString()));
     }
 
     public void removeTab(ChatTab chatTab) {
         getChatTabs().remove(chatTab);
         Managers.Feature.getFeatureInstance(ChatTabsFeature.class).chatTabs.touched();
 
-        chatTabs.remove(chatTab);
+        tabDataMap.remove(chatTab);
     }
 
     public ChatComponent getChatComponent(ChatTab tab) {
-        return chatTabs.get(tab).getChatComponent();
+        return tabDataMap.get(tab).getChatComponent();
     }
 
     public boolean hasUnreadMessages(ChatTab tab) {
-        return chatTabs.get(tab).hasUnreadMessages();
+        return tabDataMap.get(tab).hasUnreadMessages();
     }
 
     // endregion
@@ -105,7 +105,7 @@ public final class ChatTabService extends Service {
     public void setFocusedTab(ChatTab focused) {
         focusedTab = focused;
 
-        chatTabs.get(focused).setUnreadMessages(false);
+        tabDataMap.get(focused).setUnreadMessages(false);
         wrappingChatComponent.setCurrentChatComponent(getChatComponent(focused));
     }
     // endregion
@@ -122,7 +122,7 @@ public final class ChatTabService extends Service {
         reset();
         // Create a new ChatTabData for each tab
         getChatTabs()
-                .forEach(chatTab -> chatTabs.put(
+                .forEach(chatTab -> tabDataMap.put(
                         chatTab, new ChatTabData(new ChatComponent(McUtils.mc()), false, chatTab.customRegexString())));
 
         // Restore all messages sent to the vanilla chat component to all the new tabs
@@ -161,16 +161,16 @@ public final class ChatTabService extends Service {
     }
 
     private void reset() {
-        chatTabs.clear();
+        tabDataMap.clear();
     }
 
     public void forEachChatComponent(Consumer<ChatComponent> chatComponentConsumer) {
-        chatTabs.values().stream().map(ChatTabData::getChatComponent).forEach(chatComponentConsumer);
+        tabDataMap.values().stream().map(ChatTabData::getChatComponent).forEach(chatComponentConsumer);
     }
 
     void markAsNewMessages(ChatTab tab) {
         if (tab != focusedTab) {
-            chatTabs.get(tab).setUnreadMessages(true);
+            tabDataMap.get(tab).setUnreadMessages(true);
         }
     }
 
@@ -207,7 +207,7 @@ public final class ChatTabService extends Service {
             }
         }
 
-        Optional<Pattern> regex = chatTabs.get(chatTab).getCustomRegex();
+        Optional<Pattern> regex = tabDataMap.get(chatTab).getCustomRegex();
         if (regex.isEmpty()) return true;
 
         return originalStyledText.matches(regex.get());
@@ -236,5 +236,18 @@ public final class ChatTabService extends Service {
         } else {
             McUtils.sendChat(message);
         }
+    }
+
+    public void updateConfig(List<ChatTab> chatTabs) {
+        this.chatTabs.clear();
+        this.chatTabs.addAll(chatTabs);
+
+        Map<ChatTab, ChatTabData> oldMap = this.tabDataMap;
+        this.tabDataMap.clear();
+        chatTabs.forEach(chatTab -> this.tabDataMap.put(
+                chatTab,
+                oldMap.containsKey(chatTab)
+                        ? oldMap.get(chatTab)
+                        : new ChatTabData(new ChatComponent(McUtils.mc()), false, chatTab.customRegexString())));
     }
 }
