@@ -16,6 +16,7 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
@@ -268,7 +269,7 @@ public final class ChatPageDetector {
 
     private List<Pair<StyledText, StyledText>> calculateForegroundReplacements(
             List<StyledText> lastBackground, List<StyledText> foreground, List<StyledText> sentBackgroundLines) {
-        List<Pair<StyledText, StyledText>> replacements = new ArrayList<>();
+        List<Pair<StyledText, StyledText>> replacements = new LinkedList<>();
         int lastBackgroundStartPos = lastBackground.size() - sentBackgroundLines.size();
         if (lastBackground.size() != foreground.size()) {
             WynntilsMod.warn("Page size mismatch in foreground replacements, skipping");
@@ -282,7 +283,8 @@ public final class ChatPageDetector {
                 WynntilsMod.warn("Line mismatch in foreground replacements, skipping");
                 return List.of();
             }
-            replacements.add(Pair.of(sentBackgroundLines.get(i), foreground.get(lastBackgroundStartPos + i)));
+            // Store in reverse order to match chat history later on
+            replacements.addFirst(Pair.of(sentBackgroundLines.get(i), foreground.get(lastBackgroundStartPos + i)));
         }
         return replacements;
     }
@@ -378,18 +380,29 @@ public final class ChatPageDetector {
         public void run() {
             ChatComponent mcChat = McUtils.mc().gui.getChat();
             List<GuiMessage> allMessages = mcChat.allMessages;
-            // Go through all messages, and replace any that match the old message
-            for (int i = 0; i < allMessages.size(); i++) {
+
+            List<Pair<StyledText, StyledText>> remainingReplacements = new LinkedList<>(replacements);
+
+            // Go through all messages from newest to oldest
+            for (int i = 0; i < allMessages.size() && !remainingReplacements.isEmpty(); i++) {
                 GuiMessage guiMessage = allMessages.get(i);
                 Component content = guiMessage.content();
                 StyledText styledText = StyledText.fromComponent(content);
 
-                for (Pair<StyledText, StyledText> replacement : replacements) {
+                // Check if this message matches any remaining replacement
+                for (int j = 0; j < remainingReplacements.size(); j++) {
+                    Pair<StyledText, StyledText> replacement = remainingReplacements.get(j);
                     if (styledText.equals(replacement.a())) {
+                        // Found a match - apply the replacement
                         Component newContent = replacement.b().getComponent();
                         GuiMessage newMessage = new GuiMessage(
                                 guiMessage.addedTime(), newContent, guiMessage.signature(), guiMessage.tag());
                         allMessages.set(i, newMessage);
+
+                        // Remove this replacement and all preceding ones
+                        for (int k = 0; k <= j; k++) {
+                            remainingReplacements.removeFirst();
+                        }
                         break;
                     }
                 }
