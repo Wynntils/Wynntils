@@ -17,6 +17,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
+import com.wynntils.screens.playerviewer.GearSharingSettingsScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.FileUtils;
@@ -82,6 +83,7 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
                 .then(Commands.literal("downloads").executes(this::downloads))
+                .then(Commands.literal("gearsharing").executes(this::openGearSharingSettings))
                 .then(Commands.literal("guildmap").executes(this::openGuildMap))
                 .then(Commands.literal("help").executes(this::help))
                 .then(Commands.literal("map").executes(this::openMap))
@@ -173,6 +175,11 @@ public class WynntilsCommand extends Command {
         Models.Player.reset();
         // No need to try to re-connect to Hades, we will do that automatically when we get the new token
 
+        return 1;
+    }
+
+    private int openGearSharingSettings(CommandContext<CommandSourceStack> commandSourceStackCommandContext) {
+        Managers.TickScheduler.scheduleNextTick(() -> McUtils.mc().setScreen(GearSharingSettingsScreen.create(null)));
         return 1;
     }
 

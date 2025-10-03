@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.regex.Matcher;
 
 public class HadesUser {
     private final UUID uuid;
@@ -129,8 +130,7 @@ public class HadesUser {
         handleAccessoryData(InventoryAccessory.NECKLACE, packet.getNecklace());
 
         if (!packet.getHeldItem().isEmpty()) {
-            ErrorOr<WynnItem> errorOrDecodedItem =
-                    Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(packet.getHeldItem()), null);
+            ErrorOr<WynnItem> errorOrDecodedItem = decodeItem(packet.getHeldItem());
 
             if (errorOrDecodedItem.hasError()) {
                 WynntilsMod.warn("Failed to decode Hades user held item: " + errorOrDecodedItem.getError());
@@ -163,8 +163,7 @@ public class HadesUser {
             this.armor.remove(armor);
             this.armorCache.remove(armor);
         } else if (!this.armorCache.getOrDefault(armor, "").equals(armorData)) {
-            ErrorOr<WynnItem> errorOrDecodedItem =
-                    Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(armorData), null);
+            ErrorOr<WynnItem> errorOrDecodedItem = decodeItem(armorData);
 
             if (errorOrDecodedItem.hasError()) {
                 WynntilsMod.warn("Failed to decode Hades user " + armor + ": " + errorOrDecodedItem.getError());
@@ -180,8 +179,7 @@ public class HadesUser {
             this.accessories.remove(accessory);
             this.accessoriesCache.remove(accessory);
         } else if (!this.accessoriesCache.getOrDefault(accessory, "").equals(accessoryData)) {
-            ErrorOr<WynnItem> errorOrDecodedItem =
-                    Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(accessoryData), null);
+            ErrorOr<WynnItem> errorOrDecodedItem = decodeItem(accessoryData);
 
             if (errorOrDecodedItem.hasError()) {
                 WynntilsMod.warn("Failed to decode Hades user " + accessory + ": " + errorOrDecodedItem.getError());
@@ -190,5 +188,15 @@ public class HadesUser {
                 this.accessoriesCache.put(accessory, accessoryData);
             }
         }
+    }
+
+    private ErrorOr<WynnItem> decodeItem(String encodedData) {
+        Matcher encodedMatcher = Models.ItemEncoding.getEncodedDataPattern().matcher(encodedData);
+        if (!encodedMatcher.find()) {
+            return ErrorOr.error("Failed to match encoded pattern for Hades user data: " + encodedData);
+        }
+
+        EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(encodedMatcher.group("data"));
+        return Models.ItemEncoding.decodeItem(encodedByteBuffer, encodedMatcher.group("name"));
     }
 }
