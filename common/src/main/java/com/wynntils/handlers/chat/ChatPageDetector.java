@@ -59,8 +59,12 @@ public final class ChatPageDetector {
     }
 
     public void onTick() {
-        tasksAtNextTick.forEach(Runnable::run);
-        tasksAtNextTick.clear();
+        ArrayList<Runnable> tasksToRun;
+        synchronized (this) {
+            tasksToRun = new ArrayList<>(tasksAtNextTick);
+            tasksAtNextTick.clear();
+        }
+        tasksToRun.forEach(Runnable::run);
     }
 
     public boolean processIncomingChatMessage(SystemMessageEvent.ChatReceivedEvent event) {
@@ -355,11 +359,15 @@ public final class ChatPageDetector {
     }
 
     private void enqueueSendDelayedChat(Component message) {
-        tasksAtNextTick.add(new SendDelayedChatTask(message));
+        synchronized (this) {
+            tasksAtNextTick.add(new SendDelayedChatTask(message));
+        }
     }
 
     private void enqueueSendBackgroundLine(StyledText message) {
-        tasksAtNextTick.add(new SendBackgroundLineTask(message));
+        synchronized (this) {
+            tasksAtNextTick.add(new SendBackgroundLineTask(message));
+        }
     }
 
     private void enqueueSendForegroundReplacements(
@@ -369,13 +377,17 @@ public final class ChatPageDetector {
 
         List<Pair<StyledText, StyledText>> replacements =
                 calculateForegroundReplacements(oldBackground, background, sentLines);
-        tasksAtNextTick.add(new SendForegroundReplacementsTask(replacements));
+        synchronized (this) {
+            tasksAtNextTick.add(new SendForegroundReplacementsTask(replacements));
+        }
     }
 
     private void enqueueSendPageContent(List<StyledText> pageContent, boolean lastPage) {
         this.pageContent = pageContent;
 
-        tasksAtNextTick.add(new SendPageContentTask(pageContent, lastPage));
+        synchronized (this) {
+            tasksAtNextTick.add(new SendPageContentTask(pageContent, lastPage));
+        }
     }
 
     private static final class SendDelayedChatTask implements Runnable {
