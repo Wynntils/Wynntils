@@ -23,8 +23,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class GambitModel extends Model {
     private final List<Gambit> ActiveGambits = new ArrayList<>();
 
-    private static final String GAMBIT_ENABLED="Click to Disable";
-    private static final String PLAYER_READY="Un-ready to change";
+    private static final String GAMBIT_ENABLED = "Click to Disable";
+    private static final String PLAYER_READY = "Un-ready to change";
 
     public GambitModel() {
         super(List.of());
@@ -46,9 +46,10 @@ public final class GambitModel extends Model {
                 ItemStack itemStack = event.getItems().get(i);
                 if (itemStack.isEmpty()) continue;
 
-                //we only need the last line of the tooltip
-                Component tooltipLast =
-                        itemStack.getTooltipLines(Item.TooltipContext.of(McUtils.mc().level), null, TooltipFlag.NORMAL).getLast();
+                // we only need the last line of the tooltip
+                Component tooltipLast = itemStack
+                        .getTooltipLines(Item.TooltipContext.of(McUtils.mc().level), null, TooltipFlag.NORMAL)
+                        .getLast();
 
                 Gambit gambit = Gambit.fromItemName(StyledText.fromComponent(itemStack.getHoverName()));
                 if (gambit == null) continue;
@@ -59,7 +60,7 @@ public final class GambitModel extends Model {
                     ActiveGambits.clear();
                 }
 
-                if (tooltipLast.toString().contains(GAMBIT_ENABLED) && gambit!= null) {
+                if (tooltipLast.toString().contains(GAMBIT_ENABLED) && gambit != null) {
                     ActiveGambits.add(gambit);
                 }
             }

@@ -212,8 +212,6 @@ public class RangeVisualizerFeature extends Feature {
         return switch (gambit) {
             case FARSIGHTED -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 3f);
             case MYOPIC -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 12f);
-            // glutton is only for testing, remove it later!!!
-            case GLUTTON -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 4f);
             default -> null;
         };
     }
