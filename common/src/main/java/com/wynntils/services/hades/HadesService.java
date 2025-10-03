@@ -418,11 +418,12 @@ public final class HadesService extends Service {
 
         if (armorItemOpt.isEmpty()
                 || (armorItemOpt.get() instanceof CraftedGearItem
-                        && !gearShareOptions.get().shareCraftedItems()) || !gearShareOptions.get().shouldShareArmor(inventoryArmor)) {
+                        && !gearShareOptions.get().shareCraftedItems())
+                || !gearShareOptions.get().shouldShareArmor(inventoryArmor)) {
             armor.remove(inventoryArmor);
             armorCache.remove(inventoryArmor);
         } else if (!armorCache.containsKey(inventoryArmor)
-                        || !armorCache.get(inventoryArmor).equals(armorItemOpt.get())) {
+                || !armorCache.get(inventoryArmor).equals(armorItemOpt.get())) {
             this.armor.put(inventoryArmor, encodeItem(armorItemOpt));
             this.armorCache.put(inventoryArmor, armorItemOpt.get());
         }
@@ -434,11 +435,12 @@ public final class HadesService extends Service {
 
         if (accessoryItemOpt.isEmpty()
                 || (accessoryItemOpt.get() instanceof CraftedGearItem
-                        && !gearShareOptions.get().shareCraftedItems()) || !gearShareOptions.get().shouldShareAccessory(inventoryAccessory)) {
+                        && !gearShareOptions.get().shareCraftedItems())
+                || !gearShareOptions.get().shouldShareAccessory(inventoryAccessory)) {
             accessories.remove(inventoryAccessory);
             accessoriesCache.remove(inventoryAccessory);
         } else if (!accessoriesCache.containsKey(inventoryAccessory)
-                        || !accessoriesCache.get(inventoryAccessory).equals(accessoryItemOpt.get())) {
+                || !accessoriesCache.get(inventoryAccessory).equals(accessoryItemOpt.get())) {
             this.accessories.put(inventoryAccessory, encodeItem(accessoryItemOpt));
             this.accessoriesCache.put(inventoryAccessory, accessoryItemOpt.get());
         }
@@ -450,11 +452,11 @@ public final class HadesService extends Service {
 
         if (heldItemOpt.isEmpty()
                 || (heldItemOpt.get() instanceof CraftedGearItem
-                        && !gearShareOptions.get().shareCraftedItems()) || !gearShareOptions.get().shouldShareHeldItem()) {
+                        && !gearShareOptions.get().shareCraftedItems())
+                || !gearShareOptions.get().shouldShareHeldItem()) {
             heldItem = "";
             heldItemCache = null;
-        } else if (heldItemCache == null
-                || !heldItemCache.equals(heldItemOpt.get())) {
+        } else if (heldItemCache == null || !heldItemCache.equals(heldItemOpt.get())) {
             heldItem = encodeItem(heldItemOpt);
             heldItemCache = heldItemOpt.get();
         }
