@@ -141,6 +141,7 @@ public final class ChatTabService extends Service {
     }
 
     public void disable() {
+        reset();
         focusedTab = null;
 
         McUtils.mc().gui.chat = vanillaChatComponent;
@@ -163,7 +164,7 @@ public final class ChatTabService extends Service {
         chatTabs.clear();
     }
 
-    void forEachChatComponent(Consumer<ChatComponent> chatComponentConsumer) {
+    public void forEachChatComponent(Consumer<ChatComponent> chatComponentConsumer) {
         chatTabs.values().stream().map(ChatTabData::getChatComponent).forEach(chatComponentConsumer);
     }
 
