@@ -10,8 +10,7 @@ import net.neoforged.bus.api.Event;
 
 public abstract class BombEvent extends Event {
     private final BombInfo bombInfo;
-
-    private StyledText message;
+    private final StyledText message;
 
     protected BombEvent(BombInfo bombInfo, StyledText message) {
         this.bombInfo = bombInfo;
@@ -36,9 +35,5 @@ public abstract class BombEvent extends Event {
 
     public StyledText getMessage() {
         return message;
-    }
-
-    public void setMessage(StyledText message) {
-        this.message = message;
     }
 }

@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.models.players.type.PlayerRank;
 import com.wynntils.utils.StringUtils;
@@ -143,8 +143,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChatMessage(ChatMessageReceivedEvent e) {
-        StyledText message = StyledTextUtils.unwrap(e.getOriginalStyledText()).stripAlignment();
+    public void onChatMessage(ChatMessageEvent.Match e) {
+        StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
         MessageType messageType = e.getMessageType();
 
         for (Redirector redirector : redirectors) {
