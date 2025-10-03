@@ -63,7 +63,7 @@ public final class SpellModel extends Model {
         return knownMarkerNames;
     }
 
-    @SubscribeEvent(receiveCanceled = true)
+    @SubscribeEvent
     public void onItemRenamed(ItemRenamedEvent event) {
         StyledText msg = event.getNewName();
         SpellFailureReason failureReason = SpellFailureReason.fromMsg(msg);

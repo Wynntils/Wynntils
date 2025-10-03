@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.network.chat.Component;
 
-public class PlayerNametagRenderEvent extends EntityNameTagRenderEvent {
+public final class PlayerNametagRenderEvent extends EntityNameTagRenderEvent {
     public PlayerNametagRenderEvent(
             PlayerRenderState renderState,
             Component displayName,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -23,7 +23,7 @@ public abstract class MouseHandlerMixin {
         MouseScrollEvent event = new MouseScrollEvent((double) windowPointer, xOffset, yOffset);
         MixinHelper.post(event);
 
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -40,7 +40,7 @@ public abstract class MouseHandlerMixin {
                 new KeyMappingEvent(key, held ? KeyMappingEvent.Operation.SET : KeyMappingEvent.Operation.UNSET);
         MixinHelper.post(event);
 
-        if (!event.isCanceled()) {
+        if (!event.isCancelRequested()) {
             original.call(key, held);
         }
     }
@@ -56,7 +56,7 @@ public abstract class MouseHandlerMixin {
         KeyMappingEvent event = new KeyMappingEvent(key, KeyMappingEvent.Operation.CLICK);
         MixinHelper.post(event);
 
-        if (!event.isCanceled()) {
+        if (!event.isCancelRequested()) {
             original.call(key);
         }
     }

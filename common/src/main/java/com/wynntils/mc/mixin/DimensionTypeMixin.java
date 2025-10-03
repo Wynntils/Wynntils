@@ -19,7 +19,7 @@ public class DimensionTypeMixin {
         DimensionAmbientLightEvent dimensionLightEvent = new DimensionAmbientLightEvent();
         MixinHelper.post(dimensionLightEvent);
 
-        if (dimensionLightEvent.isCanceled()) {
+        if (dimensionLightEvent.isCancelRequested()) {
             cir.setReturnValue(1.0F);
             cir.cancel();
         }

@@ -53,7 +53,7 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableObjectiveTrackingOnScoreboard.get()
                 && event.getSegment().getScoreboardPart() instanceof GuildObjectiveScoreboardPart) {
-            event.setCanceled(true);
+            event.requestCancel();
             return;
         }
     }

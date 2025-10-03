@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.neoforge.mixins;
@@ -45,7 +45,7 @@ public abstract class ForgeGuiMixin {
         MixinHelper.post(event);
 
         // Return a non-zero value to cancel rendering
-        if (event.isCanceled()) return 1;
+        if (event.isCancelRequested()) return 1;
 
         return original.call(instance, entity);
     }

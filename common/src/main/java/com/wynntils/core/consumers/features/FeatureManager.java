@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -182,7 +183,6 @@ import net.minecraft.client.Options;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 
 /** Loads {@link Feature}s */
@@ -587,7 +587,7 @@ public final class FeatureManager extends Manager {
                 .findFirst();
     }
 
-    public void handleExceptionInEventListener(Event event, String featureClassName, Throwable t) {
+    public void handleExceptionInEventListener(BaseEvent event, String featureClassName, Throwable t) {
         String featureName = featureClassName.substring(featureClassName.lastIndexOf('.') + 1);
 
         Optional<Feature> featureOptional = getFeatureFromString(featureName);

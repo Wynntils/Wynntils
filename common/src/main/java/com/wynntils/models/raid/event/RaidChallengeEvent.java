@@ -4,10 +4,10 @@
  */
 package com.wynntils.models.raid.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.raid.type.RaidInfo;
-import net.neoforged.bus.api.Event;
 
-public abstract class RaidChallengeEvent extends Event {
+public abstract class RaidChallengeEvent extends BaseEvent {
     private final RaidInfo raidInfo;
 
     protected RaidChallengeEvent(RaidInfo raidInfo) {
@@ -18,13 +18,13 @@ public abstract class RaidChallengeEvent extends Event {
         return raidInfo;
     }
 
-    public static class Started extends RaidChallengeEvent {
+    public static final class Started extends RaidChallengeEvent {
         public Started(RaidInfo raidInfo) {
             super(raidInfo);
         }
     }
 
-    public static class Completed extends RaidChallengeEvent {
+    public static final class Completed extends RaidChallengeEvent {
         public Completed(RaidInfo raidInfo) {
             super(raidInfo);
         }

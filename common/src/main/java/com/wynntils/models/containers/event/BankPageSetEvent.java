@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.containers.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
 /**
  * Fires when a bank page has been fully loaded
  */
-public class BankPageSetEvent extends Event {}
+public final class BankPageSetEvent extends BaseEvent {}

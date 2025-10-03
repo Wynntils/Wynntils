@@ -17,6 +17,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class DisableRecipeBookFeature extends Feature {
     @SubscribeEvent
     public void onRecipeBookOpen(RecipeBookButtonCreateEvent event) {
-        event.setCanceled(true);
+        event.requestCancel();
     }
 }

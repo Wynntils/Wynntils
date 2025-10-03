@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.lootrun.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
-public abstract class LootrunFinishedEvent extends Event {
+public abstract class LootrunFinishedEvent extends BaseEvent {
     private final int challengesCompleted;
     private final int timeElapsed;
 
@@ -23,7 +23,7 @@ public abstract class LootrunFinishedEvent extends Event {
         return timeElapsed;
     }
 
-    public static class Completed extends LootrunFinishedEvent {
+    public static final class Completed extends LootrunFinishedEvent {
         protected final int rewardPulls;
         protected final int rewardRerolls;
         protected final int rewardSacrifices;
@@ -74,7 +74,7 @@ public abstract class LootrunFinishedEvent extends Event {
         }
     }
 
-    public static class Failed extends LootrunFinishedEvent {
+    public static final class Failed extends LootrunFinishedEvent {
         public Failed(int challengesCompleted, int timeElapsed) {
             super(challengesCompleted, timeElapsed);
         }

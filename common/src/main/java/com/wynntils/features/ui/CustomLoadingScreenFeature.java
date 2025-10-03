@@ -62,7 +62,7 @@ public class CustomLoadingScreenFeature extends Feature {
     public void onScreenClosed(ScreenClosedEvent.Pre event) {
         // Don't allow screens to close when they are "faked"
         if (isCustomScreenVisible()) {
-            event.setCanceled(true);
+            event.requestCancel();
         }
         // But update our knowledge of what screen Minecraft thinks it is showing
         if (replacedScreen != null) {
@@ -72,7 +72,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
         if (McUtils.mc().level == null) {
             // Vanilla will interpret this as it should show the title menu, so cancel it
-            event.setCanceled(true);
+            event.requestCancel();
         }
     }
 
@@ -123,7 +123,7 @@ public class CustomLoadingScreenFeature extends Feature {
         // Make the screen think it is showing, but really don't let it show
         replacedScreen = screen;
         screen.init(McUtils.mc(), 1, 1);
-        event.setCanceled(true);
+        event.requestCancel();
     }
 
     @SubscribeEvent

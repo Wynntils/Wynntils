@@ -54,7 +54,7 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableObjectiveTrackingOnScoreboard.get()
                 && event.getSegment().getScoreboardPart() instanceof DailyObjectiveScoreboardPart) {
-            event.setCanceled(true);
+            event.requestCancel();
             return;
         }
     }

@@ -67,7 +67,7 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
                 this.getFont(),
                 backgroundOpacity);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             cancelRender.set(true);
             return backgroundOpacity;
         }

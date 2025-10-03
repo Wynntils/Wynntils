@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.GuiMessage;
-import net.neoforged.bus.api.Event;
 
-public class AddGuiMessageLineEvent extends Event {
+public final class AddGuiMessageLineEvent extends BaseEvent {
     private final GuiMessage message;
     private final GuiMessage.Line line;
     private final int index;

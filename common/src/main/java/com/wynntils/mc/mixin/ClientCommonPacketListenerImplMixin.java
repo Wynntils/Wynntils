@@ -35,7 +35,7 @@ public abstract class ClientCommonPacketListenerImplMixin {
         ServerResourcePackEvent.Load event =
                 new ServerResourcePackEvent.Load(packet.id(), packet.url(), packet.hash(), packet.required());
         MixinHelper.postAlways(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             // Use the common packet listener's connection, as it's too early to get the player's connection
             this.connection.send(new ServerboundResourcePackPacket(
                     packet.id(), ServerboundResourcePackPacket.Action.SUCCESSFULLY_LOADED));

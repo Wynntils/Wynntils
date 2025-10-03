@@ -1,15 +1,15 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
-import net.neoforged.bus.api.Event;
 
 /** Fires for changes in player info in scoreboard */
-public abstract class PlayerInfoEvent extends Event {
+public abstract class PlayerInfoEvent extends BaseEvent {
     private final UUID id;
 
     protected PlayerInfoEvent(UUID id) {
@@ -21,7 +21,7 @@ public abstract class PlayerInfoEvent extends Event {
     }
 
     /** Fires on change to name in scoreboard */
-    public static class PlayerDisplayNameChangeEvent extends PlayerInfoEvent {
+    public static final class PlayerDisplayNameChangeEvent extends PlayerInfoEvent {
         private final Component displayName;
 
         public PlayerDisplayNameChangeEvent(UUID id, Component displayName) {
@@ -35,7 +35,7 @@ public abstract class PlayerInfoEvent extends Event {
     }
 
     /** Fires on addition of name to scoreboard */
-    public static class PlayerLogInEvent extends PlayerInfoEvent {
+    public static final class PlayerLogInEvent extends PlayerInfoEvent {
         private final String name;
 
         public PlayerLogInEvent(UUID id, String name) {
@@ -49,7 +49,7 @@ public abstract class PlayerInfoEvent extends Event {
     }
 
     /** Fires on removal of name to scoreboard */
-    public static class PlayerLogOutEvent extends PlayerInfoEvent {
+    public static final class PlayerLogOutEvent extends PlayerInfoEvent {
         public PlayerLogOutEvent(UUID id) {
             super(id);
         }

@@ -4,10 +4,10 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.bus.api.Event;
 
-public class SetLocalPlayerVehicleEvent extends Event {
+public final class SetLocalPlayerVehicleEvent extends BaseEvent {
     private final Entity vehicle;
 
     public SetLocalPlayerVehicleEvent(Entity vehicle) {

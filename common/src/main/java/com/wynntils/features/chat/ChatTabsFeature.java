@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -53,20 +52,20 @@ public class ChatTabsFeature extends Feature {
     private final Config<Boolean> oldTabHotkey = new Config<>(false);
 
     // We do this here, and not in Services.ChatTab to not introduce a feature-model dependency.
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent
     public void onChatReceived(ChatMessageEvent.Discard event) {
         // We will send this message to every matching tab, so we can cancel it.
-        event.setCanceled(true);
+        event.requestCancel();
 
         Services.ChatTab.handleIncomingMessage(event.getRecipientType(), event.getMessage(), event.getMessage());
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent
     public void onClientsideChat(SystemMessageEvent.ChatReceivedEvent event) {
         if (Services.ChatTab.getFocusedTab() == null) return;
 
         // We will send this message to every matching tab, so we can cancel it.
-        event.setCanceled(true);
+        event.requestCancel();
 
         boolean isRenderThread = McUtils.mc().isSameThread();
         if (isRenderThread) {
@@ -104,7 +103,7 @@ public class ChatTabsFeature extends Feature {
 
         // These should not be focused
         if (guiEventListener instanceof ChatTabButton || guiEventListener instanceof ChatTabSettingsButton) {
-            event.setCanceled(true);
+            event.requestCancel();
         }
     }
 
@@ -151,7 +150,7 @@ public class ChatTabsFeature extends Feature {
             if (newTab == -1) return;
 
             Services.ChatTab.setFocusedTab(newTab);
-            event.setCanceled(true);
+            event.requestCancel();
             return;
         }
 
@@ -160,15 +159,15 @@ public class ChatTabsFeature extends Feature {
             if (newTab != null) {
                 Services.ChatTab.setFocusedTab(newTab);
             }
-            event.setCanceled(true);
+            event.requestCancel();
             return;
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent
     public void onChatScreenSend(ChatScreenSendEvent event) {
         Services.ChatTab.sendChat(event.getInput());
-        event.setCanceled(true);
+        event.requestCancel();
     }
 
     @Override

@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.bus.api.Event;
 
-public abstract class MobEffectEvent extends Event {
+public abstract class MobEffectEvent extends BaseEvent {
     private final Entity entity;
     private final MobEffect effect;
 

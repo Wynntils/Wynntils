@@ -54,7 +54,7 @@ public abstract class PlayerRendererMixin
         PlayerNametagRenderEvent event = new PlayerNametagRenderEvent(
                 renderState, displayName, poseStack, buffer, packedLight, this.entityRenderDispatcher, this.getFont());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

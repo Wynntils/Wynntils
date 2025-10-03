@@ -60,7 +60,7 @@ public abstract class ConnectionMixin {
                 PacketEvent.PacketSentEvent<? extends Packet<?>> bundledEvent =
                         new PacketEvent.PacketSentEvent<>(bundledPacket);
                 MixinHelper.postAlways(bundledEvent);
-                if (!bundledEvent.isCanceled()) {
+                if (!bundledEvent.isCancelRequested()) {
                     remainingPackets.add(bundledPacket);
                 } else {
                     hasCancelled = true;
@@ -77,7 +77,7 @@ public abstract class ConnectionMixin {
         } else {
             PacketEvent.PacketReceivedEvent<? extends Packet<?>> event = new PacketEvent.PacketReceivedEvent<>(packet);
             MixinHelper.postAlways(event);
-            if (event.isCanceled()) {
+            if (event.isCancelRequested()) {
                 return null;
             }
         }
@@ -103,7 +103,7 @@ public abstract class ConnectionMixin {
     private void sendPre(Packet<?> packet, PacketSendListener sendListener, boolean flush, CallbackInfo ci) {
         PacketEvent.PacketSentEvent<? extends Packet<?>> event = new PacketEvent.PacketSentEvent<>(packet);
         MixinHelper.postAlways(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

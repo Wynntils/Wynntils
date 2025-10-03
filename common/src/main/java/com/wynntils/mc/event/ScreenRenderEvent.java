@@ -1,15 +1,15 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.neoforged.bus.api.Event;
 
-public class ScreenRenderEvent extends Event {
+public final class ScreenRenderEvent extends BaseEvent {
     private final Screen screen;
     private final GuiGraphics guiGraphics;
     private final int mouseX;

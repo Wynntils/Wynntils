@@ -4,10 +4,10 @@
  */
 package com.wynntils.models.raid.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.raid.raids.RaidKind;
-import net.neoforged.bus.api.Event;
 
-public class RaidStartedEvent extends Event {
+public final class RaidStartedEvent extends BaseEvent {
     private final RaidKind raidKind;
 
     public RaidStartedEvent(RaidKind raidKind) {

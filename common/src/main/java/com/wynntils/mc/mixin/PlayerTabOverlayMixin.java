@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -30,7 +30,7 @@ public class PlayerTabOverlayMixin {
                 guiGraphics, DeltaTracker.ZERO, McUtils.window(), RenderEvent.ElementType.PLAYER_TAB_LIST);
         MixinHelper.post(renderEvent);
 
-        if (renderEvent.isCanceled()) {
+        if (renderEvent.isCancelRequested()) {
             ci.cancel();
         }
     }

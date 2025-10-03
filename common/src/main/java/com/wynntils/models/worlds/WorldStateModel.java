@@ -254,7 +254,7 @@ public final class WorldStateModel extends Model {
             CutsceneStartedEvent event = new CutsceneStartedEvent(groupCutscene);
             WynntilsMod.postEvent(event);
 
-            if (event.isCanceled()) {
+            if (event.isCancelRequested()) {
                 cutsceneState = CutsceneState.SKIPPED_CUTSCENE;
             }
         }

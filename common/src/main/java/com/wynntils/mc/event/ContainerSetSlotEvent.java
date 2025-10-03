@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class ContainerSetSlotEvent extends Event {
+public abstract class ContainerSetSlotEvent extends BaseEvent {
     private final int containerId;
     private final int stateId;
     private final int slot;
@@ -41,7 +41,7 @@ public abstract class ContainerSetSlotEvent extends Event {
      * Note: This event goes through {@link com.wynntils.handlers.item.ItemHandler},
      *       so you can use it to get {@link com.wynntils.models.items.WynnItem}s.
      */
-    public static class Pre extends ContainerSetSlotEvent implements ICancellableEvent {
+    public static final class Pre extends ContainerSetSlotEvent implements CancelRequestable {
         public Pre(int containerId, int stateId, int slot, ItemStack itemStack) {
             super(containerId, stateId, slot, itemStack);
         }
@@ -50,7 +50,7 @@ public abstract class ContainerSetSlotEvent extends Event {
     /**
      * Note: This is called after {@link SetSlotEvent.Pre}, so you can use it to get {@link com.wynntils.models.items.WynnItem}s.
      */
-    public static class Post extends ContainerSetSlotEvent {
+    public static final class Post extends ContainerSetSlotEvent {
         public Post(int containerId, int stateId, int slot, ItemStack itemStack) {
             super(containerId, stateId, slot, itemStack);
         }

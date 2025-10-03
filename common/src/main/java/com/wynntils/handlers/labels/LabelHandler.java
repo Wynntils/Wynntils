@@ -70,7 +70,7 @@ public final class LabelHandler extends Handler {
                 WynntilsMod.postEvent(textChangedEvent);
 
                 // If the event was cancelled, remove the name change data
-                if (textChangedEvent.isCanceled()) {
+                if (textChangedEvent.isCancelRequested()) {
                     event.removePackedItem(packedItem);
                     continue;
                 }

@@ -1,22 +1,22 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.labels.event;
 
+import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelInfo;
 import java.util.Optional;
 import net.minecraft.world.entity.Display;
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 
 /**
  * This event is called when data of a {@link net.minecraft.world.entity.Display.TextDisplay} is changed.
  * <p>
  * The various events are cancellable.
  */
-public abstract class TextDisplayChangedEvent extends Event implements ICancellableEvent {
+public abstract class TextDisplayChangedEvent extends BaseEvent {
     private final Display.TextDisplay textDisplay;
     private final LabelInfo labelInfo;
 
@@ -33,7 +33,7 @@ public abstract class TextDisplayChangedEvent extends Event implements ICancella
         return Optional.ofNullable(labelInfo);
     }
 
-    public static class Text extends TextDisplayChangedEvent {
+    public static final class Text extends TextDisplayChangedEvent implements CancelRequestable {
         private StyledText text;
 
         public Text(Display.TextDisplay textDisplay, LabelInfo labelInfo, StyledText text) {

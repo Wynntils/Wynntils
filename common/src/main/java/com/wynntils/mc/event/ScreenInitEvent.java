@@ -1,16 +1,16 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.gui.screens.Screen;
-import net.neoforged.bus.api.Event;
 
 /**
  * Fired when a screen is re-inited. Use this to add widgets.
  */
-public abstract class ScreenInitEvent extends Event {
+public abstract class ScreenInitEvent extends BaseEvent {
     private final Screen screen;
     private final boolean firstInit;
 
@@ -27,13 +27,13 @@ public abstract class ScreenInitEvent extends Event {
         return firstInit;
     }
 
-    public static class Pre extends ScreenInitEvent {
+    public static final class Pre extends ScreenInitEvent {
         public Pre(Screen screen, boolean firstInit) {
             super(screen, firstInit);
         }
     }
 
-    public static class Post extends ScreenInitEvent {
+    public static final class Post extends ScreenInitEvent {
         public Post(Screen screen, boolean firstInit) {
             super(screen, firstInit);
         }

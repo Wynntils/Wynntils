@@ -112,8 +112,12 @@ public final class ProfessionModel extends Model {
             harvestIds.put(gatheringInfo.getEntity().getId());
             lastGatherTime = System.currentTimeMillis();
             lastProfessionXpGain = gatheringInfo.getProfessionType();
-            WynntilsMod.postEvent(new ProfessionXpGainEvent(
-                    gatheringInfo.getProfessionType(), gatheringInfo.getXpGain(), gatheringInfo.getCurrentXp()));
+            ProfessionXpGainEvent xpGainEvent = new ProfessionXpGainEvent(
+                    gatheringInfo.getProfessionType(), gatheringInfo.getXpGain(), gatheringInfo.getCurrentXp());
+            WynntilsMod.postEvent(xpGainEvent);
+            if (xpGainEvent.isCancelRequested()) {
+                // FIXME: What to do?
+            }
         }
     }
 
@@ -129,8 +133,8 @@ public final class ProfessionModel extends Model {
                     Float.parseFloat(craftMatcher.group("gain")),
                     Float.parseFloat(craftMatcher.group("current")));
             WynntilsMod.postEvent(xpGainEvent);
-            if (xpGainEvent.isCanceled()) {
-                event.setCanceled(true);
+            if (xpGainEvent.isCancelRequested()) {
+                event.requestCancel();
             }
             return;
         }

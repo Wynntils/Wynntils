@@ -18,7 +18,7 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
-import com.wynntils.models.combat.type.DamageDealtEvent;
+import com.wynntils.models.combat.event.DamageDealtEvent;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.gear.type.GearTier;

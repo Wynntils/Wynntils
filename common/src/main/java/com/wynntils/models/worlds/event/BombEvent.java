@@ -4,11 +4,11 @@
  */
 package com.wynntils.models.worlds.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.worlds.type.BombInfo;
-import net.neoforged.bus.api.Event;
 
-public abstract class BombEvent extends Event {
+public abstract class BombEvent extends BaseEvent {
     private final BombInfo bombInfo;
     private final StyledText message;
 
