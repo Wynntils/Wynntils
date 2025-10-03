@@ -10,6 +10,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.utils.ListUtils;
 import com.wynntils.utils.TaskUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayDeque;
@@ -18,6 +19,8 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
+import net.minecraft.client.GuiMessage;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
 
 public final class ChatPageDetector {
@@ -242,7 +245,7 @@ public final class ChatPageDetector {
             if (numCollectedMessages == 4) {
                 // This was the last page, and the "background" is actually a redraw
                 // of the foreground. The page mode is now finished.
-                List<StyledText> sentLines = sentBackgroundLines;
+                List<StyledText> sentLines = List.copyOf(sentBackgroundLines);
 
                 pageBackground = null;
                 pageContent = List.of();
@@ -373,7 +376,26 @@ public final class ChatPageDetector {
 
         @Override
         public void run() {
-            // FIXME: Implement
+            ChatComponent mcChat = McUtils.mc().gui.getChat();
+            List<GuiMessage> allMessages = mcChat.allMessages;
+            // Go through all messages, and replace any that match the old message
+            for (int i = 0; i < allMessages.size(); i++) {
+                GuiMessage guiMessage = allMessages.get(i);
+                Component content = guiMessage.content();
+                StyledText styledText = StyledText.fromComponent(content);
+
+                for (Pair<StyledText, StyledText> replacement : replacements) {
+                    if (styledText.equals(replacement.a())) {
+                        Component newContent = replacement.b().getComponent();
+                        GuiMessage newMessage = new GuiMessage(
+                                guiMessage.addedTime(), newContent, guiMessage.signature(), guiMessage.tag());
+                        allMessages.set(i, newMessage);
+                        break;
+                    }
+                }
+            }
+
+            mcChat.refreshTrimmedMessages();
         }
     }
 
