@@ -23,12 +23,14 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class ChatTabsFeature extends Feature {
-    // These should move to ChatTabService, as Storage
+    // This is kept here only for config persistence, the "real" list is in ChatTabService
+    // and it must be updated whenever this config is updated.
     @Persisted
     public final HiddenConfig<List<ChatTab>> chatTabs = new HiddenConfig<>(new ArrayList<>(List.of(
             new ChatTab("All", false, null, null, null),
@@ -68,6 +70,13 @@ public class ChatTabsFeature extends Feature {
     @Override
     public void onEnable() {
         Services.ChatTab.enable();
+
+        Screen screen = McUtils.mc().screen;
+        if (screen instanceof ChatScreen chatScreen) {
+            if (screen instanceof ChatTabsScreen) return;
+
+            McUtils.mc().setScreen(new ChatTabsScreen("", oldTabHotkey.get()));
+        }
     }
 
     @Override
@@ -77,12 +86,6 @@ public class ChatTabsFeature extends Feature {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        if (!isEnabled()) return;
-
-        Services.ChatTab.enable();
-
-        if ((McUtils.mc().screen instanceof ChatScreen chatScreen)) {
-            McUtils.mc().setScreen(new ChatTabsScreen("", oldTabHotkey.get()));
-        }
+        Services.ChatTab.updateConfig(chatTabs.get());
     }
 }

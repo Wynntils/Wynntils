@@ -36,6 +36,10 @@ public class WrappingChatComponent extends ChatComponent {
         this.currentChatComponent = chatComponent;
     }
 
+    public ChatComponent getOriginalChatComponent() {
+        return originalChatComponent;
+    }
+
     @Override
     public void tick() {
         originalChatComponent.tick();

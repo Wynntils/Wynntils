@@ -6,18 +6,24 @@ package com.wynntils.handlers.chat;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.SystemMessageEvent;
+import com.wynntils.services.chat.WrappingChatComponent;
 import com.wynntils.utils.ListUtils;
 import com.wynntils.utils.TaskUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
+import net.minecraft.client.GuiMessage;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
 
 public final class ChatPageDetector {
@@ -242,7 +248,7 @@ public final class ChatPageDetector {
             if (numCollectedMessages == 4) {
                 // This was the last page, and the "background" is actually a redraw
                 // of the foreground. The page mode is now finished.
-                List<StyledText> sentLines = sentBackgroundLines;
+                List<StyledText> sentLines = List.copyOf(sentBackgroundLines);
 
                 pageBackground = null;
                 pageContent = List.of();
@@ -261,27 +267,6 @@ public final class ChatPageDetector {
                 }
             }
         }
-    }
-
-    private List<Pair<StyledText, StyledText>> calculateForegroundReplacements(
-            List<StyledText> lastBackground, List<StyledText> foreground, List<StyledText> sentBackgroundLines) {
-        List<Pair<StyledText, StyledText>> replacements = new ArrayList<>();
-        int lastBackgroundStartPos = lastBackground.size() - sentBackgroundLines.size();
-        if (lastBackground.size() != foreground.size()) {
-            WynntilsMod.warn("Page size mismatch in foreground replacements, skipping");
-            return List.of();
-        }
-        for (int i = 0; i < sentBackgroundLines.size(); i++) {
-            if (!lastBackground
-                    .get(lastBackgroundStartPos + i)
-                    .getString()
-                    .equals(sentBackgroundLines.get(i).getString())) {
-                WynntilsMod.warn("Line mismatch in foreground replacements, skipping");
-                return List.of();
-            }
-            replacements.add(Pair.of(sentBackgroundLines.get(i), foreground.get(lastBackgroundStartPos + i)));
-        }
-        return replacements;
     }
 
     /**
@@ -312,6 +297,61 @@ public final class ChatPageDetector {
 
         // No sufficient match found
         return null;
+    }
+
+    private List<Pair<StyledText, StyledText>> calculateForegroundReplacements(
+            List<StyledText> lastBackground, List<StyledText> foreground, List<StyledText> sentBackgroundLines) {
+        List<Pair<StyledText, StyledText>> replacements = new LinkedList<>();
+        int lastBackgroundStartPos = lastBackground.size() - sentBackgroundLines.size();
+        if (lastBackground.size() != foreground.size()) {
+            WynntilsMod.warn("Page size mismatch in foreground replacements, skipping");
+            return List.of();
+        }
+        for (int i = 0; i < sentBackgroundLines.size(); i++) {
+            if (!lastBackground
+                    .get(lastBackgroundStartPos + i)
+                    .getString()
+                    .equals(sentBackgroundLines.get(i).getString())) {
+                WynntilsMod.warn("Line mismatch in foreground replacements, skipping");
+                return List.of();
+            }
+            // Store in reverse order to match chat history later on
+            replacements.addFirst(Pair.of(sentBackgroundLines.get(i), foreground.get(lastBackgroundStartPos + i)));
+        }
+        return replacements;
+    }
+
+    private static void processChatComponentReplacements(
+            ChatComponent chatComponent, List<Pair<StyledText, StyledText>> replacements) {
+        List<GuiMessage> allMessages = chatComponent.allMessages;
+        List<Pair<StyledText, StyledText>> remainingReplacements = new LinkedList<>(replacements);
+
+        // Go through all messages from newest to oldest
+        for (int i = 0; i < allMessages.size() && !remainingReplacements.isEmpty(); i++) {
+            GuiMessage guiMessage = allMessages.get(i);
+            Component content = guiMessage.content();
+            StyledText styledText = StyledText.fromComponent(content);
+
+            // Check if this message matches any remaining replacement
+            for (int j = 0; j < remainingReplacements.size(); j++) {
+                Pair<StyledText, StyledText> replacement = remainingReplacements.get(j);
+                if (styledText.equals(replacement.a())) {
+                    // Found a match - apply the replacement
+                    Component newContent = replacement.b().getComponent();
+                    GuiMessage newMessage = new GuiMessage(
+                            guiMessage.addedTime(), newContent, guiMessage.signature(), guiMessage.tag());
+                    allMessages.set(i, newMessage);
+
+                    // Remove this replacement and all preceding ones
+                    for (int k = 0; k <= j; k++) {
+                        remainingReplacements.removeFirst();
+                    }
+                    break;
+                }
+            }
+        }
+
+        chatComponent.refreshTrimmedMessages();
     }
 
     private void enqueueSendDelayedChat(Component message) {
@@ -373,7 +413,13 @@ public final class ChatPageDetector {
 
         @Override
         public void run() {
-            // FIXME: Implement
+            ChatComponent chatComponent = McUtils.mc().gui.getChat();
+            if (chatComponent instanceof WrappingChatComponent wrappingChatComponent) {
+                chatComponent = wrappingChatComponent.getOriginalChatComponent();
+            }
+            processChatComponentReplacements(chatComponent, replacements);
+
+            Services.ChatTab.forEachChatComponent(c -> processChatComponentReplacements(c, replacements));
         }
     }
 
