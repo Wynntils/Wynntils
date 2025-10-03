@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.chat;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
@@ -114,12 +115,14 @@ public final class ChatTabService extends Service {
 
     public void enable() {
         if (isEnabled()) return;
-
-        vanillaChatComponent = McUtils.mc().gui.chat;
-        wrappingChatComponent = new WrappingChatComponent(McUtils.mc());
-        McUtils.mc().gui.chat = wrappingChatComponent;
+        if (getTabCount() == 0) {
+            WynntilsMod.warn("Cannot enable Chat Tabs: no tabs configured");
+            return;
+        }
 
         reset();
+
+        vanillaChatComponent = McUtils.mc().gui.chat;
         // Create a new ChatTabData for each tab
         getChatTabs()
                 .forEach(chatTab -> tabDataMap.put(
@@ -135,16 +138,23 @@ public final class ChatTabService extends Service {
             recipientTabs.forEach(tab -> Services.ChatTab.getChatComponent(tab).addMessage(component));
         });
 
-        if (getTabCount() != 0) {
-            setFocusedTab(0);
-        }
+        ChatTab firstTab = getChatTabs().getFirst();
+        ChatTabData firstTabData = tabDataMap.get(firstTab);
+
+        firstTabData.setUnreadMessages(false);
+        WrappingChatComponent chatComponent = new WrappingChatComponent(McUtils.mc());
+        chatComponent.setCurrentChatComponent(firstTabData.getChatComponent());
+
+        focusedTab = firstTab;
+        wrappingChatComponent = chatComponent;
+        McUtils.mc().gui.chat = wrappingChatComponent;
     }
 
     public void disable() {
+        McUtils.mc().gui.chat = vanillaChatComponent;
+
         reset();
         focusedTab = null;
-
-        McUtils.mc().gui.chat = vanillaChatComponent;
     }
 
     public boolean isEnabled() {

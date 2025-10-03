@@ -9,6 +9,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.SystemMessageEvent;
+import com.wynntils.services.chat.WrappingChatComponent;
 import com.wynntils.utils.ListUtils;
 import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -412,7 +413,11 @@ public final class ChatPageDetector {
 
         @Override
         public void run() {
-            processChatComponentReplacements(McUtils.mc().gui.getChat(), replacements);
+            ChatComponent chatComponent = McUtils.mc().gui.getChat();
+            if (chatComponent instanceof WrappingChatComponent wrappingChatComponent) {
+                chatComponent = wrappingChatComponent.getOriginalChatComponent();
+            }
+            processChatComponentReplacements(chatComponent, replacements);
 
             Services.ChatTab.forEachChatComponent(c -> processChatComponentReplacements(c, replacements));
         }
