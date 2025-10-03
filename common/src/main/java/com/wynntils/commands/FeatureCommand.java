@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -181,7 +181,7 @@ public class FeatureCommand extends Command {
             return 1;
         }
 
-        Managers.Feature.disableFeature(feature);
+        Managers.Feature.disableFeature(feature, false);
 
         if (feature.isEnabled()) {
             context.getSource()

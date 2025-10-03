@@ -14,7 +14,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.services.translation.TranslationService;
@@ -51,25 +51,25 @@ public class TranslationFeature extends Feature {
             new Config<>(TranslationService.TranslationServices.GOOGLEAPI);
 
     @SubscribeEvent
-    public void onChat(ChatMessageReceivedEvent e) {
+    public void onChat(ChatMessageEvent.Match e) {
         if (languageName.get().isEmpty()) return;
 
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
 
-        StyledText originalText = e.getStyledText();
-        String codedString = wrapCoding(originalText);
+        StyledText originalMessage = e.getMessage();
+        String codedString = wrapCoding(originalMessage);
         Services.Translation.getTranslator(translationService.get())
                 .translate(List.of(codedString), languageName.get(), translatedMsgList -> {
                     StyledText messageToSend;
                     if (!translatedMsgList.isEmpty()) {
                         String result = translatedMsgList.getFirst();
-                        messageToSend = unwrapCoding(result, originalText);
+                        messageToSend = unwrapCoding(result, originalMessage);
                     } else {
                         if (keepOriginal.get()) return;
 
                         // We failed to get a translation; send the original message so it's not lost
-                        messageToSend = originalText;
+                        messageToSend = originalMessage;
                     }
                     McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(messageToSend.getComponent()));
                 });

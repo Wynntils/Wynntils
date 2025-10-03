@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatScreenSendEvent;
@@ -54,12 +54,11 @@ public class ChatTabsFeature extends Feature {
 
     // We do this here, and not in Services.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onChatReceived(ChatMessageReceivedEvent event) {
+    public void onChatReceived(ChatMessageEvent.Discard event) {
         // We will send this message to every matching tab, so we can cancel it.
         event.setCanceled(true);
 
-        Services.ChatTab.handleIncomingMessage(
-                event.getRecipientType(), event.getOriginalStyledText(), event.getStyledText());
+        Services.ChatTab.handleIncomingMessage(event.getRecipientType(), event.getMessage(), event.getMessage());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
