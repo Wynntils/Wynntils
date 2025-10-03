@@ -5,6 +5,7 @@
 package com.wynntils.models.lootrun.beacons;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.NullableConfig;
 import com.wynntils.models.beacons.type.BeaconKind;
 import com.wynntils.utils.colors.CommonColors;
@@ -42,7 +43,8 @@ public enum LootrunBeaconKind implements BeaconKind, NullableConfig {
 
     @Override
     public float getCustomModelData() {
-        return Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA_SUPPLIER.get().orElse(-1f);
+        return Services.CustomModel.getFloat(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA_KEY)
+                .orElse(-1f);
     }
 
     public static LootrunBeaconKind fromName(String name) {

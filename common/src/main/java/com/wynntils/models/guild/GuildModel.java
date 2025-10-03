@@ -12,6 +12,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
@@ -30,8 +31,10 @@ import com.wynntils.models.guild.type.DiplomacyInfo;
 import com.wynntils.models.guild.type.GuildInfo;
 import com.wynntils.models.guild.type.GuildMemberInfo;
 import com.wynntils.models.guild.type.GuildRank;
+import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.screens.guildlog.GuildLogHolder;
+import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -154,6 +157,9 @@ public final class GuildModel extends Model {
     private CappedValue objectivesCompletedProgress = CappedValue.EMPTY;
     private int objectiveStreak = 0;
 
+    private static final int REQUEST_RATELIMIT = 300000;
+    private long lastGuildRequest = 0;
+
     public GuildModel() {
         super(List.of());
 
@@ -195,6 +201,8 @@ public final class GuildModel extends Model {
             String playerName = memberLeftMatcher.group(2);
             WynntilsMod.info("Player " + playerName + " left guild");
             guildMembers.remove(playerName);
+            WynntilsMod.postEvent(new HadesRelationsUpdateEvent.GuildMemberList(
+                    Set.of(playerName), HadesRelationsUpdateEvent.ChangeType.REMOVE));
             return;
         }
 
@@ -203,6 +211,8 @@ public final class GuildModel extends Model {
             String playerName = memberJoinedMatcher.group(2);
             WynntilsMod.info("Player " + playerName + " joined guild");
             guildMembers.add(playerName);
+            WynntilsMod.postEvent(new HadesRelationsUpdateEvent.GuildMemberList(
+                    Set.of(playerName), HadesRelationsUpdateEvent.ChangeType.ADD));
             return;
         }
 
@@ -218,6 +228,8 @@ public final class GuildModel extends Model {
 
             WynntilsMod.info("Player " + playerName + " kicked from guild");
             guildMembers.remove(playerName);
+            WynntilsMod.postEvent(new HadesRelationsUpdateEvent.GuildMemberList(
+                    Set.of(playerName), HadesRelationsUpdateEvent.ChangeType.REMOVE));
             return;
         }
 
@@ -311,6 +323,13 @@ public final class GuildModel extends Model {
         if (!title.matches(Pattern.compile(ContainerModel.GUILD_DIPLOMACY_MENU_NAME))) return;
 
         parseDiplomacyContent(event.getItems());
+    }
+
+    @SubscribeEvent
+    public void onAuth(HadesEvent.Authenticated event) {
+        if (!Models.WorldState.onWorld()) return;
+
+        requestGuildMembers();
     }
 
     public void parseGuildInfoFromGuildMenu(ItemStack guildInfoItem) {
@@ -446,19 +465,28 @@ public final class GuildModel extends Model {
         return guildMembers.contains(username);
     }
 
-    private void requestGuildMembers() {
-        if (guildName != null) {
-            CompletableFuture<GuildInfo> completableFuture = getGuild(guildName);
+    public void requestGuildMembers() {
+        if (guildName != null && !guildName.isEmpty()) {
+            if (System.currentTimeMillis() - lastGuildRequest > REQUEST_RATELIMIT || guildMembers.isEmpty()) {
+                CompletableFuture<GuildInfo> completableFuture = getGuild(guildName);
 
-            completableFuture.whenComplete((guild, throwable) -> {
-                if (throwable != null) {
-                    WynntilsMod.error("Failed to retrieve players guild (" + guildName + ") info", throwable);
-                } else {
-                    guildMembers = guild.guildMembers().stream()
-                            .map(GuildMemberInfo::username)
-                            .collect(Collectors.toSet());
-                }
-            });
+                completableFuture.whenComplete((guild, throwable) -> {
+                    if (throwable != null) {
+                        WynntilsMod.error("Failed to retrieve players guild (" + guildName + ") info", throwable);
+                    } else {
+                        guildMembers = guild.guildMembers().stream()
+                                .map(GuildMemberInfo::username)
+                                .collect(Collectors.toSet());
+                        lastGuildRequest = System.currentTimeMillis();
+                        WynntilsMod.postEvent(new HadesRelationsUpdateEvent.GuildMemberList(
+                                guildMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+                    }
+                });
+            } else {
+                WynntilsMod.info("Skipping guild member list update request because it was requested recently.");
+                WynntilsMod.postEvent(new HadesRelationsUpdateEvent.GuildMemberList(
+                        guildMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+            }
         }
     }
 
@@ -471,6 +499,8 @@ public final class GuildModel extends Model {
         guildLevelProgress = CappedValue.EMPTY;
         objectivesCompletedProgress = CappedValue.EMPTY;
         objectiveStreak = 0;
+        WynntilsMod.postEvent(new HadesRelationsUpdateEvent.GuildMemberList(
+                guildMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
     }
 
     public String getGuildName() {
