@@ -486,10 +486,27 @@ public final class FeatureManager extends Manager {
 
         if (!feature.userEnabled.get()) return; // not enabled by user
 
-        enableFeature(feature);
+        doEnableFeature(feature);
     }
 
     public void enableFeature(Feature feature) {
+        try {
+            doEnableFeature(feature);
+        } catch (Throwable exception) {
+            // Log and handle gracefully, just disable this feature
+            crashFeature(feature);
+            WynntilsMod.reportCrash(
+                    CrashType.FEATURE,
+                    feature.getClass().getSimpleName(),
+                    feature.getClass().getName(),
+                    "enable",
+                    true,
+                    true,
+                    exception);
+        }
+    }
+
+    private void doEnableFeature(Feature feature) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException("Tried to enable an unregistered feature: " + feature);
         }
@@ -509,14 +526,14 @@ public final class FeatureManager extends Manager {
         Managers.KeyBind.enableFeatureKeyBinds(feature);
     }
 
-    public void disableFeature(Feature feature) {
+    public void disableFeature(Feature feature, boolean force) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException("Tried to disable an unregistered feature: " + feature);
         }
 
         FeatureState state = FEATURES.get(feature);
 
-        if (state != FeatureState.ENABLED) return;
+        if (state != FeatureState.ENABLED && !force) return;
 
         feature.onDisable();
 
@@ -534,7 +551,7 @@ public final class FeatureManager extends Manager {
             throw new IllegalArgumentException("Tried to crash an unregistered feature: " + feature);
         }
 
-        disableFeature(feature);
+        disableFeature(feature, true);
 
         FEATURES.put(feature, FeatureState.CRASHED);
     }
