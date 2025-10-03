@@ -11,10 +11,10 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.trademarket.TradeMarketModel;
+import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
 import com.wynntils.models.trademarket.type.TradeMarketPriceCheckInfo;
 import com.wynntils.models.trademarket.type.TradeMarketState;
@@ -46,15 +46,13 @@ public class TradeMarketPriceMatchFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageEvent.Match e) {
+    public void onTradeMarketChatInput(TradeMarketChatInputEvent e) {
+        if (e.getState() != TradeMarketState.PRICE_CHAT_INPUT) return;
         if (!sendPriceMessage) return;
-        if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.PRICE_CHAT_INPUT) return;
 
         WynntilsMod.info("Trying to set trade market price to " + priceToSend);
-
-        McUtils.sendChat(String.valueOf(priceToSend));
+        e.setResponse(String.valueOf(priceToSend));
         e.cancelChat();
-
         sendPriceMessage = false;
     }
 
