@@ -723,7 +723,11 @@ public final class FunctionManager extends Manager {
         registerFunction(new WarFunctions.WarStartFunction());
         registerFunction(new WarFunctions.WarsSinceFunction());
 
+        registerFunction(new WorldEventFunctions.AnnihilationDryCount());
         registerFunction(new WorldEventFunctions.AnnihilationSunProgressFunction());
+        registerFunction(new WorldEventFunctions.CurrentWorldEventFunction());
+        registerFunction(new WorldEventFunctions.CurrentWorldEventStartTimeFunction());
+        registerFunction(new WorldEventFunctions.WorldEventStartTimeFunction());
 
         registerFunction(new WorldFunctions.CurrentTerritoryFunction());
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());

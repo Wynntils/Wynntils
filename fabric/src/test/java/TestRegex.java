@@ -12,6 +12,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.account.AccountModel;
+import com.wynntils.models.activities.worldevents.WorldEventModel;
 import com.wynntils.models.bonustotems.label.BonusTotemLabelParser;
 import com.wynntils.models.combat.bossbar.DamageBar;
 import com.wynntils.models.combat.label.DamageLabelParser;
@@ -1119,5 +1120,21 @@ public class TestRegex {
         PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_INPUT_PATTERN");
         p.shouldMatch(
                 "§5\uE00A\uE002 Type the price in emeralds or formatted (e.g '10eb', '10stx 5eb') or type 'cancel' to cancel:");
+    }
+
+    @Test
+    public void WorldEventModel_ANNIHILATION_TIMER_PATTERN() {
+        PatternTester p = new PatternTester(WorldEventModel.class, "ANNIHILATION_TIMER_PATTERN");
+        p.shouldMatch("§#00bdbfff\uE001 §cPrepare to defend the province at the Corruption Portal in 39m 22s!");
+        p.shouldMatch("§#00bdbfff\uE001 §cPrepare to defend the province at the Corruption Portal in 11h 30m!");
+    }
+
+    @Test
+    public void WorldEventModel_WORLD_EVENT_PATTERN() {
+        PatternTester p = new PatternTester(WorldEventModel.class, "WORLD_EVENT_PATTERN");
+        p.shouldMatch(
+                "§#00bdbfff\uE00D\uE002 The Shapes in the Dark World Event starts in 6m 59s! §7(509 blocks away) §d§nClick to track");
+        p.shouldMatch(
+                "§#00bdbfff\uE00D\uE002 The Corrupted Spring World Event starts in 2m 59s! §7(271 blocks away) §d§nClick to track");
     }
 }
