@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)
@@ -142,7 +141,7 @@ public class ChatRedirectFeature extends Feature {
         redirectors.add(redirector);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match e) {
         StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
         MessageType messageType = e.getMessageType();
@@ -157,7 +156,7 @@ public class ChatRedirectFeature extends Feature {
             Matcher matcher = message.getMatcher(pattern);
 
             if (matcher.find()) {
-                e.setCanceled(true);
+                e.cancelChat();
                 if (redirector.getAction() == RedirectAction.HIDE) continue;
 
                 for (StyledText notification : redirector.getNotifications(matcher)) {

@@ -8,8 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.WynnItem;
@@ -294,7 +294,7 @@ public class InventoryFunctions {
             ItemStack itemStack = InventoryUtils.getItemInHand();
             StyledText hoverName = StyledText.fromComponent(itemStack.getHoverName());
             if (!arguments.getArgument("formatted").getBooleanValue()) {
-                return hoverName.getString(PartStyle.StyleType.NONE);
+                return hoverName.getString(StyleType.NONE);
             }
             return hoverName.getString();
         }

@@ -12,8 +12,8 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
@@ -74,7 +74,7 @@ public class TranslationFeature extends Feature {
                     McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(messageToSend.getComponent()));
                 });
         if (!keepOriginal.get()) {
-            e.setCanceled(true);
+            e.cancelChat();
         }
     }
 
@@ -149,7 +149,7 @@ public class TranslationFeature extends Feature {
 
     private String wrapCoding(StyledText origCoded) {
         return origCoded
-                .getString(PartStyle.StyleType.INCLUDE_EVENTS)
+                .getString(StyleType.INCLUDE_EVENTS)
                 .replaceAll("(§[0-9a-fklmnor])", "{$1}")
                 .replaceAll("§\\[([0-9]+)\\]", "[§$1]")
                 .replaceAll("§<([0-9]+)>", "<§$1>");

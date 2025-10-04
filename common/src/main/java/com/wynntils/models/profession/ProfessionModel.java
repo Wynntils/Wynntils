@@ -130,7 +130,7 @@ public final class ProfessionModel extends Model {
                     Float.parseFloat(craftMatcher.group("current")));
             WynntilsMod.postEvent(xpGainEvent);
             if (xpGainEvent.isCanceled()) {
-                event.setCanceled(true);
+                event.cancelChat();
             }
             return;
         }

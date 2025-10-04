@@ -7,17 +7,12 @@ package com.wynntils.mc.mixin;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.PauseMenuInitEvent;
-import com.wynntils.mc.event.ScreenFocusEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.CrashReport;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ComponentPath;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -82,26 +77,6 @@ public abstract class ScreenMixin implements ScreenExtension {
     private void onFirstScreenInitPost(CallbackInfo ci) {
         // This is called only once, when the screen is first initialized
         MixinHelper.post(new ScreenInitEvent.Post((Screen) (Object) this, true));
-    }
-
-    @Inject(method = "changeFocus(Lnet/minecraft/client/gui/ComponentPath;)V", at = @At("HEAD"), cancellable = true)
-    private void onChangeFocus(ComponentPath componentPath, CallbackInfo ci) {
-        GuiEventListener guiEventListener = componentPath instanceof ComponentPath.Path path
-                ? path.childPath().component()
-                : componentPath.component();
-
-        ScreenFocusEvent event = new ScreenFocusEvent((Screen) (Object) this, guiEventListener);
-        MixinHelper.post(event);
-
-        if (event.isCanceled()) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", at = @At("RETURN"))
-    private void onScreenRenderPost(
-            GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        MixinHelper.post(new ScreenRenderEvent((Screen) (Object) this, guiGraphics, mouseX, mouseY, partialTick));
     }
 
     @Inject(

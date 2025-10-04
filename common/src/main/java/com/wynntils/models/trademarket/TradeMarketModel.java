@@ -25,7 +25,9 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderCon
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
+import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
+import com.wynntils.models.trademarket.event.TradeMarketStateEvent;
 import com.wynntils.models.trademarket.type.TradeMarketPriceCheckInfo;
 import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
 import com.wynntils.models.trademarket.type.TradeMarketState;
@@ -34,6 +36,7 @@ import com.wynntils.screens.trademarket.TradeMarketSearchResultHolder;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,6 +51,9 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class TradeMarketModel extends Model {
+    private static final Set<TradeMarketState> CHAT_INPUT_STATES = EnumSet.of(
+            TradeMarketState.SEARCH_CHAT_INPUT, TradeMarketState.AMOUNT_CHAT_INPUT, TradeMarketState.PRICE_CHAT_INPUT);
+
     private static final Pattern[] ITEM_NAME_PATTERNS = {
         // Item on the create buy order menu or create sell offer menu
         Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+?)(?:§6)? for .+ Each$"),
@@ -132,7 +138,7 @@ public final class TradeMarketModel extends Model {
     public void onScreenClose(ScreenClosedEvent.Post event) {
         if (inChatInput()) return;
 
-        tradeMarketState = TradeMarketState.NOT_ACTIVE;
+        updateTradeMarketState(TradeMarketState.NOT_ACTIVE);
         filtersActive = false;
         nameFiltersActive = false;
     }
@@ -169,19 +175,38 @@ public final class TradeMarketModel extends Model {
     public void onChatMessageReceive(ChatMessageEvent.Match event) {
         StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
 
+        TradeMarketState newState;
+
         if (styledText.matches(SEARCH_INPUT_PATTERN)) {
-            tradeMarketState = TradeMarketState.SEARCH_CHAT_INPUT;
+            newState = TradeMarketState.SEARCH_CHAT_INPUT;
         } else if (styledText.matches(AMOUNT_INPUT_PATTERN)) {
-            tradeMarketState = TradeMarketState.AMOUNT_CHAT_INPUT;
+            newState = TradeMarketState.AMOUNT_CHAT_INPUT;
         } else if (styledText.matches(PRICE_INPUT_PATTERN)) {
-            tradeMarketState = TradeMarketState.PRICE_CHAT_INPUT;
+            newState = TradeMarketState.PRICE_CHAT_INPUT;
         } else if (styledText.matches(CANCELLED_PATTERN)) {
-            tradeMarketState = TradeMarketState.NOT_ACTIVE;
+            newState = TradeMarketState.NOT_ACTIVE;
+        } else {
+            newState = null;
+        }
+
+        if (newState != null) {
+            updateTradeMarketState(newState);
+
+            if (inChatInput()) {
+                TradeMarketChatInputEvent inputEvent = new TradeMarketChatInputEvent(newState, styledText);
+                WynntilsMod.postEvent(inputEvent);
+                if (inputEvent.isCanceled()) {
+                    event.cancelChat();
+                }
+                if (inputEvent.getResponse() != null) {
+                    McUtils.sendChat(inputEvent.getResponse());
+                }
+            }
         }
     }
 
     @SubscribeEvent
-    public void onClientChat(ChatSentEvent event) {
+    public void onChatSent(ChatSentEvent event) {
         if (tradeMarketState != TradeMarketState.SEARCH_CHAT_INPUT) return;
         if (!nameFiltersActive && event.getMessage().equalsIgnoreCase("cancel")) return;
 
@@ -192,7 +217,7 @@ public final class TradeMarketModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
-        tradeMarketState = TradeMarketState.NOT_ACTIVE;
+        updateTradeMarketState(TradeMarketState.NOT_ACTIVE);
         nameFiltersActive = false;
         filtersActive = false;
     }
@@ -345,27 +370,31 @@ public final class TradeMarketModel extends Model {
     private void updateStateFromContainer() {
         Container currentContainer = Models.Container.getCurrentContainer();
 
+        TradeMarketState newState;
         if (currentContainer instanceof TradeMarketContainer) {
-            tradeMarketState = nameFiltersActive || filtersActive
+            newState = nameFiltersActive || filtersActive
                     ? TradeMarketState.FILTERED_RESULTS
                     : TradeMarketState.DEFAULT_RESULTS;
         } else if (currentContainer instanceof TradeMarketFiltersContainer) {
-            tradeMarketState = TradeMarketState.FILTERS_PAGE;
+            newState = TradeMarketState.FILTERS_PAGE;
         } else if (currentContainer instanceof TradeMarketSellContainer) {
-            tradeMarketState = TradeMarketState.SELLING;
+            newState = TradeMarketState.SELLING;
         } else if (currentContainer instanceof TradeMarketBuyContainer) {
-            tradeMarketState = TradeMarketState.BUYING;
+            newState = TradeMarketState.BUYING;
         } else if (currentContainer instanceof TradeMarketTradesContainer) {
-            tradeMarketState = TradeMarketState.VIEWING_TRADES;
+            newState = TradeMarketState.VIEWING_TRADES;
         } else if (currentContainer instanceof TradeMarketOrderContainer) {
-            tradeMarketState = TradeMarketState.VIEWING_ORDER;
+            newState = TradeMarketState.VIEWING_ORDER;
+        } else {
+            newState = null;
+        }
+        if (newState != null) {
+            updateTradeMarketState(newState);
         }
     }
 
     public boolean inChatInput() {
-        return tradeMarketState == TradeMarketState.SEARCH_CHAT_INPUT
-                || tradeMarketState == TradeMarketState.AMOUNT_CHAT_INPUT
-                || tradeMarketState == TradeMarketState.PRICE_CHAT_INPUT;
+        return CHAT_INPUT_STATES.contains(tradeMarketState);
     }
 
     public boolean inTradeMarket() {
@@ -374,5 +403,14 @@ public final class TradeMarketModel extends Model {
 
     public TradeMarketState getTradeMarketState() {
         return tradeMarketState;
+    }
+
+    private void updateTradeMarketState(TradeMarketState newState) {
+        if (tradeMarketState != newState) {
+            TradeMarketState oldState = tradeMarketState;
+            tradeMarketState = newState;
+
+            WynntilsMod.postEvent(new TradeMarketStateEvent(newState, oldState));
+        }
     }
 }

@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.scoreboard;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
@@ -50,17 +50,17 @@ public class LootrunScoreboardPart extends ScoreboardPart {
 
         StyledText currentStateLine = content.getFirst();
 
-        if (currentStateLine.matches(CHOOSE_BEACON_PATTERN, PartStyle.StyleType.NONE)) {
+        if (currentStateLine.matches(CHOOSE_BEACON_PATTERN, StyleType.NONE)) {
             Models.Lootrun.setState(LootrunningState.CHOOSING_BEACON, null);
-        } else if (currentStateLine.matches(WARPING_BACK_PATTERN, PartStyle.StyleType.NONE)) {
+        } else if (currentStateLine.matches(WARPING_BACK_PATTERN, StyleType.NONE)) {
             Models.Lootrun.setState(LootrunningState.NOT_RUNNING, null);
-        } else if (currentStateLine.matches(LOOT_PATTERN, PartStyle.StyleType.NONE)) {
+        } else if (currentStateLine.matches(LOOT_PATTERN, StyleType.NONE)) {
             Models.Lootrun.setState(LootrunningState.IN_TASK, LootrunTaskType.LOOT);
-        } else if (currentStateLine.matches(SLAY_PATTERN, PartStyle.StyleType.NONE)) {
+        } else if (currentStateLine.matches(SLAY_PATTERN, StyleType.NONE)) {
             Models.Lootrun.setState(LootrunningState.IN_TASK, LootrunTaskType.SLAY);
-        } else if (currentStateLine.matches(DESTROY_PATTERN, PartStyle.StyleType.NONE)) {
+        } else if (currentStateLine.matches(DESTROY_PATTERN, StyleType.NONE)) {
             Models.Lootrun.setState(LootrunningState.IN_TASK, LootrunTaskType.DESTROY);
-        } else if (currentStateLine.matches(DEFEND_PATTERN, PartStyle.StyleType.NONE)) {
+        } else if (currentStateLine.matches(DEFEND_PATTERN, StyleType.NONE)) {
             Models.Lootrun.setState(LootrunningState.IN_TASK, LootrunTaskType.DEFEND);
         }
 
@@ -71,7 +71,7 @@ public class LootrunScoreboardPart extends ScoreboardPart {
         }
 
         StyledText timeRemainingLine = content.get(1);
-        Matcher matcher = timeRemainingLine.getMatcher(TIMER_PATTERN, PartStyle.StyleType.NONE);
+        Matcher matcher = timeRemainingLine.getMatcher(TIMER_PATTERN, StyleType.NONE);
         if (matcher.matches()) {
             Models.Lootrun.setTimeLeft(Integer.parseInt(matcher.group(1)) * 60 + Integer.parseInt(matcher.group(2)));
         }
@@ -83,7 +83,7 @@ public class LootrunScoreboardPart extends ScoreboardPart {
         }
 
         StyledText challengesLine = content.get(2);
-        matcher = challengesLine.getMatcher(CHALLENGES_PATTERN, PartStyle.StyleType.NONE);
+        matcher = challengesLine.getMatcher(CHALLENGES_PATTERN, StyleType.NONE);
         if (matcher.matches()) {
             Models.Lootrun.setChallenges(
                     new CappedValue(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2))));
