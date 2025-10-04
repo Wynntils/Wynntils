@@ -49,7 +49,7 @@ public class TomeInfoRegistry {
                         UrlId.DATA_STATIC_TOMES,
                         Dependency.multi(
                                 Models.WynnItem,
-                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
+                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN_V2, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
                 .handleJsonObject(this::loadTomeInfoRegistry);
     }
 
