@@ -90,9 +90,9 @@ public final class Models {
     public static final ElementModel Element = new ElementModel();
     public static final EmeraldModel Emerald = new EmeraldModel();
     public static final FriendsModel Friends = new FriendsModel();
+    public static final GambitModel Gambit = new GambitModel();
     public static final GearModel Gear = new GearModel();
     public static final GuildModel Guild = new GuildModel();
-    public static final GambitModel Gambit = new GambitModel();
     public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
     public static final HorseModel Horse = new HorseModel();
     public static final IngredientModel Ingredient = new IngredientModel();

@@ -6,32 +6,30 @@ package com.wynntils.models.gambits;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.RaidStartContainer;
 import com.wynntils.models.gambits.type.Gambit;
-import com.wynntils.utils.mc.McUtils;
+import com.wynntils.models.gambits.type.GambitStatus;
+import com.wynntils.models.items.items.gui.GambitItem;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
+import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class GambitModel extends Model {
-    private final List<Gambit> ActiveGambits = new ArrayList<>();
-
-    private static final String GAMBIT_ENABLED = "Click to Disable";
-    private static final String PLAYER_READY = "Un-ready to change";
+    private final List<Gambit> activeGambits = new ArrayList<>();
 
     public GambitModel() {
         super(List.of());
     }
 
     public List<Gambit> getActiveGambits() {
-        return ActiveGambits;
+        return Collections.unmodifiableList(activeGambits);
     }
 
     @SubscribeEvent
@@ -46,22 +44,24 @@ public final class GambitModel extends Model {
                 ItemStack itemStack = event.getItems().get(i);
                 if (itemStack.isEmpty()) continue;
 
-                // we only need the last line of the tooltip
-                Component tooltipLast = itemStack
-                        .getTooltipLines(Item.TooltipContext.of(McUtils.mc().level), null, TooltipFlag.NORMAL)
-                        .getLast();
+                Optional<ItemAnnotation> item = ItemHandler.getItemStackAnnotation(itemStack);
+                Gambit gambit = null;
+                GambitStatus gambitStatus = null;
+                if (item.isPresent() && item.get() instanceof GambitItem) {
+                    gambit = ((GambitItem) item.get()).getGambit();
+                    gambitStatus = ((GambitItem) item.get()).getGambitStatus();
+                }
 
-                Gambit gambit = Gambit.fromItemName(StyledText.fromComponent(itemStack.getHoverName()));
                 if (gambit == null) continue;
 
                 // only clear the gambits before adding the first item, skip if player is readied up
-                if (isFirst && !tooltipLast.toString().contains(PLAYER_READY)) {
+                if (isFirst && (gambitStatus != GambitStatus.PLAYER_READY)) {
                     isFirst = false;
-                    ActiveGambits.clear();
+                    activeGambits.clear();
                 }
 
-                if (tooltipLast.toString().contains(GAMBIT_ENABLED) && gambit != null) {
-                    ActiveGambits.add(gambit);
+                if (gambitStatus == gambitStatus.ENABLED) {
+                    activeGambits.add(gambit);
                 }
             }
         }

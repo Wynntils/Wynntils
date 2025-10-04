@@ -23,7 +23,8 @@ public enum Gambit {
     MADDENING_MAGE("Maddening Mage's Gambit"),
     MYOPIC("Myopic's Gambit"),
     OUTWORN_SOLDIER("Outworn Soldier's Gambit"),
-    SHATTERED_MORTAL("Shattered Mortal's Gambit");
+    SHATTERED_MORTAL("Shattered Mortal's Gambit"),
+    UNKNOWN("Unknown");
 
     private final String name;
 
@@ -41,6 +42,6 @@ public enum Gambit {
                 return g;
             }
         }
-        return null;
+        return UNKNOWN;
     }
 }
