@@ -293,21 +293,21 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (!isRenderThread()) return;
 
         ContainerSetContentEvent.Pre event = new ContainerSetContentEvent.Pre(
-                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId());
+                packet.items(), packet.carriedItem(), packet.containerId(), packet.stateId());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
         }
 
-        if (!packet.getItems().equals(event.getItems())) {
-            if (packet.getContainerId() == 0) {
+        if (!packet.items().equals(event.getItems())) {
+            if (packet.containerId() == 0) {
                 McUtils.player()
                         .inventoryMenu
-                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
-            } else if (packet.getContainerId() == McUtils.containerMenu().containerId) {
+                        .initializeContents(packet.stateId(), packet.items(), packet.carriedItem());
+            } else if (packet.containerId() == McUtils.containerMenu().containerId) {
                 McUtils.player()
                         .containerMenu
-                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
+                        .initializeContents(packet.stateId(), packet.items(), packet.carriedItem());
             }
 
             ci.cancel();
@@ -322,7 +322,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (!isRenderThread()) return;
 
         MixinHelper.post(new ContainerSetContentEvent.Post(
-                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
+                packet.items(), packet.carriedItem(), packet.containerId(), packet.stateId()));
     }
 
     @Inject(
