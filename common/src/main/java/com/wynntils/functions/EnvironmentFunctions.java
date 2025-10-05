@@ -152,7 +152,7 @@ public class EnvironmentFunctions {
     public static class MinecraftVersionFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return SharedConstants.getCurrentVersion().getName();
+            return SharedConstants.getCurrentVersion().name();
         }
     }
 

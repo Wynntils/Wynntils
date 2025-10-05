@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -32,7 +32,7 @@ public final class NetManager extends Manager {
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s+MC-%s (%s) %s",
             WynntilsMod.getVersion(),
-            SharedConstants.getCurrentVersion().getName(),
+            SharedConstants.getCurrentVersion().name(),
             WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
             WynntilsMod.getModLoader());
 
