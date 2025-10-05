@@ -34,7 +34,7 @@ public abstract class PlayerInteractEvent extends PlayerEvent {
     }
 
     public Level getWorld() {
-        return this.getPlayer().getCommandSenderWorld();
+        return this.getPlayer().level();
     }
 
     public InteractionResult getCancellationResult() {
