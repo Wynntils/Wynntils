@@ -14,18 +14,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.player.AvatarRenderer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PlayerRenderer.class)
-public abstract class PlayerRendererMixin
-        extends LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel> {
-    protected PlayerRendererMixin(Context context, PlayerModel entityModel, float f) {
+@Mixin(AvatarRenderer.class)
+public abstract class AvatarRendererMixin
+        extends LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel> {
+    protected AvatarRendererMixin(Context context, PlayerModel entityModel, float f) {
         super(context, entityModel, f);
     }
 
@@ -41,11 +41,11 @@ public abstract class PlayerRendererMixin
 
     @Inject(
             method =
-                    "renderNameTag(Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+                    "renderNameTag(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At("HEAD"),
             cancellable = true)
     private void onNameTagRenderPre(
-            PlayerRenderState renderState,
+            AvatarRenderState renderState,
             Component displayName,
             PoseStack poseStack,
             MultiBufferSource buffer,
