@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -59,6 +58,12 @@ public class RangeVisualizerFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> renderInFirstPerson = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> showGambitCircles = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> showMajorIDCircles = new Config<>(true);
 
     // Handles rendering for other players and ourselves in third person
     @SubscribeEvent
@@ -131,66 +136,71 @@ public class RangeVisualizerFeature extends Feature {
         // Don't render for ghost/npc
         if (!Models.Player.isLocalPlayer(player)) return;
 
-        List<GearInfo> validGear;
+        List<Pair<CustomColor, Float>> circles = new ArrayList<>();
+        if (showMajorIDCircles.get()) {
+            List<GearInfo> validGear;
 
-        if (player == McUtils.player()) {
-            // This is ourselves, rendered from outside
+            if (player == McUtils.player()) {
+                // This is ourselves, rendered from outside
 
-            // Don't render for preview in inventory or character selection screen
-            if (McUtils.mc().screen != null && !(McUtils.mc().screen instanceof ChatScreen)) return;
+                // Don't render for preview in inventory or character selection screen
+                if (McUtils.mc().screen != null && !(McUtils.mc().screen instanceof ChatScreen)) return;
 
-            validGear = Models.CharacterStats.getWornGear();
-        } else {
-            // Other players must be in party
-            if (!Models.Party.getPartyMembers()
-                    .contains(StyledText.fromComponent(player.getName()).getStringWithoutFormatting())) return;
+                validGear = Models.CharacterStats.getWornGear();
+            } else {
+                // Other players must be in party
+                if (!Models.Party.getPartyMembers()
+                        .contains(StyledText.fromComponent(player.getName()).getStringWithoutFormatting())) return;
 
-            validGear = new ArrayList<>();
-            // Check main hand
-            GearInfo mainHandGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
-            if (mainHandGearInfo != null) {
-                if (mainHandGearInfo.type().isWeapon()) {
-                    // We cannot verify class or level :(
-                    validGear.add(mainHandGearInfo);
-                }
-            }
-
-            // Check armor slots
-            player.getArmorSlots().forEach(itemStack -> {
-                GearInfo armorGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
-                if (armorGearInfo != null) {
-                    if (armorGearInfo.type().isArmor()) {
-                        validGear.add(armorGearInfo);
+                validGear = new ArrayList<>();
+                // Check main hand
+                GearInfo mainHandGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
+                if (mainHandGearInfo != null) {
+                    if (mainHandGearInfo.type().isWeapon()) {
+                        // We cannot verify class or level :(
+                        validGear.add(mainHandGearInfo);
                     }
                 }
-            });
 
-            // Accessory slots are not available to us :(
+                // Check armor slots
+                player.getArmorSlots().forEach(itemStack -> {
+                    GearInfo armorGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
+                    if (armorGearInfo != null) {
+                        if (armorGearInfo.type().isArmor()) {
+                            validGear.add(armorGearInfo);
+                        }
+                    }
+                });
+
+                // Accessory slots are not available to us :(
+            }
+
+            // For each valid gear, check all its major IDs, and store them as color/radius pairs
+            // Offset the radius slightly so multiple circles can be shown for each player
+            // Only a few major IDs can actually be applied at the same time, but we make this general
+            validGear.stream()
+                    .flatMap(gearInfo -> gearInfo.fixedStats().majorIds().stream()
+                            .map(majorId -> getCircleFromMajorId(majorId.name())))
+                    .filter(Objects::nonNull)
+                    .forEach(circles::add);
         }
-
-        // For each valid gear, check all its major IDs, and store them as color/radius pairs
-        // Offset the radius slightly so multiple circles can be shown for each player
-        // Only a few major IDs can actually be applied at the same time, but we make this general
-        List<Pair<CustomColor, Float>> circles = validGear.stream()
-                .flatMap(gearInfo ->
-                        gearInfo.fixedStats().majorIds().stream().map(majorId -> getCircleFromMajorId(majorId.name())))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
 
         // add circles gained from raid major id buffs and gambits
         if (Models.Raid.getCurrentRaid() != null) {
             // only show our own gambit circles
-            if (player == McUtils.player()) {
+            if (player == McUtils.player() && showGambitCircles.get()) {
                 Models.Gambit.getActiveGambits().stream()
                         .map(this::getCircleFromGambit)
                         .filter(Objects::nonNull)
                         .forEach(circles::add);
             }
 
-            Models.Raid.getRaidMajorIds(player.getName().getString()).stream()
-                    .map(this::getCircleFromMajorId)
-                    .filter(Objects::nonNull)
-                    .forEach(circles::add);
+            if (showMajorIDCircles.get()) {
+                Models.Raid.getRaidMajorIds(player.getName().getString()).stream()
+                        .map(this::getCircleFromMajorId)
+                        .filter(Objects::nonNull)
+                        .forEach(circles::add);
+            }
         }
 
         if (!circles.isEmpty()) {

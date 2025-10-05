@@ -6,8 +6,6 @@ package com.wynntils.models.gambits;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.RaidStartContainer;
@@ -44,12 +42,12 @@ public final class GambitModel extends Model {
                 ItemStack itemStack = event.getItems().get(i);
                 if (itemStack.isEmpty()) continue;
 
-                Optional<ItemAnnotation> item = ItemHandler.getItemStackAnnotation(itemStack);
+                Optional<GambitItem> gambitItem = Models.Item.asWynnItem(itemStack, GambitItem.class);
                 Gambit gambit = null;
                 GambitStatus gambitStatus = null;
-                if (item.isPresent() && item.get() instanceof GambitItem) {
-                    gambit = ((GambitItem) item.get()).getGambit();
-                    gambitStatus = ((GambitItem) item.get()).getGambitStatus();
+                if (gambitItem.isPresent()) {
+                    gambit = gambitItem.get().getGambit();
+                    gambitStatus = gambitItem.get().getGambitStatus();
                 }
 
                 if (gambit == null) continue;

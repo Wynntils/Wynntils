@@ -4,8 +4,6 @@
  */
 package com.wynntils.models.gambits.type;
 
-import com.wynntils.core.text.StyledText;
-
 public enum Gambit {
     ANEMIC("Anemic's Gambit"),
     ARCANE_INCONTINENT("Arcane Incontinent's Gambit"),
@@ -36,7 +34,7 @@ public enum Gambit {
         return name;
     }
 
-    public static Gambit fromItemName(StyledText itemName) {
+    public static Gambit fromItemName(String itemName) {
         for (Gambit g : values()) {
             if (itemName.contains(g.getName())) {
                 return g;

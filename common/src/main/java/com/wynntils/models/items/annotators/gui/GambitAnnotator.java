@@ -43,8 +43,7 @@ public final class GambitAnnotator implements GuiItemAnnotator {
             gambitStatus = GambitStatus.DISABLED;
         }
 
-        return new GambitItem(
-                Gambit.fromItemName(StyledText.fromString(itemName)), itemName, color, description, gambitStatus);
+        return new GambitItem(Gambit.fromItemName(itemName), itemName, color, description, gambitStatus);
     }
 
     private List<StyledText> extractDescriptionLines(List<StyledText> lines) {

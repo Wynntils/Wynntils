@@ -21,7 +21,7 @@ public class GambitItem extends GuiItem {
     public GambitItem(
             Gambit gambit, String name, CustomColor color, List<StyledText> description, GambitStatus gambitStatus) {
         this.gambit = gambit;
-        // not sure if I should remove the name or not, might be good to have, in case we have an unknown gambit
+        // name left here, in case we have an unknown gambit
         this.name = name;
         this.color = color;
         this.description = description;
