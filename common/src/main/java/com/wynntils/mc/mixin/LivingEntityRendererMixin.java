@@ -18,8 +18,8 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -88,9 +88,9 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntityRenderStat
             at = @At("RETURN"))
     private void onRenderPost(
             T renderState, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
-        if (!(renderState instanceof PlayerRenderState playerRenderState)) return;
+        if (!(renderState instanceof AvatarRenderState avatarRenderState)) return;
 
-        PlayerRenderEvent event = new PlayerRenderEvent(playerRenderState, matrixStack, buffer, packedLight);
+        PlayerRenderEvent event = new PlayerRenderEvent(avatarRenderState, matrixStack, buffer, packedLight);
         MixinHelper.post(event);
     }
 
