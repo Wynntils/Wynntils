@@ -10,8 +10,8 @@ import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(HumanoidArmorLayer.class)
 public abstract class HumanoidArmorLayerMixin<T extends HumanoidRenderState, A extends HumanoidModel<T>> {
     @Unique
-    private PlayerRenderState playerRenderState;
+    private AvatarRenderState avatarRenderState;
 
     @Inject(
             method =
@@ -37,8 +37,8 @@ public abstract class HumanoidArmorLayerMixin<T extends HumanoidRenderState, A e
             float f,
             float g,
             CallbackInfo ci) {
-        this.playerRenderState =
-                humanoidRenderState instanceof PlayerRenderState ? (PlayerRenderState) humanoidRenderState : null;
+        this.avatarRenderState =
+                humanoidRenderState instanceof AvatarRenderState ? (AvatarRenderState) humanoidRenderState : null;
     }
 
     @Inject(
@@ -54,9 +54,9 @@ public abstract class HumanoidArmorLayerMixin<T extends HumanoidRenderState, A e
             int packedLight,
             A model,
             CallbackInfo ci) {
-        if (playerRenderState == null) return;
+        if (avatarRenderState == null) return;
 
-        PlayerRenderLayerEvent.Armor event = new PlayerRenderLayerEvent.Armor(playerRenderState, slot);
+        PlayerRenderLayerEvent.Armor event = new PlayerRenderLayerEvent.Armor(avatarRenderState, slot);
         MixinHelper.post(event);
         if (event.isCanceled()) ci.cancel();
     }

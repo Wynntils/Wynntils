@@ -73,7 +73,7 @@ public class RangeVisualizerFeature extends Feature {
     // Handles rendering for other players and ourselves in third person
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
-        Entity entity = ((EntityRenderStateExtension) e.getPlayerRenderState()).getEntity();
+        Entity entity = ((EntityRenderStateExtension) e.getAvatarRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         // We render the circle for ourselves in onRenderLevelLast if first person rendering is enabled
         if (player.equals(McUtils.player()) && renderInFirstPerson.get()) return;
