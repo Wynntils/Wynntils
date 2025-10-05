@@ -2,6 +2,7 @@
   "client": [
     "AbstractContainerScreenMixin",
     "AbstractRecipeBookScreenMixin",
+    "AvatarRendererMixin",
     "BossHealthOverlayMixin",
     "CapeLayerMixin",
     "ChatComponentMixin",
@@ -43,7 +44,6 @@
     "MouseHandlerMixin",
     "MultiPlayerGameModeMixin",
     "PackRepositoryMixin",
-    "PlayerRendererMixin",
     "PlayerTabOverlayMixin",
     "ProgressScreenMixin",
     "RenderTargetMixin",

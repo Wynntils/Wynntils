@@ -22,7 +22,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.EquipmentAssetManager;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
@@ -33,11 +33,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.Equippable;
 
 public final class WynntilsCapeLayer extends WynntilsLayer {
-    private final HumanoidModel<PlayerRenderState> model;
+    private final HumanoidModel<AvatarRenderState> model;
     private final EquipmentAssetManager equipmentAssets;
 
     public WynntilsCapeLayer(
-            RenderLayerParent<PlayerRenderState, PlayerModel> renderLayerParent,
+            RenderLayerParent<AvatarRenderState, PlayerModel> renderLayerParent,
             EntityRendererProvider.Context renderProviderContext) {
         super(renderLayerParent);
         this.model = new PlayerCapeModel<>(renderProviderContext.getModelSet().bakeLayer(ModelLayers.PLAYER_CAPE));
@@ -49,12 +49,12 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PlayerRenderState playerRenderState,
+            AvatarRenderState avatarRenderState,
             float yRot,
             float xRot) {
         if (!Managers.Feature.getFeatureInstance(WynntilsCosmeticsFeature.class).isEnabled()) return;
 
-        Entity entity = ((EntityRenderStateExtension) playerRenderState).getEntity();
+        Entity entity = ((EntityRenderStateExtension) avatarRenderState).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (!Services.Cosmetics.shouldRenderCape(player, false)) return;
 
@@ -62,12 +62,12 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
         if (texture == null) return;
 
         poseStack.pushPose();
-        if (this.hasLayer(playerRenderState.chestEquipment, EquipmentClientInfo.LayerType.HUMANOID)) {
+        if (this.hasLayer(avatarRenderState.chestEquipment, EquipmentClientInfo.LayerType.HUMANOID)) {
             poseStack.translate(0.0F, -0.053125F, 0.06875F);
         }
 
         RenderTranslucentCheckEvent.Cape translucentCheckEvent =
-                new RenderTranslucentCheckEvent.Cape(false, playerRenderState, 1.0f);
+                new RenderTranslucentCheckEvent.Cape(false, avatarRenderState, 1.0f);
         MixinHelper.post(translucentCheckEvent);
 
         VertexConsumer vertexConsumer = buffer.getBuffer(
@@ -75,7 +75,7 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
                         ? RenderType.entityCutout(texture)
                         : RenderType.entityTranslucent(texture));
         this.getParentModel().copyPropertiesTo(this.model);
-        this.model.setupAnim(playerRenderState);
+        this.model.setupAnim(avatarRenderState);
         this.model.renderToBuffer(
                 poseStack,
                 vertexConsumer,

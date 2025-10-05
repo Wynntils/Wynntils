@@ -6,25 +6,25 @@ package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.neoforged.bus.api.Event;
 
 public class PlayerRenderEvent extends Event {
-    private final PlayerRenderState playerRenderState;
+    private final AvatarRenderState avatarRenderState;
     private final PoseStack poseStack;
     private final MultiBufferSource buffer;
     private final int packedLight;
 
     public PlayerRenderEvent(
-            PlayerRenderState playerRenderState, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
-        this.playerRenderState = playerRenderState;
+            AvatarRenderState avatarRenderState, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        this.avatarRenderState = avatarRenderState;
         this.poseStack = poseStack;
         this.buffer = buffer;
         this.packedLight = packedLight;
     }
 
-    public PlayerRenderState getPlayerRenderState() {
-        return playerRenderState;
+    public AvatarRenderState getAvatarRenderState() {
+        return avatarRenderState;
     }
 
     public PoseStack getPoseStack() {

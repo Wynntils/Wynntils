@@ -4,27 +4,27 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class PlayerRenderLayerEvent extends Event implements ICancellableEvent {
-    private final PlayerRenderState playerRenderState;
+    private final AvatarRenderState avatarRenderState;
 
-    protected PlayerRenderLayerEvent(PlayerRenderState playerRenderState) {
-        this.playerRenderState = playerRenderState;
+    protected PlayerRenderLayerEvent(AvatarRenderState avatarRenderState) {
+        this.avatarRenderState = avatarRenderState;
     }
 
-    public PlayerRenderState getPlayerRenderState() {
-        return playerRenderState;
+    public AvatarRenderState getAvatarRenderState() {
+        return avatarRenderState;
     }
 
     public static class Armor extends PlayerRenderLayerEvent {
         private final EquipmentSlot slot;
 
-        public Armor(PlayerRenderState playerRenderState, EquipmentSlot slot) {
-            super(playerRenderState);
+        public Armor(AvatarRenderState avatarRenderState, EquipmentSlot slot) {
+            super(avatarRenderState);
             this.slot = slot;
         }
 
@@ -34,14 +34,14 @@ public abstract class PlayerRenderLayerEvent extends Event implements ICancellab
     }
 
     public static class Cape extends PlayerRenderLayerEvent {
-        public Cape(PlayerRenderState playerRenderState) {
-            super(playerRenderState);
+        public Cape(AvatarRenderState avatarRenderState) {
+            super(avatarRenderState);
         }
     }
 
     public static class Elytra extends PlayerRenderLayerEvent {
-        public Elytra(PlayerRenderState playerRenderState) {
-            super(playerRenderState);
+        public Elytra(AvatarRenderState avatarRenderState) {
+            super(avatarRenderState);
         }
     }
 }

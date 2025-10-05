@@ -27,7 +27,7 @@ public class WynntilsCosmeticsFeature extends Feature {
     public void onCapeRender(PlayerRenderLayerEvent.Cape event) {
         if (!isEnabled() || !Managers.Connection.onServer()) return;
 
-        Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+        Entity entity = ((EntityRenderStateExtension) event.getAvatarRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (McUtils.player().is(player) && !renderOwnCape.get()) return;
 
@@ -41,7 +41,7 @@ public class WynntilsCosmeticsFeature extends Feature {
     public void onElytraRender(PlayerRenderLayerEvent.Elytra event) {
         if (!isEnabled() || !Managers.Connection.onServer()) return;
 
-        Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+        Entity entity = ((EntityRenderStateExtension) event.getAvatarRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (McUtils.player().is(player) && !renderOwnCape.get()) return;
 

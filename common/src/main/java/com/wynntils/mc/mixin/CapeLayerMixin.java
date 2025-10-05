@@ -17,7 +17,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.resources.PlayerSkin;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,25 +36,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CapeLayerMixin {
     @Shadow
     @Final
-    private HumanoidModel<PlayerRenderState> model;
+    private HumanoidModel<AvatarRenderState> model;
 
     @Unique
     private float wynntilsTranslucence;
 
     @Inject(
             method =
-                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/PlayerRenderState;FF)V",
+                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/AvatarRenderState;FF)V",
             at = @At("HEAD"),
             cancellable = true)
     private void render(
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PlayerRenderState playerRenderState,
+            AvatarRenderState avatarRenderState,
             float f,
             float g,
             CallbackInfo ci) {
-        PlayerRenderLayerEvent.Cape event = new PlayerRenderLayerEvent.Cape(playerRenderState);
+        PlayerRenderLayerEvent.Cape event = new PlayerRenderLayerEvent.Cape(avatarRenderState);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
@@ -63,7 +63,7 @@ public abstract class CapeLayerMixin {
 
     @ModifyArg(
             method =
-                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/PlayerRenderState;FF)V",
+                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/AvatarRenderState;FF)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -71,11 +71,11 @@ public abstract class CapeLayerMixin {
                                     "net/minecraft/client/renderer/MultiBufferSource.getBuffer(Lnet/minecraft/client/renderer/RenderType;)Lcom/mojang/blaze3d/vertex/VertexConsumer;"))
     private RenderType setTranslucenceCapeRenderType(
             RenderType original,
-            @Local(argsOnly = true) PlayerRenderState playerRenderState,
+            @Local(argsOnly = true) AvatarRenderState avatarRenderState,
             @Local PlayerSkin playerSkin) {
         // Always set default translucence value to 1.0f, because cape layer doesn't rendered same as ghost player.
         // It hidden by checking if player is invisible or cape model part is turned off
-        RenderTranslucentCheckEvent.Cape event = new RenderTranslucentCheckEvent.Cape(false, playerRenderState, 1.0f);
+        RenderTranslucentCheckEvent.Cape event = new RenderTranslucentCheckEvent.Cape(false, avatarRenderState, 1.0f);
         MixinHelper.post(event);
 
         float translucence = event.getTranslucence();
@@ -87,7 +87,7 @@ public abstract class CapeLayerMixin {
 
     @WrapOperation(
             method =
-                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/PlayerRenderState;FF)V",
+                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/AvatarRenderState;FF)V",
             at =
                     @At(
                             value = "INVOKE",

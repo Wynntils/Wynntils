@@ -19,7 +19,7 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
@@ -28,7 +28,7 @@ public final class WynntilsElytraLayer extends WynntilsLayer {
     private final ElytraModel elytraModel;
 
     public WynntilsElytraLayer(
-            RenderLayerParent<PlayerRenderState, PlayerModel> renderLayerParent,
+            RenderLayerParent<AvatarRenderState, PlayerModel> renderLayerParent,
             EntityRendererProvider.Context renderProviderContext) {
         super(renderLayerParent);
         this.elytraModel = new ElytraModel(renderProviderContext.getModelSet().bakeLayer(ModelLayers.ELYTRA));
@@ -39,12 +39,12 @@ public final class WynntilsElytraLayer extends WynntilsLayer {
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PlayerRenderState playerRenderState,
+            AvatarRenderState avatarRenderState,
             float yRot,
             float xRot) {
         if (!Managers.Feature.getFeatureInstance(WynntilsCosmeticsFeature.class).isEnabled()) return;
 
-        Entity entity = ((EntityRenderStateExtension) playerRenderState).getEntity();
+        Entity entity = ((EntityRenderStateExtension) avatarRenderState).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (!Services.Cosmetics.shouldRenderCape(player, true)) return;
 
@@ -53,7 +53,7 @@ public final class WynntilsElytraLayer extends WynntilsLayer {
 
         poseStack.pushPose();
         poseStack.translate(0.0F, 0.0F, 0.125F);
-        elytraModel.setupAnim(playerRenderState);
+        elytraModel.setupAnim(avatarRenderState);
         VertexConsumer vertexConsumer =
                 ItemRenderer.getArmorFoilBuffer(buffer, RenderType.armorCutoutNoCull(texture), false);
         this.elytraModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY);

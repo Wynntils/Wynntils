@@ -10,8 +10,8 @@ import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.WingsLayer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,9 +32,9 @@ public abstract class WingsLayerMixin<T extends HumanoidRenderState, M extends E
             float f,
             float g,
             CallbackInfo ci) {
-        if (!(renderState instanceof PlayerRenderState playerRenderState)) return;
+        if (!(renderState instanceof AvatarRenderState avatarRenderState)) return;
 
-        PlayerRenderLayerEvent.Elytra event = new PlayerRenderLayerEvent.Elytra(playerRenderState);
+        PlayerRenderLayerEvent.Elytra event = new PlayerRenderLayerEvent.Elytra(avatarRenderState);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
