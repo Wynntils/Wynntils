@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.models.abilities.type.ShieldType;
@@ -94,8 +95,8 @@ public class SpellFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("isColored", Boolean.class, true),
-                    new FunctionArguments.Argument<>("useShortName", Boolean.class, false)));
+                    new Argument<>("isColored", Boolean.class, true),
+                    new Argument<>("useShortName", Boolean.class, false)));
         }
     }
 
@@ -116,7 +117,7 @@ public class SpellFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 
@@ -137,7 +138,7 @@ public class SpellFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 
@@ -158,7 +159,7 @@ public class SpellFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 
@@ -179,7 +180,7 @@ public class SpellFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 }

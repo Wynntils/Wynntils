@@ -85,8 +85,6 @@ public final class NotificationManager extends Manager {
         // If the message is the same, don't do anything
         if (oldMessage.equals(newMessage)) return msgContainer;
 
-        WynntilsMod.info("Message Edited: " + msgContainer.getRenderTask() + " -> " + newMessage.getString());
-
         // If we have multiple repeated messages, we want to only edit the last one.
         Component oldComponent = msgContainer.getRenderTask().getText().getComponent();
         if (msgContainer.getMessageCount() > 1) {

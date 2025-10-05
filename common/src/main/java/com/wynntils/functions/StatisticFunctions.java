@@ -1,14 +1,16 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.services.statistics.type.StatisticEntry;
 import com.wynntils.services.statistics.type.StatisticKind;
+import com.wynntils.utils.type.Time;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.client.resources.language.I18n;
@@ -64,6 +66,16 @@ public final class StatisticFunctions {
         }
     }
 
+    public static class StatisticsFirstModifiedTimeFunction extends StatisticFunction<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            StatisticEntry statistic = getStatisticEntry(arguments);
+            if (statistic == null) return Time.NONE;
+
+            return Time.of(statistic.firstModified());
+        }
+    }
+
     public static class StatisticsFirstModifiedFunction extends StatisticFunction<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
@@ -71,6 +83,16 @@ public final class StatisticFunctions {
             if (statistic == null) return 0L;
 
             return statistic.firstModified();
+        }
+    }
+
+    public static class StatisticsLastModifiedTimeFunction extends StatisticFunction<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            StatisticEntry statistic = getStatisticEntry(arguments);
+            if (statistic == null) return Time.NONE;
+
+            return Time.of(statistic.lastModified());
         }
     }
 
@@ -99,8 +121,7 @@ public final class StatisticFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("statisticKey", String.class, null),
-                    new FunctionArguments.Argument<>("value", Number.class, null)));
+                    new Argument<>("statisticKey", String.class, null), new Argument<>("value", Number.class, null)));
         }
     }
 
@@ -110,8 +131,8 @@ public final class StatisticFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("statisticKey", String.class, null),
-                    new FunctionArguments.Argument<>("overall", Boolean.class, null)));
+                    new Argument<>("statisticKey", String.class, null),
+                    new Argument<>("overall", Boolean.class, null)));
         }
 
         @Override

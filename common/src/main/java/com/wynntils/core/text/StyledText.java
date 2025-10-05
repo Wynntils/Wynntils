@@ -409,6 +409,18 @@ public final class StyledText implements Iterable<StyledTextPart> {
      * @return the split {@link StyledText}s
      */
     public StyledText[] split(String regex) {
+        return split(regex, false);
+    }
+
+    /**
+     * Splits this {@link StyledText} into multiple {@link StyledText}s at the given index.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used when splitting.
+     *
+     * @param regex the regex to split at
+     * @param keepTrailingEmpty If true, trailing empty StyledTexts are kept
+     * @return the split {@link StyledText}s
+     */
+    public StyledText[] split(String regex, boolean keepTrailingEmpty) {
         // If this is an empty text, return an array with a single empty text
         if (parts.isEmpty()) {
             return new StyledText[] {StyledText.EMPTY};
@@ -424,7 +436,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             String partString = part.getString(null, PartStyle.StyleType.NONE);
 
             // Avoid empty parts at the end of the list, but keep them otherwise
-            int maxSplit = i == parts.size() - 1 ? 0 : -1;
+            int maxSplit = !keepTrailingEmpty && i == (parts.size() - 1) ? 0 : -1;
 
             List<String> stringParts =
                     Arrays.stream(pattern.split(partString, maxSplit)).toList();

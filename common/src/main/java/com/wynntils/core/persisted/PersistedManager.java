@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted;
@@ -30,10 +30,10 @@ public final class PersistedManager extends Manager {
         super(List.of());
     }
 
-    public void setRaw(PersistedValue<?> persisted, Object value) {
+    public <T> void setRaw(PersistedValue<T> persisted, Object value) {
         // Hack to allow Config/Storage manager to get around package limitations
         // Will be removed when refactoring is done
-        persisted.setRaw(value);
+        persisted.setWithoutTouch((T) value);
     }
 
     public void registerOwner(PersistedOwner owner) {

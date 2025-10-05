@@ -96,11 +96,25 @@ public final class StyledTextUtils {
         return newLines;
     }
 
+    public static int getLineCount(StyledText styledText) {
+        List<StyledText> lines = List.of(styledText.split("\n", true));
+        int lineCount = lines.size();
+        return lineCount;
+    }
+
     /**
      * Removes all newlines from the given styled text.
      */
     public static StyledText joinAllLines(StyledText styledText) {
         return styledText.replaceAll("\n", "");
+    }
+
+    public static List<StyledText> stripEventsAndLinks(List<StyledText> lines) {
+        List<StyledText> linesWithoutEvents = lines.stream()
+                .map(s -> s.getString())
+                .map(str -> StyledText.fromString(str))
+                .toList();
+        return linesWithoutEvents;
     }
 
     /**

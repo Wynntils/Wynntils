@@ -13,7 +13,9 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.arguments.ListArgument;
 import com.wynntils.core.text.StyledText;
 import java.util.Arrays;
 import java.util.Collection;
@@ -290,14 +292,13 @@ public class FunctionCommand extends Command {
                 ChatFormatting.GRAY + "Description: " + ChatFormatting.WHITE + function.getDescription() + "\n");
         helpComponent.append(ChatFormatting.GRAY + "Aliases:" + ChatFormatting.WHITE + " ["
                 + String.join(", ", function.getAliasList()) + "]\n");
-        helpComponent.append(ChatFormatting.GRAY + "Returns: " + ChatFormatting.WHITE
-                + function.getFunctionType().getSimpleName() + "\n");
+        helpComponent.append(
+                ChatFormatting.GRAY + "Returns: " + ChatFormatting.WHITE + function.getReturnTypeName() + "\n");
         helpComponent.append(ChatFormatting.GRAY + "Arguments:" + ChatFormatting.WHITE + " ("
                 + (isArgumentOptional ? "Optional" : "Required")
                 + ")");
 
-        for (FunctionArguments.Argument<?> argument :
-                function.getArgumentsBuilder().getArguments()) {
+        for (Argument<?> argument : function.getArgumentsBuilder().getArguments()) {
             String type;
 
             if (isArgumentOptional) {
@@ -305,7 +306,7 @@ public class FunctionCommand extends Command {
                         .formatted(
                                 argument.getType().getSimpleName(),
                                 argument.getDefaultValue().toString());
-            } else if (argument instanceof FunctionArguments.ListArgument<?>) {
+            } else if (argument instanceof ListArgument<?>) {
                 type = "(List<" + argument.getType().getSimpleName() + ">)";
             } else {
                 type = ("(" + argument.getType().getSimpleName() + ")");

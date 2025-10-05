@@ -7,6 +7,7 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.bonustotems.BonusTotem;
 import com.wynntils.models.bonustotems.type.BonusTotemType;
@@ -70,7 +71,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("worldName", String.class, "")));
+                    List.of(new Argument<>("worldName", String.class, "")));
         }
 
         @Override
@@ -138,7 +139,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 
@@ -159,7 +160,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 
@@ -180,7 +181,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 
@@ -201,7 +202,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 
@@ -230,7 +231,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
+                    List.of(new Argument<>("gatekeeperNumber", Integer.class, 0)));
         }
 
         @Override
@@ -252,7 +253,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
+                    List.of(new Argument<>("gatekeeperNumber", Integer.class, 0)));
         }
 
         @Override
@@ -274,7 +275,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
+                    List.of(new Argument<>("gatekeeperNumber", Integer.class, 0)));
         }
 
         @Override
@@ -306,7 +307,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 
@@ -326,7 +327,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 
@@ -346,7 +347,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 
@@ -366,7 +367,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
 
@@ -419,7 +420,7 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("prefixOnly", Boolean.class, false)));
+                    List.of(new Argument<>("prefixOnly", Boolean.class, false)));
         }
     }
 
@@ -436,9 +437,9 @@ public class WorldFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("width", Number.class, 130),
-                    new FunctionArguments.Argument<>("height", Number.class, 130),
-                    new FunctionArguments.Argument<>("scale", Number.class, 1)));
+                    new Argument<>("width", Number.class, 130),
+                    new Argument<>("height", Number.class, 130),
+                    new Argument<>("scale", Number.class, 1)));
         }
     }
 }

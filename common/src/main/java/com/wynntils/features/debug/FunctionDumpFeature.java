@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -74,7 +75,7 @@ public class FunctionDumpFeature extends Feature {
                 function.getName(),
                 function.getDescription(),
                 aliases,
-                function.getFunctionType().getSimpleName()
+                function.getReturnTypeName()
             };
             dataLines.add(dataLine);
         }
@@ -88,8 +89,7 @@ public class FunctionDumpFeature extends Feature {
 
         for (int i = 0; i < Managers.Function.getFunctions().size(); i++) {
             Function<?> function = Managers.Function.getFunctions().get(i);
-            for (FunctionArguments.Argument<?> argument :
-                    function.getArgumentsBuilder().getArguments()) {
+            for (Argument<?> argument : function.getArgumentsBuilder().getArguments()) {
                 String[] dataLine = {
                     String.valueOf(dataLines.size()),
                     argument.getName(),
@@ -133,7 +133,7 @@ public class FunctionDumpFeature extends Feature {
         String clearDatabase = "DROP SCHEMA public CASCADE; CREATE SCHEMA public;";
 
         Set<String> typeNames = Managers.Function.getFunctions().stream()
-                .map(function -> function.getFunctionType().getSimpleName())
+                .map(function -> function.getReturnTypeName())
                 .collect(Collectors.toSet());
         String makeTypeEnum = "CREATE TYPE type AS ENUM ("
                 + typeNames.stream().map(name -> "'" + name + "'").collect(Collectors.joining(",")) + ");";

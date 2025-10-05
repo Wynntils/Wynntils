@@ -6,6 +6,7 @@ package com.wynntils.core.consumers.functions;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.parser.ArgumentParser;
 import com.wynntils.core.consumers.functions.expressions.Expression;
@@ -14,11 +15,14 @@ import com.wynntils.core.consumers.functions.templates.Template;
 import com.wynntils.core.consumers.functions.templates.parser.TemplateParser;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.functions.ActivityFunctions;
+import com.wynntils.functions.BombFunctions;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.GuildFunctions;
+import com.wynntils.functions.HadesPartyFunctions;
 import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.InventoryFunctions;
 import com.wynntils.functions.LootrunFunctions;
@@ -28,6 +32,7 @@ import com.wynntils.functions.RaidFunctions;
 import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.SpellFunctions;
 import com.wynntils.functions.StatisticFunctions;
+import com.wynntils.functions.StatusEffectFunctions;
 import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldEventFunctions;
 import com.wynntils.functions.WorldFunctions;
@@ -42,6 +47,7 @@ import com.wynntils.functions.generic.MathFunctions;
 import com.wynntils.functions.generic.NamedFunctions;
 import com.wynntils.functions.generic.RangedFunctions;
 import com.wynntils.functions.generic.StringFunctions;
+import com.wynntils.functions.generic.TimeFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.ErrorOr;
@@ -339,8 +345,7 @@ public final class FunctionManager extends Manager {
                 : "Fix i18n name for " + function.getTranslatedName();
         assert !function.getDescription().startsWith("function.wynntils.")
                 : "Fix i18n description for " + function.getDescription();
-        for (FunctionArguments.Argument<?> argument :
-                function.getArgumentsBuilder().getArguments()) {
+        for (Argument<?> argument : function.getArgumentsBuilder().getArguments()) {
             assert !function.getArgumentDescription(argument.getName()).startsWith("function.wynntils.")
                     : "Fix i18n argument description for " + function.getArgumentDescription(argument.getName());
         }
@@ -348,7 +353,6 @@ public final class FunctionManager extends Manager {
 
     private void registerAllFunctions() {
         // Generic Functions
-
         registerFunction(new CappedFunctions.AtCapFunction());
         registerFunction(new CappedFunctions.CapFunction());
         registerFunction(new CappedFunctions.CappedFunction());
@@ -371,6 +375,7 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new ConditionalFunctions.IfCappedValueFunction());
         registerFunction(new ConditionalFunctions.IfCustomColorFunction());
+        registerFunction(new ConditionalFunctions.IfFunction());
         registerFunction(new ConditionalFunctions.IfNumberFunction());
         registerFunction(new ConditionalFunctions.IfStringFunction());
 
@@ -382,10 +387,10 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new LogicFunctions.AndFunction());
         registerFunction(new LogicFunctions.EqualsFunction());
-        registerFunction(new LogicFunctions.LessThanFunction());
-        registerFunction(new LogicFunctions.LessThanOrEqualsFunction());
         registerFunction(new LogicFunctions.GreaterThanFunction());
         registerFunction(new LogicFunctions.GreaterThanOrEqualsFunction());
+        registerFunction(new LogicFunctions.LessThanFunction());
+        registerFunction(new LogicFunctions.LessThanOrEqualsFunction());
         registerFunction(new LogicFunctions.NotEqualsFunction());
         registerFunction(new LogicFunctions.NotFunction());
         registerFunction(new LogicFunctions.OrFunction());
@@ -411,8 +416,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.CappedStringFunction());
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatCappedFunction());
-        registerFunction(new StringFunctions.FormatDurationFunction());
         registerFunction(new StringFunctions.FormatDateFunction());
+        registerFunction(new StringFunctions.FormatDurationFunction());
         registerFunction(new StringFunctions.FormatFunction());
         registerFunction(new StringFunctions.FormatRangedFunction());
         registerFunction(new StringFunctions.LeadingZerosFunction());
@@ -425,8 +430,301 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.StringContainsFunction());
         registerFunction(new StringFunctions.StringEqualsFunction());
         registerFunction(new StringFunctions.StringFunction());
+        registerFunction(new StringFunctions.ToRomanNumeralsFunction());
+
+        registerFunction(new TimeFunctions.AbsoluteTimeFunction());
+        registerFunction(new TimeFunctions.FormatTimeAdvancedFunction());
+        registerFunction(new TimeFunctions.SecondsBetweenFunction());
+        registerFunction(new TimeFunctions.SecondsSinceFunction());
+        registerFunction(new TimeFunctions.TimeFunction());
+        registerFunction(new TimeFunctions.TimeOffsetFunction());
+        registerFunction(new TimeFunctions.TimeStringFunction());
+        registerFunction(new TimeFunctions.TimestampFunction());
 
         // Regular Functions
+        registerFunction(new ActivityFunctions.ActivityColorFunction());
+        registerFunction(new ActivityFunctions.ActivityNameFunction());
+        registerFunction(new ActivityFunctions.ActivityTaskFunction());
+        registerFunction(new ActivityFunctions.ActivityTypeFunction());
+        registerFunction(new ActivityFunctions.IsTrackingActivityFunction());
+
+        registerFunction(new BombFunctions.BombFormattedStringFunction());
+        registerFunction(new BombFunctions.BombLengthFunction());
+        registerFunction(new BombFunctions.BombOwnerFunction());
+        registerFunction(new BombFunctions.BombEndTimeFunction());
+        registerFunction(new BombFunctions.BombStartTimeFunction());
+        registerFunction(new BombFunctions.BombTypeFunction());
+        registerFunction(new BombFunctions.BombWorldFunction());
+
+        registerFunction(new CharacterFunctions.AspectTierFunction());
+        registerFunction(new CharacterFunctions.BpsFunction());
+        registerFunction(new CharacterFunctions.BpsXzFunction());
+        registerFunction(new CharacterFunctions.CappedAwakenedProgressFunction());
+        registerFunction(new CharacterFunctions.CappedBloodPoolFunction());
+        registerFunction(new CharacterFunctions.CappedCorruptedFunction());
+        registerFunction(new CharacterFunctions.CappedFocusFunction());
+        registerFunction(new CharacterFunctions.CappedHealthFunction());
+        registerFunction(new CharacterFunctions.CappedHolyPowerFunction());
+        registerFunction(new CharacterFunctions.CappedManaBankFunction());
+        registerFunction(new CharacterFunctions.CappedManaFunction());
+        registerFunction(new CharacterFunctions.CappedOphanimFunction());
+        registerFunction(new CharacterFunctions.ClassFunction());
+        registerFunction(new CharacterFunctions.CommanderActivatedFunction());
+        registerFunction(new CharacterFunctions.CommanderDurationFunction());
+        registerFunction(new CharacterFunctions.EquippedAspectFunction());
+        registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
+        registerFunction(new CharacterFunctions.GuildObjectiveScoreFunction());
+        registerFunction(new CharacterFunctions.HasNoGuiFunction());
+        registerFunction(new CharacterFunctions.HealthFunction());
+        registerFunction(new CharacterFunctions.HealthMaxFunction());
+        registerFunction(new CharacterFunctions.HealthPctFunction());
+        registerFunction(new CharacterFunctions.HummingbirdsStateFunction());
+        registerFunction(new CharacterFunctions.IdFunction());
+        registerFunction(new CharacterFunctions.IsAspectEquippedFunction());
+        registerFunction(new CharacterFunctions.IsRidingHorseFunction());
+        registerFunction(new CharacterFunctions.ManaFunction());
+        registerFunction(new CharacterFunctions.ManaMaxFunction());
+        registerFunction(new CharacterFunctions.ManaPctFunction());
+        registerFunction(new CharacterFunctions.OphanimActive());
+        registerFunction(new CharacterFunctions.OphanimHealingPercentFunction());
+        registerFunction(new CharacterFunctions.OphanimOrb());
+        registerFunction(new CharacterFunctions.PersonalObjectiveGoalFunction());
+        registerFunction(new CharacterFunctions.PersonalObjectiveScoreFunction());
+        registerFunction(new CharacterFunctions.SprintFunction());
+
+        registerFunction(new CombatFunctions.AreaDamageAverageFunction());
+        registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
+        registerFunction(new CombatFunctions.BlocksAboveGroundFunction());
+        registerFunction(new CombatFunctions.FocusedMobHealthFunction());
+        registerFunction(new CombatFunctions.FocusedMobHealthPercentFunction());
+        registerFunction(new CombatFunctions.FocusedMobNameFunction());
+        registerFunction(new CombatFunctions.KillsPerMinuteFunction());
+        registerFunction(new CombatFunctions.LastDamageDealtFunction());
+        registerFunction(new CombatFunctions.LastKillFunction());
+        registerFunction(new CombatFunctions.LastSpellNameFunction());
+        registerFunction(new CombatFunctions.LastSpellRepeatCountFunction());
+        registerFunction(new CombatFunctions.TicksSinceLastSpellFunction());
+        registerFunction(new CombatFunctions.TimeSinceLastDamageDealtFunction());
+        registerFunction(new CombatFunctions.TimeSinceLastKillFunction());
+        registerFunction(new CombatFunctions.TotalAreaDamageFunction());
+
+        registerFunction(new CombatXpFunctions.CappedLevelFunction());
+        registerFunction(new CombatXpFunctions.CappedXpFunction());
+        registerFunction(new CombatXpFunctions.LevelFunction());
+        registerFunction(new CombatXpFunctions.XpFunction());
+        registerFunction(new CombatXpFunctions.XpPctFunction());
+        registerFunction(new CombatXpFunctions.XpPerMinuteFunction());
+        registerFunction(new CombatXpFunctions.XpPerMinuteRawFunction());
+        registerFunction(new CombatXpFunctions.XpPercentagePerMinuteFunction());
+        registerFunction(new CombatXpFunctions.XpRawFunction());
+        registerFunction(new CombatXpFunctions.XpReqFunction());
+        registerFunction(new CombatXpFunctions.XpReqRawFunction());
+
+        registerFunction(new EnvironmentFunctions.CappedMemFunction());
+        registerFunction(new EnvironmentFunctions.ClockFunction());
+        registerFunction(new EnvironmentFunctions.ClockmFunction());
+        registerFunction(new EnvironmentFunctions.MemMaxFunction());
+        registerFunction(new EnvironmentFunctions.MemPctFunction());
+        registerFunction(new EnvironmentFunctions.MemUsedFunction());
+        registerFunction(new EnvironmentFunctions.MinecraftVersionFunction());
+        registerFunction(new EnvironmentFunctions.NowFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchHoursFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchMillisecondsFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchMinutesFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchRunningFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchSecondsFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchZero());
+        registerFunction(new EnvironmentFunctions.WynncraftVersionFunction());
+        registerFunction(new EnvironmentFunctions.WynntilsVersionFunction());
+
+        registerFunction(new GuildFunctions.CappedGuildLevelProgressFunction());
+        registerFunction(new GuildFunctions.CappedGuildObjectivesProgressFunction());
+        registerFunction(new GuildFunctions.GuildLevelFunction());
+        registerFunction(new GuildFunctions.GuildNameFunction());
+        registerFunction(new GuildFunctions.GuildRankFunction());
+        registerFunction(new GuildFunctions.IsAlliedGuildFunction());
+        registerFunction(new GuildFunctions.IsGuildMemberFunction());
+        registerFunction(new GuildFunctions.ObjectiveStreakFunction());
+
+        registerFunction(new HadesPartyFunctions.HadesPartyMemberHealthFunction());
+        registerFunction(new HadesPartyFunctions.HadesPartyMemberLocationFunction());
+        registerFunction(new HadesPartyFunctions.HadesPartyMemberManaFunction());
+        registerFunction(new HadesPartyFunctions.HadesPartyMemberNameFunction());
+
+        registerFunction(new HorseFunctions.CappedHorseLevelFunction());
+        registerFunction(new HorseFunctions.CappedHorseTotalLevelTimeFunction());
+        registerFunction(new HorseFunctions.CappedHorseXpFunction());
+        registerFunction(new HorseFunctions.HorseLevelFunction());
+        registerFunction(new HorseFunctions.HorseLevelMaxFunction());
+        registerFunction(new HorseFunctions.HorseLevelTimeFunction());
+        registerFunction(new HorseFunctions.HorseNameFunction());
+        registerFunction(new HorseFunctions.HorseTierFunction());
+        registerFunction(new HorseFunctions.HorseXpFunction());
+
+        registerFunction(new InventoryFunctions.AccessoryDurabilityFunction());
+        registerFunction(new InventoryFunctions.AllShinyStatsFunction());
+        registerFunction(new InventoryFunctions.ArmorDurabilityFunction());
+        registerFunction(new InventoryFunctions.CappedHeldItemDurabilityFunction());
+        registerFunction(new InventoryFunctions.CappedIngredientPouchSlotsFunction());
+        registerFunction(new InventoryFunctions.CappedInventorySlotsFunction());
+        registerFunction(new InventoryFunctions.EmeraldBlockFunction());
+        registerFunction(new InventoryFunctions.EmeraldStringFunction());
+        registerFunction(new InventoryFunctions.EmeraldsFunction());
+        registerFunction(new InventoryFunctions.HeldItemCooldownFunction());
+        registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
+        registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
+        registerFunction(new InventoryFunctions.HeldItemNameFunction());
+        registerFunction(new InventoryFunctions.HeldItemShinyStatFunction());
+        registerFunction(new InventoryFunctions.HeldItemTypeFunction());
+        registerFunction(new InventoryFunctions.IngredientPouchIngredientsFunction());
+        registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
+        registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());
+        registerFunction(new InventoryFunctions.InventoryFreeFunction());
+        registerFunction(new InventoryFunctions.InventoryIngredientsFunction());
+        registerFunction(new InventoryFunctions.InventoryUsedFunction());
+        registerFunction(new InventoryFunctions.ItemCountFunction());
+        registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
+        registerFunction(new InventoryFunctions.MaterialCountFunction());
+        registerFunction(new InventoryFunctions.MoneyFunction());
+
+        registerFunction(new LootrunFunctions.ChestOpenedFunction());
+        registerFunction(new LootrunFunctions.ChestsOpenedThisSessionFunction());
+        registerFunction(new LootrunFunctions.DryBoxesFunction());
+        registerFunction(new LootrunFunctions.DryPullsFunction());
+        registerFunction(new LootrunFunctions.DryStreakFunction());
+        registerFunction(new LootrunFunctions.HighestDryStreakFunction());
+        registerFunction(new LootrunFunctions.LastDryStreakFunction());
+        registerFunction(new LootrunFunctions.LastMythicFunction());
+        registerFunction(new LootrunFunctions.LootrunBeaconCountFunction());
+        registerFunction(new LootrunFunctions.LootrunBeaconVibrantFunction());
+        registerFunction(new LootrunFunctions.LootrunChallengesFunction());
+        registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconColorFunction());
+        registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconVibrantFunction());
+        registerFunction(new LootrunFunctions.LootrunMissionFunction());
+        registerFunction(new LootrunFunctions.LootrunNextOrangeExpireFunction());
+        registerFunction(new LootrunFunctions.LootrunOrangeBeaconCountFunction());
+        registerFunction(new LootrunFunctions.LootrunRainbowBeaconCountFunction());
+        registerFunction(new LootrunFunctions.LootrunRedBeaconChallengeCountFunction());
+        registerFunction(new LootrunFunctions.LootrunRerollsFunction());
+        registerFunction(new LootrunFunctions.LootrunSacrificesFunction());
+        registerFunction(new LootrunFunctions.LootrunStateFunction());
+        registerFunction(new LootrunFunctions.LootrunTaskLocationFunction());
+        registerFunction(new LootrunFunctions.LootrunTaskNameFunction());
+        registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
+        registerFunction(new LootrunFunctions.LootrunTimeFunction());
+        registerFunction(new LootrunFunctions.LootrunTrialFunction());
+
+        registerFunction(new MinecraftFunctions.DirFunction());
+        registerFunction(new MinecraftFunctions.FpsFunction());
+        registerFunction(new MinecraftFunctions.KeyPressedFunction());
+        registerFunction(new MinecraftFunctions.MinecraftEffectDurationFunction());
+        registerFunction(new MinecraftFunctions.MyLocationFunction());
+        registerFunction(new MinecraftFunctions.TicksFunction());
+
+        registerFunction(new ProfessionFunctions.LastHarvestMaterialLevelFunction());
+        registerFunction(new ProfessionFunctions.LastHarvestMaterialNameFunction());
+        registerFunction(new ProfessionFunctions.LastHarvestMaterialTierFunction());
+        registerFunction(new ProfessionFunctions.LastHarvestMaterialTypeFunction());
+        registerFunction(new ProfessionFunctions.LastHarvestResourceTypeFunction());
+        registerFunction(new ProfessionFunctions.LastHarvestXpGainFunction());
+        registerFunction(new ProfessionFunctions.LastProfessionXpGainFunction());
+        registerFunction(new ProfessionFunctions.MaterialDryStreak());
+        registerFunction(new ProfessionFunctions.ProfessionLevelFunction());
+        registerFunction(new ProfessionFunctions.ProfessionPercentageFunction());
+        registerFunction(new ProfessionFunctions.ProfessionXpFunction());
+        registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());
+        registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
+
+        registerFunction(new RaidFunctions.CurrentRaidBossCountFunction());
+        registerFunction(new RaidFunctions.CurrentRaidChallengeCountFunction());
+        registerFunction(new RaidFunctions.CurrentRaidDamageFunction());
+        registerFunction(new RaidFunctions.CurrentRaidFunction());
+        registerFunction(new RaidFunctions.CurrentRaidRoomDamageFunction());
+        registerFunction(new RaidFunctions.CurrentRaidRoomNameFunction());
+        registerFunction(new RaidFunctions.CurrentRaidRoomStartFunction());
+        registerFunction(new RaidFunctions.CurrentRaidRoomTimeFunction());
+        registerFunction(new RaidFunctions.CurrentRaidStartFunction());
+        registerFunction(new RaidFunctions.CurrentRaidTimeFunction());
+        registerFunction(new RaidFunctions.DryAspectsFunction());
+        registerFunction(new RaidFunctions.DryRaidRewardPullsFunction());
+        registerFunction(new RaidFunctions.DryRaidsAspectsFunction());
+        registerFunction(new RaidFunctions.DryRaidsTomesFunction());
+        registerFunction(new RaidFunctions.RaidChallengesFunction());
+        registerFunction(new RaidFunctions.RaidHasRoomFunction());
+        registerFunction(new RaidFunctions.RaidIntermissionTimeFunction());
+        registerFunction(new RaidFunctions.RaidIsBossRoomFunction());
+        registerFunction(new RaidFunctions.RaidPersonalBestTimeFunction());
+        registerFunction(new RaidFunctions.RaidRoomDamageFunction());
+        registerFunction(new RaidFunctions.RaidRoomNameFunction());
+        registerFunction(new RaidFunctions.RaidRoomStartFunction());
+        registerFunction(new RaidFunctions.RaidRoomTimeFunction());
+        registerFunction(new RaidFunctions.RaidTimeRemainingFunction());
+        registerFunction(new RaidFunctions.RaidsRunsSinceFunction());
+        registerFunction(new RaidFunctions.SpecificRaidRunsSinceFunction());
+
+        registerFunction(new RangedFunctions.RangeHighFunction());
+        registerFunction(new RangedFunctions.RangeLowFunction());
+        registerFunction(new RangedFunctions.RangedFunction());
+
+        registerFunction(new SocialFunctions.FriendsFunction());
+        registerFunction(new SocialFunctions.IsFriendFunction());
+        registerFunction(new SocialFunctions.IsPartyMemberFunction());
+        registerFunction(new SocialFunctions.PartyLeaderFunction());
+        registerFunction(new SocialFunctions.PartyMembersFunction());
+        registerFunction(new SocialFunctions.PlayerNameFunction());
+        registerFunction(new SocialFunctions.WynntilsRoleFunction());
+
+        registerFunction(new SpellFunctions.ArrowShieldCountFunction());
+        registerFunction(new SpellFunctions.GuardianAngelsCountFunction());
+        registerFunction(new SpellFunctions.MantleShieldCountFunction());
+        registerFunction(new SpellFunctions.ShamanMaskFunction());
+        registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
+        registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
+        registerFunction(new SpellFunctions.ShamanTotemStateFunction());
+        registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
+        registerFunction(new SpellFunctions.ShieldTypeNameFunction());
+
+        registerFunction(new StatisticFunctions.StatisticsAverageFunction());
+        registerFunction(new StatisticFunctions.StatisticsCountFunction());
+        registerFunction(new StatisticFunctions.StatisticsFirstModifiedFunction());
+        registerFunction(new StatisticFunctions.StatisticsFirstModifiedTimeFunction());
+        registerFunction(new StatisticFunctions.StatisticsFormattedFunction());
+        registerFunction(new StatisticFunctions.StatisticsLastModifiedFunction());
+        registerFunction(new StatisticFunctions.StatisticsLastModifiedTimeFunction());
+        registerFunction(new StatisticFunctions.StatisticsMaxFunction());
+        registerFunction(new StatisticFunctions.StatisticsMinFunction());
+        registerFunction(new StatisticFunctions.StatisticsTotalFunction());
+
+        registerFunction(new StatusEffectFunctions.StatusEffectActiveFunction());
+        registerFunction(new StatusEffectFunctions.StatusEffectDurationFunction());
+        registerFunction(new StatusEffectFunctions.StatusEffectModifierFunction());
+        registerFunction(new StatusEffectFunctions.StatusEffectPrefixFunction());
+        registerFunction(new StatusEffectFunctions.StatusEffectsFunction());
+
+        registerFunction(new WarFunctions.AuraTimerFunction());
+        registerFunction(new WarFunctions.CurrentTowerAttackSpeedFunction());
+        registerFunction(new WarFunctions.CurrentTowerDamageFunction());
+        registerFunction(new WarFunctions.CurrentTowerDefenseFunction());
+        registerFunction(new WarFunctions.CurrentTowerHealthFunction());
+        registerFunction(new WarFunctions.EstimatedTimeToFinishWarFunction());
+        registerFunction(new WarFunctions.EstimatedWarEndFunction());
+        registerFunction(new WarFunctions.InitialTowerAttackSpeedFunction());
+        registerFunction(new WarFunctions.InitialTowerDamageFunction());
+        registerFunction(new WarFunctions.InitialTowerDefenseFunction());
+        registerFunction(new WarFunctions.InitialTowerHealthFunction());
+        registerFunction(new WarFunctions.IsTerritoryQueuedFunction());
+        registerFunction(new WarFunctions.TeamDpsFunction());
+        registerFunction(new WarFunctions.TimeInWarFunction());
+        registerFunction(new WarFunctions.TowerDpsFunction());
+        registerFunction(new WarFunctions.TowerEffectiveHpFunction());
+        registerFunction(new WarFunctions.TowerOwnerFunction());
+        registerFunction(new WarFunctions.TowerTerritoryFunction());
+        registerFunction(new WarFunctions.VolleyTimerFunction());
+        registerFunction(new WarFunctions.WarStartFunction());
+        registerFunction(new WarFunctions.WarsSinceFunction());
+
+        registerFunction(new WorldEventFunctions.AnnihilationSunProgressFunction());
+
         registerFunction(new WorldFunctions.CurrentTerritoryFunction());
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
@@ -450,231 +748,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.TokenGatekeeperTypeFunction());
         registerFunction(new WorldFunctions.WorldStateFunction());
         registerFunction(new WorldFunctions.WorldUptimeFunction());
-
-        registerFunction(new CharacterFunctions.BpsFunction());
-        registerFunction(new CharacterFunctions.BpsXzFunction());
-        registerFunction(new CharacterFunctions.CappedAwakenedProgressFunction());
-        registerFunction(new CharacterFunctions.CappedBloodPoolFunction());
-        registerFunction(new CharacterFunctions.CappedCorruptedFunction());
-        registerFunction(new CharacterFunctions.CappedFocusFunction());
-        registerFunction(new CharacterFunctions.CappedHealthFunction());
-        registerFunction(new CharacterFunctions.CappedHolyPowerFunction());
-        registerFunction(new CharacterFunctions.CappedManaBankFunction());
-        registerFunction(new CharacterFunctions.CappedManaFunction());
-        registerFunction(new CharacterFunctions.CappedOphanimFunction());
-        registerFunction(new CharacterFunctions.ClassFunction());
-        registerFunction(new CharacterFunctions.CommanderActivatedFunction());
-        registerFunction(new CharacterFunctions.CommanderDurationFunction());
-        registerFunction(new CharacterFunctions.HealthFunction());
-        registerFunction(new CharacterFunctions.HealthMaxFunction());
-        registerFunction(new CharacterFunctions.HealthPctFunction());
-        registerFunction(new CharacterFunctions.IdFunction());
-        registerFunction(new CharacterFunctions.ManaFunction());
-        registerFunction(new CharacterFunctions.ManaMaxFunction());
-        registerFunction(new CharacterFunctions.ManaPctFunction());
-        registerFunction(new CharacterFunctions.OphanimActive());
-        registerFunction(new CharacterFunctions.OphanimOrb());
-        registerFunction(new CharacterFunctions.SprintFunction());
-        registerFunction(new CharacterFunctions.StatusEffectActiveFunction());
-        registerFunction(new CharacterFunctions.StatusEffectDurationFunction());
-        registerFunction(new CharacterFunctions.StatusEffectModifierFunction());
-        registerFunction(new CharacterFunctions.StatusEffectsFunction());
-
-        registerFunction(new CombatFunctions.AreaDamageAverageFunction());
-        registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
-        registerFunction(new CombatFunctions.BlocksAboveGroundFunction());
-        registerFunction(new CombatFunctions.FocusedMobHealthFunction());
-        registerFunction(new CombatFunctions.FocusedMobHealthPercentFunction());
-        registerFunction(new CombatFunctions.FocusedMobNameFunction());
-        registerFunction(new CombatFunctions.KillsPerMinuteFunction());
-        registerFunction(new CombatFunctions.LastSpellNameFunction());
-        registerFunction(new CombatFunctions.LastSpellRepeatCountFunction());
-        registerFunction(new CombatFunctions.TicksSinceLastSpellFunction());
-        registerFunction(new CombatFunctions.TimeSinceLastDamageDealtFunction());
-        registerFunction(new CombatFunctions.TimeSinceLastKillFunction());
-        registerFunction(new CombatFunctions.TotalAreaDamageFunction());
-
-        registerFunction(new CombatXpFunctions.CappedLevelFunction());
-        registerFunction(new CombatXpFunctions.CappedXpFunction());
-        registerFunction(new CombatXpFunctions.LevelFunction());
-        registerFunction(new CombatXpFunctions.XpFunction());
-        registerFunction(new CombatXpFunctions.XpPctFunction());
-        registerFunction(new CombatXpFunctions.XpPerMinuteFunction());
-        registerFunction(new CombatXpFunctions.XpPerMinuteRawFunction());
-        registerFunction(new CombatXpFunctions.XpPercentagePerMinuteFunction());
-        registerFunction(new CombatXpFunctions.XpRawFunction());
-        registerFunction(new CombatXpFunctions.XpReqFunction());
-        registerFunction(new CombatXpFunctions.XpReqRawFunction());
-
-        registerFunction(new EnvironmentFunctions.CappedMemFunction());
-        registerFunction(new EnvironmentFunctions.ClockFunction());
-        registerFunction(new EnvironmentFunctions.ClockmFunction());
-        registerFunction(new EnvironmentFunctions.StopwatchZero());
-        registerFunction(new EnvironmentFunctions.StopwatchRunningFunction());
-        registerFunction(new EnvironmentFunctions.StopwatchHoursFunction());
-        registerFunction(new EnvironmentFunctions.StopwatchMinutesFunction());
-        registerFunction(new EnvironmentFunctions.StopwatchSecondsFunction());
-        registerFunction(new EnvironmentFunctions.StopwatchMillisecondsFunction());
-        registerFunction(new EnvironmentFunctions.MemMaxFunction());
-        registerFunction(new EnvironmentFunctions.MemPctFunction());
-        registerFunction(new EnvironmentFunctions.MemUsedFunction());
-
-        registerFunction(new InventoryFunctions.AccessoryDurabilityFunction());
-        registerFunction(new InventoryFunctions.AllShinyStatsFunction());
-        registerFunction(new InventoryFunctions.ArmorDurabilityFunction());
-        registerFunction(new InventoryFunctions.CappedHeldItemDurabilityFunction());
-        registerFunction(new InventoryFunctions.CappedIngredientPouchSlotsFunction());
-        registerFunction(new InventoryFunctions.CappedInventorySlotsFunction());
-        registerFunction(new InventoryFunctions.EmeraldBlockFunction());
-        registerFunction(new InventoryFunctions.EmeraldStringFunction());
-        registerFunction(new InventoryFunctions.EmeraldsFunction());
-        registerFunction(new InventoryFunctions.HeldItemCooldownFunction());
-        registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
-        registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
-        registerFunction(new InventoryFunctions.HeldItemNameFunction());
-        registerFunction(new InventoryFunctions.HeldItemShinyStatFunction());
-        registerFunction(new InventoryFunctions.HeldItemTypeFunction());
-        registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
-        registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());
-        registerFunction(new InventoryFunctions.InventoryFreeFunction());
-        registerFunction(new InventoryFunctions.InventoryUsedFunction());
-        registerFunction(new InventoryFunctions.ItemCountFunction());
-        registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
-        registerFunction(new InventoryFunctions.MoneyFunction());
-
-        registerFunction(new GuildFunctions.CappedGuildLevelProgressFunction());
-        registerFunction(new GuildFunctions.CappedGuildObjectivesProgressFunction());
-        registerFunction(new GuildFunctions.GuildLevelFunction());
-        registerFunction(new GuildFunctions.GuildNameFunction());
-        registerFunction(new GuildFunctions.GuildRankFunction());
-        registerFunction(new GuildFunctions.IsAlliedGuildFunction());
-        registerFunction(new GuildFunctions.ObjectiveStreakFunction());
-
-        registerFunction(new HorseFunctions.CappedHorseLevelFunction());
-        registerFunction(new HorseFunctions.CappedHorseTotalLevelTimeFunction());
-        registerFunction(new HorseFunctions.CappedHorseXpFunction());
-        registerFunction(new HorseFunctions.HorseLevelFunction());
-        registerFunction(new HorseFunctions.HorseLevelMaxFunction());
-        registerFunction(new HorseFunctions.HorseLevelTimeFunction());
-        registerFunction(new HorseFunctions.HorseNameFunction());
-        registerFunction(new HorseFunctions.HorseTierFunction());
-        registerFunction(new HorseFunctions.HorseXpFunction());
-
-        registerFunction(new LootrunFunctions.ChestOpenedFunction());
-        registerFunction(new LootrunFunctions.DryBoxesFunction());
-        registerFunction(new LootrunFunctions.DryPullsFunction());
-        registerFunction(new LootrunFunctions.DryStreakFunction());
-        registerFunction(new LootrunFunctions.HighestDryStreakFunction());
-        registerFunction(new LootrunFunctions.LastDryStreakFunction());
-        registerFunction(new LootrunFunctions.LastMythicFunction());
-        registerFunction(new LootrunFunctions.LootrunBeaconCountFunction());
-        registerFunction(new LootrunFunctions.LootrunBeaconVibrantFunction());
-        registerFunction(new LootrunFunctions.LootrunChallengesFunction());
-        registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconColorFunction());
-        registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconVibrantFunction());
-        registerFunction(new LootrunFunctions.LootrunMissionFunction());
-        registerFunction(new LootrunFunctions.LootrunRedBeaconChallengeCountFunction());
-        registerFunction(new LootrunFunctions.LootrunOrangeBeaconCountFunction());
-        registerFunction(new LootrunFunctions.LootrunNextOrangeExpireFunction());
-        registerFunction(new LootrunFunctions.LootrunRainbowBeaconCountFunction());
-        registerFunction(new LootrunFunctions.LootrunRerollsFunction());
-        registerFunction(new LootrunFunctions.LootrunSacrificesFunction());
-        registerFunction(new LootrunFunctions.LootrunStateFunction());
-        registerFunction(new LootrunFunctions.LootrunTaskLocationFunction());
-        registerFunction(new LootrunFunctions.LootrunTaskNameFunction());
-        registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
-        registerFunction(new LootrunFunctions.LootrunTimeFunction());
-        registerFunction(new LootrunFunctions.LootrunTrialFunction());
-
-        registerFunction(new MinecraftFunctions.DirFunction());
-        registerFunction(new MinecraftFunctions.FpsFunction());
-        registerFunction(new MinecraftFunctions.KeyPressedFunction());
-        registerFunction(new MinecraftFunctions.MinecraftEffectDurationFunction());
-        registerFunction(new MinecraftFunctions.MyLocationFunction());
-        registerFunction(new MinecraftFunctions.TicksFunction());
-
-        registerFunction(new ProfessionFunctions.LastHarvestMaterialLevelFunction());
-        registerFunction(new ProfessionFunctions.LastHarvestMaterialNameFunction());
-        registerFunction(new ProfessionFunctions.LastHarvestMaterialTierFunction());
-        registerFunction(new ProfessionFunctions.LastHarvestMaterialTypeFunction());
-        registerFunction(new ProfessionFunctions.LastHarvestResourceTypeFunction());
-        registerFunction(new ProfessionFunctions.MaterialDryStreak());
-        registerFunction(new ProfessionFunctions.ProfessionLevelFunction());
-        registerFunction(new ProfessionFunctions.ProfessionPercentageFunction());
-        registerFunction(new ProfessionFunctions.ProfessionXpFunction());
-        registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());
-        registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
-
-        registerFunction(new RaidFunctions.CurrentRaidFunction());
-        registerFunction(new RaidFunctions.CurrentRaidBossCountFunction());
-        registerFunction(new RaidFunctions.CurrentRaidChallengeCountFunction());
-        registerFunction(new RaidFunctions.CurrentRaidRoomNameFunction());
-        registerFunction(new RaidFunctions.CurrentRaidRoomTimeFunction());
-        registerFunction(new RaidFunctions.CurrentRaidRoomDamageFunction());
-        registerFunction(new RaidFunctions.CurrentRaidTimeFunction());
-        registerFunction(new RaidFunctions.CurrentRaidDamageFunction());
-        registerFunction(new RaidFunctions.DryAspectsFunction());
-        registerFunction(new RaidFunctions.DryRaidRewardPullsFunction());
-        registerFunction(new RaidFunctions.DryRaidsTomesFunction());
-        registerFunction(new RaidFunctions.DryRaidsAspectsFunction());
-        registerFunction(new RaidFunctions.RaidChallengesFunction());
-        registerFunction(new RaidFunctions.RaidHasRoomFunction());
-        registerFunction(new RaidFunctions.RaidIntermissionTimeFunction());
-        registerFunction(new RaidFunctions.RaidIsBossRoomFunction());
-        registerFunction(new RaidFunctions.RaidRoomDamageFunction());
-        registerFunction(new RaidFunctions.RaidRoomNameFunction());
-        registerFunction(new RaidFunctions.RaidRoomTimeFunction());
-        registerFunction(new RaidFunctions.RaidPersonalBestTimeFunction());
-        registerFunction(new RaidFunctions.RaidTimeRemainingFunction());
-
-        registerFunction(new RangedFunctions.RangeHighFunction());
-        registerFunction(new RangedFunctions.RangeLowFunction());
-        registerFunction(new RangedFunctions.RangedFunction());
-
-        registerFunction(new SpellFunctions.ArrowShieldCountFunction());
-        registerFunction(new SpellFunctions.GuardianAngelsCountFunction());
-        registerFunction(new SpellFunctions.MantleShieldCountFunction());
-        registerFunction(new SpellFunctions.ShamanMaskFunction());
-        registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
-        registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
-        registerFunction(new SpellFunctions.ShamanTotemStateFunction());
-        registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
-        registerFunction(new SpellFunctions.ShieldTypeNameFunction());
-
-        registerFunction(new SocialFunctions.FriendsFunction());
-        registerFunction(new SocialFunctions.PartyMembersFunction());
-        registerFunction(new SocialFunctions.PartyLeaderFunction());
-
-        registerFunction(new StatisticFunctions.StatisticsTotalFunction());
-        registerFunction(new StatisticFunctions.StatisticsCountFunction());
-        registerFunction(new StatisticFunctions.StatisticsMinFunction());
-        registerFunction(new StatisticFunctions.StatisticsMaxFunction());
-        registerFunction(new StatisticFunctions.StatisticsAverageFunction());
-        registerFunction(new StatisticFunctions.StatisticsFirstModifiedFunction());
-        registerFunction(new StatisticFunctions.StatisticsLastModifiedFunction());
-        registerFunction(new StatisticFunctions.StatisticsFormattedFunction());
-
-        registerFunction(new WarFunctions.AuraTimerFunction());
-        registerFunction(new WarFunctions.CurrentTowerAttackSpeedFunction());
-        registerFunction(new WarFunctions.CurrentTowerDamageFunction());
-        registerFunction(new WarFunctions.CurrentTowerDefenseFunction());
-        registerFunction(new WarFunctions.CurrentTowerHealthFunction());
-        registerFunction(new WarFunctions.EstimatedTimeToFinishWarFunction());
-        registerFunction(new WarFunctions.InitialTowerAttackSpeedFunction());
-        registerFunction(new WarFunctions.InitialTowerDamageFunction());
-        registerFunction(new WarFunctions.InitialTowerDefenseFunction());
-        registerFunction(new WarFunctions.InitialTowerHealthFunction());
-        registerFunction(new WarFunctions.IsTerritoryQueuedFunction());
-        registerFunction(new WarFunctions.TeamDpsFunction());
-        registerFunction(new WarFunctions.TimeInWarFunction());
-        registerFunction(new WarFunctions.TowerDpsFunction());
-        registerFunction(new WarFunctions.TowerEffectiveHpFunction());
-        registerFunction(new WarFunctions.TowerOwnerFunction());
-        registerFunction(new WarFunctions.TowerTerritoryFunction());
-        registerFunction(new WarFunctions.VolleyTimerFunction());
-        registerFunction(new WarFunctions.WarsSinceFunction());
-
-        registerFunction(new WorldEventFunctions.AnnihilationSunProgressFunction());
 
         registerFunction(new WynnAlphabetFunctions.TranscribeGavellianFunction());
         registerFunction(new WynnAlphabetFunctions.TranscribeWynnicFunction());

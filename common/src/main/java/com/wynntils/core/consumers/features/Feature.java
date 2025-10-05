@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.features;
@@ -98,7 +98,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
         if (userEnabled.get()) {
             Managers.Feature.enableFeature(this);
         } else {
-            Managers.Feature.disableFeature(this);
+            Managers.Feature.disableFeature(this, false);
         }
     }
 

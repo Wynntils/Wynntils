@@ -73,6 +73,9 @@ public class ValuablesProtectionFeature extends Feature {
     @Persisted
     private final Config<Integer> craftedBlacksmithLevel = new Config<>(0);
 
+    @Persisted
+    private final Config<Boolean> requireCtrlToSell = new Config<>(false);
+
     private static final ResourceLocation CIRCLE_TEXTURE =
             ResourceLocation.withDefaultNamespace("textures/wynn/gui/tutorial.png");
 
@@ -181,7 +184,7 @@ public class ValuablesProtectionFeature extends Feature {
             break;
         }
 
-        if (!slotsToWarn.isEmpty()) {
+        if (!slotsToWarn.isEmpty() && requireCtrlToSell.get()) {
             ctrlHintTextWidget = new HintTextWidget(
                     cs.width / 2,
                     cs.topPos - 6,
@@ -273,9 +276,10 @@ public class ValuablesProtectionFeature extends Feature {
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (slotsToWarn.isEmpty() || KeyboardUtils.isControlDown()) return;
-        if (e.getSlotNum() != BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT && e.getSlotNum() != TM_CONFIRM_BUTTON_SLOT)
+        if (slotsToWarn.isEmpty() || KeyboardUtils.isControlDown() || !requireCtrlToSell.get()) return;
+        if (e.getSlotNum() != BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT && e.getSlotNum() != TM_CONFIRM_BUTTON_SLOT) {
             return;
+        }
 
         e.setCanceled(true);
         for (int i = 0; i < 12; i += 6) {

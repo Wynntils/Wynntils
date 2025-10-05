@@ -6,8 +6,10 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.Time;
 import java.util.List;
 
 public class CombatFunctions {
@@ -32,8 +34,7 @@ public class CombatFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("seconds", Integer.class, 10)));
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("seconds", Integer.class, 10)));
         }
 
         @Override
@@ -51,8 +52,7 @@ public class CombatFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("seconds", Integer.class, 10)));
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("seconds", Integer.class, 10)));
         }
 
         @Override
@@ -83,7 +83,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("includeShared", Boolean.class, true)));
+                    List.of(new Argument<>("includeShared", Boolean.class, true)));
         }
 
         @Override
@@ -103,7 +103,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, false)));
+                    List.of(new Argument<>("burst", Boolean.class, false)));
         }
 
         @Override
@@ -123,7 +123,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, false)));
+                    List.of(new Argument<>("burst", Boolean.class, false)));
         }
 
         @Override
@@ -143,7 +143,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, false)));
+                    List.of(new Argument<>("burst", Boolean.class, false)));
         }
 
         @Override
@@ -188,6 +188,18 @@ public class CombatFunctions {
         }
     }
 
+    public static class LastDamageDealtFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            return Time.of(Models.Combat.getLastDamageDealtTimestamp());
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("last_dam");
+        }
+    }
+
     public static class TimeSinceLastDamageDealtFunction extends Function<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
@@ -197,6 +209,20 @@ public class CombatFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("last_dam_ms");
+        }
+    }
+
+    public static class LastKillFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            return Time.of(Models.Combat.getLastKillTimestamp(
+                    arguments.getArgument("includeShared").getBooleanValue()));
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("includeShared", Boolean.class, false)));
         }
     }
 
@@ -211,7 +237,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("includeShared", Boolean.class, false)));
+                    List.of(new Argument<>("includeShared", Boolean.class, false)));
         }
 
         @Override

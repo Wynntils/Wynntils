@@ -62,7 +62,7 @@ public final class WrappedScreenHandler extends Handler {
     }
 
     @SubscribeEvent
-    public void onScreenClose(ScreenClosedEvent event) {
+    public void onScreenClose(ScreenClosedEvent.Post event) {
         resetWrappedScreen(true);
     }
 

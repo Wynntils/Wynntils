@@ -33,7 +33,7 @@ public final class EmeraldModel extends Model {
     private static final Pattern EB_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(b|eb)");
     private static final Pattern K_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(k|thousand)");
     private static final Pattern M_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(m|million)");
-    private static final Pattern E_PATTERN = Pattern.compile("(\\d+)($|\\s|\\s*e|\\s*em)(?![^\\d\\s-])");
+    private static final Pattern E_PATTERN = Pattern.compile("(\\d+)($|-t|\\s|\\s*e|\\s*em)(?![^\\d\\s-])");
     private static final Pattern RAW_PRICE_PATTERN = Pattern.compile("\\d+");
     private static final double SILVERBULL_TAX_AMOUNT = 1.03;
     private static final double NORMAL_TAX_AMOUNT = 1.05;
@@ -99,6 +99,10 @@ public final class EmeraldModel extends Model {
         } else {
             containerEmeralds += adjustValue;
         }
+    }
+
+    public String getEmeraldCountString(int emeralds, boolean includeSymbol) {
+        return String.format(Locale.ROOT, "%,d" + (includeSymbol ? EmeraldUnits.EMERALD.getSymbol() : ""), emeralds);
     }
 
     public String getFormattedString(int emeralds, boolean appendZeros) {
@@ -191,6 +195,14 @@ public final class EmeraldModel extends Model {
         }
 
         return (emeralds > 0) ? String.valueOf(emeralds) : "";
+    }
+
+    public int getWithoutTax(int taxedValue) {
+        return (int) Math.ceil(taxedValue / Models.Emerald.getTaxAmount());
+    }
+
+    public int getWithTax(int untaxedValue) {
+        return (int) Math.floor(untaxedValue * Models.Emerald.getTaxAmount());
     }
 
     public double getTaxAmount() {

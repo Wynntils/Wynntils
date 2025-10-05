@@ -1,15 +1,14 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.UnsignedByteUtils;
 import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.UnsignedByte;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
-import net.minecraft.SharedConstants;
-import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,8 +19,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class TestUnsignedByteUtils {
     @BeforeAll
     public static void setup() {
-        SharedConstants.tryDetectVersion();
-        Bootstrap.bootStrap();
+        WynntilsMod.setupTestEnv();
     }
 
     @Test

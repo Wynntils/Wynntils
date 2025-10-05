@@ -90,7 +90,7 @@ public final class BankModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onScreenClose(ScreenClosedEvent e) {
+    public void onScreenClose(ScreenClosedEvent.Post e) {
         storageContainerType = null;
         currentPage = 1;
         editingName = false;

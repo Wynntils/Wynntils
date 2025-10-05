@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.type.RangedValue;
 import java.util.List;
@@ -20,9 +21,8 @@ public final class RangedFunctions {
 
         @Override
         protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("low", Integer.class, null),
-                    new FunctionArguments.Argument<>("high", Integer.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("low", Integer.class, null), new Argument<>("high", Integer.class, null)));
         }
     }
 
@@ -40,7 +40,7 @@ public final class RangedFunctions {
         @Override
         protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("range", RangedValue.class, null)));
+                    List.of(new Argument<>("range", RangedValue.class, null)));
         }
     }
 
@@ -58,7 +58,7 @@ public final class RangedFunctions {
         @Override
         protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("range", RangedValue.class, null)));
+                    List.of(new Argument<>("range", RangedValue.class, null)));
         }
     }
 }

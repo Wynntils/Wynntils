@@ -5,12 +5,14 @@
 package com.wynntils.models.raid.raids;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.colors.CustomColor;
 import java.util.Collections;
 import java.util.Map;
 
 public abstract class RaidKind {
     private final String raidName;
     private final String abbreviation;
+    private final CustomColor raidColor;
     private final StyledText entryTitle;
     private final Map<Integer, Map<String, String>> challengeNames;
     private final int challengeCount;
@@ -20,6 +22,7 @@ public abstract class RaidKind {
     protected RaidKind(
             String raidName,
             String abbreviation,
+            CustomColor raidColor,
             StyledText entryTitle,
             Map<Integer, Map<String, String>> challengeNames,
             int challengeCount,
@@ -27,6 +30,7 @@ public abstract class RaidKind {
             Map<String, Map<Integer, String>> majorIdBuffs) {
         this.raidName = raidName;
         this.abbreviation = abbreviation;
+        this.raidColor = raidColor;
         this.entryTitle = entryTitle;
         this.challengeNames = Collections.unmodifiableMap(challengeNames);
         this.challengeCount = challengeCount;
@@ -37,10 +41,11 @@ public abstract class RaidKind {
     protected RaidKind(
             String raidName,
             String abbreviation,
+            CustomColor raidColor,
             StyledText entryTitle,
             Map<Integer, Map<String, String>> challengeNames,
             Map<String, Map<Integer, String>> majorIdBuffs) {
-        this(raidName, abbreviation, entryTitle, challengeNames, 3, 1, majorIdBuffs);
+        this(raidName, abbreviation, raidColor, entryTitle, challengeNames, 3, 1, majorIdBuffs);
     }
 
     public String getRaidName() {
@@ -49,6 +54,10 @@ public abstract class RaidKind {
 
     public String getAbbreviation() {
         return abbreviation;
+    }
+
+    public CustomColor getRaidColor() {
+        return raidColor;
     }
 
     public StyledText getEntryTitle() {

@@ -12,7 +12,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
@@ -85,11 +85,11 @@ public class ChatMentionFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChat(ChatMessageReceivedEvent e) {
+    public void onChat(ChatMessageEvent.Edit e) {
         if (e.getRecipientType() == RecipientType.INFO && suppressMentionsInInfo.get()) return;
 
-        StyledText styledText = e.getStyledText();
-        StyledText modified = styledText.iterateBackwards((part, changes) -> {
+        StyledText message = e.getMessage();
+        StyledText modified = message.iterateBackwards((part, changes) -> {
             // We have reached the end of the message content,
             // we don't want to highlight our own name in our own message
             if (END_OF_HEADER_PATTERN
@@ -133,7 +133,7 @@ public class ChatMentionFeature extends Feature {
         });
 
         // No changes were made, there was no mention.
-        if (styledText.equals(modified)) return;
+        if (message.equals(modified)) return;
 
         if (markMention.get()) {
             e.setMessage(modified);

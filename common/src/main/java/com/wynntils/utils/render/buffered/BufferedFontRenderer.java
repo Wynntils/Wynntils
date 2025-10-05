@@ -266,7 +266,7 @@ public final class BufferedFontRenderer {
         }
     }
 
-    private void renderAlignedTextInBox(
+    public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             StyledText text,

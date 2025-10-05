@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.json;
@@ -22,6 +22,7 @@ import com.wynntils.utils.colors.CustomColor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -66,19 +67,47 @@ public final class JsonManager extends Manager {
     public void savePreciousJson(File jsonFile, JsonObject jsonObject) {
         FileUtils.mkdir(jsonFile.getParentFile());
 
-        if (jsonFile.exists()) {
-            File backupFile = new File(jsonFile.getPath() + ".bak");
-            // Remove old backup (if any), and move current json file to backup
-            FileUtils.deleteFile(backupFile);
-            FileUtils.moveFile(jsonFile, backupFile);
+        File tempFile = new File(jsonFile.getPath() + ".tmp");
+
+        if (tempFile.exists()) {
+            // Clear an old temp file if it exists
+            FileUtils.deleteFile(tempFile);
         }
 
+        // Write the temp file
         try (OutputStreamWriter fileWriter =
-                new OutputStreamWriter(new FileOutputStream(jsonFile), StandardCharsets.UTF_8)) {
+                new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8)) {
             GSON.toJson(jsonObject, fileWriter);
             fileWriter.flush();
         } catch (IOException e) {
-            WynntilsMod.error("Failed to save json file " + jsonFile, e);
+            WynntilsMod.error("Failed to save temp json file " + tempFile, e);
+        }
+
+        // Check that the temp file is valid before we overwrite the original file
+        try (FileReader reader = new FileReader(tempFile, StandardCharsets.UTF_8)) {
+            JsonElement parsed = JsonParser.parseReader(reader);
+
+            if (!parsed.isJsonObject()) {
+                WynntilsMod.error("Temporary json file " + tempFile + " did not contain a JsonObject");
+                return;
+            }
+        } catch (Exception e) {
+            WynntilsMod.error("Temporary json file " + tempFile + " is invalid", e);
+            return;
+        }
+
+        // Backup the old file, and replace it with the temp file
+        try {
+            if (jsonFile.exists()) {
+                File backupFile = new File(jsonFile.getPath() + ".bak");
+                // Remove old backup (if any), and move current json file to backup
+                FileUtils.deleteFile(backupFile);
+                FileUtils.moveFile(jsonFile, backupFile);
+            }
+
+            FileUtils.moveFile(tempFile, jsonFile);
+        } catch (Exception e) {
+            WynntilsMod.error("Failed to replace temp file " + jsonFile, e);
         }
     }
 

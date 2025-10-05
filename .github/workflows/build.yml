@@ -1,4 +1,4 @@
-name: Spotless and Build
+name: Spotless, Build and Test
 
 on:
   workflow_dispatch:
@@ -54,4 +54,11 @@ jobs:
         run: ./gradlew buildDependents -x spotlessCheck -x test
 
       - name: Test with Gradle
-        run: ./gradlew test -x spotlessCheck
+        run: ./gradlew test -x spotlessCheck --stacktrace --info
+
+      - name: Upload test report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: fabric/build/reports/tests/test/**

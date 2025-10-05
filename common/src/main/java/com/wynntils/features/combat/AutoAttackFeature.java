@@ -54,14 +54,14 @@ public class AutoAttackFeature extends Feature {
     public void onSwing(ArmSwingEvent event) {
         if (Models.Character.getClassType() != ClassType.ARCHER && spellInputs == 0) return;
 
-        handleInput();
+        handleInput(false);
     }
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (Models.Character.getClassType() == ClassType.ARCHER && spellInputs == 0) return;
 
-        handleInput();
+        handleInput(false);
     }
 
     @SubscribeEvent
@@ -73,7 +73,7 @@ public class AutoAttackFeature extends Feature {
             if (entityType == EntityType.INTERACTION) return;
         }
 
-        handleInput();
+        handleInput(true);
     }
 
     @SubscribeEvent
@@ -88,6 +88,7 @@ public class AutoAttackFeature extends Feature {
             spellInputs = 0;
         }
 
+        if (Models.Raid.isParasiteOvertaken()) return;
         if (tickCount % TICKS_PER_ATTACK != 0) return;
         if (lastSpellInput + Models.Spell.SPELL_COST_RESET_TICKS > McUtils.player().tickCount) return;
 
@@ -104,10 +105,16 @@ public class AutoAttackFeature extends Feature {
         MouseUtils.sendAttackInput(Models.Character.getClassType() == ClassType.ARCHER);
     }
 
-    private void handleInput() {
+    private void handleInput(boolean interaction) {
         if (lastSpellInput == -1L || spellInputs < 3) {
             lastSpellInput = McUtils.player().tickCount;
             spellInputs++;
+
+            // If the input came from PlayerInteractEvent.InteractAt then a UseItemEvent was
+            // also sent so we need to only include one of them
+            if (interaction) {
+                spellInputs--;
+            }
 
             if (spellInputs == 3) {
                 spellInputs = 0;

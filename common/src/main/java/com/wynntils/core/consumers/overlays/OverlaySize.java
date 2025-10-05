@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -28,6 +28,9 @@ public class OverlaySize {
         this.height = height;
     }
 
+    /**
+     * This String-based constructor is implicitly called from {@link Config#tryParseStringValue}.
+     */
     public OverlaySize(String string) {
         Matcher matcher = SIZE_REGEX.matcher(string.replace(" ", ""));
 

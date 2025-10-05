@@ -1,27 +1,27 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.arguments.ListArgument;
 import java.util.List;
 
 public final class MathFunctions {
     public static class AddFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values =
-                    arguments.<Number>getArgument("values").asList().getValues();
+            List<Number> values = arguments.getArgument("values").getNumberList();
 
             return values.stream().mapToDouble(Number::doubleValue).sum();
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Number.class)));
         }
     }
 
@@ -34,9 +34,8 @@ public final class MathFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
         }
 
         @Override
@@ -48,16 +47,14 @@ public final class MathFunctions {
     public static class MultiplyFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values =
-                    arguments.<Number>getArgument("values").asList().getValues();
+            List<Number> values = arguments.getArgument("values").getNumberList();
 
             return values.stream().mapToDouble(Number::doubleValue).reduce(1, (a, b) -> a * b);
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Number.class)));
         }
 
         @Override
@@ -76,8 +73,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("dividend", Number.class, null),
-                    new FunctionArguments.Argument<>("divisor", Number.class, null)));
+                    new Argument<>("dividend", Number.class, null), new Argument<>("divisor", Number.class, null)));
         }
 
         @Override
@@ -96,8 +92,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("dividend", Number.class, null),
-                    new FunctionArguments.Argument<>("divisor", Number.class, null)));
+                    new Argument<>("dividend", Number.class, null), new Argument<>("divisor", Number.class, null)));
         }
 
         @Override
@@ -117,8 +112,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("base", Number.class, null),
-                    new FunctionArguments.Argument<>("exponent", Number.class, null)));
+                    new Argument<>("base", Number.class, null), new Argument<>("exponent", Number.class, null)));
         }
 
         @Override
@@ -135,8 +129,7 @@ public final class MathFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
         }
 
         @Override
@@ -148,31 +141,27 @@ public final class MathFunctions {
     public static class MaxFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values =
-                    arguments.<Number>getArgument("values").asList().getValues();
+            List<Number> values = arguments.getArgument("values").getNumberList();
             return values.stream().mapToDouble(Number::doubleValue).max().orElse(0);
             // .orElse(0) is safer because max() returns OptionalDouble, but will probably never be used
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Number.class)));
         }
     }
 
     public static class MinFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values =
-                    arguments.<Number>getArgument("values").asList().getValues();
+            List<Number> values = arguments.getArgument("values").getNumberList();
             return values.stream().mapToDouble(Number::doubleValue).min().orElse(0);
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Number.class)));
         }
     }
 
@@ -187,8 +176,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("value", Number.class, null),
-                    new FunctionArguments.Argument<>("decimals", Integer.class, null)));
+                    new Argument<>("value", Number.class, null), new Argument<>("decimals", Integer.class, null)));
         }
     }
 
@@ -200,8 +188,7 @@ public final class MathFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
         }
 
         @Override
@@ -218,8 +205,7 @@ public final class MathFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
         }
     }
 
@@ -233,9 +219,8 @@ public final class MathFunctions {
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("min", Number.class, null),
-                    new FunctionArguments.Argument<>("max", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("min", Number.class, null), new Argument<>("max", Number.class, null)));
         }
 
         @Override
