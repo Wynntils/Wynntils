@@ -5,6 +5,7 @@
 package com.wynntils.neoforge.mixins;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.resource.ResourceHandle;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,7 +16,6 @@ import java.util.List;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.FogParameters;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -36,9 +36,9 @@ public abstract class ForgeLevelRendererMixin {
                             target =
                                     "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
                             ordinal = 2),
-            method = "lambda$addMainPass$2")
+            method = "lambda$addMainPass$2") // framepass.executes lambda inside the addMainPass method
     private static void renderTilePost(
-            FogParameters fogParameters,
+            GpuBufferSlice shaderFog,
             DeltaTracker deltaTracker,
             Camera camera,
             ProfilerFiller profiler,
@@ -46,15 +46,13 @@ public abstract class ForgeLevelRendererMixin {
             Matrix4f projectionMatrix,
             ResourceHandle<RenderTarget> mainResourceHandle,
             ResourceHandle<RenderTarget> translucentResourceHandle,
-            ResourceHandle<RenderTarget> itemEntityResourceHandle,
-            ResourceHandle<RenderTarget> weatherResourceHandle,
-            Frustum frustum,
             boolean renderBlockOutline,
+            Frustum frustum,
+            ResourceHandle<RenderTarget> itemEntityResourceHandle,
             ResourceHandle<RenderTarget> entityOutlineResourceHandle,
             CallbackInfo ci,
             @Local PoseStack poseStack) {
-        MixinHelper.post(new RenderTileLevelLastEvent(
-                McUtils.mc().levelRenderer, poseStack, deltaTracker, projectionMatrix, camera));
+        MixinHelper.post(new RenderTileLevelLastEvent(McUtils.mc().levelRenderer, poseStack, deltaTracker, camera));
     }
 
     // This reverts the patch made by NeoForge here: https://github.com/neoforged/NeoForge/pull/858

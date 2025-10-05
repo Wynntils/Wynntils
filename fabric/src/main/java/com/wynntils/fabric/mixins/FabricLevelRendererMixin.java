@@ -5,6 +5,7 @@
 package com.wynntils.fabric.mixins;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.resource.ResourceHandle;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,7 +14,6 @@ import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.FogParameters;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -38,24 +38,21 @@ public abstract class FabricLevelRendererMixin {
                             target =
                                     "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
                             ordinal = 2),
-            method = "method_62214")
+            method = "method_62214") // framepass.executes lambda inside the addMainPass method
     private void renderTilePost(
-            FogParameters fogParameters,
+            GpuBufferSlice shaderFog,
             DeltaTracker deltaTracker,
             Camera camera,
             ProfilerFiller profiler,
             Matrix4f viewMatrix,
-            Matrix4f projectionMatrix,
             ResourceHandle<RenderTarget> mainResourceHandle,
             ResourceHandle<RenderTarget> translucentResourceHandle,
-            ResourceHandle<RenderTarget> itemEntityResourceHandle,
-            ResourceHandle<RenderTarget> weatherResourceHandle,
             boolean renderBlockOutline,
             Frustum frustum,
+            ResourceHandle<RenderTarget> itemEntityResourceHandle,
             ResourceHandle<RenderTarget> entityOutlineResourceHandle,
             CallbackInfo ci,
             @Local PoseStack poseStack) {
-        MixinHelper.post(new RenderTileLevelLastEvent(
-                this.minecraft.levelRenderer, poseStack, deltaTracker, projectionMatrix, camera));
+        MixinHelper.post(new RenderTileLevelLastEvent(this.minecraft.levelRenderer, poseStack, deltaTracker, camera));
     }
 }
