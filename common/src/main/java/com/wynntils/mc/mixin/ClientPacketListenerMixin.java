@@ -27,6 +27,7 @@ import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.mc.event.ParticleAddedEvent;
 import com.wynntils.mc.event.PlayerInfoEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
+import com.wynntils.mc.event.PlayerInfoUpdateEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.PongReceivedEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
@@ -39,6 +40,7 @@ import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
+import com.wynntils.mc.mixin.accessors.ClientboundPlayerInfoUpdatePacketAccessor;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
@@ -165,6 +167,20 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (event.getRoot() != root) {
             // If we changed the root, replace the CommandDispatcher
             this.commands = new CommandDispatcher<>(event.getRoot());
+        }
+    }
+
+    @Inject(
+            method = "handlePlayerInfoUpdate(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket;)V",
+            at = @At("HEAD"))
+    private void handlePlayerInfoUpdatePre(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+        if (!MixinHelper.onWynncraft()) return;
+
+        PlayerInfoUpdateEvent e = new PlayerInfoUpdateEvent(packet.entries(), packet.newEntries());
+        MixinHelper.post(e);
+        if (e.getEntries() != packet.entries()) {
+            ((ClientboundPlayerInfoUpdatePacketAccessor) packet).setEntries(e.getEntries());
         }
     }
 
