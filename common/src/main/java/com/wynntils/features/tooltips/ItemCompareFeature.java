@@ -157,7 +157,8 @@ public class ItemCompareFeature extends Feature {
         if (!isItemStackSelected(hoveredItemStack)) {
             switch (hoveredGearItemProperty.getGearType()) {
                 case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> {
-                    List<ItemStack> armors = McUtils.inventory().armor;
+                    List<ItemStack> armors =
+                            new ArrayList<>(McUtils.inventory().equipment.items.values());
 
                     Optional<ItemStack> matchingArmorOpt = armors.stream()
                             .filter(itemStack -> isMatchingType(itemStack, hoveredGearItemProperty))
