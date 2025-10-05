@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.keybinds;
@@ -27,11 +27,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 /** Registers and handles keybinds */
 public final class KeyBindManager extends Manager {
+    public static final KeyMapping.Category CATEGORY =
+            KeyMapping.Category.register(Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "wynntils"));
+
     private final Set<KeyBind> enabledKeyBinds = ConcurrentHashMap.newKeySet();
     private final Map<Feature, List<Pair<KeyBind, String>>> keyBinds = new ConcurrentHashMap<>();
 
@@ -64,7 +68,7 @@ public final class KeyBindManager extends Manager {
     @SubscribeEvent
     public void onKeyPress(InventoryKeyPressEvent e) {
         checkAllKeyBinds(keyBind -> {
-            if (keyBind.getKeyMapping().matches(e.getKeyCode(), e.getScanCode())) {
+            if (keyBind.getKeyMapping().matches(e.getKeyEvent())) {
                 keyBind.onInventoryPress(e.getHoveredSlot());
             }
         });
@@ -73,7 +77,7 @@ public final class KeyBindManager extends Manager {
     @SubscribeEvent
     public void onMousePress(InventoryMouseClickedEvent e) {
         checkAllKeyBinds(keyBind -> {
-            if (keyBind.getKeyMapping().matchesMouse(e.getButton())) {
+            if (keyBind.getKeyMapping().matchesMouse(e.getMouseButtonEvent())) {
                 keyBind.onInventoryPress(e.getHoveredSlot());
             }
         });
@@ -185,22 +189,5 @@ public final class KeyBindManager extends Manager {
 
     private boolean hasName(String name) {
         return enabledKeyBinds.stream().anyMatch(k -> k.getName().equals(name));
-    }
-
-    /**
-     * Note: this is called directly from a mixin!
-     */
-    public static void initKeyMapping(String category, Map<String, Integer> categorySortOrder) {
-        if (categorySortOrder.containsKey(category)) return;
-
-        int max = 0;
-
-        for (int val : categorySortOrder.values()) {
-            if (val > max) {
-                max = val;
-            }
-        }
-
-        categorySortOrder.put(category, max + 1);
     }
 }

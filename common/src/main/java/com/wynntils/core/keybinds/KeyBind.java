@@ -1,17 +1,17 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.keybinds;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.wynntils.core.components.Managers;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.world.inventory.Slot;
 
 /** Wraps a {@link KeyMapping} with relevant context */
 public class KeyBind {
-    private static final String CATEGORY = "Wynntils";
     private final Runnable onPress;
     private final Consumer<Slot> onInventoryPress;
     private final boolean firstPress;
@@ -30,7 +30,7 @@ public class KeyBind {
      */
     public KeyBind(String name, int keyCode, boolean firstPress, Runnable onPress, Consumer<Slot> onInventoryPress) {
         this.firstPress = firstPress;
-        this.keyMapping = new KeyMapping(name, InputConstants.Type.KEYSYM, keyCode, CATEGORY);
+        this.keyMapping = new KeyMapping(name, InputConstants.Type.KEYSYM, keyCode, Managers.KeyBind.CATEGORY);
 
         // Unbind keybind, bound after registration by options reload
         keyMapping.setKey(InputConstants.UNKNOWN);
@@ -57,7 +57,7 @@ public class KeyBind {
             Runnable onPress,
             Consumer<Slot> onInventoryPress) {
         this.firstPress = firstPress;
-        this.keyMapping = new KeyMapping(name, type, keyCode, CATEGORY);
+        this.keyMapping = new KeyMapping(name, type, keyCode, Managers.KeyBind.CATEGORY);
 
         // Unbind keybind, bound after registration by options reload
         keyMapping.setKey(InputConstants.UNKNOWN);
@@ -77,7 +77,7 @@ public class KeyBind {
      */
     public KeyBind(String name, int keyCode, InputConstants.Type type, boolean firstPress, Runnable onPress) {
         this.firstPress = firstPress;
-        this.keyMapping = new KeyMapping(name, type, keyCode, CATEGORY);
+        this.keyMapping = new KeyMapping(name, type, keyCode, Managers.KeyBind.CATEGORY);
 
         // Unbind keybind, bound after registration by options reload
         keyMapping.setKey(InputConstants.UNKNOWN);
@@ -123,7 +123,7 @@ public class KeyBind {
         return keyMapping.getName();
     }
 
-    public String getCategory() {
+    public KeyMapping.Category getCategory() {
         return keyMapping.getCategory();
     }
 
