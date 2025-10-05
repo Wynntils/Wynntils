@@ -9,6 +9,7 @@ pluginManagement {
 
 include("common")
 include("fabric")
-include("neoforge")
+// TODO: Enable NeoForge
+//include("neoforge")
 
 rootProject.name = "Wynntils"
