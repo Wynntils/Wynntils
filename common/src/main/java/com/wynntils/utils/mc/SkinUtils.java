@@ -4,9 +4,11 @@
  */
 package com.wynntils.utils.mc;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.UUID;
@@ -37,12 +39,17 @@ public final class SkinUtils {
     }
 
     public static void setPlayerHeadSkin(ItemStack itemStack, String textureString) {
+        ImmutableMultimap<String, Property> props =
+                ImmutableMultimap.of("textures", new Property("textures", textureString));
+
+        PropertyMap propertyMap = new PropertyMap(props);
+
         // If this starts being done repeatedly for the same texture string,
         // we should cache the UUID.
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "");
-        gameProfile.getProperties().put("textures", new Property("textures", textureString, null));
+        gameProfile = new GameProfile(gameProfile.id(), gameProfile.name(), propertyMap);
 
-        itemStack.set(DataComponents.PROFILE, new ResolvableProfile(gameProfile));
+        itemStack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(gameProfile));
     }
 
     public static Identifier getSkin(UUID uuid) {
