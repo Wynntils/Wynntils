@@ -550,6 +550,12 @@ public final class ChatHandler extends Handler {
 
         ChatMessageEvent.Edit rewriteEvent = new ChatMessageEvent.Edit(styledText, messageType, recipientType);
         WynntilsMod.postEvent(rewriteEvent);
+
+        ChatMessageEvent.Discard discardEvent =
+                new ChatMessageEvent.Discard(rewriteEvent.getMessage(), messageType, recipientType);
+        WynntilsMod.postEvent(discardEvent);
+        if (discardEvent.isCanceled()) return null;
+
         return rewriteEvent.getMessage();
     }
 
