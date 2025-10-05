@@ -219,7 +219,7 @@ public final class HadesService extends Service {
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.AQUA)
                                 .withUnderlined(true)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
+                                .withClickEvent(new ClickEvent.RunCommand("/wynntils reauth"))));
                 failed.append(Component.translatable("service.wynntils.hades.clickToConnect3")
                         .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
