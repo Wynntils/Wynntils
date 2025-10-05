@@ -45,7 +45,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.ReceivingLevelScreen;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -196,7 +196,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         for (ClientboundPlayerInfoUpdatePacket.Entry entry : packet.newEntries()) {
             GameProfile profile = entry.profile();
             if (profile == null) continue;
-            MixinHelper.post(new PlayerInfoEvent.PlayerLogInEvent(profile.getId(), profile.getName()));
+            MixinHelper.post(new PlayerInfoEvent.PlayerLogInEvent(profile.id(), profile.name()));
         }
 
         for (ClientboundPlayerInfoUpdatePacket.Entry entry : packet.entries()) {
@@ -388,15 +388,15 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        SetSpawnEvent event = new SetSpawnEvent(packet.getPos());
+        SetSpawnEvent event = new SetSpawnEvent(packet.respawnData().pos());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
 
             // Signal loading complete to the loading screen,
             // or else we are stuck in an "infinite" loading state
-            if (McUtils.screen() instanceof ReceivingLevelScreen receivingLevelScreen) {
-                receivingLevelScreen.onClose();
+            if (McUtils.screen() instanceof LevelLoadingScreen levelLoadingScreen) {
+                levelLoadingScreen.onClose();
             }
         }
     }
