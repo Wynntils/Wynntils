@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.network.HashedStack;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -28,18 +29,20 @@ public final class InventoryUtils {
             List.of(RING_1_SLOT_NUM, RING_2_SLOT_NUM, BRACELET_SLOT_NUM, NECKLACE_SLOT_NUM);
 
     public static void sendInventorySlotMouseClick(int slotNumber, MouseClickType mouseButton) {
-        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
+        Int2ObjectMap<HashedStack> changedSlots = new Int2ObjectOpenHashMap<>();
         ItemStack itemStack = McUtils.inventory().getItem(slotNumber);
-        changedSlots.put(slotNumber, itemStack);
+        changedSlots.put(
+                slotNumber,
+                HashedStack.create(itemStack, McUtils.mc().getConnection().decoratedHashOpsGenenerator()));
 
         McUtils.sendPacket(new ServerboundContainerClickPacket(
                 McUtils.inventoryMenu().containerId,
                 McUtils.inventoryMenu().getStateId(),
-                slotNumber,
-                mouseButton.ordinal(),
+                (short) slotNumber,
+                (byte) mouseButton.ordinal(),
                 ClickType.PICKUP,
-                ItemStack.EMPTY,
-                changedSlots));
+                changedSlots,
+                HashedStack.EMPTY));
     }
 
     public static List<ItemStack> getAccessories(Player player) {
