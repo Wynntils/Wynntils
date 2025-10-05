@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.lootrunpaths;
@@ -7,12 +7,12 @@ package com.wynntils.services.lootrunpaths;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.services.lootrunpaths.type.LootrunNote;
 import com.wynntils.services.lootrunpaths.type.LootrunPath;
 import com.wynntils.services.lootrunpaths.type.LootrunSaveResult;
-import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,6 +30,7 @@ import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.world.phys.Vec3;
 
 public final class LootrunPathFileParser {
@@ -73,8 +74,10 @@ public final class LootrunPathFileParser {
                         positionJson.get("x").getAsDouble(),
                         positionJson.get("y").getAsDouble(),
                         positionJson.get("z").getAsDouble());
-                Component component = Component.Serializer.fromJson(
-                        noteJson.get("note"), McUtils.mc().player.registryAccess());
+                Component component = ComponentSerialization.CODEC
+                        .parse(JsonOps.INSTANCE, noteJson.get("note"))
+                        .result()
+                        .orElse(Component.empty());
                 LootrunNote note = new LootrunNote(position, component);
                 notes.add(note);
             }
@@ -122,13 +125,13 @@ public final class LootrunPathFileParser {
                 locationJson.addProperty("z", position.z());
                 noteJson.add("location", locationJson);
 
-                String noteString = Component.Serializer.toJson(
-                        note.component(), McUtils.mc().player.registryAccess());
+                DataResult<JsonElement> noteResult =
+                        ComponentSerialization.CODEC.encodeStart(JsonOps.INSTANCE, note.component());
 
-                // Parse the JSON string back into a JSON object
-                JsonElement noteElement = JsonParser.parseString(noteString);
-                noteJson.add("note", noteElement);
-                notes.add(noteJson);
+                if (noteResult.result().isPresent()) {
+                    noteJson.add("note", noteResult.result().get());
+                    notes.add(noteJson);
+                }
             }
             json.add("notes", notes);
 
