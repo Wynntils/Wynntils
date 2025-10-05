@@ -1,36 +1,37 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public class InventoryKeyPressEvent extends Event implements ICancellableEvent {
-    private final int keyCode;
-    private final int scanCode;
-    private final int modifiers;
+    private final KeyEvent keyEvent;
     private final Slot hoveredSlot;
 
-    public InventoryKeyPressEvent(int keyCode, int scanCode, int modifiers, Slot hoveredSlot) {
-        this.keyCode = keyCode;
-        this.scanCode = scanCode;
-        this.modifiers = modifiers;
+    public InventoryKeyPressEvent(KeyEvent keyEvent, Slot hoveredSlot) {
+        this.keyEvent = keyEvent;
         this.hoveredSlot = hoveredSlot;
     }
 
+    public KeyEvent getKeyEvent() {
+        return keyEvent;
+    }
+
     public int getKeyCode() {
-        return keyCode;
+        return keyEvent.key();
     }
 
     public int getScanCode() {
-        return scanCode;
+        return keyEvent.scancode();
     }
 
     public int getModifiers() {
-        return modifiers;
+        return keyEvent.modifiers();
     }
 
     public Slot getHoveredSlot() {
