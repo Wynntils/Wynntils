@@ -12,13 +12,13 @@ import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Unit;
 import net.minecraft.util.datafix.fixes.ItemIdFix;
 import net.minecraft.util.datafix.fixes.ItemStackTheFlatteningFix;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
-import net.minecraft.world.item.component.Unbreakable;
 
 public record ItemMaterial(ItemStack itemStack) {
     public static ItemMaterial getDefaultTomeItemMaterial() {
@@ -73,7 +73,7 @@ public record ItemMaterial(ItemStack itemStack) {
 
         CustomModelData customModelData = new CustomModelData(List.of(modelValue), List.of(), List.of(), List.of());
         itemStack.set(DataComponents.CUSTOM_MODEL_DATA, customModelData);
-        itemStack.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
+        itemStack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
         return itemStack;
     }
 
