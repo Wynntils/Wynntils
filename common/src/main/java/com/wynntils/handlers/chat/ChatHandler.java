@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.chat;
@@ -10,12 +10,12 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.MobEffectEvent;
+import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -129,16 +129,7 @@ public final class ChatHandler extends Handler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPlayerChatReceived(ChatPacketReceivedEvent.Player event) {
-        if (shouldSeparateNPC()) {
-            handleWithSeparation(event);
-        } else {
-            handleIncomingChatLine(event);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onSystemChatReceived(ChatPacketReceivedEvent.System event) {
+    public void onSystemChatReceived(SystemMessageEvent.ChatReceivedEvent event) {
         if (shouldSeparateNPC()) {
             handleWithSeparation(event);
         } else {
@@ -177,7 +168,7 @@ public final class ChatHandler extends Handler {
         return lastSlowdownApplied != 0;
     }
 
-    private void handleIncomingChatLine(ChatPacketReceivedEvent event) {
+    private void handleIncomingChatLine(SystemMessageEvent.ChatReceivedEvent event) {
         StyledText styledText = StyledText.fromComponent(event.getMessage());
 
         // This is a normal one line chat, or we pass a chat screen through
@@ -190,7 +181,7 @@ public final class ChatHandler extends Handler {
         }
     }
 
-    private void handleWithSeparation(ChatPacketReceivedEvent event) {
+    private void handleWithSeparation(SystemMessageEvent.ChatReceivedEvent event) {
         StyledText styledText = StyledText.fromComponent(event.getMessage());
 
         long currentTicks = McUtils.mc().level.getGameTime();
@@ -553,10 +544,19 @@ public final class ChatHandler extends Handler {
             }
         }
 
-        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(styledText, messageType, recipientType);
-        WynntilsMod.postEvent(event);
-        if (event.isCanceled()) return null;
-        return event.getStyledText();
+        ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(styledText, messageType, recipientType);
+        WynntilsMod.postEvent(receivedEvent);
+        if (receivedEvent.isCanceled()) return null;
+
+        ChatMessageEvent.Edit rewriteEvent = new ChatMessageEvent.Edit(styledText, messageType, recipientType);
+        WynntilsMod.postEvent(rewriteEvent);
+
+        ChatMessageEvent.Discard discardEvent =
+                new ChatMessageEvent.Discard(rewriteEvent.getMessage(), messageType, recipientType);
+        WynntilsMod.postEvent(discardEvent);
+        if (discardEvent.isCanceled()) return null;
+
+        return rewriteEvent.getMessage();
     }
 
     private void handleNpcDialogue(List<StyledText> dialogue, NpcDialogueType type, boolean isProtected) {

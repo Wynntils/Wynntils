@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -7,14 +7,13 @@ package com.wynntils.mc.event;
 import com.wynntils.core.events.EventThread;
 import net.neoforged.bus.api.Event;
 
-/** Fired on connection to a server */
 public abstract class ConnectionEvent extends Event {
     @EventThread(EventThread.Type.RENDER)
-    public static class ConnectedEvent extends ConnectionEvent {
+    public static class ConnectingEvent extends ConnectionEvent {
         private final String host;
         private final int port;
 
-        public ConnectedEvent(String host, int port) {
+        public ConnectingEvent(String host, int port) {
             this.host = host;
             this.port = port;
         }
@@ -34,8 +33,18 @@ public abstract class ConnectionEvent extends Event {
     }
 
     @EventThread(EventThread.Type.RENDER)
-    public static class DisconnectedEvent extends ConnectionEvent {}
+    public static final class ConnectedEvent extends Event {}
 
     @EventThread(EventThread.Type.RENDER)
-    public static class UnexpectedDisconnectedEvent extends DisconnectedEvent {}
+    public static class DisconnectedEvent extends ConnectionEvent {
+        private final String reason;
+
+        public DisconnectedEvent(String reason) {
+            this.reason = reason;
+        }
+
+        public String getReason() {
+            return reason;
+        }
+    }
 }

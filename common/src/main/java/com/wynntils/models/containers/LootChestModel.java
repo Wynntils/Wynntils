@@ -135,7 +135,7 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
-    public void onScreenClose(ScreenClosedEvent e) {
+    public void onScreenClose(ScreenClosedEvent.Post e) {
         nextExpectedLootContainerId = -2;
     }
 

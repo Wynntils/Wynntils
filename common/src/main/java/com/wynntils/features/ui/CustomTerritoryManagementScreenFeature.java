@@ -89,7 +89,7 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenClosed(ScreenClosedEvent event) {
+    public void onScreenClosed(ScreenClosedEvent.Post event) {
         // Reset the flag when the screen is closed
         customScreenOpened = false;
         openTerritoryManagement = false;
