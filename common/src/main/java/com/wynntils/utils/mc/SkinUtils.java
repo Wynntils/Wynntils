@@ -42,7 +42,7 @@ public final class SkinUtils {
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "");
         gameProfile.getProperties().put("textures", new Property("textures", textureString, null));
 
-        itemStack.set(DataComponents.PROFILE, new ResolvableProfile(gameProfile));
+        itemStack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(gameProfile));
     }
 
     public static ResourceLocation getSkin(UUID uuid) {
