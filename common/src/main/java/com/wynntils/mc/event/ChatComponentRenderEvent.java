@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -73,16 +73,16 @@ public abstract class ChatComponentRenderEvent extends Event {
 
     public static class Background extends ChatComponentRenderEvent {
         private final GuiGraphics guiGraphics;
-        private final int renderX;
+        private final int renderY;
         private final int lineHeight;
-        private final int opacity;
+        private final float opacity;
 
         public Background(
-                ChatComponent chatComponent, GuiGraphics guiGraphics, int renderX, int lineHeight, int opacity) {
+                ChatComponent chatComponent, GuiGraphics guiGraphics, int renderY, int lineHeight, float opacity) {
             super(chatComponent);
 
             this.guiGraphics = guiGraphics;
-            this.renderX = renderX;
+            this.renderY = renderY;
             this.lineHeight = lineHeight;
             this.opacity = opacity;
         }
@@ -91,15 +91,15 @@ public abstract class ChatComponentRenderEvent extends Event {
             return guiGraphics;
         }
 
-        public int getRenderX() {
-            return renderX;
+        public int getRenderY() {
+            return renderY;
         }
 
         public int getLineHeight() {
             return lineHeight;
         }
 
-        public int getOpacity() {
+        public float getOpacity() {
             return opacity;
         }
     }
