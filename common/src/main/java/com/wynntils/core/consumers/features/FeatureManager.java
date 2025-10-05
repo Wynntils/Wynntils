@@ -619,8 +619,8 @@ public final class FeatureManager extends Manager {
             MutableComponent enableMessage = Component.literal("Click here to enable it again.")
                     .withStyle(ChatFormatting.UNDERLINE)
                     .withStyle(ChatFormatting.RED)
-                    .withStyle(style -> style.withClickEvent(new ClickEvent(
-                            ClickEvent.Action.RUN_COMMAND, "/feature enable " + feature.getShortName())));
+                    .withStyle(style -> style.withClickEvent(
+                            new ClickEvent.RunCommand("/feature enable " + feature.getShortName())));
 
             McUtils.sendMessageToClient(enableMessage);
         }

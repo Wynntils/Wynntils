@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -93,13 +93,10 @@ public class OnlineMembersCommand extends Command {
                         for (GuildMemberInfo guildMember : onlineRankMembers) {
                             response.append(Component.literal(guildMember.username())
                                     .withStyle(ChatFormatting.AQUA)
-                                    .withStyle(style -> style.withHoverEvent(new HoverEvent(
-                                                    HoverEvent.Action.SHOW_TEXT,
-                                                    Component.literal("Click to private message "
-                                                                    + guildMember.username())
-                                                            .withStyle(ChatFormatting.GRAY)))
-                                            .withClickEvent(new ClickEvent(
-                                                    ClickEvent.Action.SUGGEST_COMMAND,
+                                    .withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal(
+                                                            "Click to private message " + guildMember.username())
+                                                    .withStyle(ChatFormatting.GRAY)))
+                                            .withClickEvent(new ClickEvent.SuggestCommand(
                                                     "/msg " + guildMember.username() + " "))));
 
                             if (onlineRankMembers.indexOf(guildMember) != onlineRankMembers.size() - 1) {
