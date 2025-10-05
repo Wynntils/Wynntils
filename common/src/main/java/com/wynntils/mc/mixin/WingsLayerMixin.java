@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.layers.WingsLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
@@ -21,16 +21,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class WingsLayerMixin<T extends HumanoidRenderState, M extends EntityModel<T>> {
     @Inject(
             method =
-                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/HumanoidRenderState;FF)V",
+                    "submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/HumanoidRenderState;FF)V",
             at = @At("HEAD"),
             cancellable = true)
     private void render(
             PoseStack poseStack,
-            MultiBufferSource buffer,
+            SubmitNodeCollector nodeCollector,
             int packedLight,
             T renderState,
-            float f,
-            float g,
+            float yRot,
+            float xRot,
             CallbackInfo ci) {
         if (!(renderState instanceof AvatarRenderState avatarRenderState)) return;
 
