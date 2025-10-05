@@ -414,7 +414,7 @@ public final class HadesService extends Service {
 
     private void updateArmorCache(InventoryArmor inventoryArmor) {
         Optional<WynnItem> armorItemOpt =
-                Models.Item.getWynnItem(McUtils.inventory().armor.get(inventoryArmor.getArmorSlot()));
+                Models.Item.getWynnItem(McUtils.inventory().getItem(inventoryArmor.getInventorySlot()));
 
         if (armorItemOpt.isEmpty()
                 || (armorItemOpt.get() instanceof CraftedGearItem

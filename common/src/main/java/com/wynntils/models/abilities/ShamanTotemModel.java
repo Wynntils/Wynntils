@@ -90,7 +90,7 @@ public final class ShamanTotemModel extends Model {
                     // These must be ran with a delay,
                     // inventory contents are set a couple ticks after the totem actually spawns
                     List<ItemStack> inv = new ArrayList<>();
-                    totemAS.getArmorSlots().forEach(inv::add);
+                    totemAS.equipment.items.values().forEach(inv::add);
 
                     if (inv.size() < 4) return;
 

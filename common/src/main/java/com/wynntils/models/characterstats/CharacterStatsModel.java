@@ -160,7 +160,7 @@ public final class CharacterStatsModel extends Model {
         // We trust that Wynncraft do not let us wear invalid gear, so no further validation checks are needed
 
         // Check armor slots
-        player.getArmorSlots().forEach(itemStack -> {
+        player.equipment.items.values().forEach(itemStack -> {
             Optional<GearItem> armorGearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
             if (armorGearItem.isPresent()) {
                 GearInfo gearInfo = armorGearItem.get().getItemInfo();

@@ -118,7 +118,7 @@ public class ItemLockFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onDrop(DropHeldItemEvent event) {
-        ItemStack selected = McUtils.inventory().getSelected();
+        ItemStack selected = McUtils.inventory().getSelectedItem();
         Optional<Slot> heldItemSlot = McUtils.inventoryMenu().slots.stream()
                 .filter(slot -> slot.getItem() == selected)
                 .findFirst();
