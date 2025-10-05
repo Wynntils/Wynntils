@@ -84,16 +84,16 @@
     "url": "https://athena.wynntils.com/cache/get/guildList"
   },
   {
+    "id": "dataAthenaItemWeights",
+    "url": "https://athena.wynntils.com/cache/get/itemWeights"
+  },
+  {
     "id": "dataAthenaLeaderboard",
     "url": "https://athena.wynntils.com/cache/get/leaderboard"
   },
   {
     "id": "dataAthenaServerList",
     "url": "https://athena.wynntils.com/cache/get/serverList"
-  },
-  {
-    "id": "dataNoriItemWeights",
-    "url": "https://nori.fish/api/item/mythic"
   },
   {
     "id": "dataStaticAbilities",
@@ -288,10 +288,6 @@
   {
     "id": "dataWynncraftTerritoryListV3",
     "url": "https://api.wynncraft.com/v3/guild/list/territory"
-  },
-  {
-    "id": "dataWynnpoolItemWeights",
-    "url": "https://api.wynnpool.com/item/weight/all"
   },
   {
     "arguments": [

@@ -4,9 +4,6 @@
  */
 package com.wynntils.services.itemweight;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -19,23 +16,18 @@ import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.services.itemweight.type.ItemWeighting;
-import com.wynntils.services.itemweight.type.WynnpoolWeighting;
 import com.wynntils.utils.colors.CustomColor;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 
 public class ItemWeightService extends Service {
-    private static final Gson WEIGHT_GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(
-                    WynnpoolWeighting.class, new WynnpoolWeighting.WynnpoolWeightingDeserializer())
-            .create();
-
     private static final ResourceLocation PILL_FONT = ResourceLocation.withDefaultNamespace("banner/pill");
     private static final CustomColor NORI_COLOR = CustomColor.fromInt(0x1cb5fc);
     private static final CustomColor WYNNPOOL_COLOR = CustomColor.fromInt(0xfc9700);
@@ -49,8 +41,7 @@ public class ItemWeightService extends Service {
                     "\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062")
             .withStyle(WYNNPOOL_STYLE);
 
-    private final Map<String, List<ItemWeighting>> noriWeightings = new HashMap<>();
-    private final Map<String, List<ItemWeighting>> wynnpoolWeightings = new HashMap<>();
+    private final Map<ItemWeightSource, Map<String, List<ItemWeighting>>> weightings = new HashMap<>();
 
     public ItemWeightService() {
         super(List.of());
@@ -58,17 +49,14 @@ public class ItemWeightService extends Service {
 
     @Override
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_NORI_ITEM_WEIGHTS).handleReader(this::handleNoriData);
-        registry.registerDownload(UrlId.DATA_WYNNPOOL_ITEM_WEIGHTS).handleReader(this::handleWynnPoolData);
+        registry.registerDownload(UrlId.DATA_ATHENA_ITEM_WEIGHTS).handleReader(this::handleItemWeights);
     }
 
     public List<ItemWeighting> getItemWeighting(String itemName, ItemWeightSource source) {
         if (!source.isSingleSource()) {
             return List.of();
         } else {
-            return source == ItemWeightSource.NORI
-                    ? noriWeightings.getOrDefault(itemName, List.of())
-                    : wynnpoolWeightings.getOrDefault(itemName, List.of());
+            return weightings.getOrDefault(source, Map.of()).getOrDefault(itemName, List.of());
         }
     }
 
@@ -113,37 +101,40 @@ public class ItemWeightService extends Service {
         return (float) (weightedSum / sumWeights);
     }
 
-    private void handleNoriData(Reader reader) {
-        JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
-        JsonObject weightsObj = json.getAsJsonObject("weights");
+    private void handleItemWeights(Reader reader) {
+        JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
 
-        for (Map.Entry<String, JsonElement> itemEntry : weightsObj.entrySet()) {
+        for (ItemWeightSource source : ItemWeightSource.values()) {
+            if (!source.isSingleSource()) continue;
+
+            String sourceName = source.name().toLowerCase(Locale.ROOT);
+
+            if (jsonObject.has(sourceName)) {
+                parseWeightingGroup(jsonObject.getAsJsonObject(sourceName), source);
+            }
+        }
+    }
+
+    private void parseWeightingGroup(JsonObject group, ItemWeightSource source) {
+        Map<String, List<ItemWeighting>> sourceMap = weightings.computeIfAbsent(source, s -> new HashMap<>());
+
+        for (Map.Entry<String, JsonElement> itemEntry : group.entrySet()) {
             String itemName = itemEntry.getKey();
             JsonObject weights = itemEntry.getValue().getAsJsonObject();
+
+            List<ItemWeighting> itemWeights = sourceMap.computeIfAbsent(itemName, k -> new ArrayList<>());
 
             for (Map.Entry<String, JsonElement> weightEntry : weights.entrySet()) {
                 String weightName = weightEntry.getKey();
                 JsonObject identificationsObj = weightEntry.getValue().getAsJsonObject();
 
                 Map<String, Double> identifications = new HashMap<>();
-                for (Map.Entry<String, JsonElement> ident : identificationsObj.entrySet()) {
-                    identifications.put(ident.getKey(), ident.getValue().getAsDouble() / 100.0);
+                for (Map.Entry<String, JsonElement> statEntry : identificationsObj.entrySet()) {
+                    identifications.put(statEntry.getKey(), statEntry.getValue().getAsDouble());
                 }
 
-                ItemWeighting w = new ItemWeighting(weightName, identifications);
-                noriWeightings.computeIfAbsent(itemName, k -> new ArrayList<>()).add(w);
+                itemWeights.add(new ItemWeighting(weightName, identifications));
             }
-        }
-    }
-
-    private void handleWynnPoolData(Reader reader) {
-        JsonArray jsonArray = JsonParser.parseReader(reader).getAsJsonArray();
-
-        for (JsonElement element : jsonArray) {
-            WynnpoolWeighting wynnpoolWeighting = WEIGHT_GSON.fromJson(element, WynnpoolWeighting.class);
-            String itemName = element.getAsJsonObject().get("item_name").getAsString();
-
-            wynnpoolWeightings.computeIfAbsent(itemName, k -> new ArrayList<>()).add(wynnpoolWeighting.itemWeighting());
         }
     }
 }
