@@ -5,6 +5,7 @@
     "BossHealthOverlayMixin",
     "CapeLayerMixin",
     "ChatComponentMixin",
+    "ChatComponentTextMixin",
     "ChatListenerMixin",
     "ChatScreenMixin",
     "ChestMenuMixin",

@@ -1,5 +1,7 @@
 accessWidener v2 named
 
+accessible class net/minecraft/client/gui/components/ChatComponent$DrawingBackgroundGraphicsAccess
+accessible class net/minecraft/client/gui/components/ChatComponent$DrawingFocusedGraphicsAccess
 accessible class net/minecraft/client/gui/GuiGraphics$ScissorStack
 accessible class net/minecraft/client/gui/screens/Screen$DeferredTooltipRendering
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation
@@ -21,6 +23,8 @@ accessible field net/minecraft/client/gui/components/AbstractSelectionList hover
 accessible field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
 accessible field net/minecraft/client/gui/components/ChatComponent allMessages Ljava/util/List;
 accessible field net/minecraft/client/gui/components/ChatComponent trimmedMessages Ljava/util/List;
+accessible field net/minecraft/client/gui/components/ChatComponent$DrawingBackgroundGraphicsAccess graphics Lnet/minecraft/client/gui/GuiGraphics;
+accessible field net/minecraft/client/gui/components/ChatComponent$DrawingFocusedGraphicsAccess graphics Lnet/minecraft/client/gui/GuiGraphics;
 accessible field net/minecraft/client/gui/components/PlayerTabOverlay visible Z
 accessible field net/minecraft/client/gui/screens/ChatScreen commandSuggestions Lnet/minecraft/client/gui/components/CommandSuggestions;
 accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraft/client/gui/components/EditBox;
