@@ -28,7 +28,7 @@ import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
@@ -36,13 +36,13 @@ import net.minecraft.world.entity.player.PlayerModelPart;
 
 public class CosmeticsService extends Service {
     private static final BiFunction<
-                    LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                    LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel>,
                     EntityRendererProvider.Context,
                     WynntilsLayer>
             CAPE_LAYER = (playerRenderer, renderProviderContext) ->
                     new WynntilsCapeLayer(playerRenderer, renderProviderContext);
     private static final BiFunction<
-                    LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                    LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel>,
                     EntityRendererProvider.Context,
                     WynntilsLayer>
             ELYTRA_LAYER = (playerRenderer, renderProviderContext) ->
@@ -50,7 +50,7 @@ public class CosmeticsService extends Service {
 
     private static final List<
                     BiFunction<
-                            LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                            LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel>,
                             EntityRendererProvider.Context,
                             WynntilsLayer>>
             REGISTERED_LAYERS = List.of(CAPE_LAYER, ELYTRA_LAYER);
@@ -65,7 +65,7 @@ public class CosmeticsService extends Service {
     // We don't want to reference Models in the mixin this is called, due to it's unpredictable class loading.
     public static List<
                     BiFunction<
-                            LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                            LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel>,
                             EntityRendererProvider.Context,
                             WynntilsLayer>>
             getRegisteredLayers() {

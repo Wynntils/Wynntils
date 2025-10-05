@@ -7,10 +7,10 @@ package com.wynntils.services.cosmetics.type;
 import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 
-public abstract class WynntilsLayer extends RenderLayer<PlayerRenderState, PlayerModel> {
-    protected WynntilsLayer(RenderLayerParent<PlayerRenderState, PlayerModel> renderLayerParent) {
+public abstract class WynntilsLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
+    protected WynntilsLayer(RenderLayerParent<AvatarRenderState, PlayerModel> renderLayerParent) {
         super(renderLayerParent);
     }
 }
