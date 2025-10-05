@@ -114,9 +114,9 @@ public class RangeVisualizerFeature extends Feature {
 
         poseStack.pushPose();
         poseStack.translate(
-                interpX - event.getCamera().getPosition().x,
-                interpY - event.getCamera().getPosition().y,
-                interpZ - event.getCamera().getPosition().z);
+                interpX - event.getCameraRenderState().pos.x,
+                interpY - event.getCameraRenderState().pos.y,
+                interpZ - event.getCameraRenderState().pos.z);
 
         for (Pair<CustomColor, Float> circle : circles) {
             float radius = circle.b();
