@@ -56,7 +56,8 @@ public final class InventoryModel extends Model {
      * @return List of all equipped armor, accessories, and held item that meets requirements
      */
     public List<ItemStack> getEquippedItems() {
-        List<ItemStack> returnable = new ArrayList<>(McUtils.inventory().armor);
+        List<ItemStack> returnable =
+                new ArrayList<>(McUtils.inventory().equipment.items.values());
         Collections.reverse(returnable); // Reverse so that helmet is first
 
         for (int i : InventoryAccessory.getSlots()) {
