@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -148,10 +148,10 @@ public class QuestCommand extends Command {
 
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(quest.name())
-                            .withStyle(style -> style.withClickEvent(
-                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quest info " + quest.name())))
-                            .withStyle(style -> style.withHoverEvent(
-                                    new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click for info"))))
+                            .withStyle(style ->
+                                    style.withClickEvent(new ClickEvent.RunCommand("/quest info " + quest.name())))
+                            .withStyle(style ->
+                                    style.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click for info"))))
                             .withStyle(ChatFormatting.WHITE));
             if (distance > 0) {
                 response.append(Component.literal(" (" + (int) Math.round(distance) + " m)")
@@ -161,10 +161,9 @@ public class QuestCommand extends Command {
             if (quest.equals(Models.Activity.getTrackedQuestInfo())) {
                 response.append(Component.literal(" [Tracked]")
                         .withStyle(ChatFormatting.DARK_AQUA)
-                        .withStyle(style ->
-                                style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quest untrack")))
-                        .withStyle(style -> style.withHoverEvent(new HoverEvent(
-                                HoverEvent.Action.SHOW_TEXT, Component.literal("Click to stop tracking")))));
+                        .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand("/quest untrack")))
+                        .withStyle(style -> style.withHoverEvent(
+                                new HoverEvent.ShowText(Component.literal("Click to stop tracking")))));
             }
         }
     }
@@ -188,17 +187,15 @@ public class QuestCommand extends Command {
                 .append(Component.literal("\n"))
                 .append(Component.literal("[Track quest]")
                         .withStyle(style -> style.withClickEvent(
-                                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quest track " + quest.name()))
-                                .withHoverEvent(new HoverEvent(
-                                        HoverEvent.Action.SHOW_TEXT, Component.literal("Click to track quest"))))
+                                        new ClickEvent.RunCommand("/quest track " + quest.name()))
+                                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to track quest"))))
                         .withStyle(ChatFormatting.DARK_AQUA))
                 .append(Component.literal(" "))
                 .append(Component.literal("[Lookup on wiki]")
-                        .withStyle(style -> style.withClickEvent(
-                                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/quest wiki " + quest.name()))
-                                .withHoverEvent(new HoverEvent(
-                                        HoverEvent.Action.SHOW_TEXT,
-                                        Component.literal("Click to lookup quest on wiki"))))
+                        .withStyle(
+                                style -> style.withClickEvent(new ClickEvent.RunCommand("/quest wiki " + quest.name()))
+                                        .withHoverEvent(new HoverEvent.ShowText(
+                                                Component.literal("Click to lookup quest on wiki"))))
                         .withStyle(ChatFormatting.DARK_AQUA));
 
         context.getSource().sendSuccess(() -> response, false);

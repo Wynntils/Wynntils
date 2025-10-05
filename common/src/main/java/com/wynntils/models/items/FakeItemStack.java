@@ -22,6 +22,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 public class FakeItemStack extends ItemStack {
     private final WynnItem wynnItem;
+    private final ItemStack itemStack;
     private final String source;
 
     public FakeItemStack(WynnItem wynnItem, ItemStack itemStack, String source) {
@@ -33,6 +34,7 @@ public class FakeItemStack extends ItemStack {
         }
 
         this.wynnItem = wynnItem;
+        this.itemStack = itemStack;
         this.source = source;
     }
 
@@ -43,6 +45,11 @@ public class FakeItemStack extends ItemStack {
     // This should be only used by chat items, so the item does not matter
     public FakeItemStack(WynnItem wynnItem, String source) {
         this(wynnItem, new ItemStack(Items.STONE), source);
+    }
+
+    @Override
+    public ItemStack copy() {
+        return new FakeItemStack(wynnItem, itemStack, source);
     }
 
     @Override
