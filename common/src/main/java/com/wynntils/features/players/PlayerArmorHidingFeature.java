@@ -46,7 +46,7 @@ public class PlayerArmorHidingFeature extends Feature {
                     return;
                 }
 
-                Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+                Entity entity = ((EntityRenderStateExtension) event.getAvatarRenderState()).getEntity();
                 if (!(entity instanceof AbstractClientPlayer player)) return;
 
                 // Only cancel if the helmet item isn't cosmetic.
