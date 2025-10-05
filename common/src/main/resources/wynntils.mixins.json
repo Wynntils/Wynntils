@@ -56,7 +56,6 @@
     "accessors.ClientboundBossEventPacketAccessor",
     "accessors.ClientboundPlayerInfoUpdatePacketAccessor",
     "accessors.ClientboundSetPlayerTeamPacketAccessor",
-    "accessors.ItemStackInfoAccessor",
     "accessors.LerpingBossEventAccessor",
     "accessors.MinecraftAccessor",
     "accessors.OptionsAccessor"

@@ -104,7 +104,7 @@ public final class WynnAlphabetModel extends Model {
                         "feature.wynntils.transcribeMessages.transcribedFrom",
                         StringUtils.capitalizeFirst(alphabet.toString().toLowerCase(Locale.ROOT)),
                         originalString);
-        partStyle = partStyle.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverComponent));
+        partStyle = partStyle.withHoverEvent(new HoverEvent.ShowText(hoverComponent));
 
         return new StyledTextPart(
                 originalTextAsTooltip ? originalString : transcriptedString, partStyle.getStyle(), null, Style.EMPTY);

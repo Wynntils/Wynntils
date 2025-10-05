@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -189,8 +189,8 @@ public class StatisticsCommand extends Command {
                         () -> Component.translatable("command.wynntils.statistics.clickHere")
                                 .withStyle(ChatFormatting.RED)
                                 .withStyle(ChatFormatting.UNDERLINE)
-                                .withStyle(style -> style.withClickEvent(
-                                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statistics reset confirm"))),
+                                .withStyle(style ->
+                                        style.withClickEvent(new ClickEvent.RunCommand("/statistics reset confirm"))),
                         false);
 
         return 1;

@@ -38,10 +38,10 @@ public final class StyledTextUtils {
         String locationString = "[%d, %d, %d]".formatted(location.x, location.y, location.z);
         Style style = Style.EMPTY.withColor(ChatFormatting.DARK_AQUA).withUnderlined(true);
 
-        style = style.withClickEvent(new ClickEvent(
-                ClickEvent.Action.RUN_COMMAND, "/compass at " + location.x + " " + location.y + " " + location.z));
-        style = style.withHoverEvent(new HoverEvent(
-                HoverEvent.Action.SHOW_TEXT, Component.translatable("utils.wynntils.component.clickToSetCompass")));
+        style = style.withClickEvent(
+                new ClickEvent.RunCommand("/compass at " + location.x + " " + location.y + " " + location.z));
+        style = style.withHoverEvent(
+                new HoverEvent.ShowText(Component.translatable("utils.wynntils.component.clickToSetCompass")));
 
         return new StyledTextPart(locationString, style, null, Style.EMPTY);
     }
@@ -209,12 +209,13 @@ public final class StyledTextUtils {
         for (StyledTextPart part : styledText) {
             HoverEvent hoverEvent = part.getPartStyle().getStyle().getHoverEvent();
 
-            if (hoverEvent == null || hoverEvent.getAction() != HoverEvent.Action.SHOW_TEXT) {
+            if (hoverEvent == null || hoverEvent.action() != HoverEvent.Action.SHOW_TEXT) {
                 continue;
             }
 
-            StyledText[] partTexts = StyledText.fromComponent(hoverEvent.getValue(HoverEvent.Action.SHOW_TEXT))
-                    .split("\n");
+            HoverEvent.ShowText showTextHoverEvent = (HoverEvent.ShowText) hoverEvent;
+            StyledText[] partTexts =
+                    StyledText.fromComponent(showTextHoverEvent.value()).split("\n");
 
             for (StyledText partText : partTexts) {
                 Matcher nicknameMatcher = partText.getMatcher(NICKNAME_PATTERN);

@@ -169,8 +169,8 @@ public class ItemScreenshotFeature extends Feature {
                                 itemStack.getHoverName(),
                                 Component.literal(outputfile.getName())
                                         .withStyle(ChatFormatting.UNDERLINE)
-                                        .withStyle(style -> style.withClickEvent(new ClickEvent(
-                                                ClickEvent.Action.OPEN_FILE, outputfile.getAbsolutePath()))))
+                                        .withStyle(style -> style.withClickEvent(
+                                                new ClickEvent.OpenFile(outputfile.getAbsolutePath()))))
                         .withStyle(ChatFormatting.GREEN));
             } catch (IOException e) {
                 WynntilsMod.error("Failed to save image to disk", e);
@@ -189,8 +189,7 @@ public class ItemScreenshotFeature extends Feature {
                     .append(Component.translatable("feature.wynntils.itemScreenshot.copy.mac.clickHere")
                             .withStyle(ChatFormatting.GRAY)
                             .withStyle(ChatFormatting.UNDERLINE)
-                            .withStyle(style -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND,
+                            .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand(
                                     "/wynntils config set ItemScreenshot saveToDisk true")))));
             return;
         }

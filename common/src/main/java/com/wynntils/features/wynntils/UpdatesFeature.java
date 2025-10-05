@@ -77,7 +77,7 @@ public class UpdatesFeature extends Feature {
         MutableComponent clickable = Component.translatable("feature.wynntils.updates.reminder.clickable");
         clickable.setStyle(clickable
                 .getStyle()
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils update"))
+                .withClickEvent(new ClickEvent.RunCommand("/wynntils update"))
                 .withUnderlined(true)
                 .withBold(true));
 
