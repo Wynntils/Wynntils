@@ -11,7 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -160,8 +160,8 @@ public final class RaidModel extends Model {
     }
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageReceivedEvent event) {
-        StyledText styledText = event.getOriginalStyledText();
+    public void onChatMessage(ChatMessageEvent.Match event) {
+        StyledText styledText = event.getMessage();
 
         Matcher rewardPullMatcher = styledText.getMatcher(REWARD_PULLS_PATTERN);
         if (rewardPullMatcher.find()) {
@@ -184,7 +184,7 @@ public final class RaidModel extends Model {
                 String playerName = matcher.group(4);
                 // if the player is nicknamed
                 if (matcher.group(3) != null) {
-                    playerName = StyledTextUtils.extractNameAndNick(event.getOriginalStyledText())
+                    playerName = StyledTextUtils.extractNameAndNick(event.getMessage())
                             .key();
                     if (playerName == null) return;
                 }
@@ -483,6 +483,7 @@ public final class RaidModel extends Model {
     }
 
     public List<String> getRaidMajorIds(String playerName) {
+        if (this.currentRaid == null) return List.of();
         if (!partyRaidBuffs.containsKey(playerName)) return List.of();
 
         List<String> rawBuffNames = partyRaidBuffs.get(playerName);

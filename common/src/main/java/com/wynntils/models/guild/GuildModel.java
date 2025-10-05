@@ -16,7 +16,7 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
@@ -169,8 +169,8 @@ public final class GuildModel extends Model {
 
     // This needs to run before any chat modifications (eg. chat mentions, filter, etc)
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatMessage(ChatMessageReceivedEvent e) {
-        StyledText message = e.getOriginalStyledText();
+    public void onChatMessage(ChatMessageEvent.Match e) {
+        StyledText message = e.getMessage();
 
         if (message.matches(MSG_LEFT_GUILD)) {
             leaveGuild();
