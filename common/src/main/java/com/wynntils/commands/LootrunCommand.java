@@ -120,7 +120,7 @@ public class LootrunCommand extends Command {
                                     Component.literal("/lootrun record")
                                             .withStyle(ChatFormatting.UNDERLINE)
                                             .withStyle((style) -> style.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lootrun record")))),
+                                                    new ClickEvent.RunCommand("/lootrun record")))),
                             false);
         } else {
             Services.LootrunPaths.stopRecording();
@@ -130,17 +130,16 @@ public class LootrunCommand extends Command {
                                             "command.wynntils.lootrun.recordStop1",
                                             Component.literal("/lootrun clear")
                                                     .withStyle(ChatFormatting.UNDERLINE)
-                                                    .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                                            ClickEvent.Action.RUN_COMMAND, "/lootrun clear"))))
+                                                    .withStyle((style) -> style.withClickEvent(
+                                                            new ClickEvent.RunCommand("/lootrun clear"))))
                                     .withStyle(ChatFormatting.RED)
                                     .append("\n")
                                     .append(Component.translatable(
                                                     "command.wynntils.lootrun.recordStop2",
                                                     Component.literal("/lootrun save <name>")
                                                             .withStyle(ChatFormatting.UNDERLINE)
-                                                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                                                    ClickEvent.Action.SUGGEST_COMMAND,
-                                                                    "/lootrun save "))))
+                                                            .withStyle((style) -> style.withClickEvent(
+                                                                    new ClickEvent.SuggestCommand("/lootrun save "))))
                                             .withStyle(ChatFormatting.GREEN)),
                             false);
         }
@@ -216,13 +215,12 @@ public class LootrunCommand extends Command {
 
                 component
                         .append("\n")
-                        .append(Component.literal("[X]").withStyle((style) -> style.withHoverEvent(new HoverEvent(
-                                        HoverEvent.Action.SHOW_TEXT,
-                                        Component.translatable("command.wynntils.lootrun.listClickToDelete")))
-                                .withClickEvent(new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/lootrun note delete " + posString.replace(",", "")))
-                                .withColor(ChatFormatting.RED)))
+                        .append(Component.literal("[X]")
+                                .withStyle((style) -> style.withHoverEvent(new HoverEvent.ShowText(
+                                                Component.translatable("command.wynntils.lootrun.listClickToDelete")))
+                                        .withClickEvent(new ClickEvent.RunCommand(
+                                                "/lootrun note delete " + posString.replace(",", "")))
+                                        .withColor(ChatFormatting.RED)))
                         .append(" " + posString + ": ")
                         .append(note.component());
             }

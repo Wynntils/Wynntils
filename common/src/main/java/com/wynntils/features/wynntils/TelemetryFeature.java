@@ -74,16 +74,16 @@ public class TelemetryFeature extends Feature {
         component.append(Component.literal("Click here")
                 .withStyle(ChatFormatting.GREEN)
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND, "/wynntils config set Telemetry crashReports true"))));
+                .withStyle(style -> style.withClickEvent(
+                        new ClickEvent.RunCommand("/wynntils config set Telemetry crashReports true"))));
         component.append(
                 Component.literal(" to accept crash report telemetry\n").withStyle(ChatFormatting.GREEN));
 
         component.append(Component.literal("Click here")
                 .withStyle(ChatFormatting.RED)
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND, "/wynntils config set Telemetry crashReports false"))));
+                .withStyle(style -> style.withClickEvent(
+                        new ClickEvent.RunCommand("/wynntils config set Telemetry crashReports false"))));
         component.append(
                 Component.literal(" to opt out of crash report telemetry\n").withStyle(ChatFormatting.RED));
 
