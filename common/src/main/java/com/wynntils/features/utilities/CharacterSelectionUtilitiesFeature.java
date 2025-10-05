@@ -38,7 +38,7 @@ public class CharacterSelectionUtilitiesFeature extends Feature {
         List<Integer> validSlots = Models.CharacterSelection.getValidCharacterSlots();
 
         for (int i = 0; i < Math.min(keyHotbarSlots.length, validSlots.size()); i++) {
-            if (!keyHotbarSlots[i].matches(e.getKeyCode(), e.getScanCode())) continue;
+            if (!keyHotbarSlots[i].matches(e.getKeyEvent())) continue;
 
             int slot = validSlots.get(i);
             Models.CharacterSelection.playWithCharacter(slot);
@@ -52,7 +52,7 @@ public class CharacterSelectionUtilitiesFeature extends Feature {
         if (Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 
         KeyMapping perspectiveKey = McUtils.options().keyTogglePerspective;
-        if (perspectiveKey.matches(e.getKey(), e.getScanCode())) {
+        if (perspectiveKey.matches(e.getKeyEvent())) {
             e.setCanceled(true);
         }
     }
