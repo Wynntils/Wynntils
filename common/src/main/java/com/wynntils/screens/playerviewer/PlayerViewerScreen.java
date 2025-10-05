@@ -135,8 +135,8 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
             // Armor and weapons are sent by Wynn so we can use those itemstacks, accessories we will have to use
             // a default texture
             if (craftedGearItem.getGearType().isArmor()) {
-                itemStack = player.getInventory()
-                        .armor
+                itemStack = new ArrayList<>(
+                                player.getInventory().equipment.items.values())
                         .get(InventoryArmor.fromString(
                                         craftedGearItem.getGearType().name())
                                 .getArmorSlot());
