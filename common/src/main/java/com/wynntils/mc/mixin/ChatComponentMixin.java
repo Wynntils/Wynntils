@@ -17,6 +17,7 @@ import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.util.ARGB;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -71,7 +72,12 @@ public abstract class ChatComponentMixin {
 
     @ModifyArg(
             method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V",
-            at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 0),
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target = "Lorg/joml/Matrix3x2fStack;translate(FF)Lorg/joml/Matrix3x2f;",
+                            ordinal = 0,
+                            remap = false),
             index = 0)
     private float offsetChatBox(float x) {
         ChatComponentRenderEvent.Translate event =
@@ -93,40 +99,48 @@ public abstract class ChatComponentMixin {
     }
 
     @Inject(
-            method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V",
+            method = "method_71992", // 1st forEachLine lambda in render
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V", ordinal = 0))
     private void renderTimestampBackground(
             GuiGraphics guiGraphics,
-            int tickCount,
-            int mouseX,
-            int mouseY,
-            boolean focused,
-            CallbackInfo ci,
-            @Local(ordinal = 18) int renderX,
-            @Local(ordinal = 9) int lineHeight,
-            @Local(ordinal = 16) int opacity) {
+            int messageIndex,
+            float backgroundOpacity,
+            float chatOpacity,
+            int screenHeight,
+            int wrappedLineCount,
+            int leftX,
+            int topY,
+            int bottomY,
+            GuiMessage.Line line,
+            int lineIndex,
+            float lineFadeFactor,
+            CallbackInfo ci) {
         MixinHelper.post(new ChatComponentRenderEvent.Background(
-                (ChatComponent) (Object) this, guiGraphics, renderX, lineHeight, opacity));
+                (ChatComponent) (Object) this, guiGraphics, topY, bottomY - topY, backgroundOpacity * lineFadeFactor));
     }
 
     @Inject(
-            method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V",
+            method = "method_71991", // 2nd forEachLine lambda in render
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/util/FormattedCharSequence;III)I"))
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/util/FormattedCharSequence;III)V"))
     private void renderTimestamp(
+            int lineYOffset,
             GuiGraphics guiGraphics,
-            int tickCount,
-            int mouseX,
-            int mouseY,
-            boolean focused,
-            CallbackInfo ci,
-            @Local GuiMessage.Line line,
-            @Local(ordinal = 19) int y,
-            @Local(ordinal = 15) int textOpacity) {
+            float chatOpacity,
+            int leftX,
+            int i,
+            int lineTop,
+            GuiMessage.Line line,
+            int lineIndex,
+            float lineFadeFactor,
+            CallbackInfo ci) {
+        float finalAlpha = lineFadeFactor * chatOpacity;
+        int color = ARGB.color(finalAlpha, -1);
+
         MixinHelper.post(new ChatComponentRenderEvent.Text(
-                (ChatComponent) (Object) this, guiGraphics, line, this.minecraft.font, y, textOpacity));
+                (ChatComponent) (Object) this, guiGraphics, line, this.minecraft.font, lineTop + lineYOffset, color));
     }
 }
