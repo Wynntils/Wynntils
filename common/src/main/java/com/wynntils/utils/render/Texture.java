@@ -339,7 +339,7 @@ public enum Texture {
     CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
     EXIT_FLAG("ui_components/exit_flag.png", 73, 62),
-    GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
+    GEAR_ICONS("ui_components/gear_icons.png", 64, 192),
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
     HOTBAR_SELECTED_HIGHLIGHT("ui_components/hotbar_selected_highlight.png", 16, 16),
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
