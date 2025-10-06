@@ -246,7 +246,7 @@ public final class WorldEventModel extends Model {
     }
 
     @SubscribeEvent
-    public void onScreenClose(ScreenClosedEvent e) {
+    public void onScreenClose(ScreenClosedEvent.Post e) {
         if (nextEventRewardIsAnnihilation) {
             dryAnnihilations.store(dryAnnihilations.get() + 1);
             nextEventRewardIsAnnihilation = false;
