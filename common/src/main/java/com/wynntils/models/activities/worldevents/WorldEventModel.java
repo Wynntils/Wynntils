@@ -143,8 +143,7 @@ public final class WorldEventModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match event) {
-        StyledText styledText =
-                StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
 
         if (styledText.matches(IN_RADIUS_PATTERN)) {
             inWorldEventRadius = true;
