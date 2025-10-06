@@ -30,6 +30,7 @@ import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.emeralds.EmeraldModel;
+import com.wynntils.models.gambits.GambitModel;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.gear.SetModel;
 import com.wynntils.models.guild.GuildModel;
@@ -89,6 +90,7 @@ public final class Models {
     public static final ElementModel Element = new ElementModel();
     public static final EmeraldModel Emerald = new EmeraldModel();
     public static final FriendsModel Friends = new FriendsModel();
+    public static final GambitModel Gambit = new GambitModel();
     public static final GearModel Gear = new GearModel();
     public static final GuildModel Guild = new GuildModel();
     public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();

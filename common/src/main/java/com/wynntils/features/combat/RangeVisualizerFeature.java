@@ -19,6 +19,7 @@ import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
+import com.wynntils.models.gambits.type.Gambit;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -32,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -58,6 +58,12 @@ public class RangeVisualizerFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> renderInFirstPerson = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> showGambitCircles = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> showMajorIDCircles = new Config<>(true);
 
     // Handles rendering for other players and ourselves in third person
     @SubscribeEvent
@@ -122,66 +128,79 @@ public class RangeVisualizerFeature extends Feature {
         // Once every tick, calculate circles for all players that were detected (i.e. rendered)
         // since the previous tick
         circlesToRender.clear();
-        detectedPlayers.forEach(this::checkMajorIdCircles);
+        detectedPlayers.forEach(this::checkCircles);
         detectedPlayers.clear();
     }
 
-    private void checkMajorIdCircles(Player player) {
+    private void checkCircles(Player player) {
         // Don't render for ghost/npc
         if (!Models.Player.isLocalPlayer(player)) return;
 
-        List<GearInfo> validGear;
+        List<Pair<CustomColor, Float>> circles = new ArrayList<>();
+        if (showMajorIDCircles.get()) {
+            List<GearInfo> validGear;
 
-        if (player == McUtils.player()) {
-            // This is ourselves, rendered from outside
+            if (player == McUtils.player()) {
+                // This is ourselves, rendered from outside
 
-            // Don't render for preview in inventory or character selection screen
-            if (McUtils.mc().screen != null && !(McUtils.mc().screen instanceof ChatScreen)) return;
+                // Don't render for preview in inventory or character selection screen
+                if (McUtils.mc().screen != null && !(McUtils.mc().screen instanceof ChatScreen)) return;
 
-            validGear = Models.CharacterStats.getWornGear();
-        } else {
-            // Other players must be in party
-            if (!Models.Party.getPartyMembers()
-                    .contains(StyledText.fromComponent(player.getName()).getStringWithoutFormatting())) return;
+                validGear = Models.CharacterStats.getWornGear();
+            } else {
+                // Other players must be in party
+                if (!Models.Party.getPartyMembers()
+                        .contains(StyledText.fromComponent(player.getName()).getStringWithoutFormatting())) return;
 
-            validGear = new ArrayList<>();
-            // Check main hand
-            GearInfo mainHandGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
-            if (mainHandGearInfo != null) {
-                if (mainHandGearInfo.type().isWeapon()) {
-                    // We cannot verify class or level :(
-                    validGear.add(mainHandGearInfo);
-                }
-            }
-
-            // Check armor slots
-            player.getArmorSlots().forEach(itemStack -> {
-                GearInfo armorGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
-                if (armorGearInfo != null) {
-                    if (armorGearInfo.type().isArmor()) {
-                        validGear.add(armorGearInfo);
+                validGear = new ArrayList<>();
+                // Check main hand
+                GearInfo mainHandGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
+                if (mainHandGearInfo != null) {
+                    if (mainHandGearInfo.type().isWeapon()) {
+                        // We cannot verify class or level :(
+                        validGear.add(mainHandGearInfo);
                     }
                 }
-            });
 
-            // Accessory slots are not available to us :(
-        }
+                // Check armor slots
+                player.getArmorSlots().forEach(itemStack -> {
+                    GearInfo armorGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
+                    if (armorGearInfo != null) {
+                        if (armorGearInfo.type().isArmor()) {
+                            validGear.add(armorGearInfo);
+                        }
+                    }
+                });
 
-        // For each valid gear, check all its major IDs, and store them as color/radius pairs
-        // Offset the radius slightly so multiple circles can be shown for each player
-        // Only a few major IDs can actually be applied at the same time, but we make this general
-        List<Pair<CustomColor, Float>> circles = validGear.stream()
-                .flatMap(gearInfo ->
-                        gearInfo.fixedStats().majorIds().stream().map(majorId -> getCircleFromMajorId(majorId.name())))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                // Accessory slots are not available to us :(
+            }
 
-        // add circles gained from raid major id buffs
-        if (Models.Raid.getCurrentRaid() != null) {
-            Models.Raid.getRaidMajorIds(player.getName().getString()).stream()
-                    .map(this::getCircleFromMajorId)
+            // For each valid gear, check all its major IDs, and store them as color/radius pairs
+            // Offset the radius slightly so multiple circles can be shown for each player
+            // Only a few major IDs can actually be applied at the same time, but we make this general
+            validGear.stream()
+                    .flatMap(gearInfo -> gearInfo.fixedStats().majorIds().stream()
+                            .map(majorId -> getCircleFromMajorId(majorId.name())))
                     .filter(Objects::nonNull)
                     .forEach(circles::add);
+        }
+
+        // add circles gained from raid major id buffs and gambits
+        if (Models.Raid.getCurrentRaid() != null) {
+            // only show our own gambit circles
+            if (player == McUtils.player() && showGambitCircles.get()) {
+                Models.Gambit.getActiveGambits().stream()
+                        .map(this::getCircleFromGambit)
+                        .filter(Objects::nonNull)
+                        .forEach(circles::add);
+            }
+
+            if (showMajorIDCircles.get()) {
+                Models.Raid.getRaidMajorIds(player.getName().getString()).stream()
+                        .map(this::getCircleFromMajorId)
+                        .filter(Objects::nonNull)
+                        .forEach(circles::add);
+            }
         }
 
         if (!circles.isEmpty()) {
@@ -193,8 +212,16 @@ public class RangeVisualizerFeature extends Feature {
         return switch (majorIdName) {
             case "Taunt" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
             case "Saviour's Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
-            case "Altruism" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 12f);
-            case "Guardian" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 7.9f);
+            case "Altruism" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 16f);
+            case "Guardian" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 12f);
+            default -> null;
+        };
+    }
+
+    private Pair<CustomColor, Float> getCircleFromGambit(Gambit gambit) {
+        return switch (gambit) {
+            case FARSIGHTED -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 3f);
+            case MYOPIC -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 12f);
             default -> null;
         };
     }

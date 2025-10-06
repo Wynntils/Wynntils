@@ -33,6 +33,7 @@ import com.wynntils.models.containers.containers.LobbyContainer;
 import com.wynntils.models.containers.containers.LootrunRewardChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardPreviewContainer;
+import com.wynntils.models.containers.containers.RaidStartContainer;
 import com.wynntils.models.containers.containers.RatingRewardsContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
@@ -104,7 +105,7 @@ public final class ContainerModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onScreenClose(ScreenClosedEvent e) {
+    public void onScreenClose(ScreenClosedEvent.Post e) {
         currentContainer = null;
     }
 
@@ -151,6 +152,7 @@ public final class ContainerModel extends Model {
         registerContainer(new PersonalBlockBankContainer());
         registerContainer(new RaidRewardChestContainer());
         registerContainer(new RaidRewardPreviewContainer());
+        registerContainer(new RaidStartContainer());
         registerContainer(new RatingRewardsContainer());
         registerContainer(new ScrapMenuContainer());
         registerContainer(new SeaskipperContainer());
