@@ -21,6 +21,7 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.models.gambits.type.Gambit;
 import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.items.items.gui.GambitItem;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -190,6 +191,7 @@ public class RangeVisualizerFeature extends Feature {
             // only show our own gambit circles
             if (player == McUtils.player() && showGambitCircles.get()) {
                 Models.Gambit.getActiveGambits().stream()
+                        .map(GambitItem::getGambit)
                         .map(this::getCircleFromGambit)
                         .filter(Objects::nonNull)
                         .forEach(circles::add);

@@ -10,9 +10,13 @@ import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.models.gambits.type.Gambit;
+import com.wynntils.models.items.items.gui.GambitItem;
+import com.wynntils.models.raid.event.RaidStartedEvent;
 import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -23,6 +27,9 @@ public class RaidProgressOverlay extends TextOverlay {
 
     @Persisted
     public final Config<Boolean> showIntermission = new Config<>(false);
+
+    @Persisted
+    public final Config<Boolean> showGambits = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> showMilliseconds = new Config<>(true);
@@ -39,7 +46,7 @@ public class RaidProgressOverlay extends TextOverlay {
     public RaidProgressOverlay() {
         super(
                 new OverlayPosition(
-                        120,
+                        80,
                         5,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
@@ -70,6 +77,12 @@ public class RaidProgressOverlay extends TextOverlay {
         return Models.Raid.getCurrentRaid() != null;
     }
 
+    @SubscribeEvent
+    public void onRaidStartedEvent(RaidStartedEvent event) {
+        // We need this, so the activated gambits show up on the template
+        buildTemplates();
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableRaidInfoOnScoreboard.get() && event.getSegment().getScoreboardPart() instanceof RaidScoreboardPart) {
@@ -80,6 +93,11 @@ public class RaidProgressOverlay extends TextOverlay {
     private void buildTemplates() {
         StringBuilder templateBuilder = new StringBuilder("{concat(\"§6§l§n\";current_raid;\"\n\";");
         StringBuilder previewBuilder = new StringBuilder("§6§l§nNest of the Grootslangs\n\n");
+
+        if (showGambits.get()) {
+            previewBuilder.append(getGambitPreview());
+            templateBuilder.append(getGambitTemplate());
+        }
 
         for (int i = 0; i < Models.Raid.MAXIMUM_CHALLENGE_ROOMS; i++) {
             templateBuilder.append(getChallengeTemplate(i + 1));
@@ -107,6 +125,38 @@ public class RaidProgressOverlay extends TextOverlay {
 
         template = templateBuilder.toString();
         previewTemplate = previewBuilder.toString();
+    }
+
+    private String getGambitTemplate() {
+        List<GambitItem> gambits = Models.Gambit.getActiveGambits();
+        if (gambits.isEmpty()) {
+            return "";
+        }
+        StringBuilder gambitBuilder = new StringBuilder().append("\"\n\";\"§6Active Gambits:\";\"\n\";");
+
+        for (GambitItem g : gambits) {
+            gambitBuilder.append("\"§"); // § here so the getcolor will actually be a color
+            gambitBuilder.append(g.getColor().toHexString());
+            gambitBuilder.append(g.getName().replace(" Gambit", ""));
+            gambitBuilder.append("\";");
+            if (g.getGambit()
+                    == Gambit.SHATTERED_MORTAL) { // GLUTTON, but changed for testing (glutton isn't available now)
+                gambitBuilder.append(
+                        " if_str(less_than(raid_active_buffs_count;3);concat(\" §6(buffs \";string(raid_active_buffs_count);\"/2)\n\");\" §4FAILED\n\");");
+            } else if (g.getGambit() == Gambit.MADDENING_MAGE) {
+                gambitBuilder.append("if_str()");
+            }
+            // Cursed Alchemist's?
+            else {
+                gambitBuilder.append("\"\n\";");
+            }
+        }
+        gambitBuilder.append("\"\n\";");
+        return gambitBuilder.toString();
+    }
+
+    private String getGambitPreview() {
+        return "§6Active Gambits:\n§3Farsighted's\n§6Maddening Mage's §6(next misfire in 3)\n§6Glutton's §6(buffs 0/2)\n\n";
     }
 
     private String getChallengeTemplate(int challengeNum) {
