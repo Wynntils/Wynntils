@@ -26,13 +26,16 @@ import com.wynntils.models.containers.containers.HousingJukeboxContainer;
 import com.wynntils.models.containers.containers.HousingListContainer;
 import com.wynntils.models.containers.containers.IngredientPouchContainer;
 import com.wynntils.models.containers.containers.InventoryContainer;
+import com.wynntils.models.containers.containers.ItemIdentifierAugmentsContainer;
 import com.wynntils.models.containers.containers.ItemIdentifierContainer;
 import com.wynntils.models.containers.containers.JukeboxContainer;
 import com.wynntils.models.containers.containers.LeaderboardRewardsContainer;
 import com.wynntils.models.containers.containers.LobbyContainer;
 import com.wynntils.models.containers.containers.LootrunRewardChestContainer;
+import com.wynntils.models.containers.containers.PartyFinderMatchFoundContainer;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardPreviewContainer;
+import com.wynntils.models.containers.containers.RaidStartContainer;
 import com.wynntils.models.containers.containers.RatingRewardsContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
@@ -116,8 +119,8 @@ public final class ContainerModel extends Model {
         // Order does not matter here so just keep it alphabetical
         registerContainer(new AbilityTreeContainer());
         registerContainer(new AbilityTreeResetContainer());
-        registerContainer(new AspectsContainer());
         registerContainer(new AccountBankContainer());
+        registerContainer(new AspectsContainer());
         registerContainer(new BlacksmithContainer());
         registerContainer(new BookshelfContainer());
         registerContainer(new ChallengeRewardContainer());
@@ -128,8 +131,8 @@ public final class ContainerModel extends Model {
         registerContainer(new DailyRewardContainer());
         registerContainer(new EventContainer());
         registerContainer(new FlyingChestContainer());
-        registerContainer(new GuildBankContainer());
         registerContainer(new GuildBadgesContainer());
+        registerContainer(new GuildBankContainer());
         registerContainer(new GuildManagementContainer());
         registerContainer(new GuildMemberListContainer());
         registerContainer(new GuildTerritoriesContainer());
@@ -137,10 +140,11 @@ public final class ContainerModel extends Model {
         registerContainer(new HousingListContainer());
         registerContainer(new IngredientBombRewardContainer());
         registerContainer(new IngredientPouchContainer());
+        registerContainer(new InventoryContainer());
         registerContainer(new IslandBlockBankContainer());
         registerContainer(new ItemBombRewardContainer());
+        registerContainer(new ItemIdentifierAugmentsContainer());
         registerContainer(new ItemIdentifierContainer());
-        registerContainer(new InventoryContainer());
         registerContainer(new JukeboxContainer());
         registerContainer(new LeaderboardRewardsContainer());
         registerContainer(new LobbyContainer());
@@ -148,9 +152,11 @@ public final class ContainerModel extends Model {
         registerContainer(new LootrunRewardChestContainer());
         registerContainer(new MiscBucketContainer());
         registerContainer(new ObjectiveRewardContainer());
+        registerContainer(new PartyFinderMatchFoundContainer());
         registerContainer(new PersonalBlockBankContainer());
         registerContainer(new RaidRewardChestContainer());
         registerContainer(new RaidRewardPreviewContainer());
+        registerContainer(new RaidStartContainer());
         registerContainer(new RatingRewardsContainer());
         registerContainer(new ScrapMenuContainer());
         registerContainer(new SeaskipperContainer());
@@ -161,16 +167,16 @@ public final class ContainerModel extends Model {
         registerContainer(new TradeMarketSellContainer());
         registerContainer(new TradeMarketTradesContainer());
 
-        for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
-            registerContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
+        for (CosmeticItemType type : CosmeticItemType.values()) {
+            registerContainer(new CosmeticContainer(type));
         }
 
         for (GuildLogType type : GuildLogType.values()) {
             registerContainer(new GuildLogContainer(type));
         }
 
-        for (CosmeticItemType type : CosmeticItemType.values()) {
-            registerContainer(new CosmeticContainer(type));
+        for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
+            registerContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
         }
 
         for (StoreItemType type : StoreItemType.values()) {

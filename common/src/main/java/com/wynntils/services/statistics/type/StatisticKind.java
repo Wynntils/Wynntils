@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.statistics.type;
@@ -47,7 +47,13 @@ public enum StatisticKind {
     // endregion
 
     // region Wars
-    WARS_JOINED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT);
+    WARS_JOINED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    // endregion
+
+    // region World Events
+    ANNIHILATIONS_COMPLETED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    ANNIHILATIONS_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    CORRUPTED_CACHES_FOUND(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT);
     // endregion
 
     private final StatFormatter formatter;
