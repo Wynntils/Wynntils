@@ -11,7 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
 import com.wynntils.handlers.labels.type.LabelInfo;
@@ -142,9 +142,9 @@ public final class WorldEventModel extends Model {
     }
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageReceivedEvent event) {
+    public void onChatMessage(ChatMessageEvent.Match event) {
         StyledText styledText =
-                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
+                StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
 
         if (styledText.matches(IN_RADIUS_PATTERN)) {
             inWorldEventRadius = true;
