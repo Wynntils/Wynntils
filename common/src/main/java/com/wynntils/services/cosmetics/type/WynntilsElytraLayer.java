@@ -5,7 +5,6 @@
 package com.wynntils.services.cosmetics.type;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
@@ -14,49 +13,66 @@ import net.minecraft.client.model.ElytraModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.EquipmentClientInfo;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.equipment.Equippable;
 
 public final class WynntilsElytraLayer extends WynntilsLayer {
     private final ElytraModel elytraModel;
+    private final EquipmentLayerRenderer equipmentRenderer;
 
     public WynntilsElytraLayer(
             RenderLayerParent<AvatarRenderState, PlayerModel> renderLayerParent,
             EntityRendererProvider.Context renderProviderContext) {
         super(renderLayerParent);
         this.elytraModel = new ElytraModel(renderProviderContext.getModelSet().bakeLayer(ModelLayers.ELYTRA));
+        this.equipmentRenderer = renderProviderContext.getEquipmentRenderer();
     }
 
     @Override
-    public void render(
+    public void submit(
             PoseStack poseStack,
-            MultiBufferSource buffer,
+            SubmitNodeCollector nodeCollector,
             int packedLight,
-            AvatarRenderState avatarRenderState,
+            AvatarRenderState renderState,
             float yRot,
             float xRot) {
         if (!Managers.Feature.getFeatureInstance(WynntilsCosmeticsFeature.class).isEnabled()) return;
 
-        Entity entity = ((EntityRenderStateExtension) avatarRenderState).getEntity();
+        Entity entity = ((EntityRenderStateExtension) renderState).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (!Services.Cosmetics.shouldRenderCape(player, true)) return;
 
         ResourceLocation texture = Services.Cosmetics.getCapeTexture(player);
         if (texture == null) return;
 
-        poseStack.pushPose();
-        poseStack.translate(0.0F, 0.0F, 0.125F);
-        elytraModel.setupAnim(avatarRenderState);
-        VertexConsumer vertexConsumer =
-                ItemRenderer.getArmorFoilBuffer(buffer, RenderType.armorCutoutNoCull(texture), false);
-        this.elytraModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY);
-        poseStack.popPose();
+        // FIXME: Always render the elytra
+        ItemStack itemStack = renderState.chestEquipment;
+        Equippable equippable = itemStack.get(DataComponents.EQUIPPABLE);
+        if (equippable != null && equippable.assetId().isPresent()) {
+            poseStack.pushPose();
+            poseStack.translate(0.0F, 0.0F, 0.125F);
+            this.equipmentRenderer.renderLayers(
+                    EquipmentClientInfo.LayerType.WINGS,
+                    equippable.assetId().get(),
+                    elytraModel,
+                    renderState,
+                    itemStack,
+                    poseStack,
+                    nodeCollector,
+                    packedLight,
+                    texture,
+                    renderState.outlineColor,
+                    0);
+            poseStack.popPose();
+        }
     }
 }
