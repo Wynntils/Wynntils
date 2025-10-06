@@ -37,13 +37,13 @@ public abstract class GuiGraphicsMixin {
     // Note: Call site 1 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
     //       This mixin works on Fabric, and on Forge as well.
     @WrapOperation(
-            method = "renderTooltip(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V",
+            method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"))
-    private void renderTooltipPre(
+                                    "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"))
+    private void setTooltipForNextFramePre(
             GuiGraphics instance,
             Font font,
             List<Component> tooltipLines,
@@ -74,15 +74,15 @@ public abstract class GuiGraphicsMixin {
     }
 
     @Inject(
-            method = "renderTooltip(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V",
+            method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V",
             at = @At("RETURN"))
-    private void renderTooltipPost(Font font, ItemStack itemStack, int mouseX, int mouseY, CallbackInfo ci) {
+    private void setTooltipForNextFramePost(Font font, ItemStack itemStack, int mouseX, int mouseY, CallbackInfo ci) {
         MixinHelper.post(new ItemTooltipRenderEvent.Post((GuiGraphics) (Object) this, itemStack, mouseX, mouseY));
     }
 
     @WrapOperation(
             method =
-                    "renderTooltipInternal(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;)V",
+                    "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -143,7 +143,7 @@ public abstract class GuiGraphicsMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;fill(Lnet/minecraft/client/renderer/RenderType;IIIIII)V"),
+                                    "Lnet/minecraft/client/gui/GuiGraphics;fill(Lcom/mojang/blaze3d/pipeline/RenderPipeline;IIIII)V"),
             cancellable = true)
     private void renderItemCooldown(ItemStack stack, int x, int y, CallbackInfo ci) {
         ItemCooldownRenderEvent event = new ItemCooldownRenderEvent(stack);
@@ -161,8 +161,8 @@ public abstract class GuiGraphicsMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I"))
-    private int changeCountOverlayColor(
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"))
+    private void changeCountOverlayColor(
             GuiGraphics guiGraphics,
             Font font,
             String text,
@@ -170,8 +170,8 @@ public abstract class GuiGraphicsMixin {
             int y,
             int color,
             boolean dropShadow,
-            Operation<Integer> original,
+            Operation<Void> original,
             @Share("wynntilsCountOverlayColor") LocalIntRef wynntilsCountOverlayColor) {
-        return original.call(guiGraphics, font, text, x, y, wynntilsCountOverlayColor.get(), dropShadow);
+        original.call(guiGraphics, font, text, x, y, wynntilsCountOverlayColor.get(), dropShadow);
     }
 }
