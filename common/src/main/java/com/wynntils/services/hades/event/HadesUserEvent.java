@@ -4,11 +4,11 @@
  */
 package com.wynntils.services.hades.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.services.hades.HadesUser;
-import net.neoforged.bus.api.Event;
 
 // Fired when a new user is added to the HadesModel in our current world
-public abstract class HadesUserEvent extends Event {
+public abstract class HadesUserEvent extends BaseEvent {
     private final HadesUser hadesUser;
 
     protected HadesUserEvent(HadesUser hadesUser) {
@@ -19,13 +19,13 @@ public abstract class HadesUserEvent extends Event {
         return hadesUser;
     }
 
-    public static class Added extends HadesUserEvent {
+    public static final class Added extends HadesUserEvent {
         public Added(HadesUser hadesUser) {
             super(hadesUser);
         }
     }
 
-    public static class Removed extends HadesUserEvent {
+    public static final class Removed extends HadesUserEvent {
         public Removed(HadesUser hadesUser) {
             super(hadesUser);
         }

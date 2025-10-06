@@ -19,7 +19,7 @@ public abstract class AbstractRecipeBookScreenMixin {
         RecipeBookButtonCreateEvent event = new RecipeBookButtonCreateEvent();
         MixinHelper.post(event);
 
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

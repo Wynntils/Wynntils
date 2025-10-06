@@ -23,7 +23,7 @@ public abstract class LocalPlayerMixin {
     private void onDropPre(boolean fullStack, CallbackInfoReturnable<Boolean> cir) {
         DropHeldItemEvent event = new DropHeldItemEvent(fullStack);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             cir.setReturnValue(false);
             cir.cancel();
         }
@@ -33,7 +33,7 @@ public abstract class LocalPlayerMixin {
     private void playSoundPre(SoundEvent sound, float volume, float pitch, CallbackInfo ci) {
         LocalSoundEvent.Player event = new LocalSoundEvent.Player(sound);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

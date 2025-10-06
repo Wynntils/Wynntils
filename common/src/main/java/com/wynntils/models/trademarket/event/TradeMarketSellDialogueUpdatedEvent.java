@@ -4,6 +4,6 @@
  */
 package com.wynntils.models.trademarket.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
-public class TradeMarketSellDialogueUpdatedEvent extends Event {}
+public final class TradeMarketSellDialogueUpdatedEvent extends BaseEvent {}

@@ -1,15 +1,15 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.CancelRequestable;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class ContainerSetContentEvent extends Event {
+public abstract class ContainerSetContentEvent extends BaseEvent {
     private final List<ItemStack> items;
     private final ItemStack carriedItem;
     private final int containerId;
@@ -38,13 +38,13 @@ public abstract class ContainerSetContentEvent extends Event {
         return stateId;
     }
 
-    public static class Pre extends ContainerSetContentEvent implements ICancellableEvent {
+    public static final class Pre extends ContainerSetContentEvent implements CancelRequestable {
         public Pre(List<ItemStack> items, ItemStack carriedItem, int containerId, int stateId) {
             super(items, carriedItem, containerId, stateId);
         }
     }
 
-    public static class Post extends ContainerSetContentEvent {
+    public static final class Post extends ContainerSetContentEvent {
         public Post(List<ItemStack> items, ItemStack carriedItem, int containerId, int stateId) {
             super(items, carriedItem, containerId, stateId);
         }

@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.scores.PlayerTeam;
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class PlayerTeamEvent extends Event implements ICancellableEvent {
+public abstract class PlayerTeamEvent extends BaseEvent {
     private final String username;
     private final PlayerTeam playerTeam;
 
@@ -31,7 +31,7 @@ public abstract class PlayerTeamEvent extends Event implements ICancellableEvent
         }
     }
 
-    public static final class Removed extends PlayerTeamEvent {
+    public static final class Removed extends PlayerTeamEvent implements CancelRequestable {
         public Removed(String username, PlayerTeam playerTeam) {
             super(username, playerTeam);
         }

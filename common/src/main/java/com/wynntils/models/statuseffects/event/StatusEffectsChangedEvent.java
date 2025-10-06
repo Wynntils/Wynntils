@@ -1,9 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.statuseffects.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
-public class StatusEffectsChangedEvent extends Event {}
+public final class StatusEffectsChangedEvent extends BaseEvent {}

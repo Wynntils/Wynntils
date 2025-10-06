@@ -33,8 +33,7 @@ public final class BossBarHandler extends Handler {
         knownBars.add(trackedBar);
     }
 
-    // FixPacketBugsFeature gets in the way if receiveCanceled is not set
-    @SubscribeEvent(receiveCanceled = true)
+    @SubscribeEvent
     public void onHealthBarEvent(BossHealthUpdateEvent event) {
         ClientboundBossEventPacket packet = event.getPacket();
 
@@ -72,9 +71,9 @@ public final class BossBarHandler extends Handler {
             BossBarAddedEvent barAddEvent = new BossBarAddedEvent(trackedBar);
             WynntilsMod.postEvent(barAddEvent);
 
-            if (barAddEvent.isCanceled()) {
+            if (barAddEvent.isCancelRequested()) {
                 trackedBar.setRendered(false);
-                event.setCanceled(true);
+                event.requestCancel();
             } else {
                 trackedBar.setRendered(true);
             }
@@ -90,7 +89,7 @@ public final class BossBarHandler extends Handler {
 
             if (trackedBar != null) {
                 if (!trackedBar.isRendered()) {
-                    event.setCanceled(true);
+                    event.requestCancel();
                 }
 
                 consumer.accept(trackedBar);

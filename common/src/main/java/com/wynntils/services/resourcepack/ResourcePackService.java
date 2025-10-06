@@ -55,7 +55,7 @@ public final class ResourcePackService extends Service {
         // 2. If we already have the correct resource pack preloaded, cancel the event
         if (preloadedPack.getId().equals(PRELOADED_PACK_PREFIX + event.getHash())) {
             WynntilsMod.info("Preloaded pack is up-to-date, cancelling server pack loading.");
-            event.setCanceled(true);
+            event.requestCancel();
             serverHasResourcePack = false;
             return;
         }

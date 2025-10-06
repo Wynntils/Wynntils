@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -21,7 +21,7 @@ public class FixCastingSpellsFromInventoryFeature extends Feature {
     public void onSetSlot(ArmSwingEvent event) {
         if (event.getActionContext() == ArmSwingEvent.ArmSwingContext.DROP_ITEM_FROM_INVENTORY_SCREEN
                 && event.getHand() == InteractionHand.MAIN_HAND) {
-            event.setCanceled(true);
+            event.requestCancel();
         }
     }
 }

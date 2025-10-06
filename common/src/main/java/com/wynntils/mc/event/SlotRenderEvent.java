@@ -1,16 +1,16 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;
-import net.neoforged.bus.api.Event;
 
-public abstract class SlotRenderEvent extends Event {
+public abstract class SlotRenderEvent extends BaseEvent {
     private final GuiGraphics guiGraphics;
     private final Screen screen;
     private final Slot slot;
@@ -37,19 +37,19 @@ public abstract class SlotRenderEvent extends Event {
         return slot;
     }
 
-    public static class Pre extends SlotRenderEvent {
+    public static final class Pre extends SlotRenderEvent {
         public Pre(GuiGraphics guiGraphics, Screen screen, Slot slot) {
             super(guiGraphics, screen, slot);
         }
     }
 
-    public static class CountPre extends SlotRenderEvent {
+    public static final class CountPre extends SlotRenderEvent {
         public CountPre(GuiGraphics guiGraphics, Screen screen, Slot slot) {
             super(guiGraphics, screen, slot);
         }
     }
 
-    public static class Post extends SlotRenderEvent {
+    public static final class Post extends SlotRenderEvent {
         public Post(GuiGraphics guiGraphics, Screen screen, Slot slot) {
             super(guiGraphics, screen, slot);
         }

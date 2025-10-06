@@ -11,6 +11,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
@@ -24,7 +25,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
-import net.neoforged.bus.api.Event;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,7 +38,7 @@ public abstract class MinecraftMixin implements MinecraftExtension {
 
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("RETURN"))
     private void setScreenPost(Screen screen, CallbackInfo ci, @Share("oldScreen") LocalRef<Screen> oldScreen) {
-        Event event = (screen == null)
+        BaseEvent event = (screen == null)
                 ? new ScreenClosedEvent.Post(oldScreen.get())
                 : new ScreenOpenedEvent.Post(screen, oldScreen.get());
         MixinHelper.post(event);
@@ -54,7 +54,7 @@ public abstract class MinecraftMixin implements MinecraftExtension {
                 ? new ScreenClosedEvent.Pre(oldScreen.get())
                 : new ScreenOpenedEvent.Pre(screen, oldScreen.get());
         MixinHelper.postAlways(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -113,7 +113,7 @@ public abstract class MinecraftMixin implements MinecraftExtension {
         ArmSwingEvent event = new ArmSwingEvent(ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK, hand);
         MixinHelper.post(event);
 
-        return !event.isCanceled();
+        return !event.isCancelRequested();
     }
 
     @WrapMethod(method = "getMainRenderTarget()Lcom/mojang/blaze3d/pipeline/RenderTarget;")

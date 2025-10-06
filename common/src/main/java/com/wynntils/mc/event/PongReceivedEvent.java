@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.EventThread;
-import net.neoforged.bus.api.Event;
 
 @EventThread(EventThread.Type.IO)
-public class PongReceivedEvent extends Event {
+public final class PongReceivedEvent extends BaseEvent {
     private final long time;
 
     public PongReceivedEvent(long time) {

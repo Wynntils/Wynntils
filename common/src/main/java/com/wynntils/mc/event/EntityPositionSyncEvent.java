@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.Event;
 
-public class EntityPositionSyncEvent extends Event {
+public final class EntityPositionSyncEvent extends BaseEvent {
     private final Entity entity;
     private final Vec3 newPosition;
 

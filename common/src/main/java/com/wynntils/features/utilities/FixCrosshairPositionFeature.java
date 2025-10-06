@@ -34,7 +34,7 @@ public class FixCrosshairPositionFeature extends Feature {
     public void onRenderCrosshair(RenderEvent.Pre event) {
         if (event.getType() != RenderEvent.ElementType.CROSSHAIR) return;
         if (!shouldOverrideCrosshair()) return;
-        event.setCanceled(true);
+        event.requestCancel();
 
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(

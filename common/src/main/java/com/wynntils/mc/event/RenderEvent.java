@@ -1,17 +1,17 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class RenderEvent extends Event {
+public abstract class RenderEvent extends BaseEvent {
     private final GuiGraphics guiGraphics;
     private final DeltaTracker deltaTracker;
     private final Window window;
@@ -52,13 +52,13 @@ public abstract class RenderEvent extends Event {
         PLAYER_TAB_LIST
     }
 
-    public static class Pre extends RenderEvent implements ICancellableEvent {
+    public static final class Pre extends RenderEvent implements CancelRequestable {
         public Pre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window, ElementType type) {
             super(guiGraphics, deltaTracker, window, type);
         }
     }
 
-    public static class Post extends RenderEvent {
+    public static final class Post extends RenderEvent {
         public Post(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window, ElementType type) {
             super(guiGraphics, deltaTracker, window, type);
         }

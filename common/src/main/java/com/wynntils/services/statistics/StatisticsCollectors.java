@@ -7,7 +7,7 @@ package com.wynntils.services.statistics;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.models.combat.type.DamageDealtEvent;
+import com.wynntils.models.combat.event.DamageDealtEvent;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.gear.type.GearTier;

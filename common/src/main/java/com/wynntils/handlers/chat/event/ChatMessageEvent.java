@@ -4,13 +4,13 @@
  */
 package com.wynntils.handlers.chat.event;
 
+import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public abstract class ChatMessageEvent extends Event {
+public abstract class ChatMessageEvent extends BaseEvent {
     protected final StyledText message;
     private final MessageType messageType;
     private final RecipientType recipientType;
@@ -36,7 +36,7 @@ public abstract class ChatMessageEvent extends Event {
     /**
      * This event is what models and features should use to listen to chat messsages.
      */
-    public static class Match extends ChatMessageEvent implements ICancellableEvent {
+    public static final class Match extends ChatMessageEvent implements CancelRequestable {
         public Match(StyledText message, MessageType messageType, RecipientType recipientType) {
             super(message, messageType, recipientType);
         }
@@ -45,7 +45,7 @@ public abstract class ChatMessageEvent extends Event {
     /**
      * This event is what features should use if they want to rewrite chat messsages.
      */
-    public static class Edit extends ChatMessageEvent {
+    public static final class Edit extends ChatMessageEvent {
         private StyledText editedMessage = null;
 
         public Edit(StyledText message, MessageType messageType, RecipientType recipientType) {
@@ -63,7 +63,7 @@ public abstract class ChatMessageEvent extends Event {
 
     // This is a temporary measure to workaround a regression with chat tabs,
     // while we await the proper chat overhaul.
-    public static class Discard extends ChatMessageEvent implements ICancellableEvent {
+    public static final class Discard extends ChatMessageEvent implements CancelRequestable {
         public Discard(StyledText message, MessageType messageType, RecipientType recipientType) {
             super(message, messageType, recipientType);
         }

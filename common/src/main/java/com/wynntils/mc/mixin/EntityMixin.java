@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -48,7 +48,7 @@ public abstract class EntityMixin implements EntityExtension {
     private void playSoundPre(SoundEvent sound, float volume, float pitch, CallbackInfo ci) {
         LocalSoundEvent.LocalEntity event = new LocalSoundEvent.LocalEntity(sound, (Entity) (Object) this);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

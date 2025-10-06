@@ -4,9 +4,9 @@
  */
 package com.wynntils.core.mod.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
-public abstract class WynncraftConnectionEvent extends Event {
+public abstract class WynncraftConnectionEvent extends BaseEvent {
     private final String host;
 
     protected WynncraftConnectionEvent(String host) {

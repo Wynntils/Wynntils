@@ -16,7 +16,6 @@ import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.regex.Pattern;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
@@ -73,30 +72,30 @@ public class MessageFilterFeature extends Feature {
     @Persisted
     private final Config<Boolean> hidePartyFinder = new Config<>(false);
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onMessage(ChatMessageEvent.Match e) {
         StyledText msg = e.getMessage();
         MessageType messageType = e.getMessageType();
 
         if (hideWelcome.get() && processFilter(msg, messageType, WELCOME)) {
-            e.setCanceled(true);
+            e.requestCancel();
             return;
         }
 
         if (hideLevelUp.get() && processFilter(msg, messageType, LEVEL_UP)) {
-            e.setCanceled(true);
+            e.requestCancel();
             return;
         }
 
         StyledText unwrapped = StyledTextUtils.unwrap(msg).stripAlignment();
 
         if (hideSystemInfo.get() && processFilter(unwrapped, messageType, SYSTEM_INFO)) {
-            e.setCanceled(true);
+            e.requestCancel();
             return;
         }
 
         if (hidePartyFinder.get() && processFilter(unwrapped, messageType, PARTY_FINDER)) {
-            e.setCanceled(true);
+            e.requestCancel();
             return;
         }
     }

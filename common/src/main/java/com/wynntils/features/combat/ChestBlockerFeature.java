@@ -50,7 +50,7 @@ public class ChestBlockerFeature extends Feature {
             if (tieredItem.isPresent() && tieredItem.get().getGearTier() == GearTier.MYTHIC) {
                 McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chestBlocker.closingBlocked")
                         .withStyle(ChatFormatting.RED));
-                e.setCanceled(true);
+                e.requestCancel();
                 return;
             }
 
@@ -64,7 +64,7 @@ public class ChestBlockerFeature extends Feature {
                                 "feature.wynntils.chestBlocker.closingBlockedPouch",
                                 emeraldPouchItem.get().getTier())
                         .withStyle(ChatFormatting.RED));
-                e.setCanceled(true);
+                e.requestCancel();
                 return;
             }
         }
@@ -89,7 +89,7 @@ public class ChestBlockerFeature extends Feature {
 
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chestBlocker.pouchBlocked")
                 .withStyle(ChatFormatting.RED));
-        event.setCanceled(true);
+        event.requestCancel();
     }
 
     private enum EmeraldPouchTier {

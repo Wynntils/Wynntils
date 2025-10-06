@@ -90,7 +90,7 @@ public class CustomNametagRendererFeature extends Feature {
         if (Models.Player.isNpc(player)) return;
 
         if (hidePlayerNametags.get()) {
-            event.setCanceled(true);
+            event.requestCancel();
             return;
         }
 
@@ -110,7 +110,7 @@ public class CustomNametagRendererFeature extends Feature {
 
         // need to handle the rendering ourselves
         if (!nametags.isEmpty()) {
-            event.setCanceled(true);
+            event.requestCancel();
             drawNametags(event, nametags);
         } else {
             drawBadges(event, 0);
@@ -120,7 +120,7 @@ public class CustomNametagRendererFeature extends Feature {
     @SubscribeEvent
     public void onEntityNameTagRender(EntityNameTagRenderEvent event) {
         if (hideAllNametags.get()) {
-            event.setCanceled(true);
+            event.requestCancel();
             return;
         }
 

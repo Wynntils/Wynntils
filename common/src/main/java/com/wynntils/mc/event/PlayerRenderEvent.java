@@ -5,11 +5,11 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.neoforged.bus.api.Event;
 
-public class PlayerRenderEvent extends Event {
+public final class PlayerRenderEvent extends BaseEvent {
     private final PlayerRenderState playerRenderState;
     private final PoseStack poseStack;
     private final MultiBufferSource buffer;

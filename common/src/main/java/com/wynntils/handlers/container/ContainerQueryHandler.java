@@ -121,7 +121,7 @@ public final class ContainerQueryHandler extends Handler {
         if (e.getSource() != SoundSource.BLOCKS) return;
         if (!e.getSound().location().toLanguageKey().equals(MENU_CLICK_SOUND)) return;
 
-        e.setCanceled(true);
+        e.requestCancel();
         return;
     }
 
@@ -174,7 +174,7 @@ public final class ContainerQueryHandler extends Handler {
             currentTitle = e.getTitle();
             currentMenuType = e.getMenuType();
             resetTimer();
-            e.setCanceled(true);
+            e.requestCancel();
         } else {
             McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
             raiseError("Unexpected container opened: '" + e.getTitle().getString() + "'");
@@ -217,7 +217,7 @@ public final class ContainerQueryHandler extends Handler {
 
         if (containerId == lastHandledContentId && ItemUtils.isItemListsEqual(e.getItems(), lastHandledItems)) {
             // After opening a new container, Wynncraft sometimes sends contents twice. Ignore this.
-            e.setCanceled(true);
+            e.requestCancel();
             resetTimer();
             return;
         }
@@ -243,7 +243,7 @@ public final class ContainerQueryHandler extends Handler {
             McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
             raiseError("Error while processing content for " + firstStepName + ": " + t.getMessage());
         } finally {
-            e.setCanceled(true);
+            e.requestCancel();
         }
     }
 
@@ -293,7 +293,7 @@ public final class ContainerQueryHandler extends Handler {
             McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
             raiseError("Error while processing set slot for " + firstStepName + ": " + t.getMessage());
         } finally {
-            e.setCanceled(true);
+            e.requestCancel();
         }
     }
 

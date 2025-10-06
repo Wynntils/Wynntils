@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.hades.protocol.enums.PacketAction;
 import java.util.Set;
-import net.neoforged.bus.api.Event;
 
-public abstract class HadesRelationsUpdateEvent extends Event {
+public abstract class HadesRelationsUpdateEvent extends BaseEvent {
     private final Set<String> changedPlayers;
     private final ChangeType changeType;
 
@@ -25,13 +25,13 @@ public abstract class HadesRelationsUpdateEvent extends Event {
         return changeType;
     }
 
-    public static class FriendList extends HadesRelationsUpdateEvent {
+    public static final class FriendList extends HadesRelationsUpdateEvent {
         public FriendList(Set<String> changedPlayers, ChangeType changeType) {
             super(changedPlayers, changeType);
         }
     }
 
-    public static class PartyList extends HadesRelationsUpdateEvent {
+    public static final class PartyList extends HadesRelationsUpdateEvent {
         public PartyList(Set<String> changedPlayers, ChangeType changeType) {
             super(changedPlayers, changeType);
         }

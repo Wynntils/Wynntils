@@ -35,28 +35,28 @@ public class HealthPotionBlockerFeature extends Feature {
     @SubscribeEvent
     public void onPotionUse(UseItemEvent event) {
         if (checkPotionUse()) {
-            event.setCanceled(true);
+            event.requestCancel();
         }
     }
 
     @SubscribeEvent
     public void onPotionUseOn(PlayerInteractEvent.Interact event) {
         if (checkPotionUse()) {
-            event.setCanceled(true);
+            event.requestCancel();
         }
     }
 
     @SubscribeEvent
     public void onPotionUseOn(PlayerInteractEvent.InteractAt event) {
         if (checkPotionUse()) {
-            event.setCanceled(true);
+            event.requestCancel();
         }
     }
 
     @SubscribeEvent
     public void onPotionUseOn(PlayerInteractEvent.RightClickBlock event) {
         if (checkPotionUse()) {
-            event.setCanceled(true);
+            event.requestCancel();
         }
     }
 

@@ -4,10 +4,10 @@
  */
 package com.wynntils.models.war.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.war.type.WarBattleInfo;
-import net.neoforged.bus.api.Event;
 
-public abstract class GuildWarEvent extends Event {
+public abstract class GuildWarEvent extends BaseEvent {
     private final WarBattleInfo warBattleInfo;
 
     protected GuildWarEvent(WarBattleInfo warBattleInfo) {
@@ -21,7 +21,7 @@ public abstract class GuildWarEvent extends Event {
     /**
      * Event fired when a guild war starts, when the tower starts attacking.
      */
-    public static class Started extends GuildWarEvent {
+    public static final class Started extends GuildWarEvent {
         public Started(WarBattleInfo warBattleInfo) {
             super(warBattleInfo);
         }
@@ -31,7 +31,7 @@ public abstract class GuildWarEvent extends Event {
      * Event fired when a guild war ends, when the tower stops attacking.
      * Note that leaving/dying/capturing territories all call this event.
      */
-    public static class Ended extends GuildWarEvent {
+    public static final class Ended extends GuildWarEvent {
         public Ended(WarBattleInfo warBattleInfo) {
             super(warBattleInfo);
         }

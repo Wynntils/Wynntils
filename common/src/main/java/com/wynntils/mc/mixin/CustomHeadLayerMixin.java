@@ -36,7 +36,7 @@ public abstract class CustomHeadLayerMixin<T extends LivingEntityRenderState> {
 
         PlayerRenderLayerEvent.Armor event = new PlayerRenderLayerEvent.Armor(playerRenderState, EquipmentSlot.HEAD);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

@@ -6,6 +6,7 @@ package com.wynntils.features.ui;
 
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.events.CancelRequestable;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -35,7 +36,6 @@ import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -182,13 +182,13 @@ public class WynntilsContentBookFeature extends Feature {
         }
     }
 
-    private void handleClick(ICancellableEvent cancellableEvent) {
+    private void handleClick(CancelRequestable cancellableEvent) {
         shiftClickedBookItem = McUtils.player().isShiftKeyDown();
 
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
         if (openWynntilsMenuInstead.get()
                 && StyledText.fromComponent(itemInHand.getHoverName()).equals(CONTENT_BOOK_NAME)) {
-            cancellableEvent.setCanceled(true);
+            cancellableEvent.requestCancel();
             WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create());
         }
     }

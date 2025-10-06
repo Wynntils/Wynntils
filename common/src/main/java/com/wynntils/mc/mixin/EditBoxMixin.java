@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -18,7 +18,7 @@ public abstract class EditBoxMixin {
     private void onInsertText(String textToInsert, CallbackInfo ci) {
         EditBoxInsertEvent event = new EditBoxInsertEvent(textToInsert);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

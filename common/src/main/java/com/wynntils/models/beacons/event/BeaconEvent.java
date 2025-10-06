@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.beacons.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.bus.api.Event;
 
-public abstract class BeaconEvent extends Event {
+public abstract class BeaconEvent extends BaseEvent {
     protected final Beacon beacon;
 
     protected BeaconEvent(Beacon beacon) {
@@ -19,7 +19,7 @@ public abstract class BeaconEvent extends Event {
         return beacon;
     }
 
-    public static class Added extends BeaconEvent {
+    public static final class Added extends BeaconEvent {
         private final Entity entity;
 
         public Added(Beacon verifiedBeacon, Entity entities) {
@@ -32,7 +32,7 @@ public abstract class BeaconEvent extends Event {
         }
     }
 
-    public static class Moved extends BeaconEvent {
+    public static final class Moved extends BeaconEvent {
         private final Beacon newBeacon;
 
         public Moved(Beacon oldBeacon, Beacon newBeacon) {
@@ -54,7 +54,7 @@ public abstract class BeaconEvent extends Event {
         }
     }
 
-    public static class Removed extends BeaconEvent {
+    public static final class Removed extends BeaconEvent {
         public Removed(Beacon beacon) {
             super(beacon);
         }

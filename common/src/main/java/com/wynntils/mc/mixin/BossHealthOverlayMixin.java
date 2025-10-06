@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -37,7 +37,7 @@ public abstract class BossHealthOverlayMixin {
     private void updatePre(ClientboundBossEventPacket packet, CallbackInfo ci) {
         BossHealthUpdateEvent event = new BossHealthUpdateEvent(packet, events);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

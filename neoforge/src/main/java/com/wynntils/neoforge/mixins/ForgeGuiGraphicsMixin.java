@@ -55,7 +55,7 @@ public abstract class ForgeGuiGraphicsMixin {
                 mouseY);
         MixinHelper.post(event);
 
-        if (event.isCanceled()) return;
+        if (event.isCancelRequested()) return;
 
         operation.call(
                 instance,

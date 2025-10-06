@@ -16,6 +16,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.mod.event.WynntilsInitEvent;
@@ -39,8 +40,6 @@ import net.minecraft.SharedConstants;
 import net.minecraft.client.resources.language.ClientLanguage;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.server.Bootstrap;
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.IEventBus;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
@@ -77,21 +76,19 @@ public final class WynntilsMod {
         eventBus.register(object);
     }
 
-    public static <T extends Event> void registerListener(Consumer<T> eventConsumer) {
+    public static <T extends BaseEvent> void registerListener(Consumer<T> eventConsumer) {
         eventBus.addListener(eventConsumer);
     }
 
-    public static <T extends Event> boolean postEvent(T event) {
+    public static void postEvent(BaseEvent event) {
         try {
             eventBus.post(event);
-            return event instanceof ICancellableEvent cancellableEvent && cancellableEvent.isCanceled();
         } catch (Throwable t) {
             handleExceptionInEventListener(t, event);
-            return false;
         }
     }
 
-    public static void postEventOnMainThread(Event event) {
+    public static void postEventOnMainThread(BaseEvent event) {
         Managers.TickScheduler.scheduleNextTick(() -> postEvent(event));
     }
 
@@ -99,7 +96,7 @@ public final class WynntilsMod {
         componentMap.values().stream().flatMap(List::stream).forEach(CoreComponent::reloadData);
     }
 
-    private static void handleExceptionInEventListener(Throwable t, Event event) {
+    private static void handleExceptionInEventListener(Throwable t, BaseEvent event) {
         StackTraceElement[] stackTrace = t.getStackTrace();
 
         String crashingFeatureName = Arrays.stream(stackTrace)

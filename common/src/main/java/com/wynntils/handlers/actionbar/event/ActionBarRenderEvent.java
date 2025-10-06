@@ -1,22 +1,22 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.actionbar.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import net.neoforged.bus.api.Event;
 
 /**
  * This event is fired on every instance of action bar recalculation, effectively, acting as a render event.
  * It allows for the modification of the action bar segments that are displayed to the player.
  * If you want to listen to segment changes, you should use {@link ActionBarUpdatedEvent}.
  */
-public class ActionBarRenderEvent extends Event {
+public final class ActionBarRenderEvent extends BaseEvent {
     private final Map<ActionBarSegment, Boolean> segments;
     private boolean renderCoordinates = true;
 

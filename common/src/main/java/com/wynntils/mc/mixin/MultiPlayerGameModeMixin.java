@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -39,7 +39,7 @@ public abstract class MultiPlayerGameModeMixin {
 
         ContainerClickEvent event = new ContainerClickEvent(player.containerMenu, slotId, clickType, mouseButton);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }
@@ -57,7 +57,7 @@ public abstract class MultiPlayerGameModeMixin {
         PlayerInteractEvent.RightClickBlock event =
                 new PlayerInteractEvent.RightClickBlock(player, hand, result.getBlockPos(), result);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             cir.setReturnValue(InteractionResult.FAIL);
             cir.cancel();
         }
@@ -71,7 +71,7 @@ public abstract class MultiPlayerGameModeMixin {
     private void useItemPre(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         UseItemEvent event = new UseItemEvent(player, McUtils.mc().level, hand);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             cir.setReturnValue(InteractionResult.FAIL);
             cir.cancel();
         }
@@ -90,7 +90,7 @@ public abstract class MultiPlayerGameModeMixin {
             CallbackInfoReturnable<InteractionResult> cir) {
         PlayerInteractEvent.InteractAt event = new PlayerInteractEvent.InteractAt(player, hand, target, ray);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             cir.setReturnValue(InteractionResult.FAIL);
             cir.cancel();
         }
@@ -105,7 +105,7 @@ public abstract class MultiPlayerGameModeMixin {
             Player player, Entity target, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         PlayerInteractEvent.Interact event = new PlayerInteractEvent.Interact(player, hand, target);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             cir.setReturnValue(InteractionResult.FAIL);
             cir.cancel();
         }
@@ -118,7 +118,7 @@ public abstract class MultiPlayerGameModeMixin {
     private void attack(Player player, Entity target, CallbackInfo ci) {
         PlayerAttackEvent event = new PlayerAttackEvent(player, target);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

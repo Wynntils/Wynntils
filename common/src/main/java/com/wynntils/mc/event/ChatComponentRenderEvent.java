@@ -1,16 +1,16 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
-import net.neoforged.bus.api.Event;
 
-public abstract class ChatComponentRenderEvent extends Event {
+public abstract class ChatComponentRenderEvent extends BaseEvent {
     private final ChatComponent chatComponent;
 
     protected ChatComponentRenderEvent(ChatComponent chatComponent) {
@@ -21,7 +21,7 @@ public abstract class ChatComponentRenderEvent extends Event {
         return chatComponent;
     }
 
-    public static class Pre extends ChatComponentRenderEvent {
+    public static final class Pre extends ChatComponentRenderEvent {
         private final GuiGraphics guiGraphics;
 
         public Pre(ChatComponent chatComponent, GuiGraphics guiGraphics) {
@@ -35,7 +35,7 @@ public abstract class ChatComponentRenderEvent extends Event {
         }
     }
 
-    public static class Translate extends ChatComponentRenderEvent {
+    public static final class Translate extends ChatComponentRenderEvent {
         private float x;
 
         public Translate(ChatComponent chatComponent, float x) {
@@ -53,7 +53,7 @@ public abstract class ChatComponentRenderEvent extends Event {
         }
     }
 
-    public static class MapMouseX extends ChatComponentRenderEvent {
+    public static final class MapMouseX extends ChatComponentRenderEvent {
         private double x;
 
         public MapMouseX(ChatComponent chatComponent, double x) {
@@ -71,7 +71,7 @@ public abstract class ChatComponentRenderEvent extends Event {
         }
     }
 
-    public static class Background extends ChatComponentRenderEvent {
+    public static final class Background extends ChatComponentRenderEvent {
         private final GuiGraphics guiGraphics;
         private final int renderX;
         private final int lineHeight;
@@ -104,7 +104,7 @@ public abstract class ChatComponentRenderEvent extends Event {
         }
     }
 
-    public static class Text extends ChatComponentRenderEvent {
+    public static final class Text extends ChatComponentRenderEvent {
         private final GuiGraphics guiGraphics;
         private final GuiMessage.Line line;
         private final Font font;

@@ -53,7 +53,7 @@ public class CharacterSelectionUtilitiesFeature extends Feature {
 
         KeyMapping perspectiveKey = McUtils.options().keyTogglePerspective;
         if (perspectiveKey.matches(e.getKey(), e.getScanCode())) {
-            e.setCanceled(true);
+            e.requestCancel();
         }
     }
 
@@ -71,6 +71,6 @@ public class CharacterSelectionUtilitiesFeature extends Feature {
         if (event.getType() != RenderEvent.ElementType.CROSSHAIR) return;
         if (Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 
-        event.setCanceled(true);
+        event.requestCancel();
     }
 }

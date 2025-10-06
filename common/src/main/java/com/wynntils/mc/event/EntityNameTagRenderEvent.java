@@ -5,15 +5,15 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.network.chat.Component;
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public class EntityNameTagRenderEvent extends Event implements ICancellableEvent {
+public class EntityNameTagRenderEvent extends BaseEvent implements CancelRequestable {
     private final EntityRenderState renderState;
     private final Component displayName;
     private final PoseStack poseStack;

@@ -1,15 +1,15 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public class UseItemEvent extends PlayerEvent implements ICancellableEvent {
+public final class UseItemEvent extends PlayerEvent implements CancelRequestable {
     private final Level level;
     private final InteractionHand hand;
 

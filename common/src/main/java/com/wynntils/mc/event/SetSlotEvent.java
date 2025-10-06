@@ -4,12 +4,12 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.Event;
 
 /** Fired when an item is set in a slot */
-public abstract class SetSlotEvent extends Event {
+public abstract class SetSlotEvent extends BaseEvent {
     private final Container container;
     private final int slot;
     protected ItemStack itemStack;
@@ -39,7 +39,7 @@ public abstract class SetSlotEvent extends Event {
      * seeing the same items being set multiple times,
      * when listening to both of these events, consider using {@link ContainerSetContentEvent.Post}
      */
-    public static class Pre extends SetSlotEvent {
+    public static final class Pre extends SetSlotEvent {
         public Pre(Container container, int slot, ItemStack itemStack) {
             super(container, slot, itemStack);
         }
@@ -49,7 +49,7 @@ public abstract class SetSlotEvent extends Event {
         }
     }
 
-    public static class Post extends SetSlotEvent {
+    public static final class Post extends SetSlotEvent {
         private final ItemStack oldItemStack;
 
         public Post(Container container, int slot, ItemStack newItemStack, ItemStack oldItemStack) {

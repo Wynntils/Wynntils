@@ -5,6 +5,7 @@
 package com.wynntils.mc.event;
 
 import com.google.common.base.Preconditions;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -14,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class PlayerInteractEvent extends PlayerEvent {
     private final InteractionHand hand;
@@ -45,7 +45,7 @@ public abstract class PlayerInteractEvent extends PlayerEvent {
         this.cancellationResult = result;
     }
 
-    public static class RightClickBlock extends PlayerInteractEvent implements ICancellableEvent {
+    public static final class RightClickBlock extends PlayerInteractEvent implements CancelRequestable {
         private final BlockPos pos;
         private final BlockHitResult hitVec;
 
@@ -64,7 +64,7 @@ public abstract class PlayerInteractEvent extends PlayerEvent {
         }
     }
 
-    public static class Interact extends PlayerInteractEvent implements ICancellableEvent {
+    public static class Interact extends PlayerInteractEvent implements CancelRequestable {
         private final Entity target;
 
         public Interact(Player player, InteractionHand hand, Entity target) {
@@ -77,7 +77,7 @@ public abstract class PlayerInteractEvent extends PlayerEvent {
         }
     }
 
-    public static class InteractAt extends Interact {
+    public static final class InteractAt extends Interact {
         private final EntityHitResult entityHitResult;
 
         public InteractAt(Player player, InteractionHand hand, Entity target, EntityHitResult entityHitResult) {

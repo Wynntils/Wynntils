@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
 import com.wynntils.core.text.StyledText;
-import net.neoforged.bus.api.Event;
 
-public abstract class ScoreboardEvent extends Event {
+public abstract class ScoreboardEvent extends BaseEvent {
     private final StyledText owner;
     private final String objectiveName;
 
@@ -24,7 +24,7 @@ public abstract class ScoreboardEvent extends Event {
         return objectiveName;
     }
 
-    public static class Set extends ScoreboardEvent {
+    public static final class Set extends ScoreboardEvent {
         private final int score;
 
         public Set(StyledText owner, String objectiveName, int score) {
@@ -37,7 +37,7 @@ public abstract class ScoreboardEvent extends Event {
         }
     }
 
-    public static class Reset extends ScoreboardEvent {
+    public static final class Reset extends ScoreboardEvent {
         public Reset(StyledText owner, String objectiveName) {
             super(owner, objectiveName);
         }

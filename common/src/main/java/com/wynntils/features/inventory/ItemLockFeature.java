@@ -110,7 +110,7 @@ public class ItemLockFeature extends Feature {
                 .get()
                 .getOrDefault(Models.Character.getId(), new TreeSet<>())
                 .contains(slotOptional.get().getContainerSlot())) {
-            event.setCanceled(true);
+            event.requestCancel();
         }
     }
 
@@ -126,7 +126,7 @@ public class ItemLockFeature extends Feature {
                 .get()
                 .getOrDefault(Models.Character.getId(), new TreeSet<>())
                 .contains(heldItemSlot.get().getContainerSlot())) {
-            event.setCanceled(true);
+            event.requestCancel();
         }
     }
 

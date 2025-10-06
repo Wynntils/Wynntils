@@ -4,14 +4,14 @@
  */
 package com.wynntils.core.mod.event;
 
-import net.neoforged.bus.api.Event;
+import com.wynntils.core.events.BaseEvent;
 
-public abstract class WynntilsInitEvent extends Event {
+public abstract class WynntilsInitEvent extends BaseEvent {
     /**
      * This event is fired when the mod finishes initializing, and all core components are ready to be used.
      * This event is the last step of the mod initialization process and is called once during the lifetime of the game.
      * Warning: This event being fired does not mean that the mod is fully loaded. Some components, such as features
      *          are loaded only after i18n initialization by Minecraft, as they depend on resources loaded by Minecraft.
      */
-    public static class ModInitFinished extends WynntilsInitEvent {}
+    public static final class ModInitFinished extends WynntilsInitEvent {}
 }

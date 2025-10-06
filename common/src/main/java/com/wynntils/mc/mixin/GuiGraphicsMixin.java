@@ -61,7 +61,7 @@ public abstract class GuiGraphicsMixin {
                 mouseY);
         MixinHelper.post(event);
 
-        if (event.isCanceled()) return;
+        if (event.isCancelRequested()) return;
 
         operation.call(
                 instance,
@@ -149,7 +149,7 @@ public abstract class GuiGraphicsMixin {
         ItemCooldownRenderEvent event = new ItemCooldownRenderEvent(stack);
         MixinHelper.post(event);
 
-        if (event.isCanceled()) {
+        if (event.isCancelRequested()) {
             ci.cancel();
         }
     }

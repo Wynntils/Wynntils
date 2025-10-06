@@ -23,7 +23,7 @@ public abstract class ChatListenerMixin {
 
         Component newMessage = event.isMessageChanged() ? event.getMessage() : message;
 
-        if (!event.isCanceled()) {
+        if (!event.isCancelRequested()) {
             original.call(newMessage, overlay);
         }
     }

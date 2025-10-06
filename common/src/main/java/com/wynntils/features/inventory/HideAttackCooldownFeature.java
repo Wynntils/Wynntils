@@ -15,6 +15,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class HideAttackCooldownFeature extends Feature {
     @SubscribeEvent
     public void onCooldownRender(ItemCooldownRenderEvent event) {
-        event.setCanceled(!ItemUtils.isWeapon(event.getItemStack()));
+        if (ItemUtils.isWeapon(event.getItemStack())) {
+            event.requestCancel();
+        }
     }
 }

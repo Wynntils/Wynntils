@@ -52,7 +52,7 @@ public class PlayerGhostTransparencyFeature extends Feature {
         if (!(entity instanceof AbstractClientPlayer player)) return;
 
         if (Models.Player.isPlayerGhost(player)) {
-            event.setCanceled(true);
+            event.requestCancel();
         }
     }
 }

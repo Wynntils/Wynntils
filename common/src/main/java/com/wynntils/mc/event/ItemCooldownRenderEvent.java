@@ -4,11 +4,11 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.BaseEvent;
+import com.wynntils.core.events.CancelRequestable;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public class ItemCooldownRenderEvent extends Event implements ICancellableEvent {
+public final class ItemCooldownRenderEvent extends BaseEvent implements CancelRequestable {
     private final ItemStack itemStack;
 
     public ItemCooldownRenderEvent(ItemStack itemStack) {
