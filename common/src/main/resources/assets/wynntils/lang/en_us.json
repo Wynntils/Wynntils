@@ -460,6 +460,8 @@
   "feature.wynntils.customNametagRenderer.name": "Nametag Rendering",
   "feature.wynntils.customNametagRenderer.showGearOnHover.description": "Should a hovered player's gears' name be rendered in the nametag?",
   "feature.wynntils.customNametagRenderer.showGearOnHover.name": "Show Player's Gear on Hover",
+  "feature.wynntils.customNametagRenderer.showGearPercentage.description": "Should gear percentage be displayed next to the gear name?",
+  "feature.wynntils.customNametagRenderer.showGearPercentage.name": "Show Gear Percentage",
   "feature.wynntils.customNametagRenderer.showLeaderboardBadges.description": "Should the top nine players in each leaderboard have badges above their names?",
   "feature.wynntils.customNametagRenderer.showLeaderboardBadges.name": "Show Leaderboard Badges Above Nametag",
   "feature.wynntils.customNametagRenderer.showOwnNametag.description": "Should your own nametag be shown in 3rd person?",
