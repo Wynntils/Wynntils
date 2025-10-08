@@ -39,6 +39,7 @@ import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
 import com.wynntils.models.raid.type.HistoricRaidInfo;
 import com.wynntils.models.raid.type.RaidInfo;
 import com.wynntils.models.raid.type.RaidRoomInfo;
+import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
@@ -112,6 +113,7 @@ public final class RaidModel extends Model {
 
     private final Map<String, List<String>> partyRaidBuffs = new HashMap<>();
 
+    private int spellsCastedThisRaid = 0;
     private int foundNumRewardPulls;
     private int expectedRaidRewardChestId = -2;
     private boolean foundMythicTome;
@@ -138,6 +140,13 @@ public final class RaidModel extends Model {
     }
 
     @SubscribeEvent
+    public void onSpellCast(SpellEvent.Cast event) {
+        if (currentRaid != null) {
+            spellsCastedThisRaid++;
+        }
+    }
+
+    @SubscribeEvent
     public void onTitle(TitleSetTextEvent event) {
         Component component = event.getComponent();
         StyledText styledText = StyledText.fromComponent(component);
@@ -149,6 +158,7 @@ public final class RaidModel extends Model {
                 currentRaid = new RaidInfo(raidKind);
                 completedCurrentChallenge = false;
                 parasiteOvertaken = false;
+                spellsCastedThisRaid = 0;
 
                 WynntilsMod.postEvent(new RaidStartedEvent(raidKind));
             }
@@ -480,6 +490,16 @@ public final class RaidModel extends Model {
 
     public RaidInfo getCurrentRaid() {
         return currentRaid;
+    }
+
+    public int getSpellsCastedThisRaid() {
+        return spellsCastedThisRaid;
+    }
+
+    public int getRaidBuffsCount(String playerName) {
+        if (this.currentRaid == null) return 0;
+        if (!partyRaidBuffs.containsKey(playerName)) return 0;
+        return partyRaidBuffs.get(playerName).size();
     }
 
     public List<String> getRaidMajorIds(String playerName) {

@@ -8,14 +8,71 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.models.items.items.gui.GambitItem;
 import com.wynntils.models.raid.type.RaidInfo;
 import com.wynntils.models.raid.type.RaidRoomInfo;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class RaidFunctions {
+    public static class ActiveGambitNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int gambitIndex = arguments.getArgument("gambitNumber").getIntegerValue();
+            List<GambitItem> activeGambits = Models.Gambit.getActiveGambits();
+            if (gambitIndex < 0) {
+                return "";
+            }
+            return gambitIndex < activeGambits.size()
+                    ? activeGambits.get(gambitIndex).getName()
+                    : "";
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("gambitNumber", Integer.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("gambit_name");
+        }
+    }
+
+    public static class ActiveGambitDescriptionFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int gambitIndex = arguments.getArgument("gambitNumber").getIntegerValue();
+            List<GambitItem> activeGambits = Models.Gambit.getActiveGambits();
+            if (gambitIndex < 0) {
+                return "";
+            }
+            if (gambitIndex < activeGambits.size()) {
+                return activeGambits.get(gambitIndex).getDescription().stream()
+                        .map(StyledText::getStringWithoutFormatting)
+                        .collect(Collectors.joining(" "));
+            }
+            return "";
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("gambitNumber", Integer.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("gambit_description");
+        }
+    }
+
     public static class CurrentRaidFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
@@ -126,6 +183,22 @@ public class RaidFunctions {
             if (Models.Raid.getCurrentRaid() == null) return -1;
 
             return Models.Raid.getRaidBossCount();
+        }
+    }
+
+    public static class RaidSpellsCount extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Raid.getSpellsCastedThisRaid(); // Doesn't show spells casted by sorcery or madness
+        }
+    }
+
+    public static class RaidActiveBuffsCount extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return 0;
+
+            return Models.Raid.getRaidBuffsCount(McUtils.playerName());
         }
     }
 

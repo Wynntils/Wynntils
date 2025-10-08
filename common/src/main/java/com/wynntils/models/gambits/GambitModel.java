@@ -20,14 +20,18 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class GambitModel extends Model {
-    private final List<Gambit> activeGambits = new ArrayList<>();
+    private final List<GambitItem> activeGambits = new ArrayList<>();
 
     public GambitModel() {
         super(List.of());
     }
 
-    public List<Gambit> getActiveGambits() {
+    public List<GambitItem> getActiveGambits() {
         return Collections.unmodifiableList(activeGambits);
+    }
+
+    public boolean isGambitActive(Gambit gambit) {
+        return activeGambits.stream().map(GambitItem::getGambit).toList().contains(gambit);
     }
 
     @SubscribeEvent
@@ -59,7 +63,7 @@ public final class GambitModel extends Model {
                 }
 
                 if (gambitStatus == gambitStatus.ENABLED) {
-                    activeGambits.add(gambit);
+                    activeGambits.add(gambitItem.get());
                 }
             }
         }

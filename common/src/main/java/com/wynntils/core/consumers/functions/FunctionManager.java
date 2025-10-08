@@ -635,6 +635,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
 
+        registerFunction(new RaidFunctions.ActiveGambitDescriptionFunction());
+        registerFunction(new RaidFunctions.ActiveGambitNameFunction());
         registerFunction(new RaidFunctions.CurrentRaidBossCountFunction());
         registerFunction(new RaidFunctions.CurrentRaidChallengeCountFunction());
         registerFunction(new RaidFunctions.CurrentRaidDamageFunction());
@@ -649,6 +651,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new RaidFunctions.DryRaidRewardPullsFunction());
         registerFunction(new RaidFunctions.DryRaidsAspectsFunction());
         registerFunction(new RaidFunctions.DryRaidsTomesFunction());
+        registerFunction(new RaidFunctions.RaidActiveBuffsCount());
         registerFunction(new RaidFunctions.RaidChallengesFunction());
         registerFunction(new RaidFunctions.RaidHasRoomFunction());
         registerFunction(new RaidFunctions.RaidIntermissionTimeFunction());
@@ -658,6 +661,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new RaidFunctions.RaidRoomNameFunction());
         registerFunction(new RaidFunctions.RaidRoomStartFunction());
         registerFunction(new RaidFunctions.RaidRoomTimeFunction());
+        registerFunction(new RaidFunctions.RaidSpellsCount());
         registerFunction(new RaidFunctions.RaidTimeRemainingFunction());
         registerFunction(new RaidFunctions.RaidsRunsSinceFunction());
         registerFunction(new RaidFunctions.SpecificRaidRunsSinceFunction());
