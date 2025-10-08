@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.players;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
@@ -11,6 +12,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.GetCameraEntityEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
@@ -31,6 +33,7 @@ import com.wynntils.services.leaderboard.type.LeaderboardBadge;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.wynn.ColorScaleUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +81,9 @@ public class CustomNametagRendererFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> showGearOnHover = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> showGearPercentage = new Config<>(true);
 
     @Persisted
     private final Config<Boolean> showWynntilsMarker = new Config<>(true);
@@ -161,14 +167,14 @@ public class CustomNametagRendererFeature extends Feature {
         Optional<HadesUser> hadesUserOpt = Services.Hades.getHadesUser(hitPlayerCache.getUUID());
         if (hadesUserOpt.isEmpty()) return;
 
-        MutableComponent handComp = getItemComponent(hadesUserOpt.get().getHeldItem());
+        MutableComponent handComp = getItemComponent(hadesUserOpt.get().getHeldItem(), showGearPercentage.get());
         if (handComp != null) {
             nametags.add(new CustomNametag(handComp, customNametagScale.get()));
         }
 
         for (InventoryAccessory accessory : hadesUserOpt.get().getAccessories().descendingKeySet()) {
             MutableComponent accessoryComp =
-                    getItemComponent(hadesUserOpt.get().getAccessories().get(accessory));
+                    getItemComponent(hadesUserOpt.get().getAccessories().get(accessory), showGearPercentage.get());
             if (accessoryComp != null) {
                 nametags.add(new CustomNametag(accessoryComp, customNametagScale.get()));
             }
@@ -176,25 +182,35 @@ public class CustomNametagRendererFeature extends Feature {
 
         for (InventoryArmor armor : hadesUserOpt.get().getArmor().descendingKeySet()) {
             MutableComponent armorComp =
-                    getItemComponent(hadesUserOpt.get().getArmor().get(armor));
+                    getItemComponent(hadesUserOpt.get().getArmor().get(armor), showGearPercentage.get());
             if (armorComp != null) {
                 nametags.add(new CustomNametag(armorComp, customNametagScale.get()));
             }
         }
     }
 
-    private static MutableComponent getItemComponent(WynnItem wynnItem) {
+    private static MutableComponent getItemComponent(WynnItem wynnItem, boolean showGearPercentage) {
         if (wynnItem == null) return null;
 
         if (wynnItem instanceof GearItem gearItem) {
             String itemName = gearItem.getItemInfo().name();
-            if (gearItem.getShinyStat().isPresent()) {
-                return Component.literal("⬡ ")
-                        .append(Component.literal("Shiny " + itemName)
-                                .withStyle(gearItem.getItemInfo().tier().getChatFormatting()));
-            }
-            return Component.literal(itemName)
+            MutableComponent gearComponent = Component.literal(itemName)
                     .withStyle(gearItem.getItemInfo().tier().getChatFormatting());
+
+            if (gearItem.getShinyStat().isPresent()) {
+                gearComponent = Component.literal("⬡ ").append(gearComponent);
+            }
+
+            if (showGearPercentage && gearItem.hasOverallValue()) {
+                ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
+                gearComponent.append(ColorScaleUtils.getPercentageTextComponent(
+                        isif.getColorMap(),
+                        gearItem.getOverallPercentage(),
+                        isif.colorLerp.get(),
+                        isif.decimalPlaces.get()));
+            }
+
+            return gearComponent;
         } else if (wynnItem instanceof CraftedGearItem craftedGearItem) {
             return Component.literal(craftedGearItem.getName())
                     .withStyle(craftedGearItem.getGearTier().getChatFormatting());
