@@ -196,7 +196,10 @@ public class CustomNametagRendererFeature extends Feature {
                     .withStyle(gearItem.getItemInfo().tier().getChatFormatting());
 
             if (gearItem.getShinyStat().isPresent()) {
-                gearComponent = Component.literal("⬡ ").append(gearComponent);
+                gearComponent = Component.literal("⬡ ")
+                        .append(Component.literal("Shiny ")
+                                .withStyle(gearItem.getItemInfo().tier().getChatFormatting()))
+                        .append(gearComponent);
             }
 
             if (showGearPercentage && gearItem.hasOverallValue()) {
