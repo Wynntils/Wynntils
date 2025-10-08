@@ -21,10 +21,8 @@ import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.playerviewer.PlayerViewerScreen;
@@ -214,12 +212,6 @@ public class CustomNametagRendererFeature extends Feature {
         } else if (wynnItem instanceof CraftedGearItem craftedGearItem) {
             return Component.literal(craftedGearItem.getName())
                     .withStyle(craftedGearItem.getGearTier().getChatFormatting());
-        } else if (wynnItem instanceof CharmItem charmItem) {
-            return Component.literal(charmItem.getItemInfo().name())
-                    .withStyle(charmItem.getItemInfo().tier().getChatFormatting());
-        } else if (wynnItem instanceof TomeItem tomeItem) {
-            return Component.literal(tomeItem.getItemInfo().name())
-                    .withStyle(tomeItem.getItemInfo().tier().getChatFormatting());
         }
 
         return null;
