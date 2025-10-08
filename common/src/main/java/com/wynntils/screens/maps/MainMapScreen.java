@@ -322,6 +322,9 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .get(),
                         Managers.Feature.getFeatureInstance(MainMapFeature.class)
                                 .renderRemoteFriendPlayers
+                                .get(),
+                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                                .renderRemoteGuildPlayers
                                 .get()));
 
         if (showTerrs) {
@@ -340,10 +343,11 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private Stream<PlayerMainMapPoi> getPlayerPois(
-            boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers) {
+            boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers, boolean renderRemoteGuildPlayers) {
         return Services.Hades.getHadesUsers()
                 .filter(hadesUser -> (hadesUser.getRelation() == PlayerRelation.PARTY && renderRemotePartyPlayers)
-                        || (hadesUser.getRelation() == PlayerRelation.FRIEND && renderRemoteFriendPlayers))
+                        || (hadesUser.getRelation() == PlayerRelation.FRIEND && renderRemoteFriendPlayers)
+                        || (hadesUser.getRelation() == PlayerRelation.GUILD && renderRemoteGuildPlayers))
                 .map(PlayerMainMapPoi::new);
     }
 
