@@ -14,7 +14,7 @@ public class GearShareOptions {
     private Map<InventoryAccessory, Boolean> accessoryShare = new TreeMap<>();
     private boolean shareHeldItem = false;
     private boolean shareCraftedItems = false;
-    private boolean shareCraftedNames = false;
+    private boolean shareCraftedNames = true;
 
     public boolean shouldShare() {
         return armorShare.values().stream().anyMatch(b -> b)
