@@ -80,7 +80,9 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         ItemWeightSource weightSource = style.weightSource();
 
         // Only gear will have weightings
-        if (weightSource == ItemWeightSource.NONE || !(itemInfo.getItemInfo() instanceof GearInfo gearInfo)) {
+        if (weightSource == ItemWeightSource.NONE
+                || !itemInfo.hasOverallValue()
+                || !(itemInfo.getItemInfo() instanceof GearInfo gearInfo)) {
             return originalHeader;
         }
 
