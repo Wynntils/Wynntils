@@ -46,6 +46,12 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
     }
 
     @Override
+    protected List<Component> getWeightedHeaderLines(List<Component> originalHeader, TooltipStyle style) {
+        // Crafted items do not have weighting
+        return originalHeader;
+    }
+
+    @Override
     protected List<Component> getIdentificationLines(
             ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator) {
         return CraftedTooltipIdentifications.buildTooltip(craftedItem, currentClass, style);
