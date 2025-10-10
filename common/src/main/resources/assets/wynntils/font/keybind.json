@@ -1,0 +1,13 @@
+{
+  "providers": [
+    {
+      "ascent": 8,
+      "chars": [
+        "Y"
+      ],
+      "file": "wynntils:font/keybind.png",
+      "height": 10,
+      "type": "bitmap"
+    }
+  ]
+}
