@@ -28,7 +28,7 @@ import net.minecraft.network.chat.Component;
 
 public final class ChatPageDetector {
     private static final int MIN_MATCHING_LINES = 5;
-    private static final int MAX_DIFFING_LINES = 5;
+    private static final int MAX_DIFFERING_LINES = 5;
     private static final int NORMAL_PAGE_WAIT = 20;
     private static final int PARTIAL_PAGE_WAIT = 60;
 
@@ -212,9 +212,9 @@ public final class ChatPageDetector {
 
         // Try to find a matching segment allowing for up to MAX_LINE_DIFFING_LINES lines difference
         // at the beginning and end
-        int minRequiredMatches = numReferenceLines - 2 * MAX_DIFFING_LINES;
+        int minRequiredMatches = numReferenceLines - 2 * MAX_DIFFERING_LINES;
 
-        for (int refStart = 0; refStart <= MAX_DIFFING_LINES; refStart++) {
+        for (int refStart = 0; refStart <= MAX_DIFFERING_LINES; refStart++) {
             for (int i = 0; i < numReferenceLines - refStart; i++) {
                 if (i >= minRequiredMatches) {
                     return true;
