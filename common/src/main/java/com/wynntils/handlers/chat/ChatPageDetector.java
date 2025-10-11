@@ -28,6 +28,7 @@ import net.minecraft.network.chat.Component;
 
 public final class ChatPageDetector {
     private static final int MIN_MATCHING_LINES = 5;
+    private static final int MAX_DIFFING_LINES = 5;
     private static final int NORMAL_PAGE_WAIT = 20;
     private static final int PARTIAL_PAGE_WAIT = 60;
 
@@ -162,37 +163,75 @@ public final class ChatPageDetector {
         // If there is not at least 4 messages, there cannot be multiple pages
         if (collectedMessages.size() < 4) return List.of(new ArrayDeque<>(collectedMessages));
 
-        // We might have two pages in a row where the first is background, and the
-        // second is foreground, so we need to ignore colors and styles when comparing,
-        // thus the need for a parallel stripped list.
-        List<Component> formattedList = new ArrayList<>(collectedMessages);
-        List<String> strippedList = collectedMessages.stream()
-                .map(c -> StyledText.fromComponent(c).getStringWithoutFormatting())
-                .toList();
-        // We use this as a marker to determine where a new page starts
-        List<String> strippedBackground = List.copyOf(strippedList.subList(0, 4));
-
+        int lastPageStart = 0;
+        List<Component> messages = new ArrayList<>(collectedMessages);
         List<Deque<Component>> separatedPages = new ArrayList<>();
-        int collectedMessagesCount = collectedMessages.size();
 
         int i = 0;
-        while (i < collectedMessagesCount) {
+        while (i < messages.size()) {
             // Start by copying the background
-            Deque<Component> page = new ArrayDeque<>(formattedList.subList(i, i + 4));
+            Deque<Component> page = new ArrayDeque<>(messages.subList(i, i + 4));
             i += 4;
 
-            while (i < collectedMessagesCount) {
-                boolean nextIsBackground = (i <= (collectedMessagesCount - 4))
-                        && (ListUtils.countMatchingElements(strippedBackground, 0, strippedList, i) >= 4);
-                if (nextIsBackground) break;
+            while (i < messages.size()) {
+                if (isPageStart(messages, lastPageStart, i)) {
+                    lastPageStart = i;
+                    break;
+                }
 
                 // Add content line
-                page.add(formattedList.get(i));
+                page.add(messages.get(i));
                 i++;
             }
             separatedPages.add(page);
         }
         return separatedPages;
+    }
+
+    private boolean isPageStart(List<Component> messageList, int oldPageIndex, int startIndex) {
+        // Check if there are at least 4 messages remaining
+        if (startIndex > messageList.size() - 4) return false;
+
+        // If the first 4 messages are equal, then it's a page start
+        if (ListUtils.countMatchingElements(messageList, oldPageIndex, messageList, startIndex) >= 4) {
+            return true;
+        }
+
+        // It could be the case that there have appeared a few new lines, possibly pushing
+        // old lines out of the way. To handle this, we try to find a matching segment
+        // of lines, allowing for a few lines difference at the start and end.
+
+        // Split all components into lines
+        List<StyledText> referenceLines = messageList.subList(oldPageIndex, oldPageIndex + 4).stream()
+                .flatMap(this::splitIntoLines)
+                .toList();
+        List<StyledText> compareLines = messageList.subList(startIndex, startIndex + 4).stream()
+                .flatMap(this::splitIntoLines)
+                .toList();
+        int numReferenceLines = referenceLines.size();
+
+        // Try to find a matching segment allowing for up to MAX_LINE_DIFFING_LINES lines difference
+        // at the beginning and end
+        int minRequiredMatches = numReferenceLines - 2 * MAX_DIFFING_LINES;
+
+        for (int refStart = 0; refStart <= MAX_DIFFING_LINES; refStart++) {
+            for (int i = 0; i < numReferenceLines - refStart; i++) {
+                if (i >= minRequiredMatches) {
+                    return true;
+                }
+                if (i >= compareLines.size()) {
+                    break;
+                }
+                if (!referenceLines
+                        .get(refStart + i)
+                        .getStringWithoutFormatting()
+                        .equals(compareLines.get(i).getStringWithoutFormatting())) {
+                    break;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void handlePage(Deque<Component> collectedMessages) {
@@ -285,8 +324,13 @@ public final class ChatPageDetector {
         int oldSize = oldBackground.size();
         int newSize = newBackground.size();
 
+        // Sometimes Wynn includes links and hovers, and sometimes it does not. Strip them
+        // make a proper comparison.
+        List<StyledText> strippedOldBackground = StyledTextUtils.stripEventsAndLinks(oldBackground);
+        List<StyledText> strippedNewBackground = StyledTextUtils.stripEventsAndLinks(newBackground);
+
         for (int pos = 0; pos < oldSize; pos++) {
-            int matchCount = ListUtils.countMatchingElements(oldBackground, pos, newBackground, 0);
+            int matchCount = ListUtils.countMatchingElements(strippedOldBackground, pos, strippedNewBackground, 0);
             int remainingOld = oldSize - pos;
 
             if (matchCount == remainingOld && matchCount >= MIN_MATCHING_LINES) {
@@ -316,8 +360,9 @@ public final class ChatPageDetector {
                     .get(lastBackgroundStartPos + i)
                     .getString()
                     .equals(sentBackgroundLines.get(i).getString())) {
-                WynntilsMod.warn("Line mismatch in foreground replacements, skipping");
-                return List.of();
+                WynntilsMod.warn(
+                        "Line mismatch in foreground replacements, skipping line: " + sentBackgroundLines.get(i));
+                continue;
             }
             // Store in reverse order to match chat history later on
             replacements.addFirst(Pair.of(sentBackgroundLines.get(i), foreground.get(lastBackgroundStartPos + i)));
@@ -339,7 +384,7 @@ public final class ChatPageDetector {
             // Check if this message matches any remaining replacement
             for (int j = 0; j < remainingReplacements.size(); j++) {
                 Pair<StyledText, StyledText> replacement = remainingReplacements.get(j);
-                if (styledText.equals(replacement.a())) {
+                if (styledText.getString().equals(replacement.a().getString())) {
                     // Found a match - apply the replacement
                     Component newContent = replacement.b().getComponent();
                     GuiMessage newMessage = new GuiMessage(
