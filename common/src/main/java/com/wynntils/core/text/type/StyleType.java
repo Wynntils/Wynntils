@@ -11,6 +11,7 @@ public record StyleType(boolean includeBasicFormatting, boolean includeEvents, b
             throw new IllegalArgumentException("Cannot have includeBasicFormatting=false and any other field true.");
         }
     }
+
     public static final StyleType NONE = new StyleType(false, false, false);
     public static final StyleType DEFAULT = new StyleType(true, false, false);
     public static final StyleType INCLUDE_FONTS = new StyleType(true, false, true);
