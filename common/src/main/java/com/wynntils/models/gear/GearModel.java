@@ -147,7 +147,7 @@ public final class GearModel extends Model {
 
         // If we still failed to find the gear type, try to find it from the item stack
         if (gearType == null) {
-            gearType = GearType.fromItemStack(itemStack);
+            gearType = GearType.fromItemStack(itemStack, true);
 
             if (gearType == null) {
                 // If we failed to find the gear type, assume it is a weapon
