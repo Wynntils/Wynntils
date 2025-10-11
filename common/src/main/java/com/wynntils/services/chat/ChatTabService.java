@@ -115,6 +115,7 @@ public final class ChatTabService extends Service {
 
     public void enable() {
         if (isEnabled()) return;
+
         if (getTabCount() == 0) {
             WynntilsMod.warn("Cannot enable Chat Tabs: no tabs configured");
             return;
@@ -151,6 +152,8 @@ public final class ChatTabService extends Service {
     }
 
     public void disable() {
+        if (!isEnabled()) return;
+
         McUtils.mc().gui.chat = vanillaChatComponent;
 
         reset();
