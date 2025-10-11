@@ -165,7 +165,8 @@ public class UnidentifiedItemIconFeature extends Feature {
 
     public enum UnidentifiedItemTextures {
         WYNN(IconRenderer.forSpriteSheet(Texture.GEAR_ICONS, 0, 2)),
-        OUTLINE(IconRenderer.forSpriteSheet(Texture.GEAR_ICONS, 64, 2));
+        OUTLINE(IconRenderer.forSpriteSheet(Texture.GEAR_ICONS, 64, 2)),
+        LEGACY(IconRenderer.forSpriteSheet(Texture.GEAR_ICONS, 128, 2));
 
         private final IconRenderer iconRenderer;
 

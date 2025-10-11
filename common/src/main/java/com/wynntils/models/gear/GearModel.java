@@ -7,6 +7,7 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
@@ -20,8 +21,10 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.type.CappedValue;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -207,6 +210,18 @@ public final class GearModel extends Model {
 
     public GearInfo getGearInfoFromApiName(String apiName) {
         return gearInfoRegistry.getFromApiName(apiName);
+    }
+
+    public List<ItemObtainInfo> getObtainInfo(GearInfo gearInfo) {
+        List<ItemObtainInfo> obtainInfo = new ArrayList<>(gearInfo.metaInfo().obtainInfo());
+
+        // If the API gave no info, then use the crowd sourced info
+        if (obtainInfo.size() == 1 && obtainInfo.getFirst().equals(ItemObtainInfo.UNKNOWN)) {
+            obtainInfo.clear();
+        }
+
+        obtainInfo.addAll(Models.WynnItem.getObtainInfo(gearInfo.name()));
+        return obtainInfo;
     }
 
     public Stream<GearInfo> getAllGearInfos() {

@@ -14,6 +14,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.festival.type.FestivalType;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.models.gear.type.GearMetaInfo;
@@ -25,6 +26,7 @@ import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.FixedStats;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.wynnitem.type.DropRestriction;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
@@ -35,6 +37,7 @@ import com.wynntils.utils.type.RangedValue;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -98,38 +101,66 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     protected List<ItemObtainInfo> parseObtainInfo(JsonObject json) {
         List<ItemObtainInfo> obtainInfo = new ArrayList<>();
 
-        // Add API-obtained information
-        String apiObtainName =
-                JsonUtils.getNullableJsonString(JsonUtils.getNullableJsonObject(json, "dropMeta"), "name");
-        List<ItemObtainType> apiObtainTypes = parseObtainTypes(json);
-        for (ItemObtainType apiObtainType : apiObtainTypes) {
-            switch (apiObtainType) {
-                case NORMAL_MOB_DROP -> {
-                    // Only add this if we do not have more specific information
-                    boolean hasSpecialMob =
-                            obtainInfo.stream().anyMatch(o -> o.sourceType() == ItemObtainType.SPECIAL_MOB_DROP);
-                    if (!hasSpecialMob) {
-                        obtainInfo.add(new ItemObtainInfo(ItemObtainType.NORMAL_MOB_DROP, Optional.empty()));
+        DropRestriction dropRestriction = DropRestriction.NEVER;
+
+        // One item in the API currently has no dropRestriction
+        if (json.has("dropRestriction")) {
+            dropRestriction =
+                    DropRestriction.fromApiName(json.get("dropRestriction").getAsString());
+        }
+
+        List<ItemObtainType> itemObtainTypes = new ArrayList<>();
+
+        if (json.has("dropMeta")) {
+            List<String> dropMetaTypes =
+                    JsonUtils.getStringOrStringArray(JsonUtils.getNullableJsonObject(json, "dropMeta"), "type");
+            for (String dropMetaType : dropMetaTypes) {
+                ItemObtainType itemObtainType = ItemObtainType.fromApiName(dropMetaType);
+
+                if (itemObtainType != null) {
+                    itemObtainTypes.add(itemObtainType);
+                } else {
+                    WynntilsMod.warn("Unknown drop meta type: " + dropMetaType);
+                }
+            }
+        }
+
+        if (itemObtainTypes.isEmpty()) {
+            JsonObject requirements = JsonUtils.getNullableJsonObject(json, "requirements");
+            int level = requirements.get("level").getAsInt();
+            String levelRange = "Between level " + Math.max(level - 4, 1) + " and " + (level + 4);
+
+            if (dropRestriction == DropRestriction.NORMAL) {
+                obtainInfo.add(new ItemObtainInfo(ItemObtainType.NORMAL_MOB_DROP, Optional.of(levelRange)));
+                obtainInfo.add(new ItemObtainInfo(ItemObtainType.LOOT_CHEST, Optional.of(levelRange)));
+            } else if (dropRestriction == DropRestriction.LOOT_CHEST) {
+                obtainInfo.add(new ItemObtainInfo(ItemObtainType.CAVE_LOOT_CHEST, Optional.of(levelRange)));
+            }
+        } else {
+            JsonObject dropMeta = json.getAsJsonObject("dropMeta");
+
+            if (dropMeta != null && !dropMeta.isJsonNull()) {
+                for (ItemObtainType itemObtainType : itemObtainTypes) {
+                    if (itemObtainType == ItemObtainType.UNKNOWN) continue;
+
+                    if (itemObtainType == ItemObtainType.EVENT) {
+                        FestivalType festivalType = FestivalType.valueOf(
+                                dropMeta.get("event").getAsString().toUpperCase(Locale.ROOT));
+                        obtainInfo.add(
+                                new ItemObtainInfo(ItemObtainType.EVENT, Optional.of(festivalType.getFullName())));
+                    } else {
+                        obtainInfo.add(new ItemObtainInfo(
+                                itemObtainType, Optional.of(dropMeta.get("name").getAsString())));
                     }
                 }
-                case DUNGEON_RAIN -> {
-                    // Only add this if we do not have more specific information
-                    boolean hasDungeon =
-                            obtainInfo.stream().anyMatch(o -> o.sourceType().isDungeon());
-                    if (!hasDungeon) {
-                        obtainInfo.add(new ItemObtainInfo(ItemObtainType.DUNGEON_RAIN, Optional.empty()));
-                    }
-                }
-                default -> {
-                    // Add the API-obtained information
-                    obtainInfo.add(new ItemObtainInfo(apiObtainType, Optional.ofNullable(apiObtainName)));
-                }
+            } else if (dropRestriction == DropRestriction.DUNGEON) {
+                obtainInfo.add(new ItemObtainInfo(ItemObtainType.FORGERY_CHEST, Optional.empty()));
             }
         }
 
         if (obtainInfo.isEmpty()) {
             // We have no information on how to obtain this
-            obtainInfo.add(new ItemObtainInfo(ItemObtainType.UNKNOWN, Optional.empty()));
+            obtainInfo.add(ItemObtainInfo.UNKNOWN);
         }
 
         return List.copyOf(obtainInfo);
