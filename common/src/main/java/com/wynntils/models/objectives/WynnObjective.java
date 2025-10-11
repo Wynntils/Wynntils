@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.objectives;
 
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -42,7 +42,7 @@ public final class WynnObjective {
     }
 
     static WynnObjective parseObjectiveLine(StyledText objectiveLine, boolean isGuildObjective, boolean hasEventBonus) {
-        String stripped = objectiveLine.getString(PartStyle.StyleType.NONE);
+        String stripped = objectiveLine.getString(StyleType.NONE);
 
         Matcher matcher = OBJECTIVE_PARSER_PATTERN.matcher(stripped);
         String goal = null;

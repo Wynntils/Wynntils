@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -71,7 +72,7 @@ public final class WynnAlphabetModel extends Model {
             boolean useColors,
             ChatFormatting colorToUse,
             boolean originalTextAsTooltip) {
-        String originalString = originalPart.getString(null, PartStyle.StyleType.NONE);
+        String originalString = originalPart.getString(null, StyleType.NONE);
         StringBuilder transcriptedStringBuilder = new StringBuilder(originalString.length());
 
         // If the message is a wynnic number, we transribe it to an english number

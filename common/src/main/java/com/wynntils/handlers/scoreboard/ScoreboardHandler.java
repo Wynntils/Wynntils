@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.scoreboard;
@@ -7,8 +7,8 @@ package com.wynntils.handlers.scoreboard;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.handlers.scoreboard.type.ScoreboardLine;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
@@ -393,7 +393,7 @@ public final class ScoreboardHandler extends Handler {
     }
 
     private ScoreboardPart getScoreboardPartForHeader(ScoreboardLine scoreboardLine) {
-        String unformattedLine = scoreboardLine.line().getString(PartStyle.StyleType.NONE);
+        String unformattedLine = scoreboardLine.line().getString(StyleType.NONE);
 
         for (ScoreboardPart part : scoreboardParts) {
             if (part.getSegmentMatcher()

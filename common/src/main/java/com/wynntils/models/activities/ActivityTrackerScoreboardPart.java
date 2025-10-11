@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
@@ -34,7 +34,7 @@ public class ActivityTrackerScoreboardPart extends ScoreboardPart {
             WynntilsMod.error("TrackerScoreboardPart: content was empty.");
         }
 
-        Matcher matcher = newValue.getHeader().getMatcher(TRACKER_MATCHER.headerPattern(), PartStyle.StyleType.NONE);
+        Matcher matcher = newValue.getHeader().getMatcher(TRACKER_MATCHER.headerPattern(), StyleType.NONE);
 
         // This should never happens, since the handler matched this before calling us
         if (!matcher.matches()) return;
@@ -54,7 +54,7 @@ public class ActivityTrackerScoreboardPart extends ScoreboardPart {
         List<StyledText> taskLines = content.subList(questNameParts.size(), content.size());
 
         for (StyledText line : taskLines) {
-            String unformatted = line.getString(PartStyle.StyleType.NONE);
+            String unformatted = line.getString(StyleType.NONE);
             Matcher spacerMatcher = SPACER_PATTERN.matcher(unformatted);
             if (spacerMatcher.matches()) {
                 // There is a special character at the start of the line, we don't need the previous space

@@ -10,8 +10,8 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
@@ -183,7 +183,7 @@ public class DiscordRichPresenceFeature extends Feature {
         ClassType classType = Models.Character.getClassType();
 
         if (classType == null) return;
-        String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
+        String name = StyledText.fromComponent(McUtils.player().getName()).getString(StyleType.NONE);
         Services.Discord.setImageText(name + " - Level " + level + " " + classType.getName());
         Services.Discord.setImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
     }

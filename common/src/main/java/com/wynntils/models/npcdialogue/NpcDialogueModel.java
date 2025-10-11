@@ -84,8 +84,8 @@ public final class NpcDialogueModel extends Model {
 
     public void handleDialogue(List<StyledText> chatMessage, boolean protectedDialogue, NpcDialogueType type) {
         // Print dialogue to the system log
-        WynntilsMod.info("[NPC] Type: " + (chatMessage.isEmpty() ? "<empty> " : "")
-                + (protectedDialogue ? "<protected> " : "") + type);
+        WynntilsMod.info("[NPC] Type: " + type + (protectedDialogue ? " <protected>" : " <not protected>")
+                + (chatMessage.isEmpty() ? " <empty>" : ""));
         chatMessage.forEach(s -> WynntilsMod.info("[NPC] " + (s.isEmpty() ? "<empty>" : s)));
 
         // The same message can be repeating before we have finished removing the old

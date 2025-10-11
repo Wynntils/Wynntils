@@ -16,7 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketPriceConversionFeature extends Feature {
     @SubscribeEvent
-    public void onClientChat(ChatSentEvent event) {
+    public void onChatSent(ChatSentEvent event) {
         if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.PRICE_CHAT_INPUT) return;
 
         String price = Models.Emerald.convertEmeraldPrice(event.getMessage());
