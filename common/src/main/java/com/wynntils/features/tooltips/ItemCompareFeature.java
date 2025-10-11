@@ -388,7 +388,7 @@ public class ItemCompareFeature extends Feature {
         for (int i : InventoryAccessory.getSlots()) {
             if (slot == i) return;
         }
-        for (int i : InventoryArmor.getSlots()) {
+        for (int i : InventoryArmor.getArmorSlots()) {
             if (slot == i + Inventory.INVENTORY_SIZE) return;
         }
 
