@@ -7,6 +7,8 @@ package com.wynntils.core.text;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.wynntils.core.components.Models;
+import com.wynntils.models.wynnfont.WynnCharModel;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
@@ -66,6 +68,12 @@ public final class StyledTextPart {
         boolean clickEventPrefix = false;
         // <>
         boolean hoverEventPrefix = false;
+        // {}
+        boolean specialPrefix = false;
+        StringBuilder specialString = new StringBuilder();
+        boolean wynncharPrefix = false;
+        StringBuilder wynncharString = new StringBuilder();
+
         String eventIndexString = "";
 
         for (char current : codedString.toCharArray()) {
@@ -84,6 +92,14 @@ public final class StyledTextPart {
                     }
                 }
 
+                if (current == '{') {
+                    specialPrefix = true;
+                    continue;
+                }
+                if (current == '(') {
+                    wynncharPrefix = true;
+                    continue;
+                }
                 // It looks like we have a hex color code
                 if (current == '#') {
                     hexColorFormatting.append(current);
@@ -119,12 +135,71 @@ public final class StyledTextPart {
                 // Color formatting resets the style
                 if (formatting.isColor()) {
                     currentStyle = Style.EMPTY.withColor(formatting);
+                } else {
+                    currentStyle = currentStyle.applyFormat(formatting);
+                }
+                continue;
+            }
+
+            if (specialPrefix) {
+                if (current != '}') {
+                    // Keep appending until we find the closing bracket
+                    specialString.append(current);
+                    continue;
+                } else {
+                    // We currently do not have any special formatting
+                    // But this is a placeholder for future features
+                    specialPrefix = false;
+                    String special = specialString.toString();
+                    specialString = new StringBuilder();
+                    if (special.startsWith("f:")) {
+                        // FIXME: Duplication!
+                        // If we already had some text with the current style
+                        // Append it before modifying the style
+                        if (!currentString.isEmpty()) {
+                            if (style != Style.EMPTY) {
+                                // We might have lost an event, so we need to add it back
+                                currentStyle = currentStyle
+                                        .withClickEvent(style.getClickEvent())
+                                        .withHoverEvent(style.getHoverEvent());
+                            }
+                            // But if the style is empty, we might have parsed events from the string itself
+
+                            parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, parentStyle));
+
+                            // reset string
+                            // style is not reset, because we want to keep the formatting
+                            currentString = new StringBuilder();
+                        }
+
+                        String fontCode = special.substring(2);
+                        ResourceLocation font = Models.WynnChar.getFontFromFromFontCode(fontCode);
+                        if (font != null) {
+                            currentStyle = currentStyle.withFont(font);
+                        }
+                    } else {
+                        // Unknown special code, just ignore it for now
+                    }
                     continue;
                 }
+            }
 
-                currentStyle = currentStyle.applyFormat(formatting);
-
-                continue;
+            if (wynncharPrefix) {
+                if (current != ')') {
+                    // Keep appending until we find the closing bracket
+                    wynncharString.append(current);
+                    continue;
+                } else {
+                    wynncharPrefix = false;
+                    String wynncharStr = wynncharString.toString();
+                    wynncharString = new StringBuilder();
+                    WynnCharModel.WynnCharMapper mapper = Models.WynnChar.getMapperFromFontName(currentStyle.getFont().toString());
+                    // Assume the string can have been created used a wrapping mappper, so always encode using a wrapper
+                    WynnCharModel.WynnCharMapper wrappedMapper = new WynnCharModel.WrappingMapper(mapper);
+                    String encoded = Models.WynnChar.encodeString(wynncharStr, wrappedMapper);
+                    currentString.append(encoded);
+                    continue;
+                }
             }
 
             // If we are parsing an event, handle it
@@ -310,6 +385,17 @@ public final class StyledTextPart {
     }
 
     public String getString(PartStyle previousStyle, PartStyle.StyleType type) {
+        String text;
+        if (type == PartStyle.StyleType.WYNNCHAR_MAPPING || type == PartStyle.StyleType.WYNNCHAR_MAPPING_ALL) {
+            String fontName = style.getFont().toString();
+            WynnCharModel.WynnCharMapper mapper = Models.WynnChar.getMapperFromFontName(fontName);
+            if (type == PartStyle.StyleType.WYNNCHAR_MAPPING_ALL) {
+                mapper = new WynnCharModel.WrappingMapper(mapper);
+            }
+            text = Models.WynnChar.decodeWynnChars(this.text, mapper);
+        } else {
+            text = this.text;
+        }
         return style.asString(previousStyle, type) + text;
     }
 
