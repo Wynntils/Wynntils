@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.type;
 
+import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.stats.type.StatListOrdering;
 
 public record TooltipStyle(
@@ -11,5 +12,6 @@ public record TooltipStyle(
         boolean useDelimiters,
         boolean showBestValueLastAlways,
         boolean showStars,
+        ItemWeightSource weightSource,
         boolean showMaxValue // this only applies to crafted items
         ) {}

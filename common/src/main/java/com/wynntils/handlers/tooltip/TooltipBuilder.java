@@ -9,6 +9,7 @@ import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.type.Pair;
@@ -21,7 +22,7 @@ import net.minecraft.network.chat.Component;
 
 public abstract class TooltipBuilder {
     private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
-            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, true);
+            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, ItemWeightSource.NONE, true);
     private final List<Component> header;
     private final List<Component> footer;
     private final String source;
@@ -31,6 +32,7 @@ public abstract class TooltipBuilder {
     private TooltipStyle cachedStyle;
     private TooltipIdentificationDecorator cachedDecorator;
     private List<Component> identificationsCache;
+    private List<Component> weightedHeaderCache;
 
     protected TooltipBuilder(List<Component> header, List<Component> footer, String source) {
         this.header = header;
@@ -44,9 +46,9 @@ public abstract class TooltipBuilder {
 
     public List<Component> getTooltipLines(
             ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator) {
-        // Header and footer are always constant
-        List<Component> tooltip = new ArrayList<>(header);
+        List<Component> tooltip;
         List<Component> identifications;
+        List<Component> weightings;
 
         // Identification lines are rendered differently depending on current class, requested
         // style and provided decorator. If all match, use cache.
@@ -58,11 +60,27 @@ public abstract class TooltipBuilder {
             cachedCurrentClass = currentClass;
             cachedStyle = style;
             cachedDecorator = decorator;
-        } else {
-            identifications = identificationsCache;
+            weightings = null;
+
+            if (style.weightSource() != ItemWeightSource.NONE) {
+                weightings = getWeightedHeaderLines(header, style);
+            }
+
+            weightedHeaderCache = weightings;
         }
 
-        tooltip.addAll(identifications);
+        // Determine header to use
+        if (style.weightSource() != ItemWeightSource.NONE) {
+            // Recalculate weighted header if not cached
+            if (weightedHeaderCache == null) {
+                weightedHeaderCache = getWeightedHeaderLines(header, style);
+            }
+            tooltip = new ArrayList<>(weightedHeaderCache);
+        } else {
+            tooltip = new ArrayList<>(header);
+        }
+
+        tooltip.addAll(identificationsCache);
 
         tooltip.addAll(footer);
 
@@ -76,6 +94,8 @@ public abstract class TooltipBuilder {
 
         return tooltip;
     }
+
+    protected abstract List<Component> getWeightedHeaderLines(List<Component> originalHeader, TooltipStyle style);
 
     protected abstract List<Component> getIdentificationLines(
             ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator);

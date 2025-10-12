@@ -55,6 +55,9 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
     private final Config<Integer> maxPartyMembers = new Config<>(4);
 
     @Persisted
+    private final Config<Boolean> showHeads = new Config<>(true);
+
+    @Persisted
     private final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
     @Persisted
@@ -186,20 +189,22 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
             PoseStack poseStack = guiGraphics.pose();
             poseStack.pushPose();
 
-            ResourceLocation skin = SkinUtils.getSkin(hadesUser.getUuid());
-
             float renderX = getRenderX();
             float renderY = getRenderY();
 
             poseStack.translate(renderX, renderY, 0);
 
-            // head
-            BufferedRenderUtils.drawTexturedRect(
-                    poseStack, bufferSource, skin, 0, 0, 0, HEAD_SIZE, HEAD_SIZE, 8, 8, 8, 8, 64, 64);
+            if (showHeads.get()) {
+                ResourceLocation skin = SkinUtils.getSkin(hadesUser.getUuid());
 
-            // hat
-            BufferedRenderUtils.drawTexturedRect(
-                    poseStack, bufferSource, skin, 0, 0, 1, HEAD_SIZE, HEAD_SIZE, 40, 8, 8, 8, 64, 64);
+                // head
+                BufferedRenderUtils.drawTexturedRect(
+                        poseStack, bufferSource, skin, 0, 0, 0, HEAD_SIZE, HEAD_SIZE, 8, 8, 8, 8, 64, 64);
+
+                // hat
+                BufferedRenderUtils.drawTexturedRect(
+                        poseStack, bufferSource, skin, 0, 0, 1, HEAD_SIZE, HEAD_SIZE, 40, 8, 8, 8, 64, 64);
+            }
 
             poseStack.translate(HEAD_SIZE, 0, 0);
 

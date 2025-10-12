@@ -20,16 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
-    private static final List<ResourceLocation> ACTION_BAR_FONTS = List.of(
-            ResourceLocation.withDefaultNamespace("hud/gameplay/default/bottom_middle"),
-            ResourceLocation.withDefaultNamespace("hud/wardrobe/default/top_middle"),
-            ResourceLocation.withDefaultNamespace("hud/wardrobe/default/bottom_middle"),
-            ResourceLocation.withDefaultNamespace("hud/gameplay/default/center_middle"),
-            ResourceLocation.withDefaultNamespace("hud/selector/default/bottom_left"),
-            ResourceLocation.withDefaultNamespace("hud/selector/default/bottom_middle"),
-            ResourceLocation.withDefaultNamespace("hud/selector/default/center_right"),
-            ResourceLocation.withDefaultNamespace("hud/selector/default/top_left"),
-            ResourceLocation.withDefaultNamespace("hud/selector/default/top_right"));
     private static final ResourceLocation COORDINATES_FONT =
             ResourceLocation.withDefaultNamespace("hud/gameplay/default/top_right");
 
@@ -51,9 +41,9 @@ public final class ActionBarHandler extends Handler {
 
         // Separate the action bar text from the coordinates
         StyledText actionBarText = packetText.iterate((part, changes) -> {
-            if (ACTION_BAR_FONTS.stream()
-                    .noneMatch(font -> font.equals(part.getPartStyle().getFont()))) {
+            if (part.getPartStyle().getFont().equals(COORDINATES_FONT)) {
                 changes.remove(part);
+                return IterationDecision.BREAK;
             }
 
             return IterationDecision.CONTINUE;
