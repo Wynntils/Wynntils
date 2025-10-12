@@ -210,7 +210,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromString(overlayName),
                                 renderX,
                                 renderX + overlay.getWidth(),

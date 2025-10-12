@@ -41,7 +41,7 @@ public abstract class TerritoryQuickFilterWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(
                                 getFilterName().withStyle(isHovered ? ChatFormatting.BOLD : ChatFormatting.RESET)),
                         this.getX() + 5,

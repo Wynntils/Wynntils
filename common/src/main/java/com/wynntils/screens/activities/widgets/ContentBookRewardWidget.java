@@ -42,7 +42,7 @@ public class ContentBookRewardWidget extends AbstractWidget {
         if (text != null) {
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             text,
                             getX(),
                             getY(),

@@ -12,7 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -86,10 +86,9 @@ public class SpellCastMessageOverlay extends Overlay {
         int alpha = (int) Math.min((float) spellMessageTimer * 256.0F / 10.0F, 255.0F);
         if (alpha <= 0) return;
 
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         spellMessage,
                         this.getRenderX(),
                         this.getRenderX() + this.getWidth(),

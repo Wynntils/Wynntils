@@ -52,7 +52,7 @@ public class BulkBuyWidget extends AbstractWidget {
         if (bulkBoughtItem == null) {
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(I18n.get("feature.wynntils.bulkBuy.widget.bulkBuy")),
                             getX() + BULK_BUY_WIDGET_CENTER,
                             getY() + 54,
@@ -62,7 +62,7 @@ public class BulkBuyWidget extends AbstractWidget {
                             TextShadow.NORMAL);
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(I18n.get("feature.wynntils.bulkBuy.widget.idle")),
                             getX() + BULK_BUY_WIDGET_CENTER,
                             getY() + 65,
@@ -73,7 +73,7 @@ public class BulkBuyWidget extends AbstractWidget {
         } else {
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(I18n.get("feature.wynntils.bulkBuy.widget.currentlyBuying")),
                             getX() + BULK_BUY_WIDGET_CENTER,
                             getY() + 29,
@@ -89,7 +89,7 @@ public class BulkBuyWidget extends AbstractWidget {
 
             FontRenderer.getInstance()
                     .renderScrollingText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(
                                     bulkBoughtItem.itemStack().getHoverName().getString()),
                             getX() + BULK_BUY_WIDGET_CENTER,
@@ -102,7 +102,7 @@ public class BulkBuyWidget extends AbstractWidget {
 
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(
                                     I18n.get("feature.wynntils.bulkBuy.widget.amount", bulkBoughtItem.amount())),
                             getX() + BULK_BUY_WIDGET_CENTER,
@@ -113,7 +113,7 @@ public class BulkBuyWidget extends AbstractWidget {
                             TextShadow.NORMAL);
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(I18n.get(
                                     "feature.wynntils.bulkBuy.widget.totalPrice",
                                     (bulkBoughtItem.amount() * bulkBoughtItem.price()))),
@@ -125,7 +125,7 @@ public class BulkBuyWidget extends AbstractWidget {
                             TextShadow.NORMAL);
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(I18n.get("feature.wynntils.bulkBuy.widget.closeCancel")),
                             getX() + BULK_BUY_WIDGET_CENTER,
                             getY() + 99,

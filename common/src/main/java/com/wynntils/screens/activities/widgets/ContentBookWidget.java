@@ -108,7 +108,7 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.literal(activityInfo.name()).withStyle(nameStyle)),
                         getX() + 18,

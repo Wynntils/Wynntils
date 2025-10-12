@@ -332,9 +332,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         PoseStack poseStack = guiGraphics.pose();
         renderBackgroundTexture(poseStack);
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
 
-        renderVersion(poseStack);
+        renderVersion(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -346,7 +346,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    protected void renderTitle(PoseStack poseStack, String titleString) {
+    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
         int txWidth = Texture.CONTENT_BOOK_TITLE.width();
         int txHeight = Texture.CONTENT_BOOK_TITLE.height();
         RenderUtils.drawScalingTexturedRect(
@@ -362,7 +362,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(titleString),
                         10 + offsetX,
                         21 + offsetY,
@@ -374,14 +374,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     private void renderPlayerInfo(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        PoseStack poseStack = guiGraphics.pose();
-
         if (!Models.Guild.getGuildName().isEmpty()) {
             String rank = Models.Guild.getGuildRank().getGuildDescription();
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(rank + " of"),
                             Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
                             Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
@@ -393,7 +391,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(Models.Guild.getGuildName()),
                             Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
                             Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
@@ -406,7 +404,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(McUtils.player().getDisplayName())
                                 .withoutFormatting(),
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
@@ -418,7 +416,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(
                                 "Level " + Models.CombatXp.getCombatLevel().current() + " "
                                         + Models.Character.getClassType().getName()),
@@ -436,7 +434,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             CappedValue progress = Models.Activity.getOverallProgress();
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(ChatFormatting.BLACK + "Progress: " + ChatFormatting.DARK_AQUA
                                     + progress.getPercentageInt() + "%" + ChatFormatting.BLACK + " ["
                                     + ChatFormatting.DARK_AQUA + progress + ChatFormatting.BLACK + "]"),
@@ -456,7 +454,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         for (int i = 0; i < wrappedSplash.length; i++) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             wrappedSplash[i],
                             Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
                             Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
