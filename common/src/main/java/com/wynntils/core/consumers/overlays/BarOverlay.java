@@ -15,13 +15,16 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
+import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.language.I18n;
 
 public abstract class BarOverlay extends DynamicOverlay {
     @Persisted(i18nKey = "overlay.wynntils.barOverlay.textShadow")
@@ -60,13 +63,6 @@ public abstract class BarOverlay extends DynamicOverlay {
         if (templateCache == null) {
             templateCache = calculateTemplate(template);
         }
-
-        ErrorOr<CappedValue> valueOrError = templateCache.value();
-        if (valueOrError.hasError()) {
-            renderText(poseStack, bufferSource, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
-            return;
-        }
-
         render(poseStack, bufferSource, currentProgress, templateCache.key());
     }
 
@@ -88,6 +84,37 @@ public abstract class BarOverlay extends DynamicOverlay {
         if (valueOrError.getValue().equals(CappedValue.EMPTY)) return;
 
         render(poseStack, bufferSource, (float) valueOrError.getValue().getProgress(), calculatedTemplate.key());
+    }
+
+    @Override
+    protected void renderOrErrorMessage(
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        if (templateCache == null) return;
+        if (templateCache.b().hasError()) {
+            StyledText[] errorMessage = {
+                StyledText.fromString("§c§l" + I18n.get("overlay.wynntils.barOverlay.valueTemplate.error") + " "
+                        + getTranslatedName()),
+                StyledText.fromUnformattedString(templateCache.b().getError())
+            };
+            BufferedFontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            guiGraphics.pose(),
+                            bufferSource,
+                            errorMessage,
+                            getRenderX(),
+                            getRenderX() + getWidth(),
+                            getRenderY(),
+                            getRenderY() + getHeight(),
+                            0,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL,
+                            1);
+
+        } else {
+            super.renderOrErrorMessage(guiGraphics, bufferSource, deltaTracker, window);
+        }
     }
 
     private void render(

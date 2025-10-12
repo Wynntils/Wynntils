@@ -51,7 +51,6 @@ import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
 import com.wynntils.features.commands.FilterAdminCommandsFeature;
 import com.wynntils.features.debug.AbilityTreeDataDumpFeature;
-import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.ContentBookDumpFeature;
 import com.wynntils.features.debug.FunctionDumpFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
@@ -170,8 +169,8 @@ import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.features.wynntils.WeeklyConfigBackupFeature;
 import com.wynntils.features.wynntils.WynntilsHintMessagesFeature;
-import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
+import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -206,7 +205,6 @@ public final class FeatureManager extends Manager {
     public void init() {
         // debug
         registerFeature(new AbilityTreeDataDumpFeature());
-        registerFeature(new ConnectionProgressFeature());
         registerFeature(new ContentBookDumpFeature());
         registerFeature(new FunctionDumpFeature());
         registerFeature(new ItemDebugTooltipsFeature());
@@ -488,10 +486,27 @@ public final class FeatureManager extends Manager {
 
         if (!feature.userEnabled.get()) return; // not enabled by user
 
-        enableFeature(feature);
+        doEnableFeature(feature);
     }
 
     public void enableFeature(Feature feature) {
+        try {
+            doEnableFeature(feature);
+        } catch (Throwable exception) {
+            // Log and handle gracefully, just disable this feature
+            crashFeature(feature);
+            WynntilsMod.reportCrash(
+                    CrashType.FEATURE,
+                    feature.getClass().getSimpleName(),
+                    feature.getClass().getName(),
+                    "enable",
+                    true,
+                    true,
+                    exception);
+        }
+    }
+
+    private void doEnableFeature(Feature feature) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException("Tried to enable an unregistered feature: " + feature);
         }
@@ -511,14 +526,14 @@ public final class FeatureManager extends Manager {
         Managers.KeyBind.enableFeatureKeyBinds(feature);
     }
 
-    public void disableFeature(Feature feature) {
+    public void disableFeature(Feature feature, boolean force) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException("Tried to disable an unregistered feature: " + feature);
         }
 
         FeatureState state = FEATURES.get(feature);
 
-        if (state != FeatureState.ENABLED) return;
+        if (state != FeatureState.ENABLED && !force) return;
 
         feature.onDisable();
 
@@ -536,7 +551,7 @@ public final class FeatureManager extends Manager {
             throw new IllegalArgumentException("Tried to crash an unregistered feature: " + feature);
         }
 
-        disableFeature(feature);
+        disableFeature(feature, true);
 
         FEATURES.put(feature, FeatureState.CRASHED);
     }
@@ -587,7 +602,7 @@ public final class FeatureManager extends Manager {
 
         // If a crash happens in a client-side message event, and we send a new message about disabling X feature,
         // we will cause a new exception and an endless recursion.
-        boolean shouldSendChat = !(event instanceof ClientsideMessageEvent);
+        boolean shouldSendChat = !(event instanceof SystemMessageEvent.ChatReceivedEvent);
 
         WynntilsMod.reportCrash(
                 CrashType.FEATURE,

@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.stats.StatCalculator;
@@ -86,6 +87,9 @@ public class ItemStatInfoFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> identificationDecorations = new Config<>(true);
+
+    @Persisted
+    public final Config<ItemWeightSource> itemWeights = new Config<>(ItemWeightSource.NONE);
 
     @Persisted
     public final Config<Boolean> overallPercentageInName = new Config<>(true);

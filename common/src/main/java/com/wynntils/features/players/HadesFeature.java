@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -52,7 +52,11 @@ public class HadesFeature extends Feature {
                 }
             }
             case "shareWithGuild" -> {
-                // TODO
+                if (shareWithGuild.get()) {
+                    Models.Guild.requestGuildMembers();
+                } else {
+                    Services.Hades.resetSocialType(SocialType.GUILD);
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ package com.wynntils.models.beacons;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.EntityPositionSyncEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
@@ -16,7 +17,6 @@ import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconKind;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.beacons.type.BeaconMarkerKind;
-import com.wynntils.services.custommodel.ModelSupplier;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -52,7 +52,7 @@ public final class BeaconModel extends Model {
     private final Map<Integer, Beacon> beacons = new Int2ObjectArrayMap<>();
     private final Map<Integer, BeaconMarker> beaconMarkers = new Int2ObjectArrayMap<>();
 
-    public static final ModelSupplier BEACON_COLOR_CUSTOM_MODEL_DATA_SUPPLIER = ModelSupplier.forKey("beacon_color");
+    public static final String BEACON_COLOR_CUSTOM_MODEL_DATA_KEY = "beacon_color";
 
     public BeaconModel() {
         super(List.of());
@@ -151,7 +151,8 @@ public final class BeaconModel extends Model {
         if (WynntilsMod.isDevelopmentEnvironment()) {
             if (itemStack.getItem() != Items.POTION) return null;
 
-            Optional<Float> beaconColorCustomModelData = BEACON_COLOR_CUSTOM_MODEL_DATA_SUPPLIER.get();
+            Optional<Float> beaconColorCustomModelData =
+                    Services.CustomModel.getFloat(BEACON_COLOR_CUSTOM_MODEL_DATA_KEY);
             if (beaconColorCustomModelData.isEmpty()) return null;
 
             // Extract custom color from potion

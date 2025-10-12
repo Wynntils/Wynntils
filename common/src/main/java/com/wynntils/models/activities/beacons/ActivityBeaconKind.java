@@ -5,6 +5,7 @@
 package com.wynntils.models.activities.beacons;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.models.beacons.type.BeaconKind;
 import com.wynntils.utils.colors.CustomColor;
 
@@ -33,6 +34,7 @@ public enum ActivityBeaconKind implements BeaconKind {
 
     @Override
     public float getCustomModelData() {
-        return Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA_SUPPLIER.get().orElse(-1f);
+        return Services.CustomModel.getFloat(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA_KEY)
+                .orElse(-1f);
     }
 }

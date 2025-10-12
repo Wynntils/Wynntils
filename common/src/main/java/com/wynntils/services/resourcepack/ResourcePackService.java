@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.resourcepack;
@@ -7,6 +7,7 @@ package com.wynntils.services.resourcepack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
+import com.wynntils.core.mod.ConnectionManager;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.ConnectionEvent;
@@ -115,12 +116,12 @@ public final class ResourcePackService extends Service {
     }
 
     @SubscribeEvent
-    public void onConnect(ConnectionEvent.ConnectedEvent event) {
+    public void onConnect(ConnectionEvent.ConnectingEvent event) {
         // Reset the flag, as we are connecting to a new server
         serverHasResourcePack = false;
 
         // If we are on a Wynncraft server, we don't need to remove the preloaded pack
-        if (Managers.Connection.onServer()) return;
+        if (Managers.Connection.getConnectionState() != ConnectionManager.ConnectionState.DISCONNECTED) return;
 
         // We are not on a Wynncraft server, clear the preloaded pack
         WynntilsMod.info("Joined a non-Wynncraft server, clearing preloaded pack.");
