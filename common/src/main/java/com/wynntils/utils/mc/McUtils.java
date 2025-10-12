@@ -6,7 +6,7 @@ package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.extension.ChatComponentExtension;
+import com.wynntils.core.components.Services;
 import java.io.File;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
@@ -131,7 +131,8 @@ public final class McUtils {
     }
 
     public static void removeMessageFromChat(Component component) {
-        ((ChatComponentExtension) mc().gui.getChat()).deleteMessage(component);
+        Services.ChatTab.modifyChatHistory(allMessages ->
+                allMessages.removeIf(guiMessage -> guiMessage.content().equals(component)));
     }
 
     public static void sendErrorToClient(String errorMsg) {
