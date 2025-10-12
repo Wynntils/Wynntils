@@ -83,7 +83,7 @@ public class SortWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(sortInfo.provider().getDisplayName()),
                         getX() + 2,
                         getY() + (height / 2f),

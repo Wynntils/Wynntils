@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.map.pois;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
@@ -12,12 +11,12 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.Identifier;
 
@@ -28,7 +27,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
 
     @Override
     public void renderAt(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             float renderX,
             float renderY,
@@ -97,10 +96,9 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
         // name
         Font font = FontRenderer.getInstance().getFont();
         int width = font.width(user.getName());
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         StyledText.fromString(user.getName()),
                         renderX - (width - playerHeadRenderSize) / 2f,
                         renderY + playerHeadRenderSize + 8,

@@ -40,7 +40,7 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.literal(getSortName())
                                 .withStyle(isHovered ? ChatFormatting.BOLD : ChatFormatting.RESET)
                                 .append(" ")

@@ -59,7 +59,7 @@ public class DownloadWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromString(downloadName),
                         getX() + width / 2f,
                         getY() + height / 2f,

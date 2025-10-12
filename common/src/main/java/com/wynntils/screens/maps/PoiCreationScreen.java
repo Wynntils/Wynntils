@@ -449,7 +449,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.waypointName") + ":"),
                         (int) (dividedWidth * 4),
                         (int) (dividedHeight * 12.5f),
@@ -460,7 +460,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("X:"),
                         dividedWidth,
                         dividedHeight * 34.5f,
@@ -470,7 +470,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("Y:"),
                         dividedWidth * 9.0f,
                         dividedHeight * 34.5f,
@@ -480,7 +480,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("Z:"),
                         dividedWidth * 17.0f,
                         dividedHeight * 34.5f,
@@ -493,7 +493,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.color") + ":"),
                         dividedWidth * 19f,
                         (int) (dividedHeight * 12.5f),
@@ -504,7 +504,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.visibility") + ":"),
                         dividedWidth * 10.0f,
                         dividedHeight * 45.5f,
@@ -514,7 +514,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get(selectedVisibility.getTranslationKey())),
                         dividedWidth * 15.0f,
                         dividedWidth * 15.0f,

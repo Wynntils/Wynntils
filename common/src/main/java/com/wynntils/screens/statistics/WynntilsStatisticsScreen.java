@@ -108,28 +108,28 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
 
         renderBackgroundTexture(poseStack);
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.statistics.name"));
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.statistics.name"));
 
-        renderVersion(poseStack);
+        renderVersion(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         if (elements.isEmpty()) {
-            renderNoElementsHelper(poseStack, I18n.get("screens.wynntils.statistics.noStatistics"));
+            renderNoElementsHelper(guiGraphics, I18n.get("screens.wynntils.statistics.noStatistics"));
         }
 
         renderDescription(poseStack);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderDescription(PoseStack poseStack) {
+    private void renderDescription(GuiGraphics guiGraphics) {
         if (highlightedStatisticKind == null) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.statistics.noItemSelected")),
                             20 + offsetX,
                             100 + offsetY,
@@ -148,7 +148,7 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
         // Name
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(highlightedStatisticKind.getName()),
                         20 + offsetX,
                         75 + offsetY,
@@ -161,15 +161,15 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
 
         // Statistics
         switch (highlightedStatisticKind.getType()) {
-            case COUNT -> renderCountStatistics(poseStack, highlightedStatisticKind, entry);
-            case ADVANCED -> renderAdvancedStatistics(poseStack, highlightedStatisticKind, entry);
+            case COUNT -> renderCountStatistics(guiGraphics, highlightedStatisticKind, entry);
+            case ADVANCED -> renderAdvancedStatistics(guiGraphics, highlightedStatisticKind, entry);
         }
     }
 
-    private void renderCountStatistics(PoseStack poseStack, StatisticKind statisticKind, StatisticEntry entry) {
+    private void renderCountStatistics(GuiGraphics guiGraphics, StatisticKind statisticKind, StatisticEntry entry) {
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.count", statisticKind.getFormattedValue(entry.count()))),
                         20 + offsetX,
@@ -181,10 +181,10 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                         TextShadow.NONE);
     }
 
-    private void renderAdvancedStatistics(PoseStack poseStack, StatisticKind statisticKind, StatisticEntry entry) {
+    private void renderAdvancedStatistics(GuiGraphics guiGraphics, StatisticKind statisticKind, StatisticEntry entry) {
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.total", statisticKind.getFormattedValue(entry.total()))),
                         20 + offsetX,
@@ -197,7 +197,7 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
         // Note: Count is not formatted according to the formatter
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.statistics.count", entry.count())),
                         20 + offsetX,
                         115 + offsetY,
@@ -208,7 +208,7 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                         TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.min", statisticKind.getFormattedValue(entry.min()))),
                         20 + offsetX,
@@ -221,7 +221,7 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.max", statisticKind.getFormattedValue(entry.max()))),
                         20 + offsetX,
@@ -234,7 +234,7 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.average",
                                 statisticKind.getFormattedValue(entry.average()))),

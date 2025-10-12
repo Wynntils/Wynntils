@@ -80,7 +80,7 @@ public class ChatTabsWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(chatTab.name()),
                         this.getX() + 4,
                         this.getY() + (this.height >> 1),

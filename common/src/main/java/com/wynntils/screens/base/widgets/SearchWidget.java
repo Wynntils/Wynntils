@@ -17,6 +17,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -35,7 +36,7 @@ public class SearchWidget extends TextInputBoxWidget {
 
     @Override
     protected void doRenderWidget(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -64,7 +65,7 @@ public class SearchWidget extends TextInputBoxWidget {
     }
 
     protected void renderText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -77,7 +78,7 @@ public class SearchWidget extends TextInputBoxWidget {
             boolean defaultText) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(defaultText ? DEFAULT_TEXT.getString() : firstPortion),
                         this.getX() + textPadding,
                         this.getX() + this.width - textPadding - lastWidth - highlightedWidth,
@@ -90,7 +91,7 @@ public class SearchWidget extends TextInputBoxWidget {
         if (!defaultText) {
             FontRenderer.getInstance()
                     .renderAlignedHighlightedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(highlightedPortion),
                             this.getX() + textPadding + firstWidth,
                             this.getX() + this.width - textPadding - lastWidth,
@@ -104,7 +105,7 @@ public class SearchWidget extends TextInputBoxWidget {
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(lastPortion),
                             this.getX() + textPadding + firstWidth + highlightedWidth,
                             this.getX() + this.width - textPadding,
