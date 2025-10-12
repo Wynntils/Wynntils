@@ -58,7 +58,7 @@ public class LogEntryWidget extends AbstractWidget {
 
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             logLine,
                             getX() + 6,
                             renderY,
@@ -74,7 +74,7 @@ public class LogEntryWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         timeText,
                         getX() + width - 6,
                         renderY + 1,

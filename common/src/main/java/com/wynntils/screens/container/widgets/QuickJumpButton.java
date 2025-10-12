@@ -70,7 +70,7 @@ public class QuickJumpButton extends WynntilsButton {
         if (icon == QuickJumpButtonIcon.NONE) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(String.valueOf(destination)),
                             getX() + 8,
                             getY() + 8,

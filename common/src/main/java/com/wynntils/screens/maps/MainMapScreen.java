@@ -297,9 +297,9 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderCoordinates(poseStack, mouseX, mouseY);
+        renderCoordinates(guiGraphics, mouseX, mouseY);
 
-        renderZoomWidget(poseStack, mouseX, mouseY);
+        renderZoomWidget(guiGraphics, mouseX, mouseY);
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 

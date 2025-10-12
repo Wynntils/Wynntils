@@ -175,7 +175,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                             scale.get() * (backgroundHeight + 2));
                     FontRenderer.getInstance()
                             .renderAlignedTextInBox(
-                                    event.getPoseStack(),
+                                    event.getGuiGraphics(),
                                     StyledText.fromString(renderedMarker.additionalText),
                                     displayPositionX - scale.get() * backgroundWidth,
                                     displayPositionX + scale.get() * backgroundWidth,
@@ -202,7 +202,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                         scale.get() * (backgroundHeight + 2));
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                event.getPoseStack(),
+                                event.getGuiGraphics(),
                                 StyledText.fromString(renderedMarker.distanceText),
                                 displayPositionX - scale.get() * backgroundWidth,
                                 displayPositionX + scale.get() * backgroundWidth,
@@ -218,7 +218,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                 if (showAdditionalTextAbove.get() && renderedMarker.additionalText != null) {
                     backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.additionalText);
                     RenderUtils.drawRect(
-                            event.getPoseStack(),
+                            event.getGuiGraphics(),
                             CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
                             displayPositionX - scale.get() * (backgroundWidth / 2 + 2),
                             displayPositionY - scale.get() * (backgroundHeight / 2) - 35 * scale.get(),
@@ -227,7 +227,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                             scale.get() * (backgroundHeight + 2));
                     FontRenderer.getInstance()
                             .renderAlignedTextInBox(
-                                    event.getPoseStack(),
+                                    event.getGuiGraphics(),
                                     StyledText.fromString(renderedMarker.additionalText),
                                     displayPositionX - scale.get() * backgroundWidth,
                                     displayPositionX + scale.get() * backgroundWidth,

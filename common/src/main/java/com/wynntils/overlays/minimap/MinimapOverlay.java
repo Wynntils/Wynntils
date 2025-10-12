@@ -205,7 +205,7 @@ public class MinimapOverlay extends Overlay {
         }
 
         renderPois(
-                poseStack,
+                guiGraphics,
                 centerX,
                 centerZ,
                 width,
@@ -236,11 +236,11 @@ public class MinimapOverlay extends Overlay {
         renderMapBorder(poseStack, renderX, renderY, width, height);
 
         // Directional Text
-        renderCardinalDirections(poseStack, width, height, centerX, centerZ);
+        renderCardinalDirections(guiGraphics, width, height, centerX, centerZ);
     }
 
     private void renderPois(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             float centerX,
             float centerZ,
             float width,
@@ -422,7 +422,7 @@ public class MinimapOverlay extends Overlay {
                     2 * w + 6,
                     2 * h + 1);
             fontRenderer.renderText(
-                    poseStack,
+                    guiGraphics,
                     StyledText.fromString(text),
                     compassRenderX,
                     compassRenderZ - 3f,
@@ -445,7 +445,7 @@ public class MinimapOverlay extends Overlay {
     }
 
     private void renderCardinalDirections(
-            PoseStack poseStack, float width, float height, float centerX, float centerZ) {
+            GuiGraphics guiGraphics, float width, float height, float centerX, float centerZ) {
         if (showCompass.get() == CompassRenderType.NONE) return;
 
         float northDX;
@@ -475,7 +475,7 @@ public class MinimapOverlay extends Overlay {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         centerX + northDX,
                         centerZ + northDY,
                         new TextRenderTask("N", TextRenderSetting.CENTERED));
@@ -507,19 +507,19 @@ public class MinimapOverlay extends Overlay {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         centerX + eastDX,
                         centerZ + eastDY,
                         new TextRenderTask("E", TextRenderSetting.CENTERED));
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         centerX - northDX,
                         centerZ - northDY,
                         new TextRenderTask("S", TextRenderSetting.CENTERED));
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         centerX - eastDX,
                         centerZ - eastDY,
                         new TextRenderTask("W", TextRenderSetting.CENTERED));

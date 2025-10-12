@@ -128,7 +128,7 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
 
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                guiGraphics.pose(),
+                                guiGraphics,
                                 StyledText.fromString(symbol),
                                 this.getX(),
                                 this.getX() + this.getWidth(),
@@ -146,7 +146,7 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
                     String symbol = productionType.getPrettySymbol().trim();
                     FontRenderer.getInstance()
                             .renderText(
-                                    guiGraphics.pose(),
+                                    guiGraphics,
                                     StyledText.fromString(symbol),
                                     this.getX() + i % 2 * 8,
                                     this.getY() + i / 2 * 8,
@@ -170,7 +170,7 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(shortTerritoryName),
                             this.getX(),
                             this.getX() + this.getWidth(),

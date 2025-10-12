@@ -56,7 +56,7 @@ public class WynntilsMenuTag extends WynntilsButton {
                 Texture.CONTENT_BOOK_TAG.height());
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.wynntilsMenu.name")),
                         getX() + width / 2f + offset,
                         getY() + height / 2f - 2,
