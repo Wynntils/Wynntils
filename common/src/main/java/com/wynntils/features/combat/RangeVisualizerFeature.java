@@ -9,18 +9,23 @@ import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.models.gambits.type.Gambit;
 import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.inventory.type.InventoryAccessory;
+import com.wynntils.models.inventory.type.InventoryArmor;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -32,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -39,7 +45,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Matrix4f;
 
@@ -148,31 +153,43 @@ public class RangeVisualizerFeature extends Feature {
 
                 validGear = Models.CharacterStats.getWornGear();
             } else {
-                // Other players must be in party
-                if (!Models.Party.getPartyMembers()
-                        .contains(StyledText.fromComponent(player.getName()).getStringWithoutFormatting())) return;
+                // Wynncraft no longer sends the worn gear by other players so we rely on players opting in to share
+                // with Hades
+                Optional<HadesUser> hadesUserOpt = Services.Hades.getHadesUser(player.getUUID());
+                if (hadesUserOpt.isEmpty()) return;
 
                 validGear = new ArrayList<>();
-                // Check main hand
-                GearInfo mainHandGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
-                if (mainHandGearInfo != null) {
-                    if (mainHandGearInfo.type().isWeapon()) {
+                // Check held item
+                GearInfo heldItemGearInfo =
+                        getOtherPlayerGearInfo(hadesUserOpt.get().getHeldItem());
+                if (heldItemGearInfo != null) {
+                    if (heldItemGearInfo.type().isWeapon()) {
                         // We cannot verify class or level :(
-                        validGear.add(mainHandGearInfo);
+                        validGear.add(heldItemGearInfo);
                     }
                 }
 
-                // Check armor slots
-                player.getArmorSlots().forEach(itemStack -> {
-                    GearInfo armorGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
+                // Check armor
+                for (InventoryArmor armor : hadesUserOpt.get().getArmor().keySet()) {
+                    GearInfo armorGearInfo =
+                            getOtherPlayerGearInfo(hadesUserOpt.get().getArmor().get(armor));
                     if (armorGearInfo != null) {
                         if (armorGearInfo.type().isArmor()) {
                             validGear.add(armorGearInfo);
                         }
                     }
-                });
-
-                // Accessory slots are not available to us :(
+                }
+                // Check accessories
+                for (InventoryAccessory accessory :
+                        hadesUserOpt.get().getAccessories().keySet()) {
+                    GearInfo accessoryGearInfo = getOtherPlayerGearInfo(
+                            hadesUserOpt.get().getAccessories().get(accessory));
+                    if (accessoryGearInfo != null) {
+                        if (accessoryGearInfo.type().isAccessory()) {
+                            validGear.add(accessoryGearInfo);
+                        }
+                    }
+                }
             }
 
             // For each valid gear, check all its major IDs, and store them as color/radius pairs
@@ -226,10 +243,12 @@ public class RangeVisualizerFeature extends Feature {
         };
     }
 
-    private GearInfo getOtherPlayerGearInfo(ItemStack itemStack) {
-        // This must specifically NOT be normalized; the ֎ is significant
-        String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-        return Models.Gear.getGearInfoFromApiName(gearName);
+    private GearInfo getOtherPlayerGearInfo(WynnItem wynnItem) {
+        if (wynnItem instanceof GearItem gearItem) {
+            return gearItem.getItemInfo();
+        }
+
+        return null;
     }
 
     /**

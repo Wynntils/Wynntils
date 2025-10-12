@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.players;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
@@ -11,21 +12,26 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.GetCameraEntityEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
-import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.inventory.type.InventoryAccessory;
+import com.wynntils.models.inventory.type.InventoryArmor;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.playerviewer.PlayerViewerScreen;
+import com.wynntils.services.hades.HadesUser;
 import com.wynntils.services.leaderboard.type.LeaderboardBadge;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.wynn.ItemUtils;
+import com.wynntils.utils.wynn.ColorScaleUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +46,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.PLAYERS)
@@ -74,6 +79,9 @@ public class CustomNametagRendererFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> showGearOnHover = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> showGearPercentage = new Config<>(true);
 
     @Persisted
     private final Config<Boolean> showWynntilsMarker = new Config<>(true);
@@ -152,31 +160,64 @@ public class CustomNametagRendererFeature extends Feature {
         LocalPlayer localPlayer = McUtils.player();
 
         if (hitPlayerCache != player) return;
-
         if (!Models.Player.isLocalPlayer(localPlayer)) return;
 
-        ItemStack heldItem = hitPlayerCache.getMainHandItem();
-        MutableComponent handComp = getItemComponent(heldItem);
-        if (handComp != null) nametags.add(new CustomNametag(handComp, customNametagScale.get()));
+        Optional<HadesUser> hadesUserOpt = Services.Hades.getHadesUser(hitPlayerCache.getUUID());
+        if (hadesUserOpt.isEmpty()) return;
 
-        for (ItemStack armorStack : hitPlayerCache.getArmorSlots()) {
-            MutableComponent armorComp = getItemComponent(armorStack);
-            if (armorComp != null) nametags.add(new CustomNametag(armorComp, customNametagScale.get()));
+        MutableComponent handComp = getItemComponent(hadesUserOpt.get().getHeldItem(), showGearPercentage.get());
+        if (handComp != null) {
+            nametags.add(new CustomNametag(handComp, customNametagScale.get()));
+        }
+
+        for (InventoryAccessory accessory : hadesUserOpt.get().getAccessories().descendingKeySet()) {
+            MutableComponent accessoryComp =
+                    getItemComponent(hadesUserOpt.get().getAccessories().get(accessory), showGearPercentage.get());
+            if (accessoryComp != null) {
+                nametags.add(new CustomNametag(accessoryComp, customNametagScale.get()));
+            }
+        }
+
+        for (InventoryArmor armor : hadesUserOpt.get().getArmor().descendingKeySet()) {
+            MutableComponent armorComp =
+                    getItemComponent(hadesUserOpt.get().getArmor().get(armor), showGearPercentage.get());
+            if (armorComp != null) {
+                nametags.add(new CustomNametag(armorComp, customNametagScale.get()));
+            }
         }
     }
 
-    private static MutableComponent getItemComponent(ItemStack itemStack) {
-        if (itemStack == null || itemStack == ItemStack.EMPTY) return null;
+    private static MutableComponent getItemComponent(WynnItem wynnItem, boolean showGearPercentage) {
+        if (wynnItem == null) return null;
 
-        // This must specifically NOT be normalized; the ֎ is significant
-        String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-        MutableComponent description = ItemUtils.getNonGearDescription(itemStack, gearName);
-        if (description != null) return description;
+        if (wynnItem instanceof GearItem gearItem) {
+            String itemName = gearItem.getItemInfo().name();
+            MutableComponent gearComponent = Component.literal(itemName)
+                    .withStyle(gearItem.getItemInfo().tier().getChatFormatting());
 
-        GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
-        if (gearInfo == null) return null;
+            if (gearItem.getShinyStat().isPresent()) {
+                gearComponent = Component.literal("⬡ ")
+                        .append(Component.literal("Shiny ")
+                                .withStyle(gearItem.getItemInfo().tier().getChatFormatting()))
+                        .append(gearComponent);
+            }
 
-        return Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
+            if (showGearPercentage && gearItem.hasOverallValue()) {
+                ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
+                gearComponent.append(ColorScaleUtils.getPercentageTextComponent(
+                        isif.getColorMap(),
+                        gearItem.getOverallPercentage(),
+                        isif.colorLerp.get(),
+                        isif.decimalPlaces.get()));
+            }
+
+            return gearComponent;
+        } else if (wynnItem instanceof CraftedGearItem craftedGearItem) {
+            return Component.literal(craftedGearItem.getName())
+                    .withStyle(craftedGearItem.getGearTier().getChatFormatting());
+        }
+
+        return null;
     }
 
     private void addAccountTypeNametag(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {

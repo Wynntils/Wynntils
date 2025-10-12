@@ -4,46 +4,49 @@
  */
 package com.wynntils.screens.playerviewer;
 
-import com.google.gson.JsonObject;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.inventory.type.InventoryAccessory;
+import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.FakeItemStack;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.CharmItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.screens.base.WynntilsContainerScreen;
+import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.playerviewer.widgets.FriendButton;
 import com.wynntils.screens.playerviewer.widgets.PartyButton;
 import com.wynntils.screens.playerviewer.widgets.PlayerInteractionButton;
 import com.wynntils.screens.playerviewer.widgets.SimplePlayerInteractionButton;
-import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
-import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.render.type.TextShadow;
-import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team.Visibility;
@@ -57,8 +60,12 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     private final PlayerTeam oldTeam;
     private final List<PlayerInteractionButton> interactionButtons = new ArrayList<>();
 
+    private Button settingsButton;
     private FriendButton friendButton;
+    private InfoButton infoButton;
     private PartyButton partyButton;
+
+    private static boolean noGear = true;
 
     private PlayerViewerScreen(Player player, PlayerViewerMenu menu) {
         super(menu, player.getInventory(), Component.empty());
@@ -79,38 +86,80 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     public static Screen create(Player player) {
-        ItemStack heldItem = createDecoratedItemStack(player.getMainHandItem(), player.getName());
+        Optional<HadesUser> hadesUserOpt = Services.Hades.getHadesUser(player.getUUID());
 
+        ItemStack heldItem = ItemStack.EMPTY;
         List<ItemStack> armorItems = new ArrayList<>();
-        for (ItemStack armorSlot : player.getArmorSlots()) {
-            armorItems.add(createDecoratedItemStack(armorSlot, player.getName()));
-        }
-        Collections.reverse(armorItems);
+        List<ItemStack> accessoryItems = new ArrayList<>();
 
-        return new PlayerViewerScreen(player, PlayerViewerMenu.create(heldItem, armorItems));
+        if (hadesUserOpt.isPresent()) {
+            heldItem = createDecoratedItemStack(hadesUserOpt.get().getHeldItem(), player);
+
+            noGear = heldItem.isEmpty();
+
+            for (InventoryAccessory accessory : InventoryAccessory.values()) {
+                WynnItem wynnItem = hadesUserOpt.get().getAccessories().get(accessory);
+
+                if (wynnItem == null) {
+                    accessoryItems.add(ItemStack.EMPTY);
+                    continue;
+                }
+
+                ItemStack accessoryItemStack = createDecoratedItemStack(wynnItem, player);
+
+                accessoryItems.add(accessoryItemStack);
+                noGear = false;
+            }
+
+            for (InventoryArmor armor : InventoryArmor.values()) {
+                WynnItem wynnItem = hadesUserOpt.get().getArmor().get(armor);
+
+                if (wynnItem == null) {
+                    armorItems.add(ItemStack.EMPTY);
+                    continue;
+                }
+
+                ItemStack armorItemStack = createDecoratedItemStack(wynnItem, player);
+
+                armorItems.add(armorItemStack);
+                noGear = false;
+            }
+        }
+
+        return new PlayerViewerScreen(player, PlayerViewerMenu.create(heldItem, armorItems, accessoryItems));
     }
 
-    private static ItemStack createDecoratedItemStack(ItemStack itemStack, Component playerName) {
-        if (itemStack.isEmpty()) {
-            return itemStack;
+    private static ItemStack createDecoratedItemStack(WynnItem wynnItem, Player player) {
+        ItemStack itemStack = ItemStack.EMPTY;
+
+        if (wynnItem instanceof GearItem gearItem) {
+            itemStack = gearItem.getItemInfo().metaInfo().material().itemStack();
+        } else if (wynnItem instanceof TomeItem tomeItem) {
+            itemStack = tomeItem.getItemInfo().metaInfo().material().itemStack();
+        } else if (wynnItem instanceof CharmItem charmItem) {
+            itemStack = charmItem.getItemInfo().metaInfo().material().itemStack();
+        } else if (wynnItem instanceof CraftedGearItem craftedGearItem) {
+            // Armor and weapons are sent by Wynn so we can use those itemstacks, accessories we will have to use
+            // a default texture
+            if (craftedGearItem.getGearType().isArmor()) {
+                itemStack = player.getInventory()
+                        .armor
+                        .get(InventoryArmor.fromString(
+                                        craftedGearItem.getGearType().name())
+                                .getArmorSlot());
+            } else if (craftedGearItem.getGearType().isWeapon()) {
+                itemStack = player.getMainHandItem();
+            } else {
+                itemStack = new ItemStack(Items.POTION);
+                CustomModelData customModelData = new CustomModelData(
+                        List.of(craftedGearItem.getGearType().getDefaultModel()), List.of(), List.of(), List.of());
+                DataComponentMap.Builder componentsBuilder =
+                        DataComponentMap.builder().set(DataComponents.CUSTOM_MODEL_DATA, customModelData);
+                itemStack.applyComponents(componentsBuilder.build());
+            }
         }
 
-        // This must specifically NOT be normalized; the ֎ is significant
-        String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-        MutableComponent description = ItemUtils.getNonGearDescription(itemStack, gearName);
-        if (description != null) {
-            itemStack.set(DataComponents.CUSTOM_NAME, description);
-            return itemStack;
-        }
-
-        GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
-        if (gearInfo == null) {
-            return itemStack;
-        }
-
-        JsonObject itemData = LoreUtils.getJsonFromIngameLore(itemStack);
-        GearInstance gearInstance = Models.Gear.parseInstance(gearInfo, itemData);
-        return new FakeItemStack(new GearItem(gearInfo, gearInstance), "From " + playerName.getString());
+        return new FakeItemStack(wynnItem, itemStack, "From " + player.getScoreboardName());
     }
 
     @Override
@@ -167,6 +216,27 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                     this.onClose(); // Required so that nametags render properly
                     McUtils.mc().setScreen(new ChatScreen("/msg " + playerName + " "));
                 }));
+
+        settingsButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.playerViewer.sharingSettings"), (b) -> {
+                            McUtils.mc().setScreen(GearSharingSettingsScreen.create(this));
+                        })
+                .pos(leftPos + 1, topPos - 21)
+                .size(Texture.PLAYER_VIEWER_BACKGROUND.width() - 23, 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.playerViewer.sharingSettingsTooltip")))
+                .build();
+
+        if (noGear) {
+            infoButton = new InfoButton(
+                    leftPos + Texture.PLAYER_VIEWER_BACKGROUND.width() - 21,
+                    topPos - 21,
+                    Component.literal("")
+                            .append(Component.translatable("screens.wynntils.playerViewer.helpTitle")
+                                    .withStyle(ChatFormatting.UNDERLINE))
+                            .append(Component.literal("\n"))
+                            .append(Component.translatable("screens.wynntils.playerViewer.help")
+                                    .withStyle(ChatFormatting.GRAY)));
+        }
     }
 
     @Override
@@ -177,26 +247,17 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.playerViewer.warning")),
-                        this.width / 2f - 200,
-                        this.width / 2f + 200,
-                        (this.height - Texture.PLAYER_VIEWER_BACKGROUND.height()) / 2f - 110,
-                        (this.height - Texture.PLAYER_VIEWER_BACKGROUND.height()) / 2f - 10,
-                        400,
-                        CommonColors.RED,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.OUTLINE);
-
         interactionButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
+        settingsButton.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        if (infoButton == null) return;
+
+        infoButton.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     private void renderPlayerModel(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        int renderX = (this.width - Texture.PLAYER_VIEWER_BACKGROUND.width()) / 2;
-        int renderY = (this.height - Texture.PLAYER_VIEWER_BACKGROUND.height()) / 2;
+        int renderX = (this.width - Texture.PLAYER_VIEWER_BACKGROUND.width()) / 2 + 13;
+        int renderY = (this.height - Texture.PLAYER_VIEWER_BACKGROUND.height()) / 2 - 4;
 
         int renderWidth = Texture.PLAYER_VIEWER_BACKGROUND.width();
         int renderHeight = Texture.PLAYER_VIEWER_BACKGROUND.height();
@@ -236,7 +297,8 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                 return true;
             }
         }
-        return false;
+
+        return settingsButton.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
