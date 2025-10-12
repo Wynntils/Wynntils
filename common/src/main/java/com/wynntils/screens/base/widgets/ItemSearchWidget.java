@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
@@ -76,7 +75,7 @@ public class ItemSearchWidget extends SearchWidget {
 
     @Override
     protected void renderText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -89,7 +88,7 @@ public class ItemSearchWidget extends SearchWidget {
             boolean defaultText) {
         if (defaultText || !getTextBoxInput().equals(searchQuery.queryString())) {
             super.renderText(
-                    poseStack,
+                    guiGraphics,
                     renderedText,
                     renderedTextStart,
                     firstPortion,
@@ -122,7 +121,7 @@ public class ItemSearchWidget extends SearchWidget {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         firstPortionStyled,
                         this.getX() + textPadding,
                         this.getX() + this.width - textPadding - lastWidth - highlightedWidth,
@@ -134,7 +133,7 @@ public class ItemSearchWidget extends SearchWidget {
 
         FontRenderer.getInstance()
                 .renderAlignedHighlightedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         highlightedPortionStyled,
                         this.getX() + textPadding + firstWidth,
                         this.getX() + this.width - textPadding - lastWidth,
@@ -148,7 +147,7 @@ public class ItemSearchWidget extends SearchWidget {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         lastPortionStyled,
                         this.getX() + textPadding + firstWidth + highlightedWidth,
                         this.getX() + this.width - textPadding,

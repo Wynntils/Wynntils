@@ -60,7 +60,7 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderScrollingAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(getMessage()),
                         this.getX(),
                         this.getX() + this.width,

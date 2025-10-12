@@ -113,7 +113,7 @@ public final class LoadingScreen extends WynntilsScreen {
                 : Component.literal(TEXT_LOGO_STRING);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(logoComponent),
                         centerX,
                         60 + offsetY,
@@ -125,7 +125,7 @@ public final class LoadingScreen extends WynntilsScreen {
         // Draw loading progress
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(message),
                         centerX,
                         100 + offsetY,
@@ -137,7 +137,7 @@ public final class LoadingScreen extends WynntilsScreen {
         // Draw additional messages (typically about queue position)
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(stageTitle),
                         centerX,
                         120 + offsetY,
@@ -147,7 +147,7 @@ public final class LoadingScreen extends WynntilsScreen {
                         TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(subtitle),
                         centerX,
                         130 + offsetY,

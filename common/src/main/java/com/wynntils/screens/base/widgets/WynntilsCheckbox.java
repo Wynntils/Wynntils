@@ -110,7 +110,7 @@ public class WynntilsCheckbox extends AbstractButton {
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(this.getMessage()),
                         this.getX() + this.width + 2,
                         this.getY() + (this.height / 2f),

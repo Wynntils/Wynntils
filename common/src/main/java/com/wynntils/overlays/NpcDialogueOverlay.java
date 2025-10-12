@@ -5,7 +5,6 @@
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -25,7 +24,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -135,11 +133,7 @@ public class NpcDialogueOverlay extends Overlay {
         allDialogues.removeLast();
 
         renderDialogue(
-                guiGraphics.pose(),
-                bufferSource,
-                allDialogues,
-                currentDialogue.dialogueType(),
-                currentDialogue.isProtected());
+                guiGraphics, bufferSource, allDialogues, currentDialogue.dialogueType(), currentDialogue.isProtected());
     }
 
     @Override
@@ -154,7 +148,7 @@ public class NpcDialogueOverlay extends Overlay {
         // we have to force update every time
         updateTextRenderSettings();
 
-        renderDialogue(guiGraphics.pose(), bufferSource, fakeDialogue, NpcDialogueType.NORMAL, true);
+        renderDialogue(guiGraphics, bufferSource, fakeDialogue, NpcDialogueType.NORMAL, true);
     }
 
     @Override
@@ -170,7 +164,7 @@ public class NpcDialogueOverlay extends Overlay {
     }
 
     private void renderDialogue(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             List<StyledText> currentDialogue,
             NpcDialogueType dialogueType,
@@ -212,10 +206,9 @@ public class NpcDialogueOverlay extends Overlay {
                 rectHeight);
 
         // Render the message
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         this.getRenderX(),
                         this.getRenderY(),
                         dialogueRenderTasks,
@@ -262,10 +255,9 @@ public class NpcDialogueOverlay extends Overlay {
                 helperRenderTasks.add(autoProgressMessage);
             }
 
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderTextsWithAlignment(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             this.getRenderX(),
                             this.getRenderY() + 20 + textHeight,
                             helperRenderTasks,

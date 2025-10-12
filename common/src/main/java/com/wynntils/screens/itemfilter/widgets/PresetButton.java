@@ -69,7 +69,7 @@ public class PresetButton extends BasicTexturedButton {
 
         FontRenderer.getInstance()
                 .renderScrollingAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         message,
                         getX() + 10,
                         getX() + getWidth() - 8,

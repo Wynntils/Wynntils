@@ -23,8 +23,8 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.services.hades.event.HadesUserEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.SkinUtils;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -210,10 +210,9 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
 
             poseStack.translate(3, 0, 0);
 
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(hadesUser.getName()),
                             0,
                             0,

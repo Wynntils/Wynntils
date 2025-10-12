@@ -59,7 +59,7 @@ public class GuideSortButton extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromString(getSortName()),
                         getX() + getWidth() / 2f,
                         getY() + getHeight() / 2f,
@@ -71,7 +71,7 @@ public class GuideSortButton extends AbstractWidget {
         if (sortDirection != null) {
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(sortDirection == SortDirection.ASCENDING ? "▲" : "▼"),
                             getX() + getWidth(),
                             getY() - 2,

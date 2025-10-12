@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.powder;
@@ -53,7 +53,7 @@ public class GuidePowderItemStackButton extends WynntilsButton {
         poseStack.translate(0, 0, 200);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(MathUtils.toRoman(itemStack.getTier())),
                         getX() + 2,
                         getX() + 14,
