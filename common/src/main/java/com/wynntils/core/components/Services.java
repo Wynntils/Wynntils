@@ -16,6 +16,7 @@ import com.wynntils.services.hades.HadesService;
 import com.wynntils.services.hint.HintService;
 import com.wynntils.services.itemfilter.ItemFilterService;
 import com.wynntils.services.itemrecord.ItemRecordService;
+import com.wynntils.services.itemweight.ItemWeightService;
 import com.wynntils.services.leaderboard.LeaderboardService;
 import com.wynntils.services.lootrunpaths.LootrunPathsService;
 import com.wynntils.services.map.MapService;
@@ -39,6 +40,7 @@ public final class Services {
     public static final HintService Hint = new HintService();
     public static final ItemFilterService ItemFilter = new ItemFilterService();
     public static final ItemRecordService ItemRecord = new ItemRecordService();
+    public static final ItemWeightService ItemWeight = new ItemWeightService();
     public static final LeaderboardService Leaderboard = new LeaderboardService();
     public static final LootrunPathsService LootrunPaths = new LootrunPathsService();
     public static final MapDataService MapData = new MapDataService();

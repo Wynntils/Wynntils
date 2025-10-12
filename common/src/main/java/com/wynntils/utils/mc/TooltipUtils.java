@@ -11,6 +11,7 @@ import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
+import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.properties.CraftedItemProperty;
@@ -84,6 +85,7 @@ public final class TooltipUtils {
                 feature.groupIdentifications.get(),
                 feature.showBestValueLastAlways.get(),
                 feature.showStars.get(),
+                feature.itemWeights.get(),
                 false // this only applies to crafted items
                 );
         LinkedList<Component> tooltips = new LinkedList<>(
@@ -111,6 +113,7 @@ public final class TooltipUtils {
                 isif.groupIdentifications.get(),
                 false, // irrelevant for crafted items
                 false, // irrelevant for crafted items
+                ItemWeightSource.NONE, // irrelevant for crafted items
                 isif.showMaxValues.get());
 
         return new LinkedList<>(
