@@ -54,7 +54,7 @@ public class LootrunPathButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(lootrun.name()),
                         this.getX() + 2,
                         this.getY() + 1,

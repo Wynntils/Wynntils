@@ -76,7 +76,7 @@ public class ConfigTile extends WynntilsButton {
 
         resetButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderDisplayName(poseStack);
+        renderDisplayName(guiGraphics);
 
         RenderUtils.drawLine(
                 poseStack,
@@ -91,10 +91,10 @@ public class ConfigTile extends WynntilsButton {
         configOptionElement.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderDisplayName(PoseStack poseStack) {
+    private void renderDisplayName(GuiGraphics guiGraphics) {
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         displayName,
                         getRenderX(),
                         this.getY() + 3,

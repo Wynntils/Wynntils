@@ -177,7 +177,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         if (!Models.CombatXp.getCombatLevel().isAtCap()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(Component.translatable(
                                     "screens.wynntils.contentBook.xpToLevelUp",
                                     String.format(Locale.ROOT, "%,d", Models.CombatXp.getXpPointsNeededToLevelUp()),
@@ -193,7 +193,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         if (trackedActivity != null) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(
                                     EnumUtils.toNiceString(trackedActivity.type()) + " - " + trackedActivity.name()),
                             offsetX + 24,
@@ -207,7 +207,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
             if (trackedDescription != null) {
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                poseStack,
+                                guiGraphics,
                                 trackedDescription,
                                 offsetX + 24,
                                 offsetX + 410,
@@ -224,7 +224,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
             if (!trackedRewards.isEmpty()) {
                 FontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromComponent(
                                         Component.translatable("screens.wynntils.contentBook.rewards")),
                                 trackedRewardsX,
@@ -240,7 +240,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.contentBook.selectToTrack")),
                             offsetX + 4,

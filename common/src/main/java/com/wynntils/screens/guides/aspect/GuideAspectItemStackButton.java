@@ -71,7 +71,7 @@ public class GuideAspectItemStackButton extends WynntilsButton {
         poseStack.translate(0, 0, 200);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(MathUtils.toRoman(itemStack.getTier())),
                         getX() + 2,
                         getX() + 14,
