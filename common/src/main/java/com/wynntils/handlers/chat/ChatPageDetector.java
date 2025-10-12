@@ -28,6 +28,7 @@ import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
 
 public final class ChatPageDetector {
+    private static final int PAGE_BACKGROUND_MESSAGES = 4;
     private static final int MIN_MATCHING_LINES = 5;
     private static final int MAX_DIFFERING_LINES = 5;
     private static final int NORMAL_PAGE_WAIT = 20;
@@ -130,7 +131,7 @@ public final class ChatPageDetector {
         // We deeem it to be a partial page if there are less than 4 messages, and none of them are single-line,
         // and they all match the beginning of the page background. This is not perfect, but it is an
         // acceptable heuristic that will catch most of these odd cases.
-        if (collectedMessages.size() >= 4) return false;
+        if (collectedMessages.size() >= PAGE_BACKGROUND_MESSAGES) return false;
         if (pageBackground == null) return false;
 
         List<StyledText> partialPage = new ArrayList<>();
@@ -151,7 +152,7 @@ public final class ChatPageDetector {
     private boolean isPage(Deque<Component> collectedMessages) {
         // It is a page if there are at least 4 messages, and none of the messages are
         // single-line
-        if (collectedMessages.size() < 4) return false;
+        if (collectedMessages.size() < PAGE_BACKGROUND_MESSAGES) return false;
         for (Component message : collectedMessages) {
             StyledText styledText = StyledText.fromComponent(message);
 
@@ -162,7 +163,7 @@ public final class ChatPageDetector {
 
     public List<Deque<Component>> splitMultiplePages(Deque<Component> collectedMessages) {
         // If there is not at least 4 messages, there cannot be multiple pages
-        if (collectedMessages.size() < 4) return List.of(new ArrayDeque<>(collectedMessages));
+        if (collectedMessages.size() < PAGE_BACKGROUND_MESSAGES) return List.of(new ArrayDeque<>(collectedMessages));
 
         int lastPageStart = 0;
         List<Component> messages = new ArrayList<>(collectedMessages);
@@ -171,8 +172,8 @@ public final class ChatPageDetector {
         int i = 0;
         while (i < messages.size()) {
             // Start by copying the background
-            Deque<Component> page = new ArrayDeque<>(messages.subList(i, i + 4));
-            i += 4;
+            Deque<Component> page = new ArrayDeque<>(messages.subList(i, i + PAGE_BACKGROUND_MESSAGES));
+            i += PAGE_BACKGROUND_MESSAGES;
 
             while (i < messages.size()) {
                 if (isPageStart(messages, lastPageStart, i)) {
@@ -191,10 +192,11 @@ public final class ChatPageDetector {
 
     private boolean isPageStart(List<Component> messageList, int oldPageIndex, int startIndex) {
         // Check if there are at least 4 messages remaining
-        if (startIndex > messageList.size() - 4) return false;
+        if (startIndex > messageList.size() - PAGE_BACKGROUND_MESSAGES) return false;
 
         // If the first 4 messages are equal, then it's a page start
-        if (ListUtils.countMatchingElements(messageList, oldPageIndex, messageList, startIndex) >= 4) {
+        if (ListUtils.countMatchingElements(messageList, oldPageIndex, messageList, startIndex)
+                >= PAGE_BACKGROUND_MESSAGES) {
             return true;
         }
 
@@ -203,10 +205,11 @@ public final class ChatPageDetector {
         // of lines, allowing for a few lines difference at the start and end.
 
         // Split all components into lines
-        List<StyledText> referenceLines = messageList.subList(oldPageIndex, oldPageIndex + 4).stream()
-                .flatMap(this::splitIntoLines)
-                .toList();
-        List<StyledText> compareLines = messageList.subList(startIndex, startIndex + 4).stream()
+        List<StyledText> referenceLines =
+                messageList.subList(oldPageIndex, oldPageIndex + PAGE_BACKGROUND_MESSAGES).stream()
+                        .flatMap(this::splitIntoLines)
+                        .toList();
+        List<StyledText> compareLines = messageList.subList(startIndex, startIndex + PAGE_BACKGROUND_MESSAGES).stream()
                 .flatMap(this::splitIntoLines)
                 .toList();
         int numReferenceLines = referenceLines.size();
@@ -248,11 +251,13 @@ public final class ChatPageDetector {
     private Pair<List<StyledText>, List<StyledText>> splitPage(Deque<Component> collectedMessages) {
         // The first four messages are always background, and the rest is page content
         List<StyledText> background = collectedMessages.stream()
-                .limit(4)
+                .limit(PAGE_BACKGROUND_MESSAGES)
                 .flatMap(this::splitIntoLines)
                 .toList();
-        List<StyledText> pageContent =
-                collectedMessages.stream().skip(4).flatMap(this::splitIntoLines).toList();
+        List<StyledText> pageContent = collectedMessages.stream()
+                .skip(PAGE_BACKGROUND_MESSAGES)
+                .flatMap(this::splitIntoLines)
+                .toList();
 
         return Pair.of(background, pageContent);
     }
@@ -289,7 +294,7 @@ public final class ChatPageDetector {
             }
         } else {
             // We failed to calculate a diff.
-            if (numCollectedMessages == 4) {
+            if (numCollectedMessages == PAGE_BACKGROUND_MESSAGES) {
                 // This was the last page, and the "background" is actually a redraw
                 // of the foreground. The page mode is now finished.
                 List<StyledText> sentLines = List.copyOf(sentBackgroundLines);
