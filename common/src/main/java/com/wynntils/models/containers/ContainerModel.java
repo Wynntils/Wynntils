@@ -128,6 +128,7 @@ public final class ContainerModel extends Model {
         registerContainer(new CharacterInfoContainer());
         registerContainer(new CharacterSelectionContainer());
         registerContainer(new ContentBookContainer());
+        registerContainer(new CosmeticContainer());
         registerContainer(new DailyRewardContainer());
         registerContainer(new EventContainer());
         registerContainer(new FlyingChestContainer());

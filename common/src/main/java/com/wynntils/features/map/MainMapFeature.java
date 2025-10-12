@@ -105,6 +105,9 @@ public class MainMapFeature extends Feature {
     public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> renderRemoteGuildPlayers = new Config<>(true);
+
+    @Persisted
     public final Config<HealthTexture> remotePlayerHealthTexture = new Config<>(HealthTexture.A);
 
     @Persisted

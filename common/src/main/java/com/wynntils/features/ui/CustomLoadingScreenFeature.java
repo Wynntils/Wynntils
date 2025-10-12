@@ -41,6 +41,7 @@ public class CustomLoadingScreenFeature extends Feature {
     private LoadingScreen loadingScreen;
     private Screen replacedScreen;
     private TickSchedulerManager.ScheduledTask delayedRemoval;
+    private boolean allowClosing;
 
     @SubscribeEvent
     public void onTickAlways(TickAlwaysEvent e) {
@@ -60,6 +61,8 @@ public class CustomLoadingScreenFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onScreenClosed(ScreenClosedEvent.Pre event) {
+        if (allowClosing) return;
+
         // Don't allow screens to close when they are "faked"
         if (isCustomScreenVisible()) {
             event.setCanceled(true);
@@ -198,7 +201,8 @@ public class CustomLoadingScreenFeature extends Feature {
     }
 
     private void createCustomScreen() {
-        loadingScreen = LoadingScreen.create(this::removeCustomScreen);
+        loadingScreen = LoadingScreen.create(this::onLoadingScreenClosed);
+        allowClosing = false;
         McUtils.mc().setScreen(loadingScreen);
     }
 
@@ -210,6 +214,15 @@ public class CustomLoadingScreenFeature extends Feature {
         } else {
             McUtils.mc().setScreen(null);
         }
+    }
+
+    private void onLoadingScreenClosed() {
+        allowClosing = true;
+        if (this.replacedScreen != null) {
+            replacedScreen.onClose();
+        }
+        delayedRemoval = null;
+        loadingScreen = null;
     }
 
     private void cancelDelayedRemoval() {
