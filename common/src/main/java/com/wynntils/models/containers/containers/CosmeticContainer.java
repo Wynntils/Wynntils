@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class CosmeticContainer extends Container implements SearchableContainerProperty {
-    private static final String COSMETIC_PREVIEW_TITLE = "\uF029";
+    private static final String COSMETIC_PREVIEW_TITLE_CHARACTER = "\uF029";
     private static final String TITLE_START = "\uDAFF\uDFF8[\uE030-\uE033]\uDAFF\uDF80";
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Next Page");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Previous Page");
@@ -27,7 +27,7 @@ public class CosmeticContainer extends Container implements SearchableContainerP
     }
 
     public CosmeticContainer() {
-        this(COSMETIC_PREVIEW_TITLE);
+        this(COSMETIC_PREVIEW_TITLE_CHARACTER);
     }
 
     @Override
