@@ -260,6 +260,8 @@ public class AddCommandExpansionFeature extends Feature {
                 .then(literal("cheer"))
                 .then(literal("clap"))
                 .then(literal("dance"))
+                .then(literal("explode"))
+                .then(literal("faint"))
                 .then(literal("flop"))
                 .then(literal("hug"))
                 .then(literal("relax"))
