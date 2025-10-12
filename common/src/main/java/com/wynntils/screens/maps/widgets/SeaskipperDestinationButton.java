@@ -67,7 +67,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                 "screens.wynntils.customSeaskipperScreen.destination",
                                 destination.getName(),
@@ -91,7 +91,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                 "screens.wynntils.customSeaskipperScreen.cost",
                                 destination.getDestination().item().getPrice())),

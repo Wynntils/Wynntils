@@ -83,7 +83,7 @@ public class ProviderButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(provider.getDisplayName()),
                         getX() + 2,
                         getY() + (height / 2f),

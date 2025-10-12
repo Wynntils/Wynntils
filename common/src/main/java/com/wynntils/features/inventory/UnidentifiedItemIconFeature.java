@@ -33,6 +33,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -112,7 +113,8 @@ public class UnidentifiedItemIconFeature extends Feature {
 
     @FunctionalInterface
     private interface IconRenderer {
-        void renderIcon(PoseStack poseStack, int x, int y, int z, GearType gearType, Optional<CustomColor> textColor);
+        void renderIcon(
+                GuiGraphics guiGraphics, int x, int y, int z, GearType gearType, Optional<CustomColor> textColor);
 
         static IconRenderer forSpriteSheet(Texture texture, int yOffset, int padding) {
             int paddedDims = 16 - padding - padding;
@@ -141,13 +143,13 @@ public class UnidentifiedItemIconFeature extends Feature {
                 VerticalAlignment verticalAlignment) {
             int padding = 0;
             int paddedDims = 16 - padding - padding;
-            return (poseStack, x, y, z, gearType, textColor) -> {
+            return (guiGraphics, x, y, z, gearType, textColor) -> {
                 poseStack.pushPose();
                 poseStack.translate(0, 0, z);
                 StyledText text = textMap.apply(gearType);
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                poseStack,
+                                guiGraphics,
                                 text,
                                 x + padding + 1,
                                 x + paddedDims + 1,

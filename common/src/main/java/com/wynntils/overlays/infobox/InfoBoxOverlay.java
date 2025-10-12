@@ -14,7 +14,7 @@ import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -65,10 +65,9 @@ public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
                         + " " + getTranslatedName()),
                 StyledText.fromUnformattedString(colorCache.getError())
             };
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            guiGraphics.pose(),
-                            bufferSource,
+                            guiGraphics,
                             errorMessage,
                             getRenderX(),
                             getRenderX() + getWidth(),

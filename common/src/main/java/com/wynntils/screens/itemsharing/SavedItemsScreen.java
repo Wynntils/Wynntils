@@ -210,7 +210,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         if (!addingCategory && !editingCategory) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(currentCategory),
                             this.leftPos + 37,
                             this.leftPos + 37 + 97,

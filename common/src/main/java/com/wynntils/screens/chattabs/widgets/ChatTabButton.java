@@ -40,7 +40,7 @@ public class ChatTabButton extends WynntilsButton {
         CustomColor color = getTabColor();
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(tab.name()),
                         getX() + 1,
                         getX() + width,

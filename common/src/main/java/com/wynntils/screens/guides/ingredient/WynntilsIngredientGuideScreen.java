@@ -70,21 +70,21 @@ public final class WynntilsIngredientGuideScreen
 
         renderBackgroundTexture(poseStack);
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
 
-        renderVersion(poseStack);
+        renderVersion(guiGraphics);
 
-        renderItemsHeader(poseStack);
+        renderItemsHeader(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderTitle(PoseStack poseStack, String titleString) {
+    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
         int txWidth = Texture.CONTENT_BOOK_TITLE.width();
         int txHeight = Texture.CONTENT_BOOK_TITLE.height();
         RenderUtils.drawScalingTexturedRect(
@@ -100,7 +100,7 @@ public final class WynntilsIngredientGuideScreen
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(titleString),
                         10 + offsetX,
                         36 + offsetY,
@@ -121,10 +121,10 @@ public final class WynntilsIngredientGuideScreen
         super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderItemsHeader(PoseStack poseStack) {
+    private void renderItemsHeader(GuiGraphics guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
                         Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + offsetX,
                         30 + offsetY,

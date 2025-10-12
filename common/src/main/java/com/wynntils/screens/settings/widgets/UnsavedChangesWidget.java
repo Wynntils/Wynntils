@@ -49,7 +49,7 @@ public class UnsavedChangesWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.settingsScreen.saveChanges")
                                 .withStyle(ChatFormatting.BOLD)),
                         getX() + 5,

@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -76,10 +76,9 @@ public abstract class TextOverlay extends DynamicOverlay {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         lines,
                         renderX,
                         renderX + this.getWidth(),

@@ -62,7 +62,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(crowdSourcedDataType.getTranslatedName()),
                         this.getX() + 14,
                         this.getY() + 1,

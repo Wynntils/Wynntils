@@ -19,7 +19,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -102,10 +101,9 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
             float renderY = offsetY + this.getRenderY();
 
             final String text = objective.asObjectiveString();
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(text),
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),

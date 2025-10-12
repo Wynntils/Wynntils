@@ -38,7 +38,7 @@ public class LogButton extends BasicTexturedButton {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromString(logType.getDisplayName()),
                         getX() + width - 2,
                         getY() + height / 2f,

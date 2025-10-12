@@ -320,7 +320,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(categoryName),
                         Texture.CONFIG_BOOK_BACKGROUND.width() * 0.25f + offsetX,
                         McUtils.mc().font.lineHeight + 5 + offsetY,
@@ -352,7 +352,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(textToRender),
                             Texture.CONFIG_BOOK_BACKGROUND.width() * 0.75f + offsetX,
                             McUtils.mc().font.lineHeight + 5 + offsetY,
@@ -373,7 +373,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.settingsScreen.unselectedConfig")),
                             Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + offsetX,

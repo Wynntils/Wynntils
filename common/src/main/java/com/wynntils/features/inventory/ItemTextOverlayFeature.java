@@ -41,6 +41,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
@@ -143,17 +144,17 @@ public class ItemTextOverlayFeature extends Feature {
     public void onRenderSlot(SlotRenderEvent.Post e) {
         if (!inventoryTextOverlayEnabled.get()) return;
 
-        drawTextOverlay(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
+        drawTextOverlay(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
         if (!hotbarTextOverlayEnabled.get()) return;
 
-        drawTextOverlay(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), true);
+        drawTextOverlay(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY(), true);
     }
 
-    private void drawTextOverlay(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+    private void drawTextOverlay(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
@@ -175,7 +176,7 @@ public class ItemTextOverlayFeature extends Feature {
         poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
         float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
         float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
-        FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task(), Font.DisplayMode.NORMAL);
+        FontRenderer.getInstance().renderText(guiGraphics, x, y, textOverlay.task());
         poseStack.popPose();
     }
 

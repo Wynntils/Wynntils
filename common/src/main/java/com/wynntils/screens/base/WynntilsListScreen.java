@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.base;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.ListSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
@@ -79,10 +78,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         }
     }
 
-    protected void renderPageInfo(PoseStack poseStack, int currentPage, int maxPage) {
+    protected void renderPageInfo(GuiGraphics guiGraphics, int currentPage, int maxPage) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
                         Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
@@ -93,10 +92,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                         TextShadow.NONE);
     }
 
-    protected void renderNoElementsHelper(PoseStack poseStack, String key) {
+    protected void renderNoElementsHelper(GuiGraphics guiGraphics, String key) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(key),
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15f + offsetX,
                         Texture.CONTENT_BOOK_BACKGROUND.width() - 15f + offsetX,

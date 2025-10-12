@@ -17,7 +17,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -132,10 +132,9 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
                     "§c§l" + I18n.get("overlay.wynntils.overlay.enabledTemplate.error") + " " + getTranslatedName()),
             StyledText.fromUnformattedString(enabledTemplateCache.getError())
         };
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         errorMessage,
                         getRenderX(),
                         getRenderX() + getWidth(),

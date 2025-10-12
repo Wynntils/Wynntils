@@ -16,9 +16,9 @@ import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.models.activities.ActivityTrackerScoreboardPart;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -32,8 +32,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class ContentTrackerOverlay extends Overlay {
-    private static final String PREVIEW_TASK =
-            """
+    private static final String PREVIEW_TASK = """
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer \
                     tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
                     pellentesque egestas volutpat. \
@@ -98,10 +97,9 @@ public class ContentTrackerOverlay extends Overlay {
         toRender.get(1).setText(Models.Activity.getTrackedName());
         toRender.get(2).setText(Models.Activity.getTrackedTask());
 
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         this.getRenderX(),
                         this.getRenderY(),
                         toRender,
@@ -116,10 +114,9 @@ public class ContentTrackerOverlay extends Overlay {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         updateTextRenderSettings(toRenderPreview); // we have to force update every time
 
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         this.getRenderX(),
                         this.getRenderY(),
                         toRenderPreview,

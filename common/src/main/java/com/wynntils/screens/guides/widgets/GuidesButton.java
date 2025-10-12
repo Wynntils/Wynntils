@@ -43,7 +43,7 @@ public class GuidesButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(guideScreen.getTitle()),
                         this.getX() + 2,
                         this.getY() + 1,

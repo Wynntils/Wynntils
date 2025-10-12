@@ -128,7 +128,7 @@ public class CustomPlayerListOverlay extends Overlay {
 
         renderBackground(poseStack);
 
-        renderPlayerNames(poseStack, availablePlayers.get());
+        renderPlayerNames(guiGraphics, availablePlayers.get());
 
         if (animation < 1) {
             RenderUtils.disableScissor(guiGraphics);
@@ -161,7 +161,7 @@ public class CustomPlayerListOverlay extends Overlay {
                 Texture.PLAYER_LIST_OVERLAY.height());
     }
 
-    private void renderPlayerNames(PoseStack poseStack, List<StyledText> players) {
+    private void renderPlayerNames(GuiGraphics guiGraphics, List<StyledText> players) {
         for (int i = 0; i < players.size(); i++) {
             int x = i / 20;
             int y = i % 20;
@@ -177,7 +177,7 @@ public class CustomPlayerListOverlay extends Overlay {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             players.get(i),
                             xPos,
                             yPos,

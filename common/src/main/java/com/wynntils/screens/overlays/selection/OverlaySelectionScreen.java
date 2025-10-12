@@ -174,7 +174,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromString(textToRender),
                                 146 + offsetX,
                                 338 + offsetX,
@@ -188,7 +188,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             } else {
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromComponent(
                                         Component.translatable("screens.wynntils.overlaySelection.unselectedOverlay")),
                                 146 + offsetX,

@@ -47,7 +47,7 @@ public class LogDateWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         renderText,
                         getX() + 4,
                         getY() + height / 2f,

@@ -1127,7 +1127,7 @@ public final class RenderUtils {
     }
 
     public static void renderDebugGrid(
-            PoseStack poseStack, float gridDivisions, float dividedWidth, float dividedHeight) {
+            GuiGraphics guiGraphics, float gridDivisions, float dividedWidth, float dividedHeight) {
         for (int i = 1; i <= gridDivisions - 1; i++) {
             double x = dividedWidth * i;
             double y = dividedHeight * i;
@@ -1136,7 +1136,7 @@ public final class RenderUtils {
             if (i % 2 == 0) continue; // reduce clutter
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(String.valueOf(i)),
                             (float) x,
                             dividedHeight * (gridDivisions / 2),
@@ -1146,7 +1146,7 @@ public final class RenderUtils {
                             TextShadow.NORMAL);
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(String.valueOf(i)),
                             dividedWidth * (gridDivisions / 2),
                             (float) y,

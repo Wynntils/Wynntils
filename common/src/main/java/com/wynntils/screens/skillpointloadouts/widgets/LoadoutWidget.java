@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.skillpointloadouts.widgets;
@@ -85,7 +85,7 @@ public class LoadoutWidget extends AbstractWidget {
                     FontRenderer.getInstance().getFont());
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(text),
                             dividedWidth * 4,
                             this.getY() + ((float) this.getHeight() / 4 * 3),
@@ -98,7 +98,7 @@ public class LoadoutWidget extends AbstractWidget {
         // Renders "name (skillPointsSum - Level minLevel)". Level is red if minLevel is higher than current level.
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(name + " (" + loadout.getSkillPointsSum() + " - "
                                 + (loadout.getMinimumCombatLevel()
                                                 > Models.CombatXp.getCombatLevel()
@@ -119,7 +119,7 @@ public class LoadoutWidget extends AbstractWidget {
         for (int i = 0; i < 5; i++) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(
                                     Skill.values()[i].getColorCode() + "" + loadout.getSkillPointsAsArray()[i]),
                             dividedWidth * (21 + i * 2),

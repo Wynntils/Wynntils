@@ -113,7 +113,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.downloads.name")
                                 .withStyle(ChatFormatting.UNDERLINE)),
                         dividedWidth * 32,
@@ -160,7 +160,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.downloads.info")
                                 .withStyle(ChatFormatting.UNDERLINE)),
                         (dividedWidth * 56),
@@ -173,7 +173,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(infoText),
                         (dividedWidth * 50),
                         (dividedWidth * 63),

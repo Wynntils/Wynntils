@@ -297,7 +297,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         // Render title
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(wrappedScreenInfo.screen().getTitle()),
                         getRenderX() + 8,
                         getRenderY() + 9,
@@ -371,7 +371,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.translatable("feature.wynntils.customTerritoryManagementScreen.filters")),
                         xOffset,
@@ -384,7 +384,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.translatable("feature.wynntils.customTerritoryManagementScreen.sorts")),
                         xOffset,

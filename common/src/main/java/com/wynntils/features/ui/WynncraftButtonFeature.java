@@ -243,7 +243,7 @@ public class WynncraftButtonFeature extends Feature {
             if (warningType == WarningType.DOWNLOADS) {
                 FontRenderer.getInstance()
                         .renderText(
-                                guiGraphics.pose(),
+                                guiGraphics,
                                 StyledText.fromString("⚠"),
                                 this.getX() + 20,
                                 this.getY(),
@@ -254,7 +254,7 @@ public class WynncraftButtonFeature extends Feature {
             } else if (warningType == WarningType.UPDATE) {
                 FontRenderer.getInstance()
                         .renderText(
-                                guiGraphics.pose(),
+                                guiGraphics,
                                 StyledText.fromString("⟳"),
                                 this.getX() + 2,
                                 this.getY(),

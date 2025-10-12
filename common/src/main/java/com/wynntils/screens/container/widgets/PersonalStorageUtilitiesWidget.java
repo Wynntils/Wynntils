@@ -76,7 +76,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
         if (!Models.Bank.isEditingMode()) {
             FontRenderer.getInstance()
                     .renderScrollingText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(pageName),
                             getX() + 4,
                             getY() + 11,

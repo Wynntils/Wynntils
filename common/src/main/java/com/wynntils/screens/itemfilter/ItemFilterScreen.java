@@ -334,7 +334,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         if (selectedProvider == null && !sortMode) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.itemFilter.unselectedFilter")),
                             147 + offsetX,
@@ -349,7 +349,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         } else if (sortMode && sorts.isEmpty()) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.noSorts")),
                             147 + offsetX,
                             345 + offsetX,
@@ -365,7 +365,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         if (!sortMode) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.itemName")),
                             150 + offsetX,
                             10 + offsetY,
@@ -377,7 +377,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.presetName")),
                         150 + offsetX,
                         185 + offsetY,
@@ -399,7 +399,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         if (providerButtons.isEmpty()) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.noProviders")),
                             8 + offsetX,
                             127 + offsetX,

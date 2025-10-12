@@ -117,7 +117,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(poi.getName()),
                         getX() + (int) (dividedWidth * 3),
                         getY() + 10,
@@ -130,7 +130,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(String.valueOf(poi.getLocation().getX())),
                         getX() + (int) (dividedWidth * 20),
                         getY() + 10,
@@ -143,7 +143,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         poiY.map(integer -> StyledText.fromString(String.valueOf(integer)))
                                 .orElse(StyledText.EMPTY),
                         getX() + (int) (dividedWidth * 23),
@@ -155,7 +155,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(String.valueOf(poi.getLocation().getZ())),
                         getX() + (int) (dividedWidth * 26),
                         getY() + 10,

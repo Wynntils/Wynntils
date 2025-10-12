@@ -207,7 +207,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(poseStack, mouseX, mouseY);
+        renderPois(guiGraphics, mouseX, mouseY);
 
         renderCursor(
                 poseStack,
@@ -223,11 +223,11 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderCoordinates(poseStack, mouseX, mouseY);
+        renderCoordinates(guiGraphics, mouseX, mouseY);
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderHoveredSeaskipperDestination(poseStack);
+        renderHoveredSeaskipperDestination(guiGraphics);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
 
@@ -386,10 +386,10 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         return selectedPoi;
     }
 
-    private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         renderDestinations(
                 destinationPois,
-                poseStack,
+                guiGraphics,
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
                 1,
                 mouseX,
@@ -398,7 +398,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
     private void renderDestinations(
             List<SeaskipperDestinationPoi> pois,
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             BoundingBox textureBoundingBox,
             float poiScale,
             int mouseX,
@@ -433,10 +433,10 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
             if (hideTerritoryBorders) {
-                poi.renderAtWithoutBorders(poseStack, bufferSource, poiRenderX, poiRenderZ, zoomRenderScale);
+                poi.renderAtWithoutBorders(guiGraphics, bufferSource, poiRenderX, poiRenderZ, zoomRenderScale);
             } else {
                 poi.renderAt(
-                        poseStack,
+                        guiGraphics,
                         bufferSource,
                         poiRenderX,
                         poiRenderZ,
@@ -490,7 +490,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         return filteredPois;
     }
 
-    private void renderHoveredSeaskipperDestination(PoseStack poseStack) {
+    private void renderHoveredSeaskipperDestination(GuiGraphics guiGraphics) {
         if (hoveredPoi == null) return;
 
         poseStack.pushPose();
@@ -521,7 +521,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                 "screens.wynntils.customSeaskipperScreen.level", hoveredPoi.getLevel())),
                         10 + xOffset,
@@ -554,7 +554,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.customSeaskipperScreen.cost", price)),
                             10 + xOffset,
@@ -568,7 +568,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(travelComponent),
                             10 + xOffset,
                             10 + renderYOffset,
@@ -581,7 +581,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.customSeaskipperScreen.origin")),
                             10 + xOffset,
@@ -595,7 +595,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.customSeaskipperScreen.inaccessible")),
                             10 + xOffset,
@@ -608,7 +608,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(hoveredPoi.getName()),
                         7 + xOffset,
                         textureWidth + xOffset,

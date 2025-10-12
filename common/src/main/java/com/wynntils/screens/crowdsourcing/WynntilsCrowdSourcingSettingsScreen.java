@@ -64,15 +64,15 @@ public class WynntilsCrowdSourcingSettingsScreen
 
         renderBackgroundTexture(poseStack);
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsCrowdSourcing.name"));
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsCrowdSourcing.name"));
 
-        renderVersion(poseStack);
+        renderVersion(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsCrowdSourcing.screenDescription"), "");
+        renderDescription(guiGraphics, I18n.get("screens.wynntils.wynntilsCrowdSourcing.screenDescription"), "");
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }

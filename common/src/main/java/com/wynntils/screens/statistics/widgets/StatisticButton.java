@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.statistics.widgets;
@@ -54,7 +54,7 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(statistic.getName()),
                         this.getX() + 2,
                         this.getY() + 1,

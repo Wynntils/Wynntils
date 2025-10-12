@@ -107,7 +107,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
         RenderUtils.drawTexturedRect(poseStack, Texture.GUILD_LOG_BACKGROUND, offsetX, offsetY);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(wrappedScreenInfo.screen().getTitle()),
                         offsetX + 20,
                         offsetY + 10,

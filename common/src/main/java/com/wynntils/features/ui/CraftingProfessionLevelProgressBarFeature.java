@@ -58,7 +58,7 @@ public class CraftingProfessionLevelProgressBarFeature extends Feature {
         final String text = "Level %d (%.2f%%)".formatted(level, progress);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        event.getGuiGraphics(),
                         StyledText.fromString(text),
                         (float) screen.width / 2,
                         screen.topPos - 8,

@@ -52,7 +52,7 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromString(state == ConfirmedBoolean.UNCONFIRMED ? "☆" : "★"),
                         getX() + getWidth() / 2f,
                         getY() + getHeight() / 2f + 1,

@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.map.pois;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.territories.TerritoryInfo;
@@ -15,14 +14,15 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PoiLocation;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.function.Supplier;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class TerritoryPoi implements Poi {
@@ -70,7 +70,7 @@ public class TerritoryPoi implements Poi {
 
     @Override
     public void renderAt(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             float renderX,
             float renderY,
@@ -137,10 +137,9 @@ public class TerritoryPoi implements Poi {
         } else {
             String guildPrefix =
                     isTerritoryInfoUsable() ? territoryInfo.getGuildPrefix() : territoryProfile.getGuildPrefix();
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(guildPrefix),
                             actualRenderX,
                             actualRenderX + renderWidth,
@@ -157,10 +156,9 @@ public class TerritoryPoi implements Poi {
                 .ifPresent(attackTimer -> {
                     final String timeLeft = attackTimer.timerString();
 
-                    BufferedFontRenderer.getInstance()
+                    FontRenderer.getInstance()
                             .renderAlignedTextInBox(
-                                    poseStack,
-                                    bufferSource,
+                                    guiGraphics,
                                     StyledText.fromString(timeLeft),
                                     actualRenderX,
                                     actualRenderX + renderWidth,
@@ -174,10 +172,9 @@ public class TerritoryPoi implements Poi {
                 });
 
         if (hovered) {
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(territoryProfile.getFriendlyName()),
                             actualRenderX,
                             actualRenderX + renderWidth,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
@@ -51,7 +51,7 @@ public class PoiSortButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         titleToRender,
                         getX() + 1,
                         getY() + 1,

@@ -293,13 +293,13 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
-    protected void renderCoordinates(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderCoordinates(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
         int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(gameX + ", " + gameZ),
                         this.centerX,
                         this.renderHeight - this.renderedBorderYOffset - 40,
@@ -309,12 +309,12 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderZoomWidget(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderZoomWidget(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (!KeyboardUtils.isShiftDown()) return;
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("Zoom " + Math.round(zoomLevel)),
                         renderX + renderedBorderXOffset + mapWidth - 40,
                         this.renderHeight - this.renderedBorderYOffset - 10,

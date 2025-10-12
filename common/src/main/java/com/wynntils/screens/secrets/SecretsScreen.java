@@ -66,7 +66,7 @@ public class SecretsScreen extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.secrets.warning")),
                         offsetX + 75,
                         offsetX + 275,

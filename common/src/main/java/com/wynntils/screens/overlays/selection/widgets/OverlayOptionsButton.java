@@ -71,7 +71,7 @@ public class OverlayOptionsButton extends BasicTexturedButton {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         message,
                         getX() + 2,
                         getX() + getWidth() - 4,

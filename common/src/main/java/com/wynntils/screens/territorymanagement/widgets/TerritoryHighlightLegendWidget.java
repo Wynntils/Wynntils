@@ -54,7 +54,7 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
         // Render the title
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.literal("Highlight Legend")),
                         this.getX() + 5,
                         this.getX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width(),
@@ -71,7 +71,7 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
                 "[%d] HQ Territory".formatted(holder.getCountForConnectionType(TerritoryConnectionType.HEADQUARTERS))));
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         hqText,
                         this.getX() + 5,
                         this.getY() + 40,
@@ -93,7 +93,7 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
                 .formatted(holder.getCountForConnectionType(TerritoryConnectionType.HEADQUARTERS_CONNECTION))));
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         hqConnText,
                         this.getX() + 5,
                         this.getY() + 60,
@@ -115,7 +115,7 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
                 "[%d] Unconnected".formatted(holder.getCountForConnectionType(TerritoryConnectionType.UNCONNECTED))));
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         unconnectedText,
                         this.getX() + 5,
                         this.getY() + 80,
@@ -136,7 +136,7 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
         // Render the territory bonus effect highlight legends
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.literal("Multi Attacks [%d]"
                                 .formatted(holder.getCountForUpgrade(TerritoryUpgrade.TOWER_MULTI_ATTACKS)))),
                         this.getX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() - 5,
@@ -148,7 +148,7 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.literal("Emerald Seeking [%d]"
                                 .formatted(holder.getCountForUpgrade(TerritoryUpgrade.EMERALD_SEEKING)))),
                         this.getX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() - 5,
@@ -160,7 +160,7 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.literal("Tome Seeking [%d]"
                                 .formatted(holder.getCountForUpgrade(TerritoryUpgrade.TOME_SEEKING)))),
                         this.getX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() - 5,
@@ -172,7 +172,7 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.literal("Mob Experience [%d]"
                                 .formatted(holder.getCountForUpgrade(TerritoryUpgrade.MOB_EXPERIENCE)))),
                         this.getX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() - 5,
@@ -184,7 +184,7 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.literal(
                                 "Mob Damage [%d]".formatted(holder.getCountForUpgrade(TerritoryUpgrade.MOB_DAMAGE)))),
                         this.getX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() - 5,
@@ -196,7 +196,7 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.literal("Gathering Experience [%d]"
                                 .formatted(holder.getCountForUpgrade(TerritoryUpgrade.GATHERING_EXPERIENCE)))),
                         this.getX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() - 5,

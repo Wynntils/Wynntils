@@ -395,7 +395,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                 .isEmpty()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.poiManagementGui.noPois")),
                             (int) (dividedWidth * 32),
@@ -410,7 +410,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.search")),
                         (int) (dividedWidth * 10) + 5,
                         (int) dividedHeight,
@@ -422,7 +422,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         if (pois.isEmpty()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.poiManagementGui.noFilteredPois")),
                             (int) (dividedWidth * 32),
