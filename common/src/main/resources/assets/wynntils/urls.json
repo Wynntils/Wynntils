@@ -102,7 +102,7 @@
   },
   {
     "id": "dataStaticAspects",
-    "md5": "ff1d201723144b9df573e4c3d897bc44",
+    "md5": "d6c9ee4c9359909155324331fda4e947",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/aspects.json"
   },
   {
@@ -112,7 +112,7 @@
   },
   {
     "id": "dataStaticCharms",
-    "md5": "43df533c38463cff59e903eb3347e019",
+    "md5": "b22d45b4298148d0852a8b9885a25c54",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/charms.json"
   },
   {
@@ -132,7 +132,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "61984545994d4afb451eb0f14c3ce64d",
+    "md5": "a62d8c134aaf681b01f93fcc32671b51",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
   },
   {
@@ -207,12 +207,12 @@
   },
   {
     "id": "dataStaticMaterials",
-    "md5": "8ac1c583f8cc4f5645aec049700acb9f",
+    "md5": "0f1db0b421ba88ab1db37e333644cb3b",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/materials.json"
   },
   {
     "id": "dataStaticModelData",
-    "md5": "c2b17aee3f01135d7e7a6f6b64a61980",
+    "md5": "c86a2609838c118c750a03762e2be2fc",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/model_data.json"
   },
   {
@@ -257,7 +257,7 @@
   },
   {
     "id": "dataStaticTomes",
-    "md5": "5cd87e3ead6b0152d321e81dc1d3326b",
+    "md5": "8e80179778f53ba55ffefee9820b6476",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/tomes.json"
   },
   {
