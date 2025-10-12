@@ -69,6 +69,7 @@ public class ChatTabsFeature extends Feature {
 
     @Override
     public void onEnable() {
+        Services.ChatTab.setChatTabs(chatTabs.get());
         Services.ChatTab.enable();
 
         Screen screen = McUtils.mc().screen;
@@ -86,6 +87,6 @@ public class ChatTabsFeature extends Feature {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        Services.ChatTab.updateConfig(chatTabs.get());
+        Services.ChatTab.setChatTabs(chatTabs.get());
     }
 }

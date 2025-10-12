@@ -251,7 +251,7 @@ public final class ChatTabService extends Service {
         }
     }
 
-    public void updateConfig(List<ChatTab> chatTabs) {
+    public void setChatTabs(List<ChatTab> chatTabs) {
         this.chatTabs.clear();
         this.chatTabs.addAll(chatTabs);
 
