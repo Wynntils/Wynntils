@@ -9,6 +9,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.handlers.chat.type.MessageType;
@@ -25,19 +26,23 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.GuiMessage;
+import net.minecraft.client.GuiMessageTag;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MessageSignature;
+import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ChatTabService extends Service {
-    private ChatTab focusedTab = null;
-
-    private ChatComponent vanillaChatComponent;
-    private WrappingChatComponent wrappingChatComponent;
-
     private final Map<ChatTab, ChatTabData> tabDataMap = new HashMap<>();
     // This is a copy of the config in ChatTabsFeature, stored there for persistence.
     private final List<ChatTab> chatTabs = new ArrayList<>();
+
+    private ChatComponent vanillaChatComponent = null;
+    private ChatTab focusedTab = null;
 
     public ChatTabService() {
         super(List.of());
@@ -71,14 +76,20 @@ public final class ChatTabService extends Service {
 
     public void addTab(int insertIndex, ChatTab chatTab) {
         getChatTabs().add(insertIndex, chatTab);
-        Managers.Feature.getFeatureInstance(ChatTabsFeature.class).chatTabs.touched();
+
+        Config<List<ChatTab>> configChatTabs = Managers.Feature.getFeatureInstance(ChatTabsFeature.class).chatTabs;
+        configChatTabs.get().add(insertIndex, chatTab);
+        configChatTabs.touched();
 
         tabDataMap.put(chatTab, new ChatTabData(new ChatComponent(McUtils.mc()), false, chatTab.customRegexString()));
     }
 
     public void removeTab(ChatTab chatTab) {
         getChatTabs().remove(chatTab);
-        Managers.Feature.getFeatureInstance(ChatTabsFeature.class).chatTabs.touched();
+
+        Config<List<ChatTab>> configChatTabs = Managers.Feature.getFeatureInstance(ChatTabsFeature.class).chatTabs;
+        configChatTabs.get().remove(chatTab);
+        configChatTabs.touched();
 
         tabDataMap.remove(chatTab);
     }
@@ -106,8 +117,13 @@ public final class ChatTabService extends Service {
     public void setFocusedTab(ChatTab focused) {
         focusedTab = focused;
 
-        tabDataMap.get(focused).setUnreadMessages(false);
-        wrappingChatComponent.setCurrentChatComponent(getChatComponent(focused));
+        ChatTabData focusedChatTabData = tabDataMap.get(focused);
+        focusedChatTabData.setUnreadMessages(false);
+
+        // Copy the focused tabs messages into the wrapping chat component for display
+        McUtils.mc().gui.chat.allMessages = focusedChatTabData.getChatComponent().allMessages;
+        McUtils.mc().gui.chat.trimmedMessages = focusedChatTabData.getChatComponent().trimmedMessages;
+        McUtils.mc().gui.chat.refreshTrimmedMessages();
     }
     // endregion
 
@@ -123,14 +139,13 @@ public final class ChatTabService extends Service {
 
         reset();
 
-        vanillaChatComponent = McUtils.mc().gui.chat;
         // Create a new ChatTabData for each tab
         getChatTabs()
                 .forEach(chatTab -> tabDataMap.put(
                         chatTab, new ChatTabData(new ChatComponent(McUtils.mc()), false, chatTab.customRegexString())));
 
-        // Restore all messages sent to the vanilla chat component to all the new tabs
-        vanillaChatComponent.allMessages.reversed().forEach(msg -> {
+        // Pass the historic messages from the vanilla chat component to all the new tabs
+        McUtils.mc().gui.chat.allMessages.reversed().forEach(msg -> {
             Component component = msg.content();
             StyledText styledText = StyledText.fromComponent(component);
             RecipientType recipientType = Handlers.Chat.getRecipientType(styledText, MessageType.FOREGROUND);
@@ -139,22 +154,17 @@ public final class ChatTabService extends Service {
             recipientTabs.forEach(tab -> Services.ChatTab.getChatComponent(tab).addMessage(component));
         });
 
-        ChatTab firstTab = getChatTabs().getFirst();
-        ChatTabData firstTabData = tabDataMap.get(firstTab);
+        vanillaChatComponent = McUtils.mc().gui.chat;
+        McUtils.mc().gui.chat = new WrappingChatComponent(McUtils.mc());
 
-        firstTabData.setUnreadMessages(false);
-        WrappingChatComponent chatComponent = new WrappingChatComponent(McUtils.mc());
-        chatComponent.setCurrentChatComponent(firstTabData.getChatComponent());
-
-        focusedTab = firstTab;
-        wrappingChatComponent = chatComponent;
-        McUtils.mc().gui.chat = wrappingChatComponent;
+        setFocusedTab(getChatTabs().getFirst());
     }
 
     public void disable() {
         if (!isEnabled()) return;
 
         McUtils.mc().gui.chat = vanillaChatComponent;
+        vanillaChatComponent = null;
 
         reset();
         focusedTab = null;
@@ -173,21 +183,58 @@ public final class ChatTabService extends Service {
         }
     }
 
+    void clearMessages(boolean clearSentMsgHistory) {
+        vanillaChatComponent.clearMessages(clearSentMsgHistory);
+        tabDataMap
+                .values()
+                .forEach(chatTabData -> chatTabData.getChatComponent().clearMessages(clearSentMsgHistory));
+    }
+
+    void addMessage(Component component, MessageSignature headerSignature, GuiMessageTag tag) {
+        try {
+            vanillaChatComponent.addMessage(component, headerSignature, tag);
+
+            StyledText styledText = StyledText.fromComponent(component);
+            RecipientType recipientType = Handlers.Chat.getRecipientType(styledText, MessageType.FOREGROUND);
+
+            List<ChatTab> recipientTabs = getRecipientTabs(recipientType, styledText);
+            recipientTabs.forEach(tab -> {
+                getChatComponent(tab).addMessage(component);
+                markAsNewMessages(tab);
+            });
+        } catch (Throwable t) {
+            warnAboutBrokenMod(component, t);
+        }
+    }
+
+    private void warnAboutBrokenMod(Component component, Throwable t) {
+        MutableComponent warning = Component.literal(
+                        "<< WARNING: A chat message was lost due to a crash in a mod other than Wynntils. See log for details. >>")
+                .withStyle(ChatFormatting.RED);
+        vanillaChatComponent.addMessage(warning);
+        getChatComponent(focusedTab).addMessage(warning);
+
+        // We have seen many issues with badly written mods that inject into addMessage, and
+        // throws exceptions. Instead of considering it a Wynntils crash, dump it to the log and
+        // ignore it. We can't resend the message to the chat, since that could cause an infinite loop,
+        // but the log should be fine.
+        WynntilsMod.warn("Another mod has caused an exception in ChatComponent.addMessage()");
+        WynntilsMod.warn("The message that could not be displayed is:"
+                + StyledText.fromComponent(component).getString());
+        WynntilsMod.warn("This is not a Wynntils bug. Here is the exception that we caught.", t);
+    }
+
     private void reset() {
         tabDataMap.clear();
     }
 
-    public void forEachChatComponent(Consumer<ChatComponent> chatComponentConsumer) {
-        tabDataMap.values().stream().map(ChatTabData::getChatComponent).forEach(chatComponentConsumer);
-    }
-
-    void markAsNewMessages(ChatTab tab) {
+    private void markAsNewMessages(ChatTab tab) {
         if (tab != focusedTab) {
             tabDataMap.get(tab).setUnreadMessages(true);
         }
     }
 
-    List<ChatTab> getRecipientTabs(RecipientType recipientType, StyledText styledText) {
+    private List<ChatTab> getRecipientTabs(RecipientType recipientType, StyledText styledText) {
         List<ChatTab> recipientTabs = new ArrayList<>();
 
         // Firstly, find the FIRST matching tab with high priority
@@ -227,6 +274,24 @@ public final class ChatTabService extends Service {
     }
     // endregion
 
+    public void modifyChatHistory(Consumer<List<GuiMessage>> allMessagesConsumer) {
+        if (!isEnabled()) {
+            ChatComponent chatComponent = McUtils.mc().gui.chat;
+
+            allMessagesConsumer.accept(chatComponent.allMessages);
+            chatComponent.refreshTrimmedMessages();
+            return;
+        }
+
+        Stream.concat(
+                        Stream.of(this.vanillaChatComponent),
+                        tabDataMap.values().stream().map(ChatTabData::getChatComponent))
+                .forEach(chatComponent -> {
+                    allMessagesConsumer.accept(chatComponent.allMessages);
+                    chatComponent.refreshTrimmedMessages();
+                });
+    }
+
     /**
      * Sends a chat message respecting chat tab autocommand settings.
      * If no chat tab is actively selected, the message will be sent normally.
@@ -255,12 +320,16 @@ public final class ChatTabService extends Service {
         this.chatTabs.clear();
         this.chatTabs.addAll(chatTabs);
 
-        Map<ChatTab, ChatTabData> oldMap = this.tabDataMap;
+        Map<ChatTab, ChatTabData> oldMap = new HashMap<>(this.tabDataMap);
         this.tabDataMap.clear();
         chatTabs.forEach(chatTab -> this.tabDataMap.put(
                 chatTab,
                 oldMap.containsKey(chatTab)
                         ? oldMap.get(chatTab)
                         : new ChatTabData(new ChatComponent(McUtils.mc()), false, chatTab.customRegexString())));
+
+        if (focusedTab != null) {
+            setFocusedTab(chatTabs.getFirst());
+        }
     }
 }

@@ -9,10 +9,8 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.SystemMessageEvent;
-import com.wynntils.services.chat.WrappingChatComponent;
 import com.wynntils.utils.ListUtils;
 import com.wynntils.utils.TaskUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayDeque;
@@ -24,7 +22,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import net.minecraft.client.GuiMessage;
-import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
 
 public final class ChatPageDetector {
@@ -377,8 +374,7 @@ public final class ChatPageDetector {
     }
 
     private static void processChatComponentReplacements(
-            ChatComponent chatComponent, List<Pair<StyledText, StyledText>> replacements) {
-        List<GuiMessage> allMessages = chatComponent.allMessages;
+            List<GuiMessage> allMessages, List<Pair<StyledText, StyledText>> replacements) {
         List<Pair<StyledText, StyledText>> remainingReplacements = new LinkedList<>(replacements);
 
         // Go through all messages from newest to oldest
@@ -405,8 +401,6 @@ public final class ChatPageDetector {
                 }
             }
         }
-
-        chatComponent.refreshTrimmedMessages();
     }
 
     private void enqueueSendDelayedChat(Component message) {
@@ -476,13 +470,8 @@ public final class ChatPageDetector {
 
         @Override
         public void run() {
-            ChatComponent chatComponent = McUtils.mc().gui.getChat();
-            if (chatComponent instanceof WrappingChatComponent wrappingChatComponent) {
-                chatComponent = wrappingChatComponent.getOriginalChatComponent();
-            }
-            processChatComponentReplacements(chatComponent, replacements);
-
-            Services.ChatTab.forEachChatComponent(c -> processChatComponentReplacements(c, replacements));
+            Services.ChatTab.modifyChatHistory(
+                    allMessages -> processChatComponentReplacements(allMessages, replacements));
         }
     }
 
