@@ -21,6 +21,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.gui.components.ChatComponent;
@@ -79,8 +80,8 @@ public final class ChatPageDetector {
                 if (lineCount == 1) return false;
 
                 // Wait a reasonable amount of time for all messages in the page to arrive
-                pageFinishedTask = TaskUtils.schedule(
-                        this::onPotentialPageFinished, NORMAL_PAGE_WAIT, java.util.concurrent.TimeUnit.MILLISECONDS);
+                pageFinishedTask =
+                        TaskUtils.schedule(this::onPotentialPageFinished, NORMAL_PAGE_WAIT, TimeUnit.MILLISECONDS);
             }
 
             // Once we started collecting messages, collect them all, so as not to change order
@@ -101,8 +102,8 @@ public final class ChatPageDetector {
                 lastPartialLinesCount = collectedMessages.size();
                 // In this case, the rest of the page will likely be sent the next tick,
                 // so we need to wait a longer time than normal.
-                pageFinishedTask = TaskUtils.schedule(
-                        this::onPotentialPageFinished, PARTIAL_PAGE_WAIT, java.util.concurrent.TimeUnit.MILLISECONDS);
+                pageFinishedTask =
+                        TaskUtils.schedule(this::onPotentialPageFinished, PARTIAL_PAGE_WAIT, TimeUnit.MILLISECONDS);
                 return;
             }
             lastPartialLinesCount = 0;
