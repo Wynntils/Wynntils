@@ -43,7 +43,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -360,7 +359,7 @@ public class ValuablesProtectionFeature extends Feature {
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(text),
                             getX(),
                             getY(),
@@ -368,8 +367,7 @@ public class ValuablesProtectionFeature extends Feature {
                             textColor,
                             horizontalAlignment,
                             VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL,
-                            Font.DisplayMode.NORMAL);
+                            TextShadow.NORMAL);
         }
 
         @Override

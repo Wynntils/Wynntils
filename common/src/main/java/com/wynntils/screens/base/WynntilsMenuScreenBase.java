@@ -16,6 +16,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -50,11 +51,11 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         RenderUtils.drawTexturedRect(poseStack, Texture.CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
-    protected void renderVersion(PoseStack poseStack) {
+    protected void renderVersion(GuiGraphics guiGraphics) {
         String version = WynntilsMod.isDevelopmentBuild() ? "Development Build" : WynntilsMod.getVersion();
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(version),
                         54 + offsetX,
                         127 + offsetX,
@@ -68,12 +69,12 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         0.7f);
     }
 
-    protected void renderTitle(PoseStack poseStack, String titleString) {
+    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
         RenderUtils.drawTexturedRect(poseStack, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(titleString),
                         10 + offsetX,
                         36 + offsetY,
@@ -84,10 +85,10 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         2f);
     }
 
-    protected void renderDescription(PoseStack poseStack, String description, String filterHelper) {
+    protected void renderDescription(GuiGraphics guiGraphics, String description, String filterHelper) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(description),
                         20 + offsetX,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetX,
@@ -99,7 +100,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(filterHelper),
                         20 + offsetX,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetY,

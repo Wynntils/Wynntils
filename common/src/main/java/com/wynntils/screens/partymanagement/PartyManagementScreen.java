@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.partymanagement;
@@ -148,7 +148,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(inviteFieldHeader),
                         dividedWidth * 36,
                         dividedWidth * 60,
@@ -168,7 +168,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         if (inParty) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get(
                                     "screens.wynntils.partyManagementGui.members",
                                     Models.Party.getPartyMembers().size(),
@@ -190,7 +190,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                     1);
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.head")),
                             dividedWidth * 5,
                             dividedHeight * PARTY_LIST_DIV_HEIGHT,
@@ -200,7 +200,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                             TextShadow.NORMAL);
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.name")),
                             dividedWidth * 7,
                             dividedHeight * PARTY_LIST_DIV_HEIGHT,
@@ -210,7 +210,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                             TextShadow.NORMAL);
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.promote")),
                             dividedWidth * 22,
                             dividedHeight * PARTY_LIST_DIV_HEIGHT,
@@ -220,7 +220,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                             TextShadow.NORMAL);
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.kick")),
                             dividedWidth * 26,
                             dividedHeight * PARTY_LIST_DIV_HEIGHT,
@@ -230,7 +230,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                             TextShadow.NORMAL);
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.priority")),
                             dividedWidth * 30,
                             dividedHeight * PARTY_LIST_DIV_HEIGHT,
@@ -243,7 +243,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.notInParty")),
                             dividedWidth * 4,
                             dividedWidth * 30,
@@ -269,7 +269,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                 1);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.head")),
                         dividedWidth * 37,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
@@ -279,7 +279,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.suggestions")),
                         dividedWidth * 39,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
@@ -289,7 +289,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.invite")),
                         dividedWidth * 58,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,

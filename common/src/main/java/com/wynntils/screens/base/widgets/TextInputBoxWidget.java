@@ -92,8 +92,6 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         Pair<String, Integer> renderedTextDetails = getRenderedText(getMaxTextWidth());
         String renderedText = renderedTextDetails.a();
         int renderedTextStart = renderedTextDetails.b();
@@ -114,7 +112,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         int lastWidth = font.width(lastPortion);
 
         doRenderWidget(
-                poseStack,
+                guiGraphics,
                 renderedText,
                 renderedTextStart,
                 firstPortion,
@@ -127,7 +125,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     protected void doRenderWidget(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -156,7 +154,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(defaultText ? DEFAULT_TEXT.getString() : firstPortion),
                         textPadding,
                         this.width - lastWidth - highlightedWidth,
@@ -171,7 +169,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         if (!defaultText) {
             FontRenderer.getInstance()
                     .renderAlignedHighlightedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(highlightedPortion),
                             textPadding + firstWidth,
                             this.width - lastWidth,
@@ -185,7 +183,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(lastPortion),
                             textPadding + firstWidth + highlightedWidth,
                             this.width,

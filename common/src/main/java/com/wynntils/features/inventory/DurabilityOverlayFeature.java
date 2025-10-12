@@ -24,7 +24,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
-import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -46,7 +46,7 @@ public class DurabilityOverlayFeature extends Feature {
         switch (durabilityRenderMode.get()) {
             case ARC -> drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
             case BAR -> drawDurabilityBar(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
-            case PERCENTAGE -> drawDurabilityPercentage(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+            case PERCENTAGE -> drawDurabilityPercentage(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY());
         }
     }
 
@@ -57,7 +57,7 @@ public class DurabilityOverlayFeature extends Feature {
             case ARC -> drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
             case BAR -> drawDurabilityBar(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
             case PERCENTAGE ->
-                drawDurabilityPercentage(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+                drawDurabilityPercentage(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
         }
     }
 
@@ -100,7 +100,7 @@ public class DurabilityOverlayFeature extends Feature {
     }
 
     // Inspiration taken from https://github.com/GTNewHorizons/DuraDisplay
-    private void drawDurabilityPercentage(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
+    private void drawDurabilityPercentage(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<DurableItemProperty> durableItemOpt =
                 Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return;
@@ -115,7 +115,7 @@ public class DurabilityOverlayFeature extends Feature {
         poseStack.translate(0, 0, 300);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         text,
                         (float) slotX + 8,
                         (float) slotY + 16,
@@ -123,8 +123,7 @@ public class DurabilityOverlayFeature extends Feature {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL,
-                        0.5f,
-                        Font.DisplayMode.NORMAL);
+                        0.5f);
         poseStack.popPose();
     }
 
