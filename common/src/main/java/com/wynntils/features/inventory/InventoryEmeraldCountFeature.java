@@ -112,7 +112,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         if (topEmeralds != 0) {
             int y = isInventory ? containerScreen.topPos - 9 : containerScreen.topPos;
             switch (emeraldCountType.get()) {
-                case TEXT -> renderTextCount(event.getPoseStack(), textX, y, topEmeralds);
+                case TEXT -> renderTextCount(event.getGuiGraphics(), textX, y, topEmeralds);
                 case TEXTURE -> {
                     if (displayBottom) { // ensure we don't overlap with bottom textures
                         int topDisplayedTextureCount = (int) Arrays.stream(getRenderableEmeraldAmounts(topEmeralds))
@@ -130,7 +130,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         if (displayBottom) {
             int y = containerScreen.topPos + containerScreen.imageHeight;
             switch (emeraldCountType.get()) {
-                case TEXT -> renderTextCount(event.getPoseStack(), textX, y + 11, bottomEmeralds);
+                case TEXT -> renderTextCount(event.getGuiGraphics(), textX, y + 11, bottomEmeralds);
                 case TEXTURE ->
                     renderTexturedCount(
                             event.getGuiGraphics(), bottomTextureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
@@ -138,7 +138,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         }
     }
 
-    private void renderTextCount(PoseStack poseStack, int x, int y, int emeralds) {
+    private void renderTextCount(GuiGraphics guiGraphics, int x, int y, int emeralds) {
         final HorizontalAlignment emeraldTextAlignment =
                 textDisplaySide.get() == TextDisplaySide.LEFT ? HorizontalAlignment.LEFT : HorizontalAlignment.RIGHT;
         final int emeraldTextOffsetX = textDisplaySide.get() == TextDisplaySide.LEFT ? 1 : -1;
@@ -155,7 +155,7 @@ public class InventoryEmeraldCountFeature extends Feature {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(emeraldText),
                         x + emeraldTextOffsetX,
                         y - 10,
@@ -215,7 +215,7 @@ public class InventoryEmeraldCountFeature extends Feature {
             poseStack.translate(0, 0, 200);
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(emeraldAmount),
                             renderX,
                             renderX + TEXTURE_SIZE - 2,

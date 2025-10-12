@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.partymanagement.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
@@ -71,8 +70,6 @@ public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
-
         // name rendering
         CustomColor color = CommonColors.WHITE;
         if (Models.Party.isPartyLeader(playerName)) {
@@ -91,7 +88,7 @@ public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         formattedPlayerName,
                         this.getX() + (this.width / gridDivisions * 3),
                         this.getY() + this.height / 2,

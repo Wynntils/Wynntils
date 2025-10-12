@@ -117,7 +117,7 @@ public class OverlayButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(textToRender),
                         getX() + 2,
                         getY() + (height / 2f),

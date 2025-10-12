@@ -55,7 +55,7 @@ public class SecretInputWidget extends AbstractWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromString(EnumUtils.toNiceString(wynntilsSecret)),
                         getX(),
                         getY() + getHeight() / 2f,

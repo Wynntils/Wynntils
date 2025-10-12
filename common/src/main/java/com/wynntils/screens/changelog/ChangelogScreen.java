@@ -111,24 +111,24 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
 
         RenderUtils.enableScissor(guiGraphics, offsetX + 40, offsetY + 11, 220, SCISSOR_HEIGHT);
         FontRenderer.getInstance()
-                .renderTexts(poseStack, 45 + offsetX, 15 + offsetY - scrollOffset, changelogTasks.get(currentPage));
+                .renderTexts(guiGraphics, 45 + offsetX, 15 + offsetY - scrollOffset, changelogTasks.get(currentPage));
         RenderUtils.disableScissor(guiGraphics);
 
         if (getMaxScrollOffset() != 0) {
             renderScrollBar(poseStack);
         }
 
-        renderPageInfo(poseStack, getCurrentPage() + 1, getMaxPage() + 1);
+        renderPageInfo(guiGraphics, getCurrentPage() + 1, getMaxPage() + 1);
 
         for (Renderable renderable : this.renderables) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
-    private void renderPageInfo(PoseStack poseStack, int currentPage, int maxPage) {
+    private void renderPageInfo(GuiGraphics guiGraphics, int currentPage, int maxPage) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
                         80 + offsetX,
                         Texture.SCROLL_BACKGROUND.width() - 80 + offsetX,

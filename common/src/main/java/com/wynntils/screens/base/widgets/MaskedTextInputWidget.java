@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
@@ -111,7 +110,7 @@ public class MaskedTextInputWidget extends AbstractWidget {
 
         @Override
         protected void doRenderWidget(
-                PoseStack poseStack,
+                GuiGraphics guiGraphics,
                 String renderedText,
                 int renderedTextStart,
                 String firstPortion,
@@ -122,7 +121,7 @@ public class MaskedTextInputWidget extends AbstractWidget {
                 int highlightedWidth,
                 int lastWidth) {
             super.doRenderWidget(
-                    poseStack,
+                    guiGraphics,
                     masked ? "*".repeat(renderedText.length()) : renderedText,
                     renderedTextStart,
                     masked ? "*".repeat(firstPortion.length()) : firstPortion,

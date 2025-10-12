@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.mapdata;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
@@ -13,11 +12,11 @@ import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public final class MapFeatureRenderer {
@@ -25,7 +24,7 @@ public final class MapFeatureRenderer {
     private static final float TEXT_SCALE = 1f;
 
     public static void renderMapFeature(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             MapFeature feature,
             ResolvedMapAttributes attributes,
@@ -89,10 +88,9 @@ public final class MapFeatureRenderer {
 
             CustomColor color = attributes.labelColor().withAlpha(labelAlpha);
 
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(attributes.label()),
                             0,
                             yOffset,
@@ -109,10 +107,9 @@ public final class MapFeatureRenderer {
         // Show level only for features that are displayed and hovered
         boolean drawLevel = hovered && (drawIcon || drawLabel);
         if (level >= 1 && drawLevel) {
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString("[Lv. " + level + "]"),
                             0,
                             yOffset,
