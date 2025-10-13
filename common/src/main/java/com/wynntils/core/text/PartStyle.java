@@ -114,11 +114,14 @@ public final class PartStyle {
         //    A color segment is the prefix and the chatFormatting char.
         //    If this is a custom color, a hex color code is used.
         //    Example: §#FF0000 or §1
-        // 2. Formatting is converted the same way as in the Style class.
-        // 3. Click events are wrapped in square brackets, and is represented as an id.
+        // 2. Font is converted to a font segment.
+        //    A font segment is the prefix and font path between {} symbols
+        //    Example: §{banner/ribbon} or §{default}
+        // 3. Formatting is converted the same way as in the Style class.
+        // 4. Click events are wrapped in square brackets, and is represented as an id.
         //    The parent of this style's owner is responsible for keeping track of click events.
         //    Example: §[1] -> (1st click event)
-        // 4. Hover events are wrapped in angle brackets, and is represented as an id.
+        // 5. Hover events are wrapped in angle brackets, and is represented as an id.
         //    The parent of this style's owner is responsible for keeping track of hover events.
         //    Example: §<1> -> (1st hover event)
 
@@ -155,7 +158,16 @@ public final class PartStyle {
                 }
             }
 
-            // 2. Formatting
+            // 2. Font
+            if (type == StyleType.INCLUDE_FONTS || type == StyleType.INCLUDE_EVERYTHING) {
+                styleString
+                        .append(STYLE_PREFIX)
+                        .append('{')
+                        .append(previousStyle.font.toString())
+                        .append('}');
+            }
+
+            // 3. Formatting
             if (obfuscated) {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.OBFUSCATED.getChar());
             }
@@ -172,8 +184,8 @@ public final class PartStyle {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
             }
 
-            if (type == StyleType.INCLUDE_EVENTS) {
-                // 3. Click event
+            if (type == StyleType.INCLUDE_EVENTS || type == StyleType.INCLUDE_EVERYTHING) {
+                // 4. Click event
                 if (clickEvent != null) {
                     styleString
                             .append(STYLE_PREFIX)
@@ -182,7 +194,7 @@ public final class PartStyle {
                             .append("]");
                 }
 
-                // 4. Hover event
+                // 5. Hover event
                 if (hoverEvent != null) {
                     styleString
                             .append(STYLE_PREFIX)
@@ -521,7 +533,9 @@ public final class PartStyle {
     }
 
     public enum StyleType {
+        INCLUDE_EVERYTHING, // Includes both events and fonts
         INCLUDE_EVENTS, // Includes click and hover events
+        INCLUDE_FONTS, // Include fonts
         DEFAULT, // The most minimal way to represent a style
         NONE // No styling
     }
