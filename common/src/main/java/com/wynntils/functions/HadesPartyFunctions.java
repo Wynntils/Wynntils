@@ -20,7 +20,7 @@ public class HadesPartyFunctions {
         public T getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("index").getIntegerValue();
             List<HadesUser> members = Services.Hades.getHadesUsers().toList();
-            return !members.isEmpty() && index >= 0 && members.size() >= index
+            return !members.isEmpty() && index >= 0 && index < members.size()
                     ? processMember(members.get(index))
                     : whenAbsent();
         }

@@ -33,7 +33,7 @@ public class BombFunctions {
             List<BombInfo> bombInfo =
                     Models.Bomb.getBombBellStream(group, sortOrder).toList();
 
-            return (!bombInfo.isEmpty() && index >= 0 && index <= bombInfo.size())
+            return (!bombInfo.isEmpty() && index >= 0 && index < bombInfo.size())
                     ? processInfo(bombInfo.get(index))
                     : invalidValue();
         }
