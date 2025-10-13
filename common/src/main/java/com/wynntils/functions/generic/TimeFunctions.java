@@ -120,7 +120,7 @@ public final class TimeFunctions {
     public static class FormatTimeAdvancedFunction extends GenericFunction<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            Time timestamp = arguments.getArgument("timestamp").getTime();
+            Time timestamp = arguments.getArgument("time").getTime();
             String format = arguments.getArgument("format").getStringValue();
 
             try {

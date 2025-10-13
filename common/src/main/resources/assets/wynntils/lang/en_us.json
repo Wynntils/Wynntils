@@ -1957,7 +1957,7 @@
   "function.wynntils.generic.formatTimeAdvanced.argument.format": "Format pattern",
   "function.wynntils.generic.formatTimeAdvanced.argument.time": "Time to format",
   "function.wynntils.generic.formatTimeAdvanced.description": "Format time to a string using an DateTimeFormatter pattern",
-  "function.wynntils.generic.formatTimeAdvanced.name": "Format Date Advanced",
+  "function.wynntils.generic.formatTimeAdvanced.name": "Format Time Advanced",
   "function.wynntils.generic.fromHex.argument.hex": "The hex code representing the desired color. The leading # can be omitted",
   "function.wynntils.generic.fromHex.description": "Returns a color value based on provided hex argument",
   "function.wynntils.generic.fromHex.name": "Color from hex string",
