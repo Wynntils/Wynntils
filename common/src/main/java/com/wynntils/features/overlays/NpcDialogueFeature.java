@@ -50,7 +50,6 @@ import org.lwjgl.glfw.GLFW;
  * </ol>
  * If the feature is disabled, we stop all special processing for chat screens in ChatHandler.
  */
-@StartDisabled
 @ConfigCategory(Category.OVERLAYS)
 public class NpcDialogueFeature extends Feature {
     // This is deliberately a styled text, so we construct new components every time
