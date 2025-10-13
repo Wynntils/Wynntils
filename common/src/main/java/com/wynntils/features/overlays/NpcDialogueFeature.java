@@ -8,7 +8,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.notifications.MessageContainer;
