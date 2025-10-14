@@ -9,6 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
+import com.wynntils.hades.protocol.enums.HadesVersion;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
 import com.wynntils.hades.protocol.packets.client.HCPacketAuthenticate;
 import com.wynntils.hades.protocol.packets.server.HSPacketAuthenticationResponse;
@@ -51,7 +52,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
                     "Tried to auth to the remote player server without being logged in on Athena.");
         }
 
-        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(Services.WynntilsAccount.getToken()));
+        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(Services.WynntilsAccount.getToken(), HadesVersion.VERSION_0_6_1));
     }
 
     @Override
