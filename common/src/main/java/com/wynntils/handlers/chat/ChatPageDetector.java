@@ -211,7 +211,7 @@ public final class ChatPageDetector {
                 .toList();
         int numReferenceLines = referenceLines.size();
 
-        // Try to find a matching segment allowing for up to MAX_LINE_DIFFING_LINES lines difference
+        // Try to find a matching segment allowing for up to MAX_DIFFERING_LINES lines difference
         // at the beginning and end
         int minRequiredMatches = numReferenceLines - 2 * MAX_DIFFERING_LINES;
 
