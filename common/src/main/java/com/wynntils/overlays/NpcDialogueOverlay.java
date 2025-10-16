@@ -16,9 +16,12 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
+import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
+import com.wynntils.models.npcdialogue.event.NpcDialogueRemoved;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
@@ -36,6 +39,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class NpcDialogueOverlay extends Overlay {
     private static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromString("§cPress SNEAK to continue");
@@ -54,6 +60,8 @@ public class NpcDialogueOverlay extends Overlay {
 
     private TextRenderSetting renderSetting;
 
+    private Component selectionComponents = null;
+
     public NpcDialogueOverlay() {
         super(
                 new OverlayPosition(
@@ -66,6 +74,36 @@ public class NpcDialogueOverlay extends Overlay {
                 HorizontalAlignment.CENTER,
                 VerticalAlignment.MIDDLE);
         updateTextRenderSettings();
+    }
+
+    @SubscribeEvent
+    public void onNpcDialoguePost(NpcDialogueProcessingEvent.Post event) {
+        NpcDialogue dialogue = event.getDialogue();
+        // This is specific to the overlay, so we don't want to handle it in the feature
+        // (when we display the dialogues in the chat, we don't need to duplicate the message)
+        if (dialogue.dialogueType() == NpcDialogueType.SELECTION) {
+            if (selectionComponents != null) return;
+
+            // This is a bit of a workaround to be able to select the options
+            MutableComponent clickMsg =
+                    Component.literal("Click on an option in chat to continue:\n").withStyle(ChatFormatting.AQUA);
+            event.getPostProcessedDialogue()
+                    .forEach(line -> clickMsg.append(Component.literal("\n").append(line.getComponent())));
+            McUtils.sendMessageToClient(clickMsg);
+            // Save the selection components so we can remove it later
+            selectionComponents = clickMsg;
+        }
+    }
+
+    @SubscribeEvent
+    public void onNpcDialogueRemoved(NpcDialogueRemoved event) {
+        if (event.getRemovedDialogue().dialogueType() == NpcDialogueType.SELECTION) {
+            // Remove the selection components if it exists
+            if (selectionComponents != null) {
+                McUtils.removeMessageFromChat(selectionComponents);
+                selectionComponents = null;
+            }
+        }
     }
 
     @Override
