@@ -42,6 +42,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -473,7 +474,8 @@ public class ItemTextOverlayFeature extends Feature {
             Skill skill = item.getSkill();
 
             StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
-                    .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))));
+                    .withStyle(Style.EMPTY.withFont(
+                            new FontDescription.Resource(ResourceLocation.withDefaultNamespace("common")))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());
@@ -499,7 +501,8 @@ public class ItemTextOverlayFeature extends Feature {
             Skill skill = item.getType().getSkill();
 
             StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
-                    .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))));
+                    .withStyle(Style.EMPTY.withFont(
+                            new FontDescription.Resource(ResourceLocation.withDefaultNamespace("common")))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());
