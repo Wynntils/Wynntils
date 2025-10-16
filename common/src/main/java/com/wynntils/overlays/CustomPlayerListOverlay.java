@@ -38,7 +38,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class CustomPlayerListOverlay extends Overlay {
     private static final Comparator<PlayerInfo> PLAYER_INFO_COMPARATOR =
-            Comparator.comparing(playerInfo -> playerInfo.getProfile().getName(), String::compareToIgnoreCase);
+            Comparator.comparing(playerInfo -> playerInfo.getProfile().name(), String::compareToIgnoreCase);
     private static final int DISTANCE_BETWEEN_CATEGORIES = 114;
     private static final int ROLL_WIDTH = 32;
     private static final int HALF_WIDTH = 233;
