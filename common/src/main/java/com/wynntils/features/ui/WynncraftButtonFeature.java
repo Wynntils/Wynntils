@@ -368,7 +368,9 @@ public class WynncraftButtonFeature extends Feature {
 
                 synchronized (this) {
                     RenderSystem.recordRenderCall(() -> {
-                        McUtils.mc().getTextureManager().register(destination, new DynamicTexture(nativeImage));
+                        McUtils.mc()
+                                .getTextureManager()
+                                .register(destination, new DynamicTexture(() -> "Wynncraft Server Icon", nativeImage));
                         serverIconLocation = destination;
                     });
                 }

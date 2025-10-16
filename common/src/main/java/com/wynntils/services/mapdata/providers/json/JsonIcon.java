@@ -33,7 +33,7 @@ public class JsonIcon implements MapIcon {
         if (!registered) {
             // We cannot do this in the constructor since GL is not initiated at that time
             registered = true;
-            McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
+            McUtils.mc().getTextureManager().register(resource, new DynamicTexture(() -> iconId, nativeImage));
         }
 
         return resource;
