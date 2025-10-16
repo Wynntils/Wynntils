@@ -32,6 +32,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
@@ -74,7 +75,8 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
                 MutableComponent damage = Component.empty()
                         .withStyle(type.getColorCode())
                         .append(Component.literal(elementSymbol)
-                                .withStyle(Style.EMPTY.withFont(Identifier.withDefaultNamespace("common"))))
+                                .withStyle(Style.EMPTY.withFont(
+                                        new FontDescription.Resource(Identifier.withDefaultNamespace("common")))))
                         .append(Component.literal(" " + type.getDisplayName()));
                 damage.append(Component.literal("Damage: " + damageStat.value().asString())
                         .withStyle(
@@ -103,7 +105,8 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
                 MutableComponent defense = Component.empty()
                         .withStyle(element.getColorCode())
                         .append(Component.literal(element.getSymbol())
-                                .withStyle(Style.EMPTY.withFont(Identifier.withDefaultNamespace("common"))))
+                                .withStyle(Style.EMPTY.withFont(
+                                        new FontDescription.Resource(Identifier.withDefaultNamespace("common")))))
                         .append(Component.literal(" " + element.getDisplayName()));
                 defense.append(Component.literal(" Defence: " + StringUtils.toSignedString(defenceStat.value()))
                         .withStyle(ChatFormatting.GRAY));
@@ -208,13 +211,14 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
                                     .withStyle(Style.EMPTY.withColor(p.getLightColor()))
                                     .append(Component.literal(" "))
                                     .append(Component.literal(symbol)
-                                            .withStyle(
-                                                    Style.EMPTY.withFont(Identifier.withDefaultNamespace("common")))));
+                                            .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
+                                                    Identifier.withDefaultNamespace("common"))))));
                             continue;
                         }
                         powderList.append(Component.literal(symbol)
                                 .withStyle(Style.EMPTY
-                                        .withFont(Identifier.withDefaultNamespace("common"))
+                                        .withFont(
+                                                new FontDescription.Resource(Identifier.withDefaultNamespace("common")))
                                         .withColor(p.getLightColor())));
                     }
                     powderList.append(Component.literal("]"));

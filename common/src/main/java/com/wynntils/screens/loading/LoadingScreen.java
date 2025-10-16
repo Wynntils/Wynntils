@@ -20,13 +20,15 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
 public final class LoadingScreen extends WynntilsScreen {
     private static final String LOGO_STRING = "\uE005\uDAFF\uDFFF\uE006";
     private static final String TEXT_LOGO_STRING = "Wynncraft";
-    private static final Identifier LOGO_FONT_LOCATION = Identifier.withDefaultNamespace("screen/static");
+    private static final FontDescription LOGO_FONT_LOCATION =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("screen/static"));
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
     private static final int SPINNER_SPEED = 1200;
     private final Runnable onClose;

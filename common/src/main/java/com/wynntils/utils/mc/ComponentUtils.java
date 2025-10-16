@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -27,7 +28,8 @@ public final class ComponentUtils {
     private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
 
-    private static final Identifier PILL_FONT = Identifier.withDefaultNamespace("banner/pill");
+    private static final FontDescription PILL_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("banner/pill"));
     private static final Style BACKGROUND_STYLE =
             Style.EMPTY.withFont(PILL_FONT).withColor(ChatFormatting.AQUA);
     private static final Style FOREGROUND_STYLE =
