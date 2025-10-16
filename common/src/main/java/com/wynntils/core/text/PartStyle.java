@@ -12,10 +12,10 @@ import java.util.Arrays;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.Identifier;
 
 public final class PartStyle {
     private static final String STYLE_PREFIX = "§";
@@ -38,7 +38,7 @@ public final class PartStyle {
     private final boolean italic;
     private final ClickEvent clickEvent;
     private final HoverEvent hoverEvent;
-    private final Identifier font;
+    private final FontDescription font;
 
     private PartStyle(
             StyledTextPart owner,
@@ -51,7 +51,7 @@ public final class PartStyle {
             boolean italic,
             ClickEvent clickEvent,
             HoverEvent hoverEvent,
-            Identifier font) {
+            FontDescription font) {
         this.owner = owner;
         this.color = color;
         this.shadowColor = shadowColor;
@@ -302,7 +302,7 @@ public final class PartStyle {
         return shadowColor;
     }
 
-    public Identifier getFont() {
+    public FontDescription getFont() {
         return font;
     }
 
@@ -426,7 +426,7 @@ public final class PartStyle {
                 font);
     }
 
-    public PartStyle withFont(Identifier font) {
+    public PartStyle withFont(FontDescription font) {
         return new PartStyle(
                 owner,
                 color,

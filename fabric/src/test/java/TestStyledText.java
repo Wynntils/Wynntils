@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -30,7 +31,8 @@ public class TestStyledText {
 
     @Test
     public void fontStyle() {
-        Identifier bannerPillFont = Identifier.fromNamespaceAndPath("minecraft", "banner/pill");
+        FontDescription bannerPillFont =
+                new FontDescription.Resource(Identifier.fromNamespaceAndPath("minecraft", "banner/pill"));
         final Component component = Component.empty()
                 .withStyle(ChatFormatting.RED)
                 .withStyle(Style.EMPTY.withFont(bannerPillFont))
@@ -70,7 +72,8 @@ public class TestStyledText {
     public void fontStyleInvalidFonts() {
         final Component component = Component.empty()
                 .withStyle(ChatFormatting.RED)
-                .withStyle(Style.EMPTY.withFont(Identifier.fromNamespaceAndPath("minecraft", "banner/nosuchfont")))
+                .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
+                        Identifier.fromNamespaceAndPath("minecraft", "banner/nosuchfont"))))
                 .append(Component.literal("inherited font"));
         final String expected = "§c§{f:minecraft:banner/nosuchfont}inherited font";
 

@@ -31,6 +31,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
@@ -117,7 +118,8 @@ public class PowderSpecialBarOverlay extends Overlay {
             text = StyledText.fromComponent(Component.empty()
                     .withStyle(powderSpecialType.getLightColor())
                     .append(Component.literal(String.valueOf(powderSpecialType.getSymbol()))
-                            .withStyle(Style.EMPTY.withFont(Identifier.withDefaultNamespace("common"))))
+                            .withStyle(Style.EMPTY.withFont(
+                                    new FontDescription.Resource(Identifier.withDefaultNamespace("common")))))
                     .append(Component.literal(" " + (int) powderSpecialCharge + "%")));
         }
 
