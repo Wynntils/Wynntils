@@ -329,7 +329,7 @@ public final class ScoreboardHandler extends Handler {
     }
 
     private void createScoreboardFromSegments() {
-        Scoreboard scoreboard = McUtils.player().getScoreboard();
+        Scoreboard scoreboard = McUtils.player().level().getScoreboard();
 
         Objective oldObjective = scoreboard.getObjective(SCOREBOARD_KEY);
         if (oldObjective != null) {
