@@ -24,6 +24,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
@@ -84,7 +85,8 @@ public class MomentumBarOverlay extends BaseBarOverlay {
                         guiGraphics,
                         StyledText.fromString(Models.Ability.momentumBar.getMomentum() + " ")
                                 .append(StyledText.fromComponent(Component.literal("\uE013")
-                                        .withStyle(Style.EMPTY.withFont(Identifier.withDefaultNamespace("common"))))),
+                                        .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
+                                                Identifier.withDefaultNamespace("common")))))),
                         this.getRenderX(),
                         this.getRenderX() + this.getWidth(),
                         renderY,

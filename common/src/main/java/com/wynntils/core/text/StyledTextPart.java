@@ -17,6 +17,7 @@ import java.util.function.Function;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -165,7 +166,7 @@ public final class StyledTextPart {
                         }
 
                         String fontCode = special.substring(2);
-                        Identifier font = FontLookup.getFontFromFromFontCode(fontCode);
+                        FontDescription font = FontLookup.getFontFromFromFontCode(fontCode);
                         if (font != null) {
                             currentStyle = currentStyle.withFont(font);
                         }
@@ -331,8 +332,8 @@ public final class StyledTextPart {
                     style = style.withStrikethrough(true);
                 }
                 if (jsonObject.has("font")) {
-                    style = style.withFont(Identifier.withDefaultNamespace(
-                            jsonObject.get("font").getAsString()));
+                    style = style.withFont(new FontDescription.Resource(Identifier.withDefaultNamespace(
+                            jsonObject.get("font").getAsString())));
                 }
                 if (jsonObject.has("color")) {
                     style = style.withColor(
