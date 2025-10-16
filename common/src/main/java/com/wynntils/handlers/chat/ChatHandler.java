@@ -64,6 +64,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class ChatHandler extends Handler {
     private final ChatPageDetector pageDetector = new ChatPageDetector();
     private final ChatPageProcessor pageProcessor = new ChatPageProcessor();
+    private boolean isLocal;
 
     @SubscribeEvent
     public void onConnectionChange(WynncraftConnectionEvent.Connected event) {
@@ -173,5 +174,13 @@ public final class ChatHandler extends Handler {
     private boolean needPageDetector() {
         // This is still a bit wonky...
         return Models.NpcDialogue.isNpcDialogExtractionRequired();
+    }
+
+    public void setLocalMessage(boolean isLocal) {
+        this.isLocal = isLocal;
+    }
+
+    public boolean isLocalMessage() {
+        return isLocal;
     }
 }

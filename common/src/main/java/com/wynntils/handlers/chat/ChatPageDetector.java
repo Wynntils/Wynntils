@@ -76,9 +76,10 @@ public final class ChatPageDetector {
             if (pageFinishedTask == null) {
                 if (lineCount == 1) {
                     // Normal single line chat messages will just be passed through
-                    if (!pageContent.isEmpty()) {
-                        // We think we are in page mode, so we have messed up. Delete the current
-                        // content page and tell the page processor to remove the page.
+                    if (!pageContent.isEmpty() && !Handlers.Chat.isLocalMessage()) {
+                        // We think we are in page mode, and this is not a locally sent message,
+                        // so we have messed up. Delete the current content page and tell the page
+                        // processor to remove the page.
                         reset();
                         Handlers.Chat.handlePage(List.of());
                     }
