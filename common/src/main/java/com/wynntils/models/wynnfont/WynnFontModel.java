@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.ResourceLocation;
 
 public final class WynnFontModel extends Model {
@@ -129,7 +130,7 @@ public final class WynnFontModel extends Model {
     }
 
     private void registerWynnFont(String fontName, String code) {
-        FontLookup.registerFontCode(ResourceLocation.tryParse(fontName), code);
+        FontLookup.registerFontCode(new FontDescription.Resource(ResourceLocation.tryParse(fontName)), code);
     }
 
     private void registerFontsForLookup() {
