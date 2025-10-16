@@ -7,6 +7,7 @@ package com.wynntils.utils.mc;
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.text.StyledText;
 import java.io.File;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
@@ -131,8 +132,9 @@ public final class McUtils {
     }
 
     public static void removeMessageFromChat(Component component) {
-        Services.ChatTab.modifyChatHistory(allMessages ->
-                allMessages.removeIf(guiMessage -> guiMessage.content().equals(component)));
+        StyledText comparison = StyledText.fromComponent(component);
+        Services.ChatTab.modifyChatHistory(allMessages -> allMessages.removeIf(
+                guiMessage -> StyledText.fromComponent(guiMessage.content()).equals(comparison)));
     }
 
     public static void sendErrorToClient(String errorMsg) {
