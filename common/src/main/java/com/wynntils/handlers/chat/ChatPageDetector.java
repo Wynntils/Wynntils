@@ -320,6 +320,9 @@ public final class ChatPageDetector {
                     sentBackgroundLines.add(message);
                     enqueueSendBackgroundLine(message);
                 }
+                // Also, since we've probably messed up royally by now, let's just restart
+                reset();
+                Handlers.Chat.handlePage(List.of());
             }
         }
     }
