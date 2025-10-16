@@ -32,7 +32,12 @@ Workspace Setup
 ========
 
 ### Initial Setup
+
+First of all, find which Java version the project is currently using. This info is in the file [gradle.propeties](gradle.properties).
+
 To set up the workspace, just import the project as a gradle project into your IDE. You might have to run `./gradlew --refresh-dependencies` if your IDE does not automatically do it.
+
+If you're using IntelliJ IDEA (which many do), there are some initial settings you need to make (before running gradlew). First, in the project structure, you need to specify the SDK (java) used, and use Intellij to download it for you if you need (choose Jetbrains Runtime as it works best for this project). Set the language level accordingly. Second, in the settings (Build tools, Execution, Deployment -> Build Tools -> Gradle) make sure the Gradle JVM is set to the project SDK.
 
 ### Building
 To build the mod just run `./gradlew buildDependents` and the artifacts should be generated in `fabric/build/libs` and `neoforge/build/libs`. There are a lot of jars there, use the jar which has the respective loader at the end (eg. `wynntils-VERSION-fabric.jar`).
