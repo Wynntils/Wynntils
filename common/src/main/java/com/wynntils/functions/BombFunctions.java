@@ -131,4 +131,16 @@ public class BombFunctions {
             return "";
         }
     }
+
+    public static class BombRemainingTimeFunction extends BombFunctionBase<Time> {
+        @Override
+        public Time processInfo(BombInfo info) {
+            return Time.of(info.getRemainingLong());
+        }
+
+        @Override
+        public Time invalidValue() {
+            return Time.NONE;
+        }
+    }
 }
