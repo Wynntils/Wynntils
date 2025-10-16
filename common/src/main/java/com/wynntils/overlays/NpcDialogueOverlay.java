@@ -85,8 +85,8 @@ public class NpcDialogueOverlay extends Overlay {
             if (selectionComponents != null) return;
 
             // This is a bit of a workaround to be able to select the options
-            MutableComponent clickMsg =
-                    Component.literal("Click on an option in chat to continue:\n").withStyle(ChatFormatting.AQUA);
+            MutableComponent clickMsg = Component.literal("Click on an option in chat to continue:\n")
+                    .withStyle(ChatFormatting.AQUA);
             event.getPostProcessedDialogue()
                     .forEach(line -> clickMsg.append(Component.literal("\n").append(line.getComponent())));
             McUtils.sendMessageToClient(clickMsg);
