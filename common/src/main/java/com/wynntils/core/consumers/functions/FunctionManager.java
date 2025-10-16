@@ -448,10 +448,11 @@ public final class FunctionManager extends Manager {
         registerFunction(new ActivityFunctions.ActivityTypeFunction());
         registerFunction(new ActivityFunctions.IsTrackingActivityFunction());
 
+        registerFunction(new BombFunctions.BombEndTimeFunction());
         registerFunction(new BombFunctions.BombFormattedStringFunction());
         registerFunction(new BombFunctions.BombLengthFunction());
         registerFunction(new BombFunctions.BombOwnerFunction());
-        registerFunction(new BombFunctions.BombEndTimeFunction());
+        registerFunction(new BombFunctions.BombRemainingTimeFunction());
         registerFunction(new BombFunctions.BombStartTimeFunction());
         registerFunction(new BombFunctions.BombTypeFunction());
         registerFunction(new BombFunctions.BombWorldFunction());
