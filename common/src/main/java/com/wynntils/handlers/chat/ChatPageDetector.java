@@ -74,8 +74,17 @@ public final class ChatPageDetector {
         int lineCount = StyledTextUtils.getLineCount(styledText);
         synchronized (this) {
             if (pageFinishedTask == null) {
-                // Normal single line chat messages will just be passed through
-                if (lineCount == 1) return false;
+                if (lineCount == 1) {
+                    // Normal single line chat messages will just be passed through
+                    if (!pageContent.isEmpty()) {
+                        // We think we are in page mode, so we have messed up. Delete the current
+                        // content page and tell the page processor to remove the page.
+                        reset();
+                        Handlers.Chat.handlePage(List.of());
+                    }
+
+                    return false;
+                }
 
                 // Wait a reasonable amount of time for all messages in the page to arrive
                 pageFinishedTask =
