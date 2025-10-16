@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -52,7 +52,8 @@ public class HadesClientHandler implements IHadesClientAdapter {
                     "Tried to auth to the remote player server without being logged in on Athena.");
         }
 
-        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(Services.WynntilsAccount.getToken(), HadesVersion.VERSION_0_6_1));
+        hadesConnection.sendPacketAndFlush(
+                new HCPacketAuthenticate(Services.WynntilsAccount.getToken(), HadesVersion.VERSION_0_6_1));
     }
 
     @Override
