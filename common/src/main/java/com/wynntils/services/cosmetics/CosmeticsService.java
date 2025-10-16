@@ -120,14 +120,17 @@ public class CosmeticsService extends Service {
 
             if (frames == 1) { // not animated
                 locations[0] = Identifier.parse(baseLocation);
-                McUtils.mc().getTextureManager().register(locations[0], new DynamicTexture(image));
+                McUtils.mc()
+                        .getTextureManager()
+                        .register(locations[0], new DynamicTexture(() -> uuid + " Wynntils Cape", image));
             } else { // animated
                 for (int i = 0; i < frames; i++) {
                     NativeImage frame = new NativeImage(frameHeight * 2, frameHeight, false);
                     image.copyRect(frame, 0, frameHeight * i, 0, 0, frameHeight * 2, frameHeight, false, false);
 
                     locations[i] = Identifier.parse(baseLocation + "/" + i);
-                    McUtils.mc().getTextureManager().register(locations[i], new DynamicTexture(frame));
+                    String label = uuid + " Wynntils Cape frame " + i;
+                    McUtils.mc().getTextureManager().register(locations[i], new DynamicTexture(() -> label, frame));
                 }
             }
 
