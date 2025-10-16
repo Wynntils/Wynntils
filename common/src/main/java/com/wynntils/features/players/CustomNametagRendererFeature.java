@@ -41,6 +41,7 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
@@ -255,8 +256,9 @@ public class CustomNametagRendererFeature extends Feature {
         }
         Component prefixedName = Component.empty()
                 .append(Component.literal(WYNNTILS_NAMETAG_LOGO)
-                        .withStyle(
-                                Style.EMPTY.withFont(WYNNTILS_NAMETAG_LOGO_FONT).withColor(logoColor)))
+                        .withStyle(Style.EMPTY
+                                .withFont(new FontDescription.Resource(WYNNTILS_NAMETAG_LOGO_FONT))
+                                .withColor(logoColor)))
                 .append(" ")
                 .append(event.getDisplayName());
         nametags.add(new CustomNametag(prefixedName, 1f));
