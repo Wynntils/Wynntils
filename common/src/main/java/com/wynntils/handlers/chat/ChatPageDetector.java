@@ -242,7 +242,7 @@ public final class ChatPageDetector {
 
         handleBackground(background, collectedMessages.size());
 
-        enqueueSendPageContent(pageContent, false);
+        enqueueSendPageContent(pageContent);
     }
 
     private Pair<List<StyledText>, List<StyledText>> splitPage(Deque<Component> collectedMessages) {
@@ -427,11 +427,11 @@ public final class ChatPageDetector {
         }
     }
 
-    private void enqueueSendPageContent(List<StyledText> pageContent, boolean lastPage) {
+    private void enqueueSendPageContent(List<StyledText> pageContent) {
         this.pageContent = pageContent;
 
         synchronized (this) {
-            tasksAtNextTick.add(new SendPageContentTask(pageContent, lastPage));
+            tasksAtNextTick.add(new SendPageContentTask(pageContent));
         }
     }
 
@@ -477,16 +477,14 @@ public final class ChatPageDetector {
 
     private static final class SendPageContentTask implements Runnable {
         private final List<StyledText> pageContent;
-        private final boolean lastPage;
 
-        private SendPageContentTask(List<StyledText> pageContent, boolean lastPage) {
+        private SendPageContentTask(List<StyledText> pageContent) {
             this.pageContent = pageContent;
-            this.lastPage = lastPage;
         }
 
         @Override
         public void run() {
-            Handlers.Chat.handlePage(pageContent, lastPage);
+            Handlers.Chat.handlePage(pageContent);
         }
     }
 }

@@ -99,8 +99,8 @@ public final class ChatHandler extends Handler {
     /**
      * Callback from ChatPageDetector when a page is detected.
      */
-    void handlePage(List<StyledText> pageContent, boolean lastPage) {
-        pageProcessor.handlePage(pageContent, lastPage);
+    void handlePage(List<StyledText> pageContent) {
+        pageProcessor.handlePage(pageContent);
     }
 
     /**

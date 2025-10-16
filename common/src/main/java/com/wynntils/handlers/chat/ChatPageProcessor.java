@@ -44,7 +44,7 @@ public final class ChatPageProcessor {
         }
     }
 
-    public void handlePage(List<StyledText> page, boolean lastPage) {
+    public void handlePage(List<StyledText> page) {
         // First we trim the empty lines at the start and end
         NpcDialogueType type = NpcDialogueType.NONE;
         ArrayList<StyledText> pageContent = new ArrayList<>(page);
