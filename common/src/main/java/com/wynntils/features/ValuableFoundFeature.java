@@ -90,7 +90,8 @@ public class ValuableFoundFeature extends Feature {
                 if (gearBoxItem.isPresent()) {
                     if (gearBoxItem.get().getGearType() != GearType.MASTERY_TOME) {
                         if (chestSound.get() != ValuableFoundSound.NONE) {
-                            McUtils.playSoundAmbient(chestSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
+                            McUtils.playSoundAmbient(
+                                    chestSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
                         }
 
                         if (!showDryStreakMessage.get()) return;
@@ -108,7 +109,8 @@ public class ValuableFoundFeature extends Feature {
                         && emeraldPouchItem.get().getTier()
                                 >= emeraldPouchTier.get().getTier()) {
                     if (emeraldPouchSound.get() != ValuableFoundSound.NONE) {
-                        McUtils.playSoundAmbient(emeraldPouchSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
+                        McUtils.playSoundAmbient(
+                                emeraldPouchSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
                     }
 
                     if (!showEmeraldPouchDryStreakMessage.get()) return;
@@ -157,7 +159,8 @@ public class ValuableFoundFeature extends Feature {
                 Optional<AspectItem> aspectItem = Models.Item.asWynnItem(itemStack, AspectItem.class);
                 if (aspectItem.isPresent()) {
                     if (aspectFoundSound.get() != ValuableFoundSound.NONE) {
-                        McUtils.playSoundAmbient(aspectFoundSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
+                        McUtils.playSoundAmbient(
+                                aspectFoundSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
                     }
                     if (showAspectDryStreakMessage.get()) {
                         sendAspectDryStreakMessage(
@@ -171,7 +174,8 @@ public class ValuableFoundFeature extends Feature {
                 Optional<TomeItem> tomeItem = Models.Item.asWynnItem(itemStack, TomeItem.class);
                 if (tomeItem.isPresent()) {
                     if (tomeFoundSound.get() != ValuableFoundSound.NONE) {
-                        McUtils.playSoundAmbient(tomeFoundSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
+                        McUtils.playSoundAmbient(
+                                tomeFoundSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
                     }
                     if (showTomeDryStreakMessage.get()) {
                         sendTomeDryStreakMessage(
@@ -188,7 +192,8 @@ public class ValuableFoundFeature extends Feature {
                 Optional<CorruptedCacheItem> cacheItem = Models.Item.asWynnItem(itemStack, CorruptedCacheItem.class);
                 if (cacheItem.isPresent()) {
                     if (cacheFoundSound.get() != ValuableFoundSound.NONE) {
-                        McUtils.playSoundAmbient(cacheFoundSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
+                        McUtils.playSoundAmbient(
+                                cacheFoundSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
                     }
                     if (showCacheDryStreakMessage.get()) {
                         sendCacheDryStreakMessage(
