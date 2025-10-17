@@ -79,17 +79,17 @@ public class NpcDialogueOverlay extends Overlay {
     @SubscribeEvent
     public void onNpcDialoguePost(NpcDialogueProcessingEvent.Post event) {
         NpcDialogue dialogue = event.getDialogue();
-
         // This is specific to the overlay, so we don't want to handle it in the feature
         // (when we display the dialogues in the chat, we don't need to duplicate the message)
         if (dialogue.dialogueType() == NpcDialogueType.SELECTION) {
+            if (selectionComponents != null) return;
+
             // This is a bit of a workaround to be able to select the options
-            MutableComponent clickMsg =
-                    Component.literal("Select an option to continue:").withStyle(ChatFormatting.AQUA);
+            MutableComponent clickMsg = Component.literal("Click on an option in chat to continue:\n")
+                    .withStyle(ChatFormatting.AQUA);
             event.getPostProcessedDialogue()
                     .forEach(line -> clickMsg.append(Component.literal("\n").append(line.getComponent())));
             McUtils.sendMessageToClient(clickMsg);
-
             // Save the selection components so we can remove it later
             selectionComponents = clickMsg;
         }

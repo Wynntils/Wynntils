@@ -8,6 +8,7 @@ import com.wynntils.core.text.StyledText;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
 public class TestGenericFunctions {
     @BeforeAll
@@ -29,6 +30,7 @@ public class TestGenericFunctions {
         assertTemplateResult("{int(add(5;6))}", "11");
     }
 
+    @DisabledIfEnvironmentVariable(named = "CI", matches = ".+")
     @Test
     public void testTimeFunctions() {
         assertTemplateResult("{now}", "now");

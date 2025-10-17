@@ -1,11 +1,11 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree.parser;
 
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
@@ -145,16 +145,16 @@ public final class AbilityTreeParser {
                 });
 
         // Remove empty lines from the end of the description
-        while (includedLines.getLast().getString(PartStyle.StyleType.NONE).isBlank()) {
+        while (includedLines.getLast().getString(StyleType.NONE).isBlank()) {
             includedLines.removeLast();
         }
 
         AbilityTreeSkillNode node = new AbilityTreeSkillNode(
                 id,
-                actualName.getString(PartStyle.StyleType.NONE),
-                actualName.getString(PartStyle.StyleType.DEFAULT),
+                actualName.getString(StyleType.NONE),
+                actualName.getString(StyleType.DEFAULT),
                 includedLines.stream()
-                        .map(styledText -> styledText.getString(PartStyle.StyleType.DEFAULT))
+                        .map(styledText -> styledText.getString(StyleType.DEFAULT))
                         .toList(),
                 itemInformation,
                 cost,

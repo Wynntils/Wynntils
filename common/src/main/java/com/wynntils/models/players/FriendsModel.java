@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class FriendsModel extends Model {
@@ -102,7 +101,7 @@ public final class FriendsModel extends Model {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onChatReceived(ChatMessageEvent.Match event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
@@ -132,14 +131,14 @@ public final class FriendsModel extends Model {
 
         if (friendMessageStatus == ListStatus.EXPECTING) {
             if (tryParseFriendList(unformatted) || tryParseNoFriendList(styledText)) {
-                event.setCanceled(true);
+                event.cancelChat();
                 friendMessageStatus = ListStatus.IDLE;
                 return;
             }
 
             // Skip first message of two, but still expect more messages
             if (styledText.getMatcher(FRIEND_LIST_FAIL_1).matches()) {
-                event.setCanceled(true);
+                event.cancelChat();
                 return;
             }
         }
@@ -150,7 +149,7 @@ public final class FriendsModel extends Model {
             // When we detect the first message indicating the start of the friends list, we set a flag
             onlineMessageStatus = ListStatus.PROCESSING;
             onlineFriends.clear();
-            event.setCanceled(true);
+            event.cancelChat();
             return;
         }
         if (onlineMessageStatus == ListStatus.PROCESSING) {
@@ -163,7 +162,7 @@ public final class FriendsModel extends Model {
 
                 onlineFriends.put(username, server);
                 WynntilsMod.info("Friend " + username + " is online on " + server);
-                event.setCanceled(true);
+                event.cancelChat();
                 return;
             } else {
                 onlineMessageStatus = ListStatus.IDLE;

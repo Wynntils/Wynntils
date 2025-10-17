@@ -33,7 +33,7 @@ public class BombFunctions {
             List<BombInfo> bombInfo =
                     Models.Bomb.getBombBellStream(group, sortOrder).toList();
 
-            return (!bombInfo.isEmpty() && index >= 0 && index <= bombInfo.size())
+            return (!bombInfo.isEmpty() && index >= 0 && index < bombInfo.size())
                     ? processInfo(bombInfo.get(index))
                     : invalidValue();
         }
@@ -129,6 +129,18 @@ public class BombFunctions {
         @Override
         public String invalidValue() {
             return "";
+        }
+    }
+
+    public static class BombRemainingTimeFunction extends BombFunctionBase<Time> {
+        @Override
+        public Time processInfo(BombInfo info) {
+            return Time.of(info.getRemainingLong());
+        }
+
+        @Override
+        public Time invalidValue() {
+            return Time.NONE;
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.chattabs;
@@ -13,7 +13,7 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.TextWidget;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.chattabs.widgets.ChatTabsWidget;
-import com.wynntils.services.chat.ChatTab;
+import com.wynntils.services.chat.type.ChatTab;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -96,7 +96,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
 
         if (firstSetup) {
             if (edited != null) {
-                nameInput.setTextBoxInput(edited.getName());
+                nameInput.setTextBoxInput(edited.name());
             }
             setFocusedTextInput(nameInput);
         }
@@ -112,8 +112,8 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
                 this,
                 autoCommandInput);
         this.addRenderableWidget(autoCommandInput);
-        if (firstSetup && edited != null && edited.getAutoCommand() != null) {
-            autoCommandInput.setTextBoxInput(edited.getAutoCommand());
+        if (firstSetup && edited != null && edited.autoCommand() != null) {
+            autoCommandInput.setTextBoxInput(edited.autoCommand());
         }
         // endregion
 
@@ -155,8 +155,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
             boolean oldCheckboxSelected = oldCheckbox != null && oldCheckbox.isSelected();
             boolean editedFirstSetupSelected = firstSetup
                     && edited != null
-                    && (edited.getFilteredTypes() == null
-                            || edited.getFilteredTypes().contains(type));
+                    && (edited.filteredTypes() == null || edited.filteredTypes().contains(type));
             boolean ticked = oldCheckboxSelected || editedFirstSetupSelected;
 
             WynntilsCheckbox newBox = new WynntilsCheckbox(
@@ -180,8 +179,8 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
                 this,
                 filterRegexInput);
         this.addRenderableWidget(filterRegexInput);
-        if (firstSetup && edited != null && edited.getCustomRegexString() != null) {
-            filterRegexInput.setTextBoxInput(edited.getCustomRegexString());
+        if (firstSetup && edited != null && edited.customRegexString() != null) {
+            filterRegexInput.setTextBoxInput(edited.customRegexString());
         }
 
         regexErrorMsg = new TextWidget(
@@ -199,7 +198,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 15));
         this.addRenderableWidget(consumingCheckbox);
         if (firstSetup && edited != null) {
-            consumingCheckbox.selected = edited.isConsuming();
+            consumingCheckbox.selected = edited.consuming();
         }
         // endregion
 
@@ -263,7 +262,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.edit", edited.getName())),
+                            StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.edit", edited.name())),
                             dividedWidth * 48,
                             dividedHeight * HEADER_ROW_Y,
                             CommonColors.WHITE,
