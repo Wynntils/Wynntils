@@ -15,9 +15,9 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -81,7 +81,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private String searchQuery;
     private boolean openChatWhenContainerClosed = false;
     private boolean quickSearching = false;
-    private boolean instantSearching = false;
+    private boolean instantSearchingSendChat = false;
+    private boolean instantSearchingCloseMenu = false;
 
     @SubscribeEvent
     public void onScreenClosed(ScreenClosedEvent.Post event) {
@@ -89,13 +90,11 @@ public class TradeMarketQuickSearchFeature extends Feature {
             if (autoCancel.get() && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 McUtils.sendChat("cancel");
             }
-        } else if (openChatWhenContainerClosed) {
-            if (quickSearching) {
-                McUtils.mc().setScreen(new ChatScreen(searchQuery));
-                quickSearching = false;
-            } else {
-                McUtils.mc().setScreen(new ChatScreen(""));
-            }
+            return;
+        }
+
+        if (openChatWhenContainerClosed) {
+            openChat();
             openChatWhenContainerClosed = false;
         }
     }
@@ -105,26 +104,40 @@ public class TradeMarketQuickSearchFeature extends Feature {
     public void onMenuClosed(MenuClosedEvent event) {
         if (!Models.TradeMarket.inTradeMarket()) return;
 
-        if (instantSearching) {
+        if (instantSearchingCloseMenu) {
             event.setCanceled(true);
-            instantSearching = false;
+            instantSearchingCloseMenu = false;
         }
     }
 
     @SubscribeEvent
-    public void onChatMessageReceive(ChatMessageEvent.Match event) {
-        if (!Models.WorldState.onWorld()) return;
-        if (!Models.TradeMarket.inChatInput()) return;
-
-        if (Models.TradeMarket.getTradeMarketState() == TradeMarketState.SEARCH_CHAT_INPUT && instantSearching) {
-            event.setCanceled(true);
-            McUtils.sendChat(searchQuery);
+    public void onTradeMarketChatInput(TradeMarketChatInputEvent event) {
+        if (event.getState() == TradeMarketState.SEARCH_CHAT_INPUT && instantSearchingSendChat) {
+            event.setResponse(searchQuery);
+            event.cancelChat();
+            instantSearchingSendChat = false;
             return;
         }
 
-        openChatWhenContainerClosed = true;
+        // If the GUI closed first, we can open the chat immediately, otherwise
+        // tell the MenuClosedEvent listener to open it when the container closes.
+        if (McUtils.mc().screen == null) {
+            openChat();
+        } else {
+            openChatWhenContainerClosed = true;
+        }
+
         if (hidePrompt.get()) {
-            event.setCanceled(true);
+            event.cancelChat();
+        }
+    }
+
+    private void openChat() {
+        if (quickSearching) {
+            McUtils.mc().setScreen(new ChatScreen(searchQuery));
+            quickSearching = false;
+        } else {
+            McUtils.mc().setScreen(new ChatScreen(""));
         }
     }
 
@@ -132,7 +145,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
         if (!Models.TradeMarket.inTradeMarket() || hoveredSlot == null || !hoveredSlot.hasItem()) return;
 
         if (instantSearch.get() != KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            instantSearching = true;
+            instantSearchingSendChat = true;
+            instantSearchingCloseMenu = true;
         } else {
             quickSearching = true;
         }

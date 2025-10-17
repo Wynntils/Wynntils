@@ -5,9 +5,9 @@
 package com.wynntils.utils.mc;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public final class StyledTextUtils {
     }
 
     public static Optional<Location> extractLocation(StyledText text) {
-        Matcher matcher = text.getMatcher(COORDINATE_PATTERN, PartStyle.StyleType.NONE);
+        Matcher matcher = text.getMatcher(COORDINATE_PATTERN, StyleType.NONE);
         if (!matcher.matches()) return Optional.empty();
 
         return Optional.of(new Location(
@@ -63,37 +63,6 @@ public final class StyledTextUtils {
                 .replaceAll(" ")
                 .trim();
         return StyledText.fromString(description);
-    }
-
-    /**
-     * This method is used by {@link com.wynntils.handlers.chat.ChatHandler} to split multi-line messages.
-     * Multi-line messages use new lines not just to split the multi-line message, but also to format the message.
-     * If a part is only a new line, we know it's a new message, but if the new line is in the middle of a part,
-     * we know it's a new line in the same message, which we don't want to split.
-     *
-     * @param styledText The styled text to split
-     * @return A list of styled texts, each representing a line
-     */
-    public static List<StyledText> splitInLines(StyledText styledText) {
-        List<StyledText> newLines = new ArrayList<>();
-
-        List<StyledTextPart> parts = new ArrayList<>();
-        for (StyledTextPart part : styledText) {
-            String partString = part.getString(null, PartStyle.StyleType.NONE);
-
-            if (partString.equals("\n")) {
-                newLines.add(StyledText.fromParts(parts));
-                parts.clear();
-            } else {
-                parts.add(part);
-            }
-        }
-
-        if (!parts.isEmpty()) {
-            newLines.add(StyledText.fromParts(parts));
-        }
-
-        return newLines;
     }
 
     public static int getLineCount(StyledText styledText) {
@@ -129,7 +98,7 @@ public final class StyledTextUtils {
         StyledTextPart lastWrappedPart = null;
         boolean expectEmptySpaceAfterWrap = false;
         for (StyledTextPart part : styledText) {
-            String partString = part.getString(null, PartStyle.StyleType.NONE);
+            String partString = part.getString(null, StyleType.NONE);
 
             // After a wrap, Wynn injects an empty space, which we want to remove
             if (expectEmptySpaceAfterWrap) {
@@ -162,7 +131,7 @@ public final class StyledTextUtils {
             if (lastWrappedPart != null) {
                 if (NEWLINE_WRAP_PATTERN.matcher(partString).matches()) {
                     // Skip the current part, add back the last part, without the newline
-                    String lastPartWithoutNewline = lastWrappedPart.getString(null, PartStyle.StyleType.NONE);
+                    String lastPartWithoutNewline = lastWrappedPart.getString(null, StyleType.NONE);
                     lastPartWithoutNewline = lastPartWithoutNewline.substring(
                             0, lastPartWithoutNewline.length() - NEWLINE_PREPARATION.length());
 
@@ -171,8 +140,7 @@ public final class StyledTextUtils {
                     if (!newParts.isEmpty()
                             && newParts.getLast().getPartStyle().equals(lastWrappedPart.getPartStyle())) {
                         StyledTextPart lastPart = newParts.removeLast();
-                        lastPartWithoutNewline =
-                                lastPart.getString(null, PartStyle.StyleType.NONE) + lastPartWithoutNewline;
+                        lastPartWithoutNewline = lastPart.getString(null, StyleType.NONE) + lastPartWithoutNewline;
 
                         newParts.add(new StyledTextPart(
                                 lastPartWithoutNewline,
@@ -188,9 +156,7 @@ public final class StyledTextUtils {
                     }
 
                     // After a soft wrap, we need to insert a space
-                    if (!newParts.getLast()
-                            .getString(null, PartStyle.StyleType.NONE)
-                            .equals(" ")) {
+                    if (!newParts.getLast().getString(null, StyleType.NONE).equals(" ")) {
                         newParts.add(new StyledTextPart(
                                 " ", lastWrappedPart.getPartStyle().getStyle(), null, null));
                     }
@@ -210,7 +176,7 @@ public final class StyledTextUtils {
             // if so, we merge them
             if (!newParts.isEmpty() && newParts.getLast().getPartStyle().equals(part.getPartStyle())) {
                 StyledTextPart lastPart = newParts.removeLast();
-                partString = lastPart.getString(null, PartStyle.StyleType.NONE) + partString;
+                partString = lastPart.getString(null, StyleType.NONE) + partString;
 
                 newParts.add(new StyledTextPart(partString, part.getPartStyle().getStyle(), null, null));
 
@@ -228,7 +194,7 @@ public final class StyledTextUtils {
 
         // If we inserted a space after a soft wrap but never saw a following part, drop that trailing space
         if (!newParts.isEmpty()
-                && newParts.getLast().getString(null, PartStyle.StyleType.NONE).equals(" ")) {
+                && newParts.getLast().getString(null, StyleType.NONE).equals(" ")) {
             newParts.removeLast();
         }
 

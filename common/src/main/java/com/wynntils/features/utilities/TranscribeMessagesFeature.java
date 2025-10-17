@@ -10,9 +10,9 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
@@ -153,7 +153,7 @@ public class TranscribeMessagesFeature extends Feature {
             Function<String, Matcher> matcherFunction,
             Function<StyledTextPart, StyledTextPart> transcriptorFunction) {
         return original.iterateBackwards((part, changes) -> {
-            String partText = part.getString(null, PartStyle.StyleType.NONE);
+            String partText = part.getString(null, StyleType.NONE);
             String transcriptedText = partText;
 
             if (END_OF_HEADER_PATTERN.matcher(partText).matches()) {
@@ -181,7 +181,7 @@ public class TranscribeMessagesFeature extends Feature {
             Function<String, Matcher> matcherFunction,
             Function<StyledTextPart, StyledTextPart> transcriptorFunction,
             List<StyledTextPart> newParts) {
-        String partText = part.getString(null, PartStyle.StyleType.NONE);
+        String partText = part.getString(null, StyleType.NONE);
 
         Matcher matcher = matcherFunction.apply(partText);
 

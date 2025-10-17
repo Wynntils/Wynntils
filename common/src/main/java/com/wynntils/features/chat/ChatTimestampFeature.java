@@ -14,7 +14,6 @@ import com.wynntils.mc.event.AddGuiMessageLineEvent;
 import com.wynntils.mc.event.ChatComponentRenderEvent;
 import com.wynntils.mc.extension.GuiMessageExtension;
 import com.wynntils.mc.extension.GuiMessageLineExtension;
-import com.wynntils.mc.mixin.accessors.ChatComponentAccessor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.time.format.DateTimeFormatter;
@@ -68,7 +67,7 @@ public class ChatTimestampFeature extends Feature {
     public void onChatComponentRenderPre(ChatComponentRenderEvent.Pre event) {
         timestampWidth = 0;
 
-        for (GuiMessage.Line line : ((ChatComponentAccessor) event.getChatComponent()).getTrimmedMessages()) {
+        for (GuiMessage.Line line : event.getChatComponent().trimmedMessages) {
             GuiMessageLineExtension extension = (GuiMessageLineExtension) (Object) line;
             Optional<Pair<Component, Integer>> timestamp = extension.getTimestamp();
 

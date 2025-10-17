@@ -7,9 +7,9 @@ package com.wynntils.features.combat;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundBossEventPacketAccessor;
 import com.wynntils.utils.StringUtils;
@@ -54,7 +54,7 @@ public class AbbreviateMobHealthFeature extends Feature {
         StyledText styledText = StyledText.fromComponent(component);
 
         StyledText modified = styledText.iterate((part, changes) -> {
-            String partStr = part.getString(null, PartStyle.StyleType.NONE);
+            String partStr = part.getString(null, StyleType.NONE);
 
             try {
                 String formattedHealth;

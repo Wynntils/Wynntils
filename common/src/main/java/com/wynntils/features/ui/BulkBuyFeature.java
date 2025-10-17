@@ -11,9 +11,9 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -240,13 +240,13 @@ public class BulkBuyFeature extends Feature {
             int newPrice = Integer.parseInt(priceMatcher.group(1).replaceAll(",", "")) * bulkBuyAmount.get();
             StyledText newLine = oldLine.iterateBackwards((part, changes) -> {
                 if (newPrice > Models.Emerald.getAmountInInventory()
-                        && part.getString(null, PartStyle.StyleType.NONE).equals("✔")) {
+                        && part.getString(null, StyleType.NONE).equals("✔")) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
                             "✖", part.getPartStyle().getStyle().withColor(ChatFormatting.RED), null, Style.EMPTY);
                     changes.add(newPart);
                 }
-                if (part.getString(null, PartStyle.StyleType.NONE).startsWith(priceMatcher.group(1))) {
+                if (part.getString(null, StyleType.NONE).startsWith(priceMatcher.group(1))) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
                             Models.Emerald.getEmeraldCountString(newPrice, true) + " ",
@@ -256,7 +256,7 @@ public class BulkBuyFeature extends Feature {
                     changes.add(newPart);
                     return IterationDecision.CONTINUE;
                 }
-                if (part.getString(null, PartStyle.StyleType.NONE).equals(priceMatcher.group(2))) {
+                if (part.getString(null, StyleType.NONE).equals(priceMatcher.group(2))) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
                             "(" + Models.Emerald.getFormattedString(newPrice, false) + ")",

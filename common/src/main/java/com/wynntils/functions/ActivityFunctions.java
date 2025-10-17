@@ -8,7 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.List;
@@ -25,8 +25,7 @@ public class ActivityFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             boolean formatted = arguments.getArgument("formatted").getBooleanValue();
-            return Models.Activity.getTrackedTask()
-                    .getString(formatted ? PartStyle.StyleType.DEFAULT : PartStyle.StyleType.NONE);
+            return Models.Activity.getTrackedTask().getString(formatted ? StyleType.DEFAULT : StyleType.NONE);
         }
 
         @Override
