@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.text;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.utils.colors.CustomColor;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -121,6 +122,10 @@ public final class PartStyle {
         // 4. Hover events are wrapped in angle brackets, and is represented as an id.
         //    The parent of this style's owner is responsible for keeping track of hover events.
         //    Example: §<1> -> (1st hover event)
+        // 5. Additional formatting support is expressed with §{...}. The currently only supported such
+        //    formatting is font style, which is represented as §{f:X}, where X is a short code given to the
+        //    font, if such is present, or the full resource location if not.
+        //    Example: §{f:d} or §{f:minecraft:default}
 
         if (type == StyleType.NONE) return "";
 
@@ -170,6 +175,10 @@ public final class PartStyle {
             }
             if (italic) {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
+            }
+            if (font != null && !font.toString().equals("minecraft:default")) {
+                String fontCode = Models.WynnChar.getFontCodeFromFont(font);
+                styleString.append(STYLE_PREFIX).append("{f:").append(fontCode).append("}");
             }
 
             if (type == StyleType.INCLUDE_EVENTS) {
@@ -458,6 +467,12 @@ public final class PartStyle {
         if (oldStyle.italic && !this.italic) return null;
         if (!oldStyle.italic && this.italic) add.append(ChatFormatting.ITALIC);
 
+        if (oldStyle.font != null && this.font == null) return null;
+        if (this.font != null) {
+            String fontCode = Models.WynnChar.getFontCodeFromFont(font);
+            add.append(STYLE_PREFIX).append("{f:").append(fontCode).append("}");
+        }
+
         if (includeEvents) {
             // If there is a click event in the old style, but not in the new one, we can't construct a difference.
             // Otherwise, if the old style and the new style has different events, add the new event.
@@ -521,6 +536,8 @@ public final class PartStyle {
     }
 
     public enum StyleType {
+        WYNNCHAR_MAPPING,
+        WYNNCHAR_MAPPING_ALL,
         INCLUDE_EVENTS, // Includes click and hover events
         DEFAULT, // The most minimal way to represent a style
         NONE // No styling
