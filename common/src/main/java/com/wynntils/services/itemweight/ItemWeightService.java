@@ -15,8 +15,10 @@ import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.services.itemweight.type.ItemWeighting;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.type.Pair;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,6 +101,38 @@ public class ItemWeightService extends Service {
         if (sumWeights == 0) return 0f;
 
         return (float) (weightedSum / sumWeights);
+    }
+
+    public Map<StatType, Pair<Float, Float>> getStatWeights(
+            ItemWeighting weighting, IdentifiableItemProperty<?, ?> itemInfo) {
+        if (weighting == null || itemInfo == null) return Map.of();
+
+        Map<StatType, Pair<Float, Float>> statWeights = new HashMap<>();
+
+        for (Map.Entry<String, Double> entry : weighting.identifications().entrySet()) {
+            String statApiName = entry.getKey();
+            float statWeight = entry.getValue().floatValue() * 100;
+
+            List<StatActualValue> identifications = itemInfo.getIdentifications();
+            List<StatPossibleValues> possibleValues = itemInfo.getPossibleValues();
+
+            StatActualValue currentValue = identifications.stream()
+                    .filter(id -> id.statType().getApiName().equalsIgnoreCase(statApiName))
+                    .findFirst()
+                    .orElse(null);
+            StatPossibleValues statPossibleValues = possibleValues.stream()
+                    .filter(id -> id.statType().getApiName().equalsIgnoreCase(statApiName))
+                    .findFirst()
+                    .orElse(null);
+
+            if (currentValue == null || statPossibleValues == null) continue;
+
+            float percent = StatCalculator.getPercentage(currentValue, statPossibleValues);
+
+            statWeights.put(currentValue.statType(), Pair.of(statWeight, percent));
+        }
+
+        return statWeights;
     }
 
     private void handleItemWeights(Reader reader) {

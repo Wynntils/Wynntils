@@ -4,7 +4,6 @@
  */
 package com.wynntils.handlers.tooltip.type;
 
-import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.stats.type.StatListOrdering;
 
 public record TooltipStyle(
@@ -12,6 +11,5 @@ public record TooltipStyle(
         boolean useDelimiters,
         boolean showBestValueLastAlways,
         boolean showStars,
-        ItemWeightSource weightSource,
         boolean showMaxValue // this only applies to crafted items
         ) {}
