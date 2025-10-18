@@ -30,6 +30,7 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.ChestMenu;
@@ -237,17 +238,17 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         float scrollBarRenderX =
                 (this.width - this.imageWidth) / 2 + this.imageWidth + Texture.SCROLLBAR_BACKGROUND.width() / 2 - 14;
         float scrollBarRenderY = (this.height - this.imageHeight) / 2
                 + Texture.SCROLLBAR_BUTTON.height() / 2
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
 
-        if (mouseX >= scrollBarRenderX
-                && mouseX <= scrollBarRenderX + Texture.SCROLLBAR_BUTTON.width()
-                && mouseY >= scrollBarRenderY
-                && mouseY <= scrollBarRenderY + Texture.SCROLLBAR_BUTTON.height()) {
+        if (event.x() >= scrollBarRenderX
+                && event.x() <= scrollBarRenderX + Texture.SCROLLBAR_BUTTON.width()
+                && event.y() >= scrollBarRenderY
+                && event.y() <= scrollBarRenderY + Texture.SCROLLBAR_BUTTON.height()) {
             holdingScrollbar = true;
             return true;
         }
@@ -260,35 +261,35 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         // Item helper widget needs special handling because it is overlaid on the search box
         for (GuiEventListener child : children()) {
             if (child instanceof ItemSearchHelperWidget) {
-                if (child.mouseClicked(mouseX, mouseY, button)) {
+                if (child.mouseClicked(event, isDoubleClick)) {
                     return true;
                 }
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (!holdingScrollbar) return false;
 
         int renderY = (this.height - this.imageHeight) / 2;
         int scrollAreaStartY = renderY + 14;
 
         int newValue = Math.round(MathUtils.map(
-                (float) mouseY, scrollAreaStartY, scrollAreaStartY + SCROLL_AREA_HEIGHT, 0, getMaxScrollOffset()));
+                (float) event.y(), scrollAreaStartY, scrollAreaStartY + SCROLL_AREA_HEIGHT, 0, getMaxScrollOffset()));
 
         scroll(newValue - scrollOffset);
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         holdingScrollbar = false;
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override

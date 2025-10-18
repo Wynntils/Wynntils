@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 
 public class RarityFilterWidget extends GuideFilterWidget {
@@ -40,12 +41,12 @@ public class RarityFilterWidget extends GuideFilterWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         boolean clicked = false;
 
         for (RarityButton rarityButton : rarityButtons) {
-            if (rarityButton.isMouseOver(mouseX, mouseY)) {
-                clicked = rarityButton.mouseClicked(mouseX, mouseY, button);
+            if (rarityButton.isMouseOver(event.x(), event.y())) {
+                clicked = rarityButton.mouseClicked(event, isDoubleClick);
                 break;
             }
         }

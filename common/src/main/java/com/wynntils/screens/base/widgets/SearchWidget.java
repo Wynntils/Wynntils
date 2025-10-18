@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -146,17 +147,17 @@ public class SearchWidget extends TextInputBoxWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (mouseX >= this.getX()
-                && mouseX <= this.getX() + this.width
-                && mouseY >= this.getY()
-                && mouseY <= this.getY() + this.height) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.x() >= this.getX()
+                && event.x() <= this.getX() + this.width
+                && event.y() >= this.getY()
+                && event.y() <= this.getY() + this.height) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-            if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_2) {
                 setTextBoxInput("");
                 setCursorAndHighlightPositions(0);
             } else {
-                setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+                setCursorAndHighlightPositions(getIndexAtPosition(event.x()));
             }
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);

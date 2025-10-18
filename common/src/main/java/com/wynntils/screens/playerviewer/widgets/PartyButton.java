@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class PartyButton extends PlayerInteractionButton {
@@ -21,8 +22,8 @@ public class PartyButton extends PlayerInteractionButton {
     }
 
     @Override
-    public void onPress() {
-        super.onPress();
+    public void onPress(InputWithModifiers input) {
+        super.onPress(input);
         Handlers.Command.queueCommand(
                 "party " + (Models.Party.getPartyMembers().contains(playerName) ? "kick " : "") + playerName);
     }

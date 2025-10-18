@@ -17,6 +17,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class WynnAlphabetButton extends WynntilsButton {
@@ -70,8 +72,8 @@ public class WynnAlphabetButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
         Models.WynnAlphabet.setSelectedAlphabet(wynnAlphabet);
 
@@ -79,5 +81,5 @@ public class WynnAlphabetButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 }

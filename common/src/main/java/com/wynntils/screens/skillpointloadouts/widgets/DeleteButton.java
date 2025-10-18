@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.skillpointloadouts.widgets;
@@ -7,6 +7,7 @@ package com.wynntils.screens.skillpointloadouts.widgets;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class DeleteButton extends WynntilsButton {
@@ -18,7 +19,7 @@ public class DeleteButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         Models.SkillPoint.deleteLoadout(parent.selectedLoadout.key());
         parent.setSelectedLoadout(null);
         parent.populateLoadouts();

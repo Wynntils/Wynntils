@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public final class IconFilterScreen extends WynntilsGridLayoutScreen {
@@ -159,11 +160,11 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll && (usedIcons.size() > MAX_ICONS_TO_DISPLAY)) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     (int) scrollButtonRenderX,
                     (int) (scrollButtonRenderX + (dividedWidth / 2)),
                     (int) scrollButtonRenderY,
@@ -174,26 +175,26 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (!draggingScroll) return false;
 
         int renderY = (int) ((this.height - backgroundHeight) / 2 + (int) (dividedHeight * 3));
         int scrollAreaStartY = renderY + 7;
 
         int newValue = Math.round(MathUtils.map(
-                (float) mouseY, scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
+                (float) event.y(), scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
 
         scroll(newValue - scrollOffset);
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
         return true;
     }

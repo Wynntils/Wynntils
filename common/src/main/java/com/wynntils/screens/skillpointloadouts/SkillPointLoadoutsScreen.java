@@ -36,6 +36,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
@@ -475,14 +477,14 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (LoadoutWidget widget : loadoutWidgets) {
-            if (widget.isMouseOver(mouseX, mouseY)) {
-                widget.mouseClicked(mouseX, mouseY, button);
+            if (widget.isMouseOver(event.x(), event.y())) {
+                widget.mouseClicked(event, isDoubleClick);
                 return true;
             }
         }
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     // baseYPosition - dividedHeight * maxScrollOffset * scrollPercent = dividedHeight * 52
@@ -517,17 +519,17 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_DELETE && deleteButton.active) {
-            deleteButton.onPress();
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_DELETE && deleteButton.active) {
+            deleteButton.onPress(event);
             return true;
-        } else if (keyCode == GLFW.GLFW_KEY_END) {
+        } else if (event.key() == GLFW.GLFW_KEY_END) {
             doScroll(Float.NEGATIVE_INFINITY);
-        } else if (keyCode == GLFW.GLFW_KEY_HOME) {
+        } else if (event.key() == GLFW.GLFW_KEY_HOME) {
             doScroll(Float.POSITIVE_INFINITY);
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     public void setSelectedLoadout(Pair<String, SavableSkillPointSet> loadout) {

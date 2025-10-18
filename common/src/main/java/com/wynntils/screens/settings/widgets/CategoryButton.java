@@ -12,6 +12,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -39,5 +40,5 @@ public class CategoryButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 }

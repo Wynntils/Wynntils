@@ -36,6 +36,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -543,33 +546,32 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
-            int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            int gameX = (int) ((event.x() - centerX) / zoomRenderScale + mapCenterX);
+            int gameZ = (int) ((event.y() - centerZ) / zoomRenderScale + mapCenterZ);
             xInput.setTextBoxInput(String.valueOf(gameX));
             zInput.setTextBoxInput(String.valueOf(gameZ));
         }
 
         for (IconButton iconButton : iconButtons) {
-            if (iconButton.isMouseOver(mouseX, mouseY)) {
-                return iconButton.mouseClicked(mouseX, mouseY, button);
+            if (iconButton.isMouseOver(event.x(), event.y())) {
+                return iconButton.mouseClicked(event, isDoubleClick);
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
-                || super.charTyped(codePoint, modifiers);
+    public boolean charTyped(CharacterEvent event) {
+        return (focusedTextInput != null && focusedTextInput.charTyped(event)) || super.charTyped(event);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
         // When tab is pressed, focus the next text box
-        if (keyCode == GLFW.GLFW_KEY_TAB) {
+        if (event.key() == GLFW.GLFW_KEY_TAB) {
             int index = focusedTextInput == null ? 0 : children().indexOf(focusedTextInput);
             int actualIndex = Math.max(index, 0) + 1;
 
@@ -591,8 +593,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             }
         }
 
-        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
-                || super.keyPressed(keyCode, scanCode, modifiers);
+        return (focusedTextInput != null && focusedTextInput.keyPressed(event)) || super.keyPressed(event);
     }
 
     @Override

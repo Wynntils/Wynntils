@@ -39,6 +39,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -352,8 +354,8 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_LEFT_CONTROL) {
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .holdGuildMapOpen
                     .get()) {
@@ -363,12 +365,12 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override
-    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) {
+    public boolean keyReleased(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_LEFT_CONTROL) {
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .holdGuildMapOpen
                     .get()) {
@@ -376,19 +378,19 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
         }
 
-        return super.keyReleased(keyCode, scanCode, modifiers);
+        return super.keyReleased(event);
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (GuiEventListener child : children()) {
-            if (child.isMouseOver(mouseX, mouseY)) {
-                child.mouseClicked(mouseX, mouseY, button);
+            if (child.isMouseOver(event.x(), event.y())) {
+                child.mouseClicked(event, isDoubleClick);
                 return true;
             }
         }
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             List<MarkerInfo> markers =
                     Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
             if (KeyboardUtils.isShiftDown() && !markers.isEmpty()) {
@@ -402,7 +404,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
 
             centerMapAroundPlayer();
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
                 Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
                         hovered.getLocation().asLocation());
@@ -443,13 +445,13 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
                 return true;
             }
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
                 if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
                     McUtils.setScreen(PoiCreationScreen.create(this, customPoi));
                 } else {
-                    int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
-                    int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
+                    int gameX = (int) ((event.x() - centerX) / zoomRenderScale + mapCenterX);
+                    int gameZ = (int) ((event.y() - centerZ) / zoomRenderScale + mapCenterZ);
 
                     McUtils.setScreen(PoiCreationScreen.create(this, new Location(gameX, 0, gameZ)));
                 }
@@ -461,12 +463,12 @@ public final class MainMapScreen extends AbstractMapScreen {
                     customPois.touched();
                 }
             } else {
-                setCompassToMouseCoords(mouseX, mouseY, true);
+                setCompassToMouseCoords(event.x(), event.y(), true);
                 return true;
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     private void shareLocationOrCompass(int button) {

@@ -16,6 +16,8 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -67,17 +69,17 @@ public class GuideGearItemStackButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) && !KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) {
             return false;
         }
 
         String unformattedName =
                 StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_ITEM_LOOKUP, Map.of("itemname", unformattedName));
             return true;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Services.Favorites.toggleFavorite(unformattedName);
         }
 
@@ -86,7 +88,7 @@ public class GuideGearItemStackButton extends WynntilsButton {
 
     /* no-op */
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     public GuideGearItemStack getItemStack() {
         return itemStack;

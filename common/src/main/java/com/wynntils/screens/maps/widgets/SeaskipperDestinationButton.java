@@ -23,6 +23,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class SeaskipperDestinationButton extends WynntilsButton {
@@ -121,7 +122,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     public SeaskipperDestinationPoi getDestination() {
         return destination;

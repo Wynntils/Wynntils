@@ -9,6 +9,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public abstract class ScreenSettingsButton extends GeneralSettingsButton {
@@ -30,7 +31,7 @@ public abstract class ScreenSettingsButton extends GeneralSettingsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         McUtils.setScreen(screen);
     }
 }

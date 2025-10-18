@@ -31,6 +31,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
@@ -130,7 +131,8 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        int button = event.button();
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (canSetCompass()) {
                 Models.Activity.placeCompassOnActivity(activityInfo);

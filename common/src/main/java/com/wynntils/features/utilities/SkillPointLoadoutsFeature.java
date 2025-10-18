@@ -14,6 +14,7 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -42,7 +43,7 @@ public class SkillPointLoadoutsFeature extends Feature {
         }
 
         @Override
-        public void onPress() {
+        public void onPress(InputWithModifiers input) {
             McUtils.setScreen(SkillPointLoadoutsScreen.create());
         }
     }

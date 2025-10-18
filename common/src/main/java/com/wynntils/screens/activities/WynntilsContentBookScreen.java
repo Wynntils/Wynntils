@@ -46,6 +46,7 @@ import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -258,14 +259,14 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (GuiEventListener listener : getWidgetsForIteration().toList()) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseClicked(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseClicked(event, isDoubleClick);
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override

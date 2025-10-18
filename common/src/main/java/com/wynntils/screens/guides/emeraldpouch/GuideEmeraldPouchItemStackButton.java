@@ -17,6 +17,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -84,14 +86,14 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) && !KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) {
             return false;
         }
 
         String unformattedName =
                 StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Services.Favorites.toggleFavorite(unformattedName);
         }
 
@@ -100,7 +102,7 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
 
     /* no-op */
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     public GuideEmeraldPouchItemStack getItemStack() {
         return itemStack;

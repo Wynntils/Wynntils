@@ -31,6 +31,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -303,24 +304,24 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        if (createLeaveButton.isMouseOver(mouseX, mouseY)) {
-            return createLeaveButton.mouseClicked(mouseX, mouseY, button);
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (createLeaveButton.isMouseOver(event.x(), event.y())) {
+            return createLeaveButton.mouseClicked(event, isDoubleClick);
         }
 
         for (AbstractWidget widget : partyMembersWidgets) {
-            if (widget.isMouseOver(mouseX, mouseY)) {
-                return widget.mouseClicked(mouseX, mouseY, button);
+            if (widget.isMouseOver(event.x(), event.y())) {
+                return widget.mouseClicked(event, isDoubleClick);
             }
         }
 
         for (AbstractWidget widget : suggestedPlayersWidgets) {
-            if (widget.isMouseOver(mouseX, mouseY)) {
-                return widget.mouseClicked(mouseX, mouseY, button);
+            if (widget.isMouseOver(event.x(), event.y())) {
+                return widget.mouseClicked(event, isDoubleClick);
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     public void reloadCreateLeaveButton() {

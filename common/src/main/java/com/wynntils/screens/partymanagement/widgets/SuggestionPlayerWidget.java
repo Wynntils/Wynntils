@@ -13,6 +13,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class SuggestionPlayerWidget extends AbstractPlayerListEntryWidget {
@@ -54,7 +55,7 @@ public class SuggestionPlayerWidget extends AbstractPlayerListEntryWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return inviteButton.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        return inviteButton.mouseClicked(event, isDoubleClick);
     }
 }

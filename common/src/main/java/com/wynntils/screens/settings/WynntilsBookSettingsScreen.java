@@ -55,6 +55,9 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -443,25 +446,25 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (displayWarning) {
-            if (unsavedChangesWidget.isMouseOver(mouseX, mouseY)) {
-                return unsavedChangesWidget.mouseClicked(mouseX, mouseY, button);
+            if (unsavedChangesWidget.isMouseOver(event.x(), event.y())) {
+                return unsavedChangesWidget.mouseClicked(event, isDoubleClick);
             } else {
                 return false;
             }
         }
 
         for (GuiEventListener listener : getWidgetsForIteration().toList()) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseClicked(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseClicked(event, isDoubleClick);
             }
         }
 
         if (!draggingConfigurableScroll
                 && MathUtils.isInside(
-                        (int) mouseX,
-                        (int) mouseY,
+                        (int) event.x(),
+                        (int) event.y(),
                         CONFIGURABLE_SCROLL_X + offsetX,
                         CONFIGURABLE_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
                         (int) configurableScrollRenderY,
@@ -473,8 +476,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         if (!draggingConfigScroll
                 && (configs.size() > CONFIGS_PER_PAGE)
                 && MathUtils.isInside(
-                        (int) mouseX,
-                        (int) mouseY,
+                        (int) event.x(),
+                        (int) event.y(),
                         CONFIG_SCROLL_X + offsetX,
                         CONFIG_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
                         (int) configScrollRenderY,
@@ -487,10 +490,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (displayWarning) {
-            if (unsavedChangesWidget.isMouseOver(mouseX, mouseY)) {
-                return unsavedChangesWidget.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            if (unsavedChangesWidget.isMouseOver(event.x(), event.y())) {
+                return unsavedChangesWidget.mouseDragged(event, dragX, dragY);
             } else {
                 return false;
             }
@@ -500,7 +503,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             int scrollAreaStartY = SCROLL_START_Y + 7 + offsetY;
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY,
+                    (float) event.y(),
                     scrollAreaStartY,
                     scrollAreaStartY + SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f,
                     0,
@@ -517,7 +520,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             int scrollAreaStartY = SCROLL_START_Y + 7 + offsetY;
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY,
+                    (float) event.y(),
                     scrollAreaStartY,
                     scrollAreaStartY + SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f,
                     0,
@@ -531,8 +534,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         }
 
         for (GuiEventListener listener : getWidgetsForIteration().toList()) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseDragged(event, dragX, dragY);
             }
         }
 
@@ -540,17 +543,17 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         if (displayWarning) {
-            if (unsavedChangesWidget.isMouseOver(mouseX, mouseY)) {
-                return unsavedChangesWidget.mouseReleased(mouseX, mouseY, button);
+            if (unsavedChangesWidget.isMouseOver(event.x(), event.y())) {
+                return unsavedChangesWidget.mouseReleased(event);
             } else {
                 return false;
             }
         }
 
         for (GuiEventListener listener : getWidgetsForIteration().toList()) {
-            listener.mouseReleased(mouseX, mouseY, button);
+            listener.mouseReleased(event);
         }
 
         draggingConfigurableScroll = false;
@@ -589,18 +592,18 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers);
+    public boolean charTyped(CharacterEvent event) {
+        return focusedTextInput != null && focusedTextInput.charTyped(event);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
             this.onClose();
             return true;
         }
 
-        return focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers);
+        return focusedTextInput != null && focusedTextInput.keyPressed(event);
     }
 
     @Override

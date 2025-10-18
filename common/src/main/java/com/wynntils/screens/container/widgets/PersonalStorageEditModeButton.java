@@ -14,6 +14,8 @@ import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -60,11 +62,11 @@ public class PersonalStorageEditModeButton extends WynntilsButton {
 
     // unused
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (Models.Bank.isEditingMode()) {
                 parent.saveEditModeChanges();
                 parent.updatePageName();
@@ -72,7 +74,7 @@ public class PersonalStorageEditModeButton extends WynntilsButton {
             } else {
                 parent.toggleEditMode(true);
             }
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (Models.Bank.isEditingMode()) {
                 parent.toggleEditMode(false);
                 parent.updatePageIcons();

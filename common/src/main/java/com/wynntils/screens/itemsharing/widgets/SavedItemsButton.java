@@ -13,6 +13,8 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class SavedItemsButton extends WynntilsButton {
@@ -38,17 +40,17 @@ public class SavedItemsButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
         if (onClick != null) {
-            onClick.accept(button);
+            onClick.accept(event.button());
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     // Unused
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 }

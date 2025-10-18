@@ -9,6 +9,7 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class ExitFlagButton extends WynntilsButton {
@@ -41,7 +42,7 @@ public class ExitFlagButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         onClickRunnable.run();
     }
 }

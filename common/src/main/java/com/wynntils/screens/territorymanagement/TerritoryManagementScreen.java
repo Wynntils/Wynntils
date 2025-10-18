@@ -49,6 +49,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -416,29 +417,31 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Render area widgets need to handle the scroll offset
         // Check if mouse is over the render area
-        if (mouseX >= getRenderX() + RENDER_AREA_POSITION.a()
-                && mouseX <= getRenderX() + RENDER_AREA_POSITION.a() + RENDER_AREA_SIZE.a()
-                && mouseY >= getRenderY() + RENDER_AREA_POSITION.b()
-                && mouseY <= getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b()) {
+        if (event.x() >= getRenderX() + RENDER_AREA_POSITION.a()
+                && event.x() <= getRenderX() + RENDER_AREA_POSITION.a() + RENDER_AREA_SIZE.a()
+                && event.y() >= getRenderY() + RENDER_AREA_POSITION.b()
+                && event.y() <= getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b()) {
             for (AbstractWidget widget : renderAreaWidgets) {
-                if (widget.isMouseOver(mouseX, mouseY + scrollOffset)) {
-                    return widget.mouseClicked(mouseX, mouseY + scrollOffset, button);
+                if (widget.isMouseOver(event.x(), event.y() + scrollOffset)) {
+                    return widget.mouseClicked(
+                            new MouseButtonEvent(event.x(), event.y() + scrollOffset, event.buttonInfo()),
+                            isDoubleClick);
                 }
             }
         }
 
         for (TerritoryQuickFilterWidget quickFilter : quickFilters) {
-            if (quickFilter.isMouseOver(mouseX, mouseY)) {
-                return quickFilter.mouseClicked(mouseX, mouseY, button);
+            if (quickFilter.isMouseOver(event.x(), event.y())) {
+                return quickFilter.mouseClicked(event, isDoubleClick);
             }
         }
 
         for (TerritoryQuickSortWidget quickSort : quickSorts) {
-            if (quickSort.isMouseOver(mouseX, mouseY)) {
-                return quickSort.mouseClicked(mouseX, mouseY, button);
+            if (quickSort.isMouseOver(event.x(), event.y())) {
+                return quickSort.mouseClicked(event, isDoubleClick);
             }
         }
 
@@ -454,21 +457,21 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 getMaxScrollOffset(),
                 getRenderY() + RENDER_AREA_POSITION.b(),
                 getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b());
-        if (mouseX >= scrollX
-                && mouseX <= scrollX + Texture.SCROLL_BUTTON.width()
-                && mouseY >= scrollY - Texture.SCROLL_BUTTON.height() / 2f
-                && mouseY <= scrollY + Texture.SCROLL_BUTTON.height() / 2f) {
+        if (event.x() >= scrollX
+                && event.x() <= scrollX + Texture.SCROLL_BUTTON.width()
+                && event.y() >= scrollY - Texture.SCROLL_BUTTON.height() / 2f
+                && event.y() <= scrollY + Texture.SCROLL_BUTTON.height() / 2f) {
             draggingScroll = true;
             return true;
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -480,11 +483,11 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             // Calculate the new scroll offset
             float newScrollOffset = MathUtils.map(
-                    (float) mouseY,
+                    (float) event.y(),
                     getRenderY() + RENDER_AREA_POSITION.b(),
                     getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b(),
                     0,
@@ -494,7 +497,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
             return true;
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     public void updateTerritoryItems() {

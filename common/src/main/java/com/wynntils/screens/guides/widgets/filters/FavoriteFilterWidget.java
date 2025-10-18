@@ -25,6 +25,7 @@ import com.wynntils.utils.type.ConfirmedBoolean;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -74,18 +75,18 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT || button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT || event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (state != ConfirmedBoolean.TRUE) {
                 state = ConfirmedBoolean.TRUE;
             } else if (state != ConfirmedBoolean.FALSE) {
                 state = ConfirmedBoolean.FALSE;
             }
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             state = ConfirmedBoolean.UNCONFIRMED;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override

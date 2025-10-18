@@ -21,6 +21,8 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -101,20 +103,20 @@ public class QuickJumpButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (Models.Bank.isEditingMode()) {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 icon = icon.next();
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 icon = icon.prev();
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         if (!Models.Bank.isEditingMode()) {
             parent.jumpToPage(destination);
         }

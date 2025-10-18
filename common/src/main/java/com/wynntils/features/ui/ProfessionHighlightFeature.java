@@ -31,6 +31,8 @@ import java.util.Optional;
 import java.util.TreeMap;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.EventPriority;
@@ -185,8 +187,8 @@ public class ProfessionHighlightFeature extends Feature {
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (!isMouseOver(mouseX, mouseY)) return false;
+        public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+            if (!isMouseOver(event.x(), event.y())) return false;
 
             ProfessionHighlightFeature feature = Managers.Feature.getFeatureInstance(ProfessionHighlightFeature.class);
 
@@ -212,7 +214,7 @@ public class ProfessionHighlightFeature extends Feature {
             }
 
             // Left click increases the profession type
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 if (profession == null) {
                     profession = ProfessionType.craftingProfessionTypes().getFirst();
                 } else {
@@ -231,7 +233,7 @@ public class ProfessionHighlightFeature extends Feature {
             }
 
             // Right click decreases the profession type
-            if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 if (profession == null) {
                     profession = ProfessionType.craftingProfessionTypes().getLast();
                 } else {
@@ -253,7 +255,7 @@ public class ProfessionHighlightFeature extends Feature {
         }
 
         @Override
-        public void onPress() {}
+        public void onPress(InputWithModifiers input) {}
     }
 
     private enum HighlightSelectionMode {

@@ -31,6 +31,7 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.Component;
@@ -188,11 +189,11 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     (int) (dividedWidth * 48),
                     (int) ((dividedWidth * 48) + 6),
                     scrollY,
@@ -204,14 +205,14 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         }
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseClicked(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseClicked(event, isDoubleClick);
             }
         }
 
         for (DownloadWidget downloadWidget : this.downloadWidgets) {
-            if (downloadWidget.isMouseOver(mouseX, mouseY)) {
-                return downloadWidget.mouseClicked(mouseX, mouseY, button);
+            if (downloadWidget.isMouseOver(event.x(), event.y())) {
+                return downloadWidget.mouseClicked(event, isDoubleClick);
             }
         }
 
@@ -219,13 +220,13 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             int scrollAreaStartY = (int) ((dividedHeight * WIDGET_TOP_Y) + 10);
             int scrollAreaHeight = (WIDGETS_PER_PAGE - 1) * widgetHeight;
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY, scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
+                    (float) event.y(), scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
 
             newOffset = Math.max(0, Math.min(newOffset, getMaxScrollOffset()));
 
@@ -235,8 +236,8 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         }
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseDragged(event, dragX, dragY);
             }
         }
 
@@ -244,12 +245,12 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseReleased(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseReleased(event);
             }
         }
 

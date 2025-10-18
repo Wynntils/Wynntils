@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -10,6 +10,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class ItemFilterUIButton extends WynntilsButton {
@@ -34,7 +35,7 @@ public class ItemFilterUIButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         McUtils.mc()
                 .setScreen(
                         ItemFilterScreen.create(searchWidget, previousScreen, supportsSorting, supportedProviderTypes));

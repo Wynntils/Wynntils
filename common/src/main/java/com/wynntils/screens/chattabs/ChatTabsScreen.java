@@ -12,6 +12,7 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.input.KeyEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class ChatTabsScreen extends ChatScreen {
@@ -38,8 +39,8 @@ public class ChatTabsScreen extends ChatScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_TAB) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_TAB) {
             int newTab = -1;
             if (oldTabHotkey) {
                 if (KeyboardUtils.isShiftDown()) {
@@ -59,15 +60,15 @@ public class ChatTabsScreen extends ChatScreen {
             }
         }
 
-        if (KeyboardUtils.isControlDown() && keyCode >= GLFW.GLFW_KEY_1 && keyCode <= GLFW.GLFW_KEY_9) {
-            ChatTab newTab = Services.ChatTab.getTab(keyCode - GLFW.GLFW_KEY_1);
+        if (KeyboardUtils.isControlDown() && event.key() >= GLFW.GLFW_KEY_1 && event.key() <= GLFW.GLFW_KEY_9) {
+            ChatTab newTab = Services.ChatTab.getTab(event.key() - GLFW.GLFW_KEY_1);
             if (newTab != null) {
                 Services.ChatTab.setFocusedTab(newTab);
             }
             return true;
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public abstract class GuideFilterWidget extends AbstractWidget {
@@ -41,7 +42,7 @@ public abstract class GuideFilterWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         guideScreen.updateSearchFromQuickFilters();
 
         return false;

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.colorpicker.widgets;
@@ -10,6 +10,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -45,13 +46,13 @@ public class HueSlider extends AbstractSliderButton {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
-        updateValue(mouseX);
+    public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
+        updateValue(event.x());
     }
 
     @Override
-    protected void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
-        updateValue(mouseX);
+    protected void onDrag(MouseButtonEvent event, double dragX, double dragY) {
+        updateValue(event.x());
     }
 
     @Override

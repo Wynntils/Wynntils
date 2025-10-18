@@ -27,6 +27,8 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -106,24 +108,24 @@ public class ProviderButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Prevent interaction when the button is outside of the mask from the screen
-        if ((mouseY <= filterScreen.getProviderMaskTopY() || mouseY >= filterScreen.getProviderMaskBottomY())) {
+        if ((event.y() <= filterScreen.getProviderMaskTopY() || event.y() >= filterScreen.getProviderMaskBottomY())) {
             return false;
         }
 
         if (filterScreen.inSortMode()) {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 filterScreen.addSort(new SortInfo(SortDirection.ASCENDING, provider));
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 filterScreen.removeSort(provider);
             }
         } else {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 filterScreen.setSelectedProvider(provider);
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 filterScreen.setFiltersForProvider(provider, null);
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
                 AnyStatFilters.AbstractAnyStatFilter anyFilter = ANY_MAP.getOrDefault(provider.getType(), null);
 
                 if (anyFilter != null) {
@@ -139,7 +141,7 @@ public class ProviderButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     private CustomColor getRectColor() {
         if (McUtils.screen() instanceof ItemFilterScreen itemFilterScreen) {

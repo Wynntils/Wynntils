@@ -11,6 +11,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.List;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 
@@ -49,7 +50,7 @@ public class ResetButton extends GeneralSettingsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         if (!config.valueChanged()) return;
         config.reset();
         onClick.run();

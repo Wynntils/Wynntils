@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.skillpointloadouts.widgets;
@@ -12,6 +12,7 @@ import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class ScrollBar extends AbstractWidget {
@@ -46,9 +47,9 @@ public class ScrollBar extends AbstractWidget {
     // Discard constant after solving, it comes from the height of the scrollable area
     // Full explanation in #artemis-dev
     @Override
-    protected void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
+    protected void onDrag(MouseButtonEvent event, double dragX, double dragY) {
         parent.doScroll((-25 * dragY) / (24 * dividedHeight));
-        super.onDrag(mouseX, mouseY, dragX, dragY);
+        super.onDrag(event, dragX, dragY);
     }
 
     @Override

@@ -23,6 +23,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class SortWidget extends AbstractWidget {
@@ -100,15 +101,15 @@ public class SortWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Prevent interaction when the button is outside of the mask from the screen
-        if ((mouseY <= filterScreen.getProviderMaskTopY() || mouseY >= filterScreen.getProviderMaskBottomY())) {
+        if ((event.y() <= filterScreen.getProviderMaskTopY() || event.y() >= filterScreen.getProviderMaskBottomY())) {
             return false;
         }
 
         for (GuiEventListener listener : buttons) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseClicked(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseClicked(event, isDoubleClick);
             }
         }
 

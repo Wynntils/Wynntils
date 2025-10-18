@@ -19,6 +19,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -60,12 +62,12 @@ public class ChatTabButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Services.ChatTab.setFocusedTab(tab);
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             McUtils.setScreen(ChatTabEditingScreen.create(tab));
         }
 
@@ -76,5 +78,5 @@ public class ChatTabButton extends WynntilsButton {
 
     // unused
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 }

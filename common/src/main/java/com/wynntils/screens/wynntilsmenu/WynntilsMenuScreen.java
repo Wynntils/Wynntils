@@ -42,6 +42,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -490,10 +491,10 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (this.hovered == null) return false;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             this.hovered.getClickAction().run();
         }
 
