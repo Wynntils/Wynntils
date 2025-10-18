@@ -5,11 +5,10 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.models.worlds.type.WynncraftVersion;
+import com.wynntils.services.athena.type.WynncraftVersion;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
@@ -159,7 +158,7 @@ public class EnvironmentFunctions {
     public static class WynncraftVersionFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            WynncraftVersion version = Models.WorldState.getWorldVersion();
+            WynncraftVersion version = Services.Compatibility.getWynncraftVersion();
             return version != null ? version.toString() : "";
         }
     }
