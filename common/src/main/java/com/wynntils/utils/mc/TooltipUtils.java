@@ -11,6 +11,7 @@ import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
+import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
@@ -78,18 +79,23 @@ public final class TooltipUtils {
         if (builder == null) return null;
         ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
 
-        TooltipIdentificationDecorator decorator =
-                feature.identificationDecorations.get() ? feature.getDecorator() : null;
+        TooltipIdentificationDecorator identificationDecorator =
+                feature.identificationDecorations.get() ? feature.getIdentificationDecorator() : null;
+        TooltipWeightDecorator weightDecorator =
+                feature.itemWeights.get() != ItemWeightSource.NONE ? feature.getWeightDecorator() : null;
         TooltipStyle currentIdentificationStyle = new TooltipStyle(
                 feature.identificationsOrdering.get(),
                 feature.groupIdentifications.get(),
                 feature.showBestValueLastAlways.get(),
                 feature.showStars.get(),
-                feature.itemWeights.get(),
                 false // this only applies to crafted items
                 );
-        LinkedList<Component> tooltips = new LinkedList<>(
-                builder.getTooltipLines(Models.Character.getClassType(), currentIdentificationStyle, decorator));
+        LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines(
+                Models.Character.getClassType(),
+                currentIdentificationStyle,
+                identificationDecorator,
+                feature.itemWeights.get(),
+                weightDecorator));
 
         // Update name depending on overall percentage; this needs to be done every rendering
         // for rainbow/defective effects
@@ -113,11 +119,10 @@ public final class TooltipUtils {
                 isif.groupIdentifications.get(),
                 false, // irrelevant for crafted items
                 false, // irrelevant for crafted items
-                ItemWeightSource.NONE, // irrelevant for crafted items
                 isif.showMaxValues.get());
 
-        return new LinkedList<>(
-                builder.getTooltipLines(Models.Character.getClassType(), currentIdentificationStyle, null));
+        return new LinkedList<>(builder.getTooltipLines(
+                Models.Character.getClassType(), currentIdentificationStyle, null, isif.itemWeights.get(), null));
     }
 
     private static void updateItemName(IdentifiableItemProperty itemInfo, Deque<Component> tooltips) {
