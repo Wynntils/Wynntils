@@ -360,7 +360,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public void onClose() {
-        McUtils.setScreen(new ChatScreen(""));
+        McUtils.setScreen(new ChatScreen("", false));
     }
 
     private void saveChatTab() {
