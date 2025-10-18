@@ -8,7 +8,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
@@ -37,34 +36,34 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
         // icon
 
         // outline
-        BufferedRenderUtils.drawRectBorders(
-                poseStack,
-                bufferSource,
-                user.getRelationColor(),
-                renderX,
-                renderY,
-                renderX + playerHeadRenderSize,
-                renderY + playerHeadRenderSize,
-                0,
-                2);
+        //        BufferedRenderUtils.drawRectBorders(
+        //                poseStack,
+        //                bufferSource,
+        //                user.getRelationColor(),
+        //                renderX,
+        //                renderY,
+        //                renderX + playerHeadRenderSize,
+        //                renderY + playerHeadRenderSize,
+        //                0,
+        //                2);
 
         // head
         ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
-        BufferedRenderUtils.drawTexturedRect(
-                poseStack,
-                bufferSource,
-                skin,
-                renderX,
-                renderY,
-                0,
-                playerHeadRenderSize,
-                playerHeadRenderSize,
-                8,
-                8,
-                8,
-                8,
-                64,
-                64);
+        //        BufferedRenderUtils.drawTexturedRect(
+        //                poseStack,
+        //                bufferSource,
+        //                skin,
+        //                renderX,
+        //                renderY,
+        //                0,
+        //                playerHeadRenderSize,
+        //                playerHeadRenderSize,
+        //                8,
+        //                8,
+        //                8,
+        //                8,
+        //                64,
+        //                64);
 
         guiGraphics.pose().popMatrix();
     }

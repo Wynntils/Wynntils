@@ -493,9 +493,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         if (this.hovered != null) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(
-                            ComponentUtils.wrapTooltips(
-                                    this.hovered.getTooltipList(),
-                                    250),
+                            ComponentUtils.wrapTooltips(this.hovered.getTooltipList(), 250),
                             Component::getVisualOrderText),
                     mouseX,
                     mouseY);

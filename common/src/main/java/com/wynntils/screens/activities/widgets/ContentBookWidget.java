@@ -120,8 +120,9 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                         TextShadow.NORMAL);
 
         if (holder.inTutorial) {
-            RenderUtils.drawRotatingBorderSegment(
-                    guiGraphics.pose(), CommonColors.RED, getX(), getY(), getX() + width, getY() + height, 1, 2, 0.25f);
+            //            RenderUtils.drawRotatingBorderSegment(
+            //                    guiGraphics.pose(), CommonColors.RED, getX(), getY(), getX() + width, getY() + height,
+            // 1, 2, 0.25f);
         }
 
         if (searchMatch) return;

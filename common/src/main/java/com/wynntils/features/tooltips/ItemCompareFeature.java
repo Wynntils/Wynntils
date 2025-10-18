@@ -342,21 +342,22 @@ public class ItemCompareFeature extends Feature {
         changePositioner = true;
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().scale(hoveredScaleFactor, hoveredScaleFactor);
-        guiGraphics.renderTooltip(
-                font, hoveredLines, hoveredItemStack.getTooltipImage(), (int) (hoveredX / hoveredScaleFactor), (int)
-                        (hoveredY / hoveredScaleFactor));
+        //        guiGraphics.renderTooltip(
+        //                font, hoveredLines, hoveredItemStack.getTooltipImage(), (int) (hoveredX / hoveredScaleFactor),
+        // (int)
+        //                        (hoveredY / hoveredScaleFactor));
         guiGraphics.pose().popMatrix();
 
         for (Tooltip tooltip : tooltips) {
             guiGraphics.pose().pushMatrix();
             float scaleFactor = tooltip.getScaleFactor();
             guiGraphics.pose().scale(scaleFactor, scaleFactor);
-            guiGraphics.renderTooltip(
-                    font,
-                    tooltip.getLines(),
-                    tooltip.getVisualTooltipComponent(),
-                    (int) (tooltip.getX() / scaleFactor),
-                    (int) (tooltip.getY() / scaleFactor));
+            //            guiGraphics.renderTooltip(
+            //                    font,
+            //                    tooltip.getLines(),
+            //                    tooltip.getVisualTooltipComponent(),
+            //                    (int) (tooltip.getX() / scaleFactor),
+            //                    (int) (tooltip.getY() / scaleFactor));
             guiGraphics.pose().popMatrix();
         }
         changePositioner = false;

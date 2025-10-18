@@ -7,7 +7,6 @@ package com.wynntils.features.ui;
 import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
@@ -46,7 +45,6 @@ import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -367,12 +365,13 @@ public class WynncraftButtonFeature extends Feature {
                 Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 
                 synchronized (this) {
-                    RenderSystem.recordRenderCall(() -> {
-                        McUtils.mc()
-                                .getTextureManager()
-                                .register(destination, new DynamicTexture(() -> "Wynncraft Server Icon", nativeImage));
-                        serverIconLocation = destination;
-                    });
+                    //                    RenderSystem.recordRenderCall(() -> {
+                    //                        McUtils.mc()
+                    //                                .getTextureManager()
+                    //                                .register(destination, new DynamicTexture(() -> "Wynncraft Server
+                    // Icon", nativeImage));
+                    //                        serverIconLocation = destination;
+                    //                    });
                 }
             } catch (IOException e) {
                 WynntilsMod.error("Unable to read server image: " + server.name, e);

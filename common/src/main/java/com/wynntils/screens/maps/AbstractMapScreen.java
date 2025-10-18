@@ -364,17 +364,17 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);
 
-            MapRenderer.renderMapQuad(
-                    map,
-                    poseStack,
-                    BUFFER_SOURCE,
-                    centerX,
-                    centerZ,
-                    textureX,
-                    textureZ,
-                    mapWidth,
-                    mapHeight,
-                    1f / zoomRenderScale);
+            //            MapRenderer.renderMapQuad(
+            //                    map,
+            //                    poseStack,
+            //                    BUFFER_SOURCE,
+            //                    centerX,
+            //                    centerZ,
+            //                    textureX,
+            //                    textureZ,
+            //                    mapWidth,
+            //                    mapHeight,
+            //                    1f / zoomRenderScale);
         }
 
         BUFFER_SOURCE.endBatch();

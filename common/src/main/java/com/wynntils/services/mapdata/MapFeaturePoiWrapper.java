@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.mapdata;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.services.map.pois.Poi;

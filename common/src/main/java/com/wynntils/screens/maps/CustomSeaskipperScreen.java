@@ -411,8 +411,9 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                 float x = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
                 float z = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
-                RenderUtils.drawLine(
-                        poseStack, CommonColors.DARK_GRAY.withAlpha(0.5f), poiRenderX, poiRenderZ, x, z, 0, 1);
+                //                RenderUtils.drawLine(
+                //                        poseStack, CommonColors.DARK_GRAY.withAlpha(0.5f), poiRenderX, poiRenderZ, x,
+                // z, 0, 1);
             }
         }
 

@@ -15,10 +15,8 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
-import com.wynntils.utils.render.type.UniversalTexture;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -159,20 +157,20 @@ public final class UpdateScreen extends WynntilsScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            BufferedRenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    guiGraphics.bufferSource,
-                    Texture.UNIVERSAL_BAR,
-                    CommonColors.LIGHT_GREEN,
-                    this.width / 2f - Texture.UNIVERSAL_BAR.width(),
-                    this.height / 2f - UniversalTexture.A.getHeight(),
-                    this.width / 2f + Texture.UNIVERSAL_BAR.width(),
-                    this.height / 2f + UniversalTexture.A.getHeight(),
-                    0,
-                    UniversalTexture.A.getTextureY1(),
-                    Texture.UNIVERSAL_BAR.width(),
-                    UniversalTexture.A.getTextureY2(),
-                    Services.Update.getUpdateProgress());
+            //            BufferedRenderUtils.drawColoredProgressBar(
+            //                    poseStack,
+            //                    guiGraphics.bufferSource,
+            //                    Texture.UNIVERSAL_BAR,
+            //                    CommonColors.LIGHT_GREEN,
+            //                    this.width / 2f - Texture.UNIVERSAL_BAR.width(),
+            //                    this.height / 2f - UniversalTexture.A.getHeight(),
+            //                    this.width / 2f + Texture.UNIVERSAL_BAR.width(),
+            //                    this.height / 2f + UniversalTexture.A.getHeight(),
+            //                    0,
+            //                    UniversalTexture.A.getTextureY1(),
+            //                    Texture.UNIVERSAL_BAR.width(),
+            //                    UniversalTexture.A.getTextureY2(),
+            //                    Services.Update.getUpdateProgress());
             return;
         }
 

@@ -9,6 +9,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.MouseButtonEvent;
 
 public class ListSearchWidget extends SearchWidget {
@@ -32,7 +33,7 @@ public class ListSearchWidget extends SearchWidget {
 
     @Override
     protected void renderText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -48,7 +49,7 @@ public class ListSearchWidget extends SearchWidget {
         guiGraphics.pose().translate(getXOffset(), getYOffset());
 
         super.renderText(
-                poseStack,
+                guiGraphics,
                 renderedText,
                 renderedTextStart,
                 firstPortion,

@@ -24,8 +24,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.ManaTexture;
@@ -225,53 +223,53 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
 
             // health
             HealthTexture healthTexture = PartyMembersOverlay.this.healthTexture.get();
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
-                    Texture.HEALTH_BAR,
-                    0,
-                    0,
-                    81 * 0.85f,
-                    healthTexture.getHeight() * 0.85f,
-                    0,
-                    healthTexture.getTextureY1(),
-                    81,
-                    healthTexture.getTextureY2(),
-                    (float) healthProgress);
+            //            BufferedRenderUtils.drawProgressBar(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    Texture.HEALTH_BAR,
+            //                    0,
+            //                    0,
+            //                    81 * 0.85f,
+            //                    healthTexture.getHeight() * 0.85f,
+            //                    0,
+            //                    healthTexture.getTextureY1(),
+            //                    81,
+            //                    healthTexture.getTextureY2(),
+            //                    (float) healthProgress);
 
             if (healthProgress > 1) {
-                BufferedRenderUtils.drawProgressBar(
-                        poseStack,
-                        bufferSource,
-                        Texture.HEALTH_BAR_OVERFLOW,
-                        0,
-                        0,
-                        81 * 0.85f,
-                        healthTexture.getHeight() * 0.85f,
-                        0,
-                        healthTexture.getTextureY1(),
-                        81,
-                        healthTexture.getTextureY2(),
-                        (float) healthProgress - 1f);
+                //                BufferedRenderUtils.drawProgressBar(
+                //                        poseStack,
+                //                        bufferSource,
+                //                        Texture.HEALTH_BAR_OVERFLOW,
+                //                        0,
+                //                        0,
+                //                        81 * 0.85f,
+                //                        healthTexture.getHeight() * 0.85f,
+                //                        0,
+                //                        healthTexture.getTextureY1(),
+                //                        81,
+                //                        healthTexture.getTextureY2(),
+                //                        (float) healthProgress - 1f);
             }
 
             guiGraphics.pose().translate(0, healthTexture.getHeight() * 0.85f);
 
             // mana
             ManaTexture manaTexture = PartyMembersOverlay.this.manaTexture.get();
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
-                    Texture.MANA_BAR,
-                    0,
-                    2,
-                    81 * 0.85f,
-                    2 + manaTexture.getHeight() * 0.85f,
-                    0,
-                    manaTexture.getTextureY1(),
-                    81,
-                    manaTexture.getTextureY2(),
-                    (float) manaProgress);
+            //            BufferedRenderUtils.drawProgressBar(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    Texture.MANA_BAR,
+            //                    0,
+            //                    2,
+            //                    81 * 0.85f,
+            //                    2 + manaTexture.getHeight() * 0.85f,
+            //                    0,
+            //                    manaTexture.getTextureY1(),
+            //                    81,
+            //                    manaTexture.getTextureY2(),
+            //                    (float) manaProgress);
 
             guiGraphics.pose().popMatrix();
         }

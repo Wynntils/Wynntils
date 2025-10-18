@@ -4,19 +4,14 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.events.MixinHelper;
-import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.services.cosmetics.CosmeticsService;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
-import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,23 +34,25 @@ public abstract class AvatarRendererMixin
                 .forEach(layerProvider -> this.addLayer(layerProvider.apply(this, context)));
     }
 
-    @Inject(
-            method =
-                    "renderNameTag(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void onNameTagRenderPre(
-            AvatarRenderState renderState,
-            Component displayName,
-            PoseStack poseStack,
-            MultiBufferSource buffer,
-            int packedLight,
-            CallbackInfo ci) {
-        PlayerNametagRenderEvent event = new PlayerNametagRenderEvent(
-                renderState, displayName, poseStack, buffer, packedLight, this.entityRenderDispatcher, this.getFont());
-        MixinHelper.post(event);
-        if (event.isCanceled()) {
-            ci.cancel();
-        }
-    }
+    //    @Inject(
+    //            method =
+    //
+    // "renderNameTag(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+    //            at = @At("HEAD"),
+    //            cancellable = true)
+    //    private void onNameTagRenderPre(
+    //            AvatarRenderState renderState,
+    //            Component displayName,
+    //            PoseStack poseStack,
+    //            MultiBufferSource buffer,
+    //            int packedLight,
+    //            CallbackInfo ci) {
+    //        PlayerNametagRenderEvent event = new PlayerNametagRenderEvent(
+    //                renderState, displayName, poseStack, buffer, packedLight, this.entityRenderDispatcher,
+    // this.getFont());
+    //        MixinHelper.post(event);
+    //        if (event.isCanceled()) {
+    //            ci.cancel();
+    //        }
+    //    }
 }

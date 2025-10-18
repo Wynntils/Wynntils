@@ -195,12 +195,12 @@ public class TextInputBoxWidget extends AbstractWidget {
                             TextShadow.NORMAL);
         }
 
-        drawCursor(
-                poseStack,
-                font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))),
-                (textPadding + this.height - textPadding) / 2,
-                VerticalAlignment.MIDDLE,
-                false);
+        //        drawCursor(
+        //                poseStack,
+        //                font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))),
+        //                (textPadding + this.height - textPadding) / 2,
+        //                VerticalAlignment.MIDDLE,
+        //                false);
 
         if (isHovered && tooltip != null) {
             guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);

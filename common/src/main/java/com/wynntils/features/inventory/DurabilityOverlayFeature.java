@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -74,9 +73,9 @@ public class DurabilityOverlayFeature extends Feature {
         CustomColor color = CustomColor.fromInt(colorInt).withAlpha(160);
 
         // draw
-        RenderSystem.enableDepthTest();
+        //        RenderSystem.enableDepthTest();
         RenderUtils.drawArc(poseStack, color, slotX, slotY, 100, durabilityFraction, 6, 8);
-        RenderSystem.disableDepthTest();
+        //        RenderSystem.disableDepthTest();
     }
 
     private void drawDurabilityBar(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {

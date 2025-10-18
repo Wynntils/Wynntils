@@ -146,8 +146,9 @@ public abstract class AbstractContainerScreenMixin {
         TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
 
         if (focusedTextInput != null) {
-            focusedTextInput.mouseDragged(
-                    mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button(), deltaX, deltaY);
+            //            focusedTextInput.mouseDragged(
+            //                    mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button(), deltaX,
+            // deltaY);
         }
     }
 
@@ -156,7 +157,8 @@ public abstract class AbstractContainerScreenMixin {
         TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
 
         if (focusedTextInput != null) {
-            focusedTextInput.mouseReleased(mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button());
+            //            focusedTextInput.mouseReleased(mouseButtonEvent.x(), mouseButtonEvent.y(),
+            // mouseButtonEvent.button());
         }
     }
 

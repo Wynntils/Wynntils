@@ -118,15 +118,16 @@ public class SearchWidget extends TextInputBoxWidget {
                             TextShadow.NORMAL);
         }
 
-        drawCursor(
-                poseStack,
-                this.getX()
-                        + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length())))
-                        + textPadding
-                        - 2,
-                this.getY() + VERTICAL_OFFSET,
-                VerticalAlignment.TOP,
-                false);
+        //        drawCursor(
+        //                poseStack,
+        //                this.getX()
+        //                        + font.width(renderedText.substring(0, Math.min(cursorPosition,
+        // renderedText.length())))
+        //                        + textPadding
+        //                        - 2,
+        //                this.getY() + VERTICAL_OFFSET,
+        //                VerticalAlignment.TOP,
+        //                false);
     }
 
     protected void renderBackground(GuiGraphics guiGraphics) {

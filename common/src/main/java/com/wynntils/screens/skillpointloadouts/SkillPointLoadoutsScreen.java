@@ -459,12 +459,12 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         }
         // Only render from 8 to 56 for scrollable area
         // -/+ 1 to not overlap/cut off content
-        RenderUtils.createRectMask(
-                poseStack,
-                (int) (dividedWidth * 4) - 1,
-                (int) (dividedHeight * 8) + 1,
-                (int) (dividedWidth * 26) + 1,
-                (int) (dividedHeight * 48) + 1);
+        //        RenderUtils.createRectMask(
+        //                poseStack,
+        //                (int) (dividedWidth * 4) - 1,
+        //                (int) (dividedHeight * 8) + 1,
+        //                (int) (dividedWidth * 26) + 1,
+        //                (int) (dividedHeight * 48) + 1);
         loadoutWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.clearMask();
         // endregion

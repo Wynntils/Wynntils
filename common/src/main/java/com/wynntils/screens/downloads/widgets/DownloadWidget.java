@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.downloads.widgets;
 
-import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.DownloadDependencyGraph;
@@ -12,7 +11,6 @@ import com.wynntils.core.net.QueuedDownload;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -72,16 +70,16 @@ public class DownloadWidget extends AbstractWidget {
             float arcY = getY() + (height / 2f) - outerRadius;
             int innerRadius = (int) (outerRadius * 0.85f);
 
-            RenderUtils.drawArc(
-                    guiGraphics.pose(),
-                    CommonColors.BLACK,
-                    getX() + getWidth() - height,
-                    arcY,
-                    0,
-                    0.8f,
-                    innerRadius,
-                    outerRadius,
-                    offset);
+            //            RenderUtils.drawArc(
+            //                    guiGraphics.pose(),
+            //                    CommonColors.BLACK,
+            //                    getX() + getWidth() - height,
+            //                    arcY,
+            //                    0,
+            //                    0.8f,
+            //                    innerRadius,
+            //                    outerRadius,
+            //                    offset);
         }
 
         if (isHovered) {

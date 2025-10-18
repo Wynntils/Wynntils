@@ -251,7 +251,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderPois(guiGraphics, mouseX, mouseY);
 
         if (Managers.Feature.getFeatureInstance(MappingProgressFeature.class).isEnabled()) {
-            renderChunkBorders(poseStack);
+            //            renderChunkBorders(poseStack);
         }
 
         // Cursor

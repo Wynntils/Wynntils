@@ -264,14 +264,14 @@ public final class FontRenderer {
                     case BOTTOM -> renderY - font.lineHeight + 2;
                 };
 
-        RenderUtils.drawRect(
-                poseStack,
-                backgroundColor,
-                renderX,
-                cursorRenderY,
-                0,
-                font.width(text.getComponent()),
-                font.lineHeight + 2);
+        //        RenderUtils.drawRect(
+        //                poseStack,
+        //                backgroundColor,
+        //                renderX,
+        //                cursorRenderY,
+        //                0,
+        //                font.width(text.getComponent()),
+        //                font.lineHeight + 2);
 
         renderAlignedTextInBox(
                 guiGraphics,
@@ -443,8 +443,9 @@ public final class FontRenderer {
                         case BOTTOM -> y - font.lineHeight - 1;
                     };
 
-            RenderUtils.createRectMask(poseStack, (int) scissorX, (int) scissorY, (int) renderWidth, (int)
-                    ((font.lineHeight + 1) * textScale)); // + 1 to account for letters that sit lower, eg y
+            //            RenderUtils.createRectMask(poseStack, (int) scissorX, (int) scissorY, (int) renderWidth, (int)
+            //                    ((font.lineHeight + 1) * textScale)); // + 1 to account for letters that sit lower, eg
+            // y
             renderText(
                     guiGraphics,
                     styledText,

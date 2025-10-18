@@ -208,6 +208,7 @@ public class WorldWaypointDistanceFeature extends Feature {
 
                 if (showAdditonalTextAbove.get() && renderedMarker.additionalText != null) {
                     backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.additionalText);
+
                     RenderUtils.drawRect(
                             event.getGuiGraphics(),
                             CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
