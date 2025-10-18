@@ -183,7 +183,7 @@ public final class WorldStateModel extends Model {
         ItemStack firstHotbarSlot = e.getItems().get(36);
 
         if (firstHotbarSlot.getItem().equals(Items.COMPASS)) {
-            StyledText name = StyledText.fromComponent(firstHotbarSlot.getCustomName());
+            StyledText name = StyledText.fromComponent(firstHotbarSlot.getHoverName());
             if (name.matches(QUICK_CONNECT_PATTERN)) {
                 setState(WorldState.HUB);
                 return;
