@@ -144,8 +144,7 @@ public class OverlayButton extends WynntilsButton {
         // name is being edited
         if (isHovered) {
             if (!overlay.isParentEnabled()) {
-                McUtils.mc()
-                        .screen
+                McUtils.screen()
                         .setTooltipForNextRenderPass(Lists.transform(
                                 ComponentUtils.wrapTooltips(
                                         List.of(Component.translatable(
@@ -154,8 +153,7 @@ public class OverlayButton extends WynntilsButton {
                                         200),
                                 Component::getVisualOrderText));
             } else {
-                McUtils.mc()
-                        .screen
+                McUtils.screen()
                         .setTooltipForNextRenderPass(Lists.transform(
                                 (editInput != null && editInput.visible) ? SAVE_NAME_TOOLTIP : descriptionTooltip,
                                 Component::getVisualOrderText));

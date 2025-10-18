@@ -27,7 +27,7 @@ public class ContainerScrollFeature extends Feature {
 
     @SubscribeEvent
     public void onInteract(MouseScrollEvent event) {
-        Screen screen = McUtils.mc().screen;
+        Screen screen = McUtils.screen();
 
         if (!(screen instanceof AbstractContainerScreen<?> gui)) return;
 

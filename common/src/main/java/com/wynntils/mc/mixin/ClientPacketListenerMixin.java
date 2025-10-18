@@ -393,7 +393,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 
             // Signal loading complete to the loading screen,
             // or else we are stuck in an "infinite" loading state
-            if (McUtils.mc().screen instanceof ReceivingLevelScreen receivingLevelScreen) {
+            if (McUtils.screen() instanceof ReceivingLevelScreen receivingLevelScreen) {
                 receivingLevelScreen.onClose();
             }
         }

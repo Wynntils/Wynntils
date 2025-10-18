@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -42,7 +42,7 @@ public class WynncraftPauseScreenFeature extends Feature {
                 ADVANCEMENTS,
                 Component.translatable("feature.wynntils.wynncraftPauseScreen.territoryMap.name")
                         .withStyle(ChatFormatting.DARK_AQUA),
-                (button) -> McUtils.mc().setScreen(GuildMapScreen.create()));
+                (button) -> McUtils.setScreen(GuildMapScreen.create()));
 
         replaceButtonFunction(
                 renderables,
@@ -55,7 +55,7 @@ public class WynncraftPauseScreenFeature extends Feature {
                 SEND_FEEDBACK,
                 Component.translatable("feature.wynntils.wynncraftPauseScreen.classSelectionButton.name"),
                 (button) -> {
-                    McUtils.mc().setScreen(null);
+                    McUtils.setScreen(null);
                     McUtils.mc().mouseHandler.grabMouse();
                     Handlers.Command.sendCommandImmediately("class");
                 });
@@ -65,7 +65,7 @@ public class WynncraftPauseScreenFeature extends Feature {
                 REPORT_BUGS,
                 Component.translatable("feature.wynntils.wynncraftPauseScreen.hubButton.name"),
                 (button) -> {
-                    McUtils.mc().setScreen(null);
+                    McUtils.setScreen(null);
                     McUtils.mc().mouseHandler.grabMouse();
                     Handlers.Command.sendCommandImmediately("hub");
                 });

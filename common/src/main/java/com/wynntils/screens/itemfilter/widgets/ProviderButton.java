@@ -101,7 +101,7 @@ public class ProviderButton extends WynntilsButton {
         }
 
         if (this.isHovered) {
-            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 
@@ -142,7 +142,7 @@ public class ProviderButton extends WynntilsButton {
     public void onPress() {}
 
     private CustomColor getRectColor() {
-        if (McUtils.mc().screen instanceof ItemFilterScreen itemFilterScreen) {
+        if (McUtils.screen() instanceof ItemFilterScreen itemFilterScreen) {
             if (itemFilterScreen.getSelectedProvider() == provider) {
                 return CommonColors.GRAY;
             }
@@ -152,7 +152,7 @@ public class ProviderButton extends WynntilsButton {
     }
 
     private CustomColor getBorderColor() {
-        if (McUtils.mc().screen instanceof ItemFilterScreen itemFilterScreen) {
+        if (McUtils.screen() instanceof ItemFilterScreen itemFilterScreen) {
             if (itemFilterScreen.getSelectedProvider() == provider) {
                 return isHovered ? CommonColors.LIGHT_GRAY : CommonColors.WHITE;
             }

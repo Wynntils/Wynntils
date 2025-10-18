@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base;
@@ -21,7 +21,7 @@ public abstract class WynntilsContainerScreen<T extends AbstractContainerMenu> e
         WynntilsMod.error("Failure in " + this.getClass().getSimpleName() + "." + method + "()", e);
         McUtils.sendErrorToClient("Wynntils: Failure in " + this.getClass().getSimpleName() + " during " + method
                 + ". Screen forcefully closed.");
-        McUtils.mc().setScreen(null);
+        McUtils.setScreen(null);
     }
 
     @Override

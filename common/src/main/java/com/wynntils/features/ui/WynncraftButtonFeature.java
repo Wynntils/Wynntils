@@ -98,7 +98,7 @@ public class WynncraftButtonFeature extends Feature {
             hasUsedButton = false;
             if (returnToTitle.get()) {
                 event.setCanceled(true);
-                McUtils.mc().setScreen(new TitleScreen());
+                McUtils.setScreen(new TitleScreen());
             }
         }
     }
@@ -162,7 +162,7 @@ public class WynncraftButtonFeature extends Feature {
     private void connectToServer(ServerData serverData) {
         hasUsedButton = true;
         ConnectScreen.startConnecting(
-                McUtils.mc().screen, McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData, false, null);
+                McUtils.screen(), McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData, false, null);
     }
 
     private void onPress(Button button) {
@@ -170,9 +170,9 @@ public class WynncraftButtonFeature extends Feature {
         if (!Managers.Download.graphState().finished()) return;
 
         if (wynncraftButton.warningType == WarningType.UPDATE) {
-            McUtils.mc().setScreen(UpdateScreen.create(wynncraftButton.serverData, wynncraftButton.titleScreen));
+            McUtils.setScreen(UpdateScreen.create(wynncraftButton.serverData, wynncraftButton.titleScreen));
         } else if (wynncraftButton.warningType == WarningType.DOWNLOADS && !wynncraftButton.ignoreFailedDownloads) {
-            McUtils.mc().setScreen(DownloadScreen.create(McUtils.mc().screen, wynncraftButton.serverData));
+            McUtils.setScreen(DownloadScreen.create(McUtils.screen(), wynncraftButton.serverData));
         } else {
             connectToServer(wynncraftButton.serverData);
         }
@@ -266,9 +266,7 @@ public class WynncraftButtonFeature extends Feature {
             }
 
             if (isHovered) {
-                McUtils.mc()
-                        .screen
-                        .setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+                McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
             }
         }
     }

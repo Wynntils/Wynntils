@@ -42,7 +42,7 @@ public class ChestBlockerFeature extends Feature {
         if (!Models.WorldState.onWorld()) return;
         if (!(Models.Container.getCurrentContainer() instanceof RewardContainer)) return;
 
-        NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
+        NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.screen());
         for (int i = 0; i < Models.LootChest.LOOT_CHEST_ITEM_COUNT; i++) {
             ItemStack itemStack = items.get(i);
             Optional<GearTierItemProperty> tieredItem =

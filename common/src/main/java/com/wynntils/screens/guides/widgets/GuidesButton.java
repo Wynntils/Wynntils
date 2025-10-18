@@ -57,6 +57,6 @@ public class GuidesButton extends WynntilsButton {
 
     @Override
     public void onPress() {
-        McUtils.mc().setScreen(guideScreen);
+        McUtils.setScreen(guideScreen);
     }
 }

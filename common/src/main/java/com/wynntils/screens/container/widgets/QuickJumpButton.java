@@ -72,8 +72,7 @@ public class QuickJumpButton extends WynntilsButton {
                         TextShadow.NORMAL);
 
         if (isHovered) {
-            McUtils.mc()
-                    .screen
+            McUtils.screen()
                     .setTooltipForNextRenderPass(Lists.transform(List.of(tooltip), Component::getVisualOrderText));
         }
     }

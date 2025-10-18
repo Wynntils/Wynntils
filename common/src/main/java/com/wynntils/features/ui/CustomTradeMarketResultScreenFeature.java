@@ -72,9 +72,9 @@ public class CustomTradeMarketResultScreenFeature extends Feature {
     @SubscribeEvent
     public void onRenderTooltip(ItemTooltipRenderEvent.Pre event) {
         if (shiftBehaviorConfig.get() == ShiftBehavior.NONE) return;
-        if (McUtils.mc().screen == null) return;
+        if (McUtils.screen() == null) return;
 
-        if (!Models.TradeMarket.isFilterScreen(McUtils.mc().screen.getTitle())) {
+        if (!Models.TradeMarket.isFilterScreen(McUtils.screen().getTitle())) {
             return;
         }
 

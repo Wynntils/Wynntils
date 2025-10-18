@@ -124,7 +124,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 12,
                 16,
                 Texture.WAYPOINT_MANAGER_ICON,
-                (b) -> McUtils.mc().setScreen(PoiManagementScreen.create(this)),
+                (b) -> McUtils.setScreen(PoiManagementScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.RED)
@@ -206,7 +206,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 14,
                 14,
                 Texture.ADD_ICON,
-                (b) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)),
+                (b) -> McUtils.setScreen(PoiCreationScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.DARK_GREEN)
@@ -446,12 +446,12 @@ public final class MainMapScreen extends AbstractMapScreen {
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
                 if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
-                    McUtils.mc().setScreen(PoiCreationScreen.create(this, customPoi));
+                    McUtils.setScreen(PoiCreationScreen.create(this, customPoi));
                 } else {
                     int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
                     int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
 
-                    McUtils.mc().setScreen(PoiCreationScreen.create(this, new Location(gameX, 0, gameZ)));
+                    McUtils.setScreen(PoiCreationScreen.create(this, new Location(gameX, 0, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {

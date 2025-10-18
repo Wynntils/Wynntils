@@ -607,7 +607,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(returnScreen);
+        McUtils.setScreen(returnScreen);
     }
 
     private void updateSaveStatus() {

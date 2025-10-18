@@ -235,12 +235,12 @@ public final class OverlayManager extends Manager {
         boolean shouldRender = true;
         Overlay selectedOverlay = null;
 
-        if (McUtils.mc().screen instanceof OverlayManagementScreen screen) {
+        if (McUtils.screen() instanceof OverlayManagementScreen screen) {
             shouldRender = false;
             showPreview = screen.showPreview();
             renderNonSelected = screen.shouldRenderAllOverlays();
             selectedOverlay = screen.getSelectedOverlay();
-        } else if (McUtils.mc().screen instanceof OverlaySelectionScreen screen) {
+        } else if (McUtils.screen() instanceof OverlaySelectionScreen screen) {
             if (screen.renderingPreview()) {
                 showPreview = true;
                 renderNonSelected = screen.shouldShowOverlays();

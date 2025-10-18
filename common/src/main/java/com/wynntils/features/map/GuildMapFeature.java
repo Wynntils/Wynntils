@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
@@ -32,11 +32,11 @@ public class GuildMapFeature extends Feature {
     private void openGuildMap() {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind
         // and should signal that we should close when the key is not held anymore.
-        if (McUtils.mc().screen instanceof GuildMapScreen guildMapScreen) {
+        if (McUtils.screen() instanceof GuildMapScreen guildMapScreen) {
             guildMapScreen.setHoldingMapKey(true);
             return;
         }
 
-        McUtils.mc().setScreen(GuildMapScreen.create());
+        McUtils.setScreen(GuildMapScreen.create());
     }
 }

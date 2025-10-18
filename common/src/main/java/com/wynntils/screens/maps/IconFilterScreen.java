@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -66,7 +66,7 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(previousScreen);
+        McUtils.setScreen(previousScreen);
     }
 
     @Override

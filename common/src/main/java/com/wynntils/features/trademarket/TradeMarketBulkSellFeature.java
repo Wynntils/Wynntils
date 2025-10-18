@@ -41,7 +41,7 @@ public class TradeMarketBulkSellFeature extends Feature {
 
     @SubscribeEvent
     public void onSellDialogueUpdated(TradeMarketSellDialogueUpdatedEvent e) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
+        if (!(McUtils.screen() instanceof ContainerScreen containerScreen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
         String soldItemName = Models.TradeMarket.getSoldItemName();

@@ -203,16 +203,16 @@ public class CustomLoadingScreenFeature extends Feature {
     private void createCustomScreen() {
         loadingScreen = LoadingScreen.create(this::onLoadingScreenClosed);
         allowClosing = false;
-        McUtils.mc().setScreen(loadingScreen);
+        McUtils.setScreen(loadingScreen);
     }
 
     private void removeCustomScreen() {
         delayedRemoval = null;
         loadingScreen = null;
-        if (McUtils.mc().screen == null) {
+        if (McUtils.screen() == null) {
             WynntilsMod.error("The custom LoadingScreen has disappeared");
         } else {
-            McUtils.mc().setScreen(null);
+            McUtils.setScreen(null);
         }
     }
 

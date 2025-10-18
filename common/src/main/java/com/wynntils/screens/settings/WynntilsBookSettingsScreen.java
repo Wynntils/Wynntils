@@ -436,7 +436,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         Managers.Config.reloadConfiguration(true);
 
         if (previousScreen != null) {
-            McUtils.mc().setScreen(previousScreen);
+            McUtils.setScreen(previousScreen);
         } else {
             super.onClose();
         }

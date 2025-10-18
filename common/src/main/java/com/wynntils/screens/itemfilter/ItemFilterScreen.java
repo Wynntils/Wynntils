@@ -459,7 +459,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     public void onClose() {
         // Set the query for the ItemSearchWidget on the previous screen and return to it
         previousSearchWidget.setTextBoxInput(itemSearchWidget.getTextBoxInput());
-        McUtils.mc().setScreen(previousScreen);
+        McUtils.setScreen(previousScreen);
     }
 
     @Override

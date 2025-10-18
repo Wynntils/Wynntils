@@ -82,8 +82,7 @@ public class GuideSortButton extends AbstractWidget {
         }
 
         if (isHovered) {
-            McUtils.mc()
-                    .screen
+            McUtils.screen()
                     .setTooltipForNextRenderPass(Lists.transform(
                             ComponentUtils.wrapTooltips(
                                     List.of(Component.translatable(

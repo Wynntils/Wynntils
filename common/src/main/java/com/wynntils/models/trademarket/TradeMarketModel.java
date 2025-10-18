@@ -279,7 +279,7 @@ public final class TradeMarketModel extends Model {
      * @return The unit price of the item currently being sold in the sell screen.
      */
     public int getUnitPrice() {
-        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return -1;
+        if (!(McUtils.screen() instanceof ContainerScreen cs)) return -1;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return -1;
 
         ItemStack priceCheckItem = cs.getMenu().getItems().get(TM_SELL_PRICE_SLOT);
@@ -299,7 +299,7 @@ public final class TradeMarketModel extends Model {
      * @return The TM's server-side price check item information.
      */
     public TradeMarketPriceCheckInfo getPriceCheckInfo() {
-        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return TradeMarketPriceCheckInfo.EMPTY;
+        if (!(McUtils.screen() instanceof ContainerScreen cs)) return TradeMarketPriceCheckInfo.EMPTY;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer))
             return TradeMarketPriceCheckInfo.EMPTY;
 
@@ -344,7 +344,7 @@ public final class TradeMarketModel extends Model {
     private void handleSellDialogueUpdate() {
         if (tradeMarketState != TradeMarketState.SELLING) return;
 
-        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
+        if (!(McUtils.screen() instanceof ContainerScreen cs)) return;
 
         ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (itemStack != ItemStack.EMPTY) {
