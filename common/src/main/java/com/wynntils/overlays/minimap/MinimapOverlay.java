@@ -5,7 +5,6 @@
 package com.wynntils.overlays.minimap;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -123,9 +122,9 @@ public class MinimapOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        //        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         float width = getWidth();
         float height = getHeight();
@@ -151,23 +150,24 @@ public class MinimapOverlay extends Overlay {
         switch (maskType.get()) {
             case RECTANGULAR ->
                 RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
-            case CIRCLE ->
-                RenderUtils.createMask(
-                        poseStack, Texture.CIRCLE_MASK, (int) renderX, (int) renderY, (int) (renderX + width), (int)
-                                (renderY + height));
+                //            case CIRCLE ->
+                //                RenderUtils.createMask(
+                //                        poseStack, Texture.CIRCLE_MASK, (int) renderX, (int) renderY, (int) (renderX +
+                // width), (int)
+                //                                (renderY + height));
         }
 
         // Always draw a black background to cover transparent map areas
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, renderX, renderY, 0, width, height);
+        //        RenderUtils.drawRect(poseStack, CommonColors.BLACK, renderX, renderY, 0, width, height);
 
         // enable rotation if necessary
         if (followPlayerRotation.get()) {
-            poseStack.pushPose();
-            RenderUtils.rotatePose(
-                    poseStack,
-                    centerX,
-                    centerZ,
-                    180 - McUtils.mc().gameRenderer.getMainCamera().getYRot());
+            //            poseStack.pushPose();
+            //            RenderUtils.rotatePose(
+            //                    poseStack,
+            //                    centerX,
+            //                    centerZ,
+            //                    180 - McUtils.mc().gameRenderer.getMainCamera().getYRot());
         }
 
         // avoid rotational overpass - This is a rather loose oversizing, if possible later
@@ -187,21 +187,21 @@ public class MinimapOverlay extends Overlay {
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(playerX);
             float textureZ = map.getTextureZPosition(playerZ);
-            MapRenderer.renderMapQuad(
-                    map,
-                    poseStack,
-                    centerX,
-                    centerZ,
-                    textureX,
-                    textureZ,
-                    width * extraFactor,
-                    height * extraFactor,
-                    zoomRenderScale);
+            //            MapRenderer.renderMapQuad(
+            //                    map,
+            //                    poseStack,
+            //                    centerX,
+            //                    centerZ,
+            //                    textureX,
+            //                    textureZ,
+            //                    width * extraFactor,
+            //                    height * extraFactor,
+            //                    zoomRenderScale);
         }
 
         // disable rotation if necessary
         if (followPlayerRotation.get()) {
-            poseStack.popPose();
+            //            poseStack.popPose();
         }
 
         renderPois(
@@ -217,14 +217,14 @@ public class MinimapOverlay extends Overlay {
                 textureBoundingCircle);
 
         // cursor
-        MapRenderer.renderCursor(
-                poseStack,
-                centerX,
-                centerZ,
-                this.pointerScale.get(),
-                this.pointerColor.get(),
-                this.pointerType.get(),
-                followPlayerRotation.get());
+        //        MapRenderer.renderCursor(
+        //                poseStack,
+        //                centerX,
+        //                centerZ,
+        //                this.pointerScale.get(),
+        //                this.pointerColor.get(),
+        //                this.pointerType.get(),
+        //                followPlayerRotation.get());
 
         // disable mask & render border
         switch (maskType.get()) {
@@ -233,7 +233,7 @@ public class MinimapOverlay extends Overlay {
         }
 
         // render border
-        renderMapBorder(poseStack, renderX, renderY, width, height);
+        //        renderMapBorder(poseStack, renderX, renderY, width, height);
 
         // Directional Text
         renderCardinalDirections(guiGraphics, width, height, centerX, centerZ);
@@ -303,16 +303,16 @@ public class MinimapOverlay extends Overlay {
                     poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
             if (BoundingShape.intersects(box, textureBoundingCircle)) {
-                poi.renderAt(
-                        poseStack,
-                        bufferSource,
-                        poiRenderX,
-                        poiRenderZ,
-                        false,
-                        poiScale.get(),
-                        currentZoom,
-                        zoomLevel,
-                        false);
+                //                poi.renderAt(
+                //                        poseStack,
+                //                        bufferSource,
+                //                        poiRenderX,
+                //                        poiRenderZ,
+                //                        false,
+                //                        poiScale.get(),
+                //                        currentZoom,
+                //                        zoomLevel,
+                //                        false);
             }
         }
 
@@ -372,40 +372,40 @@ public class MinimapOverlay extends Overlay {
                 // Replace with pointer
                 float angle = (float) Math.toDegrees(StrictMath.atan2(compassOffsetZ, compassOffsetX)) + 90f;
 
-                poseStack.pushPose();
-                RenderUtils.rotatePose(poseStack, compassRenderX, compassRenderZ, angle);
-                waypointPoi
-                        .getPointerPoi()
-                        .renderAt(
-                                poseStack,
-                                bufferSource,
-                                compassRenderX,
-                                compassRenderZ,
-                                false,
-                                poiScale.get(),
-                                1f / zoomRenderScale,
-                                zoomLevel,
-                                false);
-                poseStack.popPose();
+                //                poseStack.pushPose();
+                //                RenderUtils.rotatePose(poseStack, compassRenderX, compassRenderZ, angle);
+                //                waypointPoi
+                //                        .getPointerPoi()
+                //                        .renderAt(
+                //                                poseStack,
+                //                                bufferSource,
+                //                                compassRenderX,
+                //                                compassRenderZ,
+                //                                false,
+                //                                poiScale.get(),
+                //                                1f / zoomRenderScale,
+                //                                zoomLevel,
+                //                                false);
+                //                poseStack.popPose();
             } else {
-                waypointPoi.renderAt(
-                        poseStack,
-                        bufferSource,
-                        compassRenderX,
-                        compassRenderZ,
-                        false,
-                        poiScale.get(),
-                        currentZoom,
-                        zoomLevel,
-                        false);
+                //                waypointPoi.renderAt(
+                //                        poseStack,
+                //                        bufferSource,
+                //                        compassRenderX,
+                //                        compassRenderZ,
+                //                        false,
+                //                        poiScale.get(),
+                //                        currentZoom,
+                //                        zoomLevel,
+                //                        false);
             }
 
             bufferSource.endBatch();
 
-            poseStack.pushPose();
-            poseStack.translate(centerX, centerZ, 0);
-            poseStack.scale(0.8f, 0.8f, 1);
-            poseStack.translate(-centerX, -centerZ, 0);
+            //            poseStack.pushPose();
+            //            poseStack.translate(centerX, centerZ, 0);
+            //            poseStack.scale(0.8f, 0.8f, 1);
+            //            poseStack.translate(-centerX, -centerZ, 0);
 
             FontRenderer fontRenderer = FontRenderer.getInstance();
             Font font = fontRenderer.getFont();
@@ -413,14 +413,14 @@ public class MinimapOverlay extends Overlay {
             String text = StringUtils.integerToShortString(Math.round(distance * zoomRenderScale)) + "m";
             float w = font.width(text) / 2f, h = font.lineHeight / 2f;
 
-            RenderUtils.drawRect(
-                    poseStack,
-                    new CustomColor(0f, 0f, 0f, 0.7f),
-                    compassRenderX - w - 3f,
-                    compassRenderZ - h - 1f,
-                    0,
-                    2 * w + 6,
-                    2 * h + 1);
+            //            RenderUtils.drawRect(
+            //                    poseStack,
+            //                    new CustomColor(0f, 0f, 0f, 0.7f),
+            //                    compassRenderX - w - 3f,
+            //                    compassRenderZ - h - 1f,
+            //                    0,
+            //                    2 * w + 6,
+            //                    2 * h + 1);
             fontRenderer.renderText(
                     guiGraphics,
                     StyledText.fromString(text),
@@ -431,7 +431,7 @@ public class MinimapOverlay extends Overlay {
                     VerticalAlignment.TOP,
                     TextShadow.NORMAL);
 
-            poseStack.popPose();
+            //            poseStack.popPose();
         }
     }
 

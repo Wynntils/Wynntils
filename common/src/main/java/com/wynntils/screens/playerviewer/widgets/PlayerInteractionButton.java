@@ -4,11 +4,8 @@
  */
 package com.wynntils.screens.playerviewer.widgets;
 
-import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
@@ -40,26 +37,27 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderSystem.enableDepthTest();
+        //        RenderSystem.enableDepthTest();
         // +3 to center icon with 1px border in 16x16 button
-        RenderUtils.drawTexturedRect(
-                guiGraphics.pose(),
-                icon.resource(),
-                this.getX() + 3,
-                this.getY() + 3,
-                2,
-                14,
-                14,
-                0,
-                0,
-                14,
-                14,
-                icon.width(),
-                icon.height());
-        RenderSystem.disableDepthTest();
+        //        RenderUtils.drawTexturedRect(
+        //                guiGraphics.pose(),
+        //                icon.resource(),
+        //                this.getX() + 3,
+        //                this.getY() + 3,
+        //                2,
+        //                14,
+        //                14,
+        //                0,
+        //                0,
+        //                14,
+        //                14,
+        //                icon.width(),
+        //                icon.height());
+        //        RenderSystem.disableDepthTest();
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltipText, Component::getVisualOrderText));
+            //            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltipText,
+            // Component::getVisualOrderText));
         }
     }
 }

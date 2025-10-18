@@ -106,9 +106,9 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
+        //        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
         RenderUtils.enableScissor(guiGraphics, offsetX + 40, offsetY + 11, 220, SCISSOR_HEIGHT);
         FontRenderer.getInstance()
@@ -116,7 +116,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         RenderUtils.disableScissor(guiGraphics);
 
         if (getMaxScrollOffset() != 0) {
-            renderScrollBar(poseStack);
+            //            renderScrollBar(poseStack);
         }
 
         renderPageInfo(guiGraphics, getCurrentPage() + 1, getMaxPage() + 1);

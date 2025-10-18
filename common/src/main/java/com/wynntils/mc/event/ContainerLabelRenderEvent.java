@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -38,7 +38,8 @@ public abstract class ContainerLabelRenderEvent extends Event implements ICancel
     }
 
     public PoseStack getPoseStack() {
-        return guiGraphics.pose();
+        //        return guiGraphics.pose();
+        return new PoseStack();
     }
 
     public float getX() {

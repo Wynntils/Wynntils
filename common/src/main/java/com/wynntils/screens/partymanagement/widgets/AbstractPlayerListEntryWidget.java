@@ -4,9 +4,7 @@
  */
 package com.wynntils.screens.partymanagement.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -30,7 +28,7 @@ public abstract class AbstractPlayerListEntryWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be Steves
@@ -38,35 +36,35 @@ public abstract class AbstractPlayerListEntryWidget extends AbstractWidget {
                 ? DefaultPlayerSkin.getDefaultTexture()
                 : playerInfo.getSkin().body().texturePath();
         // head rendering
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                this.getX() + (this.width / gridDivisions) - 8,
-                this.getY() + (this.height / 2) - 8,
-                8,
-                16,
-                16,
-                8,
-                8,
-                8,
-                8,
-                64,
-                64);
+        //        RenderUtils.drawTexturedRect(
+        //                poseStack,
+        //                skin,
+        //                this.getX() + (this.width / gridDivisions) - 8,
+        //                this.getY() + (this.height / 2) - 8,
+        //                8,
+        //                16,
+        //                16,
+        //                8,
+        //                8,
+        //                8,
+        //                8,
+        //                64,
+        //                64);
         // hat rendering
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                this.getX() + (this.width / gridDivisions) - 8,
-                this.getY() + (this.height / 2) - 8,
-                8,
-                16,
-                16,
-                40,
-                8,
-                8,
-                8,
-                64,
-                64);
+        //        RenderUtils.drawTexturedRect(
+        //                poseStack,
+        //                skin,
+        //                this.getX() + (this.width / gridDivisions) - 8,
+        //                this.getY() + (this.height / 2) - 8,
+        //                8,
+        //                16,
+        //                16,
+        //                40,
+        //                8,
+        //                8,
+        //                8,
+        //                64,
+        //                64);
     }
 
     @Override

@@ -10,7 +10,6 @@ import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.utils.mc.KeyboardUtils;
-import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +121,8 @@ public class GuildOverallProductionWidget extends AbstractWidget {
                     .withStyle(ChatFormatting.YELLOW));
         }
 
-        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), lines, this.getX(), this.getY());
+        //        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), lines, this.getX(),
+        // this.getY());
     }
 
     @Override

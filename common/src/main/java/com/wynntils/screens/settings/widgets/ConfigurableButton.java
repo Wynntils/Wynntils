@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.google.common.collect.Lists;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
@@ -128,12 +127,13 @@ public class ConfigurableButton extends WynntilsButton {
 
         if (isHovered) {
             if (enabledCheckbox.isHovered()) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(toggleTooltip, Component::getVisualOrderText));
+                //                McUtils.screen()
+                //                        .setTooltipForNextRenderPass(Lists.transform(toggleTooltip,
+                // Component::getVisualOrderText));
             } else if (configurable instanceof Feature) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(
-                                Lists.transform(descriptionTooltip, Component::getVisualOrderText));
+                //                McUtils.screen()
+                //                        .setTooltipForNextRenderPass(
+                //                                Lists.transform(descriptionTooltip, Component::getVisualOrderText));
             }
         }
     }

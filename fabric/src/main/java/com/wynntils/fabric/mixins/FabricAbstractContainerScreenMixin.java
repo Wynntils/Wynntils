@@ -63,17 +63,19 @@ public abstract class FabricAbstractContainerScreenMixin {
     }
 
     // See ForgeGuiGraphics#renderTooltipPost for the Forge mixin.
-    @Inject(
-            method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V",
-                            shift = At.Shift.AFTER))
-    private void renderTooltipPost(GuiGraphics guiGraphics, int x, int y, CallbackInfo ci, @Local ItemStack itemStack) {
-        MixinHelper.post(new ItemTooltipRenderEvent.Post(guiGraphics, itemStack, x, y));
-    }
+    //    @Inject(
+    //            method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V",
+    //            at =
+    //                    @At(
+    //                            value = "INVOKE",
+    //                            target =
+    //
+    // "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V",
+    //                            shift = At.Shift.AFTER))
+    //    private void renderTooltipPost(GuiGraphics guiGraphics, int x, int y, CallbackInfo ci, @Local ItemStack
+    // itemStack) {
+    //        MixinHelper.post(new ItemTooltipRenderEvent.Post(guiGraphics, itemStack, x, y));
+    //    }
 
     // See the ForgeAbstractContainerScreenMixin#renderSlotPreCount for the Forge mixin.
     @Inject(

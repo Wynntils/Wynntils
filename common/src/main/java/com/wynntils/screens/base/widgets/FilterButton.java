@@ -4,10 +4,8 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,56 +79,56 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRect(poseStack, getButtonColor(), getX(), getY(), 0, width, height);
+        //        RenderUtils.drawRect(poseStack, getButtonColor(), getX(), getY(), 0, width, height);
 
         if (!this.dynamicTexture) {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    texture.resource(),
-                    getX() + (width - texture.width()) / 2f,
-                    getY() + (height - texture.height()) / 2f,
-                    1,
-                    texture.width(),
-                    texture.height(),
-                    0,
-                    0,
-                    texture.width(),
-                    texture.height(),
-                    texture.width(),
-                    texture.height());
+            //            RenderUtils.drawTexturedRect(
+            //                    poseStack,
+            //                    texture.resource(),
+            //                    getX() + (width - texture.width()) / 2f,
+            //                    getY() + (height - texture.height()) / 2f,
+            //                    1,
+            //                    texture.width(),
+            //                    texture.height(),
+            //                    0,
+            //                    0,
+            //                    texture.width(),
+            //                    texture.height(),
+            //                    texture.width(),
+            //                    texture.height());
         } else {
             if (this.isHovered) {
-                RenderUtils.drawTexturedRect(
-                        poseStack,
-                        texture.resource(),
-                        getX() + (width - texture.width()) / 2f,
-                        getY() + (height - texture.height() / 2f) / 2f,
-                        1,
-                        texture.width(),
-                        texture.height() / 2f,
-                        0,
-                        texture.height() / 2,
-                        texture.width(),
-                        texture.height() / 2,
-                        texture.width(),
-                        texture.height());
+                //                RenderUtils.drawTexturedRect(
+                //                        poseStack,
+                //                        texture.resource(),
+                //                        getX() + (width - texture.width()) / 2f,
+                //                        getY() + (height - texture.height() / 2f) / 2f,
+                //                        1,
+                //                        texture.width(),
+                //                        texture.height() / 2f,
+                //                        0,
+                //                        texture.height() / 2,
+                //                        texture.width(),
+                //                        texture.height() / 2,
+                //                        texture.width(),
+                //                        texture.height());
             } else {
-                RenderUtils.drawTexturedRect(
-                        poseStack,
-                        texture.resource(),
-                        getX() + (width - texture.width()) / 2f,
-                        getY() + (height - texture.height() / 2f) / 2f,
-                        1,
-                        texture.width(),
-                        texture.height() / 2f,
-                        0,
-                        0,
-                        texture.width(),
-                        texture.height() / 2,
-                        texture.width(),
-                        texture.height());
+                //                RenderUtils.drawTexturedRect(
+                //                        poseStack,
+                //                        texture.resource(),
+                //                        getX() + (width - texture.width()) / 2f,
+                //                        getY() + (height - texture.height() / 2f) / 2f,
+                //                        1,
+                //                        texture.width(),
+                //                        texture.height() / 2f,
+                //                        0,
+                //                        0,
+                //                        texture.width(),
+                //                        texture.height() / 2,
+                //                        texture.width(),
+                //                        texture.height());
             }
         }
     }

@@ -24,8 +24,6 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Optional;
@@ -125,17 +123,17 @@ public class ItemFavoriteFeature extends Feature {
     }
 
     private static void renderFavoriteItem(SlotRenderEvent.CountPre event) {
-        BufferedRenderUtils.drawScalingTexturedRect(
-                event.getPoseStack(),
-                event.getGuiGraphics().bufferSource,
-                Texture.FAVORITE_ICON.resource(),
-                event.getSlot().x + 10,
-                event.getSlot().y,
-                200,
-                9,
-                9,
-                Texture.FAVORITE_ICON.width(),
-                Texture.FAVORITE_ICON.height());
+        //        BufferedRenderUtils.drawScalingTexturedRect(
+        //                event.getPoseStack(),
+        //                event.getGuiGraphics().bufferSource,
+        //                Texture.FAVORITE_ICON.resource(),
+        //                event.getSlot().x + 10,
+        //                event.getSlot().y,
+        //                200,
+        //                9,
+        //                9,
+        //                Texture.FAVORITE_ICON.width(),
+        //                Texture.FAVORITE_ICON.height());
     }
 
     private void tryChangeFavoriteStateOnHoveredSlot(Slot hoveredSlot) {

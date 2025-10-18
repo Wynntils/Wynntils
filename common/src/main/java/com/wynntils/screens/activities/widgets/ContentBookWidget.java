@@ -19,7 +19,6 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -94,15 +93,15 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
         final CustomColor gradientColor = activityInfo.status() == ActivityStatus.UNAVAILABLE
                 ? UNAVAILABLE_COLOR
                 : activityInfo.type().getColor();
-        RenderUtils.fillSidewaysGradient(
-                guiGraphics.pose(),
-                getX(),
-                getY(),
-                getX() + width,
-                getY() + height,
-                0,
-                gradientColor,
-                gradientColor.withAlpha(0));
+        //        RenderUtils.fillSidewaysGradient(
+        //                guiGraphics.pose(),
+        //                getX(),
+        //                getY(),
+        //                getX() + width,
+        //                getY() + height,
+        //                0,
+        //                gradientColor,
+        //                gradientColor.withAlpha(0));
         guiGraphics.renderItem(itemStack, getX(), getY());
 
         nameStyle = nameStyle.withBold(this.isHovered || activityInfo.trackingState() == ActivityTrackingState.TRACKED);
@@ -121,13 +120,15 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                         TextShadow.NORMAL);
 
         if (holder.inTutorial) {
-            RenderUtils.drawRotatingBorderSegment(
-                    guiGraphics.pose(), CommonColors.RED, getX(), getY(), getX() + width, getY() + height, 1, 2, 0.25f);
+            //            RenderUtils.drawRotatingBorderSegment(
+            //                    guiGraphics.pose(), CommonColors.RED, getX(), getY(), getX() + width, getY() + height,
+            // 1, 2, 0.25f);
         }
 
         if (searchMatch) return;
 
-        RenderUtils.drawRect(guiGraphics.pose(), CommonColors.BLACK.withAlpha(100), getX(), getY(), 1, width, height);
+        //        RenderUtils.drawRect(guiGraphics.pose(), CommonColors.BLACK.withAlpha(100), getX(), getY(), 1, width,
+        // height);
     }
 
     @Override

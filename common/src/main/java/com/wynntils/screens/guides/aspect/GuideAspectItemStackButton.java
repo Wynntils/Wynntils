@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.aspect;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -13,7 +12,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import net.minecraft.ChatFormatting;
@@ -50,27 +48,27 @@ public class GuideAspectItemStackButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         CustomColor color = CustomColor.fromChatFormatting(
                 itemStack.getAspectInfo().gearTier().getChatFormatting());
 
-        RenderUtils.drawTexturedRectWithColor(
-                poseStack,
-                Texture.HIGHLIGHT.resource(),
-                color.withAlpha(1f),
-                getX() - 1,
-                getY() - 1,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+        //        RenderUtils.drawTexturedRectWithColor(
+        //                poseStack,
+        //                Texture.HIGHLIGHT.resource(),
+        //                color.withAlpha(1f),
+        //                getX() - 1,
+        //                getY() - 1,
+        //                0,
+        //                18,
+        //                18,
+        //                Texture.HIGHLIGHT.width(),
+        //                Texture.HIGHLIGHT.height());
 
         RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 200);
+        //        poseStack.pushPose();
+        //        poseStack.translate(0, 0, 200);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,
@@ -82,19 +80,19 @@ public class GuideAspectItemStackButton extends WynntilsButton {
                         textColor,
                         HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
-        poseStack.popPose();
+        //        poseStack.popPose();
 
         if (Services.Favorites.isFavorite(itemStack)) {
-            RenderUtils.drawScalingTexturedRect(
-                    poseStack,
-                    Texture.FAVORITE_ICON.resource(),
-                    getX() + 12,
-                    getY() - 4,
-                    200,
-                    9,
-                    9,
-                    Texture.FAVORITE_ICON.width(),
-                    Texture.FAVORITE_ICON.height());
+            //            RenderUtils.drawScalingTexturedRect(
+            //                    poseStack,
+            //                    Texture.FAVORITE_ICON.resource(),
+            //                    getX() + 12,
+            //                    getY() - 4,
+            //                    200,
+            //                    9,
+            //                    9,
+            //                    Texture.FAVORITE_ICON.width(),
+            //                    Texture.FAVORITE_ICON.height());
         }
     }
 

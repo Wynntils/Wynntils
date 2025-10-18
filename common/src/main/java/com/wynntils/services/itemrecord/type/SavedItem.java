@@ -86,7 +86,7 @@ public record SavedItem(String base64, Set<String> categories, ItemStack itemSta
                 itemStack = ItemStack.CODEC
                         .parse(JsonOps.INSTANCE, itemStackJson)
                         .result()
-                        .orElseThrow(() -> new JsonParseException("Failed to decode ItemStack"));
+                        .orElse(ItemStack.EMPTY);
             } else if (jsonObject.has("itemStackInfo")) {
                 // Old items did not use the codec so will rely on the previously stored itemstackinfo
                 ItemStackInfo info = context.deserialize(jsonObject.get("itemStackInfo"), ItemStackInfo.class);
@@ -103,7 +103,6 @@ public record SavedItem(String base64, Set<String> categories, ItemStack itemSta
                 }
 
                 itemStack.applyComponents(componentsBuilder.build());
-                ;
             } else {
                 WynntilsMod.error("SavedItem has no itemStack or itemStackInfo");
                 itemStack = ItemStack.EMPTY;

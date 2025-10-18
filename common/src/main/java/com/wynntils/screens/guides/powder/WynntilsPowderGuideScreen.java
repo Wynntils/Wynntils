@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.powder;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsListScreen;
@@ -77,9 +76,9 @@ public final class WynntilsPowderGuideScreen
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        renderBackgroundTexture(poseStack);
+        //        renderBackgroundTexture(poseStack);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.powder.name"));
 
@@ -99,8 +98,9 @@ public final class WynntilsPowderGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuidePowderItemStackButton guidePowderItemStack) {
-            guiGraphics.renderTooltip(
-                    FontRenderer.getInstance().getFont(), guidePowderItemStack.getItemStack(), mouseX, mouseY);
+            //            guiGraphics.renderTooltip(
+            //                    FontRenderer.getInstance().getFont(), guidePowderItemStack.getItemStack(), mouseX,
+            // mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);

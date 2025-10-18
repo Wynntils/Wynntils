@@ -220,14 +220,14 @@ public class ItemCompareFeature extends Feature {
         Window window = McUtils.mc().getWindow();
         GuiGraphics guiGraphics = event.getGuiGraphics();
         Font font = FontRenderer.getInstance().getFont();
-        final PoseStack poseStack = guiGraphics.pose();
+        //        final PoseStack poseStack = guiGraphics.pose();
         float universalScale = Managers.Feature.getFeatureInstance(TooltipFittingFeature.class)
                 .universalScale
                 .get();
         int twoPad = COMPARE_ITEM_PAD * 2;
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 300);
+        //        poseStack.pushPose();
+        //        poseStack.translate(0, 0, 300);
 
         List<Component> hoveredLines = new ArrayList<>(event.getTooltips());
         if (removeFlavourText.get()) {
@@ -344,28 +344,29 @@ public class ItemCompareFeature extends Feature {
         event.setCanceled(true);
 
         changePositioner = true;
-        poseStack.pushPose();
-        poseStack.scale(hoveredScaleFactor, hoveredScaleFactor, 1);
-        guiGraphics.renderTooltip(
-                font, hoveredLines, hoveredItemStack.getTooltipImage(), (int) (hoveredX / hoveredScaleFactor), (int)
-                        (hoveredY / hoveredScaleFactor));
-        poseStack.popPose();
+        //        poseStack.pushPose();
+        //        poseStack.scale(hoveredScaleFactor, hoveredScaleFactor, 1);
+        //        guiGraphics.renderTooltip(
+        //                font, hoveredLines, hoveredItemStack.getTooltipImage(), (int) (hoveredX / hoveredScaleFactor),
+        // (int)
+        //                        (hoveredY / hoveredScaleFactor));
+        //        poseStack.popPose();
 
         for (Tooltip tooltip : tooltips) {
-            poseStack.pushPose();
+            //            poseStack.pushPose();
             float scaleFactor = tooltip.getScaleFactor();
-            poseStack.scale(scaleFactor, scaleFactor, 1);
-            guiGraphics.renderTooltip(
-                    font,
-                    tooltip.getLines(),
-                    tooltip.getVisualTooltipComponent(),
-                    (int) (tooltip.getX() / scaleFactor),
-                    (int) (tooltip.getY() / scaleFactor));
-            poseStack.popPose();
+            //            poseStack.scale(scaleFactor, scaleFactor, 1);
+            //            guiGraphics.renderTooltip(
+            //                    font,
+            //                    tooltip.getLines(),
+            //                    tooltip.getVisualTooltipComponent(),
+            //                    (int) (tooltip.getX() / scaleFactor),
+            //                    (int) (tooltip.getY() / scaleFactor));
+            //            poseStack.popPose();
         }
         changePositioner = false;
 
-        poseStack.popPose();
+        //        poseStack.popPose();
     }
 
     private boolean isMatchingType(WynnItem wynnItem, GearTypeItemProperty gearItemReference) {

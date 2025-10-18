@@ -4,12 +4,9 @@
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.maps.widgets.SeaskipperDestinationButton;
 import com.wynntils.screens.maps.widgets.SeaskipperTravelButton;
@@ -194,10 +191,10 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        //        PoseStack poseStack = guiGraphics.pose();
+        //        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
-        RenderSystem.enableDepthTest();
+        //        RenderSystem.enableDepthTest();
 
         renderMap(guiGraphics);
 
@@ -210,15 +207,15 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         renderPois(guiGraphics, mouseX, mouseY);
 
-        renderCursor(
-                poseStack,
-                1.5f,
-                Managers.Feature.getFeatureInstance(CustomSeaskipperScreenFeature.class)
-                        .pointerColor
-                        .get(),
-                Managers.Feature.getFeatureInstance(CustomSeaskipperScreenFeature.class)
-                        .pointerType
-                        .get());
+        //        renderCursor(
+        //                poseStack,
+        //                1.5f,
+        //                Managers.Feature.getFeatureInstance(CustomSeaskipperScreenFeature.class)
+        //                        .pointerColor
+        //                        .get(),
+        //                Managers.Feature.getFeatureInstance(CustomSeaskipperScreenFeature.class)
+        //                        .pointerType
+        //                        .get());
 
         RenderUtils.disableScissor(guiGraphics);
 
@@ -232,18 +229,18 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         renderTooltip(guiGraphics, mouseX, mouseY);
 
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.DESTINATION_LIST.resource(),
-                5,
-                departureBoardY,
-                0,
-                Texture.DESTINATION_LIST.width() * currentTextureScale,
-                Texture.DESTINATION_LIST.height() * currentTextureScale,
-                Texture.DESTINATION_LIST.width(),
-                Texture.DESTINATION_LIST.height());
+        //        RenderUtils.drawScalingTexturedRect(
+        //                poseStack,
+        //                Texture.DESTINATION_LIST.resource(),
+        //                5,
+        //                departureBoardY,
+        //                0,
+        //                Texture.DESTINATION_LIST.width() * currentTextureScale,
+        //                Texture.DESTINATION_LIST.height() * currentTextureScale,
+        //                Texture.DESTINATION_LIST.width(),
+        //                Texture.DESTINATION_LIST.height());
 
-        renderScrollButton(poseStack);
+        //        renderScrollButton(poseStack);
 
         for (SeaskipperDestinationButton destinationButton : destinationButtons) {
             destinationButton.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -419,8 +416,9 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                 float x = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
                 float z = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
-                RenderUtils.drawLine(
-                        poseStack, CommonColors.DARK_GRAY.withAlpha(0.5f), poiRenderX, poiRenderZ, x, z, 0, 1);
+                //                RenderUtils.drawLine(
+                //                        poseStack, CommonColors.DARK_GRAY.withAlpha(0.5f), poiRenderX, poiRenderZ, x,
+                // z, 0, 1);
             }
         }
 
@@ -494,8 +492,8 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     private void renderHoveredSeaskipperDestination(GuiGraphics guiGraphics) {
         if (hoveredPoi == null) return;
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 101);
+        //        poseStack.pushPose();
+        //        poseStack.translate(0, 0, 101);
         int xOffset = (int) (width - SCREEN_SIDE_OFFSET - 250);
         int yOffset = (int) (SCREEN_SIDE_OFFSET + 40);
 
@@ -504,21 +502,21 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         final float centerHeight = isAccessible ? 50 : 30;
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
-                xOffset,
-                Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
-                textureWidth,
-                centerHeight,
-                textureWidth,
-                Texture.MAP_INFO_TOOLTIP_CENTER.height());
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.MAP_INFO_NAME_BOX,
-                xOffset,
-                Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset);
+        //        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
+        //        RenderUtils.drawTexturedRect(
+        //                poseStack,
+        //                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
+        //                xOffset,
+        //                Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
+        //                textureWidth,
+        //                centerHeight,
+        //                textureWidth,
+        //                Texture.MAP_INFO_TOOLTIP_CENTER.height());
+        //        RenderUtils.drawTexturedRect(
+        //                poseStack,
+        //                Texture.MAP_INFO_NAME_BOX,
+        //                xOffset,
+        //                Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -624,7 +622,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
 
-        poseStack.popPose();
+        //        poseStack.popPose();
     }
 
     private void renderScrollButton(PoseStack poseStack) {

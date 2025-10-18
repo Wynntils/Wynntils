@@ -4,10 +4,8 @@
  */
 package com.wynntils.screens.guides.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -31,23 +29,23 @@ public class ImportButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         Texture addButton = Texture.ADD_ICON_OFFSET;
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                addButton.resource(),
-                this.getX(),
-                this.getY(),
-                0,
-                this.width,
-                this.height,
-                0,
-                isHovered ? addButton.height() / 2 : 0,
-                addButton.width(),
-                addButton.height() / 2,
-                addButton.width(),
-                addButton.height());
+        //        RenderUtils.drawTexturedRect(
+        //                poseStack,
+        //                addButton.resource(),
+        //                this.getX(),
+        //                this.getY(),
+        //                0,
+        //                this.width,
+        //                this.height,
+        //                0,
+        //                isHovered ? addButton.height() / 2 : 0,
+        //                addButton.width(),
+        //                addButton.height() / 2,
+        //                addButton.width(),
+        //                addButton.height());
     }
 
     @Override

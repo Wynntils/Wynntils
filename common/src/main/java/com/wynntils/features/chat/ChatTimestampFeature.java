@@ -98,8 +98,8 @@ public class ChatTimestampFeature extends Feature {
     public void onChatComponentRenderBackground(ChatComponentRenderEvent.Background event) {
         if (timestampWidth == 0) return;
 
-        event.getGuiGraphics().pose().pushPose();
-        event.getGuiGraphics().pose().translate((float) -(timestampWidth + 4), 0f, 0f);
+        //        event.getGuiGraphics().pose().pushPose();
+        //        event.getGuiGraphics().pose().translate((float) -(timestampWidth + 4), 0f, 0f);
 
         event.getGuiGraphics()
                 .fill(
@@ -109,7 +109,7 @@ public class ChatTimestampFeature extends Feature {
                         event.getRenderY(),
                         CommonColors.BLACK.withAlpha(event.getOpacity()).asInt());
 
-        event.getGuiGraphics().pose().popPose();
+        //        event.getGuiGraphics().pose().popPose();
     }
 
     @SubscribeEvent
@@ -120,8 +120,8 @@ public class ChatTimestampFeature extends Feature {
 
         if (extension.getTimestamp().isEmpty()) return;
 
-        event.getGuiGraphics().pose().pushPose();
-        event.getGuiGraphics().pose().translate(-(extension.getTimestamp().get().b() + 4f), 0f, 0f);
+        //        event.getGuiGraphics().pose().pushPose();
+        //        event.getGuiGraphics().pose().translate(-(extension.getTimestamp().get().b() + 4f), 0f, 0f);
 
         event.getGuiGraphics()
                 .drawString(
@@ -131,6 +131,6 @@ public class ChatTimestampFeature extends Feature {
                         event.getRenderY(),
                         (event.getTextOpacity()));
 
-        event.getGuiGraphics().pose().popPose();
+        //        event.getGuiGraphics().pose().popPose();
     }
 }

@@ -12,7 +12,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -81,22 +80,22 @@ public abstract class IconPoi implements Poi {
         float width = icon.width() * modifier;
         float height = icon.height() * modifier;
 
-        BufferedRenderUtils.drawColoredTexturedRect(
-                poseStack,
-                bufferSource,
-                icon.resource(),
-                this.getIconColor(),
-                this.getIconAlpha(zoomRenderScale),
-                renderX - width / 2,
-                renderY - height / 2,
-                getDisplayPriority().ordinal(), // z-index for rendering
-                width,
-                height);
+        //        BufferedRenderUtils.drawColoredTexturedRect(
+        //                poseStack,
+        //                bufferSource,
+        //                icon.resource(),
+        //                this.getIconColor(),
+        //                this.getIconAlpha(zoomRenderScale),
+        //                renderX - width / 2,
+        //                renderY - height / 2,
+        //                getDisplayPriority().ordinal(), // z-index for rendering
+        //                width,
+        //                height);
 
         if (hovered) {
             // Render name if hovered
 
-            poseStack.pushPose();
+            //            poseStack.pushPose();
 
             FontRenderer.getInstance()
                     .renderText(
@@ -109,7 +108,7 @@ public abstract class IconPoi implements Poi {
                             VerticalAlignment.MIDDLE,
                             TextShadow.OUTLINE);
 
-            poseStack.popPose();
+            //            poseStack.popPose();
         }
     }
 

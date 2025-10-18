@@ -19,12 +19,10 @@ import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.npcdialogue.event.NpcDialogueRemoved;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -195,15 +193,15 @@ public class NpcDialogueOverlay extends Overlay {
                     case BOTTOM -> this.getRenderY() + this.getHeight() - rectHeight;
                 };
         int colorAlphaRect = Math.round(MathUtils.clamp(255 * backgroundOpacity.get(), 0, 255));
-        BufferedRenderUtils.drawRect(
-                poseStack,
-                bufferSource,
-                CommonColors.BLACK.withAlpha(colorAlphaRect),
-                this.getRenderX(),
-                rectRenderY,
-                0,
-                this.getWidth(),
-                rectHeight);
+        //        BufferedRenderUtils.drawRect(
+        //                poseStack,
+        //                bufferSource,
+        //                CommonColors.BLACK.withAlpha(colorAlphaRect),
+        //                this.getRenderX(),
+        //                rectRenderY,
+        //                0,
+        //                this.getWidth(),
+        //                rectHeight);
 
         // Render the message
         FontRenderer.getInstance()

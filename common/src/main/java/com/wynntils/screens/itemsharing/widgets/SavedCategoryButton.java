@@ -6,7 +6,6 @@ package com.wynntils.screens.itemsharing.widgets;
 
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
@@ -27,8 +26,8 @@ public class SavedCategoryButton extends WynntilsButton {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawHoverableTexturedRect(
-                guiGraphics.pose(), buttonTexture, this.getX(), this.getY(), this.isHovered);
+        //        RenderUtils.drawHoverableTexturedRect(
+        //                guiGraphics.pose(), buttonTexture, this.getX(), this.getY(), this.isHovered);
     }
 
     @Override

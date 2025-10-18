@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.partymanagement;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
@@ -17,7 +16,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -129,7 +127,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         boolean inParty = Models.Party.isInParty();
 
@@ -181,14 +179,14 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                             VerticalAlignment.TOP,
                             TextShadow.NORMAL,
                             2);
-            RenderUtils.drawRect(
-                    poseStack,
-                    CommonColors.WHITE,
-                    dividedWidth * 4,
-                    dividedHeight * PARTY_LIST_DIV_HEIGHT,
-                    0,
-                    dividedWidth * 30 - dividedWidth * 2,
-                    1);
+            //            RenderUtils.drawRect(
+            //                    poseStack,
+            //                    CommonColors.WHITE,
+            //                    dividedWidth * 4,
+            //                    dividedHeight * PARTY_LIST_DIV_HEIGHT,
+            //                    0,
+            //                    dividedWidth * 30 - dividedWidth * 2,
+            //                    1);
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
@@ -260,14 +258,14 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         // endregion
 
         // region Suggestions
-        RenderUtils.drawRect(
-                poseStack,
-                CommonColors.WHITE,
-                dividedWidth * 36,
-                dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
-                0,
-                dividedWidth * 60 - dividedWidth * 36,
-                1);
+        //        RenderUtils.drawRect(
+        //                poseStack,
+        //                CommonColors.WHITE,
+        //                dividedWidth * 36,
+        //                dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
+        //                0,
+        //                dividedWidth * 60 - dividedWidth * 36,
+        //                1);
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
