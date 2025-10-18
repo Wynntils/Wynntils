@@ -5,7 +5,6 @@
 package com.wynntils.overlays.objectives;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -18,8 +17,6 @@ import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
@@ -68,7 +65,7 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         List<WynnObjective> objectives = Models.Objectives.getPersonalObjectives();
 
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         final int barHeight = this.enableProgressBar.get() ? 5 : 0;
         final int barWidth = 182;
@@ -120,19 +117,19 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
             }
 
             if (this.enableProgressBar.get()) {
-                BufferedRenderUtils.drawProgressBar(
-                        poseStack,
-                        bufferSource,
-                        Texture.EXPERIENCE_BAR,
-                        this.getRenderX(),
-                        renderY + SPACE_BETWEEN,
-                        this.getRenderX() + this.getWidth(),
-                        renderY + SPACE_BETWEEN + actualBarHeight,
-                        0,
-                        objectivesTexture.get().getTextureY1(),
-                        barWidth,
-                        objectivesTexture.get().getTextureY2(),
-                        objective.getProgress());
+                //                BufferedRenderUtils.drawProgressBar(
+                //                        poseStack,
+                //                        bufferSource,
+                //                        Texture.EXPERIENCE_BAR,
+                //                        this.getRenderX(),
+                //                        renderY + SPACE_BETWEEN,
+                //                        this.getRenderX() + this.getWidth(),
+                //                        renderY + SPACE_BETWEEN + actualBarHeight,
+                //                        0,
+                //                        objectivesTexture.get().getTextureY1(),
+                //                        barWidth,
+                //                        objectivesTexture.get().getTextureY2(),
+                //                        objective.getProgress());
             }
 
             offsetY += renderedHeightWithoutTextHeight + textHeight;

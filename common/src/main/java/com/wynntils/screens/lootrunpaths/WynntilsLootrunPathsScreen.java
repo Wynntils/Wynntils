@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.lootrunpaths;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -127,7 +126,8 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                                 .withStyle(ChatFormatting.RED));
             }
 
-            guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
+            //            guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX,
+            // mouseY);
             return;
         }
 
@@ -136,9 +136,9 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        renderBackgroundTexture(poseStack);
+        //        renderBackgroundTexture(poseStack);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.lootruns.name"));
 

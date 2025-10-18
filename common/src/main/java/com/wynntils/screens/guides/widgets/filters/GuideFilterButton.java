@@ -4,16 +4,10 @@
  */
 package com.wynntils.screens.guides.widgets.filters;
 
-import com.google.common.collect.Lists;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
-import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -33,27 +27,28 @@ public abstract class GuideFilterButton<T extends ItemStatProvider<?>> extends A
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX(), getY());
+        //        RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX(), getY());
 
         if (!isHovered && !state) return;
 
-        RenderUtils.drawRect(
-                guiGraphics.pose(),
-                (state ? CommonColors.ORANGE : CommonColors.WHITE).withAlpha(isHovered ? 0.7f : 0.5f),
-                getX(),
-                getY(),
-                0,
-                getWidth(),
-                getHeight());
+        //        RenderUtils.drawRect(
+        //                guiGraphics.pose(),
+        //                (state ? CommonColors.ORANGE : CommonColors.WHITE).withAlpha(isHovered ? 0.7f : 0.5f),
+        //                getX(),
+        //                getY(),
+        //                0,
+        //                getWidth(),
+        //                getHeight());
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(
-                            ComponentUtils.wrapTooltips(
-                                    List.of(Component.translatable(
-                                            "screens.wynntils.wynntilsGuides.filterWidget.tooltip", getFilterName())),
-                                    200),
-                            Component::getVisualOrderText));
+            //            McUtils.screen()
+            //                    .setTooltipForNextRenderPass(Lists.transform(
+            //                            ComponentUtils.wrapTooltips(
+            //                                    List.of(Component.translatable(
+            //                                            "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
+            // getFilterName())),
+            //                                    200),
+            //                            Component::getVisualOrderText));
         }
     }
 

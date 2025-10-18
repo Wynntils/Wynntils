@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -39,7 +38,6 @@ import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
@@ -165,13 +163,13 @@ public class ItemTextOverlayFeature extends Feature {
             return;
         }
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
-        poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
+        //        poseStack.pushPose();
+        //        poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
+        //        poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
         float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
         float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
         FontRenderer.getInstance().renderText(guiGraphics, x, y, textOverlay.task());
-        poseStack.popPose();
+        //        poseStack.popPose();
     }
 
     private TextOverlayInfo calculateOverlay(WynnItem wynnItem) {

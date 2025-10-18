@@ -5,7 +5,6 @@
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
@@ -114,8 +113,8 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     private void renderPlayerList(GuiGraphics guiGraphics, double animation) {
-        RenderSystem.disableDepthTest();
-        PoseStack poseStack = guiGraphics.pose();
+        //        RenderSystem.disableDepthTest();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         if (animation < 1) {
             RenderUtils.enableScissor(
@@ -126,7 +125,7 @@ public class CustomPlayerListOverlay extends Overlay {
                     McUtils.mc().getWindow().getScreenHeight());
         }
 
-        renderBackground(poseStack);
+        //        renderBackground(poseStack);
 
         renderPlayerNames(guiGraphics, availablePlayers.get());
 
@@ -135,13 +134,13 @@ public class CustomPlayerListOverlay extends Overlay {
         }
 
         float middle = getRenderX() + HALF_WIDTH + ROLL_WIDTH;
-        renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 11 - HALF_WIDTH * animation), 0);
-        renderRoll(
-                poseStack,
-                (float) (middle - 11 + HALF_WIDTH * animation),
-                Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH);
+        //        renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 11 - HALF_WIDTH * animation), 0);
+        //        renderRoll(
+        //                poseStack,
+        //                (float) (middle - 11 + HALF_WIDTH * animation),
+        //                Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH);
 
-        RenderSystem.enableDepthTest();
+        //        RenderSystem.enableDepthTest();
     }
 
     private void renderRoll(PoseStack poseStack, float xPos, int uOffset) {

@@ -14,7 +14,6 @@ import com.wynntils.screens.territorymanagement.highlights.TerritoryBonusEffectH
 import com.wynntils.screens.territorymanagement.highlights.TerritoryTypeHighlighter;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -43,14 +42,14 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
         }
 
         // Render the background
-        RenderUtils.drawRect(
-                guiGraphics.pose(),
-                CommonColors.BLACK.withAlpha(80),
-                this.getX(),
-                this.getY(),
-                0,
-                Texture.TERRITORY_MANAGEMENT_BACKGROUND.width(),
-                110);
+        //        RenderUtils.drawRect(
+        //                guiGraphics.pose(),
+        //                CommonColors.BLACK.withAlpha(80),
+        //                this.getX(),
+        //                this.getY(),
+        //                0,
+        //                Texture.TERRITORY_MANAGEMENT_BACKGROUND.width(),
+        //                110);
 
         // Render the title
         FontRenderer.getInstance()
@@ -80,15 +79,15 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
-        RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
-                TerritoryTypeHighlighter.HEADQUARTERS_BORDER_COLOR,
-                this.getX() + 3,
-                this.getY() + 32,
-                this.getX() + 7 + FontRenderer.getInstance().getFont().width(hqText.getComponent()),
-                this.getY() + 46,
-                0,
-                1f);
+        //        RenderUtils.drawRectBorders(
+        //                guiGraphics.pose(),
+        //                TerritoryTypeHighlighter.HEADQUARTERS_BORDER_COLOR,
+        //                this.getX() + 3,
+        //                this.getY() + 32,
+        //                this.getX() + 7 + FontRenderer.getInstance().getFont().width(hqText.getComponent()),
+        //                this.getY() + 46,
+        //                0,
+        //                1f);
 
         StyledText hqConnText = StyledText.fromComponent(Component.literal("[%d] HQ Connection"
                 .formatted(holder.getCountForConnectionType(TerritoryConnectionType.HEADQUARTERS_CONNECTION))));
@@ -102,15 +101,15 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
-        RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
-                TerritoryTypeHighlighter.HEADQUARTERS_CONNECTION_BORDER_COLOR,
-                this.getX() + 3,
-                this.getY() + 53,
-                this.getX() + 7 + FontRenderer.getInstance().getFont().width(hqConnText.getComponent()),
-                this.getY() + 66,
-                0,
-                1f);
+        //        RenderUtils.drawRectBorders(
+        //                guiGraphics.pose(),
+        //                TerritoryTypeHighlighter.HEADQUARTERS_CONNECTION_BORDER_COLOR,
+        //                this.getX() + 3,
+        //                this.getY() + 53,
+        //                this.getX() + 7 + FontRenderer.getInstance().getFont().width(hqConnText.getComponent()),
+        //                this.getY() + 66,
+        //                0,
+        //                1f);
 
         StyledText unconnectedText = StyledText.fromComponent(Component.literal(
                 "[%d] Unconnected".formatted(holder.getCountForConnectionType(TerritoryConnectionType.UNCONNECTED))));
@@ -124,15 +123,15 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
-        RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
-                TerritoryTypeHighlighter.NO_ROUTE_BORDER_COLOR,
-                this.getX() + 3,
-                this.getY() + 73,
-                this.getX() + 7 + FontRenderer.getInstance().getFont().width(unconnectedText.getComponent()),
-                this.getY() + 86,
-                0,
-                1f);
+        //        RenderUtils.drawRectBorders(
+        //                guiGraphics.pose(),
+        //                TerritoryTypeHighlighter.NO_ROUTE_BORDER_COLOR,
+        //                this.getX() + 3,
+        //                this.getY() + 73,
+        //                this.getX() + 7 + FontRenderer.getInstance().getFont().width(unconnectedText.getComponent()),
+        //                this.getY() + 86,
+        //                0,
+        //                1f);
 
         // Render the territory bonus effect highlight legends
         FontRenderer.getInstance()

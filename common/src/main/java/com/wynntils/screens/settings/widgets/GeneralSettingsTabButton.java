@@ -4,9 +4,7 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.function.Consumer;
@@ -49,7 +47,7 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         // Don't count as hovered if mouse is hovering the book as the tags render
         // slightly underneath the book
@@ -91,21 +89,21 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
             yOffset = hoverOffset;
         }
 
-        RenderUtils.drawTexturedRect(poseStack, tagTexture, this.getX() + xOffset, this.getY() + yOffset);
+        //        RenderUtils.drawTexturedRect(poseStack, tagTexture, this.getX() + xOffset, this.getY() + yOffset);
 
         // Render icon on tag
         if (offsetDirection == OffsetDirection.UP || offsetDirection == OffsetDirection.DOWN) {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    iconTexture,
-                    getX() + (getWidth() - iconTexture.width()) / 2f + xOffset,
-                    getY() + 14 + yOffset);
+            //            RenderUtils.drawTexturedRect(
+            //                    poseStack,
+            //                    iconTexture,
+            //                    getX() + (getWidth() - iconTexture.width()) / 2f + xOffset,
+            //                    getY() + 14 + yOffset);
         } else {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    iconTexture,
-                    getX() + 14 + xOffset,
-                    getY() + (getHeight() - iconTexture.height()) / 2f + yOffset);
+            //            RenderUtils.drawTexturedRect(
+            //                    poseStack,
+            //                    iconTexture,
+            //                    getX() + 14 + xOffset,
+            //                    getY() + (getHeight() - iconTexture.height()) / 2f + yOffset);
         }
     }
 

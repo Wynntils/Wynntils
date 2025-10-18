@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -23,11 +22,9 @@ import com.wynntils.services.map.pois.PlayerMainMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.BoundingBox;
@@ -234,7 +231,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(MainMapFeature.class)
@@ -245,9 +242,9 @@ public final class MainMapScreen extends AbstractMapScreen {
             return;
         }
 
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        //        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
-        RenderSystem.enableDepthTest();
+        //        RenderSystem.enableDepthTest();
 
         renderMap(guiGraphics);
 
@@ -258,41 +255,41 @@ public final class MainMapScreen extends AbstractMapScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(poseStack, mouseX, mouseY);
+        //        renderPois(poseStack, mouseX, mouseY);
 
         if (Managers.Feature.getFeatureInstance(MappingProgressFeature.class).isEnabled()) {
-            renderChunkBorders(poseStack);
+            //            renderChunkBorders(poseStack);
             BUFFER_SOURCE.endBatch();
         }
 
         // Cursor
-        renderCursor(
-                poseStack,
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .playerPointerScale
-                        .get(),
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .pointerColor
-                        .get(),
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .pointerType
-                        .get());
+        //        renderCursor(
+        //                poseStack,
+        //                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+        //                        .playerPointerScale
+        //                        .get(),
+        //                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+        //                        .pointerColor
+        //                        .get(),
+        //                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+        //                        .pointerType
+        //                        .get());
 
         LootrunPathInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
 
         if (currentLootrun != null) {
-            MapRenderer.renderLootrunLine(
-                    currentLootrun,
-                    2f,
-                    3f,
-                    poseStack,
-                    centerX,
-                    centerZ,
-                    mapCenterX,
-                    mapCenterZ,
-                    zoomRenderScale,
-                    CommonColors.LIGHT_BLUE.asInt(),
-                    CommonColors.BLACK.asInt());
+            //            MapRenderer.renderLootrunLine(
+            //                    currentLootrun,
+            //                    2f,
+            //                    3f,
+            //                    poseStack,
+            //                    centerX,
+            //                    centerZ,
+            //                    mapCenterX,
+            //                    mapCenterZ,
+            //                    zoomRenderScale,
+            //                    CommonColors.LIGHT_BLUE.asInt(),
+            //                    CommonColors.BLACK.asInt());
         }
 
         RenderUtils.disableScissor(guiGraphics);

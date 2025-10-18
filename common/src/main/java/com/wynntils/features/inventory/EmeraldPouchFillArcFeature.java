@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -60,8 +59,8 @@ public class EmeraldPouchFillArcFeature extends Feature {
         float ringFraction = Math.min(1f, capacityFraction);
 
         // draw
-        RenderSystem.enableDepthTest();
+        //        RenderSystem.enableDepthTest();
         RenderUtils.drawArc(poseStack, color, slotX - 2, slotY - 2, 100, ringFraction, 8, 10);
-        RenderSystem.disableDepthTest();
+        //        RenderSystem.disableDepthTest();
     }
 }

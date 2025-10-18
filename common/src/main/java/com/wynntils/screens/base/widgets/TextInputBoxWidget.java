@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
@@ -137,20 +136,20 @@ public class TextInputBoxWidget extends AbstractWidget {
             int firstWidth,
             int highlightedWidth,
             int lastWidth) {
-        poseStack.pushPose();
+        //        poseStack.pushPose();
 
-        poseStack.translate(this.getX(), this.getY(), 0);
+        //        poseStack.translate(this.getX(), this.getY(), 0);
 
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
-        RenderUtils.drawRectBorders(
-                poseStack,
-                isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
-                0,
-                0,
-                this.width,
-                this.height,
-                1,
-                2);
+        //        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
+        //        RenderUtils.drawRectBorders(
+        //                poseStack,
+        //                isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
+        //                0,
+        //                0,
+        //                this.width,
+        //                this.height,
+        //                1,
+        //                2);
 
         boolean defaultText = Objects.equals(textBoxInput, "");
 
@@ -198,18 +197,19 @@ public class TextInputBoxWidget extends AbstractWidget {
                             TextShadow.NORMAL);
         }
 
-        drawCursor(
-                poseStack,
-                font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))),
-                (textPadding + this.height - textPadding) / 2,
-                VerticalAlignment.MIDDLE,
-                false);
+        //        drawCursor(
+        //                poseStack,
+        //                font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))),
+        //                (textPadding + this.height - textPadding) / 2,
+        //                VerticalAlignment.MIDDLE,
+        //                false);
 
         if (isHovered && tooltip != null) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            //            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip,
+            // Component::getVisualOrderText));
         }
 
-        poseStack.popPose();
+        //        poseStack.popPose();
     }
 
     protected int getMaxTextWidth() {

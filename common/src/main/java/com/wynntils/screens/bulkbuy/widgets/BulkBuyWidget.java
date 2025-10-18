@@ -8,10 +8,8 @@ import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.AnimationPercentage;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -45,8 +43,9 @@ public class BulkBuyWidget extends AbstractWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.setX(originalX - (int) (getWidth() * animationPercentage.getAnimation()));
         // Prevent widget from rendering behind highlights
-        RenderUtils.createRectMask(guiGraphics.pose(), originalX - getWidth(), getY(), getWidth(), getHeight());
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BULK_BUY_PANEL, getX(), getY());
+        //        RenderUtils.createRectMask(guiGraphics.pose(), originalX - getWidth(), getY(), getWidth(),
+        // getHeight());
+        //        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BULK_BUY_PANEL, getX(), getY());
 
         // bulkBoughtItemStack is null when there is no item being bulk bought
         if (bulkBoughtItem == null) {
@@ -83,9 +82,9 @@ public class BulkBuyWidget extends AbstractWidget {
                             TextShadow.NORMAL);
 
             // X coordinate is center of widget (BULK_BUY_WIDGET_CENTER) minus half of the item icon width (8)
-            GuiGraphics itemRenderGuiGraphics = new GuiGraphics(McUtils.mc(), BUFFER_SOURCE);
-            itemRenderGuiGraphics.renderItem(
-                    bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);
+            //            GuiGraphics itemRenderGuiGraphics = new GuiGraphics(McUtils.mc(), BUFFER_SOURCE);
+            //            itemRenderGuiGraphics.renderItem(
+            //                    bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);
 
             FontRenderer.getInstance()
                     .renderScrollingText(

@@ -4,13 +4,10 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.google.common.collect.Lists;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -106,8 +103,9 @@ public class WynntilsCheckbox extends AbstractButton {
             resourceLocation = this.isFocused() || this.isHovered() ? CHECKBOX_HIGHLIGHTED_SPRITE : CHECKBOX_SPRITE;
         }
 
-        RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(), resourceLocation, this.getX(), this.getY(), 0, this.width, this.height, 20, 20);
+        //        RenderUtils.drawScalingTexturedRect(
+        //                guiGraphics.pose(), resourceLocation, this.getX(), this.getY(), 0, this.width, this.height,
+        // 20, 20);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
@@ -123,7 +121,8 @@ public class WynntilsCheckbox extends AbstractButton {
                         1f);
 
         if (isHovered && tooltip != null) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            //            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip,
+            // Component::getVisualOrderText));
         }
     }
 

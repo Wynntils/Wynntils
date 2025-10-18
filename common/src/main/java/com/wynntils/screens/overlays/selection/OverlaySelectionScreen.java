@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -156,11 +155,11 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         // When not rendering a preview of the selected overlay
         if (!renderPreview) {
-            RenderUtils.drawTexturedRect(poseStack, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
+            //            RenderUtils.drawTexturedRect(poseStack, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
 
             searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -206,12 +205,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             }
 
             if (overlayList.size() > MAX_OVERLAYS_PER_PAGE) {
-                renderOverlayScroll(poseStack);
+                //                renderOverlayScroll(poseStack);
             }
 
             if (selectedOverlay != null
                     && selectedOverlay.getVisibleConfigOptions().size() > CONFIGS_PER_PAGE) {
-                renderConfigScroll(poseStack);
+                //                renderConfigScroll(poseStack);
             }
 
             renderTooltips(guiGraphics, mouseX, mouseY);
@@ -225,17 +224,18 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             exitPreviewButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
             // We don't have a delta tracker here, so we'll just use a zero delta tracker
-            selectedOverlay.renderPreview(guiGraphics, guiGraphics.bufferSource, DeltaTracker.ZERO, McUtils.window());
+            //            selectedOverlay.renderPreview(guiGraphics, guiGraphics.bufferSource, DeltaTracker.ZERO,
+            // McUtils.window());
 
-            RenderUtils.drawRectBorders(
-                    poseStack,
-                    CommonColors.RED,
-                    selectedOverlay.getRenderX(),
-                    selectedOverlay.getRenderY(),
-                    selectedOverlay.getRenderX() + selectedOverlay.getWidth(),
-                    selectedOverlay.getRenderY() + selectedOverlay.getHeight(),
-                    1,
-                    1);
+            //            RenderUtils.drawRectBorders(
+            //                    poseStack,
+            //                    CommonColors.RED,
+            //                    selectedOverlay.getRenderX(),
+            //                    selectedOverlay.getRenderY(),
+            //                    selectedOverlay.getRenderX() + selectedOverlay.getWidth(),
+            //                    selectedOverlay.getRenderY() + selectedOverlay.getHeight(),
+            //                    1,
+            //                    1);
         }
     }
 
@@ -977,8 +977,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
         for (GuiEventListener child : optionButtons) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                //                guiGraphics.renderComponentTooltip(
+                //                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(),
+                // mouseX, mouseY);
                 break;
             }
         }

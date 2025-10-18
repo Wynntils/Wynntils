@@ -26,7 +26,6 @@ import com.wynntils.screens.playerviewer.widgets.SimplePlayerInteractionButton;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -279,12 +278,12 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        BufferedRenderUtils.drawTexturedRect(
-                guiGraphics.pose(),
-                guiGraphics.bufferSource,
-                Texture.PLAYER_VIEWER_BACKGROUND,
-                this.leftPos,
-                this.topPos);
+        //        BufferedRenderUtils.drawTexturedRect(
+        //                guiGraphics.pose(),
+        //                guiGraphics.bufferSource,
+        //                Texture.PLAYER_VIEWER_BACKGROUND,
+        //                this.leftPos,
+        //                this.topPos);
     }
 
     @Override

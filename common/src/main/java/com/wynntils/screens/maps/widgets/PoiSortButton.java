@@ -4,13 +4,11 @@
  */
 package com.wynntils.screens.maps.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.PoiManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -45,10 +43,11 @@ public class PoiSortButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRect(
-                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.5f : 0.3f), getX(), getY(), 0, width, height);
+        //        RenderUtils.drawRect(
+        //                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.5f : 0.3f), getX(), getY(), 0, width,
+        // height);
 
         FontRenderer.getInstance()
                 .renderText(

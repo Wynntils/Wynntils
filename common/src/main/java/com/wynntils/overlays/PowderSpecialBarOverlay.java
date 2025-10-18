@@ -20,7 +20,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
@@ -135,19 +134,19 @@ public class PowderSpecialBarOverlay extends Overlay {
                         this.getRenderHorizontalAlignment(),
                         this.textShadow.get());
 
-        BufferedRenderUtils.drawColoredProgressBar(
-                poseStack,
-                bufferSource,
-                universalBarTexture,
-                color,
-                this.getRenderX(),
-                renderY + 10,
-                this.getRenderX() + this.getWidth(),
-                renderY + 10 + renderedHeight,
-                0,
-                barTexture.get().getTextureY1(),
-                Texture.UNIVERSAL_BAR.width(),
-                barTexture.get().getTextureY2(),
-                (this.flip.get() ? -1f : 1f) * powderSpecialCharge / 100f);
+        //        BufferedRenderUtils.drawColoredProgressBar(
+        //                poseStack,
+        //                bufferSource,
+        //                universalBarTexture,
+        //                color,
+        //                this.getRenderX(),
+        //                renderY + 10,
+        //                this.getRenderX() + this.getWidth(),
+        //                renderY + 10 + renderedHeight,
+        //                0,
+        //                barTexture.get().getTextureY1(),
+        //                Texture.UNIVERSAL_BAR.width(),
+        //                barTexture.get().getTextureY2(),
+        //                (this.flip.get() ? -1f : 1f) * powderSpecialCharge / 100f);
     }
 }

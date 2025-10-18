@@ -4,7 +4,6 @@
  */
 package com.wynntils.utils.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CommonColors;
@@ -21,7 +20,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
@@ -266,14 +264,14 @@ public final class FontRenderer {
                     case BOTTOM -> renderY - font.lineHeight + 2;
                 };
 
-        RenderUtils.drawRect(
-                poseStack,
-                backgroundColor,
-                renderX,
-                cursorRenderY,
-                0,
-                font.width(text.getComponent()),
-                font.lineHeight + 2);
+        //        RenderUtils.drawRect(
+        //                poseStack,
+        //                backgroundColor,
+        //                renderX,
+        //                cursorRenderY,
+        //                0,
+        //                font.width(text.getComponent()),
+        //                font.lineHeight + 2);
 
         renderAlignedTextInBox(
                 guiGraphics,
@@ -393,17 +391,7 @@ public final class FontRenderer {
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
             TextShadow shadow) {
-        renderText(
-                guiGraphics,
-                text,
-                x,
-                y,
-                maxWidth,
-                customColor,
-                horizontalAlignment,
-                verticalAlignment,
-                shadow,
-                1f);
+        renderText(guiGraphics, text, x, y, maxWidth, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
     public void renderScrollingText(
@@ -455,8 +443,9 @@ public final class FontRenderer {
                         case BOTTOM -> y - font.lineHeight - 1;
                     };
 
-            RenderUtils.createRectMask(poseStack, (int) scissorX, (int) scissorY, (int) renderWidth, (int)
-                    ((font.lineHeight + 1) * textScale)); // + 1 to account for letters that sit lower, eg y
+            //            RenderUtils.createRectMask(poseStack, (int) scissorX, (int) scissorY, (int) renderWidth, (int)
+            //                    ((font.lineHeight + 1) * textScale)); // + 1 to account for letters that sit lower, eg
+            // y
             renderText(
                     guiGraphics,
                     styledText,
@@ -585,28 +574,18 @@ public final class FontRenderer {
                 line.getSetting().shadow());
     }
 
-    private void renderTexts(
-            GuiGraphics guiGraphics,
-            float x,
-            float y,
-            List<TextRenderTask> lines,
-            float textScale) {
+    private void renderTexts(GuiGraphics guiGraphics, float x, float y, List<TextRenderTask> lines, float textScale) {
         float currentY = y;
         for (TextRenderTask line : lines) {
             renderText(guiGraphics, x, currentY, line, textScale);
             currentY += FontRenderer.getInstance()
-                    .calculateRenderHeight(
-                            line.getText(), line.getSetting().maxWidth() / textScale)
+                            .calculateRenderHeight(
+                                    line.getText(), line.getSetting().maxWidth() / textScale)
                     * textScale;
         }
     }
 
-    private void renderText(
-            GuiGraphics guiGraphics,
-            float x,
-            float y,
-            TextRenderTask line,
-            float textScale) {
+    private void renderText(GuiGraphics guiGraphics, float x, float y, TextRenderTask line, float textScale) {
         renderText(
                 guiGraphics,
                 line.getText(),
@@ -620,8 +599,7 @@ public final class FontRenderer {
                 textScale);
     }
 
-    public void renderTexts(
-            GuiGraphics guiGraphics, float x, float y, List<TextRenderTask> lines) {
+    public void renderTexts(GuiGraphics guiGraphics, float x, float y, List<TextRenderTask> lines) {
         renderTexts(guiGraphics, x, y, lines, 1f);
     }
 

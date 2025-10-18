@@ -4,15 +4,11 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -44,19 +40,19 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-        RenderUtils.drawRoundedRectWithBorder(
-                poseStack,
-                CommonColors.BLACK,
-                getBackgroundColor(),
-                this.getX(),
-                this.getY(),
-                0,
-                this.width,
-                this.height,
-                1,
-                3,
-                3);
+        //        PoseStack poseStack = guiGraphics.pose();
+        //        RenderUtils.drawRoundedRectWithBorder(
+        //                poseStack,
+        //                CommonColors.BLACK,
+        //                getBackgroundColor(),
+        //                this.getX(),
+        //                this.getY(),
+        //                0,
+        //                this.width,
+        //                this.height,
+        //                1,
+        //                3,
+        //                3);
 
         FontRenderer.getInstance()
                 .renderScrollingAlignedTextInBox(
@@ -78,7 +74,8 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
         }
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            //            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip,
+            // Component::getVisualOrderText));
         }
     }
 

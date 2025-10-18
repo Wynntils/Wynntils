@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -43,7 +43,8 @@ public class ContainerRenderEvent extends Event {
     }
 
     public PoseStack getPoseStack() {
-        return guiGraphics.pose();
+        //        return guiGraphics.pose();
+        return new PoseStack();
     }
 
     public int getMouseX() {

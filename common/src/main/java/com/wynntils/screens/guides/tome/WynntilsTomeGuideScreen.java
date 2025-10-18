@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.tome;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -64,9 +63,9 @@ public final class WynntilsTomeGuideScreen extends WynntilsGuideScreen<GuideTome
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        renderBackgroundTexture(poseStack);
+        //        renderBackgroundTexture(poseStack);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.tomeGuide.name"));
 
@@ -84,8 +83,9 @@ public final class WynntilsTomeGuideScreen extends WynntilsGuideScreen<GuideTome
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideTomeItemStackButton guideTomeItemStackButton) {
-            guiGraphics.renderTooltip(
-                    FontRenderer.getInstance().getFont(), guideTomeItemStackButton.getItemStack(), mouseX, mouseY);
+            //            guiGraphics.renderTooltip(
+            //                    FontRenderer.getInstance().getFont(), guideTomeItemStackButton.getItemStack(), mouseX,
+            // mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);

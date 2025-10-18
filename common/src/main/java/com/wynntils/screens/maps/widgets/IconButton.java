@@ -4,11 +4,8 @@
  */
 package com.wynntils.screens.maps.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.maps.PoiCreationScreen;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -42,24 +39,26 @@ public class IconButton extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRect(
-                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
+        //        RenderUtils.drawRect(
+        //                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width,
+        // height);
 
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                mapIcon.resource(),
-                iconRenderX,
-                iconRenderY,
-                1,
-                iconWidth,
-                iconHeight,
-                mapIcon.width(),
-                mapIcon.height());
+        //        RenderUtils.drawScalingTexturedRect(
+        //                poseStack,
+        //                mapIcon.resource(),
+        //                iconRenderX,
+        //                iconRenderY,
+        //                1,
+        //                iconWidth,
+        //                iconHeight,
+        //                mapIcon.width(),
+        //                mapIcon.height());
 
         if (selected) {
-            RenderUtils.drawRect(poseStack, CommonColors.LIGHT_BLUE.withAlpha(35), getX(), getY(), 1, width, height);
+            //            RenderUtils.drawRect(poseStack, CommonColors.LIGHT_BLUE.withAlpha(35), getX(), getY(), 1,
+            // width, height);
         }
     }
 

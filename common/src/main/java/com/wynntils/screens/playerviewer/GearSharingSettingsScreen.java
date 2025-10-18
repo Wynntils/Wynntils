@@ -11,7 +11,6 @@ import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
@@ -134,7 +133,7 @@ public class GearSharingSettingsScreen extends WynntilsScreen {
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.PLAYER_VIEWER_BACKGROUND, offsetX, offsetY);
+        //        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.PLAYER_VIEWER_BACKGROUND, offsetX, offsetY);
 
         InventoryScreen.renderEntityInInventoryFollowsMouse(
                 guiGraphics,

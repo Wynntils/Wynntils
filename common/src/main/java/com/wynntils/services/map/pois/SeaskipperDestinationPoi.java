@@ -15,7 +15,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -90,8 +89,8 @@ public class SeaskipperDestinationPoi implements Poi {
             float renderY,
             float mapZoom,
             boolean renderBorders) {
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 100);
+        //        poseStack.pushPose();
+        //        poseStack.translate(0, 0, 100);
 
         final float renderWidth = width * mapZoom;
         final float renderHeight = height * mapZoom;
@@ -106,26 +105,26 @@ public class SeaskipperDestinationPoi implements Poi {
         CustomColor color = getColor();
 
         if (renderBorders) {
-            BufferedRenderUtils.drawRect(
-                    poseStack,
-                    bufferSource,
-                    color.withAlpha(65),
-                    actualRenderX,
-                    actualRenderZ,
-                    0,
-                    renderWidth,
-                    renderHeight);
+            //            BufferedRenderUtils.drawRect(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    color.withAlpha(65),
+            //                    actualRenderX,
+            //                    actualRenderZ,
+            //                    0,
+            //                    renderWidth,
+            //                    renderHeight);
 
-            BufferedRenderUtils.drawRectBorders(
-                    poseStack,
-                    bufferSource,
-                    color,
-                    actualRenderX,
-                    actualRenderZ,
-                    actualRenderX + renderWidth,
-                    actualRenderZ + renderHeight,
-                    0,
-                    1.5f);
+            //            BufferedRenderUtils.drawRectBorders(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    color,
+            //                    actualRenderX,
+            //                    actualRenderZ,
+            //                    actualRenderX + renderWidth,
+            //                    actualRenderZ + renderHeight,
+            //                    0,
+            //                    1.5f);
         }
 
         FontRenderer.getInstance()
@@ -142,7 +141,7 @@ public class SeaskipperDestinationPoi implements Poi {
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
 
-        poseStack.popPose();
+        //        poseStack.popPose();
     }
 
     @Override
