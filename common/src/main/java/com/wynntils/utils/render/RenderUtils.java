@@ -6,7 +6,6 @@ package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.MathUtils;
@@ -1189,14 +1188,14 @@ public final class RenderUtils {
         GL11.glEnable(GL11.GL_STENCIL_TEST);
 
         // Enable writing to stencil
-        RenderSystem.stencilMask(0xff);
-        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT);
-        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
-        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+        //        RenderSystem.stencilMask(0xff);
+        //        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT);
+        //        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
+        //        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
 
         // Disable writing to color or depth
-        RenderSystem.colorMask(false, false, false, false);
-        RenderSystem.depthMask(false);
+        //        RenderSystem.colorMask(false, false, false, false);
+        //        RenderSystem.depthMask(false);
 
         // Draw textured image
         int width = texture.width();
@@ -1216,13 +1215,13 @@ public final class RenderUtils {
                 height);
 
         // Reenable color and depth
-        RenderSystem.colorMask(true, true, true, true);
-        RenderSystem.depthMask(true);
+        //        RenderSystem.colorMask(true, true, true, true);
+        //        RenderSystem.depthMask(true);
 
         // Only write to stencil area
-        RenderSystem.stencilMask(0x00);
-        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
-        RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xff);
+        //        RenderSystem.stencilMask(0x00);
+        //        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        //        RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xff);
     }
 
     /**
@@ -1230,14 +1229,14 @@ public final class RenderUtils {
      * Based on Figura <a href="https://github.com/Kingdom-of-The-Moon/FiguraRewriteRewrite"> code</a>.
      */
     public static void clearMask() {
-        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT);
+        //        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT);
 
         // Turn off writing to stencil buffer.
-        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
-        RenderSystem.stencilMask(0x00);
+        //        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        //        RenderSystem.stencilMask(0x00);
 
         // Always succeed in the stencil test, no matter what.
-        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
+        //        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
     }
 
     public static void renderDebugGrid(
