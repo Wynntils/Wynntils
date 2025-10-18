@@ -39,6 +39,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -285,31 +286,31 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (GuiEventListener child : children()) {
-            if (child.isMouseOver(mouseX, mouseY)) {
-                child.mouseClicked(mouseX, mouseY, button);
+            if (child.isMouseOver(event.x(), event.y())) {
+                child.mouseClicked(event, isDoubleClick);
                 return true;
             }
         }
 
         // Manage on shift right click
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
             Handlers.Command.queueCommand("gu territory " + territoryPoi.getName());
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
                 Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
                         hovered.getLocation().asLocation());
                 return true;
             }
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            setCompassToMouseCoords(mouseX, mouseY, !KeyboardUtils.isShiftDown());
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            setCompassToMouseCoords(event.x(), event.y(), !KeyboardUtils.isShiftDown());
             return true;
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     private void renderHoveredTerritoryInfo(PoseStack poseStack) {

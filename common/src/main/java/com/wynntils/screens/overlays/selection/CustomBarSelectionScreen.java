@@ -26,6 +26,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -124,17 +125,17 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
+            if (listener.isMouseOver(event.x(), event.y())) {
                 // Special case for the texture button to handle both
                 // left and right clicks
                 if (listener == textureButton) {
-                    if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                         scrollTextures(1);
                         McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
                         return true;
-                    } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                    } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                         scrollTextures(-1);
                         McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
                         return true;
@@ -142,7 +143,7 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
 
                     return false;
                 } else {
-                    return listener.mouseClicked(mouseX, mouseY, button);
+                    return listener.mouseClicked(event, isDoubleClick);
                 }
             }
         }

@@ -29,6 +29,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -331,26 +332,26 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Order of these matter!
         // First, check if we need to load a new widget. If yes, it could have a different save button
         // state. Then, we need to determine if a checkbox was clicked.
         // If yes, update the save/add button states and move on.
         // If not, deal with clicks on the save/add buttons, then super method if needed.
         for (AbstractWidget widget : chatTabsWidgets) {
-            if (widget.isMouseOver(mouseX, mouseY)) {
-                return widget.mouseClicked(mouseX, mouseY, button);
+            if (widget.isMouseOver(event.x(), event.y())) {
+                return widget.mouseClicked(event, isDoubleClick);
             }
         }
 
-        if (saveButton.isMouseOver(mouseX, mouseY)) {
-            return saveButton.mouseClicked(mouseX, mouseY, button);
+        if (saveButton.isMouseOver(event.x(), event.y())) {
+            return saveButton.mouseClicked(event, isDoubleClick);
         }
-        if (saveAndCloseButton.isMouseOver(mouseX, mouseY)) {
-            return saveAndCloseButton.mouseClicked(mouseX, mouseY, button);
+        if (saveAndCloseButton.isMouseOver(event.x(), event.y())) {
+            return saveAndCloseButton.mouseClicked(event, isDoubleClick);
         }
 
-        boolean mouseClicked = super.doMouseClicked(mouseX, mouseY, button);
+        boolean mouseClicked = super.doMouseClicked(event, isDoubleClick);
         updateSaveButtonActive();
 
         return mouseClicked;

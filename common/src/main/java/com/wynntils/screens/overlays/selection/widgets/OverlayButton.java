@@ -27,6 +27,9 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -162,17 +165,17 @@ public class OverlayButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies and released
-        if ((mouseY <= selectionScreen.getConfigMaskTopY() || mouseY >= selectionScreen.getConfigMaskBottomY())) {
+        if ((event.y() <= selectionScreen.getConfigMaskTopY() || event.y() >= selectionScreen.getConfigMaskBottomY())) {
             return false;
         }
 
-        if (editInput != null && editInput.visible && editInput.mouseClicked(mouseX, mouseY, button)) {
+        if (editInput != null && editInput.visible && editInput.mouseClicked(event, isDoubleClick)) {
             return true;
         }
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (isSelected() && editInput != null) {
                 editInput.visible = true;
                 selectionScreen.setFocusedTextInput(editInput);
@@ -181,29 +184,29 @@ public class OverlayButton extends WynntilsButton {
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies and released
-        if ((mouseY <= selectionScreen.getConfigMaskTopY() || mouseY >= selectionScreen.getConfigMaskBottomY())) {
+        if ((event.y() <= selectionScreen.getConfigMaskTopY() || event.y() >= selectionScreen.getConfigMaskBottomY())) {
             return false;
         }
 
         if (editInput != null) {
-            editInput.mouseReleased(mouseX, mouseY, button);
+            editInput.mouseReleased(event);
         }
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ENTER && editInput != null && editInput.visible) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ENTER && editInput != null && editInput.visible) {
             editInput.visible = false;
 
             if (overlay instanceof CustomNameProperty customNameOverlay) {

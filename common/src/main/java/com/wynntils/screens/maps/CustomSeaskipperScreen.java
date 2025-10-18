@@ -36,6 +36,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 
@@ -256,10 +257,10 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (GuiEventListener child : children()) {
-            if (child.isMouseOver(mouseX, mouseY)) {
-                child.mouseClicked(mouseX, mouseY, button);
+            if (child.isMouseOver(event.x(), event.y())) {
+                child.mouseClicked(event, isDoubleClick);
                 return true;
             }
         }
@@ -291,8 +292,8 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         if (!draggingScroll && (availablePois.size() > MAX_DESTINATIONS)) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     (int) scrollButtonRenderX,
                     (int) (scrollButtonRenderX + Texture.SCROLL_BUTTON.width() * currentTextureScale),
                     (int) scrollButtonRenderY,
@@ -303,17 +304,17 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             int startRenderY = (int) (departureBoardY + 4 * currentTextureScale * 0.933f);
             int scrollAreaStartY = startRenderY + 9;
 
             int newValue = Math.round(MathUtils.map(
-                    (float) mouseY,
+                    (float) event.y(),
                     scrollAreaStartY,
                     scrollAreaStartY + scrollAreaHeight - Texture.SCROLL_BUTTON.height() * currentTextureScale,
                     0,
@@ -324,13 +325,13 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
             return true;
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
