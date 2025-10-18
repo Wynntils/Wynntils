@@ -52,7 +52,12 @@ public abstract class ForgeLevelRendererMixin {
             ResourceHandle<RenderTarget> entityOutlineResourceHandle,
             CallbackInfo ci,
             @Local PoseStack poseStack) {
-        MixinHelper.post(new RenderTileLevelLastEvent(McUtils.mc().levelRenderer, poseStack, deltaTracker, camera));
+        MixinHelper.post(new RenderTileLevelLastEvent(
+                McUtils.mc().levelRenderer,
+                poseStack,
+                McUtils.mc().levelRenderer.submitNodeStorage,
+                deltaTracker,
+                camera));
     }
 
     // This reverts the patch made by NeoForge here: https://github.com/neoforged/NeoForge/pull/858

@@ -106,13 +106,12 @@ public class BeaconBeamFeature extends Feature {
                 colorInt = color.withAlpha(alpha).asInt();
             }
 
-            BeaconRenderer.renderBeaconBeam(
+            BeaconRenderer.submitBeaconBeam(
                     poseStack,
-                    BUFFER_SOURCE,
+                    event.getSubmitNodeStorage(),
                     BeaconRenderer.BEAM_LOCATION,
                     event.getDeltaTracker().getGameTimeDeltaPartialTick(false),
                     1f,
-                    McUtils.player().level().getGameTime(),
                     0,
                     BeaconRenderer.MAX_RENDER_Y,
                     colorInt,
