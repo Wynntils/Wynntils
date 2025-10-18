@@ -40,7 +40,7 @@ public final class SkinUtils {
         // If this starts being done repeatedly for the same texture string,
         // we should cache the UUID.
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "");
-        gameProfile.getProperties().put("textures", new Property("textures", textureString, null));
+        gameProfile.properties().put("textures", new Property("textures", textureString, null));
 
         itemStack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(gameProfile));
     }
