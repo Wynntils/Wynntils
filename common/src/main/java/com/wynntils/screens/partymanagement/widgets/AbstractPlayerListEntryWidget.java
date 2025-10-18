@@ -36,7 +36,7 @@ public abstract class AbstractPlayerListEntryWidget extends AbstractWidget {
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be Steves
         Identifier skin = (playerInfo == null)
                 ? DefaultPlayerSkin.getDefaultTexture()
-                : playerInfo.getSkin().texture();
+                : playerInfo.getSkin().body().texturePath();
         // head rendering
         RenderUtils.drawTexturedRect(
                 poseStack,
