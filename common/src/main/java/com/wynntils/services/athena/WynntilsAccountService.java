@@ -145,7 +145,8 @@ public final class WynntilsAccountService extends Service {
             String s1 = (new BigInteger(Crypt.digestData("", publicKey, secretkey))).toString(16);
 
             McUtils.mc()
-                    .getMinecraftSessionService()
+                    .services()
+                    .sessionService()
                     .joinServer(
                             McUtils.mc().getUser().getProfileId(),
                             McUtils.mc().getUser().getAccessToken(),
