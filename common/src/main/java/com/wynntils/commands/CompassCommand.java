@@ -58,6 +58,11 @@ public class CompassCommand extends Command {
     }
 
     @Override
+    public List<String> getAliases() {
+        return List.of("c", "comp");
+    }
+
+    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base, CommandBuildContext context) {
         return base.then(Commands.literal("at")
