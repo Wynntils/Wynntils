@@ -63,6 +63,6 @@ public final class SkinUtils {
             return DefaultPlayerSkin.getDefaultTexture();
         }
 
-        return playerInfo.getSkin().texture();
+        return playerInfo.getSkin().body().texturePath();
     }
 }
