@@ -23,6 +23,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class ChatTabsWidget extends AbstractWidget {
@@ -106,10 +107,10 @@ public class ChatTabsWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (deleteButton.mouseClicked(mouseX, mouseY, button)
-                || moveUpButton.mouseClicked(mouseX, mouseY, button)
-                || moveDownButton.mouseClicked(mouseX, mouseY, button)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (deleteButton.mouseClicked(event, isDoubleClick)
+                || moveUpButton.mouseClicked(event, isDoubleClick)
+                || moveDownButton.mouseClicked(event, isDoubleClick)) {
             parent.reloadChatTabsWidgets();
             return true;
         }
