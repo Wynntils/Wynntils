@@ -4,9 +4,7 @@
  */
 package com.wynntils.utils.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
@@ -25,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import org.joml.Vector2d;
@@ -239,9 +236,9 @@ public final class MapRenderer {
 
         BufferBuilder bufferBuilder =
                 Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
-        RenderSystem.setShader(CoreShaders.POSITION_COLOR);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.disableCull();
+        //        RenderSystem.setShader(CoreShaders.POSITION_COLOR);
+        //        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        //        RenderSystem.disableCull();
 
         List<Vector2f> points = new ArrayList<>();
 
@@ -295,8 +292,8 @@ public final class MapRenderer {
                     lootrunWidth);
         }
 
-        BufferUploader.drawWithShader(bufferBuilder.build());
-        RenderSystem.enableCull();
+        //        BufferUploader.drawWithShader(bufferBuilder.build());
+        //        RenderSystem.enableCull();
     }
 
     private static void drawTriangles(
