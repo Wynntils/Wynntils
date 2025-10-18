@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.partymanagement.widgets;
@@ -36,7 +36,7 @@ public abstract class AbstractPlayerListEntryWidget extends AbstractWidget {
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be Steves
         ResourceLocation skin = (playerInfo == null)
                 ? DefaultPlayerSkin.getDefaultTexture()
-                : playerInfo.getSkin().texture();
+                : playerInfo.getSkin().body().texturePath();
         // head rendering
         RenderUtils.drawTexturedRect(
                 poseStack,
