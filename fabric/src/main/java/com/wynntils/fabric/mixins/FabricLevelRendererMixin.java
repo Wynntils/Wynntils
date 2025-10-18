@@ -15,6 +15,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.joml.Matrix4f;
@@ -30,6 +31,10 @@ public abstract class FabricLevelRendererMixin {
     @Shadow
     @Final
     private Minecraft minecraft;
+
+    @Shadow
+    @Final
+    private SubmitNodeStorage submitNodeStorage;
 
     @Inject(
             at =
@@ -53,6 +58,7 @@ public abstract class FabricLevelRendererMixin {
             ResourceHandle<RenderTarget> entityOutlineResourceHandle,
             CallbackInfo ci,
             @Local PoseStack poseStack) {
-        MixinHelper.post(new RenderTileLevelLastEvent(this.minecraft.levelRenderer, poseStack, deltaTracker, camera));
+        MixinHelper.post(new RenderTileLevelLastEvent(
+                this.minecraft.levelRenderer, poseStack, submitNodeStorage, deltaTracker, camera));
     }
 }
