@@ -259,4 +259,25 @@ public final class StringUtils {
             return I18n.get("utils.wynntils.time.future", timeStr);
         }
     }
+
+    public static String getAbbreviation(String input) {
+        if (input == null || input.isBlank()) return "";
+
+        String[] words = WHITESPACES.split(input.trim());
+        StringBuilder abbreviation = new StringBuilder();
+
+        if (words.length == 1) {
+            String word = words[0];
+            abbreviation.append(word, 0, Math.min(3, word.length()));
+        } else {
+            for (int i = 0; i < Math.min(3, words.length); i++) {
+                String word = words[i];
+                if (!word.isEmpty()) {
+                    abbreviation.append(word.charAt(0));
+                }
+            }
+        }
+
+        return abbreviation.toString();
+    }
 }
