@@ -54,6 +54,7 @@ import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.StoreTierAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
+import com.wynntils.models.items.annotators.gui.TradeMarketIdentificationFilterAnnotator;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
@@ -111,6 +112,7 @@ public final class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new StoreTierAnnotator());
         Handlers.Item.registerAnnotator(new TerritoryAnnotator());
         Handlers.Item.registerAnnotator(new TerritoryUpgradeAnnotator());
+        Handlers.Item.registerAnnotator(new TradeMarketIdentificationFilterAnnotator());
 
         // ItemAnnotators
         // This must be done last
