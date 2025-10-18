@@ -66,17 +66,6 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    // renderMenuBackground causes issues with our texture rendering so until that is fixed we can just overwrite the
-    // call
-    @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (McUtils.mc().level == null) {
-            renderPanorama(guiGraphics, partialTick);
-        }
-
-        renderBlurredBackground();
-    }
-
     @Override
     public final boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         try {
