@@ -128,12 +128,12 @@ public class MainMapFeature extends Feature {
     private void openMainMap() {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind
         // and should signal that we should close when the key is not held anymore.
-        if (McUtils.mc().screen instanceof MainMapScreen mainMapScreen) {
+        if (McUtils.screen() instanceof MainMapScreen mainMapScreen) {
             mainMapScreen.setHoldingMapKey(true);
             return;
         }
 
-        McUtils.mc().setScreen(MainMapScreen.create());
+        McUtils.setScreen(MainMapScreen.create());
     }
 
     private void openWaypointSetup() {
@@ -142,7 +142,7 @@ public class MainMapFeature extends Feature {
                 McUtils.player().getBlockY(),
                 McUtils.player().getBlockZ());
 
-        McUtils.mc().setScreen(PoiCreationScreen.create(null, location));
+        McUtils.setScreen(PoiCreationScreen.create(null, location));
     }
 
     @SubscribeEvent

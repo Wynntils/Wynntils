@@ -24,7 +24,7 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
     }
 
     private void failure(String method, Throwable throwable) {
-        McUtils.mc().setScreen(null);
+        McUtils.setScreen(null);
 
         WynntilsMod.reportCrash(
                 CrashType.SCREEN,

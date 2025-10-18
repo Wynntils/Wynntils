@@ -81,7 +81,7 @@ public class BulkBuyFeature extends Feature {
         // Shops are all size 54 for double chest, sometimes size 41 is sent (no idea what it's for)
         if (e.getSlot() != 4 || e.getContainer().getContainerSize() != 54) return;
 
-        initBulkBuyWidget(McUtils.mc().screen);
+        initBulkBuyWidget(McUtils.screen());
     }
 
     @SubscribeEvent

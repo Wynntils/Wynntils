@@ -515,7 +515,7 @@ public final class ActivityModel extends Model {
             case MAP ->
                 Managers.TickScheduler.scheduleNextTick(() -> {
                     McUtils.player().closeContainer();
-                    McUtils.mc().setScreen(MainMapScreen.create(x, z));
+                    McUtils.setScreen(MainMapScreen.create(x, z));
                 });
             case COMPASS -> {
                 McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);

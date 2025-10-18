@@ -62,7 +62,7 @@ public class InventoryEmeraldCountFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
-        Screen screen = McUtils.mc().screen;
+        Screen screen = McUtils.screen();
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
         if (isExcludedContainer(screen)) return;
 

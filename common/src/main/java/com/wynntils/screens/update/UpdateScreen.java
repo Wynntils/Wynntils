@@ -316,7 +316,7 @@ public final class UpdateScreen extends WynntilsScreen {
                         return;
                     }
                     Managers.TickScheduler.scheduleNextTick(
-                            () -> McUtils.mc().setScreen(ChangelogScreen.create(changelog, this)));
+                            () -> McUtils.setScreen(ChangelogScreen.create(changelog, this)));
                 });
     }
 

@@ -64,7 +64,7 @@ public final class ContainerQueryHandler extends Handler {
             return;
         }
 
-        Screen screen = McUtils.mc().screen;
+        Screen screen = McUtils.screen();
         if (screen instanceof AbstractContainerScreen) {
             // Another inventory screen is already open, cannot do this
             firstStep.onError("Another container screen is already open");

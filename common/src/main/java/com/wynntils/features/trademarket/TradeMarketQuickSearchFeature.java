@@ -121,7 +121,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
         // If the GUI closed first, we can open the chat immediately, otherwise
         // tell the MenuClosedEvent listener to open it when the container closes.
-        if (McUtils.mc().screen == null) {
+        if (McUtils.screen() == null) {
             openChat();
         } else {
             openChatWhenContainerClosed = true;
@@ -134,10 +134,10 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     private void openChat() {
         if (quickSearching) {
-            McUtils.mc().setScreen(new ChatScreen(searchQuery));
+            McUtils.setScreen(new ChatScreen(searchQuery));
             quickSearching = false;
         } else {
-            McUtils.mc().setScreen(new ChatScreen(""));
+            McUtils.setScreen(new ChatScreen(""));
         }
     }
 

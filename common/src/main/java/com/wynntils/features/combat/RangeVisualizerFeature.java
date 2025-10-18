@@ -149,7 +149,7 @@ public class RangeVisualizerFeature extends Feature {
                 // This is ourselves, rendered from outside
 
                 // Don't render for preview in inventory or character selection screen
-                if (McUtils.mc().screen != null && !(McUtils.mc().screen instanceof ChatScreen)) return;
+                if (McUtils.screen() != null && !(McUtils.screen() instanceof ChatScreen)) return;
 
                 validGear = Models.CharacterStats.getWornGear();
             } else {

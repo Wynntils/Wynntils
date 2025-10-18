@@ -60,7 +60,7 @@ public class InputTranscriptionFeature extends Feature {
 
     @SubscribeEvent
     public void onEditBoxInsert(EditBoxInsertEvent event) {
-        if (!(McUtils.mc().screen instanceof ChatScreen chatScreen)) return;
+        if (!(McUtils.screen() instanceof ChatScreen chatScreen)) return;
         if (!transcriptionButtons.get()) return;
         if (event.getTextToWrite().isBlank()) return;
 
@@ -91,7 +91,7 @@ public class InputTranscriptionFeature extends Feature {
     @SubscribeEvent
     public void onChatScreenKeyTyped(ChatScreenKeyTypedEvent event) {
         if (event.getKeyCode() != GLFW.GLFW_KEY_BACKSPACE) return;
-        if (!(McUtils.mc().screen instanceof ChatScreen chatScreen)) return;
+        if (!(McUtils.screen() instanceof ChatScreen chatScreen)) return;
         if (!transcriptionButtons.get()) return;
         if (!chatScreen.input.getHighlighted().isBlank()) return;
 

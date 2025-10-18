@@ -66,7 +66,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         editButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.edit"),
-                        (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, poi)))
+                        (button) -> McUtils.setScreen(PoiCreationScreen.create(managementScreen, poi)))
                 .pos(x + width - 20 - (manageButtonsWidth * 2), y)
                 .size(manageButtonsWidth, 20)
                 .build();

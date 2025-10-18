@@ -38,7 +38,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
 
     @SubscribeEvent
     public void onSellDialogueUpdated(TradeMarketSellDialogueUpdatedEvent e) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
+        if (!(McUtils.screen() instanceof ContainerScreen containerScreen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
         removePriceButtons(containerScreen);

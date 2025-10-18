@@ -63,7 +63,7 @@ public class ItemFavoriteFeature extends Feature {
         if (!(Models.Container.getCurrentContainer() instanceof RewardContainer)) return;
 
         boolean containsFavorite = false;
-        NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
+        NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.screen());
         for (int i = 0; i < 27; i++) {
             ItemStack itemStack = items.get(i);
 

@@ -214,12 +214,12 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                 Texture.MESSAGE_ICON,
                 () -> {
                     this.onClose(); // Required so that nametags render properly
-                    McUtils.mc().setScreen(new ChatScreen("/msg " + playerName + " "));
+                    McUtils.setScreen(new ChatScreen("/msg " + playerName + " "));
                 }));
 
         settingsButton = new Button.Builder(
                         Component.translatable("screens.wynntils.playerViewer.sharingSettings"), (b) -> {
-                            McUtils.mc().setScreen(GearSharingSettingsScreen.create(this));
+                            McUtils.setScreen(GearSharingSettingsScreen.create(this));
                         })
                 .pos(leftPos + 1, topPos - 21)
                 .size(Texture.PLAYER_VIEWER_BACKGROUND.width() - 23, 20)

@@ -179,7 +179,7 @@ public class WynntilsCommand extends Command {
     }
 
     private int openGearSharingSettings(CommandContext<CommandSourceStack> commandSourceStackCommandContext) {
-        Managers.TickScheduler.scheduleNextTick(() -> McUtils.mc().setScreen(GearSharingSettingsScreen.create(null)));
+        Managers.TickScheduler.scheduleNextTick(() -> McUtils.setScreen(GearSharingSettingsScreen.create(null)));
         return 1;
     }
 
@@ -235,7 +235,7 @@ public class WynntilsCommand extends Command {
     }
 
     private int downloads(CommandContext<CommandSourceStack> context) {
-        Managers.TickScheduler.scheduleNextTick(() -> McUtils.mc().setScreen(DownloadScreen.create(null, null)));
+        Managers.TickScheduler.scheduleNextTick(() -> McUtils.setScreen(DownloadScreen.create(null, null)));
         return 1;
     }
 
@@ -402,7 +402,7 @@ public class WynntilsCommand extends Command {
 
     private int openScreen(Screen screenToOpen) {
         // Delay is needed to prevent chat screen overwriting the new screen
-        Managers.TickScheduler.scheduleLater(() -> McUtils.mc().setScreen(screenToOpen), 2);
+        Managers.TickScheduler.scheduleLater(() -> McUtils.setScreen(screenToOpen), 2);
         return 1;
     }
 

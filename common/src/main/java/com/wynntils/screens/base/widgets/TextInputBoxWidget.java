@@ -206,7 +206,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                 false);
 
         if (isHovered && tooltip != null) {
-            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
 
         poseStack.popPose();

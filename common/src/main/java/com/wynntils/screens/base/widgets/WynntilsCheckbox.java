@@ -122,7 +122,7 @@ public class WynntilsCheckbox extends AbstractButton {
                         1f);
 
         if (isHovered && tooltip != null) {
-            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 

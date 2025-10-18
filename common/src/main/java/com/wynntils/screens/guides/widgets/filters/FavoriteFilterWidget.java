@@ -62,8 +62,7 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
                         TextShadow.NONE);
 
         if (isHovered) {
-            McUtils.mc()
-                    .screen
+            McUtils.screen()
                     .setTooltipForNextRenderPass(Lists.transform(
                             ComponentUtils.wrapTooltips(
                                     List.of(Component.translatable(

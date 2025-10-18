@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.lootrunpaths.widgets;
@@ -101,7 +101,7 @@ public class LootrunPathButton extends WynntilsButton {
             LootrunPath path = lootrun.path();
             Position start = path.points().getFirst();
 
-            McUtils.mc().setScreen(MainMapScreen.create((float) start.x(), (float) start.z()));
+            McUtils.setScreen(MainMapScreen.create((float) start.x(), (float) start.z()));
             return true;
         }
 

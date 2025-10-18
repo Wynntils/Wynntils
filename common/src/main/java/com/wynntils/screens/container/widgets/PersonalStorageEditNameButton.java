@@ -54,9 +54,7 @@ public class PersonalStorageEditNameButton extends WynntilsButton {
         if (isHovered) {
             List<Component> tooltipToUse = Models.Bank.isEditingName() ? CANCEL_TOOLTIP : EDIT_TOOLTIP;
 
-            McUtils.mc()
-                    .screen
-                    .setTooltipForNextRenderPass(Lists.transform(tooltipToUse, Component::getVisualOrderText));
+            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltipToUse, Component::getVisualOrderText));
         }
     }
 

@@ -71,7 +71,7 @@ public class ChatItemFeature extends Feature {
 
     @RegisterKeyBind
     private final KeyBind itemRecordKeybind = new KeyBind(
-            "Open Item Record", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc().setScreen(SavedItemsScreen.create()));
+            "Open Item Record", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.setScreen(SavedItemsScreen.create()));
 
     @Persisted
     private final Config<Boolean> showSharingScreen = new Config<>(true);
@@ -84,7 +84,7 @@ public class ChatItemFeature extends Feature {
     @SubscribeEvent
     public void onKeyTyped(KeyInputEvent e) {
         if (!Models.WorldState.onWorld()) return;
-        if (!(McUtils.mc().screen instanceof ChatScreen chatScreen)) return;
+        if (!(McUtils.screen() instanceof ChatScreen chatScreen)) return;
 
         EditBox chatInput = ((ChatScreenAccessor) chatScreen).getChatInput();
 
@@ -174,7 +174,7 @@ public class ChatItemFeature extends Feature {
 
         if (share) {
             if (showSharingScreen.get()) {
-                McUtils.mc().setScreen(ItemSharingScreen.create(wynnItemOpt.get(), hoveredSlot.getItem()));
+                McUtils.setScreen(ItemSharingScreen.create(wynnItemOpt.get(), hoveredSlot.getItem()));
             } else {
                 makeChatPrompt(wynnItemOpt.get());
             }

@@ -91,8 +91,7 @@ public class DownloadWidget extends AbstractWidget {
         }
 
         if (isHovered) {
-            McUtils.mc()
-                    .screen
+            McUtils.screen()
                     .setTooltipForNextRenderPass(Lists.transform(DOWNLOAD_TOOLTIP, Component::getVisualOrderText));
         }
     }

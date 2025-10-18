@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -180,7 +180,7 @@ public class SeaskipperDestinationPoi implements Poi {
     private CustomColor getColor() {
         if (destination.isPlayerInside()) {
             return CommonColors.ORANGE;
-        } else if (McUtils.mc().screen instanceof CustomSeaskipperScreen seaskipperScreen
+        } else if (McUtils.screen() instanceof CustomSeaskipperScreen seaskipperScreen
                 && seaskipperScreen.getSelectedDestination() == this) {
             return CommonColors.GREEN;
         } else if (!destination.isAvailable()) {

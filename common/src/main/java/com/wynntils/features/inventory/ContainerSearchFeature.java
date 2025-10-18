@@ -186,7 +186,7 @@ public class ContainerSearchFeature extends Feature {
 
         if (!matchedItems
                 && autoSearching
-                && McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
+                && McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen) {
             tryAutoSearch(abstractContainerScreen);
         }
     }
@@ -220,7 +220,7 @@ public class ContainerSearchFeature extends Feature {
             if (lastSearchWidget == null
                     || lastSearchWidget.getTextBoxInput().isEmpty()
                     || currentContainer == null
-                    || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
+                    || !(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)
                     || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
 
             // Set widget as unfocused so number input actions can be performed after searching
@@ -408,7 +408,7 @@ public class ContainerSearchFeature extends Feature {
     }
 
     private void forceUpdateSearch() {
-        Screen screen = McUtils.mc().screen;
+        Screen screen = McUtils.screen();
         if (lastSearchWidget != null
                 && screen instanceof AbstractContainerScreen<?> abstractContainerScreen
                 && abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu) {

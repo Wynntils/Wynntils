@@ -46,8 +46,7 @@ public abstract class GuideFilterButton<T extends ItemStatProvider<?>> extends A
                 getHeight());
 
         if (isHovered) {
-            McUtils.mc()
-                    .screen
+            McUtils.screen()
                     .setTooltipForNextRenderPass(Lists.transform(
                             ComponentUtils.wrapTooltips(
                                     List.of(Component.translatable(
