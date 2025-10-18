@@ -22,6 +22,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class SecretInputWidget extends AbstractWidget {
@@ -80,32 +81,32 @@ public class SecretInputWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (maskedTextInputWidget.isMouseOver(mouseX, mouseY)) {
-            return maskedTextInputWidget.mouseClicked(mouseX, mouseY, button);
-        } else if (openLinkButton.isMouseOver(mouseX, mouseY)) {
-            return openLinkButton.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (maskedTextInputWidget.isMouseOver(event.x(), event.y())) {
+            return maskedTextInputWidget.mouseClicked(event, isDoubleClick);
+        } else if (openLinkButton.isMouseOver(event.x(), event.y())) {
+            return openLinkButton.mouseClicked(event, isDoubleClick);
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (maskedTextInputWidget.isMouseOver(mouseX, mouseY)) {
-            return maskedTextInputWidget.mouseReleased(mouseX, mouseY, button);
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (maskedTextInputWidget.isMouseOver(event.x(), event.y())) {
+            return maskedTextInputWidget.mouseReleased(event);
         }
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (maskedTextInputWidget.isMouseOver(mouseX, mouseY)) {
-            return maskedTextInputWidget.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (maskedTextInputWidget.isMouseOver(event.x(), event.y())) {
+            return maskedTextInputWidget.mouseDragged(event, dragX, dragY);
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override

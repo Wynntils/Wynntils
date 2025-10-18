@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -92,8 +94,8 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType) == ConfirmedBoolean.TRUE) {
                 Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
                         .crowdSourcedDataTypeEnabledMap
@@ -119,7 +121,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
             return true;
         }
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             ConfirmedBoolean dataCollectionState =
                     Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType);
             if (dataCollectionState == ConfirmedBoolean.UNCONFIRMED) {
@@ -145,7 +147,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     @Override
     public List<Component> getTooltipLines() {

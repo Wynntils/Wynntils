@@ -21,6 +21,7 @@ import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class SecretsScreen extends WynntilsScreen {
@@ -84,11 +85,11 @@ public class SecretsScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     offsetX + 336,
                     offsetX + 336 + Texture.SCROLL_BUTTON.width(),
                     (int) scrollY,
@@ -100,22 +101,22 @@ public class SecretsScreen extends WynntilsScreen {
         }
 
         for (SecretInputWidget secretInput : secretInputs) {
-            if (secretInput.isMouseOver(mouseX, mouseY)) {
-                return secretInput.mouseClicked(mouseX, mouseY, button);
+            if (secretInput.isMouseOver(event.x(), event.y())) {
+                return secretInput.mouseClicked(event, isDoubleClick);
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             int scrollAreaStartY = offsetY + 7 + 17;
             int scrollAreaHeight = SCROLL_AREA_HEIGHT - Texture.SCROLL_BUTTON.height();
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY, scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
+                    (float) event.y(), scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
 
             newOffset = Math.max(0, Math.min(newOffset, getMaxScrollOffset()));
 
@@ -125,25 +126,25 @@ public class SecretsScreen extends WynntilsScreen {
         }
 
         for (SecretInputWidget secretInput : secretInputs) {
-            if (secretInput.isMouseOver(mouseX, mouseY)) {
-                return secretInput.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            if (secretInput.isMouseOver(event.x(), event.y())) {
+                return secretInput.mouseDragged(event, dragX, dragY);
             }
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
         for (SecretInputWidget secretInput : secretInputs) {
-            if (secretInput.isMouseOver(mouseX, mouseY)) {
-                return secretInput.mouseReleased(mouseX, mouseY, button);
+            if (secretInput.isMouseOver(event.x(), event.y())) {
+                return secretInput.mouseReleased(event);
             }
         }
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
