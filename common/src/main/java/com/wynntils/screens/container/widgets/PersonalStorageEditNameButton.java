@@ -14,6 +14,8 @@ import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -38,35 +40,35 @@ public class PersonalStorageEditNameButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.EDIT_NAME_ICON.resource(),
-                this.getX(),
-                this.getY(),
-                0,
-                this.width,
-                this.height,
-                Texture.EDIT_NAME_ICON.width(),
-                Texture.EDIT_NAME_ICON.height());
+//        RenderUtils.drawScalingTexturedRect(
+//                poseStack,
+//                Texture.EDIT_NAME_ICON.resource(),
+//                this.getX(),
+//                this.getY(),
+//                0,
+//                this.width,
+//                this.height,
+//                Texture.EDIT_NAME_ICON.width(),
+//                Texture.EDIT_NAME_ICON.height());
 
         if (isHovered) {
             List<Component> tooltipToUse = Models.Bank.isEditingName() ? CANCEL_TOOLTIP : EDIT_TOOLTIP;
 
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltipToUse, Component::getVisualOrderText));
+//            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltipToUse, Component::getVisualOrderText));
         }
     }
 
     // unused
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             parent.toggleEditInput(!Models.Bank.isEditingName());
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !Models.Bank.isEditingName()) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !Models.Bank.isEditingName()) {
             Models.Bank.resetCurrentPageName();
             parent.updatePageName();
         }

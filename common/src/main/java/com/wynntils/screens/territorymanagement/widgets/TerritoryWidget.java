@@ -56,29 +56,29 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!territoryColor.backgroundColors().isEmpty()) {
-            RenderUtils.drawMulticoloredRect(
-                    guiGraphics.pose(),
-                    territoryColor.backgroundColors(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    this.getWidth(),
-                    this.getHeight());
+//            RenderUtils.drawMulticoloredRect(
+//                    guiGraphics.pose(),
+//                    territoryColor.backgroundColors(),
+//                    this.getX(),
+//                    this.getY(),
+//                    0,
+//                    this.getWidth(),
+//                    this.getHeight());
         }
 
         if (territoryColor.borderColor() != CustomColor.NONE) {
-            RenderUtils.drawRectBorders(
-                    guiGraphics.pose(),
-                    territoryColor.borderColor(),
-                    this.getX() + 0.75f,
-                    this.getY() + 0.75f,
-                    this.getX() + this.getWidth() - 0.75f,
-                    this.getY() + this.getHeight() - 0.75f,
-                    0,
-                    1.5f);
+//            RenderUtils.drawRectBorders(
+//                    guiGraphics.pose(),
+//                    territoryColor.borderColor(),
+//                    this.getX() + 0.75f,
+//                    this.getY() + 0.75f,
+//                    this.getX() + this.getWidth() - 0.75f,
+//                    this.getY() + this.getHeight() - 0.75f,
+//                    0,
+//                    1.5f);
         }
 
-        guiGraphics.pose().pushPose();
+//        guiGraphics.pose().pushPose();
 
         // Pick the texture based on the item type
         Texture texture = Texture.TERRITORY_ITEM;
@@ -98,18 +98,18 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
         int itemRenderY = this.getY() + (this.getHeight() - itemHeight) / 2;
 
         // Render at the center of the widget
-        RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(),
-                texture.resource(),
-                itemRenderX,
-                itemRenderY,
-                0,
-                itemWidth,
-                itemHeight,
-                texture.width(),
-                texture.height());
+//        RenderUtils.drawScalingTexturedRect(
+//                guiGraphics.pose(),
+//                texture.resource(),
+//                itemRenderX,
+//                itemRenderY,
+//                0,
+//                itemWidth,
+//                itemHeight,
+//                texture.width(),
+//                texture.height());
 
-        guiGraphics.pose().popPose();
+//        guiGraphics.pose().popPose();
 
         // Render the territory production type icons
         Set<GuildResource> productionTypes = territoryItem.getProduction().keySet().stream()
@@ -126,34 +126,34 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
                         ? productionTypes.iterator().next().getPrettySymbol().trim()
                         : "";
 
-                FontRenderer.getInstance()
-                        .renderAlignedTextInBox(
-                                guiGraphics.pose(),
-                                StyledText.fromString(symbol),
-                                this.getX(),
-                                this.getX() + this.getWidth(),
-                                this.getY(),
-                                this.getY() + this.getHeight(),
-                                0,
-                                CommonColors.WHITE,
-                                HorizontalAlignment.LEFT,
-                                VerticalAlignment.TOP,
-                                TextShadow.NORMAL);
+//                FontRenderer.getInstance()
+//                        .renderAlignedTextInBox(
+//                                guiGraphics.pose(),
+//                                StyledText.fromString(symbol),
+//                                this.getX(),
+//                                this.getX() + this.getWidth(),
+//                                this.getY(),
+//                                this.getY() + this.getHeight(),
+//                                0,
+//                                CommonColors.WHITE,
+//                                HorizontalAlignment.LEFT,
+//                                VerticalAlignment.TOP,
+//                                TextShadow.NORMAL);
             } else {
                 // Render the production types in two lines, 2 icons per line
                 int i = 0;
                 for (GuildResource productionType : productionTypes) {
                     String symbol = productionType.getPrettySymbol().trim();
-                    FontRenderer.getInstance()
-                            .renderText(
-                                    guiGraphics.pose(),
-                                    StyledText.fromString(symbol),
-                                    this.getX() + i % 2 * 8,
-                                    this.getY() + i / 2 * 8,
-                                    CommonColors.WHITE,
-                                    HorizontalAlignment.LEFT,
-                                    VerticalAlignment.TOP,
-                                    TextShadow.NORMAL);
+//                    FontRenderer.getInstance()
+//                            .renderText(
+//                                    guiGraphics.pose(),
+//                                    StyledText.fromString(symbol),
+//                                    this.getX() + i % 2 * 8,
+//                                    this.getY() + i / 2 * 8,
+//                                    CommonColors.WHITE,
+//                                    HorizontalAlignment.LEFT,
+//                                    VerticalAlignment.TOP,
+//                                    TextShadow.NORMAL);
                     i++;
                 }
             }
@@ -168,27 +168,27 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
 
             float textScale = Math.min(0.95f, maxTextWidth / (float) textWidth);
 
-            FontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            guiGraphics.pose(),
-                            StyledText.fromString(shortTerritoryName),
-                            this.getX(),
-                            this.getX() + this.getWidth(),
-                            this.getY(),
-                            this.getY() + this.getHeight(),
-                            0,
-                            CommonColors.ORANGE,
-                            HorizontalAlignment.RIGHT,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.OUTLINE,
-                            textScale);
+//            FontRenderer.getInstance()
+//                    .renderAlignedTextInBox(
+//                            guiGraphics.pose(),
+//                            StyledText.fromString(shortTerritoryName),
+//                            this.getX(),
+//                            this.getX() + this.getWidth(),
+//                            this.getY(),
+//                            this.getY() + this.getHeight(),
+//                            0,
+//                            CommonColors.ORANGE,
+//                            HorizontalAlignment.RIGHT,
+//                            VerticalAlignment.BOTTOM,
+//                            TextShadow.OUTLINE,
+//                            textScale);
         }
     }
 
-    @Override
-    public void onClick(double mouseX, double mouseY) {
-        holder.territoryItemClicked(territoryItem);
-    }
+//    @Override
+//    public void onClick(double mouseX, double mouseY) {
+//        holder.territoryItemClicked(territoryItem);
+//    }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}

@@ -42,6 +42,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -386,8 +387,8 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-        renderScrollButton(poseStack);
+//        PoseStack poseStack = guiGraphics.pose();
+//        renderScrollButton(poseStack);
 
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
@@ -395,7 +396,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                 .isEmpty()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.poiManagementGui.noPois")),
                             (int) (dividedWidth * 32),
@@ -410,7 +411,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.search")),
                         (int) (dividedWidth * 10) + 5,
                         (int) dividedHeight,
@@ -422,7 +423,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         if (pois.isEmpty()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.poiManagementGui.noFilteredPois")),
                             (int) (dividedWidth * 32),
@@ -432,14 +433,14 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         } else {
-            RenderUtils.drawRect(
-                    poseStack,
-                    CommonColors.WHITE,
-                    (int) (dividedWidth * 12),
-                    (int) (dividedHeight * HEADER_HEIGHT),
-                    0,
-                    (int) (dividedWidth * 38),
-                    1);
+//            RenderUtils.drawRect(
+//                    poseStack,
+//                    CommonColors.WHITE,
+//                    (int) (dividedWidth * 12),
+//                    (int) (dividedHeight * HEADER_HEIGHT),
+//                    0,
+//                    (int) (dividedWidth * 38),
+//                    1);
         }
     }
 
@@ -447,24 +448,24 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(),
-                Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
-                backgroundX,
-                backgroundY,
-                0,
-                backgroundWidth,
-                backgroundHeight,
-                Texture.WAYPOINT_MANAGER_BACKGROUND.width(),
-                Texture.WAYPOINT_MANAGER_BACKGROUND.height());
+//        RenderUtils.drawScalingTexturedRect(
+//                guiGraphics.pose(),
+//                Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
+//                backgroundX,
+//                backgroundY,
+//                0,
+//                backgroundWidth,
+//                backgroundHeight,
+//                Texture.WAYPOINT_MANAGER_BACKGROUND.width(),
+//                Texture.WAYPOINT_MANAGER_BACKGROUND.height());
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll && (pois.size() > maxPoisToDisplay)) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     (int) scrollButtonRenderX,
                     (int) (scrollButtonRenderX + (dividedWidth / 2)),
                     (int) scrollButtonRenderY,
@@ -475,18 +476,18 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (!draggingScroll) return false;
 
         int renderY = (int) ((this.height - backgroundHeight) / 2 + (int) (dividedHeight * 3));
         int scrollAreaStartY = renderY + 7;
 
         int newValue = Math.round(MathUtils.map(
-                (float) mouseY,
+                (float) event.y(),
                 scrollAreaStartY,
                 scrollAreaStartY + scrollAreaHeight,
                 0,
@@ -494,13 +495,13 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
         scroll(newValue - scrollOffset);
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 
@@ -25,7 +26,7 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
 
     @Override
     public void renderAt(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             float renderX,
             float renderY,
@@ -34,39 +35,39 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
             float zoomRenderScale,
             float zoomLevel,
             boolean showLabels) {
-        poseStack.pushPose();
-        poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
+//        poseStack.pushPose();
+//        poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
 
         // outline
-        BufferedRenderUtils.drawRectBorders(
-                poseStack,
-                bufferSource,
-                user.getRelationColor(),
-                renderX,
-                renderY,
-                renderX + playerHeadRenderSize,
-                renderY + playerHeadRenderSize,
-                0,
-                2);
+//        BufferedRenderUtils.drawRectBorders(
+//                poseStack,
+//                bufferSource,
+//                user.getRelationColor(),
+//                renderX,
+//                renderY,
+//                renderX + playerHeadRenderSize,
+//                renderY + playerHeadRenderSize,
+//                0,
+//                2);
 
         // head
         ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
-        BufferedRenderUtils.drawTexturedRect(
-                poseStack,
-                bufferSource,
-                skin,
-                renderX,
-                renderY,
-                0,
-                playerHeadRenderSize,
-                playerHeadRenderSize,
-                8,
-                8,
-                8,
-                8,
-                64,
-                64);
+//        BufferedRenderUtils.drawTexturedRect(
+//                poseStack,
+//                bufferSource,
+//                skin,
+//                renderX,
+//                renderY,
+//                0,
+//                playerHeadRenderSize,
+//                playerHeadRenderSize,
+//                8,
+//                8,
+//                8,
+//                8,
+//                64,
+//                64);
 
-        poseStack.popPose();
+//        poseStack.popPose();
     }
 }

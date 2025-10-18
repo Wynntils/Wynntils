@@ -13,6 +13,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class AnyFilterWidget extends GeneralFilterWidget {
@@ -32,29 +33,29 @@ public class AnyFilterWidget extends GeneralFilterWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        StyledText.fromComponent(Component.translatable(
-                                "screens.wynntils.itemFilter.anyFilterActive",
-                                parent.getProvider().getDisplayName())),
-                        getX(),
-                        getX() + getWidth(),
-                        getY(),
-                        getY() + getHeight() - 30,
-                        getWidth(),
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+//        FontRenderer.getInstance()
+//                .renderAlignedTextInBox(
+//                        guiGraphics.pose(),
+//                        StyledText.fromComponent(Component.translatable(
+//                                "screens.wynntils.itemFilter.anyFilterActive",
+//                                parent.getProvider().getDisplayName())),
+//                        getX(),
+//                        getX() + getWidth(),
+//                        getY(),
+//                        getY() + getHeight() - 30,
+//                        getWidth(),
+//                        CommonColors.WHITE,
+//                        HorizontalAlignment.CENTER,
+//                        VerticalAlignment.MIDDLE,
+//                        TextShadow.NORMAL);
 
         removeButton.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (removeButton.isMouseOver(mouseX, mouseY)) {
-            return removeButton.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (removeButton.isMouseOver(event.x(), event.y())) {
+            return removeButton.mouseClicked(event, isDoubleClick);
         }
 
         return false;

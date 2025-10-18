@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.map.pois;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
@@ -17,6 +16,7 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public abstract class IconPoi implements Poi {
@@ -61,7 +61,7 @@ public abstract class IconPoi implements Poi {
 
     @Override
     public void renderAt(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             float renderX,
             float renderY,
@@ -81,26 +81,26 @@ public abstract class IconPoi implements Poi {
         float width = icon.width() * modifier;
         float height = icon.height() * modifier;
 
-        BufferedRenderUtils.drawColoredTexturedRect(
-                poseStack,
-                bufferSource,
-                icon.resource(),
-                this.getIconColor(),
-                this.getIconAlpha(zoomRenderScale),
-                renderX - width / 2,
-                renderY - height / 2,
-                getDisplayPriority().ordinal(), // z-index for rendering
-                width,
-                height);
+//        BufferedRenderUtils.drawColoredTexturedRect(
+//                poseStack,
+//                bufferSource,
+//                icon.resource(),
+//                this.getIconColor(),
+//                this.getIconAlpha(zoomRenderScale),
+//                renderX - width / 2,
+//                renderY - height / 2,
+//                getDisplayPriority().ordinal(), // z-index for rendering
+//                width,
+//                height);
 
         if (hovered) {
             // Render name if hovered
 
-            poseStack.pushPose();
+//            poseStack.pushPose();
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(getName()),
                             renderX,
                             15 + renderY,
@@ -109,7 +109,7 @@ public abstract class IconPoi implements Poi {
                             VerticalAlignment.MIDDLE,
                             TextShadow.OUTLINE);
 
-            poseStack.popPose();
+//            poseStack.popPose();
         }
     }
 

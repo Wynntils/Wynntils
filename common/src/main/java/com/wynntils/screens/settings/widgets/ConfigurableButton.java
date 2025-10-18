@@ -5,7 +5,6 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
@@ -28,6 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class ConfigurableButton extends WynntilsButton {
@@ -83,8 +84,6 @@ public class ConfigurableButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         // Don't want to display tooltip when the tile is outside the mask from the screen
         if (isHovered && (mouseY <= maskTopY || mouseY >= maskBottomY)) {
             isHovered = false;
@@ -114,7 +113,7 @@ public class ConfigurableButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(textToRender),
                         (isOverlay ? this.getX() + 12 : this.getX()),
                         this.getY(),
@@ -129,23 +128,23 @@ public class ConfigurableButton extends WynntilsButton {
 
         if (isHovered) {
             if (enabledCheckbox.isHovered()) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(toggleTooltip, Component::getVisualOrderText));
+//                McUtils.screen()
+//                        .setTooltipForNextRenderPass(Lists.transform(toggleTooltip, Component::getVisualOrderText));
             } else if (configurable instanceof Feature) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(
-                                Lists.transform(descriptionTooltip, Component::getVisualOrderText));
+//                McUtils.screen()
+//                        .setTooltipForNextRenderPass(
+//                                Lists.transform(descriptionTooltip, Component::getVisualOrderText));
             }
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Prevent interaction when the tile is outside of the mask from the screen
-        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
+        if ((event.y() <= maskTopY || event.y() >= maskBottomY)) return false;
 
         // Toggle the enabled state of the configurable when toggling the checkbox
-        if (enabledCheckbox.isMouseOver(mouseX, mouseY)) {
+        if (enabledCheckbox.isMouseOver(event.x(), event.y())) {
             if (configurable instanceof Feature feature) {
                 feature.setUserEnabled(!feature.isEnabled());
             } else if (configurable instanceof Overlay) {
@@ -165,14 +164,14 @@ public class ConfigurableButton extends WynntilsButton {
                 bookSettingsScreen.changesMade();
             }
 
-            return enabledCheckbox.mouseClicked(mouseX, mouseY, button);
+            return enabledCheckbox.mouseClicked(event, isDoubleClick);
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.setSelectedConfigurable(configurable);
         }

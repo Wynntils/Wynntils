@@ -23,39 +23,39 @@ public class AlphaSlider extends AbstractSliderButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.fillSidewaysGradient(
-                guiGraphics.pose(),
-                getX(),
-                getY(),
-                getX() + width,
-                getY() + height,
-                0,
-                CommonColors.WHITE.withAlpha(0),
-                colorPickerScreen.getColor().withAlpha(255));
+//        RenderUtils.fillSidewaysGradient(
+//                guiGraphics.pose(),
+//                getX(),
+//                getY(),
+//                getX() + width,
+//                getY() + height,
+//                0,
+//                CommonColors.WHITE.withAlpha(0),
+//                colorPickerScreen.getColor().withAlpha(255));
 
         double exactX = getX() + width * value;
         int handleX = (int) Math.round(exactX);
 
-        RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
-                CommonColors.DARK_GRAY,
-                (float) (handleX - 1.0),
-                (float) getY(),
-                (float) (handleX + 1.0),
-                (float) (getY() + getHeight()),
-                2,
-                1);
+//        RenderUtils.drawRectBorders(
+//                guiGraphics.pose(),
+//                CommonColors.DARK_GRAY,
+//                (float) (handleX - 1.0),
+//                (float) getY(),
+//                (float) (handleX + 1.0),
+//                (float) (getY() + getHeight()),
+//                2,
+//                1);
     }
 
-    @Override
-    public void onClick(double mouseX, double mouseY) {
-        updateValue(mouseX);
-    }
-
-    @Override
-    protected void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
-        updateValue(mouseX);
-    }
+//    @Override
+//    public void onClick(double mouseX, double mouseY) {
+//        updateValue(mouseX);
+//    }
+//
+//    @Override
+//    protected void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
+//        updateValue(mouseX);
+//    }
 
     @Override
     protected void updateMessage() {}

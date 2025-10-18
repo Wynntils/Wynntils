@@ -116,7 +116,7 @@ public class ItemLockFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onDrop(DropHeldItemEvent event) {
-        ItemStack selected = McUtils.inventory().getSelected();
+        ItemStack selected = McUtils.inventory().getSelectedItem();
         Optional<Slot> heldItemSlot = McUtils.inventoryMenu().slots.stream()
                 .filter(slot -> slot.getItem() == selected)
                 .findFirst();
@@ -132,17 +132,17 @@ public class ItemLockFeature extends Feature {
 
     private void renderLockedSlot(
             GuiGraphics guiGraphics, AbstractContainerScreen<?> containerScreen, Slot lockedSlot) {
-        BufferedRenderUtils.drawTexturedRect(
-                guiGraphics.pose(),
-                guiGraphics.bufferSource,
-                Texture.ITEM_LOCK.resource(),
-                ((containerScreen.leftPos + lockedSlot.x)) + 12,
-                ((containerScreen.topPos + lockedSlot.y)) - 4,
-                399,
-                8,
-                8,
-                Texture.ITEM_LOCK.width() / 2,
-                Texture.ITEM_LOCK.height() / 2);
+//        BufferedRenderUtils.drawTexturedRect(
+//                guiGraphics.pose(),
+//                guiGraphics.bufferSource,
+//                Texture.ITEM_LOCK.resource(),
+//                ((containerScreen.leftPos + lockedSlot.x)) + 12,
+//                ((containerScreen.topPos + lockedSlot.y)) - 4,
+//                399,
+//                8,
+//                8,
+//                Texture.ITEM_LOCK.width() / 2,
+//                Texture.ITEM_LOCK.height() / 2);
     }
 
     private void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {

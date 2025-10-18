@@ -9,6 +9,7 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class ExitFlagButton extends WynntilsButton {
@@ -21,27 +22,27 @@ public class ExitFlagButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         Texture texture = Texture.EXIT_FLAG;
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                texture.resource(),
-                this.getX(),
-                this.getY(),
-                0,
-                this.width,
-                this.height,
-                0,
-                isHovered ? texture.height() / 2 : 0,
-                texture.width(),
-                texture.height() / 2,
-                texture.width(),
-                texture.height());
+//        RenderUtils.drawTexturedRect(
+//                poseStack,
+//                texture.resource(),
+//                this.getX(),
+//                this.getY(),
+//                0,
+//                this.width,
+//                this.height,
+//                0,
+//                isHovered ? texture.height() / 2 : 0,
+//                texture.width(),
+//                texture.height() / 2,
+//                texture.width(),
+//                texture.height());
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         onClickRunnable.run();
     }
 }

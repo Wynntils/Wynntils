@@ -20,13 +20,15 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 
 public final class LoadingScreen extends WynntilsScreen {
     private static final String LOGO_STRING = "\uE005\uDAFF\uDFFF\uE006";
     private static final String TEXT_LOGO_STRING = "Wynncraft";
-    private static final ResourceLocation LOGO_FONT_LOCATION = ResourceLocation.withDefaultNamespace("screen/static");
+    private static final FontDescription LOGO_FONT_LOCATION =
+            new FontDescription.Resource(ResourceLocation.withDefaultNamespace("screen/static"));
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
     private static final int SPINNER_SPEED = 1200;
     private final Runnable onClose;
@@ -80,7 +82,7 @@ public final class LoadingScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         int textureWidth = Texture.BACKGROUND_SPLASH.width();
         int textureHeight = Texture.BACKGROUND_SPLASH.height();
@@ -92,19 +94,19 @@ public final class LoadingScreen extends WynntilsScreen {
         float scaledHeight = textureHeight * scaleFactor;
 
         // Draw background
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.BACKGROUND_SPLASH.resource(),
-                (this.width - scaledWidth) / 2f,
-                (this.height - scaledHeight) / 2f,
-                0,
-                scaledWidth,
-                scaledHeight,
-                textureWidth,
-                textureHeight);
+//        RenderUtils.drawScalingTexturedRect(
+//                poseStack,
+//                Texture.BACKGROUND_SPLASH.resource(),
+//                (this.width - scaledWidth) / 2f,
+//                (this.height - scaledHeight) / 2f,
+//                0,
+//                scaledWidth,
+//                scaledHeight,
+//                textureWidth,
+//                textureHeight);
 
         // Draw notebook background
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
+//        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
         // Draw logo
         int centerX = (int) (Texture.SCROLL_BACKGROUND.width() / 2f + 15 + offsetX);
@@ -113,7 +115,7 @@ public final class LoadingScreen extends WynntilsScreen {
                 : Component.literal(TEXT_LOGO_STRING);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(logoComponent),
                         centerX,
                         60 + offsetY,
@@ -125,7 +127,7 @@ public final class LoadingScreen extends WynntilsScreen {
         // Draw loading progress
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(message),
                         centerX,
                         100 + offsetY,
@@ -137,7 +139,7 @@ public final class LoadingScreen extends WynntilsScreen {
         // Draw additional messages (typically about queue position)
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(stageTitle),
                         centerX,
                         120 + offsetY,
@@ -147,7 +149,7 @@ public final class LoadingScreen extends WynntilsScreen {
                         TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(subtitle),
                         centerX,
                         130 + offsetY,
@@ -158,7 +160,7 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw spinner
         boolean state = (System.currentTimeMillis() % SPINNER_SPEED) < SPINNER_SPEED / 2;
-        drawSpinner(poseStack, centerX, 150 + offsetY, state);
+//        drawSpinner(poseStack, centerX, 150 + offsetY, state);
     }
 
     private void drawSpinner(PoseStack poseStack, float x, float y, boolean state) {

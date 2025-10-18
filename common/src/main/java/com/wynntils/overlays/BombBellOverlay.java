@@ -15,9 +15,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombSortOrder;
 import com.wynntils.models.worlds.type.BombType;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -104,41 +104,39 @@ public class BombBellOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        BufferedFontRenderer.getInstance()
-                .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
-                        this.getRenderX(),
-                        this.getRenderY(),
-                        renderTasks,
-                        this.getWidth(),
-                        this.getHeight(),
-                        this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment(),
-                        fontScale.get());
+//        FontRenderer.getInstance()
+//                .renderTextsWithAlignment(
+//                        guiGraphics,
+//                        this.getRenderX(),
+//                        this.getRenderY(),
+//                        renderTasks,
+//                        this.getWidth(),
+//                        this.getHeight(),
+//                        this.getRenderHorizontalAlignment(),
+//                        this.getRenderVerticalAlignment(),
+//                        fontScale.get());
     }
 
     @Override
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        BufferedFontRenderer.getInstance()
-                .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
-                        this.getRenderX(),
-                        this.getRenderY(),
-                        List.of(
-                                new TextRenderTask(
-                                        StyledText.fromString("§6Combat XP§7 on §fWC32 §6(16m 35s)"),
-                                        textRenderSetting),
-                                new TextRenderTask(
-                                        StyledText.fromString("§6Profession Speed§7 on §fWC1 §6(3m 12s)"),
-                                        textRenderSetting)),
-                        this.getWidth(),
-                        this.getHeight(),
-                        this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment(),
-                        fontScale.get());
+//        FontRenderer.getInstance()
+//                .renderTextsWithAlignment(
+//                        guiGraphics,
+//                        this.getRenderX(),
+//                        this.getRenderY(),
+//                        List.of(
+//                                new TextRenderTask(
+//                                        StyledText.fromString("§6Combat XP§7 on §fWC32 §6(16m 35s)"),
+//                                        textRenderSetting),
+//                                new TextRenderTask(
+//                                        StyledText.fromString("§6Profession Speed§7 on §fWC1 §6(3m 12s)"),
+//                                        textRenderSetting)),
+//                        this.getWidth(),
+//                        this.getHeight(),
+//                        this.getRenderHorizontalAlignment(),
+//                        this.getRenderVerticalAlignment(),
+//                        fontScale.get());
     }
 
     @Override

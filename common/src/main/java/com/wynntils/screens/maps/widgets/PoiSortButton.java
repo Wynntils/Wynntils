@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
@@ -15,6 +15,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class PoiSortButton extends WynntilsButton {
@@ -44,14 +45,14 @@ public class PoiSortButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRect(
-                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.5f : 0.3f), getX(), getY(), 0, width, height);
+//        RenderUtils.drawRect(
+//                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.5f : 0.3f), getX(), getY(), 0, width, height);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         titleToRender,
                         getX() + 1,
                         getY() + 1,
@@ -62,7 +63,7 @@ public class PoiSortButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         managementScreen.toggleSortType(sortType, this);
     }
 

@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.map.pois;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.seaskipper.type.SeaskipperDestination;
@@ -15,11 +14,12 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PoiLocation;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class SeaskipperDestinationPoi implements Poi {
@@ -66,7 +66,7 @@ public class SeaskipperDestinationPoi implements Poi {
 
     @Override
     public void renderAt(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             float renderX,
             float renderY,
@@ -75,23 +75,23 @@ public class SeaskipperDestinationPoi implements Poi {
             float zoomRenderScale,
             float zoomLevel,
             boolean showLabels) {
-        renderPoi(poseStack, bufferSource, renderX, renderY, zoomRenderScale, true);
+        renderPoi(guiGraphics, bufferSource, renderX, renderY, zoomRenderScale, true);
     }
 
     public void renderAtWithoutBorders(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderX, float renderY, float mapZoom) {
-        renderPoi(poseStack, bufferSource, renderX, renderY, mapZoom, false);
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderX, float renderY, float mapZoom) {
+        renderPoi(guiGraphics, bufferSource, renderX, renderY, mapZoom, false);
     }
 
     private void renderPoi(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             float mapZoom,
             boolean renderBorders) {
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 100);
+//        poseStack.pushPose();
+//        poseStack.translate(0, 0, 100);
 
         final float renderWidth = width * mapZoom;
         final float renderHeight = height * mapZoom;
@@ -106,32 +106,31 @@ public class SeaskipperDestinationPoi implements Poi {
         CustomColor color = getColor();
 
         if (renderBorders) {
-            BufferedRenderUtils.drawRect(
-                    poseStack,
-                    bufferSource,
-                    color.withAlpha(65),
-                    actualRenderX,
-                    actualRenderZ,
-                    0,
-                    renderWidth,
-                    renderHeight);
+//            BufferedRenderUtils.drawRect(
+//                    poseStack,
+//                    bufferSource,
+//                    color.withAlpha(65),
+//                    actualRenderX,
+//                    actualRenderZ,
+//                    0,
+//                    renderWidth,
+//                    renderHeight);
 
-            BufferedRenderUtils.drawRectBorders(
-                    poseStack,
-                    bufferSource,
-                    color,
-                    actualRenderX,
-                    actualRenderZ,
-                    actualRenderX + renderWidth,
-                    actualRenderZ + renderHeight,
-                    0,
-                    1.5f);
+//            BufferedRenderUtils.drawRectBorders(
+//                    poseStack,
+//                    bufferSource,
+//                    color,
+//                    actualRenderX,
+//                    actualRenderZ,
+//                    actualRenderX + renderWidth,
+//                    actualRenderZ + renderHeight,
+//                    0,
+//                    1.5f);
         }
 
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         StyledText.fromString(profile.destination()),
                         actualRenderX,
                         actualRenderX + renderWidth,
@@ -143,7 +142,7 @@ public class SeaskipperDestinationPoi implements Poi {
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
 
-        poseStack.popPose();
+//        poseStack.popPose();
     }
 
     @Override

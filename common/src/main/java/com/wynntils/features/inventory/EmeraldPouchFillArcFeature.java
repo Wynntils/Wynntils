@@ -60,8 +60,8 @@ public class EmeraldPouchFillArcFeature extends Feature {
         float ringFraction = Math.min(1f, capacityFraction);
 
         // draw
-        RenderSystem.enableDepthTest();
+//        RenderSystem.enableDepthTest();
         RenderUtils.drawArc(poseStack, color, slotX - 2, slotY - 2, 100, ringFraction, 8, 10);
-        RenderSystem.disableDepthTest();
+//        RenderSystem.disableDepthTest();
     }
 }

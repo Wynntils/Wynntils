@@ -7,6 +7,7 @@ package com.wynntils.services.map.pois;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.utils.mc.type.PoiLocation;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public interface Poi {
@@ -21,7 +22,7 @@ public interface Poi {
     boolean hasStaticLocation();
 
     void renderAt(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             float renderX,
             float renderY,

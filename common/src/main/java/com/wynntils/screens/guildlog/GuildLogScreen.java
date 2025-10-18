@@ -33,6 +33,7 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
@@ -101,13 +102,13 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.GUILD_LOG_BACKGROUND, offsetX, offsetY);
+//        RenderUtils.drawTexturedRect(poseStack, Texture.GUILD_LOG_BACKGROUND, offsetX, offsetY);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(wrappedScreenInfo.screen().getTitle()),
                         offsetX + 20,
                         offsetY + 10,
@@ -118,17 +119,17 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
 
         renderLogs(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderScroll(poseStack);
+//        renderScroll(poseStack);
 
         renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     offsetX + 393,
                     offsetX + 393 + Texture.SCROLL_BUTTON.width(),
                     (int) scrollY,
@@ -139,17 +140,17 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             int scrollAreaStartY = offsetY + 15 + 17;
             int scrollAreaHeight = SCROLL_AREA_HEIGHT - Texture.SCROLL_BUTTON.height();
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY, scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, maxScrollOffset));
+                    (float) event.y(), scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, maxScrollOffset));
 
             newOffset = Math.max(0, Math.min(newOffset, maxScrollOffset));
 
@@ -158,14 +159,14 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
             return true;
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override

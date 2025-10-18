@@ -12,6 +12,7 @@ import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class ExportButton extends WynntilsButton implements TooltipProvider {
@@ -30,27 +31,27 @@ public class ExportButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         Texture shareButton = Texture.SHARE_ICON_OFFSET;
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                shareButton.resource(),
-                this.getX(),
-                this.getY(),
-                0,
-                this.width,
-                this.height,
-                0,
-                isHovered ? shareButton.height() / 2 : 0,
-                shareButton.width(),
-                shareButton.height() / 2,
-                shareButton.width(),
-                shareButton.height());
+//        RenderUtils.drawTexturedRect(
+//                poseStack,
+//                shareButton.resource(),
+//                this.getX(),
+//                this.getY(),
+//                0,
+//                this.width,
+//                this.height,
+//                0,
+//                isHovered ? shareButton.height() / 2 : 0,
+//                shareButton.width(),
+//                shareButton.height() / 2,
+//                shareButton.width(),
+//                shareButton.height());
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         onClickRunnable.run();
     }
 

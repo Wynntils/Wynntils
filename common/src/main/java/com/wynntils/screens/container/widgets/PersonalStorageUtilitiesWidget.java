@@ -24,6 +24,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class PersonalStorageUtilitiesWidget extends AbstractWidget {
@@ -70,21 +71,21 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BANK_PANEL, getX(), getY());
+//        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BANK_PANEL, getX(), getY());
 
         if (!Models.Bank.isEditingName()) {
-            FontRenderer.getInstance()
-                    .renderScrollingText(
-                            guiGraphics.pose(),
-                            StyledText.fromString(pageName),
-                            getX() + 4,
-                            getY() + 11,
-                            getWidth() - 18,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.TOP,
-                            TextShadow.NORMAL,
-                            1f);
+//            FontRenderer.getInstance()
+//                    .renderScrollingText(
+//                            guiGraphics.pose(),
+//                            StyledText.fromString(pageName),
+//                            getX() + 4,
+//                            getY() + 11,
+//                            getWidth() - 18,
+//                            CommonColors.WHITE,
+//                            HorizontalAlignment.LEFT,
+//                            VerticalAlignment.TOP,
+//                            TextShadow.NORMAL,
+//                            1f);
         }
 
         editButton.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -94,15 +95,15 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (GuiEventListener listener : quickJumpButtons) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseClicked(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseClicked(event, isDoubleClick);
             }
         }
 
-        if (editButton.isMouseOver(mouseX, mouseY)) {
-            return editButton.mouseClicked(mouseX, mouseY, button);
+        if (editButton.isMouseOver(event.x(), event.y())) {
+            return editButton.mouseClicked(event, isDoubleClick);
         }
 
         return false;

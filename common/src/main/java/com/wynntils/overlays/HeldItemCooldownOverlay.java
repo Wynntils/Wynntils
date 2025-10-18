@@ -43,13 +43,13 @@ public class HeldItemCooldownOverlay extends Overlay {
                         player.getItemInHand(InteractionHand.MAIN_HAND),
                         deltaTracker.getGameTimeDeltaPartialTick(true));
         if (cooldownPercent <= 0f) return;
-        renderOverlay(guiGraphics.pose(), bufferSource, cooldownPercent);
+//        renderOverlay(guiGraphics.pose(), bufferSource, cooldownPercent);
     }
 
     @Override
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        renderOverlay(guiGraphics.pose(), bufferSource, 1F);
+//        renderOverlay(guiGraphics.pose(), bufferSource, 1F);
     }
 
     private void renderOverlay(PoseStack poseStack, MultiBufferSource bufferSource, float cooldownPercent) {

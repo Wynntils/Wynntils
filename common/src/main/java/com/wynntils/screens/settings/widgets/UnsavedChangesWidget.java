@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class UnsavedChangesWidget extends AbstractWidget {
@@ -45,34 +46,34 @@ public class UnsavedChangesWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SETTINGS_WARNING_BACKGROUND, getX(), getY());
+//        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SETTINGS_WARNING_BACKGROUND, getX(), getY());
 
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.settingsScreen.saveChanges")
-                                .withStyle(ChatFormatting.BOLD)),
-                        getX() + 5,
-                        getX() + getWidth() - 10,
-                        getY() + 30,
-                        getY() + getHeight() - 30,
-                        Texture.SETTINGS_WARNING_BACKGROUND.width() - 10,
-                        CommonColors.RED,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.TOP,
-                        TextShadow.NORMAL,
-                        1.25f);
+//        FontRenderer.getInstance()
+//                .renderAlignedTextInBox(
+//                        guiGraphics.pose(),
+//                        StyledText.fromComponent(Component.translatable("screens.wynntils.settingsScreen.saveChanges")
+//                                .withStyle(ChatFormatting.BOLD)),
+//                        getX() + 5,
+//                        getX() + getWidth() - 10,
+//                        getY() + 30,
+//                        getY() + getHeight() - 30,
+//                        Texture.SETTINGS_WARNING_BACKGROUND.width() - 10,
+//                        CommonColors.RED,
+//                        HorizontalAlignment.CENTER,
+//                        VerticalAlignment.TOP,
+//                        TextShadow.NORMAL,
+//                        1.25f);
 
         yesButton.render(guiGraphics, mouseX, mouseY, partialTick);
         noButton.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (yesButton.isMouseOver(mouseX, mouseY)) {
-            return yesButton.mouseClicked(mouseX, mouseY, button);
-        } else if (noButton.isMouseOver(mouseX, mouseY)) {
-            return noButton.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (yesButton.isMouseOver(event.x(), event.y())) {
+            return yesButton.mouseClicked(event, isDoubleClick);
+        } else if (noButton.isMouseOver(event.x(), event.y())) {
+            return noButton.mouseClicked(event, isDoubleClick);
         }
 
         return false;

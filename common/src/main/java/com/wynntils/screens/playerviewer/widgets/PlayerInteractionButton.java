@@ -12,6 +12,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
@@ -31,7 +32,7 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
     }
 
@@ -39,26 +40,26 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderSystem.enableDepthTest();
+//        RenderSystem.enableDepthTest();
         // +3 to center icon with 1px border in 16x16 button
-        RenderUtils.drawTexturedRect(
-                guiGraphics.pose(),
-                icon.resource(),
-                this.getX() + 3,
-                this.getY() + 3,
-                2,
-                14,
-                14,
-                0,
-                0,
-                14,
-                14,
-                icon.width(),
-                icon.height());
-        RenderSystem.disableDepthTest();
+//        RenderUtils.drawTexturedRect(
+//                guiGraphics.pose(),
+//                icon.resource(),
+//                this.getX() + 3,
+//                this.getY() + 3,
+//                2,
+//                14,
+//                14,
+//                0,
+//                0,
+//                14,
+//                14,
+//                icon.width(),
+//                icon.height());
+//        RenderSystem.disableDepthTest();
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltipText, Component::getVisualOrderText));
+//            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltipText, Component::getVisualOrderText));
         }
     }
 }

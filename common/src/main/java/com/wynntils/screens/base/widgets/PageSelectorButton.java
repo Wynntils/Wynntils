@@ -10,6 +10,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -29,7 +30,7 @@ public class PageSelectorButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         if (!isValid()) return;
 
         McUtils.playSoundUI(BOOK_TURN_PAGE_SOUND);
@@ -43,14 +44,14 @@ public class PageSelectorButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         Texture arrowTexture = this.forward ? Texture.FORWARD_ARROW_OFFSET : Texture.BACKWARD_ARROW_OFFSET;
 
         if (isValid() && !isHovered) {
-            drawTexture(poseStack, arrowTexture, arrowTexture.width() / 2);
+//            drawTexture(poseStack, arrowTexture, arrowTexture.width() / 2);
         } else {
-            drawTexture(poseStack, arrowTexture, 0);
+//            drawTexture(poseStack, arrowTexture, 0);
         }
     }
 

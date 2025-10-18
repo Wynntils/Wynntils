@@ -41,6 +41,7 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -163,13 +164,13 @@ public class ItemTextOverlayFeature extends Feature {
             return;
         }
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
-        poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
+//        poseStack.pushPose();
+//        poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
+//        poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
         float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
         float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
-        FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task(), Font.DisplayMode.NORMAL);
-        poseStack.popPose();
+//        FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task(), Font.DisplayMode.NORMAL);
+//        poseStack.popPose();
     }
 
     private TextOverlayInfo calculateOverlay(WynnItem wynnItem) {
@@ -472,7 +473,8 @@ public class ItemTextOverlayFeature extends Feature {
             Skill skill = item.getSkill();
 
             StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
-                    .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))));
+                    .withStyle(Style.EMPTY.withFont(
+                            new FontDescription.Resource(ResourceLocation.withDefaultNamespace("common")))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());
@@ -498,7 +500,8 @@ public class ItemTextOverlayFeature extends Feature {
             Skill skill = item.getType().getSkill();
 
             StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
-                    .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))));
+                    .withStyle(Style.EMPTY.withFont(
+                            new FontDescription.Resource(ResourceLocation.withDefaultNamespace("common")))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());

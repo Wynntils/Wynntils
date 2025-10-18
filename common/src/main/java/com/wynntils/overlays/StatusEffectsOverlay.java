@@ -14,9 +14,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.models.statuseffects.type.StatusEffect;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -93,41 +93,39 @@ public class StatusEffectsOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        BufferedFontRenderer.getInstance()
-                .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
-                        this.getRenderX(),
-                        this.getRenderY(),
-                        renderCache,
-                        this.getWidth(),
-                        this.getHeight(),
-                        this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment(),
-                        fontScale.get());
+//        FontRenderer.getInstance()
+//                .renderTextsWithAlignment(
+//                        guiGraphics,
+//                        this.getRenderX(),
+//                        this.getRenderY(),
+//                        renderCache,
+//                        this.getWidth(),
+//                        this.getHeight(),
+//                        this.getRenderHorizontalAlignment(),
+//                        this.getRenderVerticalAlignment(),
+//                        fontScale.get());
     }
 
     @Override
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        BufferedFontRenderer.getInstance()
-                .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
-                        this.getRenderX(),
-                        this.getRenderY(),
-                        List.of(
-                                new TextRenderTask(
-                                        StyledText.fromString("§8⬤ §7 Purification 00:02"), textRenderSetting),
-                                new TextRenderTask(StyledText.fromString("§8⬤ §7 Exploding 01:12"), textRenderSetting),
-                                new TextRenderTask(StyledText.fromString("§8⬤ §7 Thorns 00:12"), textRenderSetting),
-                                new TextRenderTask(
-                                        StyledText.fromString("§8⬤ §7 Soul Point Regen 00:12"), textRenderSetting)),
-                        this.getWidth(),
-                        this.getHeight(),
-                        this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment(),
-                        fontScale.get());
+//        FontRenderer.getInstance()
+//                .renderTextsWithAlignment(
+//                        guiGraphics,
+//                        this.getRenderX(),
+//                        this.getRenderY(),
+//                        List.of(
+//                                new TextRenderTask(
+//                                        StyledText.fromString("§8⬤ §7 Purification 00:02"), textRenderSetting),
+//                                new TextRenderTask(StyledText.fromString("§8⬤ §7 Exploding 01:12"), textRenderSetting),
+//                                new TextRenderTask(StyledText.fromString("§8⬤ §7 Thorns 00:12"), textRenderSetting),
+//                                new TextRenderTask(
+//                                        StyledText.fromString("§8⬤ §7 Soul Point Regen 00:12"), textRenderSetting)),
+//                        this.getWidth(),
+//                        this.getHeight(),
+//                        this.getRenderHorizontalAlignment(),
+//                        this.getRenderVerticalAlignment(),
+//                        fontScale.get());
     }
 
     @Override

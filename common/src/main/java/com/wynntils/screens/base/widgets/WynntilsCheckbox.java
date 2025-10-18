@@ -19,6 +19,7 @@ import java.util.function.BiConsumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -89,7 +90,7 @@ public class WynntilsCheckbox extends AbstractButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         this.selected = !this.selected;
         this.onClick.accept(this, this.selected);
     }
@@ -105,12 +106,12 @@ public class WynntilsCheckbox extends AbstractButton {
             resourceLocation = this.isFocused() || this.isHovered() ? CHECKBOX_HIGHLIGHTED_SPRITE : CHECKBOX_SPRITE;
         }
 
-        RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(), resourceLocation, this.getX(), this.getY(), 0, this.width, this.height, 20, 20);
+//        RenderUtils.drawScalingTexturedRect(
+//                guiGraphics.pose(), resourceLocation, this.getX(), this.getY(), 0, this.width, this.height, 20, 20);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(this.getMessage()),
                         this.getX() + this.width + 2,
                         this.getY() + (this.height / 2f),
@@ -122,7 +123,7 @@ public class WynntilsCheckbox extends AbstractButton {
                         1f);
 
         if (isHovered && tooltip != null) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+//            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 

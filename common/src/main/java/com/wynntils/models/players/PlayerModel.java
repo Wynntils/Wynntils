@@ -157,7 +157,7 @@ public final class PlayerModel extends Model {
 
         Player player = event.getPlayer();
         if (player == null || player.getUUID() == null) return;
-        StyledText name = StyledText.fromString(player.getGameProfile().getName());
+        StyledText name = StyledText.fromString(player.getGameProfile().name());
         if (isNpc(player) || isDisplayPlayer(player)) return;
 
         loadUser(Models.Player.getUserUUID(player), name.getString());
@@ -168,7 +168,7 @@ public final class PlayerModel extends Model {
         PlayerInfo playerInfo = McUtils.mc().getConnection().getPlayerInfo(event.getUsername());
         if (playerInfo == null) return;
 
-        UUID uuid = playerInfo.getProfile().getId();
+        UUID uuid = playerInfo.getProfile().id();
         if (uuid == null) return;
 
         PlayerTeam playerTeam = event.getPlayerTeam();
@@ -226,7 +226,7 @@ public final class PlayerModel extends Model {
                     fetching.remove(uuid);
 
                     // Schedule cape loading for next render tick
-                    RenderSystem.recordRenderCall(() -> Services.Cosmetics.loadCosmeticTextures(uuid, user));
+//                    RenderSystem.recordRenderCall(() -> Services.Cosmetics.loadCosmeticTextures(uuid, user));
                 },
                 onError -> {
                     errors.put(System.currentTimeMillis());

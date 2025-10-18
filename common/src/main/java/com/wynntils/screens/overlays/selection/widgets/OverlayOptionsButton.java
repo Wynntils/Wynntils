@@ -51,7 +51,7 @@ public class OverlayOptionsButton extends BasicTexturedButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         // Only count as hovered if the mouse is outside of the background area as a slight bit
         // of the button is rendered underneath the background
@@ -67,11 +67,11 @@ public class OverlayOptionsButton extends BasicTexturedButton {
         }
 
         // When selected or hovered it should use the alternate texture
-        RenderUtils.drawHoverableTexturedRect(poseStack, texture, getX(), getY(), this.isHovered || this.isSelected);
+//        RenderUtils.drawHoverableTexturedRect(poseStack, texture, getX(), getY(), this.isHovered || this.isSelected);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         message,
                         getX() + 2,
                         getX() + getWidth() - 4,

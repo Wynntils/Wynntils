@@ -37,24 +37,24 @@ public class ContentBookRewardWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX() + width - 10, getY() - 1);
+//        RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX() + width - 10, getY() - 1);
 
         if (text != null) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics.pose(),
-                            text,
-                            getX(),
-                            getY(),
-                            CommonColors.GREEN,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.TOP,
-                            TextShadow.NORMAL,
-                            0.9f);
+//            FontRenderer.getInstance()
+//                    .renderText(
+//                            guiGraphics.pose(),
+//                            text,
+//                            getX(),
+//                            getY(),
+//                            CommonColors.GREEN,
+//                            HorizontalAlignment.LEFT,
+//                            VerticalAlignment.TOP,
+//                            TextShadow.NORMAL,
+//                            0.9f);
         }
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+//            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 

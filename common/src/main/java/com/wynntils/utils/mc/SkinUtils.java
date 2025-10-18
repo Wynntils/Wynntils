@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -40,9 +40,9 @@ public final class SkinUtils {
         // If this starts being done repeatedly for the same texture string,
         // we should cache the UUID.
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "");
-        gameProfile.getProperties().put("textures", new Property("textures", textureString, null));
+        gameProfile.properties().put("textures", new Property("textures", textureString, null));
 
-        itemStack.set(DataComponents.PROFILE, new ResolvableProfile(gameProfile));
+        itemStack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(gameProfile));
     }
 
     public static ResourceLocation getSkin(UUID uuid) {
@@ -56,6 +56,6 @@ public final class SkinUtils {
             return DefaultPlayerSkin.getDefaultTexture();
         }
 
-        return playerInfo.getSkin().texture();
+        return playerInfo.getSkin().body().texturePath();
     }
 }

@@ -20,6 +20,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class QuickJumpButton extends WynntilsButton {
@@ -45,9 +46,9 @@ public class QuickJumpButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.QUICK_JUMP_BUTTON, getX(), getY(), isHovered);
+//        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.QUICK_JUMP_BUTTON, getX(), getY(), isHovered);
 
         CustomColor color = CommonColors.WHITE;
         Component tooltip = Component.translatable(
@@ -62,7 +63,7 @@ public class QuickJumpButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(String.valueOf(destination)),
                         getX() + 8,
                         getY() + 8,
@@ -72,13 +73,13 @@ public class QuickJumpButton extends WynntilsButton {
                         TextShadow.NORMAL);
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(List.of(tooltip), Component::getVisualOrderText));
+//            McUtils.screen()
+//                    .setTooltipForNextRenderPass(Lists.transform(List.of(tooltip), Component::getVisualOrderText));
         }
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         parent.jumpToPage(destination);
     }
 }

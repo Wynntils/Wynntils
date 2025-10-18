@@ -14,6 +14,7 @@ import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class SeaskipperTravelButton extends WynntilsButton {
@@ -25,28 +26,28 @@ public class SeaskipperTravelButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         seaskipperScreen.travelToDestination();
     }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.TRAVEL_BUTTON.resource(),
-                this.getX(),
-                this.getY(),
-                0,
-                this.width,
-                this.height,
-                0,
-                seaskipperScreen.getSelectedDestination() != null ? 0 : Texture.TRAVEL_BUTTON.height() / 2,
-                Texture.TRAVEL_BUTTON.width(),
-                Texture.TRAVEL_BUTTON.height() / 2,
-                Texture.TRAVEL_BUTTON.width(),
-                Texture.TRAVEL_BUTTON.height());
+//        RenderUtils.drawTexturedRect(
+//                poseStack,
+//                Texture.TRAVEL_BUTTON.resource(),
+//                this.getX(),
+//                this.getY(),
+//                0,
+//                this.width,
+//                this.height,
+//                0,
+//                seaskipperScreen.getSelectedDestination() != null ? 0 : Texture.TRAVEL_BUTTON.height() / 2,
+//                Texture.TRAVEL_BUTTON.width(),
+//                Texture.TRAVEL_BUTTON.height() / 2,
+//                Texture.TRAVEL_BUTTON.width(),
+//                Texture.TRAVEL_BUTTON.height());
 
         if (isHovered && seaskipperScreen.getSelectedDestination() != null) {
             List<Component> tooltip = List.of(Component.translatable(
@@ -54,7 +55,7 @@ public class SeaskipperTravelButton extends WynntilsButton {
                             seaskipperScreen.getSelectedDestination().getName())
                     .withStyle(ChatFormatting.GRAY));
 
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+//            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 }

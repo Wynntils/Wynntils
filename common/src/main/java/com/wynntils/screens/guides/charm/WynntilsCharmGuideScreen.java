@@ -62,19 +62,19 @@ public final class WynntilsCharmGuideScreen
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        renderBackgroundTexture(poseStack);
+//        renderBackgroundTexture(poseStack);
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.charmGuide.name"));
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.charmGuide.name"));
 
-        renderVersion(poseStack);
+        renderVersion(guiGraphics);
 
-        renderItemsHeader(poseStack);
+        renderItemsHeader(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -82,17 +82,17 @@ public final class WynntilsCharmGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideCharmItemStackButton guideCharmItemStackButton) {
-            guiGraphics.renderTooltip(
-                    FontRenderer.getInstance().getFont(), guideCharmItemStackButton.getItemStack(), mouseX, mouseY);
+//            guiGraphics.renderTooltip(
+//                    FontRenderer.getInstance().getFont(), guideCharmItemStackButton.getItemStack(), mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderItemsHeader(PoseStack poseStack) {
+    private void renderItemsHeader(GuiGraphics guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
                         Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + offsetX,
                         30 + offsetY,

@@ -38,6 +38,8 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -142,8 +144,8 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
             // Armor and weapons are sent by Wynn so we can use those itemstacks, accessories we will have to use
             // a default texture
             if (craftedGearItem.getGearType().isArmor()) {
-                itemStack = player.getInventory()
-                        .armor
+                itemStack = new ArrayList<>(
+                                player.getInventory().equipment.items.values())
                         .get(InventoryArmor.fromString(
                                         craftedGearItem.getGearType().name())
                                 .getArmorSlot());
@@ -214,7 +216,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                 Texture.MESSAGE_ICON,
                 () -> {
                     this.onClose(); // Required so that nametags render properly
-                    McUtils.setScreen(new ChatScreen("/msg " + playerName + " "));
+                    McUtils.setScreen(new ChatScreen("/msg " + playerName + " ", false));
                 }));
 
         settingsButton = new Button.Builder(
@@ -277,12 +279,12 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        BufferedRenderUtils.drawTexturedRect(
-                guiGraphics.pose(),
-                guiGraphics.bufferSource,
-                Texture.PLAYER_VIEWER_BACKGROUND,
-                this.leftPos,
-                this.topPos);
+//        BufferedRenderUtils.drawTexturedRect(
+//                guiGraphics.pose(),
+//                guiGraphics.bufferSource,
+//                Texture.PLAYER_VIEWER_BACKGROUND,
+//                this.leftPos,
+//                this.topPos);
     }
 
     @Override
@@ -291,14 +293,14 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (PlayerInteractionButton interactionButton : interactionButtons) {
-            if (interactionButton.mouseClicked(mouseX, mouseY, button)) {
+            if (interactionButton.mouseClicked(event, isDoubleClick)) {
                 return true;
             }
         }
 
-        return settingsButton.mouseClicked(mouseX, mouseY, button);
+        return settingsButton.mouseClicked(event, isDoubleClick);
     }
 
     @Override
@@ -307,13 +309,13 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == McUtils.options().keyInventory.key.getValue()) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == McUtils.options().keyInventory.key.getValue()) {
             this.onClose();
             return true;
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets;
@@ -18,6 +18,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public final class SelectionFilterWidget extends GeneralFilterWidget {
@@ -51,16 +52,16 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRect(poseStack, getRectColor().withAlpha(100), getX(), getY(), 0, width - 18, height);
+//        RenderUtils.drawRect(poseStack, getRectColor().withAlpha(100), getX(), getY(), 0, width - 18, height);
 
-        RenderUtils.drawRectBorders(
-                poseStack, getBorderColor(), getX(), getY(), getX() + width - 18, getY() + height, 1, 2);
+//        RenderUtils.drawRectBorders(
+//                poseStack, getBorderColor(), getX(), getY(), getX() + width - 18, getY() + height, 1, 2);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(valueName),
                         getX() + 2,
                         getY() + (height / 2f),
@@ -75,9 +76,9 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (usedCheckbox.isMouseOver(mouseX, mouseY)) {
-            return usedCheckbox.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (usedCheckbox.isMouseOver(event.x(), event.y())) {
+            return usedCheckbox.mouseClicked(event, isDoubleClick);
         }
 
         return false;
