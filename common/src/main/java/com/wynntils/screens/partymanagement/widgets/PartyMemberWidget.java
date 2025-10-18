@@ -16,6 +16,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
@@ -112,15 +113,15 @@ public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (moveUpButton.mouseClicked(mouseX, mouseY, button) || moveDownButton.mouseClicked(mouseX, mouseY, button)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (moveUpButton.mouseClicked(event, isDoubleClick) || moveDownButton.mouseClicked(event, isDoubleClick)) {
             return true;
         }
 
         if (!Models.Party.isPartyLeader(McUtils.playerName())) return false;
 
-        return promoteButton.mouseClicked(mouseX, mouseY, button)
-                || kickButton.mouseClicked(mouseX, mouseY, button)
-                || disbandButton.mouseClicked(mouseX, mouseY, button);
+        return promoteButton.mouseClicked(event, isDoubleClick)
+                || kickButton.mouseClicked(event, isDoubleClick)
+                || disbandButton.mouseClicked(event, isDoubleClick);
     }
 }

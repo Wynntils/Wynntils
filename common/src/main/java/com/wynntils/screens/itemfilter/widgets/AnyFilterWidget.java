@@ -13,6 +13,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class AnyFilterWidget extends GeneralFilterWidget {
@@ -52,9 +53,9 @@ public class AnyFilterWidget extends GeneralFilterWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (removeButton.isMouseOver(mouseX, mouseY)) {
-            return removeButton.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (removeButton.isMouseOver(event.x(), event.y())) {
+            return removeButton.mouseClicked(event, isDoubleClick);
         }
 
         return false;

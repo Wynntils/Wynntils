@@ -17,6 +17,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class GuidesButton extends WynntilsButton {
@@ -55,8 +56,7 @@ public class GuidesButton extends WynntilsButton {
                         1f);
     }
 
-    @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         McUtils.setScreen(guideScreen);
     }
 }

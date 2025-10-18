@@ -18,6 +18,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public final class SelectionFilterWidget extends GeneralFilterWidget {
@@ -75,9 +76,9 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (usedCheckbox.isMouseOver(mouseX, mouseY)) {
-            return usedCheckbox.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (usedCheckbox.isMouseOver(event.x(), event.y())) {
+            return usedCheckbox.mouseClicked(event, isDoubleClick);
         }
 
         return false;
