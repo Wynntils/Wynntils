@@ -136,7 +136,7 @@ public final class InventoryModel extends Model {
                     Optional<MaterialItem> materialItemOpt = Models.Item.asWynnItem(itemStack, MaterialItem.class);
                     if (materialItemOpt.isEmpty()) return false;
                     MaterialItem materialItem = materialItemOpt.get();
-                    if (!itemStack.getCustomName().getString().startsWith(name)) return false;
+                    if (!itemStack.getHoverName().getString().startsWith(name)) return false;
                     return exact ? materialItem.getQualityTier() == tier : materialItem.getQualityTier() >= tier;
                 })
                 .mapToInt(itemStack -> itemStack.count)
