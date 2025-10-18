@@ -19,7 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.util.ARGB;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -100,49 +99,51 @@ public abstract class ChatComponentMixin {
         return original.call(event.getX());
     }
 
-    @Inject(
-            method = "lambda$render$0", // 1st forEachLine lambda in render
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V", ordinal = 0))
-    private void renderTimestampBackground(
-            GuiGraphics guiGraphics,
-            int i,
-            float f,
-            float g,
-            int j,
-            int k,
-            int l,
-            int m,
-            int n,
-            GuiMessage.Line line,
-            int o,
-            float h,
-            CallbackInfo ci) {
-        MixinHelper.post(
-                new ChatComponentRenderEvent.Background((ChatComponent) (Object) this, guiGraphics, m, n - m, f));
-    }
+    //    @Inject(
+    //            method = "lambda$render$0", // 1st forEachLine lambda in render
+    //            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V", ordinal =
+    // 0))
+    //    private void renderTimestampBackground(
+    //            GuiGraphics guiGraphics,
+    //            int i,
+    //            float f,
+    //            float g,
+    //            int j,
+    //            int k,
+    //            int l,
+    //            int m,
+    //            int n,
+    //            GuiMessage.Line line,
+    //            int o,
+    //            float h,
+    //            CallbackInfo ci) {
+    //        MixinHelper.post(
+    //                new ChatComponentRenderEvent.Background((ChatComponent) (Object) this, guiGraphics, m, n - m, f));
+    //    }
 
-    @Inject(
-            method = "lambda$render$1", // 2nd forEachLine lambda in render
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/util/FormattedCharSequence;III)V"))
-    private void renderTimestamp(
-            int i,
-            GuiGraphics guiGraphics,
-            float f,
-            int j,
-            int k,
-            int l,
-            GuiMessage.Line line,
-            int m,
-            float g,
-            CallbackInfo ci,
-            @Local(ordinal = 5) int y) {
-        MixinHelper.post(new ChatComponentRenderEvent.Text(
-                (ChatComponent) (Object) this, guiGraphics, line, this.minecraft.font, y, ARGB.color(g, -1)));
-    }
+    //    @Inject(
+    //            method = "lambda$render$1", // 2nd forEachLine lambda in render
+    //            at =
+    //                    @At(
+    //                            value = "INVOKE",
+    //                            target =
+    //
+    // "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/util/FormattedCharSequence;III)V"))
+    //    private void renderTimestamp(
+    //            int i,
+    //            GuiGraphics guiGraphics,
+    //            float f,
+    //            int j,
+    //            int k,
+    //            int l,
+    //            GuiMessage.Line line,
+    //            int m,
+    //            float g,
+    //            CallbackInfo ci,
+    //            @Local(ordinal = 5) int y) {
+    //        MixinHelper.post(new ChatComponentRenderEvent.Text(
+    //                (ChatComponent) (Object) this, guiGraphics, line, this.minecraft.font, y, ARGB.color(g, -1)));
+    //    }
 
     @WrapOperation(
             method =
