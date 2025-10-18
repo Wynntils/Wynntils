@@ -68,7 +68,7 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         List<WynnObjective> objectives = Models.Objectives.getPersonalObjectives();
 
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         final int barHeight = this.enableProgressBar.get() ? 5 : 0;
         final int barWidth = 182;
@@ -120,19 +120,19 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
             }
 
             if (this.enableProgressBar.get()) {
-                BufferedRenderUtils.drawProgressBar(
-                        poseStack,
-                        bufferSource,
-                        Texture.EXPERIENCE_BAR,
-                        this.getRenderX(),
-                        renderY + SPACE_BETWEEN,
-                        this.getRenderX() + this.getWidth(),
-                        renderY + SPACE_BETWEEN + actualBarHeight,
-                        0,
-                        objectivesTexture.get().getTextureY1(),
-                        barWidth,
-                        objectivesTexture.get().getTextureY2(),
-                        objective.getProgress());
+//                BufferedRenderUtils.drawProgressBar(
+//                        poseStack,
+//                        bufferSource,
+//                        Texture.EXPERIENCE_BAR,
+//                        this.getRenderX(),
+//                        renderY + SPACE_BETWEEN,
+//                        this.getRenderX() + this.getWidth(),
+//                        renderY + SPACE_BETWEEN + actualBarHeight,
+//                        0,
+//                        objectivesTexture.get().getTextureY1(),
+//                        barWidth,
+//                        objectivesTexture.get().getTextureY2(),
+//                        objective.getProgress());
             }
 
             offsetY += renderedHeightWithoutTextHeight + textHeight;

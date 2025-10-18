@@ -104,9 +104,9 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        renderBackgroundTexture(poseStack);
+//        renderBackgroundTexture(poseStack);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.statistics.name"));
 
@@ -118,7 +118,7 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
             renderNoElementsHelper(guiGraphics, I18n.get("screens.wynntils.statistics.noStatistics"));
         }
 
-        renderDescription(poseStack);
+//        renderDescription(poseStack);
 
         renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 

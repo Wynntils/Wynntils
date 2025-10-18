@@ -34,22 +34,22 @@ public class LogButton extends BasicTexturedButton {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), logType.getIcon(), getX() + 3, getY() + 3);
+//        RenderUtils.drawTexturedRect(guiGraphics.pose(), logType.getIcon(), getX() + 3, getY() + 3);
 
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics.pose(),
-                        StyledText.fromString(logType.getDisplayName()),
-                        getX() + width - 2,
-                        getY() + height / 2f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.RIGHT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        guiGraphics.pose(),
+//                        StyledText.fromString(logType.getDisplayName()),
+//                        getX() + width - 2,
+//                        getY() + height / 2f,
+//                        CommonColors.WHITE,
+//                        HorizontalAlignment.RIGHT,
+//                        VerticalAlignment.MIDDLE,
+//                        TextShadow.NORMAL);
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(getTooltipLines(), Component::getVisualOrderText));
+//            McUtils.screen()
+//                    .setTooltipForNextRenderPass(Lists.transform(getTooltipLines(), Component::getVisualOrderText));
         }
     }
 }

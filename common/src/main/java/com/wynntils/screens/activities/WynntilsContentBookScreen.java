@@ -162,9 +162,9 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        renderBackgroundTexture(poseStack);
+//        renderBackgroundTexture(poseStack);
 
         contentBookWidgets
                 .get(currentPage)
@@ -464,8 +464,8 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : getWidgetsForIteration().toList()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+//                guiGraphics.renderComponentTooltip(
+//                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
                 break;
             }
         }

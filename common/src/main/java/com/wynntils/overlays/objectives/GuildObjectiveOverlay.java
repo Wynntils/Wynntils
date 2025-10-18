@@ -82,7 +82,7 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
 
     private void renderObjective(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, WynnObjective guildObjective) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         if (this.hideOnInactivity.get()) {
             final int maxInactivityMs = 3000;
@@ -125,19 +125,19 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
         }
 
         if (this.enableProgressBar.get()) {
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
-                    Texture.BUBBLE_BAR,
-                    this.getRenderX(),
-                    renderY + SPACE_BETWEEN,
-                    this.getRenderX() + this.getWidth(),
-                    renderY + SPACE_BETWEEN + actualBarHeight,
-                    0,
-                    objectivesTexture.get().getTextureY1(),
-                    barWidth,
-                    objectivesTexture.get().getTextureY2(),
-                    guildObjective.getProgress());
+//            BufferedRenderUtils.drawProgressBar(
+//                    poseStack,
+//                    bufferSource,
+//                    Texture.BUBBLE_BAR,
+//                    this.getRenderX(),
+//                    renderY + SPACE_BETWEEN,
+//                    this.getRenderX() + this.getWidth(),
+//                    renderY + SPACE_BETWEEN + actualBarHeight,
+//                    0,
+//                    objectivesTexture.get().getTextureY1(),
+//                    barWidth,
+//                    objectivesTexture.get().getTextureY2(),
+//                    guildObjective.getProgress());
         }
     }
 }

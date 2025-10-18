@@ -122,7 +122,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
 
         @Override
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX(), getY());
+//            RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX(), getY());
 
             if (!isHovered && state == ConfirmedBoolean.UNCONFIRMED) return;
 
@@ -134,24 +134,24 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                 color = CommonColors.RED;
             }
 
-            RenderUtils.drawRect(
-                    guiGraphics.pose(),
-                    color.withAlpha(isHovered ? 0.7f : 0.5f),
-                    getX(),
-                    getY(),
-                    0,
-                    getWidth(),
-                    getHeight());
+//            RenderUtils.drawRect(
+//                    guiGraphics.pose(),
+//                    color.withAlpha(isHovered ? 0.7f : 0.5f),
+//                    getX(),
+//                    getY(),
+//                    0,
+//                    getWidth(),
+//                    getHeight());
 
             if (isHovered) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(
-                                ComponentUtils.wrapTooltips(
-                                        List.of(Component.translatable(
-                                                "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
-                                                getFilterName())),
-                                        200),
-                                Component::getVisualOrderText));
+//                McUtils.screen()
+//                        .setTooltipForNextRenderPass(Lists.transform(
+//                                ComponentUtils.wrapTooltips(
+//                                        List.of(Component.translatable(
+//                                                "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
+//                                                getFilterName())),
+//                                        200),
+//                                Component::getVisualOrderText));
             }
         }
 

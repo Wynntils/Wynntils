@@ -49,57 +49,57 @@ public abstract class AbstractContainerScreenMixin {
                 this.hoveredSlot));
     }
 
-    @WrapOperation(
-            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
-                            ordinal = 0))
-    private int renderContainerLabel(
-            GuiGraphics instance,
-            Font font,
-            Component text,
-            int x,
-            int y,
-            int color,
-            boolean dropShadow,
-            Operation<Integer> original) {
-        ContainerLabelRenderEvent.ContainerLabel event = new ContainerLabelRenderEvent.ContainerLabel(
-                (AbstractContainerScreen<?>) (Object) this, instance, color, x, y, text);
-        MixinHelper.post(event);
+//    @WrapOperation(
+//            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
+//            at =
+//                    @At(
+//                            value = "INVOKE",
+//                            target =
+//                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
+//                            ordinal = 0))
+//    private int renderContainerLabel(
+//            GuiGraphics instance,
+//            Font font,
+//            Component text,
+//            int x,
+//            int y,
+//            int color,
+//            boolean dropShadow,
+//            Operation<Integer> original) {
+//        ContainerLabelRenderEvent.ContainerLabel event = new ContainerLabelRenderEvent.ContainerLabel(
+//                (AbstractContainerScreen<?>) (Object) this, instance, color, x, y, text);
+//        MixinHelper.post(event);
+//
+//        if (event.isCanceled()) return 0;
+//
+//        return original.call(instance, font, event.getContainerLabel(), x, y, event.getColor(), dropShadow);
+//    }
 
-        if (event.isCanceled()) return 0;
-
-        return original.call(instance, font, event.getContainerLabel(), x, y, event.getColor(), dropShadow);
-    }
-
-    @WrapOperation(
-            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
-                            ordinal = 1))
-    private int renderInventoryLabel(
-            GuiGraphics instance,
-            Font font,
-            Component text,
-            int x,
-            int y,
-            int color,
-            boolean dropShadow,
-            Operation<Integer> original) {
-        ContainerLabelRenderEvent.InventoryLabel event = new ContainerLabelRenderEvent.InventoryLabel(
-                (AbstractContainerScreen<?>) (Object) this, instance, color, x, y, text);
-        MixinHelper.post(event);
-
-        if (event.isCanceled()) return 0;
-
-        return original.call(instance, font, event.getInventoryLabel(), x, y, event.getColor(), dropShadow);
-    }
+//    @WrapOperation(
+//            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
+//            at =
+//                    @At(
+//                            value = "INVOKE",
+//                            target =
+//                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
+//                            ordinal = 1))
+//    private int renderInventoryLabel(
+//            GuiGraphics instance,
+//            Font font,
+//            Component text,
+//            int x,
+//            int y,
+//            int color,
+//            boolean dropShadow,
+//            Operation<Integer> original) {
+//        ContainerLabelRenderEvent.InventoryLabel event = new ContainerLabelRenderEvent.InventoryLabel(
+//                (AbstractContainerScreen<?>) (Object) this, instance, color, x, y, text);
+//        MixinHelper.post(event);
+//
+//        if (event.isCanceled()) return 0;
+//
+//        return original.call(instance, font, event.getInventoryLabel(), x, y, event.getColor(), dropShadow);
+//    }
 
     @Inject(
             method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;)V",
@@ -146,8 +146,8 @@ public abstract class AbstractContainerScreenMixin {
         TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
 
         if (focusedTextInput != null) {
-            focusedTextInput.mouseDragged(
-                    mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button(), deltaX, deltaY);
+//            focusedTextInput.mouseDragged(
+//                    mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button(), deltaX, deltaY);
         }
     }
 
@@ -156,7 +156,7 @@ public abstract class AbstractContainerScreenMixin {
         TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
 
         if (focusedTextInput != null) {
-            focusedTextInput.mouseReleased(mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button());
+//            focusedTextInput.mouseReleased(mouseButtonEvent.x(), mouseButtonEvent.y(), mouseButtonEvent.button());
         }
     }
 

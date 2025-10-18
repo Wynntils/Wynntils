@@ -291,21 +291,21 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         // Screen background
-        RenderUtils.drawTexturedRect(
-                guiGraphics.pose(), Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.TERRITORY_SIDEBAR, getRenderX() - 22, getRenderY());
+//        RenderUtils.drawTexturedRect(
+//                guiGraphics.pose(), Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
+//        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.TERRITORY_SIDEBAR, getRenderX() - 22, getRenderY());
 
         // Render title
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics.pose(),
-                        StyledText.fromComponent(wrappedScreenInfo.screen().getTitle()),
-                        getRenderX() + 8,
-                        getRenderY() + 9,
-                        CommonColors.TITLE_GRAY,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NONE);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        guiGraphics.pose(),
+//                        StyledText.fromComponent(wrappedScreenInfo.screen().getTitle()),
+//                        getRenderX() + 8,
+//                        getRenderY() + 9,
+//                        CommonColors.TITLE_GRAY,
+//                        HorizontalAlignment.LEFT,
+//                        VerticalAlignment.MIDDLE,
+//                        TextShadow.NONE);
 
         // Render the widgets
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
@@ -347,54 +347,54 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 getMaxScrollOffset(),
                 getRenderY() + RENDER_AREA_POSITION.b(),
                 getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b());
-        RenderUtils.drawTexturedRect(
-                guiGraphics.pose(),
-                Texture.SCROLLBAR_BUTTON,
-                getRenderX()
-                        + RENDER_AREA_POSITION.a()
-                        + RENDER_AREA_SIZE.a()
-                        + 10f
-                        - Texture.SCROLL_BUTTON.width() / 2f,
-                renderY - Texture.SCROLLBAR_BUTTON.height() / 2f);
+//        RenderUtils.drawTexturedRect(
+//                guiGraphics.pose(),
+//                Texture.SCROLLBAR_BUTTON,
+//                getRenderX()
+//                        + RENDER_AREA_POSITION.a()
+//                        + RENDER_AREA_SIZE.a()
+//                        + 10f
+//                        - Texture.SCROLL_BUTTON.width() / 2f,
+//                renderY - Texture.SCROLLBAR_BUTTON.height() / 2f);
     }
 
     private void renderQuickFiltersAndSorts(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int xOffset = getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5;
 
-        RenderUtils.drawRect(
-                guiGraphics.pose(),
-                CommonColors.BLACK.withAlpha(80),
-                xOffset,
-                getRenderY(),
-                0,
-                QUICK_FILTER_WIDTH,
-                Texture.TERRITORY_MANAGEMENT_BACKGROUND.height());
+//        RenderUtils.drawRect(
+//                guiGraphics.pose(),
+//                CommonColors.BLACK.withAlpha(80),
+//                xOffset,
+//                getRenderY(),
+//                0,
+//                QUICK_FILTER_WIDTH,
+//                Texture.TERRITORY_MANAGEMENT_BACKGROUND.height());
 
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        StyledText.fromComponent(
-                                Component.translatable("feature.wynntils.customTerritoryManagementScreen.filters")),
-                        xOffset,
-                        QUICK_FILTER_WIDTH + xOffset,
-                        5 + getRenderY(),
-                        0,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        TextShadow.OUTLINE);
+//        FontRenderer.getInstance()
+//                .renderAlignedTextInBox(
+//                        guiGraphics.pose(),
+//                        StyledText.fromComponent(
+//                                Component.translatable("feature.wynntils.customTerritoryManagementScreen.filters")),
+//                        xOffset,
+//                        QUICK_FILTER_WIDTH + xOffset,
+//                        5 + getRenderY(),
+//                        0,
+//                        CommonColors.WHITE,
+//                        HorizontalAlignment.CENTER,
+//                        TextShadow.OUTLINE);
 
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        StyledText.fromComponent(
-                                Component.translatable("feature.wynntils.customTerritoryManagementScreen.sorts")),
-                        xOffset,
-                        QUICK_FILTER_WIDTH + xOffset,
-                        70 + getRenderY(),
-                        0,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        TextShadow.OUTLINE);
+//        FontRenderer.getInstance()
+//                .renderAlignedTextInBox(
+//                        guiGraphics.pose(),
+//                        StyledText.fromComponent(
+//                                Component.translatable("feature.wynntils.customTerritoryManagementScreen.sorts")),
+//                        xOffset,
+//                        QUICK_FILTER_WIDTH + xOffset,
+//                        70 + getRenderY(),
+//                        0,
+//                        CommonColors.WHITE,
+//                        HorizontalAlignment.CENTER,
+//                        TextShadow.OUTLINE);
 
         for (TerritoryQuickFilterWidget quickFilter : quickFilters) {
             quickFilter.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -413,7 +413,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         List<Component> tooltipLines = tooltipProvider.getTooltipLines();
         if (tooltipLines.isEmpty()) return;
 
-        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
+//        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
     }
 
     @Override

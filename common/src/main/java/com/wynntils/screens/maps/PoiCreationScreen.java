@@ -393,13 +393,13 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        renderBlurredBackground();
+//        renderBlurredBackground();
 
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+//        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
-        RenderSystem.enableDepthTest();
+//        RenderSystem.enableDepthTest();
         renderMap(guiGraphics);
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -421,29 +421,29 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();
 
-            poi.renderAt(
-                    poseStack,
-                    bufferSource,
-                    MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
-                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
-                    hovered == poi,
-                    1,
-                    zoomRenderScale,
-                    zoomLevel,
-                    true);
+//            poi.renderAt(
+//                    poseStack,
+//                    bufferSource,
+//                    MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
+//                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
+//                    hovered == poi,
+//                    1,
+//                    zoomRenderScale,
+//                    zoomLevel,
+//                    true);
 
             bufferSource.endBatch();
         }
 
-        renderCursor(
-                poseStack,
-                1.5f,
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .pointerColor
-                        .get(),
-                Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .pointerType
-                        .get());
+//        renderCursor(
+//                poseStack,
+//                1.5f,
+//                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+//                        .pointerColor
+//                        .get(),
+//                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+//                        .pointerType
+//                        .get());
 
         RenderUtils.disableScissor(guiGraphics);
 

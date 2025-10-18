@@ -328,11 +328,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         hovered = null;
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.ITEM_FILTER_BACKGROUND, offsetX, offsetY);
+//        RenderUtils.drawTexturedRect(poseStack, Texture.ITEM_FILTER_BACKGROUND, offsetX, offsetY);
 
         if (selectedProvider == null && !sortMode) {
             FontRenderer.getInstance()
@@ -442,11 +442,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
 
         if (itemStatProviders.size() > MAX_PROVIDERS_PER_PAGE) {
-            renderProvidersScroll(poseStack);
+//            renderProvidersScroll(poseStack);
         }
 
         if (sortMode && sorts.size() > MAX_SORTS_PER_PAGE) {
-            renderSortScroll(poseStack);
+//            renderSortScroll(poseStack);
         }
 
         renderTooltips(guiGraphics, mouseX, mouseY);
@@ -1066,7 +1066,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         if (tooltipLines.isEmpty()) return;
 
-        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
+//        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
     }
 
     private void renderProvidersScroll(PoseStack poseStack) {

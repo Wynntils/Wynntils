@@ -127,7 +127,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                                 .withStyle(ChatFormatting.RED));
             }
 
-            guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
+//            guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
             return;
         }
 
@@ -136,9 +136,9 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        renderBackgroundTexture(poseStack);
+//        renderBackgroundTexture(poseStack);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.lootruns.name"));
 

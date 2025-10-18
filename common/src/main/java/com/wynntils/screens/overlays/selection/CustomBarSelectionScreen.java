@@ -101,22 +101,22 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         // Draw the custom bar centered in the screen with 50% progress
-        BufferedRenderUtils.drawProgressBar(
-                poseStack,
-                guiGraphics.bufferSource,
-                availableBars.get(barTypeIndex).a(),
-                barX,
-                barY,
-                barX + availableBars.get(barTypeIndex).a().width(),
-                barY + availableBars.get(barTypeIndex).b().get(barTextureIndex).getHeight(),
-                0,
-                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY1(),
-                availableBars.get(barTypeIndex).a().width(),
-                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY2(),
-                0.5f);
+//        BufferedRenderUtils.drawProgressBar(
+//                poseStack,
+//                guiGraphics.bufferSource,
+//                availableBars.get(barTypeIndex).a(),
+//                barX,
+//                barY,
+//                barX + availableBars.get(barTypeIndex).a().width(),
+//                barY + availableBars.get(barTypeIndex).b().get(barTextureIndex).getHeight(),
+//                0,
+//                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY1(),
+//                availableBars.get(barTypeIndex).a().width(),
+//                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY2(),
+//                0.5f);
     }
 
     @Override

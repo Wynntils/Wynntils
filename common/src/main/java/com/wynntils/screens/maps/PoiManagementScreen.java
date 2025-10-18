@@ -387,8 +387,8 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-        renderScrollButton(poseStack);
+//        PoseStack poseStack = guiGraphics.pose();
+//        renderScrollButton(poseStack);
 
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
@@ -433,14 +433,14 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         } else {
-            RenderUtils.drawRect(
-                    poseStack,
-                    CommonColors.WHITE,
-                    (int) (dividedWidth * 12),
-                    (int) (dividedHeight * HEADER_HEIGHT),
-                    0,
-                    (int) (dividedWidth * 38),
-                    1);
+//            RenderUtils.drawRect(
+//                    poseStack,
+//                    CommonColors.WHITE,
+//                    (int) (dividedWidth * 12),
+//                    (int) (dividedHeight * HEADER_HEIGHT),
+//                    0,
+//                    (int) (dividedWidth * 38),
+//                    1);
         }
     }
 
@@ -448,16 +448,16 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(),
-                Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
-                backgroundX,
-                backgroundY,
-                0,
-                backgroundWidth,
-                backgroundHeight,
-                Texture.WAYPOINT_MANAGER_BACKGROUND.width(),
-                Texture.WAYPOINT_MANAGER_BACKGROUND.height());
+//        RenderUtils.drawScalingTexturedRect(
+//                guiGraphics.pose(),
+//                Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
+//                backgroundX,
+//                backgroundY,
+//                0,
+//                backgroundWidth,
+//                backgroundHeight,
+//                Texture.WAYPOINT_MANAGER_BACKGROUND.width(),
+//                Texture.WAYPOINT_MANAGER_BACKGROUND.height());
     }
 
     @Override

@@ -176,7 +176,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(GuildMapFeature.class)
@@ -187,9 +187,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
             return;
         }
 
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+//        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
-        RenderSystem.enableDepthTest();
+//        RenderSystem.enableDepthTest();
 
         renderMap(guiGraphics);
 
@@ -200,17 +200,17 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(poseStack, mouseX, mouseY);
+//        renderPois(poseStack, mouseX, mouseY);
 
-        renderCursor(
-                poseStack,
-                1.5f,
-                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
-                        .pointerColor
-                        .get(),
-                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
-                        .pointerType
-                        .get());
+//        renderCursor(
+//                poseStack,
+//                1.5f,
+//                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+//                        .pointerColor
+//                        .get(),
+//                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+//                        .pointerType
+//                        .get());
 
         RenderUtils.disableScissor(guiGraphics);
 
@@ -220,7 +220,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderHoveredTerritoryInfo(poseStack);
+//        renderHoveredTerritoryInfo(poseStack);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -270,16 +270,16 @@ public final class GuildMapScreen extends AbstractMapScreen {
             float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
-            poi.renderAt(
-                    poseStack,
-                    bufferSource,
-                    poiRenderX,
-                    poiRenderZ,
-                    hovered == poi,
-                    poiScale,
-                    zoomRenderScale,
-                    zoomLevel,
-                    true);
+//            poi.renderAt(
+//                    poseStack,
+//                    bufferSource,
+//                    poiRenderX,
+//                    poiRenderZ,
+//                    hovered == poi,
+//                    poiScale,
+//                    zoomRenderScale,
+//                    zoomLevel,
+//                    true);
         }
 
         bufferSource.endBatch();
@@ -322,9 +322,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
         int yOffset = (int) (SCREEN_SIDE_OFFSET + 40);
 
         if (territoryPoi.isFakeTerritoryInfo()) {
-            renderTerritoryTooltipWithFakeInfo(poseStack, xOffset, yOffset, territoryPoi);
+//            renderTerritoryTooltipWithFakeInfo(poseStack, xOffset, yOffset, territoryPoi);
         } else {
-            renderTerritoryTooltip(poseStack, xOffset, yOffset, territoryPoi);
+//            renderTerritoryTooltip(poseStack, xOffset, yOffset, territoryPoi);
         }
 
         poseStack.popPose();
@@ -386,21 +386,21 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         * 10
                 + (territoryInfo.isHeadquarters() ? 20 : 0);
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
-                xOffset,
-                Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
-                textureWidth,
-                centerHeight,
-                textureWidth,
-                Texture.MAP_INFO_TOOLTIP_CENTER.height());
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.MAP_INFO_NAME_BOX,
-                xOffset,
-                Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset);
+//        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
+//        RenderUtils.drawTexturedRect(
+//                poseStack,
+//                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
+//                xOffset,
+//                Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
+//                textureWidth,
+//                centerHeight,
+//                textureWidth,
+//                Texture.MAP_INFO_TOOLTIP_CENTER.height());
+//        RenderUtils.drawTexturedRect(
+//                poseStack,
+//                Texture.MAP_INFO_NAME_BOX,
+//                xOffset,
+//                Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset);
 
         // guild
         FontRenderer.getInstance()
@@ -547,21 +547,21 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         final float centerHeight = 35;
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
-                xOffset,
-                Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
-                textureWidth,
-                centerHeight,
-                textureWidth,
-                Texture.MAP_INFO_TOOLTIP_CENTER.height());
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.MAP_INFO_NAME_BOX,
-                xOffset,
-                Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset);
+//        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
+//        RenderUtils.drawTexturedRect(
+//                poseStack,
+//                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
+//                xOffset,
+//                Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
+//                textureWidth,
+//                centerHeight,
+//                textureWidth,
+//                Texture.MAP_INFO_TOOLTIP_CENTER.height());
+//        RenderUtils.drawTexturedRect(
+//                poseStack,
+//                Texture.MAP_INFO_NAME_BOX,
+//                xOffset,
+//                Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset);
 
         // guild
         FontRenderer.getInstance()

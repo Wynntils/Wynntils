@@ -23,39 +23,39 @@ public class BackButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         Texture backArrow = Texture.BACK_ARROW_OFFSET;
         if (this.isHovered) {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    backArrow.resource(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    this.width,
-                    this.height,
-                    backArrow.width() / 2,
-                    0,
-                    backArrow.width() / 2,
-                    backArrow.height(),
-                    backArrow.width(),
-                    backArrow.height());
+//            RenderUtils.drawTexturedRect(
+//                    poseStack,
+//                    backArrow.resource(),
+//                    this.getX(),
+//                    this.getY(),
+//                    0,
+//                    this.width,
+//                    this.height,
+//                    backArrow.width() / 2,
+//                    0,
+//                    backArrow.width() / 2,
+//                    backArrow.height(),
+//                    backArrow.width(),
+//                    backArrow.height());
         } else {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    backArrow.resource(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    this.width,
-                    this.height,
-                    0,
-                    0,
-                    backArrow.width() / 2,
-                    backArrow.height(),
-                    backArrow.width(),
-                    backArrow.height());
+//            RenderUtils.drawTexturedRect(
+//                    poseStack,
+//                    backArrow.resource(),
+//                    this.getX(),
+//                    this.getY(),
+//                    0,
+//                    this.width,
+//                    this.height,
+//                    0,
+//                    0,
+//                    backArrow.width() / 2,
+//                    backArrow.height(),
+//                    backArrow.width(),
+//                    backArrow.height());
         }
     }
 

@@ -49,47 +49,47 @@ public class GuideSortButton extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawRect(
-                guiGraphics.pose(),
-                CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f),
-                getX(),
-                getY(),
-                0,
-                getWidth(),
-                getHeight());
+//        RenderUtils.drawRect(
+//                guiGraphics.pose(),
+//                CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f),
+//                getX(),
+//                getY(),
+//                0,
+//                getWidth(),
+//                getHeight());
 
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics.pose(),
-                        StyledText.fromString(getSortName()),
-                        getX() + getWidth() / 2f,
-                        getY() + getHeight() / 2f,
-                        sortDirection == null ? CommonColors.WHITE : CommonColors.ORANGE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        guiGraphics.pose(),
+//                        StyledText.fromString(getSortName()),
+//                        getX() + getWidth() / 2f,
+//                        getY() + getHeight() / 2f,
+//                        sortDirection == null ? CommonColors.WHITE : CommonColors.ORANGE,
+//                        HorizontalAlignment.CENTER,
+//                        VerticalAlignment.MIDDLE,
+//                        TextShadow.NORMAL);
 
         if (sortDirection != null) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics.pose(),
-                            StyledText.fromString(sortDirection == SortDirection.ASCENDING ? "▲" : "▼"),
-                            getX() + getWidth(),
-                            getY() - 2,
-                            CommonColors.YELLOW,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.TOP,
-                            TextShadow.OUTLINE);
+//            FontRenderer.getInstance()
+//                    .renderText(
+//                            guiGraphics.pose(),
+//                            StyledText.fromString(sortDirection == SortDirection.ASCENDING ? "▲" : "▼"),
+//                            getX() + getWidth(),
+//                            getY() - 2,
+//                            CommonColors.YELLOW,
+//                            HorizontalAlignment.CENTER,
+//                            VerticalAlignment.TOP,
+//                            TextShadow.OUTLINE);
         }
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(
-                            ComponentUtils.wrapTooltips(
-                                    List.of(Component.translatable(
-                                            "screens.wynntils.wynntilsGuides.sortWidget.tooltip", getSortName())),
-                                    200),
-                            Component::getVisualOrderText));
+//            McUtils.screen()
+//                    .setTooltipForNextRenderPass(Lists.transform(
+//                            ComponentUtils.wrapTooltips(
+//                                    List.of(Component.translatable(
+//                                            "screens.wynntils.wynntilsGuides.sortWidget.tooltip", getSortName())),
+//                                    200),
+//                            Component::getVisualOrderText));
         }
     }
 

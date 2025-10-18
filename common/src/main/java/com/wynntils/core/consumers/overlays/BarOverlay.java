@@ -56,8 +56,6 @@ public abstract class BarOverlay extends DynamicOverlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PoseStack poseStack = guiGraphics.pose();
-
         BarOverlayTemplatePair template = getTemplate();
 
         if (templateCache == null) {
@@ -123,7 +121,7 @@ public abstract class BarOverlay extends DynamicOverlay {
         renderText(guiGraphics, bufferSource, renderY, textValue);
 
         float progress = (flip.get() ? -1 : 1) * renderedProgress;
-        renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
+//        renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
     }
 
     @Override

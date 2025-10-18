@@ -41,17 +41,17 @@ public abstract class TerritoryQuickFilterWidget extends AbstractWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         boolean isHovered = this.isMouseOver(mouseX, mouseY);
 
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics.pose(),
-                        StyledText.fromComponent(
-                                getFilterName().withStyle(isHovered ? ChatFormatting.BOLD : ChatFormatting.RESET)),
-                        this.getX() + 5,
-                        this.getY() + 5,
-                        getFilterColor(),
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.OUTLINE);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        guiGraphics.pose(),
+//                        StyledText.fromComponent(
+//                                getFilterName().withStyle(isHovered ? ChatFormatting.BOLD : ChatFormatting.RESET)),
+//                        this.getX() + 5,
+//                        this.getY() + 5,
+//                        getFilterColor(),
+//                        HorizontalAlignment.LEFT,
+//                        VerticalAlignment.TOP,
+//                        TextShadow.OUTLINE);
     }
 
     @Override

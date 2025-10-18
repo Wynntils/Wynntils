@@ -110,13 +110,13 @@ public class OverlayButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
         boolean enabled = Managers.Overlay.isEnabled(overlay);
 
-        RenderUtils.drawRect(poseStack, getRectColor(enabled).withAlpha(100), getX(), getY(), 0, width, height);
+//        RenderUtils.drawRect(poseStack, getRectColor(enabled).withAlpha(100), getX(), getY(), 0, width, height);
 
-        RenderUtils.drawRectBorders(
-                poseStack, getBorderColor(enabled), getX(), getY(), getX() + width, getY() + height, 1, 2);
+//        RenderUtils.drawRectBorders(
+//                poseStack, getBorderColor(enabled), getX(), getY(), getX() + width, getY() + height, 1, 2);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
@@ -147,19 +147,19 @@ public class OverlayButton extends WynntilsButton {
         // name is being edited
         if (isHovered) {
             if (!overlay.isParentEnabled()) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(
-                                ComponentUtils.wrapTooltips(
-                                        List.of(Component.translatable(
-                                                "screens.wynntils.overlaySelection.parentDisabled",
-                                                overlay.getParentTranslatedName())),
-                                        200),
-                                Component::getVisualOrderText));
+//                McUtils.screen()
+//                        .setTooltipForNextRenderPass(Lists.transform(
+//                                ComponentUtils.wrapTooltips(
+//                                        List.of(Component.translatable(
+//                                                "screens.wynntils.overlaySelection.parentDisabled",
+//                                                overlay.getParentTranslatedName())),
+//                                        200),
+//                                Component::getVisualOrderText));
             } else {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(
-                                (editInput != null && editInput.visible) ? SAVE_NAME_TOOLTIP : descriptionTooltip,
-                                Component::getVisualOrderText));
+//                McUtils.screen()
+//                        .setTooltipForNextRenderPass(Lists.transform(
+//                                (editInput != null && editInput.visible) ? SAVE_NAME_TOOLTIP : descriptionTooltip,
+//                                Component::getVisualOrderText));
             }
         }
     }

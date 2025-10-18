@@ -124,9 +124,9 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        renderBackgroundTexture(poseStack);
+//        renderBackgroundTexture(poseStack);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.name"));
 

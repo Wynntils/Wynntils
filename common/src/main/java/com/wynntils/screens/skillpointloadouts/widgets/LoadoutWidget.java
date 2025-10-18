@@ -57,23 +57,23 @@ public class LoadoutWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         if (this.isMouseOver(mouseX, mouseY)) {
-            RenderUtils.drawRect(
-                    poseStack, CommonColors.GRAY.withAlpha(100), this.getX(), this.getY(), 0, width, height);
+//            RenderUtils.drawRect(
+//                    poseStack, CommonColors.GRAY.withAlpha(100), this.getX(), this.getY(), 0, width, height);
         }
         if (parent.getSelectedLoadout() != null
                 && parent.getSelectedLoadout().key().equals(this.name)) {
-            RenderUtils.drawRectBorders(
-                    poseStack,
-                    CommonColors.WHITE,
-                    this.getX(),
-                    this.getY(),
-                    this.getX() + this.getWidth(),
-                    this.getY() + this.getHeight(),
-                    1,
-                    0.5f);
+//            RenderUtils.drawRectBorders(
+//                    poseStack,
+//                    CommonColors.WHITE,
+//                    this.getX(),
+//                    this.getY(),
+//                    this.getX() + this.getWidth(),
+//                    this.getY() + this.getHeight(),
+//                    1,
+//                    0.5f);
         }
 
         int nameYOffset = 2;
@@ -131,10 +131,10 @@ public class LoadoutWidget extends AbstractWidget {
         }
     }
 
-    @Override
-    public void onClick(double mouseX, double mouseY) {
-        parent.setSelectedLoadout(Pair.of(name, loadout));
-    }
+//    @Override
+//    public void onClick(double mouseX, double mouseY) {
+//        parent.setSelectedLoadout(Pair.of(name, loadout));
+//    }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}

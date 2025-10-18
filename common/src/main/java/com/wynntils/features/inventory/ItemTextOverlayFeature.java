@@ -164,13 +164,13 @@ public class ItemTextOverlayFeature extends Feature {
             return;
         }
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
-        poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
+//        poseStack.pushPose();
+//        poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
+//        poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
         float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
         float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
-        FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task(), Font.DisplayMode.NORMAL);
-        poseStack.popPose();
+//        FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task(), Font.DisplayMode.NORMAL);
+//        poseStack.popPose();
     }
 
     private TextOverlayInfo calculateOverlay(WynnItem wynnItem) {

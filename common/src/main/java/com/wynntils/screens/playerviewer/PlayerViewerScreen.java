@@ -279,12 +279,12 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        BufferedRenderUtils.drawTexturedRect(
-                guiGraphics.pose(),
-                guiGraphics.bufferSource,
-                Texture.PLAYER_VIEWER_BACKGROUND,
-                this.leftPos,
-                this.topPos);
+//        BufferedRenderUtils.drawTexturedRect(
+//                guiGraphics.pose(),
+//                guiGraphics.bufferSource,
+//                Texture.PLAYER_VIEWER_BACKGROUND,
+//                this.leftPos,
+//                this.topPos);
     }
 
     @Override

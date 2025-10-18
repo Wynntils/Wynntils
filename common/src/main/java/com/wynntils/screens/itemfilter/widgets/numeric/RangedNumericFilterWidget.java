@@ -69,16 +69,16 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
         maxInput.render(guiGraphics, mouseX, mouseY, partialTick);
         removeButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics.pose(),
-                        StyledText.fromString("-"),
-                        getX() + 59,
-                        getY() + 11,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.OUTLINE);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        guiGraphics.pose(),
+//                        StyledText.fromString("-"),
+//                        getX() + 59,
+//                        getY() + 11,
+//                        CommonColors.WHITE,
+//                        HorizontalAlignment.CENTER,
+//                        VerticalAlignment.MIDDLE,
+//                        TextShadow.OUTLINE);
     }
 
     @Override

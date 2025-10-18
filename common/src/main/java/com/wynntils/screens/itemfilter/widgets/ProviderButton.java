@@ -77,11 +77,11 @@ public class ProviderButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRect(poseStack, getRectColor().withAlpha(100), getX(), getY(), 0, width, height);
+//        RenderUtils.drawRect(poseStack, getRectColor().withAlpha(100), getX(), getY(), 0, width, height);
 
-        RenderUtils.drawRectBorders(poseStack, getBorderColor(), getX(), getY(), getX() + width, getY() + height, 1, 2);
+//        RenderUtils.drawRectBorders(poseStack, getBorderColor(), getX(), getY(), getX() + width, getY() + height, 1, 2);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
@@ -103,7 +103,7 @@ public class ProviderButton extends WynntilsButton {
         }
 
         if (this.isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+//            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 

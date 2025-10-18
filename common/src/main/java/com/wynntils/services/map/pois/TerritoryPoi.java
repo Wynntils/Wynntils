@@ -79,8 +79,8 @@ public class TerritoryPoi implements Poi {
             float zoomRenderScale,
             float zoomLevel,
             boolean showLabels) {
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 100);
+//        poseStack.pushPose();
+//        poseStack.translate(0, 0, 100);
 
         final float renderWidth = width * zoomRenderScale;
         final float renderHeight = height * zoomRenderScale;
@@ -104,34 +104,34 @@ public class TerritoryPoi implements Poi {
                     isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getGuild()));
         }
 
-        BufferedRenderUtils.drawMulticoloredRect(
-                poseStack,
-                bufferSource,
-                colors.stream().map(x -> x.withAlpha(80)).toList(),
-                actualRenderX,
-                actualRenderZ,
-                0,
-                renderWidth,
-                renderHeight);
-        BufferedRenderUtils.drawMulticoloredRectBorders(
-                poseStack,
-                bufferSource,
-                colors,
-                actualRenderX,
-                actualRenderZ,
-                0,
-                renderWidth,
-                renderHeight,
-                1.5f,
-                0.5f);
+//        BufferedRenderUtils.drawMulticoloredRect(
+//                poseStack,
+//                bufferSource,
+//                colors.stream().map(x -> x.withAlpha(80)).toList(),
+//                actualRenderX,
+//                actualRenderZ,
+//                0,
+//                renderWidth,
+//                renderHeight);
+//        BufferedRenderUtils.drawMulticoloredRectBorders(
+//                poseStack,
+//                bufferSource,
+//                colors,
+//                actualRenderX,
+//                actualRenderZ,
+//                0,
+//                renderWidth,
+//                renderHeight,
+//                1.5f,
+//                0.5f);
 
         if (isTerritoryInfoUsable() && territoryInfo.isHeadquarters()) {
-            BufferedRenderUtils.drawTexturedRect(
-                    poseStack,
-                    bufferSource,
-                    Texture.GUILD_HEADQUARTERS,
-                    actualRenderX + renderWidth / 2f - Texture.GUILD_HEADQUARTERS.width() / 2f,
-                    actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS.height() / 2f);
+//            BufferedRenderUtils.drawTexturedRect(
+//                    poseStack,
+//                    bufferSource,
+//                    Texture.GUILD_HEADQUARTERS,
+//                    actualRenderX + renderWidth / 2f - Texture.GUILD_HEADQUARTERS.width() / 2f,
+//                    actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS.height() / 2f);
         } else {
             String guildPrefix =
                     isTerritoryInfoUsable() ? territoryInfo.getGuildPrefix() : territoryProfile.getGuildPrefix();
@@ -185,7 +185,7 @@ public class TerritoryPoi implements Poi {
                             TextShadow.OUTLINE);
         }
 
-        poseStack.popPose();
+//        poseStack.popPose();
     }
 
     private boolean isTerritoryInfoUsable() {

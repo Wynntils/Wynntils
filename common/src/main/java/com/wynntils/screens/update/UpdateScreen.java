@@ -121,7 +121,7 @@ public final class UpdateScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         FontRenderer.getInstance()
                 .renderText(
@@ -162,20 +162,20 @@ public final class UpdateScreen extends WynntilsScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            BufferedRenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    guiGraphics.bufferSource,
-                    Texture.UNIVERSAL_BAR,
-                    CommonColors.LIGHT_GREEN,
-                    this.width / 2f - Texture.UNIVERSAL_BAR.width(),
-                    this.height / 2f - UniversalTexture.A.getHeight(),
-                    this.width / 2f + Texture.UNIVERSAL_BAR.width(),
-                    this.height / 2f + UniversalTexture.A.getHeight(),
-                    0,
-                    UniversalTexture.A.getTextureY1(),
-                    Texture.UNIVERSAL_BAR.width(),
-                    UniversalTexture.A.getTextureY2(),
-                    Services.Update.getUpdateProgress());
+//            BufferedRenderUtils.drawColoredProgressBar(
+//                    poseStack,
+//                    guiGraphics.bufferSource,
+//                    Texture.UNIVERSAL_BAR,
+//                    CommonColors.LIGHT_GREEN,
+//                    this.width / 2f - Texture.UNIVERSAL_BAR.width(),
+//                    this.height / 2f - UniversalTexture.A.getHeight(),
+//                    this.width / 2f + Texture.UNIVERSAL_BAR.width(),
+//                    this.height / 2f + UniversalTexture.A.getHeight(),
+//                    0,
+//                    UniversalTexture.A.getTextureY1(),
+//                    Texture.UNIVERSAL_BAR.width(),
+//                    UniversalTexture.A.getTextureY2(),
+//                    Services.Update.getUpdateProgress());
             return;
         }
 

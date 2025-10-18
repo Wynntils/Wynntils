@@ -158,15 +158,15 @@ public class ItemSearchWidget extends SearchWidget {
                         HorizontalAlignment.LEFT,
                         TextShadow.NORMAL);
 
-        drawCursor(
-                poseStack,
-                this.getX()
-                        + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length())))
-                        + textPadding
-                        - 2,
-                this.getY() + VERTICAL_OFFSET,
-                VerticalAlignment.TOP,
-                false);
+//        drawCursor(
+//                poseStack,
+//                this.getX()
+//                        + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length())))
+//                        + textPadding
+//                        - 2,
+//                this.getY() + VERTICAL_OFFSET,
+//                VerticalAlignment.TOP,
+//                false);
     }
 
     private StyledText getStyledText(int charIndex, char c) {

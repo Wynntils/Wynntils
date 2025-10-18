@@ -33,21 +33,21 @@ public class AnyFilterWidget extends GeneralFilterWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        StyledText.fromComponent(Component.translatable(
-                                "screens.wynntils.itemFilter.anyFilterActive",
-                                parent.getProvider().getDisplayName())),
-                        getX(),
-                        getX() + getWidth(),
-                        getY(),
-                        getY() + getHeight() - 30,
-                        getWidth(),
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+//        FontRenderer.getInstance()
+//                .renderAlignedTextInBox(
+//                        guiGraphics.pose(),
+//                        StyledText.fromComponent(Component.translatable(
+//                                "screens.wynntils.itemFilter.anyFilterActive",
+//                                parent.getProvider().getDisplayName())),
+//                        getX(),
+//                        getX() + getWidth(),
+//                        getY(),
+//                        getY() + getHeight() - 30,
+//                        getWidth(),
+//                        CommonColors.WHITE,
+//                        HorizontalAlignment.CENTER,
+//                        VerticalAlignment.MIDDLE,
+//                        TextShadow.NORMAL);
 
         removeButton.render(guiGraphics, mouseX, mouseY, partialTick);
     }

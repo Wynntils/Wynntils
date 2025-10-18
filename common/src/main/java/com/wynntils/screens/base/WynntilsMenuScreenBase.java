@@ -70,7 +70,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
     }
 
     protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
+//        RenderUtils.drawTexturedRect(poseStack, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
 
         FontRenderer.getInstance()
                 .renderText(

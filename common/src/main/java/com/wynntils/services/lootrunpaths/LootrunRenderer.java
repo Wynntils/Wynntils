@@ -148,7 +148,7 @@ public final class LootrunRenderer {
             BlockState block = McUtils.mc().level.getBlockState(chest);
             if (block.is(Blocks.BARRIER) || block.is(Blocks.AIR)) continue;
 
-            ShapeRenderer.renderLineBox(poseStack, consumer, new AABB(chest), red, green, blue, 1f);
+//            ShapeRenderer.renderLineBox(poseStack, consumer, new AABB(chest), red, green, blue, 1f);
         }
 
         BUFFER_SOURCE.endBatch();
@@ -163,8 +163,8 @@ public final class LootrunRenderer {
         switch (Managers.Feature.getFeatureInstance(LootrunFeature.class)
                 .pathType
                 .get()) {
-            case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_QUAD);
-            case LINE -> renderNonTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_LINE);
+//            case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_QUAD);
+//            case LINE -> renderNonTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_LINE);
         }
     }
 
@@ -229,7 +229,7 @@ public final class LootrunRenderer {
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
         poseStack.pushPose();
         poseStack.translate(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+//        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         for (ColoredPath locationsInRoute : locations) {
             VertexConsumer consumer = BUFFER_SOURCE.getBuffer(renderType);

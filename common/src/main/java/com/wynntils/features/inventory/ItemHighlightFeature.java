@@ -168,7 +168,7 @@ public class ItemHighlightFeature extends Feature {
 
         if (selectedItemHighlight.get()
                 && McUtils.inventory().getSelectedItem().equals(e.getSlot().getItem())) {
-            RenderSystem.enableDepthTest();
+//            RenderSystem.enableDepthTest();
             RenderUtils.drawTexturedRectWithColor(
                     e.getPoseStack(),
                     Texture.HOTBAR_SELECTED_HIGHLIGHT.resource(),
@@ -180,11 +180,11 @@ public class ItemHighlightFeature extends Feature {
                     16,
                     16,
                     16);
-            RenderSystem.disableDepthTest();
+//            RenderSystem.disableDepthTest();
             return;
         }
 
-        RenderSystem.enableDepthTest();
+//        RenderSystem.enableDepthTest();
         RenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
                 Texture.HIGHLIGHT.resource(),
@@ -201,7 +201,7 @@ public class ItemHighlightFeature extends Feature {
                 18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
-        RenderSystem.disableDepthTest();
+//        RenderSystem.disableDepthTest();
     }
 
     @SubscribeEvent
@@ -212,33 +212,33 @@ public class ItemHighlightFeature extends Feature {
         if (color == CustomColor.NONE) return;
 
         if (selectedItemHighlight.get() && McUtils.inventory().getSelectedItem().equals(e.getItemStack())) {
-            BufferedRenderUtils.drawTexturedRectWithColor(
-                    e.getPoseStack(),
-                    e.getGuiGraphics().bufferSource,
-                    Texture.HOTBAR_SELECTED_HIGHLIGHT,
-                    color,
-                    e.getX(),
-                    e.getY());
+//            BufferedRenderUtils.drawTexturedRectWithColor(
+//                    e.getPoseStack(),
+//                    e.getGuiGraphics().bufferSource,
+//                    Texture.HOTBAR_SELECTED_HIGHLIGHT,
+//                    color,
+//                    e.getX(),
+//                    e.getY());
             return;
         }
 
-        BufferedRenderUtils.drawTexturedRectWithColor(
-                e.getPoseStack(),
-                e.getGuiGraphics().bufferSource,
-                Texture.HIGHLIGHT.resource(),
-                color,
-                e.getX() - 1,
-                e.getY() - 1,
-                0,
-                18,
-                18,
-                // TODO: Remove +18 when porting to 1.21.6+
-                (highlightTexture.get().ordinal() * 18) + 18,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+//        BufferedRenderUtils.drawTexturedRectWithColor(
+//                e.getPoseStack(),
+//                e.getGuiGraphics().bufferSource,
+//                Texture.HIGHLIGHT.resource(),
+//                color,
+//                e.getX() - 1,
+//                e.getY() - 1,
+//                0,
+//                18,
+//                18,
+//                // TODO: Remove +18 when porting to 1.21.6+
+//                (highlightTexture.get().ordinal() * 18) + 18,
+//                0,
+//                18,
+//                18,
+//                Texture.HIGHLIGHT.width(),
+//                Texture.HIGHLIGHT.height());
     }
 
     @SubscribeEvent

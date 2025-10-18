@@ -74,21 +74,21 @@ public class ConfigTile extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         resetButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
         renderDisplayName(guiGraphics);
 
-        RenderUtils.drawLine(
-                poseStack,
-                CommonColors.GRAY,
-                this.getX(),
-                this.getY() + this.height,
-                this.getX() + this.width,
-                this.getY() + this.height,
-                0,
-                1);
+//        RenderUtils.drawLine(
+//                poseStack,
+//                CommonColors.GRAY,
+//                this.getX(),
+//                this.getY() + this.height,
+//                this.getX() + this.width,
+//                this.getY() + this.height,
+//                0,
+//                1);
 
         configOptionElement.render(guiGraphics, mouseX, mouseY, partialTick);
     }

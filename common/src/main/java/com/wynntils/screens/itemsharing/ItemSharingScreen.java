@@ -112,7 +112,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.ITEM_SHARING_BACKGROUND, backgroundX, backgroundY);
+//        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.ITEM_SHARING_BACKGROUND, backgroundX, backgroundY);
     }
 
     @Override
@@ -123,11 +123,11 @@ public final class ItemSharingScreen extends WynntilsScreen {
     private void renderPreview(GuiGraphics guiGraphics) {
         if (previewItemStack == null) return;
 
-        guiGraphics.renderTooltip(
-                FontRenderer.getInstance().getFont(),
-                previewItemStack,
-                tooltipX,
-                backgroundY + (FontRenderer.getInstance().getFont().lineHeight * 2));
+//        guiGraphics.renderTooltip(
+//                FontRenderer.getInstance().getFont(),
+//                previewItemStack,
+//                tooltipX,
+//                backgroundY + (FontRenderer.getInstance().getFont().lineHeight * 2));
     }
 
     private void refreshPreview() {

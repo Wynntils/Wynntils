@@ -330,8 +330,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-        renderBackgroundTexture(poseStack);
+//        PoseStack poseStack = guiGraphics.pose();
+//        renderBackgroundTexture(poseStack);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
 
@@ -350,16 +350,16 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
         int txWidth = Texture.CONTENT_BOOK_TITLE.width();
         int txHeight = Texture.CONTENT_BOOK_TITLE.height();
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.CONTENT_BOOK_TITLE.resource(),
-                offsetX,
-                15 + offsetY,
-                0,
-                txWidth,
-                txHeight,
-                txWidth,
-                txHeight);
+//        RenderUtils.drawScalingTexturedRect(
+//                poseStack,
+//                Texture.CONTENT_BOOK_TITLE.resource(),
+//                offsetX,
+//                15 + offsetY,
+//                0,
+//                txWidth,
+//                txHeight,
+//                txWidth,
+//                txHeight);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -503,11 +503,11 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     private void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (this.hovered != null) {
-            guiGraphics.renderComponentTooltip(
-                    FontRenderer.getInstance().getFont(),
-                    ComponentUtils.wrapTooltips(this.hovered.getTooltipList(), 250),
-                    mouseX,
-                    mouseY);
+//            guiGraphics.renderComponentTooltip(
+//                    FontRenderer.getInstance().getFont(),
+//                    ComponentUtils.wrapTooltips(this.hovered.getTooltipList(), 250),
+//                    mouseX,
+//                    mouseY);
         }
     }
 

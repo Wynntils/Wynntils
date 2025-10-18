@@ -128,12 +128,12 @@ public class ConfigurableButton extends WynntilsButton {
 
         if (isHovered) {
             if (enabledCheckbox.isHovered()) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(toggleTooltip, Component::getVisualOrderText));
+//                McUtils.screen()
+//                        .setTooltipForNextRenderPass(Lists.transform(toggleTooltip, Component::getVisualOrderText));
             } else if (configurable instanceof Feature) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(
-                                Lists.transform(descriptionTooltip, Component::getVisualOrderText));
+//                McUtils.screen()
+//                        .setTooltipForNextRenderPass(
+//                                Lists.transform(descriptionTooltip, Component::getVisualOrderText));
             }
         }
     }

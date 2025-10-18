@@ -32,67 +32,67 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntityRenderStat
     @Unique
     private float wynntilsTranslucence;
 
-    @WrapOperation(
-            method =
-                    "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getRenderType(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;ZZZ)Lnet/minecraft/client/renderer/RenderType;"))
-    private RenderType onTranslucentCheck(
-            LivingEntityRenderer<?, ?, ?> instance,
-            LivingEntityRenderState livingEntityRenderState,
-            boolean bodyVisible,
-            boolean translucent,
-            boolean glowing,
-            Operation<RenderType> original) {
-        RenderTranslucentCheckEvent.Body event =
-                new RenderTranslucentCheckEvent.Body(translucent, livingEntityRenderState, translucent ? 0.15f : 1f);
-        MixinHelper.post(event);
+//    @WrapOperation(
+//            method =
+//                    "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+//            at =
+//                    @At(
+//                            value = "INVOKE",
+//                            target =
+//                                    "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getRenderType(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;ZZZ)Lnet/minecraft/client/renderer/RenderType;"))
+//    private RenderType onTranslucentCheck(
+//            LivingEntityRenderer<?, ?, ?> instance,
+//            LivingEntityRenderState livingEntityRenderState,
+//            boolean bodyVisible,
+//            boolean translucent,
+//            boolean glowing,
+//            Operation<RenderType> original) {
+//        RenderTranslucentCheckEvent.Body event =
+//                new RenderTranslucentCheckEvent.Body(translucent, livingEntityRenderState, translucent ? 0.15f : 1f);
+//        MixinHelper.post(event);
+//
+//        // Save translucence value for later use
+//        wynntilsTranslucence = event.getTranslucence();
+//
+//        return original.call(instance, livingEntityRenderState, bodyVisible, translucent, glowing);
+//    }
 
-        // Save translucence value for later use
-        wynntilsTranslucence = event.getTranslucence();
+//    @WrapOperation(
+//            method =
+//                    "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+//            at =
+//                    @At(
+//                            value = "INVOKE",
+//                            target =
+//                                    "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"))
+//    private void onOpacityUse(
+//            EntityModel<? super LivingEntityRenderState> instance,
+//            PoseStack poseStack,
+//            VertexConsumer consumer,
+//            int packedLight,
+//            int overlayCoords,
+//            int originalTranslucence,
+//            Operation<Void> original) {
+//        original.call(
+//                instance,
+//                poseStack,
+//                consumer,
+//                packedLight,
+//                overlayCoords,
+//                CommonColors.WHITE.withAlpha(wynntilsTranslucence).asInt());
+//    }
 
-        return original.call(instance, livingEntityRenderState, bodyVisible, translucent, glowing);
-    }
-
-    @WrapOperation(
-            method =
-                    "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"))
-    private void onOpacityUse(
-            EntityModel<? super LivingEntityRenderState> instance,
-            PoseStack poseStack,
-            VertexConsumer consumer,
-            int packedLight,
-            int overlayCoords,
-            int originalTranslucence,
-            Operation<Void> original) {
-        original.call(
-                instance,
-                poseStack,
-                consumer,
-                packedLight,
-                overlayCoords,
-                CommonColors.WHITE.withAlpha(wynntilsTranslucence).asInt());
-    }
-
-    @Inject(
-            method =
-                    "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At("RETURN"))
-    private void onRenderPost(
-            T renderState, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
-        if (!(renderState instanceof AvatarRenderState avatarRenderState)) return;
-
-        PlayerRenderEvent event = new PlayerRenderEvent(avatarRenderState, matrixStack, buffer, packedLight);
-        MixinHelper.post(event);
-    }
+//    @Inject(
+//            method =
+//                    "render(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+//            at = @At("RETURN"))
+//    private void onRenderPost(
+//            T renderState, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
+//        if (!(renderState instanceof AvatarRenderState avatarRenderState)) return;
+//
+//        PlayerRenderEvent event = new PlayerRenderEvent(avatarRenderState, matrixStack, buffer, packedLight);
+//        MixinHelper.post(event);
+//    }
 
     @ModifyExpressionValue(
             method = "shouldShowName(Lnet/minecraft/world/entity/LivingEntity;D)Z",

@@ -30,26 +30,26 @@ public class ScrollBar extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRect(
-                poseStack,
-                this.isMouseOver(mouseX, mouseY) ? HOVERED : CommonColors.LIGHT_GRAY,
-                getX(),
-                getY(),
-                0,
-                getWidth(),
-                getHeight());
+//        RenderUtils.drawRect(
+//                poseStack,
+//                this.isMouseOver(mouseX, mouseY) ? HOVERED : CommonColors.LIGHT_GRAY,
+//                getX(),
+//                getY(),
+//                0,
+//                getWidth(),
+//                getHeight());
     }
 
     // dragY = dividedHeight * 8 + dividedHeight * 48 * (-scrollY / 50)
     // Discard constant after solving, it comes from the height of the scrollable area
     // Full explanation in #artemis-dev
-    @Override
-    protected void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
-        parent.doScroll((-25 * dragY) / (24 * dividedHeight));
-        super.onDrag(mouseX, mouseY, dragX, dragY);
-    }
+//    @Override
+//    protected void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
+//        parent.doScroll((-25 * dragY) / (24 * dividedHeight));
+//        super.onDrag(mouseX, mouseY, dragX, dragY);
+//    }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}

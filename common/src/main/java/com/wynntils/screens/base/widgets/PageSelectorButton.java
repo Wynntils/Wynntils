@@ -44,14 +44,14 @@ public class PageSelectorButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         Texture arrowTexture = this.forward ? Texture.FORWARD_ARROW_OFFSET : Texture.BACKWARD_ARROW_OFFSET;
 
         if (isValid() && !isHovered) {
-            drawTexture(poseStack, arrowTexture, arrowTexture.width() / 2);
+//            drawTexture(poseStack, arrowTexture, arrowTexture.width() / 2);
         } else {
-            drawTexture(poseStack, arrowTexture, 0);
+//            drawTexture(poseStack, arrowTexture, 0);
         }
     }
 

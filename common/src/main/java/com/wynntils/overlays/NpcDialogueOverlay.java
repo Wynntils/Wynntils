@@ -195,15 +195,15 @@ public class NpcDialogueOverlay extends Overlay {
                     case BOTTOM -> this.getRenderY() + this.getHeight() - rectHeight;
                 };
         int colorAlphaRect = Math.round(MathUtils.clamp(255 * backgroundOpacity.get(), 0, 255));
-        BufferedRenderUtils.drawRect(
-                poseStack,
-                bufferSource,
-                CommonColors.BLACK.withAlpha(colorAlphaRect),
-                this.getRenderX(),
-                rectRenderY,
-                0,
-                this.getWidth(),
-                rectHeight);
+//        BufferedRenderUtils.drawRect(
+//                poseStack,
+//                bufferSource,
+//                CommonColors.BLACK.withAlpha(colorAlphaRect),
+//                this.getRenderX(),
+//                rectRenderY,
+//                0,
+//                this.getWidth(),
+//                rectHeight);
 
         // Render the message
         FontRenderer.getInstance()

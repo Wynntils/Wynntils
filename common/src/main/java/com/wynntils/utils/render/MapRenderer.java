@@ -6,7 +6,7 @@ package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
+//import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
@@ -27,7 +27,7 @@ import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import net.minecraft.client.renderer.CoreShaders;
+//import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
@@ -91,9 +91,9 @@ public final class MapRenderer {
             float width,
             float height,
             float scale) {
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getMapPositionTextureQuad(map.resource()));
+//        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getMapPositionTextureQuad(map.resource()));
 
-        renderMap(map, poseStack, buffer, centerX, centerZ, textureX, textureZ, width, height, scale);
+//        renderMap(map, poseStack, buffer, centerX, centerZ, textureX, textureZ, width, height, scale);
     }
 
     public static void renderMapQuad(
@@ -106,24 +106,24 @@ public final class MapRenderer {
             float width,
             float height,
             float scale) {
-        RenderSystem.disableBlend();
-
-        RenderSystem.setShader(CoreShaders.POSITION_TEX);
-        RenderSystem.setShaderTexture(0, map.resource());
-
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-
-        // clamp map rendering
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
-
-        BufferBuilder builder =
-                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-
-        renderMap(map, poseStack, builder, centerX, centerZ, textureX, textureZ, width, height, scale);
-
-        BufferUploader.drawWithShader(builder.build());
+//        RenderSystem.disableBlend();
+//
+//        RenderSystem.setShader(CoreShaders.POSITION_TEX);
+//        RenderSystem.setShaderTexture(0, map.resource());
+//
+//        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+//        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+//
+//        // clamp map rendering
+//        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
+//        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
+//
+//        BufferBuilder builder =
+//                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+//
+//        renderMap(map, poseStack, builder, centerX, centerZ, textureX, textureZ, width, height, scale);
+//
+//        BufferUploader.drawWithShader(builder.build());
     }
 
     private static void renderMap(
@@ -281,9 +281,9 @@ public final class MapRenderer {
 
         BufferBuilder bufferBuilder =
                 Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
-        RenderSystem.setShader(CoreShaders.POSITION_COLOR);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.disableCull();
+//        RenderSystem.setShader(CoreShaders.POSITION_COLOR);
+//        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+//        RenderSystem.disableCull();
 
         List<Vector2f> points = new ArrayList<>();
 
@@ -337,8 +337,8 @@ public final class MapRenderer {
                     lootrunWidth);
         }
 
-        BufferUploader.drawWithShader(bufferBuilder.build());
-        RenderSystem.enableCull();
+//        BufferUploader.drawWithShader(bufferBuilder.build());
+//        RenderSystem.enableCull();
     }
 
     private static void drawTriangles(

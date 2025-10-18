@@ -27,8 +27,8 @@ public class SavedCategoryButton extends WynntilsButton {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawHoverableTexturedRect(
-                guiGraphics.pose(), buttonTexture, this.getX(), this.getY(), this.isHovered);
+//        RenderUtils.drawHoverableTexturedRect(
+//                guiGraphics.pose(), buttonTexture, this.getX(), this.getY(), this.isHovered);
     }
 
     @Override

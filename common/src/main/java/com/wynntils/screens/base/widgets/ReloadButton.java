@@ -31,39 +31,39 @@ public class ReloadButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         Texture reloadButton = Texture.RELOAD_ICON_OFFSET;
         if (this.isHovered) {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    reloadButton.resource(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    this.width,
-                    this.height,
-                    reloadButton.width() / 2,
-                    0,
-                    reloadButton.width() / 2,
-                    reloadButton.height(),
-                    reloadButton.width(),
-                    reloadButton.height());
+//            RenderUtils.drawTexturedRect(
+//                    poseStack,
+//                    reloadButton.resource(),
+//                    this.getX(),
+//                    this.getY(),
+//                    0,
+//                    this.width,
+//                    this.height,
+//                    reloadButton.width() / 2,
+//                    0,
+//                    reloadButton.width() / 2,
+//                    reloadButton.height(),
+//                    reloadButton.width(),
+//                    reloadButton.height());
         } else {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    reloadButton.resource(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    this.width,
-                    this.height,
-                    0,
-                    0,
-                    reloadButton.width() / 2,
-                    reloadButton.height(),
-                    reloadButton.width(),
-                    reloadButton.height());
+//            RenderUtils.drawTexturedRect(
+//                    poseStack,
+//                    reloadButton.resource(),
+//                    this.getX(),
+//                    this.getY(),
+//                    0,
+//                    this.width,
+//                    this.height,
+//                    0,
+//                    0,
+//                    reloadButton.width() / 2,
+//                    reloadButton.height(),
+//                    reloadButton.width(),
+//                    reloadButton.height());
         }
     }
 

@@ -42,35 +42,35 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawRect(
-                guiGraphics.pose(),
-                CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f),
-                getX(),
-                getY(),
-                0,
-                getWidth(),
-                getHeight());
+//        RenderUtils.drawRect(
+//                guiGraphics.pose(),
+//                CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f),
+//                getX(),
+//                getY(),
+//                0,
+//                getWidth(),
+//                getHeight());
 
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics.pose(),
-                        StyledText.fromString(state == ConfirmedBoolean.UNCONFIRMED ? "☆" : "★"),
-                        getX() + getWidth() / 2f,
-                        getY() + getHeight() / 2f + 1,
-                        getStarColor(),
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NONE);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        guiGraphics.pose(),
+//                        StyledText.fromString(state == ConfirmedBoolean.UNCONFIRMED ? "☆" : "★"),
+//                        getX() + getWidth() / 2f,
+//                        getY() + getHeight() / 2f + 1,
+//                        getStarColor(),
+//                        HorizontalAlignment.CENTER,
+//                        VerticalAlignment.MIDDLE,
+//                        TextShadow.NONE);
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(
-                            ComponentUtils.wrapTooltips(
-                                    List.of(Component.translatable(
-                                            "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
-                                            I18n.get("service.wynntils.itemFilter.stat.favorite.name"))),
-                                    200),
-                            Component::getVisualOrderText));
+//            McUtils.screen()
+//                    .setTooltipForNextRenderPass(Lists.transform(
+//                            ComponentUtils.wrapTooltips(
+//                                    List.of(Component.translatable(
+//                                            "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
+//                                            I18n.get("service.wynntils.itemFilter.stat.favorite.name"))),
+//                                    200),
+//                            Component::getVisualOrderText));
         }
     }
 

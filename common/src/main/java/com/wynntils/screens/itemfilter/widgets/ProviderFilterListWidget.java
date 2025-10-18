@@ -160,7 +160,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         RenderUtils.disableScissor(guiGraphics);
 
         if (isScrollable()) {
-            renderScrollBar(guiGraphics.pose());
+//            renderScrollBar(guiGraphics.pose());
         }
     }
 

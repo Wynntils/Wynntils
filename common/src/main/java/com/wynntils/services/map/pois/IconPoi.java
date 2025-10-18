@@ -81,22 +81,22 @@ public abstract class IconPoi implements Poi {
         float width = icon.width() * modifier;
         float height = icon.height() * modifier;
 
-        BufferedRenderUtils.drawColoredTexturedRect(
-                poseStack,
-                bufferSource,
-                icon.resource(),
-                this.getIconColor(),
-                this.getIconAlpha(zoomRenderScale),
-                renderX - width / 2,
-                renderY - height / 2,
-                getDisplayPriority().ordinal(), // z-index for rendering
-                width,
-                height);
+//        BufferedRenderUtils.drawColoredTexturedRect(
+//                poseStack,
+//                bufferSource,
+//                icon.resource(),
+//                this.getIconColor(),
+//                this.getIconAlpha(zoomRenderScale),
+//                renderX - width / 2,
+//                renderY - height / 2,
+//                getDisplayPriority().ordinal(), // z-index for rendering
+//                width,
+//                height);
 
         if (hovered) {
             // Render name if hovered
 
-            poseStack.pushPose();
+//            poseStack.pushPose();
 
             FontRenderer.getInstance()
                     .renderText(
@@ -109,7 +109,7 @@ public abstract class IconPoi implements Poi {
                             VerticalAlignment.MIDDLE,
                             TextShadow.OUTLINE);
 
-            poseStack.popPose();
+//            poseStack.popPose();
         }
     }
 

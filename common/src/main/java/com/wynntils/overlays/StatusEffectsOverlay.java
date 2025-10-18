@@ -93,39 +93,39 @@ public class StatusEffectsOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        FontRenderer.getInstance()
-                .renderTextsWithAlignment(
-                        guiGraphics,
-                        this.getRenderX(),
-                        this.getRenderY(),
-                        renderCache,
-                        this.getWidth(),
-                        this.getHeight(),
-                        this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment(),
-                        fontScale.get());
+//        FontRenderer.getInstance()
+//                .renderTextsWithAlignment(
+//                        guiGraphics,
+//                        this.getRenderX(),
+//                        this.getRenderY(),
+//                        renderCache,
+//                        this.getWidth(),
+//                        this.getHeight(),
+//                        this.getRenderHorizontalAlignment(),
+//                        this.getRenderVerticalAlignment(),
+//                        fontScale.get());
     }
 
     @Override
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        FontRenderer.getInstance()
-                .renderTextsWithAlignment(
-                        guiGraphics,
-                        this.getRenderX(),
-                        this.getRenderY(),
-                        List.of(
-                                new TextRenderTask(
-                                        StyledText.fromString("§8⬤ §7 Purification 00:02"), textRenderSetting),
-                                new TextRenderTask(StyledText.fromString("§8⬤ §7 Exploding 01:12"), textRenderSetting),
-                                new TextRenderTask(StyledText.fromString("§8⬤ §7 Thorns 00:12"), textRenderSetting),
-                                new TextRenderTask(
-                                        StyledText.fromString("§8⬤ §7 Soul Point Regen 00:12"), textRenderSetting)),
-                        this.getWidth(),
-                        this.getHeight(),
-                        this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment(),
-                        fontScale.get());
+//        FontRenderer.getInstance()
+//                .renderTextsWithAlignment(
+//                        guiGraphics,
+//                        this.getRenderX(),
+//                        this.getRenderY(),
+//                        List.of(
+//                                new TextRenderTask(
+//                                        StyledText.fromString("§8⬤ §7 Purification 00:02"), textRenderSetting),
+//                                new TextRenderTask(StyledText.fromString("§8⬤ §7 Exploding 01:12"), textRenderSetting),
+//                                new TextRenderTask(StyledText.fromString("§8⬤ §7 Thorns 00:12"), textRenderSetting),
+//                                new TextRenderTask(
+//                                        StyledText.fromString("§8⬤ §7 Soul Point Regen 00:12"), textRenderSetting)),
+//                        this.getWidth(),
+//                        this.getHeight(),
+//                        this.getRenderHorizontalAlignment(),
+//                        this.getRenderVerticalAlignment(),
+//                        fontScale.get());
     }
 
     @Override

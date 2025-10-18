@@ -70,11 +70,11 @@ public class ChatTabsWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         if (this.isMouseOver(mouseX, mouseY)) {
-            RenderUtils.drawRect(
-                    poseStack, CommonColors.GRAY.withAlpha(70), this.getX(), this.getY(), 0, this.width, this.height);
+//            RenderUtils.drawRect(
+//                    poseStack, CommonColors.GRAY.withAlpha(70), this.getX(), this.getY(), 0, this.width, this.height);
         }
 
         CustomColor nameColor = parent.isActiveChatTab(chatTab) ? CommonColors.GREEN : CommonColors.WHITE;

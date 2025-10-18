@@ -45,58 +45,58 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
         }
     }
 
-    @ModifyArg(
-            method =
-                    "renderNameTag(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;getBackgroundOpacity(F)F"))
-    private float onNameTagRenderPre(
-            float backgroundOpacity,
-            @Local(ordinal = 0, argsOnly = true) S entityRenderState,
-            @Local(ordinal = 0, argsOnly = true) Component displayName,
-            @Local(ordinal = 0, argsOnly = true) PoseStack poseStack,
-            @Local(ordinal = 0, argsOnly = true) MultiBufferSource bufferSource,
-            @Local(ordinal = 0, argsOnly = true) int packedLight,
-            @Share("cancelRender") LocalBooleanRef cancelRender) {
-        EntityNameTagRenderEvent event = new EntityNameTagRenderEvent(
-                entityRenderState,
-                displayName,
-                poseStack,
-                bufferSource,
-                packedLight,
-                this.entityRenderDispatcher,
-                this.getFont(),
-                backgroundOpacity);
-        MixinHelper.post(event);
-        if (event.isCanceled()) {
-            cancelRender.set(true);
-            return backgroundOpacity;
-        }
+//    @ModifyArg(
+//            method =
+//                    "renderNameTag(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+//            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;getBackgroundOpacity(F)F"))
+//    private float onNameTagRenderPre(
+//            float backgroundOpacity,
+//            @Local(ordinal = 0, argsOnly = true) S entityRenderState,
+//            @Local(ordinal = 0, argsOnly = true) Component displayName,
+//            @Local(ordinal = 0, argsOnly = true) PoseStack poseStack,
+//            @Local(ordinal = 0, argsOnly = true) MultiBufferSource bufferSource,
+//            @Local(ordinal = 0, argsOnly = true) int packedLight,
+//            @Share("cancelRender") LocalBooleanRef cancelRender) {
+//        EntityNameTagRenderEvent event = new EntityNameTagRenderEvent(
+//                entityRenderState,
+//                displayName,
+//                poseStack,
+//                bufferSource,
+//                packedLight,
+//                this.entityRenderDispatcher,
+//                this.getFont(),
+//                backgroundOpacity);
+//        MixinHelper.post(event);
+//        if (event.isCanceled()) {
+//            cancelRender.set(true);
+//            return backgroundOpacity;
+//        }
+//
+//        return event.getBackgroundOpacity();
+//    }
 
-        return event.getBackgroundOpacity();
-    }
-
-    @Inject(
-            method =
-                    "renderNameTag(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target = "Lnet/minecraft/client/Options;getBackgroundOpacity(F)F",
-                            shift = At.Shift.AFTER),
-            cancellable = true)
-    private void onNameTagRenderPre(
-            S entityRenderState,
-            Component displayName,
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
-            int packedLight,
-            CallbackInfo ci,
-            @Share("cancelRender") LocalBooleanRef cancelRender) {
-        if (cancelRender.get()) {
-            // We inject in the middle of the method, to have locals,
-            // but we need to manually pop the matrix stack now
-            poseStack.popPose();
-            ci.cancel();
-        }
-    }
+//    @Inject(
+//            method =
+//                    "renderNameTag(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+//            at =
+//                    @At(
+//                            value = "INVOKE",
+//                            target = "Lnet/minecraft/client/Options;getBackgroundOpacity(F)F",
+//                            shift = At.Shift.AFTER),
+//            cancellable = true)
+//    private void onNameTagRenderPre(
+//            S entityRenderState,
+//            Component displayName,
+//            PoseStack poseStack,
+//            MultiBufferSource bufferSource,
+//            int packedLight,
+//            CallbackInfo ci,
+//            @Share("cancelRender") LocalBooleanRef cancelRender) {
+//        if (cancelRender.get()) {
+//            // We inject in the middle of the method, to have locals,
+//            // but we need to manually pop the matrix stack now
+//            poseStack.popPose();
+//            ci.cancel();
+//        }
+//    }
 }

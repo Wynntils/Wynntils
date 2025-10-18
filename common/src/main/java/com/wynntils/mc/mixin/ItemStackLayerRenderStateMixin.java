@@ -24,26 +24,26 @@ public abstract class ItemStackLayerRenderStateMixin {
     @Final
     private ItemStackRenderState field_55345;
 
-    @Inject(
-            method =
-                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V",
-            at =
-                    @At(
-                            target =
-                                    "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack;)V",
-                            value = "INVOKE"))
-    private void onRenderItem(
-            PoseStack poseStack,
-            MultiBufferSource multiBufferSource,
-            int packedLight,
-            int packedOverlay,
-            CallbackInfo ci) {
-        if (field_55345.displayContext != ItemDisplayContext.GROUND) return;
-
-        if (field_55345 instanceof ItemStackRenderStateExtension extension) {
-            if (extension.getItemStack() == null) return;
-
-            MixinHelper.post(new GroundItemEntityTransformEvent(poseStack, extension.getItemStack()));
-        }
-    }
+//    @Inject(
+//            method =
+//                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V",
+//            at =
+//                    @At(
+//                            target =
+//                                    "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack;)V",
+//                            value = "INVOKE"))
+//    private void onRenderItem(
+//            PoseStack poseStack,
+//            MultiBufferSource multiBufferSource,
+//            int packedLight,
+//            int packedOverlay,
+//            CallbackInfo ci) {
+//        if (field_55345.displayContext != ItemDisplayContext.GROUND) return;
+//
+//        if (field_55345 instanceof ItemStackRenderStateExtension extension) {
+//            if (extension.getItemStack() == null) return;
+//
+//            MixinHelper.post(new GroundItemEntityTransformEvent(poseStack, extension.getItemStack()));
+//        }
+//    }
 }

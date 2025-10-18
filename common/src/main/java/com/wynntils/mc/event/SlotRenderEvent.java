@@ -26,7 +26,8 @@ public abstract class SlotRenderEvent extends Event {
     }
 
     public PoseStack getPoseStack() {
-        return guiGraphics.pose();
+//        return guiGraphics.pose();
+        return new PoseStack();
     }
 
     public Screen getScreen() {

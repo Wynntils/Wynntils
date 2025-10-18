@@ -25,39 +25,39 @@ public abstract class HumanoidArmorLayerMixin<T extends HumanoidRenderState, A e
     @Unique
     private AvatarRenderState avatarRenderState;
 
-    @Inject(
-            method =
-                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/HumanoidRenderState;FF)V",
-            at = @At("HEAD"))
-    private void captureRenderState(
-            PoseStack poseStack,
-            MultiBufferSource multiBufferSource,
-            int i,
-            T humanoidRenderState,
-            float f,
-            float g,
-            CallbackInfo ci) {
-        this.avatarRenderState =
-                humanoidRenderState instanceof AvatarRenderState ? (AvatarRenderState) humanoidRenderState : null;
-    }
+//    @Inject(
+//            method =
+//                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/HumanoidRenderState;FF)V",
+//            at = @At("HEAD"))
+//    private void captureRenderState(
+//            PoseStack poseStack,
+//            MultiBufferSource multiBufferSource,
+//            int i,
+//            T humanoidRenderState,
+//            float f,
+//            float g,
+//            CallbackInfo ci) {
+//        this.avatarRenderState =
+//                humanoidRenderState instanceof AvatarRenderState ? (AvatarRenderState) humanoidRenderState : null;
+//    }
 
-    @Inject(
-            method =
-                    "renderArmorPiece(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/EquipmentSlot;ILnet/minecraft/client/model/HumanoidModel;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void renderArmorPiece(
-            PoseStack poseStack,
-            MultiBufferSource buffer,
-            ItemStack armorItem,
-            EquipmentSlot slot,
-            int packedLight,
-            A model,
-            CallbackInfo ci) {
-        if (avatarRenderState == null) return;
-
-        PlayerRenderLayerEvent.Armor event = new PlayerRenderLayerEvent.Armor(avatarRenderState, slot);
-        MixinHelper.post(event);
-        if (event.isCanceled()) ci.cancel();
-    }
+//    @Inject(
+//            method =
+//                    "renderArmorPiece(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/EquipmentSlot;ILnet/minecraft/client/model/HumanoidModel;)V",
+//            at = @At("HEAD"),
+//            cancellable = true)
+//    private void renderArmorPiece(
+//            PoseStack poseStack,
+//            MultiBufferSource buffer,
+//            ItemStack armorItem,
+//            EquipmentSlot slot,
+//            int packedLight,
+//            A model,
+//            CallbackInfo ci) {
+//        if (avatarRenderState == null) return;
+//
+//        PlayerRenderLayerEvent.Armor event = new PlayerRenderLayerEvent.Armor(avatarRenderState, slot);
+//        MixinHelper.post(event);
+//        if (event.isCanceled()) ci.cancel();
+//    }
 }

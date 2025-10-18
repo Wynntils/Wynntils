@@ -31,11 +31,11 @@ public class SavedItemsButton extends WynntilsButton {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        BufferedRenderUtils.drawHoverableTexturedRect(
-                guiGraphics.pose(), guiGraphics.bufferSource, buttonTexture, this.getX(), this.getY(), this.isHovered);
+//        BufferedRenderUtils.drawHoverableTexturedRect(
+//                guiGraphics.pose(), guiGraphics.bufferSource, buttonTexture, this.getX(), this.getY(), this.isHovered);
 
         if (this.isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+//            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 

@@ -49,20 +49,20 @@ public class SearchWidget extends TextInputBoxWidget {
             int lastWidth) {
         boolean defaultText = Objects.equals(textBoxInput, "");
 
-        renderBackground(poseStack);
+//        renderBackground(poseStack);
 
-        renderText(
-                poseStack,
-                renderedText,
-                renderedTextStart,
-                firstPortion,
-                highlightedPortion,
-                lastPortion,
-                font,
-                firstWidth,
-                highlightedWidth,
-                lastWidth,
-                defaultText);
+//        renderText(
+//                poseStack,
+//                renderedText,
+//                renderedTextStart,
+//                firstPortion,
+//                highlightedPortion,
+//                lastPortion,
+//                font,
+//                firstWidth,
+//                highlightedWidth,
+//                lastWidth,
+//                defaultText);
     }
 
     protected void renderText(
@@ -117,15 +117,15 @@ public class SearchWidget extends TextInputBoxWidget {
                             TextShadow.NORMAL);
         }
 
-        drawCursor(
-                poseStack,
-                this.getX()
-                        + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length())))
-                        + textPadding
-                        - 2,
-                this.getY() + VERTICAL_OFFSET,
-                VerticalAlignment.TOP,
-                false);
+//        drawCursor(
+//                poseStack,
+//                this.getX()
+//                        + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length())))
+//                        + textPadding
+//                        - 2,
+//                this.getY() + VERTICAL_OFFSET,
+//                VerticalAlignment.TOP,
+//                false);
     }
 
     protected void renderBackground(PoseStack poseStack) {

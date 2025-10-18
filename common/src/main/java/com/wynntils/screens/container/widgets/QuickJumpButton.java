@@ -46,9 +46,9 @@ public class QuickJumpButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.QUICK_JUMP_BUTTON, getX(), getY(), isHovered);
+//        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.QUICK_JUMP_BUTTON, getX(), getY(), isHovered);
 
         CustomColor color = CommonColors.WHITE;
         Component tooltip = Component.translatable(
@@ -73,8 +73,8 @@ public class QuickJumpButton extends WynntilsButton {
                         TextShadow.NORMAL);
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(List.of(tooltip), Component::getVisualOrderText));
+//            McUtils.screen()
+//                    .setTooltipForNextRenderPass(Lists.transform(List.of(tooltip), Component::getVisualOrderText));
         }
     }
 

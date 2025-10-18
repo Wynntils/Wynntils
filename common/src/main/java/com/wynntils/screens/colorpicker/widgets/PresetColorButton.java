@@ -28,9 +28,9 @@ public class PresetColorButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRect(poseStack, color, getX(), getY(), 0, width, height);
+//        RenderUtils.drawRect(poseStack, color, getX(), getY(), 0, width, height);
     }
 
     @Override

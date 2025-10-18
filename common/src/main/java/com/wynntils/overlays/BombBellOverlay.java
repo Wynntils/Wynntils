@@ -104,39 +104,39 @@ public class BombBellOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        FontRenderer.getInstance()
-                .renderTextsWithAlignment(
-                        guiGraphics,
-                        this.getRenderX(),
-                        this.getRenderY(),
-                        renderTasks,
-                        this.getWidth(),
-                        this.getHeight(),
-                        this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment(),
-                        fontScale.get());
+//        FontRenderer.getInstance()
+//                .renderTextsWithAlignment(
+//                        guiGraphics,
+//                        this.getRenderX(),
+//                        this.getRenderY(),
+//                        renderTasks,
+//                        this.getWidth(),
+//                        this.getHeight(),
+//                        this.getRenderHorizontalAlignment(),
+//                        this.getRenderVerticalAlignment(),
+//                        fontScale.get());
     }
 
     @Override
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        FontRenderer.getInstance()
-                .renderTextsWithAlignment(
-                        guiGraphics,
-                        this.getRenderX(),
-                        this.getRenderY(),
-                        List.of(
-                                new TextRenderTask(
-                                        StyledText.fromString("§6Combat XP§7 on §fWC32 §6(16m 35s)"),
-                                        textRenderSetting),
-                                new TextRenderTask(
-                                        StyledText.fromString("§6Profession Speed§7 on §fWC1 §6(3m 12s)"),
-                                        textRenderSetting)),
-                        this.getWidth(),
-                        this.getHeight(),
-                        this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment(),
-                        fontScale.get());
+//        FontRenderer.getInstance()
+//                .renderTextsWithAlignment(
+//                        guiGraphics,
+//                        this.getRenderX(),
+//                        this.getRenderY(),
+//                        List.of(
+//                                new TextRenderTask(
+//                                        StyledText.fromString("§6Combat XP§7 on §fWC32 §6(16m 35s)"),
+//                                        textRenderSetting),
+//                                new TextRenderTask(
+//                                        StyledText.fromString("§6Profession Speed§7 on §fWC1 §6(3m 12s)"),
+//                                        textRenderSetting)),
+//                        this.getWidth(),
+//                        this.getHeight(),
+//                        this.getRenderHorizontalAlignment(),
+//                        this.getRenderVerticalAlignment(),
+//                        fontScale.get());
     }
 
     @Override

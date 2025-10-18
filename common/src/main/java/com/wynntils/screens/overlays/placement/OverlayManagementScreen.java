@@ -134,12 +134,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         if (selectionMode != SelectionMode.NONE) {
-            renderAlignmentLines(poseStack);
+//            renderAlignmentLines(poseStack);
         } else {
-            renderSections(poseStack);
+//            renderSections(poseStack);
         }
 
         Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
@@ -161,26 +161,26 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             if (!renderAllOverlays && overlay != selectedOverlay) continue;
 
             CustomColor color = getOverlayColor(overlay);
-            RenderUtils.drawRectBorders(
-                    poseStack,
-                    color,
-                    overlay.getRenderX(),
-                    overlay.getRenderY(),
-                    overlay.getRenderX() + overlay.getWidth(),
-                    overlay.getRenderY() + overlay.getHeight(),
-                    1,
-                    1.8f);
+//            RenderUtils.drawRectBorders(
+//                    poseStack,
+//                    color,
+//                    overlay.getRenderX(),
+//                    overlay.getRenderY(),
+//                    overlay.getRenderX() + overlay.getWidth(),
+//                    overlay.getRenderY() + overlay.getHeight(),
+//                    1,
+//                    1.8f);
             int colorAlphaRect = fixedSelection && overlay == selectedOverlay
                     ? (int) Math.max(MathUtils.map(animationLengthRemaining, 0, ANIMATION_LENGTH, 30, 255), 30)
                     : 30;
-            RenderUtils.drawRect(
-                    poseStack,
-                    color.withAlpha(colorAlphaRect),
-                    overlay.getRenderX(),
-                    overlay.getRenderY(),
-                    0,
-                    overlay.getWidth(),
-                    overlay.getHeight());
+//            RenderUtils.drawRect(
+//                    poseStack,
+//                    color.withAlpha(colorAlphaRect),
+//                    overlay.getRenderX(),
+//                    overlay.getRenderY(),
+//                    0,
+//                    overlay.getWidth(),
+//                    overlay.getHeight());
 
             String overlayName = overlay.getTranslatedName();
 
@@ -233,18 +233,18 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     && overlay != selectedOverlay
                     && isMouseHoveringOverlay(overlay, mouseX, mouseY)
                     && selectionMode == SelectionMode.NONE) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(
-                                List.of(Component.literal(overlayName)), Component::getVisualOrderText));
+//                McUtils.screen()
+//                        .setTooltipForNextRenderPass(Lists.transform(
+//                                List.of(Component.literal(overlayName)), Component::getVisualOrderText));
 
                 renderedTooltip = true;
             } else if (!renderedTooltip
                     && overlay == selectedOverlay
                     && isMouseHoveringOverlay(overlay, mouseX, mouseY)
                     && selectionMode == SelectionMode.NONE) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(
-                                Lists.transform(HELP_TOOLTIP_LINES, Component::getVisualOrderText));
+//                McUtils.screen()
+//                        .setTooltipForNextRenderPass(
+//                                Lists.transform(HELP_TOOLTIP_LINES, Component::getVisualOrderText));
                 renderedTooltip = true;
             }
         }

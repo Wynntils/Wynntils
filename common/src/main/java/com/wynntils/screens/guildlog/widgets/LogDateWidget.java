@@ -43,18 +43,18 @@ public class LogDateWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_DATE_ENTRY, getX(), getY());
+//        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_DATE_ENTRY, getX(), getY());
 
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics.pose(),
-                        renderText,
-                        getX() + 4,
-                        getY() + height / 2f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        guiGraphics.pose(),
+//                        renderText,
+//                        getX() + 4,
+//                        getY() + height / 2f,
+//                        CommonColors.WHITE,
+//                        HorizontalAlignment.LEFT,
+//                        VerticalAlignment.MIDDLE,
+//                        TextShadow.NORMAL);
     }
 
     @Override

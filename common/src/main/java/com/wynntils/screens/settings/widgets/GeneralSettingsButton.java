@@ -44,19 +44,19 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-        RenderUtils.drawRoundedRectWithBorder(
-                poseStack,
-                CommonColors.BLACK,
-                getBackgroundColor(),
-                this.getX(),
-                this.getY(),
-                0,
-                this.width,
-                this.height,
-                1,
-                3,
-                3);
+//        PoseStack poseStack = guiGraphics.pose();
+//        RenderUtils.drawRoundedRectWithBorder(
+//                poseStack,
+//                CommonColors.BLACK,
+//                getBackgroundColor(),
+//                this.getX(),
+//                this.getY(),
+//                0,
+//                this.width,
+//                this.height,
+//                1,
+//                3,
+//                3);
 
         FontRenderer.getInstance()
                 .renderScrollingAlignedTextInBox(
@@ -78,7 +78,7 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
         }
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+//            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 

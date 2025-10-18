@@ -168,8 +168,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        BufferedRenderUtils.drawTexturedRect(
-                guiGraphics.pose(), guiGraphics.bufferSource, Texture.ITEM_RECORD, this.leftPos, this.topPos);
+//        BufferedRenderUtils.drawTexturedRect(
+//                guiGraphics.pose(), guiGraphics.bufferSource, Texture.ITEM_RECORD, this.leftPos, this.topPos);
     }
 
     @Override
@@ -207,7 +207,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         if (!addingCategory && !editingCategory) {
             FontRenderer.getInstance()
@@ -226,19 +226,19 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         }
 
         for (int selectedSlot : selectedSlots) {
-            BufferedRenderUtils.drawRectBorders(
-                    poseStack,
-                    guiGraphics.bufferSource,
-                    CommonColors.WHITE,
-                    this.leftPos + this.getMenu().getSlot(selectedSlot).x,
-                    this.topPos + this.getMenu().getSlot(selectedSlot).y,
-                    this.leftPos + this.getMenu().getSlot(selectedSlot).x + 16,
-                    this.topPos + this.getMenu().getSlot(selectedSlot).y + 16,
-                    200,
-                    1);
+//            BufferedRenderUtils.drawRectBorders(
+//                    poseStack,
+//                    guiGraphics.bufferSource,
+//                    CommonColors.WHITE,
+//                    this.leftPos + this.getMenu().getSlot(selectedSlot).x,
+//                    this.topPos + this.getMenu().getSlot(selectedSlot).y,
+//                    this.leftPos + this.getMenu().getSlot(selectedSlot).x + 16,
+//                    this.topPos + this.getMenu().getSlot(selectedSlot).y + 16,
+//                    200,
+//                    1);
         }
 
-        renderScrollButton(poseStack);
+//        renderScrollButton(poseStack);
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }

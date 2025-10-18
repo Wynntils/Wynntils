@@ -101,7 +101,7 @@ public class ValuablesProtectionFeature extends Feature {
         if (currentContainerType != null && !currentContainerType.isInstance(currentContainer)) return;
         if (!slotsToWarn.contains(e.getSlot().index)) return;
 
-        RenderSystem.enableDepthTest();
+//        RenderSystem.enableDepthTest();
         RenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
                 CIRCLE_TEXTURE,
@@ -117,7 +117,7 @@ public class ValuablesProtectionFeature extends Feature {
                 48,
                 48,
                 192);
-        RenderSystem.disableDepthTest();
+//        RenderSystem.disableDepthTest();
     }
 
     @SubscribeEvent

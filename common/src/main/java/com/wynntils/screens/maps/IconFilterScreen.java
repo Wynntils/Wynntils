@@ -140,23 +140,23 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        renderScrollButton(guiGraphics.pose());
+//        renderScrollButton(guiGraphics.pose());
     }
 
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(),
-                Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
-                backgroundX,
-                backgroundY,
-                0,
-                backgroundWidth,
-                backgroundHeight,
-                Texture.WAYPOINT_MANAGER_BACKGROUND.width(),
-                Texture.WAYPOINT_MANAGER_BACKGROUND.height());
+//        RenderUtils.drawScalingTexturedRect(
+//                guiGraphics.pose(),
+//                Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
+//                backgroundX,
+//                backgroundY,
+//                0,
+//                backgroundWidth,
+//                backgroundHeight,
+//                Texture.WAYPOINT_MANAGER_BACKGROUND.width(),
+//                Texture.WAYPOINT_MANAGER_BACKGROUND.height());
     }
 
     @Override

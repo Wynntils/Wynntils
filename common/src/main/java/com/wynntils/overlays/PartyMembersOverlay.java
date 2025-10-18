@@ -186,29 +186,29 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
         @Override
         public void render(
                 GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-            PoseStack poseStack = guiGraphics.pose();
-            poseStack.pushPose();
+//            PoseStack poseStack = guiGraphics.pose();
+//            poseStack.pushPose();
 
             float renderX = getRenderX();
             float renderY = getRenderY();
 
-            poseStack.translate(renderX, renderY, 0);
+//            poseStack.translate(renderX, renderY, 0);
 
             if (showHeads.get()) {
                 ResourceLocation skin = SkinUtils.getSkin(hadesUser.getUuid());
 
                 // head
-                BufferedRenderUtils.drawTexturedRect(
-                        poseStack, bufferSource, skin, 0, 0, 0, HEAD_SIZE, HEAD_SIZE, 8, 8, 8, 8, 64, 64);
+//                BufferedRenderUtils.drawTexturedRect(
+//                        poseStack, bufferSource, skin, 0, 0, 0, HEAD_SIZE, HEAD_SIZE, 8, 8, 8, 8, 64, 64);
 
                 // hat
-                BufferedRenderUtils.drawTexturedRect(
-                        poseStack, bufferSource, skin, 0, 0, 1, HEAD_SIZE, HEAD_SIZE, 40, 8, 8, 8, 64, 64);
+//                BufferedRenderUtils.drawTexturedRect(
+//                        poseStack, bufferSource, skin, 0, 0, 1, HEAD_SIZE, HEAD_SIZE, 40, 8, 8, 8, 64, 64);
             }
 
-            poseStack.translate(HEAD_SIZE, 0, 0);
+//            poseStack.translate(HEAD_SIZE, 0, 0);
 
-            poseStack.translate(3, 0, 0);
+//            poseStack.translate(3, 0, 0);
 
             FontRenderer.getInstance()
                     .renderText(
@@ -221,62 +221,62 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
                             VerticalAlignment.TOP,
                             TextShadow.NORMAL);
 
-            poseStack.translate(0, 12, 0);
+//            poseStack.translate(0, 12, 0);
 
             double healthProgress = hadesUser.getHealth().getProgress();
             double manaProgress = hadesUser.getMana().getProgress();
 
             // health
             HealthTexture healthTexture = PartyMembersOverlay.this.healthTexture.get();
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
-                    Texture.HEALTH_BAR,
-                    0,
-                    0,
-                    81 * 0.85f,
-                    healthTexture.getHeight() * 0.85f,
-                    0,
-                    healthTexture.getTextureY1(),
-                    81,
-                    healthTexture.getTextureY2(),
-                    (float) healthProgress);
+//            BufferedRenderUtils.drawProgressBar(
+//                    poseStack,
+//                    bufferSource,
+//                    Texture.HEALTH_BAR,
+//                    0,
+//                    0,
+//                    81 * 0.85f,
+//                    healthTexture.getHeight() * 0.85f,
+//                    0,
+//                    healthTexture.getTextureY1(),
+//                    81,
+//                    healthTexture.getTextureY2(),
+//                    (float) healthProgress);
 
             if (healthProgress > 1) {
-                BufferedRenderUtils.drawProgressBar(
-                        poseStack,
-                        bufferSource,
-                        Texture.HEALTH_BAR_OVERFLOW,
-                        0,
-                        0,
-                        81 * 0.85f,
-                        healthTexture.getHeight() * 0.85f,
-                        0,
-                        healthTexture.getTextureY1(),
-                        81,
-                        healthTexture.getTextureY2(),
-                        (float) healthProgress - 1f);
+//                BufferedRenderUtils.drawProgressBar(
+//                        poseStack,
+//                        bufferSource,
+//                        Texture.HEALTH_BAR_OVERFLOW,
+//                        0,
+//                        0,
+//                        81 * 0.85f,
+//                        healthTexture.getHeight() * 0.85f,
+//                        0,
+//                        healthTexture.getTextureY1(),
+//                        81,
+//                        healthTexture.getTextureY2(),
+//                        (float) healthProgress - 1f);
             }
 
-            poseStack.translate(0, healthTexture.getHeight() * 0.85f, 0);
+//            poseStack.translate(0, healthTexture.getHeight() * 0.85f, 0);
 
             // mana
             ManaTexture manaTexture = PartyMembersOverlay.this.manaTexture.get();
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
-                    Texture.MANA_BAR,
-                    0,
-                    2,
-                    81 * 0.85f,
-                    2 + manaTexture.getHeight() * 0.85f,
-                    0,
-                    manaTexture.getTextureY1(),
-                    81,
-                    manaTexture.getTextureY2(),
-                    (float) manaProgress);
+//            BufferedRenderUtils.drawProgressBar(
+//                    poseStack,
+//                    bufferSource,
+//                    Texture.MANA_BAR,
+//                    0,
+//                    2,
+//                    81 * 0.85f,
+//                    2 + manaTexture.getHeight() * 0.85f,
+//                    0,
+//                    manaTexture.getTextureY1(),
+//                    81,
+//                    manaTexture.getTextureY2(),
+//                    (float) manaProgress);
 
-            poseStack.popPose();
+//            poseStack.popPose();
         }
     }
 }

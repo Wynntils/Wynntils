@@ -70,17 +70,17 @@ public class SortWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRectBorders(
-                poseStack,
-                sortInfo.direction() == SortDirection.DESCENDING ? CommonColors.WHITE : CommonColors.BLACK,
-                getX(),
-                getY(),
-                getX() + width,
-                getY() + height,
-                1,
-                1);
+//        RenderUtils.drawRectBorders(
+//                poseStack,
+//                sortInfo.direction() == SortDirection.DESCENDING ? CommonColors.WHITE : CommonColors.BLACK,
+//                getX(),
+//                getY(),
+//                getX() + width,
+//                getY() + height,
+//                1,
+//                1);
 
         FontRenderer.getInstance()
                 .renderScrollingText(

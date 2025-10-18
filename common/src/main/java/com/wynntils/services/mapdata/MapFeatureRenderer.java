@@ -40,10 +40,10 @@ public final class MapFeatureRenderer {
 
         int yOffset = 0;
 
-        poseStack.pushPose();
+//        poseStack.pushPose();
         // z-index for rendering
-        poseStack.translate(renderX, renderY, attributes.priority());
-        poseStack.scale(renderScale, renderScale, renderScale);
+//        poseStack.translate(renderX, renderY, attributes.priority());
+//        poseStack.scale(renderScale, renderScale, renderScale);
 
         // Draw icon, if applicable
         float iconAlpha =
@@ -59,17 +59,17 @@ public final class MapFeatureRenderer {
                 iconAlpha = 1f;
             }
 
-            BufferedRenderUtils.drawColoredTexturedRect(
-                    poseStack,
-                    bufferSource,
-                    icon.get().getResourceLocation(),
-                    attributes.iconColor(),
-                    iconAlpha,
-                    0 - iconWidth / 2f,
-                    yOffset - iconHeight / 2f,
-                    0,
-                    iconWidth,
-                    iconHeight);
+//            BufferedRenderUtils.drawColoredTexturedRect(
+//                    poseStack,
+//                    bufferSource,
+//                    icon.get().getResourceLocation(),
+//                    attributes.iconColor(),
+//                    iconAlpha,
+//                    0 - iconWidth / 2f,
+//                    yOffset - iconHeight / 2f,
+//                    0,
+//                    iconWidth,
+//                    iconHeight);
             yOffset += (iconHeight + labelHeight) / 2 + SPACING;
         }
 
@@ -123,9 +123,9 @@ public final class MapFeatureRenderer {
         // Draw decoration, if applicable
         MapDecoration decoration = attributes.iconDecoration();
         if (decoration.isVisible()) {
-            decoration.render(poseStack, bufferSource, hovered, zoomLevel);
+//            decoration.render(poseStack, bufferSource, hovered, zoomLevel);
         }
 
-        poseStack.popPose();
+//        poseStack.popPose();
     }
 }

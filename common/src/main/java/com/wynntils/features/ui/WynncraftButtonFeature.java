@@ -228,17 +228,17 @@ public class WynncraftButtonFeature extends Feature {
             }
 
             // Insets the icon by 3
-            BufferedRenderUtils.drawScalingTexturedRect(
-                    guiGraphics.pose(),
-                    guiGraphics.bufferSource,
-                    serverIcon.getServerIconLocation(),
-                    this.getX() + 3,
-                    this.getY() + 3,
-                    0,
-                    this.width - 6,
-                    this.height - 6,
-                    64,
-                    64);
+//            BufferedRenderUtils.drawScalingTexturedRect(
+//                    guiGraphics.pose(),
+//                    guiGraphics.bufferSource,
+//                    serverIcon.getServerIconLocation(),
+//                    this.getX() + 3,
+//                    this.getY() + 3,
+//                    0,
+//                    this.width - 6,
+//                    this.height - 6,
+//                    64,
+//                    64);
 
             if (warningType == WarningType.DOWNLOADS) {
                 FontRenderer.getInstance()
@@ -266,7 +266,7 @@ public class WynncraftButtonFeature extends Feature {
             }
 
             if (isHovered) {
-                McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+//                McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
             }
         }
     }
@@ -367,12 +367,12 @@ public class WynncraftButtonFeature extends Feature {
                 Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 
                 synchronized (this) {
-                    RenderSystem.recordRenderCall(() -> {
-                        McUtils.mc()
-                                .getTextureManager()
-                                .register(destination, new DynamicTexture(() -> "Wynncraft Server Icon", nativeImage));
-                        serverIconLocation = destination;
-                    });
+//                    RenderSystem.recordRenderCall(() -> {
+//                        McUtils.mc()
+//                                .getTextureManager()
+//                                .register(destination, new DynamicTexture(() -> "Wynncraft Server Icon", nativeImage));
+//                        serverIconLocation = destination;
+//                    });
                 }
             } catch (IOException e) {
                 WynntilsMod.error("Unable to read server image: " + server.name, e);

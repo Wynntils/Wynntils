@@ -146,7 +146,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.COLOR_PICKER_BACKGROUND, offsetX, offsetY);
+//        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.COLOR_PICKER_BACKGROUND, offsetX, offsetY);
 
         renderSelectedColor(guiGraphics, offsetX + 11, offsetY + 15);
 
@@ -217,6 +217,6 @@ public final class ColorPickerScreen extends WynntilsScreen {
     }
 
     private void renderSelectedColor(GuiGraphics guiGraphics, int x, int y) {
-        RenderUtils.drawRect(guiGraphics.pose(), color, x, y, 0, 82, 66);
+//        RenderUtils.drawRect(guiGraphics.pose(), color, x, y, 0, 82, 66);
     }
 }

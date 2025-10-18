@@ -82,7 +82,7 @@ public final class LoadingScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         int textureWidth = Texture.BACKGROUND_SPLASH.width();
         int textureHeight = Texture.BACKGROUND_SPLASH.height();
@@ -94,19 +94,19 @@ public final class LoadingScreen extends WynntilsScreen {
         float scaledHeight = textureHeight * scaleFactor;
 
         // Draw background
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.BACKGROUND_SPLASH.resource(),
-                (this.width - scaledWidth) / 2f,
-                (this.height - scaledHeight) / 2f,
-                0,
-                scaledWidth,
-                scaledHeight,
-                textureWidth,
-                textureHeight);
+//        RenderUtils.drawScalingTexturedRect(
+//                poseStack,
+//                Texture.BACKGROUND_SPLASH.resource(),
+//                (this.width - scaledWidth) / 2f,
+//                (this.height - scaledHeight) / 2f,
+//                0,
+//                scaledWidth,
+//                scaledHeight,
+//                textureWidth,
+//                textureHeight);
 
         // Draw notebook background
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
+//        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
         // Draw logo
         int centerX = (int) (Texture.SCROLL_BACKGROUND.width() / 2f + 15 + offsetX);
@@ -160,7 +160,7 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw spinner
         boolean state = (System.currentTimeMillis() % SPINNER_SPEED) < SPINNER_SPEED / 2;
-        drawSpinner(poseStack, centerX, 150 + offsetY, state);
+//        drawSpinner(poseStack, centerX, 150 + offsetY, state);
     }
 
     private void drawSpinner(PoseStack poseStack, float x, float y, boolean state) {

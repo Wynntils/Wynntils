@@ -36,29 +36,29 @@ public abstract class FabricLevelRendererMixin {
     @Final
     private SubmitNodeStorage submitNodeStorage;
 
-    @Inject(
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
-                            ordinal = 2),
-            method = "method_62214") // framepass.executes lambda inside the addMainPass method
-    private void renderTilePost(
-            GpuBufferSlice shaderFog,
-            DeltaTracker deltaTracker,
-            Camera camera,
-            ProfilerFiller profiler,
-            Matrix4f viewMatrix,
-            ResourceHandle<RenderTarget> mainResourceHandle,
-            ResourceHandle<RenderTarget> translucentResourceHandle,
-            boolean renderBlockOutline,
-            Frustum frustum,
-            ResourceHandle<RenderTarget> itemEntityResourceHandle,
-            ResourceHandle<RenderTarget> entityOutlineResourceHandle,
-            CallbackInfo ci,
-            @Local PoseStack poseStack) {
-        MixinHelper.post(new RenderTileLevelLastEvent(
-                this.minecraft.levelRenderer, poseStack, submitNodeStorage, deltaTracker, camera));
-    }
+//    @Inject(
+//            at =
+//                    @At(
+//                            value = "INVOKE",
+//                            target =
+//                                    "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
+//                            ordinal = 2),
+//            method = "method_62214") // framepass.executes lambda inside the addMainPass method
+//    private void renderTilePost(
+//            GpuBufferSlice shaderFog,
+//            DeltaTracker deltaTracker,
+//            Camera camera,
+//            ProfilerFiller profiler,
+//            Matrix4f viewMatrix,
+//            ResourceHandle<RenderTarget> mainResourceHandle,
+//            ResourceHandle<RenderTarget> translucentResourceHandle,
+//            boolean renderBlockOutline,
+//            Frustum frustum,
+//            ResourceHandle<RenderTarget> itemEntityResourceHandle,
+//            ResourceHandle<RenderTarget> entityOutlineResourceHandle,
+//            CallbackInfo ci,
+//            @Local PoseStack poseStack) {
+//        MixinHelper.post(new RenderTileLevelLastEvent(
+//                this.minecraft.levelRenderer, poseStack, submitNodeStorage, deltaTracker, camera));
+//    }
 }

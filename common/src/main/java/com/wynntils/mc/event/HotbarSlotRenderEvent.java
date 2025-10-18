@@ -27,7 +27,8 @@ public abstract class HotbarSlotRenderEvent extends Event {
     }
 
     public PoseStack getPoseStack() {
-        return guiGraphics.pose();
+//        return guiGraphics.pose();
+        return new PoseStack();
     }
 
     public ItemStack getItemStack() {

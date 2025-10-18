@@ -54,29 +54,29 @@ public class IconFilterWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRect(
-                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
+//        RenderUtils.drawRect(
+//                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
 
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                icon.resource(),
-                iconRenderX,
-                iconRenderY,
-                1,
-                iconWidth,
-                iconHeight,
-                icon.width(),
-                icon.height());
+//        RenderUtils.drawScalingTexturedRect(
+//                poseStack,
+//                icon.resource(),
+//                iconRenderX,
+//                iconRenderY,
+//                1,
+//                iconWidth,
+//                iconHeight,
+//                icon.width(),
+//                icon.height());
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+//            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
 
         // Highlight to show inclusion
         if (included) {
-            RenderUtils.drawRect(poseStack, CommonColors.RED.withAlpha(35), getX(), getY(), 1, width, height);
+//            RenderUtils.drawRect(poseStack, CommonColors.RED.withAlpha(35), getX(), getY(), 1, width, height);
         }
     }
 

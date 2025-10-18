@@ -122,7 +122,7 @@ public class GuildOverallProductionWidget extends AbstractWidget {
                     .withStyle(ChatFormatting.YELLOW));
         }
 
-        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), lines, this.getX(), this.getY());
+//        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), lines, this.getX(), this.getY());
     }
 
     @Override

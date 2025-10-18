@@ -62,9 +62,9 @@ public final class WynntilsCharmGuideScreen
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        renderBackgroundTexture(poseStack);
+//        renderBackgroundTexture(poseStack);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.charmGuide.name"));
 
@@ -82,8 +82,8 @@ public final class WynntilsCharmGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideCharmItemStackButton guideCharmItemStackButton) {
-            guiGraphics.renderTooltip(
-                    FontRenderer.getInstance().getFont(), guideCharmItemStackButton.getItemStack(), mouseX, mouseY);
+//            guiGraphics.renderTooltip(
+//                    FontRenderer.getInstance().getFont(), guideCharmItemStackButton.getItemStack(), mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);

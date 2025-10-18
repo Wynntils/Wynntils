@@ -49,10 +49,10 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         CustomColor backgroundColor = getButtonBackgroundColor();
-        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
+//        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderScrollingText(

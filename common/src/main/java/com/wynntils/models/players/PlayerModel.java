@@ -226,7 +226,7 @@ public final class PlayerModel extends Model {
                     fetching.remove(uuid);
 
                     // Schedule cape loading for next render tick
-                    RenderSystem.recordRenderCall(() -> Services.Cosmetics.loadCosmeticTextures(uuid, user));
+//                    RenderSystem.recordRenderCall(() -> Services.Cosmetics.loadCosmeticTextures(uuid, user));
                 },
                 onError -> {
                     errors.put(System.currentTimeMillis());

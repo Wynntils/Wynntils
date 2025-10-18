@@ -105,7 +105,7 @@ public class ProfessionHighlightFeature extends Feature {
         if (selectedProfession == null) return;
         if (!professionItemPropertyOpt.get().getProfessionTypes().contains(selectedProfession)) return;
 
-        RenderSystem.enableDepthTest();
+//        RenderSystem.enableDepthTest();
 
         RenderUtils.drawTexturedRectWithColor(
                 event.getPoseStack(),
@@ -119,7 +119,7 @@ public class ProfessionHighlightFeature extends Feature {
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
 
-        RenderSystem.disableDepthTest();
+//        RenderSystem.disableDepthTest();
     }
 
     private void setSelectedProfession(ProfessionType professionType) {

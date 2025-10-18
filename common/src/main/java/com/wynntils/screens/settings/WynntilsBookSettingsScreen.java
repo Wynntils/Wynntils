@@ -306,7 +306,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         if (displayWarning) {
             unsavedChangesWidget.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -315,7 +315,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         renderTags(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderBg(poseStack);
+//        renderBg(poseStack);
 
         String categoryName = selectedCategory == null
                 ? I18n.get("screens.wynntils.settingsScreen.all")
@@ -332,15 +332,15 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        RenderUtils.drawLine(
-                poseStack,
-                CommonColors.GRAY,
-                offsetX + 11,
-                offsetY + 19,
-                Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 6 + offsetX,
-                19 + offsetY,
-                0,
-                1);
+//        RenderUtils.drawLine(
+//                poseStack,
+//                CommonColors.GRAY,
+//                offsetX + 11,
+//                offsetY + 19,
+//                Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 6 + offsetX,
+//                19 + offsetY,
+//                0,
+//                1);
 
         if (selectedConfigurable != null || hoveredConfigurable != null) {
             Configurable configurable = hoveredConfigurable != null ? hoveredConfigurable : selectedConfigurable;
@@ -364,15 +364,15 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            RenderUtils.drawLine(
-                    poseStack,
-                    CommonColors.GRAY,
-                    Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 6 + offsetX,
-                    19 + offsetY,
-                    Texture.CONFIG_BOOK_BACKGROUND.width() - 11 + offsetX,
-                    19 + offsetY,
-                    0,
-                    1);
+//            RenderUtils.drawLine(
+//                    poseStack,
+//                    CommonColors.GRAY,
+//                    Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 6 + offsetX,
+//                    19 + offsetY,
+//                    Texture.CONFIG_BOOK_BACKGROUND.width() - 11 + offsetX,
+//                    19 + offsetY,
+//                    0,
+//                    1);
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -392,14 +392,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         }
 
         if (configurables.size() > CONFIGURABLES_PER_PAGE) {
-            renderConfigurableScroll(poseStack);
+//            renderConfigurableScroll(poseStack);
         }
 
         if (hoveredConfigurable == null && configs.size() > CONFIGS_PER_PAGE) {
-            renderSelectedConfigScroll(poseStack);
+//            renderSelectedConfigScroll(poseStack);
         } else if (hoveredConfigurable != null
                 && configurableMap.get(hoveredConfigurable).size() > CONFIGS_PER_PAGE) {
-            renderHoveredConfigScroll(poseStack);
+//            renderHoveredConfigScroll(poseStack);
         }
 
         renderConfigurables(guiGraphics, mouseX, mouseY, partialTick);
@@ -1157,8 +1157,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+//                guiGraphics.renderComponentTooltip(
+//                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
                 break;
             }
         }

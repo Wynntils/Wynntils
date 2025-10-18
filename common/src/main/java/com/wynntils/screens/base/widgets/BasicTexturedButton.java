@@ -50,21 +50,21 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         if (scaleTexture) {
-            RenderUtils.drawScalingTexturedRect(
-                    poseStack,
-                    texture.resource(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    getWidth(),
-                    getHeight(),
-                    texture.width(),
-                    texture.height());
+//            RenderUtils.drawScalingTexturedRect(
+//                    poseStack,
+//                    texture.resource(),
+//                    this.getX(),
+//                    this.getY(),
+//                    0,
+//                    getWidth(),
+//                    getHeight(),
+//                    texture.width(),
+//                    texture.height());
         } else {
-            RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
+//            RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
         }
     }
 

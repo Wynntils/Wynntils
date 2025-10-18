@@ -40,22 +40,22 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         boolean isHovered = this.isMouseOver(mouseX, mouseY);
 
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics.pose(),
-                        StyledText.fromComponent(Component.literal(getSortName())
-                                .withStyle(isHovered ? ChatFormatting.BOLD : ChatFormatting.RESET)
-                                .append(" ")
-                                .append(
-                                        sortDirection == null
-                                                ? "-"
-                                                : sortDirection == SortDirection.ASCENDING ? "▲" : "▼")),
-                        this.getX() + 5,
-                        this.getY() + 5,
-                        getSortColor(),
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.OUTLINE);
+//        FontRenderer.getInstance()
+//                .renderText(
+//                        guiGraphics.pose(),
+//                        StyledText.fromComponent(Component.literal(getSortName())
+//                                .withStyle(isHovered ? ChatFormatting.BOLD : ChatFormatting.RESET)
+//                                .append(" ")
+//                                .append(
+//                                        sortDirection == null
+//                                                ? "-"
+//                                                : sortDirection == SortDirection.ASCENDING ? "▲" : "▼")),
+//                        this.getX() + 5,
+//                        this.getY() + 5,
+//                        getSortColor(),
+//                        HorizontalAlignment.LEFT,
+//                        VerticalAlignment.TOP,
+//                        TextShadow.OUTLINE);
     }
 
     @Override

@@ -46,23 +46,23 @@ public class UnsavedChangesWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SETTINGS_WARNING_BACKGROUND, getX(), getY());
+//        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SETTINGS_WARNING_BACKGROUND, getX(), getY());
 
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.settingsScreen.saveChanges")
-                                .withStyle(ChatFormatting.BOLD)),
-                        getX() + 5,
-                        getX() + getWidth() - 10,
-                        getY() + 30,
-                        getY() + getHeight() - 30,
-                        Texture.SETTINGS_WARNING_BACKGROUND.width() - 10,
-                        CommonColors.RED,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.TOP,
-                        TextShadow.NORMAL,
-                        1.25f);
+//        FontRenderer.getInstance()
+//                .renderAlignedTextInBox(
+//                        guiGraphics.pose(),
+//                        StyledText.fromComponent(Component.translatable("screens.wynntils.settingsScreen.saveChanges")
+//                                .withStyle(ChatFormatting.BOLD)),
+//                        getX() + 5,
+//                        getX() + getWidth() - 10,
+//                        getY() + 30,
+//                        getY() + getHeight() - 30,
+//                        Texture.SETTINGS_WARNING_BACKGROUND.width() - 10,
+//                        CommonColors.RED,
+//                        HorizontalAlignment.CENTER,
+//                        VerticalAlignment.TOP,
+//                        TextShadow.NORMAL,
+//                        1.25f);
 
         yesButton.render(guiGraphics, mouseX, mouseY, partialTick);
         noButton.render(guiGraphics, mouseX, mouseY, partialTick);

@@ -34,7 +34,7 @@ public class WynntilsMenuTag extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
         if (isHovered) {
             offset = Math.min(2, offset + 1);
@@ -42,20 +42,20 @@ public class WynntilsMenuTag extends WynntilsButton {
             offset = Math.max(0, offset - 1);
         }
 
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.CONTENT_BOOK_TAG.resource(),
-                getX(),
-                getY(),
-                0,
-                Texture.CONTENT_BOOK_TAG.width(),
-                height,
-                0,
-                height * offset,
-                Texture.CONTENT_BOOK_TAG.width(),
-                height,
-                Texture.CONTENT_BOOK_TAG.width(),
-                Texture.CONTENT_BOOK_TAG.height());
+//        RenderUtils.drawTexturedRect(
+//                poseStack,
+//                Texture.CONTENT_BOOK_TAG.resource(),
+//                getX(),
+//                getY(),
+//                0,
+//                Texture.CONTENT_BOOK_TAG.width(),
+//                height,
+//                0,
+//                height * offset,
+//                Texture.CONTENT_BOOK_TAG.width(),
+//                height,
+//                Texture.CONTENT_BOOK_TAG.width(),
+//                Texture.CONTENT_BOOK_TAG.height());
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,

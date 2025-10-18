@@ -64,9 +64,9 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+//        PoseStack poseStack = guiGraphics.pose();
 
-        renderBackgroundTexture(poseStack);
+//        renderBackgroundTexture(poseStack);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.itemGuide.name"));
 
@@ -84,8 +84,8 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideGearItemStackButton guideGearItemStackButton) {
-            guiGraphics.renderTooltip(
-                    FontRenderer.getInstance().getFont(), guideGearItemStackButton.getItemStack(), mouseX, mouseY);
+//            guiGraphics.renderTooltip(
+//                    FontRenderer.getInstance().getFont(), guideGearItemStackButton.getItemStack(), mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);

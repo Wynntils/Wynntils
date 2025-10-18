@@ -48,25 +48,25 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRectWithColor(
-                guiGraphics.pose(),
-                Texture.INFO.resource(),
-                isHovered ? CommonColors.AQUA : CommonColors.WHITE,
-                this.getX(),
-                this.getY(),
-                0,
-                getWidth(),
-                getHeight(),
-                0,
-                0,
-                Texture.INFO.width(),
-                Texture.INFO.height(),
-                Texture.INFO.width(),
-                Texture.INFO.height());
+//        RenderUtils.drawTexturedRectWithColor(
+//                guiGraphics.pose(),
+//                Texture.INFO.resource(),
+//                isHovered ? CommonColors.AQUA : CommonColors.WHITE,
+//                this.getX(),
+//                this.getY(),
+//                0,
+//                getWidth(),
+//                getHeight(),
+//                0,
+//                0,
+//                Texture.INFO.width(),
+//                Texture.INFO.height(),
+//                Texture.INFO.width(),
+//                Texture.INFO.height());
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(getTooltipLines(), Component::getVisualOrderText));
+//            McUtils.screen()
+//                    .setTooltipForNextRenderPass(Lists.transform(getTooltipLines(), Component::getVisualOrderText));
         }
     }
 
