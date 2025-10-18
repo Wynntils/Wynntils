@@ -5,6 +5,7 @@
 package com.wynntils.screens.playerviewer.widgets;
 
 import com.wynntils.utils.render.Texture;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -19,8 +20,8 @@ public class SimplePlayerInteractionButton extends PlayerInteractionButton {
     }
 
     @Override
-    public void onPress() {
-        super.onPress();
+    public void onPress(InputWithModifiers input) {
+        super.onPress(input);
         runnable.run();
     }
 }

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class FilterButton extends WynntilsButton implements TooltipProvider {
@@ -154,7 +155,7 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         onPress.run();
     }
 }

@@ -11,6 +11,7 @@ import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -69,36 +70,36 @@ public class SaturationBrightnessWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
-        cursorX = (int) (mouseX - getX());
-        cursorY = (int) (mouseY - getY());
+        cursorX = (int) (event.x() - getX());
+        cursorY = (int) (event.y() - getY());
 
         cursorHeld = true;
 
         updateValue(cursorX, cursorY);
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (!cursorHeld) return false;
 
-        cursorX = Mth.clamp((int) (mouseX - getX()), 0, getWidth());
-        cursorY = Mth.clamp((int) (mouseY - getY()), 0, getHeight());
+        cursorX = Mth.clamp((int) (event.x() - getX()), 0, getWidth());
+        cursorY = Mth.clamp((int) (event.y() - getY()), 0, getHeight());
 
         updateValue(cursorX, cursorY);
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         cursorHeld = false;
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     public void setColor(CustomColor color) {
