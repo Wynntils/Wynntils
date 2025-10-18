@@ -216,7 +216,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                 Texture.MESSAGE_ICON,
                 () -> {
                     this.onClose(); // Required so that nametags render properly
-                    McUtils.setScreen(new ChatScreen("/msg " + playerName + " "));
+                    McUtils.setScreen(new ChatScreen("/msg " + playerName + " ", false));
                 }));
 
         settingsButton = new Button.Builder(
