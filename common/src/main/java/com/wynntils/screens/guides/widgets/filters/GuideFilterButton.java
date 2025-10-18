@@ -17,6 +17,7 @@ import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public abstract class GuideFilterButton<T extends ItemStatProvider<?>> extends AbstractWidget {
@@ -57,10 +58,10 @@ public abstract class GuideFilterButton<T extends ItemStatProvider<?>> extends A
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         state = !state;
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     protected abstract void updateStateFromQuery(ItemSearchQuery searchQuery);

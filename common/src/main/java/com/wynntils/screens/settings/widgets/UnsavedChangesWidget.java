@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class UnsavedChangesWidget extends AbstractWidget {
@@ -68,11 +69,11 @@ public class UnsavedChangesWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (yesButton.isMouseOver(mouseX, mouseY)) {
-            return yesButton.mouseClicked(mouseX, mouseY, button);
-        } else if (noButton.isMouseOver(mouseX, mouseY)) {
-            return noButton.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (yesButton.isMouseOver(event.x(), event.y())) {
+            return yesButton.mouseClicked(event, isDoubleClick);
+        } else if (noButton.isMouseOver(event.x(), event.y())) {
+            return noButton.mouseClicked(event, isDoubleClick);
         }
 
         return false;

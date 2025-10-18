@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -12,6 +12,7 @@ import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
@@ -23,7 +24,7 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         ActivitySortOrder activitySortOrder = sortableActivityScreen.getActivitySortOrder();
 
         ActivitySortOrder[] activitySortOrders = ActivitySortOrder.values();

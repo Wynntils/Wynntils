@@ -21,6 +21,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -60,19 +62,19 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!this.active || !this.visible) return false;
 
-        if (this.isValidClickButton(button)) {
-            boolean clicked = this.isMouseOver(mouseX, mouseY);
+        if (this.isValidClickButton(event.buttonInfo())) {
+            boolean clicked = this.isMouseOver(event.x(), event.y());
             if (clicked) {
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
 
-                if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                     forwardClick();
-                } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                     backwardClick();
-                } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
                     resetClick();
                 }
 
@@ -86,10 +88,10 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
     }
 
     @Override
-    protected boolean isValidClickButton(int button) {
-        return button == GLFW.GLFW_MOUSE_BUTTON_LEFT
-                || button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
-                || button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
+    protected boolean isValidClickButton(MouseButtonInfo buttonInfo) {
+        return buttonInfo.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT
+                || buttonInfo.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
+                || buttonInfo.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
     }
 
     public final String getItemSearchQuery() {

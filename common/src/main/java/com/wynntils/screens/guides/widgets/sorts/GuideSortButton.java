@@ -25,6 +25,7 @@ import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -93,20 +94,20 @@ public class GuideSortButton extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT || button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT || event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (sortDirection == SortDirection.DESCENDING) {
                 sortDirection = SortDirection.ASCENDING;
             } else if (sortDirection != SortDirection.DESCENDING) {
                 sortDirection = SortDirection.DESCENDING;
             }
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             sortDirection = null;
         }
 
         guideScreen.updateSearchFromQuickFilters();
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     public final void updateFromQuery(ItemSearchQuery searchQuery) {

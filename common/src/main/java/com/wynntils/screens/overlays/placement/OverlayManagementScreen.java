@@ -44,6 +44,8 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
 import org.lwjgl.glfw.GLFW;
@@ -270,9 +272,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Let the buttons of the Screen have priority
-        if (super.doMouseClicked(mouseX, mouseY, button)) return true;
+        if (super.doMouseClicked(event, isDoubleClick)) return true;
 
         userInteracted = true;
         animationLengthRemaining = 0;
@@ -293,7 +295,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     .collect(Collectors.toSet());
 
             for (Overlay overlay : overlays) {
-                if (isMouseHoveringOverlay(overlay, mouseX, mouseY)) {
+                if (isMouseHoveringOverlay(overlay, event.x(), event.y())) {
                     selectedOverlay = overlay;
                     break;
                 }
@@ -306,7 +308,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         setupButtons();
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown()) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown()) {
             selectedOverlay.getConfigOptionFromString("position").ifPresent(Config::reset);
             selectedOverlay.getConfigOptionFromString("size").ifPresent(Config::reset);
             selectedOverlay
@@ -319,7 +321,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             return true;
         }
 
-        Vec2 mousePos = new Vec2((float) mouseX, (float) mouseY);
+        Vec2 mousePos = new Vec2((float) event.x(), (float) event.y());
 
         for (Corner corner : Corner.values()) {
             float distance = selected.getCornerPoints(corner).distanceToSqr(mousePos);
@@ -365,7 +367,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 }
             }
 
-            if (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY) {
+            if (event.x() >= minX && event.x() <= maxX && event.y() >= minY && event.y() <= maxY) {
                 selectedEdge = value;
                 selectionMode = SelectionMode.EDGE;
 
@@ -373,7 +375,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             }
         }
 
-        if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY)) {
+        if (isMouseHoveringOverlay(selectedOverlay, event.x(), event.y())) {
             selectionMode = SelectionMode.AREA;
 
             return false;
@@ -383,9 +385,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         // Let the buttons of the Screen have priority
-        if (super.mouseDragged(mouseX, mouseY, button, dragX, dragY)) return true;
+        if (super.mouseDragged(event, dragX, dragY)) return true;
 
         if (selectedOverlay == null) return false;
 
@@ -400,25 +402,25 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         // Let the buttons of the Screen have priority
-        if (super.mouseReleased(mouseX, mouseY, button)) return true;
+        if (super.mouseReleased(event)) return true;
 
         resetSelection();
         return false;
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
         userInteracted = true;
         animationLengthRemaining = 0;
 
-        if (keyCode == GLFW.GLFW_KEY_ENTER) {
+        if (event.key() == GLFW.GLFW_KEY_ENTER) {
             Managers.Config.saveConfig();
             onClose();
             McUtils.setScreen(previousScreen);
             return true;
-        } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+        } else if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
             onClose();
             McUtils.setScreen(previousScreen);
             return true;
@@ -428,10 +430,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         // Shirt + Arrow keys change overlay alignment
         if (KeyboardUtils.isShiftDown()) {
-            if (keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_DOWN) {
+            if (event.key() == GLFW.GLFW_KEY_UP || event.key() == GLFW.GLFW_KEY_DOWN) {
                 int index = selectedOverlay.getRenderVerticalAlignment().ordinal();
 
-                if (keyCode == GLFW.GLFW_KEY_DOWN) {
+                if (event.key() == GLFW.GLFW_KEY_DOWN) {
                     index += 1;
                 } else {
                     index -= 1;
@@ -445,10 +447,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         .getConfigOptionFromString("verticalAlignmentOverride")
                         .ifPresent(config -> ((Config<VerticalAlignment>) config).setValue(values[finalIndex]));
 
-            } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT) {
+            } else if (event.key() == GLFW.GLFW_KEY_RIGHT || event.key() == GLFW.GLFW_KEY_LEFT) {
                 int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
 
-                if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+                if (event.key() == GLFW.GLFW_KEY_RIGHT) {
                     index += 1;
                 } else {
                     index -= 1;
@@ -467,10 +469,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             int offsetX = 0;
             int offsetY = 0;
 
-            if (keyCode == GLFW.GLFW_KEY_UP) offsetY = -1;
-            else if (keyCode == GLFW.GLFW_KEY_DOWN) offsetY = 1;
-            else if (keyCode == GLFW.GLFW_KEY_RIGHT) offsetX = 1;
-            else if (keyCode == GLFW.GLFW_KEY_LEFT) offsetX = -1;
+            if (event.key() == GLFW.GLFW_KEY_UP) offsetY = -1;
+            else if (event.key() == GLFW.GLFW_KEY_DOWN) offsetY = 1;
+            else if (event.key() == GLFW.GLFW_KEY_RIGHT) offsetX = 1;
+            else if (event.key() == GLFW.GLFW_KEY_LEFT) offsetX = -1;
 
             final int finalOffsetX = offsetX;
             final int finalOffsetY = offsetY;
@@ -484,7 +486,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                             finalOffsetY)));
         }
 
-        if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+        if (event.key() == GLFW.GLFW_KEY_LEFT_SHIFT || event.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
             snappingEnabled = false;
             edgeAlignmentSnapMap.clear();
             alignmentLinesToRender.clear();
@@ -494,11 +496,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+    public boolean keyReleased(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_LEFT_SHIFT || event.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
             snappingEnabled = true;
         }
-        return super.keyReleased(keyCode, scanCode, modifiers);
+        return super.keyReleased(event);
     }
 
     public Overlay getSelectedOverlay() {

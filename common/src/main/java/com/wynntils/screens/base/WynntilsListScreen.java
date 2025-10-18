@@ -21,6 +21,9 @@ import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -121,10 +124,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (GuiEventListener child : new ArrayList<>(this.children())) {
-            if (child.isMouseOver(mouseX, mouseY)) {
-                child.mouseClicked(mouseX, mouseY, button);
+            if (child.isMouseOver(event.x(), event.y())) {
+                child.mouseClicked(event, isDoubleClick);
             }
         }
 
@@ -132,44 +135,44 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         for (GuiEventListener child : new ArrayList<>(this.children())) {
-            child.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            child.mouseDragged(event, dragX, dragY);
         }
 
         return true;
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         for (GuiEventListener child : new ArrayList<>(this.children())) {
-            child.mouseReleased(mouseX, mouseY, button);
+            child.mouseReleased(event);
         }
 
         return true;
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
             onClose();
             return true;
         }
 
         if (searchWidget != null) {
-            return searchWidget.keyPressed(keyCode, scanCode, modifiers);
+            return searchWidget.keyPressed(event);
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
+    public boolean charTyped(CharacterEvent event) {
         if (searchWidget != null) {
-            return searchWidget.charTyped(codePoint, modifiers);
+            return searchWidget.charTyped(event);
         }
 
-        return super.charTyped(codePoint, modifiers);
+        return super.charTyped(event);
     }
 
     @Override
