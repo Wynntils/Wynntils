@@ -12,6 +12,7 @@ import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class ImportButton extends WynntilsButton implements TooltipProvider {
@@ -50,7 +51,7 @@ public class ImportButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         onClickRunnable.run();
     }
 

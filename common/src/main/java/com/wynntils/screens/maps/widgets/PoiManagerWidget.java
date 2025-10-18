@@ -26,6 +26,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -187,16 +188,16 @@ public class PoiManagerWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
             Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
                     poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor(), poi.getName());
             return true;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
                     poi.getLocation().asLocation());
             return true;
@@ -206,12 +207,12 @@ public class PoiManagerWidget extends AbstractWidget {
 
         // Determine if a button was clicked or should we select the widget
         if (selectionMode) {
-            clickedButton = selectButton.mouseClicked(mouseX, mouseY, button);
+            clickedButton = selectButton.mouseClicked(event, isDoubleClick);
         } else {
-            clickedButton = editButton.mouseClicked(mouseX, mouseY, button)
-                    || deleteButton.mouseClicked(mouseX, mouseY, button)
-                    || upButton.mouseClicked(mouseX, mouseY, button)
-                    || downButton.mouseClicked(mouseX, mouseY, button);
+            clickedButton = editButton.mouseClicked(event, isDoubleClick)
+                    || deleteButton.mouseClicked(event, isDoubleClick)
+                    || upButton.mouseClicked(event, isDoubleClick)
+                    || downButton.mouseClicked(event, isDoubleClick);
         }
 
         if (clickedButton) {
