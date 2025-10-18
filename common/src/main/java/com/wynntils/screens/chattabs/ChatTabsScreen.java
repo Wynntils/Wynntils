@@ -19,7 +19,7 @@ public class ChatTabsScreen extends ChatScreen {
     private final boolean oldTabHotkey;
 
     public ChatTabsScreen(String initial, boolean oldTabHotkey) {
-        super(initial);
+        super(initial, false);
         this.oldTabHotkey = oldTabHotkey;
     }
 
