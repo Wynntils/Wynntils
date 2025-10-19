@@ -32,7 +32,7 @@ public class WynntilsModForge {
                         .getModInfo()
                         .getVersion()
                         .toString(),
-                !FMLEnvironment.production,
+                !FMLEnvironment.isProduction(),
                 modFile);
 
         ModLoadingContext.get()
