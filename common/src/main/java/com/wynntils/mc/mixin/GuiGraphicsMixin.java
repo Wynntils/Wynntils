@@ -85,14 +85,14 @@ public abstract class GuiGraphicsMixin {
             String ignored,
             @Share("wynntilsCountOverlayColor") LocalIntRef wynntilsCountOverlayColor) {
         if (!MixinHelper.onWynncraft()) {
-            wynntilsCountOverlayColor.set(0xFFFFFF);
+            wynntilsCountOverlayColor.set(0xFFFFFFFF);
             return text;
         }
 
         String count = (itemStack.getCount() == 1) ? null : String.valueOf(itemStack.getCount());
         String countString = (text == null) ? count : text;
 
-        ItemCountOverlayRenderEvent event = new ItemCountOverlayRenderEvent(itemStack, countString, 0xFFFFFF);
+        ItemCountOverlayRenderEvent event = new ItemCountOverlayRenderEvent(itemStack, countString, 0xFFFFFFFF);
         MixinHelper.post(event);
         wynntilsCountOverlayColor.set(event.getCountColor());
 
