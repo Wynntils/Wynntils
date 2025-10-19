@@ -33,7 +33,7 @@ public class SavedItemsButton extends WynntilsButton {
                 guiGraphics.pose(), guiGraphics.bufferSource, buttonTexture, this.getX(), this.getY(), this.isHovered);
 
         if (this.isHovered) {
-            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 

@@ -48,8 +48,7 @@ public class LogButton extends BasicTexturedButton {
                         TextShadow.NORMAL);
 
         if (isHovered) {
-            McUtils.mc()
-                    .screen
+            McUtils.screen()
                     .setTooltipForNextRenderPass(Lists.transform(getTooltipLines(), Component::getVisualOrderText));
         }
     }

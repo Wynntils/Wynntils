@@ -103,7 +103,7 @@ public class CustomNametagRendererFeature extends Feature {
         }
 
         // If we are viewing this player's gears, do not show plus info
-        if (McUtils.mc().screen instanceof PlayerViewerScreen playerViewerScreen
+        if (McUtils.screen() instanceof PlayerViewerScreen playerViewerScreen
                 && playerViewerScreen.getPlayer() == player) {
             return;
         }
@@ -141,7 +141,7 @@ public class CustomNametagRendererFeature extends Feature {
     public void onCameraCheck(GetCameraEntityEvent e) {
         if (!showOwnNametag.get()) return;
         // Only render when a screen is not open or in the chat screen
-        if (McUtils.mc().screen != null && !(McUtils.mc().screen instanceof ChatScreen)) return;
+        if (McUtils.screen() != null && !(McUtils.screen() instanceof ChatScreen)) return;
 
         // We don't need to check if the entity is the local player as that is already done in
         // LivingEntityRenderer.shouldShowName

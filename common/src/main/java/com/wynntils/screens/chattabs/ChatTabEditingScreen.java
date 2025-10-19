@@ -362,7 +362,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(new ChatScreen(""));
+        McUtils.setScreen(new ChatScreen(""));
     }
 
     private void saveChatTab() {
@@ -384,7 +384,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
                         .collect(Collectors.toSet()),
                 filterRegexInput.getTextBoxInput().isBlank() ? null : filterRegexInput.getTextBoxInput());
         Services.ChatTab.addTab(insertIndex, chatTab);
-        McUtils.mc().setScreen(ChatTabEditingScreen.create(chatTab));
+        McUtils.setScreen(ChatTabEditingScreen.create(chatTab));
     }
 
     private void updateSaveButtonActive() {
@@ -448,7 +448,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         chatTabsWidgets.add(new Button.Builder(
                         Component.translatable("screens.wynntils.chatTabsGui.new")
                                 .withStyle(color),
-                        (button) -> McUtils.mc().setScreen(ChatTabEditingScreen.create()))
+                        (button) -> McUtils.setScreen(ChatTabEditingScreen.create()))
                 .pos(
                         (int) (dividedWidth * 13),
                         initialVerticalOffset + (int) (dividedHeight * (chatTabs.size() * 5 + 1)))

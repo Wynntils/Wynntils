@@ -72,11 +72,11 @@ public class ChatTabsFeature extends Feature {
         Services.ChatTab.setChatTabs(chatTabs.get());
         Services.ChatTab.enable();
 
-        Screen screen = McUtils.mc().screen;
+        Screen screen = McUtils.screen();
         if (screen instanceof ChatScreen chatScreen) {
             if (screen instanceof ChatTabsScreen) return;
 
-            McUtils.mc().setScreen(new ChatTabsScreen("", oldTabHotkey.get()));
+            McUtils.setScreen(new ChatTabsScreen("", oldTabHotkey.get()));
         }
     }
 

@@ -127,7 +127,7 @@ public class GearSharingSettingsScreen extends WynntilsScreen {
     @Override
     public void onClose() {
         Services.Hades.saveGearShareOptions();
-        McUtils.mc().setScreen(previousScreen);
+        McUtils.setScreen(previousScreen);
     }
 
     @Override

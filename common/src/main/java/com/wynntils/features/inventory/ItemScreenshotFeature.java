@@ -78,7 +78,7 @@ public class ItemScreenshotFeature extends Feature {
         if (!Models.WorldState.onWorld()) return;
         if (screenshotSlot == null || !screenshotSlot.hasItem()) return;
 
-        Screen screen = McUtils.mc().screen;
+        Screen screen = McUtils.screen();
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
 
         // has to be called during a render period

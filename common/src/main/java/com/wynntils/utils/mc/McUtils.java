@@ -14,6 +14,7 @@ import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -79,6 +80,14 @@ public final class McUtils {
 
     public static double guiScale() {
         return window().getGuiScale();
+    }
+
+    public static Screen screen() {
+        return mc().screen;
+    }
+
+    public static void setScreen(Screen screen) {
+        mc().setScreen(screen);
     }
 
     public static void playSoundUI(SoundEvent sound) {

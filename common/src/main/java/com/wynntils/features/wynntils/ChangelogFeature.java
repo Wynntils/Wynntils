@@ -24,7 +24,7 @@ public class ChangelogFeature extends Feature {
         if (WynntilsMod.getVersion().equals(Services.Update.lastShownChangelogVersion.get())) return;
 
         Services.Update.getChangelog(true).thenAccept(changelog -> {
-            Managers.TickScheduler.scheduleNextTick(() -> McUtils.mc().setScreen(ChangelogScreen.create(changelog)));
+            Managers.TickScheduler.scheduleNextTick(() -> McUtils.setScreen(ChangelogScreen.create(changelog)));
         });
     }
 }

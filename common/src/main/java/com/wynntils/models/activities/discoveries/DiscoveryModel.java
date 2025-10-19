@@ -216,7 +216,7 @@ public final class DiscoveryModel extends Model {
             switch (action) {
                 // We can't run this is on request thread
                 case MAP ->
-                    Managers.TickScheduler.scheduleNextTick(() -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
+                    Managers.TickScheduler.scheduleNextTick(() -> McUtils.setScreen(MainMapScreen.create(x, z)));
                 case COMPASS -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z), name);
             }
         });

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemsharing;
@@ -62,7 +62,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
         this.wynnItem = wynnItem;
         this.itemStack = itemStack;
-        this.previousScreen = McUtils.mc().screen;
+        this.previousScreen = McUtils.screen();
     }
 
     private ItemSharingScreen(WynnItem wynnItem, ItemStack itemStack, boolean savedItem) {
@@ -71,7 +71,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
         this.wynnItem = wynnItem;
         this.itemStack = itemStack;
         this.savedItem = savedItem;
-        this.previousScreen = McUtils.mc().screen;
+        this.previousScreen = McUtils.screen();
     }
 
     // Creating screen from an item
@@ -120,7 +120,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(previousScreen);
+        McUtils.setScreen(previousScreen);
     }
 
     private void renderPreview(GuiGraphics guiGraphics) {
@@ -193,10 +193,12 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
     private void shareItem(String target) {
         switch (target) {
-            case "guild" -> Handlers.Command.sendCommandImmediately(
-                    "g " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
-            case "party" -> Handlers.Command.sendCommandImmediately(
-                    "p " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
+            case "guild" ->
+                Handlers.Command.sendCommandImmediately(
+                        "g " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
+            case "party" ->
+                Handlers.Command.sendCommandImmediately(
+                        "p " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
             case "save" -> {
                 ItemStack itemStackToSave = itemStack;
 
@@ -284,7 +286,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                     if (!savedItem) {
                         shareItem("save");
                     } else {
-                        McUtils.mc().setScreen(SavedItemsScreen.create());
+                        McUtils.setScreen(SavedItemsScreen.create());
                     }
                 })
                 .pos(backgroundX + 10, backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() - 30)

@@ -92,7 +92,7 @@ public class ConfigurableButton extends WynntilsButton {
 
         CustomColor color = isHovered ? CommonColors.YELLOW : CommonColors.WHITE;
 
-        if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+        if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
             if (bookSettingsScreen.getSelectedConfigurable() == configurable) {
                 color = CommonColors.GRAY;
             }
@@ -129,12 +129,10 @@ public class ConfigurableButton extends WynntilsButton {
 
         if (isHovered) {
             if (enabledCheckbox.isHovered()) {
-                McUtils.mc()
-                        .screen
+                McUtils.screen()
                         .setTooltipForNextRenderPass(Lists.transform(toggleTooltip, Component::getVisualOrderText));
             } else if (configurable instanceof Feature) {
-                McUtils.mc()
-                        .screen
+                McUtils.screen()
                         .setTooltipForNextRenderPass(
                                 Lists.transform(descriptionTooltip, Component::getVisualOrderText));
             }
@@ -162,7 +160,7 @@ public class ConfigurableButton extends WynntilsButton {
             }
 
             // Repopulate screen to update new enabled/disabled states
-            if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+            if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
                 bookSettingsScreen.populateConfigurables();
                 bookSettingsScreen.changesMade();
             }
@@ -175,7 +173,7 @@ public class ConfigurableButton extends WynntilsButton {
 
     @Override
     public void onPress() {
-        if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+        if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.setSelectedConfigurable(configurable);
         }
     }

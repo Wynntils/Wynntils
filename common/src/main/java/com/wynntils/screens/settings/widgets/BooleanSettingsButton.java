@@ -37,7 +37,7 @@ public class BooleanSettingsButton extends GeneralSettingsButton {
 
         // Reload the configurables in case the enabled button was toggled so the checkboxes
         // can change state
-        if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+        if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.populateConfigurables();
         }
     }

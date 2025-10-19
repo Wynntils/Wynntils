@@ -80,7 +80,7 @@ public final class CharacterSelectionModel extends Model {
     @SubscribeEvent
     public void onArmSwing(ArmSwingEvent e) {
         if (isCreatingCharacter) return;
-        if (McUtils.mc().screen != null) return;
+        if (McUtils.screen() != null) return;
         if (e.getHand() != InteractionHand.MAIN_HAND) return;
         if (Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 

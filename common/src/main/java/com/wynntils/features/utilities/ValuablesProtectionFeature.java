@@ -123,7 +123,7 @@ public class ValuablesProtectionFeature extends Feature {
 
     @SubscribeEvent
     public void onSetSlot(SetSlotEvent.Post e) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
+        if (!(McUtils.screen() instanceof ContainerScreen cs)) return;
 
         Container currentContainer = Models.Container.getCurrentContainer();
         if (currentContainer == null) return;
@@ -308,7 +308,7 @@ public class ValuablesProtectionFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen)) return;
+        if (!(McUtils.screen() instanceof ContainerScreen)) return;
 
         emphasizeAnimationDelay++;
         if (emphasizeAnimationDelay % 4 == 0) {
@@ -327,7 +327,7 @@ public class ValuablesProtectionFeature extends Feature {
     }
 
     private void resetAll() {
-        if (McUtils.mc().screen instanceof ContainerScreen cs) {
+        if (McUtils.screen() instanceof ContainerScreen cs) {
             cs.removeWidget(ctrlHintTextWidget);
             tmHintTextWidgets.forEach(cs::removeWidget);
         }

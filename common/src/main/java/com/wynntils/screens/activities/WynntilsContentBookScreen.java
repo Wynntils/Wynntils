@@ -144,7 +144,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
             // will close the screen before opening the new one which is a bit disorienting
             McUtils.sendPacket(new ServerboundContainerClosePacket(wrappedScreenInfo.containerId()));
             McUtils.player().containerMenu = McUtils.player().inventoryMenu;
-            McUtils.mc().setScreen(WynntilsMenuScreen.create());
+            McUtils.setScreen(WynntilsMenuScreen.create());
         }));
 
         holder.reloadActions();

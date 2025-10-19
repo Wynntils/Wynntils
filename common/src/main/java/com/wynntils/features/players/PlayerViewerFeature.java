@@ -40,7 +40,7 @@ public class PlayerViewerFeature extends Feature {
         if (!Models.Player.isLocalPlayer(hitPlayer.get())) return;
 
         playerViewerScreen = (PlayerViewerScreen) PlayerViewerScreen.create(hitPlayer.get());
-        McUtils.mc().setScreen(playerViewerScreen);
+        McUtils.setScreen(playerViewerScreen);
     }
 
     @SubscribeEvent

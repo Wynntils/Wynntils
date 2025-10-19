@@ -138,7 +138,7 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                 holder.pressSlot(slot);
 
                 if (activityInfo.trackingState() == ActivityTrackingState.TRACKED
-                        && McUtils.mc().screen instanceof WynntilsContentBookScreen contentBookScreen) {
+                        && McUtils.screen() instanceof WynntilsContentBookScreen contentBookScreen) {
                     contentBookScreen.removeTrackedActivity();
                 }
             }

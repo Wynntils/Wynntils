@@ -31,6 +31,6 @@ public abstract class ScreenSettingsButton extends GeneralSettingsButton {
 
     @Override
     public void onPress() {
-        McUtils.mc().setScreen(screen);
+        McUtils.setScreen(screen);
     }
 }

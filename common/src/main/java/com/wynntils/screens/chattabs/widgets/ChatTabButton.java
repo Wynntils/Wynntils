@@ -66,7 +66,7 @@ public class ChatTabButton extends WynntilsButton {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Services.ChatTab.setFocusedTab(tab);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            McUtils.mc().setScreen(ChatTabEditingScreen.create(tab));
+            McUtils.setScreen(ChatTabEditingScreen.create(tab));
         }
 
         // Hack: We should return true here,

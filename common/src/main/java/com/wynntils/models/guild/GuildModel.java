@@ -315,7 +315,7 @@ public final class GuildModel extends Model {
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
+        if (!(McUtils.screen() instanceof ContainerScreen containerScreen)) return;
 
         StyledText title = StyledText.fromComponent(containerScreen.getTitle());
         if (!title.matches(Pattern.compile(ContainerModel.GUILD_DIPLOMACY_MENU_NAME))) return;

@@ -116,7 +116,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
                                 .withStyle(ChatFormatting.GRAY));
             }
 
-            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 

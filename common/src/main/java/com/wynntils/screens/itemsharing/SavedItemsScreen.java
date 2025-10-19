@@ -190,7 +190,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(slot.getItem());
 
                 if (wynnItemOpt.isPresent()) {
-                    McUtils.mc().setScreen(ItemSharingScreen.create(wynnItemOpt.get(), slot.getItem(), true));
+                    McUtils.setScreen(ItemSharingScreen.create(wynnItemOpt.get(), slot.getItem(), true));
                 } else {
                     McUtils.sendMessageToClient(Component.translatable("screens.wynntils.savedItems.unableToShare"));
                 }
@@ -396,7 +396,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         }
 
         categoryInput = new TextInputBoxWidget(
-                this.leftPos + 37, this.topPos + 5, 97, 16, null, (TextboxScreen) McUtils.mc().screen, categoryInput);
+                this.leftPos + 37, this.topPos + 5, 97, 16, null, (TextboxScreen) McUtils.screen(), categoryInput);
 
         // Get the current category name and add if we are editing
         if (editingCategory) {

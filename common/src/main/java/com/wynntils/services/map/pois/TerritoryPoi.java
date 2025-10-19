@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -91,7 +91,7 @@ public class TerritoryPoi implements Poi {
 
         List<CustomColor> colors;
         if (isTerritoryInfoUsable()
-                && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
+                && McUtils.screen() instanceof GuildMapScreen guildMapScreen
                 && guildMapScreen.isResourceMode()) {
             colors = territoryInfo.getResourceColors();
         } else if ((isTerritoryInfoUsable()

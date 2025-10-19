@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
@@ -64,7 +64,7 @@ public class IconButton extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (McUtils.mc().screen instanceof PoiCreationScreen poiCreationScreen) {
+        if (McUtils.screen() instanceof PoiCreationScreen poiCreationScreen) {
             poiCreationScreen.setSelectedIcon(mapIcon);
         }
 

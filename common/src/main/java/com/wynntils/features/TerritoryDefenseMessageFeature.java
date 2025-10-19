@@ -38,9 +38,9 @@ public class TerritoryDefenseMessageFeature extends Feature {
 
     @SubscribeEvent
     public void onInventoryClick(InventoryMouseClickedEvent event) {
-        if (event.getHoveredSlot() == null || McUtils.mc().screen == null) return;
+        if (event.getHoveredSlot() == null || McUtils.screen() == null) return;
         Matcher titleMatcher =
-                ATTACK_SCREEN_TITLE.matcher(McUtils.mc().screen.getTitle().getString());
+                ATTACK_SCREEN_TITLE.matcher(McUtils.screen().getTitle().getString());
         if (!titleMatcher.matches()) return;
 
         ItemStack itemStack = event.getHoveredSlot().getItem();

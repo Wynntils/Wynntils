@@ -77,7 +77,7 @@ public class ItemLockFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInventoryClickEvent(ContainerClickEvent event) {
         // Don't lock fullscreen container slots
-        if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
+        if (!(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
         if (!blockAllActionsOnLockedItems.get() && event.getClickType() != ClickType.THROW) return;
 

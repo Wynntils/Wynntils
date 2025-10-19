@@ -44,7 +44,7 @@ public class ColorPickerWidget extends WynntilsButton {
         RenderUtils.drawRect(poseStack, value, getX(), getY(), 0, width, height);
 
         if (isHovered) {
-            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(TOOLTIP, Component::getVisualOrderText));
+            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(TOOLTIP, Component::getVisualOrderText));
         }
     }
 
@@ -52,7 +52,7 @@ public class ColorPickerWidget extends WynntilsButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
-        McUtils.mc().setScreen(ColorPickerScreen.create(McUtils.mc().screen, inputWidget));
+        McUtils.setScreen(ColorPickerScreen.create(McUtils.screen(), inputWidget));
 
         return true;
     }
