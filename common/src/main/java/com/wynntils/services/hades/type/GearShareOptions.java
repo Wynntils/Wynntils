@@ -12,8 +12,8 @@ import java.util.TreeMap;
 public class GearShareOptions {
     private Map<InventoryArmor, Boolean> armorShare = new TreeMap<>();
     private Map<InventoryAccessory, Boolean> accessoryShare = new TreeMap<>();
-    private boolean shareHeldItem = false;
-    private boolean shareCraftedItems = false;
+    private boolean shareHeldItem = true;
+    private boolean shareCraftedItems = true;
     private boolean shareCraftedNames = true;
 
     public boolean shouldShare() {
@@ -23,7 +23,7 @@ public class GearShareOptions {
     }
 
     public boolean shouldShareArmor(InventoryArmor armor) {
-        return armorShare.getOrDefault(armor, false);
+        return armorShare.getOrDefault(armor, true);
     }
 
     public void setShareArmor(InventoryArmor armor, boolean share) {
@@ -31,7 +31,7 @@ public class GearShareOptions {
     }
 
     public boolean shouldShareAccessory(InventoryAccessory accessory) {
-        return accessoryShare.getOrDefault(accessory, false);
+        return accessoryShare.getOrDefault(accessory, true);
     }
 
     public void setShareAccessory(InventoryAccessory accessory, boolean share) {
