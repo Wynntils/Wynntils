@@ -31,7 +31,7 @@ public final class BufferedRenderUtils {
 
         float halfWidth = width / 2;
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POSITION_COLOR_TRIANGLE_STRIP);
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderTypes.POSITION_COLOR_TRIANGLE_STRIP);
 
         if (x1 == x2) {
             if (y2 < y1) {
@@ -122,7 +122,7 @@ public final class BufferedRenderUtils {
             float height) {
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderTypes.POSITION_COLOR_QUAD);
 
         buffer.addVertex(matrix, x, y + height, z).setColor(color.r(), color.g(), color.b(), color.a());
         buffer.addVertex(matrix, x + width, y + height, z).setColor(color.r(), color.g(), color.b(), color.a());
@@ -201,7 +201,7 @@ public final class BufferedRenderUtils {
         }
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderTypes.POSITION_COLOR_QUAD);
 
         float splitX = width / (colors.size() - 1);
 
@@ -235,7 +235,7 @@ public final class BufferedRenderUtils {
             float height) {
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionColorTextureQuad(tex));
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderTypes.getPositionColorTextureQuad(tex));
 
         float[] colorArray = color.asFloatArray();
 
@@ -387,7 +387,7 @@ public final class BufferedRenderUtils {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionTextureQuad(tex));
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderTypes.getPositionTextureQuad(tex));
 
         buffer.addVertex(matrix, x, y + height, z).setUv(uOffset * uScale, (vOffset + v) * vScale);
         buffer.addVertex(matrix, x + width, y + height, z).setUv((uOffset + u) * uScale, (vOffset + v) * vScale);
@@ -436,7 +436,7 @@ public final class BufferedRenderUtils {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionColorTextureQuad(tex));
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderTypes.getPositionColorTextureQuad(tex));
 
         buffer.addVertex(matrix, x, y + height, z)
                 .setUv(uOffset * uScale, (vOffset + v) * vScale)
@@ -525,7 +525,7 @@ public final class BufferedRenderUtils {
         Matrix4f matrix = poseStack.last().pose();
 
         VertexConsumer buffer =
-                bufferSource.getBuffer(CustomRenderType.getPositionColorTextureQuad(texture.identifier()));
+                bufferSource.getBuffer(CustomRenderTypes.getPositionColorTextureQuad(texture.identifier()));
 
         float xMin = Math.min(x1, x2),
                 xMax = Math.max(x1, x2),
@@ -619,7 +619,7 @@ public final class BufferedRenderUtils {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionTextureQuad(texture.identifier()));
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderTypes.getPositionTextureQuad(texture.identifier()));
 
         float xMin = Math.min(x1, x2),
                 xMax = Math.max(x1, x2),
@@ -660,7 +660,7 @@ public final class BufferedRenderUtils {
             int textureY2) {
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionTextureQuad(texture.identifier()));
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderTypes.getPositionTextureQuad(texture.identifier()));
 
         float xMin = Math.min(x1, x2),
                 xMax = Math.max(x1, x2),

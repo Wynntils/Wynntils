@@ -21,7 +21,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
-import com.wynntils.utils.render.buffered.CustomRenderType;
+import com.wynntils.utils.render.buffered.CustomRenderTypes;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public final class MapRenderer {
             float width,
             float height,
             float scale) {
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getMapPositionTextureQuad(map.identifier()));
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderTypes.getMapPositionTextureQuad(map.identifier()));
 
         renderMap(map, poseStack, buffer, centerX, centerZ, textureX, textureZ, width, height, scale);
     }

@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.lootrunpaths;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -17,7 +16,7 @@ import com.wynntils.services.lootrunpaths.type.ColoredPosition;
 import com.wynntils.services.lootrunpaths.type.LootrunNote;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
-import com.wynntils.utils.render.buffered.CustomRenderType;
+import com.wynntils.utils.render.buffered.CustomRenderTypes;
 import com.wynntils.utils.type.Pair;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import java.util.ArrayList;
@@ -28,10 +27,11 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
-import net.minecraft.util.ARGB;
+import net.minecraft.gizmos.GizmoStyle;
+import net.minecraft.gizmos.Gizmos;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -87,7 +87,7 @@ public final class LootrunRenderer {
                 }
 
                 if (lootrun.chests().containsKey(chunkLong)) {
-                    renderChests(poseStack, lootrun, color, chunkLong);
+                    renderChests(lootrun, color, chunkLong);
                 }
 
                 if (Managers.Feature.getFeatureInstance(LootrunFeature.class)
@@ -135,23 +135,16 @@ public final class LootrunRenderer {
         }
     }
 
-    private static void renderChests(PoseStack poseStack, LootrunPathInstance lootrun, int color, long chunkLong) {
-        VertexConsumer consumer = BUFFER_SOURCE.getBuffer(RenderType.lines());
+    private static void renderChests(LootrunPathInstance lootrun, int color, long chunkLong) {
         Set<BlockPos> chests = lootrun.chests().get(chunkLong);
-
-        float red = ((float) ARGB.red(color)) / 255;
-        float green = ((float) ARGB.green(color)) / 255;
-        float blue = ((float) ARGB.blue(color)) / 255;
 
         for (BlockPos chest : chests) {
             // Wynncraft requested that chest highlights are not rendered on these blocks
             BlockState block = McUtils.mc().level.getBlockState(chest);
             if (block.is(Blocks.BARRIER) || block.is(Blocks.AIR)) continue;
 
-            ShapeRenderer.renderLineBox(poseStack, consumer, new AABB(chest), red, green, blue, 1f);
+            Gizmos.cuboid(new AABB(chest), GizmoStyle.stroke(color));
         }
-
-        BUFFER_SOURCE.endBatch();
     }
 
     private static void renderPoints(PoseStack poseStack, Long2ObjectMap<List<ColoredPath>> points, long chunkLong) {
@@ -163,8 +156,8 @@ public final class LootrunRenderer {
         switch (Managers.Feature.getFeatureInstance(LootrunFeature.class)
                 .pathType
                 .get()) {
-            case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_QUAD);
-            case LINE -> renderNonTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_LINE);
+            case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level, CustomRenderTypes.LOOTRUN_QUAD);
+            case LINE -> renderNonTexturedLootrunPoints(poseStack, locations, level, RenderTypes.LINES);
         }
     }
 
@@ -229,7 +222,6 @@ public final class LootrunRenderer {
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
         poseStack.pushPose();
         poseStack.translate(camera.position().x, camera.position().y, camera.position().z);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         for (ColoredPath locationsInRoute : locations) {
             VertexConsumer consumer = BUFFER_SOURCE.getBuffer(renderType);
@@ -301,7 +293,8 @@ public final class LootrunRenderer {
         int pathColor = coloredPosition.color();
         consumer.addVertex(lastMatrix, (float) position.x(), (float) position.y(), (float) position.z())
                 .setColor(pathColor)
-                .setNormal(0, 0, 1);
+                .setNormal(0, 0, 1)
+                .setLineWidth(3);
     }
 
     private static void renderTexturedQueuedPoints(

@@ -29,7 +29,7 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.buffered.CustomRenderType;
+import com.wynntils.utils.render.buffered.CustomRenderTypes;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -270,7 +270,7 @@ public class RangeVisualizerFeature extends Feature {
 
         poseStack.pushPose();
         poseStack.translate(-position.x(), -position.y(), -position.z());
-        VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
+        VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderTypes.POSITION_COLOR_QUAD);
 
         Matrix4f matrix4f = poseStack.last().pose();
         double angleStep = 2 * Math.PI / SEGMENTS;

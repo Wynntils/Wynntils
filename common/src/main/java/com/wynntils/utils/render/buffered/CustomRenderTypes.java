@@ -6,11 +6,11 @@ package com.wynntils.utils.render.buffered;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.wynntils.utils.render.Texture;
-import java.util.OptionalDouble;
 import java.util.function.Function;
+
+import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.util.Util;
 import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.RenderStateShard;
@@ -20,40 +20,12 @@ import net.minecraft.util.TriState;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-public class CustomRenderType extends RenderType {
-    // Copied from RenderType.LINE_STRIP and changed the line width from the default
-    // to 3
-    public static final RenderType LOOTRUN_LINE = RenderType.create(
-            "wynntils_lootrun_line",
-            DefaultVertexFormat.POSITION_COLOR_NORMAL,
-            Mode.LINE_STRIP,
-            256,
-            false,
-            false,
-            CompositeState.builder()
-                    .setShaderState(RENDERTYPE_LINES_SHADER)
-                    .setLineState(new LineStateShard(OptionalDouble.of(3)))
-                    .setLayeringState(VIEW_OFFSET_Z_LAYERING)
-                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                    .setOutputState(ITEM_ENTITY_TARGET)
-                    .setWriteMaskState(COLOR_DEPTH_WRITE)
-                    .setCullState(NO_CULL)
-                    .createCompositeState(false));
-
+public class CustomRenderTypes {
     public static final RenderType LOOTRUN_QUAD = RenderType.create(
             "wynntils_lootrun_quad",
-            DefaultVertexFormat.POSITION_TEX_COLOR,
-            Mode.QUADS,
-            256,
-            false,
-            false,
-            CompositeState.builder()
-                    .setShaderState(new ShaderStateShard(CoreShaders.POSITION_TEX_COLOR))
-                    .setCullState(NO_CULL)
-                    .setTextureState(new TextureStateShard(Texture.LOOTRUN_LINE.identifier(), TriState.FALSE, false))
-                    .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                    .setWriteMaskState(COLOR_DEPTH_WRITE)
-                    .createCompositeState(false));
+            RenderSetup.builder(CustomRenderPipelines.LOOTRUN_QUAD_PIPELINE)
+                    .withTexture("Sampler0", Texture.LOOTRUN_LINE.identifier())
+                    .createRenderSetup());
 
     public static final RenderType POSITION_COLOR_TRIANGLE_STRIP = RenderType.create(
             "wynntils_position_color_triangle_strip",
@@ -151,17 +123,5 @@ public class CustomRenderType extends RenderType {
 
     public static RenderType getMapPositionTextureQuad(Identifier resource) {
         return MAP_POSITION_TEXTURE_QUAD.apply(resource);
-    }
-
-    public CustomRenderType(
-            String pName,
-            VertexFormat pFormat,
-            Mode pMode,
-            int pBufferSize,
-            boolean pAffectsCrumbling,
-            boolean pSortOnUpload,
-            Runnable pSetupState,
-            Runnable pClearState) {
-        super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
     }
 }
