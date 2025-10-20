@@ -4,6 +4,8 @@
  */
 package com.wynntils.screens.container.widgets;
 
+import static com.wynntils.models.containers.BankModel.QUICK_JUMP_BUTTON_ICONS;
+
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
@@ -21,6 +23,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public class QuickJumpButton extends WynntilsButton {
     private final int destination;
@@ -28,18 +31,22 @@ public class QuickJumpButton extends WynntilsButton {
     private final CustomColor selectedColor;
     private final PersonalStorageUtilitiesWidget parent;
 
+    private int iconIndex;
+
     public QuickJumpButton(
             int x,
             int y,
             int destination,
             CustomColor lockedColor,
             CustomColor selectedColor,
+            Integer iconIndex,
             PersonalStorageUtilitiesWidget parent) {
         super(x, y, 16, 16, Component.literal("Container Quick Jump Button"));
 
         this.destination = destination;
         this.lockedColor = lockedColor;
         this.selectedColor = selectedColor;
+        this.iconIndex = iconIndex;
         this.parent = parent;
     }
 
@@ -60,16 +67,35 @@ public class QuickJumpButton extends WynntilsButton {
             tooltip = Component.translatable("feature.wynntils.personalStorageUtilities.unavailable", destination);
         }
 
-        FontRenderer.getInstance()
-                .renderText(
+        if (iconIndex != 0) {
+            var index = iconIndex - 1;
+
+            if (index >= 0 && index < QUICK_JUMP_BUTTON_ICONS.size()) {
+                var texture = QUICK_JUMP_BUTTON_ICONS.get(index);
+                RenderUtils.drawTexturedRectWithColor(
                         poseStack,
-                        StyledText.fromString(String.valueOf(destination)),
-                        getX() + 8,
-                        getY() + 8,
+                        texture.resource(),
                         color,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+                        getX(),
+                        getY(),
+                        0,
+                        16,
+                        16,
+                        texture.width(),
+                        texture.height());
+            }
+        } else {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(String.valueOf(destination)),
+                            getX() + 8,
+                            getY() + 8,
+                            color,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+        }
 
         if (isHovered) {
             McUtils.screen()
@@ -78,7 +104,32 @@ public class QuickJumpButton extends WynntilsButton {
     }
 
     @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (Models.Bank.isEditingMode()) {
+            var maxIndex = QUICK_JUMP_BUTTON_ICONS.size() + 1;
+
+            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                iconIndex = (iconIndex - 1 + maxIndex) % maxIndex;
+            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                iconIndex = (iconIndex + 1) % maxIndex;
+            }
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
     public void onPress() {
-        parent.jumpToPage(destination);
+        if (!Models.Bank.isEditingMode()) {
+            parent.jumpToPage(destination);
+        }
+    }
+
+    public int getIconIndex() {
+        return iconIndex;
+    }
+
+    public void setIconIndex(int iconIndex) {
+        this.iconIndex = iconIndex;
     }
 }

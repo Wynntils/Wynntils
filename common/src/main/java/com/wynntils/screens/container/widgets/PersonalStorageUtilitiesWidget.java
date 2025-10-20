@@ -31,7 +31,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
 
     private final PersonalStorageContainer container;
     private final List<QuickJumpButton> quickJumpButtons = new ArrayList<>();
-    private final PersonalStorageEditNameButton editButton;
+    private final PersonalStorageEditModeButton editButton;
     private final TextInputBoxWidget editInput;
     private final PersonalStorageUtilitiesFeature feature;
     private final AbstractContainerScreen<?> screen;
@@ -50,7 +50,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
         this.feature = feature;
         this.screen = screen;
 
-        editButton = new PersonalStorageEditNameButton(x + 86, y + 9, 14, 14, this);
+        editButton = new PersonalStorageEditModeButton(x + 86, y + 9, 14, 14, this);
 
         editInput = new TextInputBoxWidget(
                 getX() + 2,
@@ -64,7 +64,6 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
         screen.addRenderableWidget(editInput);
 
         updatePageName();
-
         addJumpButtons();
     }
 
@@ -72,7 +71,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BANK_PANEL, getX(), getY());
 
-        if (!Models.Bank.isEditingName()) {
+        if (!Models.Bank.isEditingMode()) {
             FontRenderer.getInstance()
                     .renderScrollingText(
                             guiGraphics.pose(),
@@ -109,23 +108,40 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     }
 
     public void jumpToPage(int destination) {
-        toggleEditInput(false);
+        toggleEditMode(false);
         feature.jumpToDestination(destination);
     }
 
-    public void toggleEditInput(boolean visible) {
-        editInput.visible = visible;
+    public void toggleEditMode(boolean on) {
+        editInput.visible = on;
         editInput.setTextBoxInput(Models.Bank.getPageName(Models.Bank.getCurrentPage()));
 
-        Models.Bank.toggleEditingName(visible);
+        Models.Bank.toggleEditingMode(on);
     }
 
     public void updatePageName() {
         pageName = Models.Bank.getPageName(Models.Bank.getCurrentPage());
     }
 
+    public void updatePageIcons() {
+        for (int i = 0; i < quickJumpButtons.size(); i++) {
+            var button = quickJumpButtons.get(i);
+            button.setIconIndex(Models.Bank.getPageIcon(i));
+        }
+        pageName = Models.Bank.getPageName(Models.Bank.getCurrentPage());
+    }
+
+    public void saveEditModeChanges() {
+        feature.saveEditModeChanges();
+    }
+
     public String getName() {
         return editInput.getTextBoxInput();
+    }
+
+    public Integer getPageIconIndex(int page) {
+        var button = quickJumpButtons.get(page);
+        return button.getIconIndex();
     }
 
     private void addJumpButtons() {
@@ -139,6 +155,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
                     i + 1,
                     this.feature.getLockedQuickJumpColor(),
                     this.feature.getSelectedQuickJumpColor(),
+                    Models.Bank.getPageIcon(i),
                     this));
 
             renderX += BUTTON_SPACING;
