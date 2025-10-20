@@ -16,6 +16,7 @@ import com.wynntils.services.lootrunpaths.type.ColoredPosition;
 import com.wynntils.services.lootrunpaths.type.LootrunNote;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
+import com.wynntils.utils.render.buffered.CustomRenderType;
 import com.wynntils.utils.type.Pair;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import java.util.ArrayList;
@@ -159,10 +160,8 @@ public final class LootrunRenderer {
         switch (Managers.Feature.getFeatureInstance(LootrunFeature.class)
                 .pathType
                 .get()) {
-                //            case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level,
-                // CustomRenderType.LOOTRUN_QUAD);
-                //            case LINE -> renderNonTexturedLootrunPoints(poseStack, locations, level,
-                // CustomRenderType.LOOTRUN_LINE);
+            case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_QUAD);
+            case LINE -> renderNonTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_LINE);
         }
     }
 
