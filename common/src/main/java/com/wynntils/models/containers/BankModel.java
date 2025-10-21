@@ -16,6 +16,7 @@ import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.containers.event.BankPageSetEvent;
+import com.wynntils.models.containers.type.BankPageCustomization;
 import com.wynntils.models.containers.type.PersonalStorageType;
 import com.wynntils.models.containers.type.QuickJumpButtonIcon;
 import java.util.List;
@@ -44,35 +45,23 @@ public final class BankModel extends Model {
     private final Storage<Map<String, Integer>> finalCharacterBankPages = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<Integer, String>> customAccountBankPageNames = new Storage<>(new TreeMap<>());
-
-    @Persisted
-    private final Storage<Map<Integer, QuickJumpButtonIcon>> customAccountBankPageIcon = new Storage<>(new TreeMap<>());
-
-    @Persisted
-    private final Storage<Map<Integer, String>> customBlockBankPageNames = new Storage<>(new TreeMap<>());
-
-    @Persisted
-    private final Storage<Map<Integer, QuickJumpButtonIcon>> customBlockBankPageIcon = new Storage<>(new TreeMap<>());
-
-    @Persisted
-    private final Storage<Map<Integer, String>> customBookshelfPageNames = new Storage<>(new TreeMap<>());
-
-    @Persisted
-    private final Storage<Map<Integer, QuickJumpButtonIcon>> customBookshelfPageIcon = new Storage<>(new TreeMap<>());
-
-    @Persisted
-    private final Storage<Map<Integer, String>> customMiscBucketPageNames = new Storage<>(new TreeMap<>());
-
-    @Persisted
-    private final Storage<Map<Integer, QuickJumpButtonIcon>> customMiscBucketPageIcon = new Storage<>(new TreeMap<>());
-
-    @Persisted
-    private final Storage<Map<String, Map<Integer, String>>> customCharacterBankPagesNames =
+    private final Storage<Map<Integer, BankPageCustomization>> customAccountBankPageCustomizations =
             new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<String, Map<Integer, QuickJumpButtonIcon>>> customCharacterBankPagesIcon =
+    private final Storage<Map<Integer, BankPageCustomization>> customBlockBankPageCustomizations =
+            new Storage<>(new TreeMap<>());
+
+    @Persisted
+    private final Storage<Map<Integer, BankPageCustomization>> customBookshelfPageCustomizations =
+            new Storage<>(new TreeMap<>());
+
+    @Persisted
+    private final Storage<Map<Integer, BankPageCustomization>> customMiscBucketPageCustomizations =
+            new Storage<>(new TreeMap<>());
+
+    @Persisted
+    private final Storage<Map<String, Map<Integer, BankPageCustomization>>> customCharacterBankPagesCustomizations =
             new Storage<>(new TreeMap<>());
 
     public static final int QUICK_JUMP_SLOT = 7;
@@ -145,111 +134,78 @@ public final class BankModel extends Model {
         }
     }
 
-    public String getPageName(int page) {
-        Map<Integer, String> pageNamesMap = getCurrentNameMap();
+    public BankPageCustomization getPageCustomization(int page) {
+        Map<Integer, BankPageCustomization> pageNamesMap = getCurrentCustomizationMap();
+        if (pageNamesMap == null) return new BankPageCustomization(page);
 
-        if (pageNamesMap == null) return I18n.get("feature.wynntils.personalStorageUtilities.page", page);
-
-        return pageNamesMap.getOrDefault(page, I18n.get("feature.wynntils.personalStorageUtilities.page", page));
-    }
-
-    public QuickJumpButtonIcon getPageIconIndex(int page) {
-        Map<Integer, QuickJumpButtonIcon> pageNamesMap = getCurrentIconMap();
-        if (pageNamesMap == null) return QuickJumpButtonIcon.NONE;
-
-        return pageNamesMap.getOrDefault(page, QuickJumpButtonIcon.NONE);
+        return pageNamesMap.getOrDefault(page, new BankPageCustomization(page));
     }
 
     public void saveCurrentPageName(String nameToSet) {
         switch (storageContainerType) {
-            case ACCOUNT_BANK -> {
-                customAccountBankPageNames.get().put(currentPage, nameToSet);
-                customAccountBankPageNames.touched();
-            }
-            case BLOCK_BANK -> {
-                customBlockBankPageNames.get().put(currentPage, nameToSet);
-                customBlockBankPageNames.touched();
-            }
-            case BOOKSHELF -> {
-                customBookshelfPageNames.get().put(currentPage, nameToSet);
-                customBookshelfPageNames.touched();
-            }
+            case ACCOUNT_BANK -> saveCurrentPageName(nameToSet, customAccountBankPageCustomizations);
+            case BLOCK_BANK -> saveCurrentPageName(nameToSet, customBlockBankPageCustomizations);
+            case BOOKSHELF -> saveCurrentPageName(nameToSet, customBookshelfPageCustomizations);
             case CHARACTER_BANK -> {
-                customCharacterBankPagesNames.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
+                customCharacterBankPagesCustomizations.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
 
-                Map<Integer, String> nameMap =
-                        customCharacterBankPagesNames.get().get(Models.Character.getId());
+                Map<Integer, BankPageCustomization> nameMap =
+                        customCharacterBankPagesCustomizations.get().get(Models.Character.getId());
 
-                nameMap.put(currentPage, nameToSet);
+                var cusomization = nameMap.getOrDefault(currentPage, new BankPageCustomization(currentPage));
+                cusomization.setName(nameToSet);
 
-                customCharacterBankPagesNames.get().put(Models.Character.getId(), nameMap);
-                customCharacterBankPagesNames.touched();
+                nameMap.put(currentPage, cusomization);
+
+                customCharacterBankPagesCustomizations.get().put(Models.Character.getId(), nameMap);
+                customCharacterBankPagesCustomizations.touched();
             }
-            case MISC_BUCKET -> {
-                customMiscBucketPageNames.get().put(currentPage, nameToSet);
-                customMiscBucketPageNames.touched();
-            }
+            case MISC_BUCKET -> saveCurrentPageName(nameToSet, customMiscBucketPageCustomizations);
         }
+    }
+
+    private void saveCurrentPageName(String nameToSet, Storage<Map<Integer, BankPageCustomization>> storage) {
+        var cusomization = storage.get().getOrDefault(currentPage, new BankPageCustomization(currentPage));
+        cusomization.setName(nameToSet);
+
+        storage.get().put(currentPage, cusomization);
+        storage.touched();
     }
 
     public void savePageIcon(Integer pageIndex, QuickJumpButtonIcon iconToSet) {
         switch (storageContainerType) {
-            case ACCOUNT_BANK -> {
-                customAccountBankPageIcon.get().put(pageIndex, iconToSet);
-                customAccountBankPageIcon.touched();
-            }
-            case BLOCK_BANK -> {
-                customBlockBankPageIcon.get().put(pageIndex, iconToSet);
-                customBlockBankPageIcon.touched();
-            }
-            case BOOKSHELF -> {
-                customBookshelfPageIcon.get().put(pageIndex, iconToSet);
-                customBookshelfPageIcon.touched();
-            }
+            case ACCOUNT_BANK -> savePageIcon(pageIndex, iconToSet, customAccountBankPageCustomizations);
+            case BLOCK_BANK -> savePageIcon(pageIndex, iconToSet, customBlockBankPageCustomizations);
+            case BOOKSHELF -> savePageIcon(pageIndex, iconToSet, customBookshelfPageCustomizations);
             case CHARACTER_BANK -> {
-                customCharacterBankPagesIcon.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
+                customCharacterBankPagesCustomizations.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
 
-                Map<Integer, QuickJumpButtonIcon> nameMap =
-                        customCharacterBankPagesIcon.get().get(Models.Character.getId());
+                Map<Integer, BankPageCustomization> nameMap =
+                        customCharacterBankPagesCustomizations.get().get(Models.Character.getId());
 
-                nameMap.put(pageIndex, iconToSet);
+                var cusomization = nameMap.getOrDefault(pageIndex, new BankPageCustomization(pageIndex));
+                cusomization.setIcon(iconToSet);
 
-                customCharacterBankPagesIcon.get().put(Models.Character.getId(), nameMap);
-                customCharacterBankPagesIcon.touched();
+                nameMap.put(pageIndex, cusomization);
+
+                customCharacterBankPagesCustomizations.get().put(Models.Character.getId(), nameMap);
+                customCharacterBankPagesCustomizations.touched();
             }
-            case MISC_BUCKET -> {
-                customMiscBucketPageIcon.get().put(pageIndex, iconToSet);
-                customMiscBucketPageIcon.touched();
-            }
+            case MISC_BUCKET -> savePageIcon(pageIndex, iconToSet, customMiscBucketPageCustomizations);
         }
     }
 
+    private void savePageIcon(
+            Integer pageIndex, QuickJumpButtonIcon iconToSet, Storage<Map<Integer, BankPageCustomization>> storage) {
+        var cusomization = storage.get().getOrDefault(pageIndex, new BankPageCustomization(pageIndex));
+        cusomization.setIcon(iconToSet);
+
+        storage.get().put(pageIndex, cusomization);
+        storage.touched();
+    }
+
     public void resetCurrentPageName() {
-        switch (storageContainerType) {
-            case ACCOUNT_BANK -> {
-                customAccountBankPageNames.get().remove(currentPage);
-                customAccountBankPageNames.touched();
-            }
-            case BLOCK_BANK -> {
-                customBlockBankPageNames.get().remove(currentPage);
-                customBlockBankPageNames.touched();
-            }
-            case BOOKSHELF -> {
-                customBookshelfPageNames.get().remove(currentPage);
-                customBookshelfPageNames.touched();
-            }
-            case CHARACTER_BANK -> {
-                customCharacterBankPagesNames
-                        .get()
-                        .getOrDefault(Models.Character.getId(), new TreeMap<>())
-                        .remove(currentPage);
-                customCharacterBankPagesNames.touched();
-            }
-            case MISC_BUCKET -> {
-                customMiscBucketPageNames.get().remove(currentPage);
-                customMiscBucketPageNames.touched();
-            }
-        }
+        saveCurrentPageName(I18n.get("feature.wynntils.personalStorageUtilities.page", currentPage));
     }
 
     public int getFinalPage() {
@@ -329,25 +285,14 @@ public final class BankModel extends Model {
         }
     }
 
-    private Map<Integer, String> getCurrentNameMap() {
+    private Map<Integer, BankPageCustomization> getCurrentCustomizationMap() {
         return switch (storageContainerType) {
-            case ACCOUNT_BANK -> customAccountBankPageNames.get();
-            case BLOCK_BANK -> customBlockBankPageNames.get();
-            case BOOKSHELF -> customBookshelfPageNames.get();
+            case ACCOUNT_BANK -> customAccountBankPageCustomizations.get();
+            case BLOCK_BANK -> customBlockBankPageCustomizations.get();
+            case BOOKSHELF -> customBookshelfPageCustomizations.get();
             case CHARACTER_BANK ->
-                customCharacterBankPagesNames.get().getOrDefault(Models.Character.getId(), new TreeMap<>());
-            case MISC_BUCKET -> customMiscBucketPageNames.get();
-        };
-    }
-
-    private Map<Integer, QuickJumpButtonIcon> getCurrentIconMap() {
-        return switch (storageContainerType) {
-            case ACCOUNT_BANK -> customAccountBankPageIcon.get();
-            case BLOCK_BANK -> customBlockBankPageIcon.get();
-            case BOOKSHELF -> customBookshelfPageIcon.get();
-            case CHARACTER_BANK ->
-                customCharacterBankPagesIcon.get().getOrDefault(Models.Character.getId(), new TreeMap<>());
-            case MISC_BUCKET -> customMiscBucketPageIcon.get();
+                customCharacterBankPagesCustomizations.get().getOrDefault(Models.Character.getId(), new TreeMap<>());
+            case MISC_BUCKET -> customMiscBucketPageCustomizations.get();
         };
     }
 }

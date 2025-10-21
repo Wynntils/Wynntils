@@ -57,7 +57,8 @@ public class QuickJumpButton extends WynntilsButton {
 
         CustomColor color = CommonColors.WHITE;
         Component tooltip = Component.translatable(
-                "feature.wynntils.personalStorageUtilities.jumpTo", Models.Bank.getPageName(destination));
+                "feature.wynntils.personalStorageUtilities.jumpTo",
+                Models.Bank.getPageCustomization(destination).getName());
         if (Models.Bank.getCurrentPage() == destination) {
             color = selectedColor;
             tooltip = Component.translatable("feature.wynntils.personalStorageUtilities.youAreHere");

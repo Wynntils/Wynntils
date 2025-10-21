@@ -60,7 +60,8 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
                 FontRenderer.getInstance().getFont().lineHeight + 2,
                 null,
                 (ScreenExtension) screen);
-        editInput.setTextBoxInput(Models.Bank.getPageName(Models.Bank.getCurrentPage()));
+        editInput.setTextBoxInput(
+                Models.Bank.getPageCustomization(Models.Bank.getCurrentPage()).getName());
         editInput.visible = false;
         screen.addRenderableWidget(editInput);
 
@@ -115,21 +116,22 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
 
     public void toggleEditMode(boolean on) {
         editInput.visible = on;
-        editInput.setTextBoxInput(Models.Bank.getPageName(Models.Bank.getCurrentPage()));
+        editInput.setTextBoxInput(
+                Models.Bank.getPageCustomization(Models.Bank.getCurrentPage()).getName());
 
         Models.Bank.toggleEditingMode(on);
     }
 
     public void updatePageName() {
-        pageName = Models.Bank.getPageName(Models.Bank.getCurrentPage());
+        pageName =
+                Models.Bank.getPageCustomization(Models.Bank.getCurrentPage()).getName();
     }
 
     public void updatePageIcons() {
         for (int i = 0; i < quickJumpButtons.size(); i++) {
             var button = quickJumpButtons.get(i);
-            button.setIcon(Models.Bank.getPageIconIndex(i));
+            button.setIcon(Models.Bank.getPageCustomization(i).getIcon());
         }
-        pageName = Models.Bank.getPageName(Models.Bank.getCurrentPage());
     }
 
     public void saveEditModeChanges() {
@@ -156,7 +158,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
                     i + 1,
                     this.feature.getLockedQuickJumpColor(),
                     this.feature.getSelectedQuickJumpColor(),
-                    Models.Bank.getPageIconIndex(i),
+                    Models.Bank.getPageCustomization(i).getIcon(),
                     this));
 
             renderX += BUTTON_SPACING;
