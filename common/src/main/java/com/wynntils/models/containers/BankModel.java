@@ -22,6 +22,7 @@ import com.wynntils.models.containers.type.QuickJumpButtonIcon;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
@@ -142,41 +143,18 @@ public final class BankModel extends Model {
     }
 
     public void saveCurrentPageName(String nameToSet) {
-        switch (storageContainerType) {
-            case ACCOUNT_BANK -> saveCurrentPageName(nameToSet, customAccountBankPageCustomizations);
-            case BLOCK_BANK -> saveCurrentPageName(nameToSet, customBlockBankPageCustomizations);
-            case BOOKSHELF -> saveCurrentPageName(nameToSet, customBookshelfPageCustomizations);
-            case CHARACTER_BANK -> {
-                customCharacterBankPagesCustomizations.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
-
-                Map<Integer, BankPageCustomization> nameMap =
-                        customCharacterBankPagesCustomizations.get().get(Models.Character.getId());
-
-                var cusomization = nameMap.getOrDefault(currentPage, new BankPageCustomization(currentPage));
-                cusomization.setName(nameToSet);
-
-                nameMap.put(currentPage, cusomization);
-
-                customCharacterBankPagesCustomizations.get().put(Models.Character.getId(), nameMap);
-                customCharacterBankPagesCustomizations.touched();
-            }
-            case MISC_BUCKET -> saveCurrentPageName(nameToSet, customMiscBucketPageCustomizations);
-        }
-    }
-
-    private void saveCurrentPageName(String nameToSet, Storage<Map<Integer, BankPageCustomization>> storage) {
-        var cusomization = storage.get().getOrDefault(currentPage, new BankPageCustomization(currentPage));
-        cusomization.setName(nameToSet);
-
-        storage.get().put(currentPage, cusomization);
-        storage.touched();
+        updatePageCustomization(currentPage, (customPageCustomization) -> customPageCustomization.setName(nameToSet));
     }
 
     public void savePageIcon(Integer pageIndex, QuickJumpButtonIcon iconToSet) {
+        updatePageCustomization(pageIndex, (customPageCustomization) -> customPageCustomization.setIcon(iconToSet));
+    }
+
+    private void updatePageCustomization(Integer pageIndex, Consumer<BankPageCustomization> updater) {
         switch (storageContainerType) {
-            case ACCOUNT_BANK -> savePageIcon(pageIndex, iconToSet, customAccountBankPageCustomizations);
-            case BLOCK_BANK -> savePageIcon(pageIndex, iconToSet, customBlockBankPageCustomizations);
-            case BOOKSHELF -> savePageIcon(pageIndex, iconToSet, customBookshelfPageCustomizations);
+            case ACCOUNT_BANK -> updatePageCustomization(pageIndex, updater, customAccountBankPageCustomizations);
+            case BLOCK_BANK -> updatePageCustomization(pageIndex, updater, customBlockBankPageCustomizations);
+            case BOOKSHELF -> updatePageCustomization(pageIndex, updater, customBookshelfPageCustomizations);
             case CHARACTER_BANK -> {
                 customCharacterBankPagesCustomizations.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
 
@@ -184,23 +162,36 @@ public final class BankModel extends Model {
                         customCharacterBankPagesCustomizations.get().get(Models.Character.getId());
 
                 var cusomization = nameMap.getOrDefault(pageIndex, new BankPageCustomization(pageIndex));
-                cusomization.setIcon(iconToSet);
 
-                nameMap.put(pageIndex, cusomization);
+                updater.accept(cusomization);
+
+                if (cusomization.equals(new BankPageCustomization(pageIndex))) {
+                    nameMap.remove(pageIndex);
+                } else {
+                    nameMap.put(pageIndex, cusomization);
+                }
 
                 customCharacterBankPagesCustomizations.get().put(Models.Character.getId(), nameMap);
                 customCharacterBankPagesCustomizations.touched();
             }
-            case MISC_BUCKET -> savePageIcon(pageIndex, iconToSet, customMiscBucketPageCustomizations);
+            case MISC_BUCKET -> updatePageCustomization(pageIndex, updater, customMiscBucketPageCustomizations);
         }
     }
 
-    private void savePageIcon(
-            Integer pageIndex, QuickJumpButtonIcon iconToSet, Storage<Map<Integer, BankPageCustomization>> storage) {
+    private void updatePageCustomization(
+            Integer pageIndex,
+            Consumer<BankPageCustomization> updater,
+            Storage<Map<Integer, BankPageCustomization>> storage) {
         var cusomization = storage.get().getOrDefault(pageIndex, new BankPageCustomization(pageIndex));
-        cusomization.setIcon(iconToSet);
 
-        storage.get().put(pageIndex, cusomization);
+        updater.accept(cusomization);
+
+        if (cusomization.equals(new BankPageCustomization(pageIndex))) {
+            storage.get().remove(pageIndex);
+        } else {
+            storage.get().put(pageIndex, cusomization);
+        }
+
         storage.touched();
     }
 

@@ -36,14 +36,12 @@ public enum QuickJumpButtonIcon {
     }
 
     public QuickJumpButtonIcon next() {
-        QuickJumpButtonIcon[] values = values();
-        int nextOrdinal = (this.ordinal() + 1) % values.length;
-        return values[nextOrdinal];
+        int nextOrdinal = (this.ordinal() + 1) % values().length;
+        return values()[nextOrdinal];
     }
 
     public QuickJumpButtonIcon prev() {
-        QuickJumpButtonIcon[] values = values();
-        int prevOrdinal = (this.ordinal() - 1 + values.length) % values.length;
-        return values[prevOrdinal];
+        int prevOrdinal = (this.ordinal() - 1 + values().length) % values().length;
+        return values()[prevOrdinal];
     }
 }

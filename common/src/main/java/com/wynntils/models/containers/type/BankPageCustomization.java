@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.containers.type;
 
+import java.util.Objects;
 import net.minecraft.client.resources.language.I18n;
 
 public class BankPageCustomization {
@@ -29,5 +30,20 @@ public class BankPageCustomization {
 
     public void setIcon(QuickJumpButtonIcon icon) {
         this.icon = icon;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BankPageCustomization that = (BankPageCustomization) o;
+        return Objects.equals(name, that.name) && icon == that.icon;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(name);
+        result = 31 * result + Objects.hashCode(icon);
+        return result;
     }
 }
