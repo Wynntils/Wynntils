@@ -4,12 +4,11 @@
  */
 package com.wynntils.screens.container.widgets;
 
-import static com.wynntils.models.containers.BankModel.QUICK_JUMP_BUTTON_ICONS;
-
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.containers.type.QuickJumpButtonIcon;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -31,7 +30,7 @@ public class QuickJumpButton extends WynntilsButton {
     private final CustomColor selectedColor;
     private final PersonalStorageUtilitiesWidget parent;
 
-    private int iconIndex;
+    private QuickJumpButtonIcon icon;
 
     public QuickJumpButton(
             int x,
@@ -39,14 +38,14 @@ public class QuickJumpButton extends WynntilsButton {
             int destination,
             CustomColor lockedColor,
             CustomColor selectedColor,
-            Integer iconIndex,
+            QuickJumpButtonIcon icon,
             PersonalStorageUtilitiesWidget parent) {
         super(x, y, 16, 16, Component.literal("Container Quick Jump Button"));
 
         this.destination = destination;
         this.lockedColor = lockedColor;
         this.selectedColor = selectedColor;
-        this.iconIndex = iconIndex;
+        this.icon = icon;
         this.parent = parent;
     }
 
@@ -67,24 +66,7 @@ public class QuickJumpButton extends WynntilsButton {
             tooltip = Component.translatable("feature.wynntils.personalStorageUtilities.unavailable", destination);
         }
 
-        if (iconIndex != 0) {
-            var index = iconIndex - 1;
-
-            if (index >= 0 && index < QUICK_JUMP_BUTTON_ICONS.size()) {
-                var texture = QUICK_JUMP_BUTTON_ICONS.get(index);
-                RenderUtils.drawTexturedRectWithColor(
-                        poseStack,
-                        texture.resource(),
-                        color,
-                        getX(),
-                        getY(),
-                        0,
-                        16,
-                        16,
-                        texture.width(),
-                        texture.height());
-            }
-        } else {
+        if (icon == QuickJumpButtonIcon.NONE) {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
@@ -95,6 +77,20 @@ public class QuickJumpButton extends WynntilsButton {
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
+
+        } else {
+            Texture texture = this.icon.getTexture();
+            RenderUtils.drawTexturedRectWithColor(
+                    poseStack,
+                    texture.resource(),
+                    color,
+                    getX(),
+                    getY(),
+                    0,
+                    16,
+                    16,
+                    texture.width(),
+                    texture.height());
         }
 
         if (isHovered) {
@@ -106,12 +102,10 @@ public class QuickJumpButton extends WynntilsButton {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (Models.Bank.isEditingMode()) {
-            var maxIndex = QUICK_JUMP_BUTTON_ICONS.size() + 1;
-
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                iconIndex = (iconIndex - 1 + maxIndex) % maxIndex;
+                icon = icon.next();
             } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                iconIndex = (iconIndex + 1) % maxIndex;
+                icon = icon.prev();
             }
         }
 
@@ -125,11 +119,11 @@ public class QuickJumpButton extends WynntilsButton {
         }
     }
 
-    public int getIconIndex() {
-        return iconIndex;
+    public QuickJumpButtonIcon getIcon() {
+        return icon;
     }
 
-    public void setIconIndex(int iconIndex) {
-        this.iconIndex = iconIndex;
+    public void setIcon(QuickJumpButtonIcon icon) {
+        this.icon = icon;
     }
 }

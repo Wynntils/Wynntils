@@ -17,7 +17,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.containers.event.BankPageSetEvent;
 import com.wynntils.models.containers.type.PersonalStorageType;
-import com.wynntils.utils.render.Texture;
+import com.wynntils.models.containers.type.QuickJumpButtonIcon;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,29 +28,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class BankModel extends Model {
-    public static final List<Texture> QUICK_JUMP_BUTTON_ICONS = List.of(
-            Texture.ALL_CONFIG_ICON,
-            Texture.CHAT_CONFIG_ICON,
-            Texture.COMBAT_CONFIG_ICON,
-            Texture.COMMANDS_CONFIG_ICON,
-            Texture.DEBUG_CONFIG_ICON,
-            Texture.EMBELLISHMENTS_CONFIG_ICON,
-            Texture.INVENTORY_CONFIG_ICON,
-            Texture.MAP_CONFIG_ICON,
-            Texture.OVERLAYS_CONFIG_ICON,
-            Texture.PLAYERS_CONFIG_ICON,
-            Texture.REDIRECTS_CONFIG_ICON,
-            Texture.TOOLTIPS_CONFIG_ICON,
-            Texture.TRADE_MARKET_CONFIG_ICON,
-            Texture.UNCATEGORIZED_CONFIG_ICON,
-            Texture.UTILITIES_CONFIG_ICON,
-            Texture.WYNNTILS_CONFIG_ICON,
-            Texture.APPLY_SETTINGS_ICON,
-            Texture.DISCARD_SETTINGS_ICON,
-            Texture.IMPORT_SETTINGS_ICON,
-            Texture.EXPORT_SETTINGS_ICON,
-            Texture.UI_CONFIG_ICON);
-
     @Persisted
     private final Storage<Integer> finalAccountBankPage = new Storage<>(21);
 
@@ -70,32 +47,32 @@ public final class BankModel extends Model {
     private final Storage<Map<Integer, String>> customAccountBankPageNames = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<Integer, Integer>> customAccountBankPageIcon = new Storage<>(new TreeMap<>());
+    private final Storage<Map<Integer, QuickJumpButtonIcon>> customAccountBankPageIcon = new Storage<>(new TreeMap<>());
 
     @Persisted
     private final Storage<Map<Integer, String>> customBlockBankPageNames = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<Integer, Integer>> customBlockBankPageIcon = new Storage<>(new TreeMap<>());
+    private final Storage<Map<Integer, QuickJumpButtonIcon>> customBlockBankPageIcon = new Storage<>(new TreeMap<>());
 
     @Persisted
     private final Storage<Map<Integer, String>> customBookshelfPageNames = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<Integer, Integer>> customBookshelfPageIcon = new Storage<>(new TreeMap<>());
+    private final Storage<Map<Integer, QuickJumpButtonIcon>> customBookshelfPageIcon = new Storage<>(new TreeMap<>());
 
     @Persisted
     private final Storage<Map<Integer, String>> customMiscBucketPageNames = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<Integer, Integer>> customMiscBucketPageIcon = new Storage<>(new TreeMap<>());
+    private final Storage<Map<Integer, QuickJumpButtonIcon>> customMiscBucketPageIcon = new Storage<>(new TreeMap<>());
 
     @Persisted
     private final Storage<Map<String, Map<Integer, String>>> customCharacterBankPagesNames =
             new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<String, Map<Integer, Integer>>> customCharacterBankPagesIcon =
+    private final Storage<Map<String, Map<Integer, QuickJumpButtonIcon>>> customCharacterBankPagesIcon =
             new Storage<>(new TreeMap<>());
 
     public static final int QUICK_JUMP_SLOT = 7;
@@ -176,12 +153,11 @@ public final class BankModel extends Model {
         return pageNamesMap.getOrDefault(page, I18n.get("feature.wynntils.personalStorageUtilities.page", page));
     }
 
-    public Integer getPageIcon(int page) {
-        Map<Integer, Integer> pageNamesMap = getCurrentIconMap();
+    public QuickJumpButtonIcon getPageIconIndex(int page) {
+        Map<Integer, QuickJumpButtonIcon> pageNamesMap = getCurrentIconMap();
+        if (pageNamesMap == null) return QuickJumpButtonIcon.NONE;
 
-        if (pageNamesMap == null) return 0;
-
-        return pageNamesMap.getOrDefault(page, 0);
+        return pageNamesMap.getOrDefault(page, QuickJumpButtonIcon.NONE);
     }
 
     public void saveCurrentPageName(String nameToSet) {
@@ -216,7 +192,7 @@ public final class BankModel extends Model {
         }
     }
 
-    public void savePageIcon(Integer pageIndex, Integer iconToSet) {
+    public void savePageIcon(Integer pageIndex, QuickJumpButtonIcon iconToSet) {
         switch (storageContainerType) {
             case ACCOUNT_BANK -> {
                 customAccountBankPageIcon.get().put(pageIndex, iconToSet);
@@ -233,7 +209,7 @@ public final class BankModel extends Model {
             case CHARACTER_BANK -> {
                 customCharacterBankPagesIcon.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
 
-                Map<Integer, Integer> nameMap =
+                Map<Integer, QuickJumpButtonIcon> nameMap =
                         customCharacterBankPagesIcon.get().get(Models.Character.getId());
 
                 nameMap.put(pageIndex, iconToSet);
@@ -364,7 +340,7 @@ public final class BankModel extends Model {
         };
     }
 
-    private Map<Integer, Integer> getCurrentIconMap() {
+    private Map<Integer, QuickJumpButtonIcon> getCurrentIconMap() {
         return switch (storageContainerType) {
             case ACCOUNT_BANK -> customAccountBankPageIcon.get();
             case BLOCK_BANK -> customBlockBankPageIcon.get();

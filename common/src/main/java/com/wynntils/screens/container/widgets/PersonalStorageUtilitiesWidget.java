@@ -9,6 +9,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
+import com.wynntils.models.containers.type.QuickJumpButtonIcon;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -126,7 +127,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     public void updatePageIcons() {
         for (int i = 0; i < quickJumpButtons.size(); i++) {
             var button = quickJumpButtons.get(i);
-            button.setIconIndex(Models.Bank.getPageIcon(i));
+            button.setIcon(Models.Bank.getPageIconIndex(i));
         }
         pageName = Models.Bank.getPageName(Models.Bank.getCurrentPage());
     }
@@ -139,9 +140,9 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
         return editInput.getTextBoxInput();
     }
 
-    public Integer getPageIconIndex(int page) {
+    public QuickJumpButtonIcon getPageIcon(int page) {
         var button = quickJumpButtons.get(page);
-        return button.getIconIndex();
+        return button.getIcon();
     }
 
     private void addJumpButtons() {
@@ -155,7 +156,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
                     i + 1,
                     this.feature.getLockedQuickJumpColor(),
                     this.feature.getSelectedQuickJumpColor(),
-                    Models.Bank.getPageIcon(i),
+                    Models.Bank.getPageIconIndex(i),
                     this));
 
             renderX += BUTTON_SPACING;
