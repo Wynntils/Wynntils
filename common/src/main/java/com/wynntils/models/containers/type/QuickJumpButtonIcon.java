@@ -47,4 +47,3 @@ public enum QuickJumpButtonIcon {
         return values[prevOrdinal];
     }
 }
-

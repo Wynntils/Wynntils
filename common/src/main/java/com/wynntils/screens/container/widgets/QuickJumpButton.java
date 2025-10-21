@@ -81,16 +81,7 @@ public class QuickJumpButton extends WynntilsButton {
         } else {
             Texture texture = this.icon.getTexture();
             RenderUtils.drawTexturedRectWithColor(
-                    poseStack,
-                    texture.resource(),
-                    color,
-                    getX(),
-                    getY(),
-                    0,
-                    16,
-                    16,
-                    texture.width(),
-                    texture.height());
+                    poseStack, texture.resource(), color, getX(), getY(), 0, 16, 16, texture.width(), texture.height());
         }
 
         if (isHovered) {
