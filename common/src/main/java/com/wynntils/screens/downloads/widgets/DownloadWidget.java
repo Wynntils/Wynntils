@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.downloads.widgets;
 
-import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.DownloadDependencyGraph;
@@ -12,9 +11,7 @@ import com.wynntils.core.net.QueuedDownload;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -22,6 +19,7 @@ import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class DownloadWidget extends AbstractWidget {
@@ -46,20 +44,20 @@ public class DownloadWidget extends AbstractWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         DownloadDependencyGraph.DownloadDependencyGraphState managerState = Managers.Download.graphState();
 
-        RenderUtils.drawRect(
-                guiGraphics.pose(),
-                CommonColors.GRAY.withAlpha(isHovered ? 200 : 100),
-                getX(),
-                getY(),
-                0,
-                width,
-                height);
+        //        RenderUtils.drawRect(
+        //                guiGraphics.pose(),
+        //                CommonColors.GRAY.withAlpha(isHovered ? 200 : 100),
+        //                getX(),
+        //                getY(),
+        //                0,
+        //                width,
+        //                height);
 
         DownloadDependencyGraph.NodeState downloadState = Managers.Download.getDownloadState(download);
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromString(downloadName),
                         getX() + width / 2f,
                         getY() + height / 2f,
@@ -78,26 +76,27 @@ public class DownloadWidget extends AbstractWidget {
             float arcY = getY() + (height / 2f) - outerRadius;
             int innerRadius = (int) (outerRadius * 0.85f);
 
-            RenderUtils.drawArc(
-                    guiGraphics.pose(),
-                    CommonColors.BLACK,
-                    getX() + getWidth() - height,
-                    arcY,
-                    0,
-                    0.8f,
-                    innerRadius,
-                    outerRadius,
-                    offset);
+            //            RenderUtils.drawArc(
+            //                    guiGraphics.pose(),
+            //                    CommonColors.BLACK,
+            //                    getX() + getWidth() - height,
+            //                    arcY,
+            //                    0,
+            //                    0.8f,
+            //                    innerRadius,
+            //                    outerRadius,
+            //                    offset);
         }
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(DOWNLOAD_TOOLTIP, Component::getVisualOrderText));
+            //            McUtils.screen()
+            //                    .setTooltipForNextRenderPass(Lists.transform(DOWNLOAD_TOOLTIP,
+            // Component::getVisualOrderText));
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         try {
             Managers.Download.retryDownload(download);
         } catch (IllegalStateException e) {

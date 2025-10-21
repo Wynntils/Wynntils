@@ -8,6 +8,7 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class ContentBookScrollButton extends BasicTexturedButton {
@@ -17,10 +18,10 @@ public class ContentBookScrollButton extends BasicTexturedButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
-        onClick.accept(button);
+        onClick.accept(event.button());
 
         return true;
     }

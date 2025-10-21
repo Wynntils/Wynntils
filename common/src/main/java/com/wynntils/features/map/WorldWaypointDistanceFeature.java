@@ -5,7 +5,6 @@
 package com.wynntils.features.map;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
@@ -144,7 +143,7 @@ public class WorldWaypointDistanceFeature extends Feature {
             Vec2 intersectPoint = getBoundingIntersectPoint(renderedMarker.screenCoordinates, event.getWindow());
             Texture icon = renderedMarker.markerInfo.texture();
             float[] color = renderedMarker.markerInfo.textureColor().asFloatArray();
-            RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
+            //            RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
 
             // The set waypoint is visible on the screen, so we render the icon + distance
             if (intersectPoint == null) {
@@ -161,7 +160,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                         scale.get() * icon.height(),
                         icon.width(),
                         icon.height());
-                RenderSystem.setShaderColor(1, 1, 1, 1);
+                //                RenderSystem.setShaderColor(1, 1, 1, 1);
 
                 if (!showAdditonalTextAbove.get() && renderedMarker.additionalText != null) {
                     backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.additionalText);
@@ -175,7 +174,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                             scale.get() * (backgroundHeight + 2));
                     FontRenderer.getInstance()
                             .renderAlignedTextInBox(
-                                    event.getPoseStack(),
+                                    event.getGuiGraphics(),
                                     StyledText.fromString(renderedMarker.additionalText),
                                     displayPositionX - scale.get() * backgroundWidth,
                                     displayPositionX + scale.get() * backgroundWidth,
@@ -202,7 +201,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                         scale.get() * (backgroundHeight + 2));
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                event.getPoseStack(),
+                                event.getGuiGraphics(),
                                 StyledText.fromString(renderedMarker.distanceText),
                                 displayPositionX - scale.get() * backgroundWidth,
                                 displayPositionX + scale.get() * backgroundWidth,
@@ -217,17 +216,18 @@ public class WorldWaypointDistanceFeature extends Feature {
 
                 if (showAdditonalTextAbove.get() && renderedMarker.additionalText != null) {
                     backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.additionalText);
-                    RenderUtils.drawRect(
-                            event.getPoseStack(),
-                            CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
-                            displayPositionX - scale.get() * (backgroundWidth / 2 + 2),
-                            displayPositionY - scale.get() * (backgroundHeight / 2) - 35 * scale.get(),
-                            0,
-                            scale.get() * (backgroundWidth + 2),
-                            scale.get() * (backgroundHeight + 2));
+                    //                    RenderUtils.drawRect(
+                    //                            event.getGuiGraphics(),
+                    //                            CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
+                    //                            displayPositionX - scale.get() * (backgroundWidth / 2 + 2),
+                    //                            displayPositionY - scale.get() * (backgroundHeight / 2) - 35 *
+                    // scale.get(),
+                    //                            0,
+                    //                            scale.get() * (backgroundWidth + 2),
+                    //                            scale.get() * (backgroundHeight + 2));
                     FontRenderer.getInstance()
                             .renderAlignedTextInBox(
-                                    event.getPoseStack(),
+                                    event.getGuiGraphics(),
                                     StyledText.fromString(renderedMarker.additionalText),
                                     displayPositionX - scale.get() * backgroundWidth,
                                     displayPositionX + scale.get() * backgroundWidth,
@@ -267,7 +267,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                         scale.get() * icon.height(),
                         icon.width(),
                         icon.height());
-                RenderSystem.setShaderColor(1, 1, 1, 1);
+                //                RenderSystem.setShaderColor(1, 1, 1, 1);
 
                 // apply rotation
                 PoseStack poseStack = event.getPoseStack();
@@ -276,18 +276,18 @@ public class WorldWaypointDistanceFeature extends Feature {
                 poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
                 poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
-                DUMMY_WAYPOINT
-                        .getPointerPoi()
-                        .renderAt(
-                                poseStack,
-                                BUFFER_SOURCE,
-                                pointerDisplayPositionX,
-                                pointerDisplayPositionY,
-                                false,
-                                scale.get(),
-                                1,
-                                50,
-                                true);
+                //                DUMMY_WAYPOINT
+                //                        .getPointerPoi()
+                //                        .renderAt(
+                //                                poseStack,
+                //                                BUFFER_SOURCE,
+                //                                pointerDisplayPositionX,
+                //                                pointerDisplayPositionY,
+                //                                false,
+                //                                scale.get(),
+                //                                1,
+                //                                50,
+                //                                true);
                 BUFFER_SOURCE.endBatch();
                 poseStack.popPose();
             }

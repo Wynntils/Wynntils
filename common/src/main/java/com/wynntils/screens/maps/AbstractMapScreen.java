@@ -41,6 +41,8 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -127,8 +129,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                //                guiGraphics.renderComponentTooltip(
+                //                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(),
+                // mouseX, mouseY);
                 return;
             }
         }
@@ -136,18 +139,18 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.FULLSCREEN_MAP_BORDER.resource(),
-                renderX,
-                renderY,
-                100,
-                renderWidth,
-                renderHeight,
-                Texture.FULLSCREEN_MAP_BORDER.width(),
-                Texture.FULLSCREEN_MAP_BORDER.height());
+        //        RenderUtils.drawScalingTexturedRect(
+        //                poseStack,
+        //                Texture.FULLSCREEN_MAP_BORDER.resource(),
+        //                renderX,
+        //                renderY,
+        //                100,
+        //                renderWidth,
+        //                renderHeight,
+        //                Texture.FULLSCREEN_MAP_BORDER.width(),
+        //                Texture.FULLSCREEN_MAP_BORDER.height());
     }
 
     protected void renderPois(
@@ -171,16 +174,16 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
-            poi.renderAt(
-                    poseStack,
-                    bufferSource,
-                    poiRenderX,
-                    poiRenderZ,
-                    hovered == poi,
-                    poiScale,
-                    zoomRenderScale,
-                    zoomLevel,
-                    true);
+            //            poi.renderAt(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    poiRenderX,
+            //                    poiRenderZ,
+            //                    hovered == poi,
+            //                    poiScale,
+            //                    zoomRenderScale,
+            //                    zoomLevel,
+            //                    true);
         }
 
         bufferSource.endBatch();
@@ -248,58 +251,58 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
             this.onClose();
             return true;
         }
-        if (keyCode == GLFW.GLFW_KEY_EQUAL || keyCode == GLFW.GLFW_KEY_KP_ADD) {
+        if (event.key() == GLFW.GLFW_KEY_EQUAL || event.key() == GLFW.GLFW_KEY_KP_ADD) {
             // Take steps of 2 to make it easier to zoom in and out
             adjustZoomLevel(2);
             return true;
         }
-        if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
+        if (event.key() == GLFW.GLFW_KEY_MINUS || event.key() == GLFW.GLFW_KEY_KP_SUBTRACT) {
             // Take steps of 2 to make it easier to zoom in and out
             adjustZoomLevel(-2);
             return true;
         }
 
         // Pass along key press to move
-        InputConstants.Key key = InputConstants.getKey(keyCode, scanCode);
+        InputConstants.Key key = InputConstants.getKey(event);
         KeyMapping.set(key, true);
 
         return false;
     }
 
     @Override
-    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+    public boolean keyReleased(KeyEvent event) {
         // Pass along key press to move
-        InputConstants.Key key = InputConstants.getKey(keyCode, scanCode);
+        InputConstants.Key key = InputConstants.getKey(event);
         KeyMapping.set(key, false);
 
         return false;
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (button == 0
-                && mouseX >= renderX
-                && mouseX <= renderX + renderWidth
-                && mouseY >= renderY
-                && mouseY <= renderY + renderHeight) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (event.button() == 0
+                && event.x() >= renderX
+                && event.x() <= renderX + renderWidth
+                && event.y() >= renderY
+                && event.y() <= renderY + renderHeight) {
             updateMapCenter(
                     (float) (mapCenterX - dragX / zoomRenderScale), (float) (mapCenterZ - dragY / zoomRenderScale));
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
-    protected void renderCoordinates(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderCoordinates(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
         int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(gameX + ", " + gameZ),
                         this.centerX,
                         this.renderHeight - this.renderedBorderYOffset - 40,
@@ -309,12 +312,12 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderZoomWidget(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderZoomWidget(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (!KeyboardUtils.isShiftDown()) return;
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("Zoom " + Math.round(zoomLevel)),
                         renderX + renderedBorderXOffset + mapWidth - 40,
                         this.renderHeight - this.renderedBorderYOffset - 10,
@@ -325,13 +328,13 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void renderMapButtons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.MAP_BUTTONS_BACKGROUND,
-                this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f,
-                this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
+        //        RenderUtils.drawTexturedRect(
+        //                poseStack,
+        //                Texture.MAP_BUTTONS_BACKGROUND,
+        //                this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f,
+        //                this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
 
         for (Renderable renderable : this.renderables) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
@@ -353,7 +356,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void renderMap(GuiGraphics guiGraphics) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -363,14 +366,14 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 (int) mapHeight);
 
         // Background black void color
-        RenderUtils.drawRect(
-                poseStack,
-                CommonColors.BLACK,
-                renderX + renderedBorderXOffset,
-                renderY + renderedBorderYOffset,
-                0,
-                mapWidth,
-                mapHeight);
+        //        RenderUtils.drawRect(
+        //                poseStack,
+        //                CommonColors.BLACK,
+        //                renderX + renderedBorderXOffset,
+        //                renderY + renderedBorderYOffset,
+        //                0,
+        //                mapWidth,
+        //                mapHeight);
 
         BoundingBox textureBoundingBox =
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
@@ -381,17 +384,17 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);
 
-            MapRenderer.renderMapQuad(
-                    map,
-                    poseStack,
-                    BUFFER_SOURCE,
-                    centerX,
-                    centerZ,
-                    textureX,
-                    textureZ,
-                    mapWidth,
-                    mapHeight,
-                    1f / zoomRenderScale);
+            //            MapRenderer.renderMapQuad(
+            //                    map,
+            //                    poseStack,
+            //                    BUFFER_SOURCE,
+            //                    centerX,
+            //                    centerZ,
+            //                    textureX,
+            //                    textureZ,
+            //                    mapWidth,
+            //                    mapHeight,
+            //                    1f / zoomRenderScale);
         }
 
         BUFFER_SOURCE.endBatch();

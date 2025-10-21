@@ -4,8 +4,6 @@
  */
 package com.wynntils.screens.itemfilter.widgets;
 
-import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
@@ -19,7 +17,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -27,6 +24,8 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -75,15 +74,16 @@ public class ProviderButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        RenderUtils.drawRect(poseStack, getRectColor().withAlpha(100), getX(), getY(), 0, width, height);
+        //        RenderUtils.drawRect(poseStack, getRectColor().withAlpha(100), getX(), getY(), 0, width, height);
 
-        RenderUtils.drawRectBorders(poseStack, getBorderColor(), getX(), getY(), getX() + width, getY() + height, 1, 2);
+        //        RenderUtils.drawRectBorders(poseStack, getBorderColor(), getX(), getY(), getX() + width, getY() +
+        // height, 1, 2);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(provider.getDisplayName()),
                         getX() + 2,
                         getY() + (height / 2f),
@@ -101,29 +101,30 @@ public class ProviderButton extends WynntilsButton {
         }
 
         if (this.isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            //            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip,
+            // Component::getVisualOrderText));
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Prevent interaction when the button is outside of the mask from the screen
-        if ((mouseY <= filterScreen.getProviderMaskTopY() || mouseY >= filterScreen.getProviderMaskBottomY())) {
+        if ((event.y() <= filterScreen.getProviderMaskTopY() || event.y() >= filterScreen.getProviderMaskBottomY())) {
             return false;
         }
 
         if (filterScreen.inSortMode()) {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 filterScreen.addSort(new SortInfo(SortDirection.ASCENDING, provider));
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 filterScreen.removeSort(provider);
             }
         } else {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 filterScreen.setSelectedProvider(provider);
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 filterScreen.setFiltersForProvider(provider, null);
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
                 AnyStatFilters.AbstractAnyStatFilter anyFilter = ANY_MAP.getOrDefault(provider.getType(), null);
 
                 if (anyFilter != null) {
@@ -139,7 +140,7 @@ public class ProviderButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     private CustomColor getRectColor() {
         if (McUtils.screen() instanceof ItemFilterScreen itemFilterScreen) {

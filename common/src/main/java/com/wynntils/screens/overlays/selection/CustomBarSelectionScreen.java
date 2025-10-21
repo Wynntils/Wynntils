@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.overlays.selection;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -12,7 +11,6 @@ import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.BarTexture;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.ManaTexture;
@@ -26,6 +24,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -100,22 +99,22 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         // Draw the custom bar centered in the screen with 50% progress
-        BufferedRenderUtils.drawProgressBar(
-                poseStack,
-                guiGraphics.bufferSource,
-                availableBars.get(barTypeIndex).a(),
-                barX,
-                barY,
-                barX + availableBars.get(barTypeIndex).a().width(),
-                barY + availableBars.get(barTypeIndex).b().get(barTextureIndex).getHeight(),
-                0,
-                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY1(),
-                availableBars.get(barTypeIndex).a().width(),
-                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY2(),
-                0.5f);
+        //        BufferedRenderUtils.drawProgressBar(
+        //                poseStack,
+        //                guiGraphics.bufferSource,
+        //                availableBars.get(barTypeIndex).a(),
+        //                barX,
+        //                barY,
+        //                barX + availableBars.get(barTypeIndex).a().width(),
+        //                barY + availableBars.get(barTypeIndex).b().get(barTextureIndex).getHeight(),
+        //                0,
+        //                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY1(),
+        //                availableBars.get(barTypeIndex).a().width(),
+        //                availableBars.get(barTypeIndex).b().get(barTextureIndex).getTextureY2(),
+        //                0.5f);
     }
 
     @Override
@@ -124,17 +123,17 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
+            if (listener.isMouseOver(event.x(), event.y())) {
                 // Special case for the texture button to handle both
                 // left and right clicks
                 if (listener == textureButton) {
-                    if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                         scrollTextures(1);
                         McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
                         return true;
-                    } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                    } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                         scrollTextures(-1);
                         McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
                         return true;
@@ -142,7 +141,7 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
 
                     return false;
                 } else {
-                    return listener.mouseClicked(mouseX, mouseY, button);
+                    return listener.mouseClicked(event, isDoubleClick);
                 }
             }
         }

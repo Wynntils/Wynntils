@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.utilities;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -43,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -102,7 +100,7 @@ public class ValuablesProtectionFeature extends Feature {
         if (currentContainerType != null && !currentContainerType.isInstance(currentContainer)) return;
         if (!slotsToWarn.contains(e.getSlot().index)) return;
 
-        RenderSystem.enableDepthTest();
+        //        RenderSystem.enableDepthTest();
         RenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
                 CIRCLE_TEXTURE,
@@ -118,7 +116,7 @@ public class ValuablesProtectionFeature extends Feature {
                 48,
                 48,
                 192);
-        RenderSystem.disableDepthTest();
+        //        RenderSystem.disableDepthTest();
     }
 
     @SubscribeEvent
@@ -360,7 +358,7 @@ public class ValuablesProtectionFeature extends Feature {
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(text),
                             getX(),
                             getY(),
@@ -368,8 +366,7 @@ public class ValuablesProtectionFeature extends Feature {
                             textColor,
                             horizontalAlignment,
                             VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL,
-                            Font.DisplayMode.NORMAL);
+                            TextShadow.NORMAL);
         }
 
         @Override

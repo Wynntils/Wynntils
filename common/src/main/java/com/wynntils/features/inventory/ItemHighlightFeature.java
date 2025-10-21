@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -26,7 +25,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -167,8 +165,8 @@ public class ItemHighlightFeature extends Feature {
         if (color == CustomColor.NONE) return;
 
         if (selectedItemHighlight.get()
-                && McUtils.inventory().getSelected().equals(e.getSlot().getItem())) {
-            RenderSystem.enableDepthTest();
+                && McUtils.inventory().getSelectedItem().equals(e.getSlot().getItem())) {
+            //            RenderSystem.enableDepthTest();
             RenderUtils.drawTexturedRectWithColor(
                     e.getPoseStack(),
                     Texture.HOTBAR_SELECTED_HIGHLIGHT.resource(),
@@ -180,11 +178,11 @@ public class ItemHighlightFeature extends Feature {
                     16,
                     16,
                     16);
-            RenderSystem.disableDepthTest();
+            //            RenderSystem.disableDepthTest();
             return;
         }
 
-        RenderSystem.enableDepthTest();
+        //        RenderSystem.enableDepthTest();
         RenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
                 Texture.HIGHLIGHT.resource(),
@@ -201,7 +199,7 @@ public class ItemHighlightFeature extends Feature {
                 18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
-        RenderSystem.disableDepthTest();
+        //        RenderSystem.disableDepthTest();
     }
 
     @SubscribeEvent
@@ -211,34 +209,34 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
-        if (selectedItemHighlight.get() && McUtils.inventory().getSelected().equals(e.getItemStack())) {
-            BufferedRenderUtils.drawTexturedRectWithColor(
-                    e.getPoseStack(),
-                    e.getGuiGraphics().bufferSource,
-                    Texture.HOTBAR_SELECTED_HIGHLIGHT,
-                    color,
-                    e.getX(),
-                    e.getY());
+        if (selectedItemHighlight.get() && McUtils.inventory().getSelectedItem().equals(e.getItemStack())) {
+            //            BufferedRenderUtils.drawTexturedRectWithColor(
+            //                    e.getPoseStack(),
+            //                    e.getGuiGraphics().bufferSource,
+            //                    Texture.HOTBAR_SELECTED_HIGHLIGHT,
+            //                    color,
+            //                    e.getX(),
+            //                    e.getY());
             return;
         }
 
-        BufferedRenderUtils.drawTexturedRectWithColor(
-                e.getPoseStack(),
-                e.getGuiGraphics().bufferSource,
-                Texture.HIGHLIGHT.resource(),
-                color,
-                e.getX() - 1,
-                e.getY() - 1,
-                0,
-                18,
-                18,
-                // TODO: Remove +18 when porting to 1.21.6+
-                (highlightTexture.get().ordinal() * 18) + 18,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+        //        BufferedRenderUtils.drawTexturedRectWithColor(
+        //                e.getPoseStack(),
+        //                e.getGuiGraphics().bufferSource,
+        //                Texture.HIGHLIGHT.resource(),
+        //                color,
+        //                e.getX() - 1,
+        //                e.getY() - 1,
+        //                0,
+        //                18,
+        //                18,
+        //                // TODO: Remove +18 when porting to 1.21.6+
+        //                (highlightTexture.get().ordinal() * 18) + 18,
+        //                0,
+        //                18,
+        //                18,
+        //                Texture.HIGHLIGHT.width(),
+        //                Texture.HIGHLIGHT.height());
     }
 
     @SubscribeEvent

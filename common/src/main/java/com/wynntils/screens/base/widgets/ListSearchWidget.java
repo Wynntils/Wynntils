@@ -10,6 +10,8 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 
 public class ListSearchWidget extends SearchWidget {
     public ListSearchWidget(
@@ -33,7 +35,7 @@ public class ListSearchWidget extends SearchWidget {
 
     @Override
     protected void renderText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -44,12 +46,12 @@ public class ListSearchWidget extends SearchWidget {
             int highlightedWidth,
             int lastWidth,
             boolean defaultText) {
-        poseStack.pushPose();
+        //        poseStack.pushPose();
 
-        poseStack.translate(getXOffset(), getYOffset(), 0);
+        //        poseStack.translate(getXOffset(), getYOffset(), 0);
 
         super.renderText(
-                poseStack,
+                guiGraphics,
                 renderedText,
                 renderedTextStart,
                 firstPortion,
@@ -61,22 +63,28 @@ public class ListSearchWidget extends SearchWidget {
                 lastWidth,
                 defaultText);
 
-        poseStack.popPose();
+        //        poseStack.popPose();
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX - getXOffset(), mouseY - getYOffset(), button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        return super.mouseClicked(
+                new MouseButtonEvent(event.x() - getXOffset(), event.y() - getYOffset(), event.buttonInfo()),
+                isDoubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        return super.mouseReleased(mouseX - getXOffset(), mouseY - getYOffset(), button);
+    public boolean mouseReleased(MouseButtonEvent event) {
+        return super.mouseReleased(
+                new MouseButtonEvent(event.x() - getXOffset(), event.y() - getYOffset(), event.buttonInfo()));
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        return super.mouseDragged(mouseX - getXOffset(), mouseY - getYOffset(), button, dragX, dragY);
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        return super.mouseDragged(
+                new MouseButtonEvent(event.x() - getXOffset(), event.y() - getYOffset(), event.buttonInfo()),
+                dragX,
+                dragY);
     }
 
     private static int getYOffset() {

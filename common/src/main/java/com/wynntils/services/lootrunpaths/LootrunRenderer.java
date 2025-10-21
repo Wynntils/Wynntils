@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.lootrunpaths;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -28,7 +27,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.util.ARGB;
@@ -37,7 +35,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -148,7 +145,7 @@ public final class LootrunRenderer {
             BlockState block = McUtils.mc().level.getBlockState(chest);
             if (block.is(Blocks.BARRIER) || block.is(Blocks.AIR)) continue;
 
-            ShapeRenderer.renderLineBox(poseStack, consumer, new AABB(chest), red, green, blue, 1f);
+            //            ShapeRenderer.renderLineBox(poseStack, consumer, new AABB(chest), red, green, blue, 1f);
         }
 
         BUFFER_SOURCE.endBatch();
@@ -229,7 +226,7 @@ public final class LootrunRenderer {
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
         poseStack.pushPose();
         poseStack.translate(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        //        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         for (ColoredPath locationsInRoute : locations) {
             VertexConsumer consumer = BUFFER_SOURCE.getBuffer(renderType);

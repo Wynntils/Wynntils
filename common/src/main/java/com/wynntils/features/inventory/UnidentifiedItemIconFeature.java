@@ -23,7 +23,6 @@ import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -33,6 +32,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -88,7 +88,8 @@ public class UnidentifiedItemIconFeature extends Feature {
 
         WynnItem wynnItem = wynnItemOpt.get();
         if (wynnItem instanceof GearBoxItem box) {
-            texture.get().getIconRenderer().renderIcon(poseStack, slotX, slotY, z, box.getGearType(), Optional.empty());
+            //            texture.get().getIconRenderer().renderIcon(poseStack, slotX, slotY, z, box.getGearType(),
+            // Optional.empty());
             return;
         }
 
@@ -97,41 +98,42 @@ public class UnidentifiedItemIconFeature extends Feature {
                                 && identifiableItem.getItemInstance().isEmpty()
                         || wynnItem instanceof UnknownGearItem unknownGearItem && unknownGearItem.isUnidentified())
                 && wynnItem instanceof GearTypeItemProperty gearType) {
-            markRevealedItemsLocation
-                    .get()
-                    .getIconRenderer()
-                    .renderIcon(
-                            poseStack,
-                            slotX,
-                            slotY,
-                            z,
-                            gearType.getGearType(),
-                            Optional.of(markRevealedItemsIconColor.get()));
+            //            markRevealedItemsLocation
+            //                    .get()
+            //                    .getIconRenderer()
+            //                    .renderIcon(
+            //                            poseStack,
+            //                            slotX,
+            //                            slotY,
+            //                            z,
+            //                            gearType.getGearType(),
+            //                            Optional.of(markRevealedItemsIconColor.get()));
         }
     }
 
     @FunctionalInterface
     private interface IconRenderer {
-        void renderIcon(PoseStack poseStack, int x, int y, int z, GearType gearType, Optional<CustomColor> textColor);
+        void renderIcon(
+                GuiGraphics guiGraphics, int x, int y, int z, GearType gearType, Optional<CustomColor> textColor);
 
         static IconRenderer forSpriteSheet(Texture texture, int yOffset, int padding) {
             int paddedDims = 16 - padding - padding;
             return (poseStack, x, y, z, gearType, textColor) -> {
                 Pair<Integer, Integer> textureCoords = TEXTURE_COORDS.get(gearType);
-                RenderUtils.drawTexturedRect(
-                        poseStack,
-                        texture.resource(),
-                        x + padding,
-                        y + padding,
-                        z,
-                        paddedDims,
-                        paddedDims,
-                        textureCoords.a(),
-                        textureCoords.b() + yOffset,
-                        16,
-                        16,
-                        texture.width(),
-                        texture.height());
+                //                RenderUtils.drawTexturedRect(
+                //                        poseStack,
+                //                        texture.resource(),
+                //                        x + padding,
+                //                        y + padding,
+                //                        z,
+                //                        paddedDims,
+                //                        paddedDims,
+                //                        textureCoords.a(),
+                //                        textureCoords.b() + yOffset,
+                //                        16,
+                //                        16,
+                //                        texture.width(),
+                //                        texture.height());
             };
         }
 
@@ -141,13 +143,13 @@ public class UnidentifiedItemIconFeature extends Feature {
                 VerticalAlignment verticalAlignment) {
             int padding = 0;
             int paddedDims = 16 - padding - padding;
-            return (poseStack, x, y, z, gearType, textColor) -> {
-                poseStack.pushPose();
-                poseStack.translate(0, 0, z);
+            return (guiGraphics, x, y, z, gearType, textColor) -> {
+                //                poseStack.pushPose();
+                //                poseStack.translate(0, 0, z);
                 StyledText text = textMap.apply(gearType);
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                poseStack,
+                                guiGraphics,
                                 text,
                                 x + padding + 1,
                                 x + paddedDims + 1,
@@ -158,7 +160,7 @@ public class UnidentifiedItemIconFeature extends Feature {
                                 horizontalAlignment,
                                 verticalAlignment,
                                 TextShadow.OUTLINE);
-                poseStack.popPose();
+                //                poseStack.popPose();
             };
         }
     }

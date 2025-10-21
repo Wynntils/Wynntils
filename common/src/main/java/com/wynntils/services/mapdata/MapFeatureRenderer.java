@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
@@ -13,11 +12,10 @@ import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public final class MapFeatureRenderer {
@@ -25,7 +23,7 @@ public final class MapFeatureRenderer {
     private static final float TEXT_SCALE = 1f;
 
     public static void renderMapFeature(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             MapFeature feature,
             ResolvedMapAttributes attributes,
@@ -41,10 +39,10 @@ public final class MapFeatureRenderer {
 
         int yOffset = 0;
 
-        poseStack.pushPose();
+        //        poseStack.pushPose();
         // z-index for rendering
-        poseStack.translate(renderX, renderY, attributes.priority());
-        poseStack.scale(renderScale, renderScale, renderScale);
+        //        poseStack.translate(renderX, renderY, attributes.priority());
+        //        poseStack.scale(renderScale, renderScale, renderScale);
 
         // Draw icon, if applicable
         float iconAlpha =
@@ -60,17 +58,17 @@ public final class MapFeatureRenderer {
                 iconAlpha = 1f;
             }
 
-            BufferedRenderUtils.drawColoredTexturedRect(
-                    poseStack,
-                    bufferSource,
-                    icon.get().getResourceLocation(),
-                    attributes.iconColor(),
-                    iconAlpha,
-                    0 - iconWidth / 2f,
-                    yOffset - iconHeight / 2f,
-                    0,
-                    iconWidth,
-                    iconHeight);
+            //            BufferedRenderUtils.drawColoredTexturedRect(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    icon.get().getResourceLocation(),
+            //                    attributes.iconColor(),
+            //                    iconAlpha,
+            //                    0 - iconWidth / 2f,
+            //                    yOffset - iconHeight / 2f,
+            //                    0,
+            //                    iconWidth,
+            //                    iconHeight);
             yOffset += (iconHeight + labelHeight) / 2 + SPACING;
         }
 
@@ -89,10 +87,9 @@ public final class MapFeatureRenderer {
 
             CustomColor color = attributes.labelColor().withAlpha(labelAlpha);
 
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(attributes.label()),
                             0,
                             yOffset,
@@ -109,10 +106,9 @@ public final class MapFeatureRenderer {
         // Show level only for features that are displayed and hovered
         boolean drawLevel = hovered && (drawIcon || drawLabel);
         if (level >= 1 && drawLevel) {
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString("[Lv. " + level + "]"),
                             0,
                             yOffset,
@@ -126,9 +122,9 @@ public final class MapFeatureRenderer {
         // Draw decoration, if applicable
         MapDecoration decoration = attributes.iconDecoration();
         if (decoration.isVisible()) {
-            decoration.render(poseStack, bufferSource, hovered, zoomLevel);
+            //            decoration.render(poseStack, bufferSource, hovered, zoomLevel);
         }
 
-        poseStack.popPose();
+        //        poseStack.popPose();
     }
 }

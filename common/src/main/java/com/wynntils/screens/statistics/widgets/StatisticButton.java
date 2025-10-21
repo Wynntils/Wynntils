@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.statistics.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
@@ -18,7 +17,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -26,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -47,14 +47,15 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
         CustomColor backgroundColor = getButtonBackgroundColor();
-        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
+        //        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width,
+        // this.height);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(statistic.getName()),
                         this.getX() + 2,
                         this.getY() + 1,
@@ -75,8 +76,8 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (isSelected()) {
                 screen.setHighlightedStatisticKind(null);
             } else {
@@ -85,7 +86,7 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
             return true;
         }
 
-        if (KeyboardUtils.isShiftDown() && button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (KeyboardUtils.isShiftDown() && event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (Services.Statistics.screenOverallMode.get()) {
                 Services.Statistics.resetStatisticOverall(statistic);
             } else {
@@ -99,7 +100,7 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     @Override
     public List<Component> getTooltipLines() {

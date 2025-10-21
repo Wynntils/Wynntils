@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -25,7 +24,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -112,7 +110,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         if (topEmeralds != 0) {
             int y = isInventory ? containerScreen.topPos - 9 : containerScreen.topPos;
             switch (emeraldCountType.get()) {
-                case TEXT -> renderTextCount(event.getPoseStack(), textX, y, topEmeralds);
+                case TEXT -> renderTextCount(event.getGuiGraphics(), textX, y, topEmeralds);
                 case TEXTURE -> {
                     if (displayBottom) { // ensure we don't overlap with bottom textures
                         int topDisplayedTextureCount = (int) Arrays.stream(getRenderableEmeraldAmounts(topEmeralds))
@@ -130,7 +128,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         if (displayBottom) {
             int y = containerScreen.topPos + containerScreen.imageHeight;
             switch (emeraldCountType.get()) {
-                case TEXT -> renderTextCount(event.getPoseStack(), textX, y + 11, bottomEmeralds);
+                case TEXT -> renderTextCount(event.getGuiGraphics(), textX, y + 11, bottomEmeralds);
                 case TEXTURE ->
                     renderTexturedCount(
                             event.getGuiGraphics(), bottomTextureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
@@ -138,13 +136,13 @@ public class InventoryEmeraldCountFeature extends Feature {
         }
     }
 
-    private void renderTextCount(PoseStack poseStack, int x, int y, int emeralds) {
+    private void renderTextCount(GuiGraphics guiGraphics, int x, int y, int emeralds) {
         final HorizontalAlignment emeraldTextAlignment =
                 textDisplaySide.get() == TextDisplaySide.LEFT ? HorizontalAlignment.LEFT : HorizontalAlignment.RIGHT;
         final int emeraldTextOffsetX = textDisplaySide.get() == TextDisplaySide.LEFT ? 1 : -1;
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 200);
+        //        poseStack.pushPose();
+        //        poseStack.translate(0, 0, 200);
 
         String emeraldText;
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
@@ -155,7 +153,7 @@ public class InventoryEmeraldCountFeature extends Feature {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(emeraldText),
                         x + emeraldTextOffsetX,
                         y - 10,
@@ -165,14 +163,14 @@ public class InventoryEmeraldCountFeature extends Feature {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        poseStack.popPose();
+        //        poseStack.popPose();
     }
 
     private void renderTexturedCount(GuiGraphics guiGraphics, int x, int y, int emeralds) {
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        poseStack.pushPose();
-        poseStack.translate(x, y, 0);
+        //        poseStack.pushPose();
+        //        poseStack.translate(x, y, 0);
 
         String[] emeraldAmounts = getRenderableEmeraldAmounts(emeralds);
 
@@ -185,20 +183,20 @@ public class InventoryEmeraldCountFeature extends Feature {
 
             final int renderX = -TEXTURE_SIZE;
             final int renderY = renderedCount * TEXTURE_SIZE;
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    Texture.EMERALD_COUNT_BACKGROUND.resource(),
-                    renderX,
-                    renderY,
-                    0,
-                    TEXTURE_SIZE,
-                    TEXTURE_SIZE,
-                    0,
-                    0,
-                    Texture.EMERALD_COUNT_BACKGROUND.width(),
-                    Texture.EMERALD_COUNT_BACKGROUND.height(),
-                    Texture.EMERALD_COUNT_BACKGROUND.width(),
-                    Texture.EMERALD_COUNT_BACKGROUND.height());
+            //            RenderUtils.drawTexturedRect(
+            //                    poseStack,
+            //                    Texture.EMERALD_COUNT_BACKGROUND.resource(),
+            //                    renderX,
+            //                    renderY,
+            //                    0,
+            //                    TEXTURE_SIZE,
+            //                    TEXTURE_SIZE,
+            //                    0,
+            //                    0,
+            //                    Texture.EMERALD_COUNT_BACKGROUND.width(),
+            //                    Texture.EMERALD_COUNT_BACKGROUND.height(),
+            //                    Texture.EMERALD_COUNT_BACKGROUND.width(),
+            //                    Texture.EMERALD_COUNT_BACKGROUND.height());
 
             guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
 
@@ -211,11 +209,11 @@ public class InventoryEmeraldCountFeature extends Feature {
                 guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
             }
 
-            poseStack.pushPose();
-            poseStack.translate(0, 0, 200);
+            //            poseStack.pushPose();
+            //            poseStack.translate(0, 0, 200);
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(emeraldAmount),
                             renderX,
                             renderX + TEXTURE_SIZE - 2,
@@ -226,12 +224,12 @@ public class InventoryEmeraldCountFeature extends Feature {
                             HorizontalAlignment.RIGHT,
                             VerticalAlignment.BOTTOM,
                             TextShadow.OUTLINE);
-            poseStack.popPose();
+            //            poseStack.popPose();
 
             renderedCount++;
         }
 
-        poseStack.popPose();
+        //        poseStack.popPose();
     }
 
     private String[] getRenderableEmeraldAmounts(int emeralds) {

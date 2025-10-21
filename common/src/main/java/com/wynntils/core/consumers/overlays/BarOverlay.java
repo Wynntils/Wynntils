@@ -12,8 +12,8 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -56,34 +56,31 @@ public abstract class BarOverlay extends DynamicOverlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PoseStack poseStack = guiGraphics.pose();
-
         BarOverlayTemplatePair template = getTemplate();
 
         if (templateCache == null) {
             templateCache = calculateTemplate(template);
         }
-        render(poseStack, bufferSource, currentProgress, templateCache.key());
+        render(guiGraphics, bufferSource, currentProgress, templateCache.key());
     }
 
     @Override
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PoseStack poseStack = guiGraphics.pose();
-
         BarOverlayTemplatePair previewTemplate = getPreviewTemplate();
         Pair<StyledText, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
 
         ErrorOr<CappedValue> valueOrError = calculatedTemplate.value();
         if (valueOrError.hasError()) {
-            renderText(poseStack, bufferSource, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
+            renderText(
+                    guiGraphics, bufferSource, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
             return;
         }
 
         // Do not render bars that has no value
         if (valueOrError.getValue().equals(CappedValue.EMPTY)) return;
 
-        render(poseStack, bufferSource, (float) valueOrError.getValue().getProgress(), calculatedTemplate.key());
+        render(guiGraphics, bufferSource, (float) valueOrError.getValue().getProgress(), calculatedTemplate.key());
     }
 
     @Override
@@ -96,10 +93,9 @@ public abstract class BarOverlay extends DynamicOverlay {
                         + getTranslatedName()),
                 StyledText.fromUnformattedString(templateCache.b().getError())
             };
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            guiGraphics.pose(),
-                            bufferSource,
+                            guiGraphics,
                             errorMessage,
                             getRenderX(),
                             getRenderX() + getWidth(),
@@ -118,14 +114,14 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     private void render(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderedProgress, StyledText textValue) {
+            GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderedProgress, StyledText textValue) {
         float barHeight = getTextureHeight() * heightModifier.get();
         float renderY = getModifiedRenderY(barHeight + 10);
 
-        renderText(poseStack, bufferSource, renderY, textValue);
+        renderText(guiGraphics, bufferSource, renderY, textValue);
 
         float progress = (flip.get() ? -1 : 1) * renderedProgress;
-        renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
+        //        renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
     }
 
     @Override
@@ -194,11 +190,10 @@ public abstract class BarOverlay extends DynamicOverlay {
         }
     }
 
-    private void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, StyledText text) {
-        BufferedFontRenderer.getInstance()
+    private void renderText(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderY, StyledText text) {
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         text,
                         getRenderX(),
                         getRenderX() + getWidth(),

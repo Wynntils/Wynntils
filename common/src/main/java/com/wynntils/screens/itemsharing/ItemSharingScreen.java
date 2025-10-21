@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.itemsharing;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
@@ -26,7 +25,6 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -94,11 +92,9 @@ public final class ItemSharingScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.itemSharing.sharingOptions")
                                 .withStyle(ChatFormatting.BOLD)),
                         backgroundX + 10,
@@ -115,7 +111,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.ITEM_SHARING_BACKGROUND, backgroundX, backgroundY);
+        //        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.ITEM_SHARING_BACKGROUND, backgroundX,
+        // backgroundY);
     }
 
     @Override
@@ -126,11 +123,11 @@ public final class ItemSharingScreen extends WynntilsScreen {
     private void renderPreview(GuiGraphics guiGraphics) {
         if (previewItemStack == null) return;
 
-        guiGraphics.renderTooltip(
-                FontRenderer.getInstance().getFont(),
-                previewItemStack,
-                tooltipX,
-                backgroundY + (FontRenderer.getInstance().getFont().lineHeight * 2));
+        //        guiGraphics.renderTooltip(
+        //                FontRenderer.getInstance().getFont(),
+        //                previewItemStack,
+        //                tooltipX,
+        //                backgroundY + (FontRenderer.getInstance().getFont().lineHeight * 2));
     }
 
     private void refreshPreview() {

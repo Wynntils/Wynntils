@@ -19,7 +19,6 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -31,6 +30,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
@@ -93,22 +93,22 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
         final CustomColor gradientColor = activityInfo.status() == ActivityStatus.UNAVAILABLE
                 ? UNAVAILABLE_COLOR
                 : activityInfo.type().getColor();
-        RenderUtils.fillSidewaysGradient(
-                guiGraphics.pose(),
-                getX(),
-                getY(),
-                getX() + width,
-                getY() + height,
-                0,
-                gradientColor,
-                gradientColor.withAlpha(0));
+        //        RenderUtils.fillSidewaysGradient(
+        //                guiGraphics.pose(),
+        //                getX(),
+        //                getY(),
+        //                getX() + width,
+        //                getY() + height,
+        //                0,
+        //                gradientColor,
+        //                gradientColor.withAlpha(0));
         guiGraphics.renderItem(itemStack, getX(), getY());
 
         nameStyle = nameStyle.withBold(this.isHovered || activityInfo.trackingState() == ActivityTrackingState.TRACKED);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.literal(activityInfo.name()).withStyle(nameStyle)),
                         getX() + 18,
@@ -120,17 +120,20 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                         TextShadow.NORMAL);
 
         if (holder.inTutorial) {
-            RenderUtils.drawRotatingBorderSegment(
-                    guiGraphics.pose(), CommonColors.RED, getX(), getY(), getX() + width, getY() + height, 1, 2, 0.25f);
+            //            RenderUtils.drawRotatingBorderSegment(
+            //                    guiGraphics.pose(), CommonColors.RED, getX(), getY(), getX() + width, getY() + height,
+            // 1, 2, 0.25f);
         }
 
         if (searchMatch) return;
 
-        RenderUtils.drawRect(guiGraphics.pose(), CommonColors.BLACK.withAlpha(100), getX(), getY(), 1, width, height);
+        //        RenderUtils.drawRect(guiGraphics.pose(), CommonColors.BLACK.withAlpha(100), getX(), getY(), 1, width,
+        // height);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        int button = event.button();
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (canSetCompass()) {
                 Models.Activity.placeCompassOnActivity(activityInfo);

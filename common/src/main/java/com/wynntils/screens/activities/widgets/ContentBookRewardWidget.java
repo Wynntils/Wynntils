@@ -4,12 +4,9 @@
  */
 package com.wynntils.screens.activities.widgets;
 
-import com.google.common.collect.Lists;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -37,12 +34,12 @@ public class ContentBookRewardWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX() + width - 10, getY() - 1);
+        //        RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX() + width - 10, getY() - 1);
 
         if (text != null) {
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             text,
                             getX(),
                             getY(),
@@ -54,7 +51,8 @@ public class ContentBookRewardWidget extends AbstractWidget {
         }
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            //            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip,
+            // Component::getVisualOrderText));
         }
     }
 

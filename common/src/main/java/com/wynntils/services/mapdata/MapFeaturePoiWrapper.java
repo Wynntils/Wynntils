@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.mapdata;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.services.map.pois.Poi;
@@ -16,6 +15,7 @@ import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class MapFeaturePoiWrapper implements Poi {
@@ -105,7 +105,7 @@ public class MapFeaturePoiWrapper implements Poi {
 
     @Override
     public void renderAt(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             MultiBufferSource bufferSource,
             float renderX,
             float renderY,
@@ -114,7 +114,8 @@ public class MapFeaturePoiWrapper implements Poi {
             float zoomRenderScale,
             float zoomLevel,
             boolean showLabels) {
-        MapFeatureRenderer.renderMapFeature(
-                poseStack, bufferSource, feature, attributes, renderX, renderY, hovered, scale, zoomLevel, showLabels);
+        //        MapFeatureRenderer.renderMapFeature(
+        //                poseStack, bufferSource, feature, attributes, renderX, renderY, hovered, scale, zoomLevel,
+        // showLabels);
     }
 }

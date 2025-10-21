@@ -46,6 +46,7 @@ import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -161,9 +162,9 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
+        //        PoseStack poseStack = guiGraphics.pose();
 
-        renderBackgroundTexture(poseStack);
+        //        renderBackgroundTexture(poseStack);
 
         contentBookWidgets
                 .get(currentPage)
@@ -177,7 +178,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         if (!Models.CombatXp.getCombatLevel().isAtCap()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(Component.translatable(
                                     "screens.wynntils.contentBook.xpToLevelUp",
                                     String.format(Locale.ROOT, "%,d", Models.CombatXp.getXpPointsNeededToLevelUp()),
@@ -193,7 +194,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         if (trackedActivity != null) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(
                                     EnumUtils.toNiceString(trackedActivity.type()) + " - " + trackedActivity.name()),
                             offsetX + 24,
@@ -207,7 +208,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
             if (trackedDescription != null) {
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                poseStack,
+                                guiGraphics,
                                 trackedDescription,
                                 offsetX + 24,
                                 offsetX + 410,
@@ -224,7 +225,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
             if (!trackedRewards.isEmpty()) {
                 FontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromComponent(
                                         Component.translatable("screens.wynntils.contentBook.rewards")),
                                 trackedRewardsX,
@@ -240,7 +241,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.contentBook.selectToTrack")),
                             offsetX + 4,
@@ -258,14 +259,14 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (GuiEventListener listener : getWidgetsForIteration().toList()) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseClicked(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseClicked(event, isDoubleClick);
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
@@ -463,8 +464,9 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : getWidgetsForIteration().toList()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                //                guiGraphics.renderComponentTooltip(
+                //                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(),
+                // mouseX, mouseY);
                 break;
             }
         }

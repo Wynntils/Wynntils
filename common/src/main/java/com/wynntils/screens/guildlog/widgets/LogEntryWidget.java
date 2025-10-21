@@ -7,7 +7,6 @@ package com.wynntils.screens.guildlog.widgets;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -49,16 +48,16 @@ public class LogEntryWidget extends AbstractWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int renderY = getY();
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_TOP, getX(), renderY);
+        //        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_TOP, getX(), renderY);
 
         renderY += Texture.LOG_ENTRY_BOTTOM.height();
 
         for (StyledText logLine : logLines) {
-            RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_MIDDLE, getX(), renderY);
+            //            RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_MIDDLE, getX(), renderY);
 
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             logLine,
                             getX() + 6,
                             renderY,
@@ -70,11 +69,11 @@ public class LogEntryWidget extends AbstractWidget {
             renderY += Texture.LOG_ENTRY_MIDDLE.height();
         }
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_MIDDLE, getX(), renderY);
+        //        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_MIDDLE, getX(), renderY);
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         timeText,
                         getX() + width - 6,
                         renderY + 1,
@@ -85,7 +84,7 @@ public class LogEntryWidget extends AbstractWidget {
 
         renderY += Texture.LOG_ENTRY_MIDDLE.height();
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_BOTTOM, getX(), renderY);
+        //        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_BOTTOM, getX(), renderY);
     }
 
     @Override
