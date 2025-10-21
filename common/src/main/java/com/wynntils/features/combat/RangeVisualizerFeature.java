@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.combat;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -44,6 +43,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Matrix4f;
@@ -264,10 +264,6 @@ public class RangeVisualizerFeature extends Feature {
      * @param color
      */
     private void renderCircle(PoseStack poseStack, Position position, float radius, int color) {
-        // Circle must be rendered on both sides, otherwise it will be invisible when looking at
-        // it from the outside
-        RenderSystem.disableCull();
-
         poseStack.pushPose();
         poseStack.translate(-position.x(), -position.y(), -position.z());
         VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderTypes.POSITION_COLOR_QUAD);
@@ -294,6 +290,5 @@ public class RangeVisualizerFeature extends Feature {
 
         BUFFER_SOURCE.endBatch();
         poseStack.popPose();
-        RenderSystem.enableCull();
     }
 }
