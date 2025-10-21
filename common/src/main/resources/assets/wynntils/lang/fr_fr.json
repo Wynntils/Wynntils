@@ -2020,8 +2020,6 @@
   "screens.wynntils.chatTabsGui.save": "Enregistrer",
   "screens.wynntils.chatTabsGui.saveAndClose": "Enregistrer et Fermer",
   "screens.wynntils.chatTabsGui.types": "Types de Message",
-  "screens.wynntils.containers.cancel.description": "Appuyez sur entrer pour enregistrer.",
-  "screens.wynntils.containers.cancel.name": "[X] Annuler le changement de nom",
   "screens.wynntils.containers.edit.description": "Cliquez droit pour réinitialiser par défaut.",
   "screens.wynntils.containers.edit.name": "[>] Changer le nom de la page actuelle",
   "screens.wynntils.content.clickToHide": "Cliquez pour masquer",

@@ -2020,8 +2020,6 @@
   "screens.wynntils.chatTabsGui.save": "Opslaan",
   "screens.wynntils.chatTabsGui.saveAndClose": "Opslaan en Sluiten",
   "screens.wynntils.chatTabsGui.types": "Berichttypen",
-  "screens.wynntils.containers.cancel.description": "Druk op enter om op te slaan.",
-  "screens.wynntils.containers.cancel.name": "[X] Annuleer naamswijziging",
   "screens.wynntils.containers.edit.description": "Rechtsklik om naar standaard te resetten.",
   "screens.wynntils.containers.edit.name": "[>] Wijzig huidige paginanaam",
   "screens.wynntils.content.clickToHide": "Klik om te verbergen",

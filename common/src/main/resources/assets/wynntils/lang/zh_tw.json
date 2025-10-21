@@ -2020,8 +2020,6 @@
   "screens.wynntils.chatTabsGui.save": "保存",
   "screens.wynntils.chatTabsGui.saveAndClose": "保存並關閉",
   "screens.wynntils.chatTabsGui.types": "消息類型",
-  "screens.wynntils.containers.cancel.description": "按回車鍵保存。",
-  "screens.wynntils.containers.cancel.name": "[X] 取消名稱更改",
   "screens.wynntils.containers.edit.description": "右鍵單擊以重置為默認值。",
   "screens.wynntils.containers.edit.name": "[>] 更改當前頁面名稱",
   "screens.wynntils.content.clickToHide": "點擊隱藏",

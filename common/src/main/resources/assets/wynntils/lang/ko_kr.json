@@ -2392,8 +2392,6 @@
   "screens.wynntils.colorPicker.cancel": "취소",
   "screens.wynntils.colorPicker.save": "저장",
   "screens.wynntils.colorPicker.widgetTooltip": "색상 선택기를 열려면 클릭하세요",
-  "screens.wynntils.containers.cancel.description": "엔터를 눌러 저장",
-  "screens.wynntils.containers.cancel.name": "[X] 이름 변경 취소",
   "screens.wynntils.containers.edit.description": "오른쪽 클릭으로 기본값으로 초기화",
   "screens.wynntils.containers.edit.name": "[>] 현재 페이지 이름 변경",
   "screens.wynntils.content.clickToHide": "클릭하여 숨기기",

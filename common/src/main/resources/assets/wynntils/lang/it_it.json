@@ -2020,8 +2020,6 @@
   "screens.wynntils.chatTabsGui.save": "Salva",
   "screens.wynntils.chatTabsGui.saveAndClose": "Salva e Chiudi",
   "screens.wynntils.chatTabsGui.types": "Tipi di Messaggio",
-  "screens.wynntils.containers.cancel.description": "Premi invio per salvare.",
-  "screens.wynntils.containers.cancel.name": "[X] Annulla cambio nome",
   "screens.wynntils.containers.edit.description": "Fai clic destro per ripristinare le impostazioni predefinite.",
   "screens.wynntils.containers.edit.name": "[>] Cambia il nome della pagina corrente",
   "screens.wynntils.content.clickToHide": "Clicca per nascondere",

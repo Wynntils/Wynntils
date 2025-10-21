@@ -2034,8 +2034,6 @@
   "screens.wynntils.chatTabsGui.save": "Сохранить",
   "screens.wynntils.chatTabsGui.saveAndClose": "Сохранить и Закрыть",
   "screens.wynntils.chatTabsGui.types": "Типы Сообщений",
-  "screens.wynntils.containers.cancel.description": "Нажмите Enter, чтобы сохранить.",
-  "screens.wynntils.containers.cancel.name": "[X] Отменить изменение имени",
   "screens.wynntils.containers.edit.description": "Щелкните правой кнопкой мыши, чтобы сбросить настройки по умолчанию.",
   "screens.wynntils.containers.edit.name": "[>] Изменить имя текущей страницы",
   "screens.wynntils.content.clickToHide": "Нажмите, чтобы скрыть",
