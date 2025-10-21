@@ -7,17 +7,20 @@ package com.wynntils.core.persisted.upfixers.storage;
 import com.google.gson.JsonObject;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.Upfixer;
-
 import java.util.Set;
 
 public class BankPageNameToBankPagePropertyUpfixer implements Upfixer {
-    private static final String[] NORMAL_KEY_TEMPLATES = {"model.bank.customAccountBankPage%s", "model.bank.customBlockBankPage%s", "model.bank.customBookshelfPage%s", "model.bank.customMiscBucketPage%s"};
+    private static final String[] NORMAL_KEY_TEMPLATES = {
+        "model.bank.customAccountBankPage%s",
+        "model.bank.customBlockBankPage%s",
+        "model.bank.customBookshelfPage%s",
+        "model.bank.customMiscBucketPage%s"
+    };
 
     private static final String CHARACTER_BANK_KEY_TEMPALTE = "model.bank.customCharacterBankPages%s";
 
     @Override
     public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
-
         migrateNormalKeys(configObject);
         migrateCharacterBank(configObject);
 
@@ -43,7 +46,6 @@ public class BankPageNameToBankPagePropertyUpfixer implements Upfixer {
         String nameKey = String.format(CHARACTER_BANK_KEY_TEMPALTE, "Names");
 
         if (configObject.has(nameKey)) {
-
             JsonObject oldCharacters = configObject.get(nameKey).getAsJsonObject();
             var newCharacters = new JsonObject();
 
