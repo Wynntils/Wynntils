@@ -44,18 +44,11 @@ public abstract class CustomRenderType extends RenderType {
     //                    .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
     //                    .createCompositeState(false));
 
-    //    public static final RenderType POSITION_COLOR_QUAD = RenderType.create(
-    //            "wynntils_position_color_quad",
-    //            DefaultVertexFormat.POSITION_COLOR,
-    //            Mode.QUADS,
-    //            256,
-    //            false,
-    //            false,
-    //            CompositeState.builder()
-    //                    .setShaderState(POSITION_COLOR_SHADER)
-    //                    .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
-    //                    .setWriteMaskState(COLOR_WRITE)
-    //                    .createCompositeState(false));
+    public static final RenderType POSITION_COLOR_QUAD = RenderType.create(
+            "wynntils_position_color_quad",
+            1536,
+            CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+            RenderType.CompositeState.builder().createCompositeState(false));
 
     //    private static final Function<ResourceLocation, RenderType> POSITION_TEXTURE_QUAD =
     //            Util.memoize(resource -> RenderType.create(
