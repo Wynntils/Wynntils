@@ -35,7 +35,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.core.component.DataComponentMap;
@@ -214,7 +213,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                 Texture.MESSAGE_ICON,
                 () -> {
                     this.onClose(); // Required so that nametags render properly
-                    McUtils.setScreen(new ChatScreen("/msg " + playerName + " "));
+                    McUtils.openChatScreen("/msg " + playerName + " ");
                 }));
 
         settingsButton = new Button.Builder(

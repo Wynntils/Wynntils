@@ -176,4 +176,8 @@ public final class McUtils {
     public static void sendChat(String message) {
         mc().getConnection().sendChat(message);
     }
+
+    public static void openChatScreen(String keybindCommand) {
+        mc().openChatScreen(keybindCommand);
+    }
 }
