@@ -2034,8 +2034,6 @@
   "screens.wynntils.chatTabsGui.save": "Сохранить",
   "screens.wynntils.chatTabsGui.saveAndClose": "Сохранить и Закрыть",
   "screens.wynntils.chatTabsGui.types": "Типы Сообщений",
-  "screens.wynntils.containers.edit.description": "Щелкните правой кнопкой мыши, чтобы сбросить настройки по умолчанию.",
-  "screens.wynntils.containers.edit.name": "[>] Изменить имя текущей страницы",
   "screens.wynntils.content.clickToHide": "Нажмите, чтобы скрыть",
   "screens.wynntils.content.clickToShow": "Нажмите, чтобы показать",
   "screens.wynntils.contentBook.leftClickToSetCompass": "Левый клик, чтобы установить маяк компаса.",
