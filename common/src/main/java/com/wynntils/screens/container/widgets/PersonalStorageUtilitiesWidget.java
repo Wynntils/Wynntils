@@ -130,7 +130,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     public void updatePageIcons() {
         for (int i = 0; i < quickJumpButtons.size(); i++) {
             var button = quickJumpButtons.get(i);
-            button.setIcon(Models.Bank.getPageCustomization(i).getIcon());
+            button.setIcon(Models.Bank.getPageCustomization(i + 1).getIcon());
         }
     }
 
@@ -143,7 +143,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     }
 
     public QuickJumpButtonIcon getPageIcon(int page) {
-        var button = quickJumpButtons.get(page);
+        var button = quickJumpButtons.get(page - 1);
         return button.getIcon();
     }
 
@@ -158,7 +158,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
                     i + 1,
                     this.feature.getLockedQuickJumpColor(),
                     this.feature.getSelectedQuickJumpColor(),
-                    Models.Bank.getPageCustomization(i).getIcon(),
+                    Models.Bank.getPageCustomization(i + 1).getIcon(),
                     this));
 
             renderX += BUTTON_SPACING;

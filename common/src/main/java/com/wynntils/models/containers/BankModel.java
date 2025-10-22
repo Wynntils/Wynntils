@@ -68,7 +68,7 @@ public final class BankModel extends Model {
     public static final int QUICK_JUMP_SLOT = 7;
     private static final String FINAL_PAGE_NAME = "\uDB3F\uDFFF";
 
-    private static final int MAX_CHARACTER_BANK_PAGES = 10;
+    private static final int MAX_CHARACTER_BANK_PAGES = 12;
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
 
     private boolean editingMode;

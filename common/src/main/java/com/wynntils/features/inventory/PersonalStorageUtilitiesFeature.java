@@ -266,7 +266,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         Models.Bank.saveCurrentPageName(widget.getName());
 
         for (int i = 0; i < storageContainer.getFinalPage(); i++) {
-            Models.Bank.savePageIcon(i, widget.getPageIcon(i));
+            Models.Bank.savePageIcon(i + 1, widget.getPageIcon(i + 1));
         }
     }
 }
