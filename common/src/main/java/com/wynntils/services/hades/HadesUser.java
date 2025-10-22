@@ -11,7 +11,7 @@ import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.colors.CommonColors;
@@ -142,7 +142,8 @@ public class HadesUser {
             } else {
                 WynnItem item = errorOrDecodedItem.getValue();
 
-                if (item instanceof GearItem gearItem && gearItem.getGearType().isWeapon()) {
+                if (item instanceof GearTypeItemProperty gearItemType
+                        && gearItemType.getGearType().isWeapon()) {
                     this.heldItem = item;
                     this.heldItemCache = packet.getHeldItem();
                 }
@@ -176,7 +177,8 @@ public class HadesUser {
             } else {
                 WynnItem item = errorOrDecodedItem.getValue();
 
-                if (item instanceof GearItem gearItem && gearItem.getGearType() == expectedGearType) {
+                if (item instanceof GearTypeItemProperty gearItemType
+                        && gearItemType.getGearType() == expectedGearType) {
                     this.armor.put(armor, errorOrDecodedItem.getValue());
                     this.armorCache.put(armor, armorData);
                 }
@@ -196,8 +198,9 @@ public class HadesUser {
             } else {
                 WynnItem item = errorOrDecodedItem.getValue();
 
-                if (item instanceof GearItem gearItem && gearItem.getGearType() == expectedGearType) {
-                    this.accessories.put(accessory, item);
+                if (item instanceof GearTypeItemProperty gearItemType
+                        && gearItemType.getGearType() == expectedGearType) {
+                    this.accessories.put(accessory, errorOrDecodedItem.getValue());
                     this.accessoriesCache.put(accessory, accessoryData);
                 }
             }
