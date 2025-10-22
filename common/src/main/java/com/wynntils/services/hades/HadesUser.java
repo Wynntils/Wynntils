@@ -139,7 +139,7 @@ public class HadesUser {
 
             if (errorOrDecodedItem.hasError()) {
                 WynntilsMod.warn("Failed to decode Hades user held item: " + errorOrDecodedItem.getError());
-            } else if (!this.heldItemCache.equals(packet.getHeldItem())) {
+            } else {
                 WynnItem item = errorOrDecodedItem.getValue();
 
                 if (item instanceof GearItem gearItem && gearItem.getGearType().isWeapon()) {
