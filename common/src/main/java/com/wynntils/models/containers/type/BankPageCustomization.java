@@ -42,8 +42,6 @@ public class BankPageCustomization {
 
     @Override
     public int hashCode() {
-        int result = Objects.hashCode(name);
-        result = 31 * result + Objects.hashCode(icon);
-        return result;
+        return Objects.hash(name, icon);
     }
 }
