@@ -233,6 +233,20 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
+    protected void renderBlurredBackground(GuiGraphics guiGraphics) {
+        if (!renderPreview) {
+            super.renderBlurredBackground(guiGraphics);
+        }
+    }
+
+    @Override
+    protected void renderMenuBackground(GuiGraphics guiGraphics) {
+        if (!renderPreview) {
+            this.renderMenuBackground(guiGraphics, 0, 0, this.width, this.height);
+        }
+    }
+
+    @Override
     public void added() {
         searchWidget.opened();
         super.added();
