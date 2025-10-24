@@ -16,6 +16,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -68,6 +69,12 @@ public final class ChatHandler extends Handler {
 
     @SubscribeEvent
     public void onConnectionChange(WynncraftConnectionEvent.Connected event) {
+        pageDetector.reset();
+        pageProcessor.reset();
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
         pageDetector.reset();
         pageProcessor.reset();
     }

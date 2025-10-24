@@ -134,10 +134,10 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     private void openChat() {
         if (quickSearching) {
-            McUtils.setScreen(new ChatScreen(searchQuery));
+            McUtils.openChatScreen(searchQuery);
             quickSearching = false;
         } else {
-            McUtils.setScreen(new ChatScreen(""));
+            McUtils.openChatScreen("");
         }
     }
 

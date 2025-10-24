@@ -56,6 +56,7 @@ public final class ChatPageDetector {
         pageBackground = null;
         pageContent = List.of();
         sentBackgroundLines = new ArrayList<>();
+        Handlers.Chat.handlePage(List.of());
     }
 
     public void onTick() {
@@ -81,7 +82,6 @@ public final class ChatPageDetector {
                         // so we have messed up. Delete the current content page and tell the page
                         // processor to remove the page.
                         reset();
-                        Handlers.Chat.handlePage(List.of());
                     }
 
                     return false;
@@ -323,7 +323,6 @@ public final class ChatPageDetector {
                 }
                 // Also, since we've probably messed up royally by now, let's just restart
                 reset();
-                Handlers.Chat.handlePage(List.of());
             }
         }
     }
