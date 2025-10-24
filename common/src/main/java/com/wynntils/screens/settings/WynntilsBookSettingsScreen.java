@@ -305,7 +305,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         //        PoseStack poseStack = guiGraphics.pose();
 
         if (displayWarning) {
@@ -411,15 +410,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         }
 
         renderTooltips(guiGraphics, mouseX, mouseY);
-    }
-
-    @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (McUtils.mc().level == null) {
-            renderPanorama(guiGraphics, partialTick);
-        }
-
-        // Don't render the blurred background
     }
 
     @Override

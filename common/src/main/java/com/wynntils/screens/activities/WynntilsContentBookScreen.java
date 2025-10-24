@@ -160,8 +160,6 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
         //        PoseStack poseStack = guiGraphics.pose();
 
         //        renderBackgroundTexture(poseStack);
