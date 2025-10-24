@@ -13,9 +13,9 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.spells.event.SpellEvent;
+import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
+import com.wynntils.models.spells.actionbar.segments.SpellSegment;
 import com.wynntils.models.spells.type.SpellDirection;
-import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -70,26 +70,8 @@ public class SpellInputsOverlay extends Overlay {
     }
 
     @SubscribeEvent
-    public void onSpellCast(SpellEvent.Partial event) {
-        SpellDirection[] dirs = event.getSpellDirectionArray();
-        SpellInputStyle style = inputStyle.get();
-
-        spellText = switch (style) {
-            case SMALL -> buildUnicodeInputs(dirs, true);
-            case FULL -> buildUnicodeInputs(dirs, false);
-            case ORIGINAL -> buildUnicodeInputs(dirs, Models.CharacterStats.getLevel() >= SMALL_CHARACTERS_LEVEL);
-            case LEGACY -> buildLegacyInputs(dirs);
-        };
-    }
-
-    @SubscribeEvent
-    public void onSpellExpired(SpellEvent.Expired event) {
-        spellText = StyledText.EMPTY;
-    }
-
-    @SubscribeEvent
-    public void onWorldStateChanged(WorldStateEvent event) {
-        spellText = StyledText.EMPTY;
+    public void onActionBarUpdate(ActionBarUpdatedEvent event) {
+        event.runIfPresentOrElse(SpellSegment.class, this::handleSpellInput, this::clearSpellInput);
     }
 
     @Override
@@ -137,6 +119,21 @@ public class SpellInputsOverlay extends Overlay {
                         this.getRenderVerticalAlignment(),
                         textShadow.get(),
                         fontScale.get());
+    }
+
+    private void handleSpellInput(SpellSegment spellSegment) {
+        SpellDirection[] dirs = spellSegment.getDirections();
+
+        spellText = switch (inputStyle.get()) {
+            case SMALL -> buildUnicodeInputs(dirs, true);
+            case FULL -> buildUnicodeInputs(dirs, false);
+            case ORIGINAL -> buildUnicodeInputs(dirs, Models.CharacterStats.getLevel() >= SMALL_CHARACTERS_LEVEL);
+            case LEGACY -> buildLegacyInputs(dirs);
+        };
+    }
+
+    private void clearSpellInput() {
+        spellText = StyledText.EMPTY;
     }
 
     private StyledText buildUnicodeInputs(SpellDirection[] dirs, boolean small) {
