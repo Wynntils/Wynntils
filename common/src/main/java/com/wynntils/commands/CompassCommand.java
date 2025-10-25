@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -55,6 +55,11 @@ public class CompassCommand extends Command {
     @Override
     public String getCommandName() {
         return "compass";
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return List.of("c", "comp");
     }
 
     @Override
