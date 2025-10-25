@@ -18,6 +18,7 @@ import com.wynntils.mc.event.GetCameraEntityEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.WynnItem;
@@ -40,12 +41,15 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.PLAYERS)
@@ -162,35 +166,80 @@ public class CustomNametagRendererFeature extends Feature {
         if (hitPlayerCache != player) return;
         if (!Models.Player.isLocalPlayer(localPlayer)) return;
 
+        List<CustomNametag> gearNametags = new ArrayList<>();
+
         Optional<HadesUser> hadesUserOpt = Services.Hades.getHadesUser(hitPlayerCache.getUUID());
         if (hadesUserOpt.isEmpty()) return;
 
-        MutableComponent handComp = getItemComponent(hadesUserOpt.get().getHeldItem(), showGearPercentage.get());
+        MutableComponent handComp = getItemComponent(
+                hadesUserOpt.get().getHeldItem(), hitPlayerCache.getMainHandItem(), showGearPercentage.get());
         if (handComp != null) {
-            nametags.add(new CustomNametag(handComp, customNametagScale.get()));
+            if (handComp.equals(Component.empty())) {
+                return;
+            }
+            gearNametags.add(new CustomNametag(handComp, customNametagScale.get()));
         }
 
         for (InventoryAccessory accessory : hadesUserOpt.get().getAccessories().descendingKeySet()) {
-            MutableComponent accessoryComp =
-                    getItemComponent(hadesUserOpt.get().getAccessories().get(accessory), showGearPercentage.get());
+            MutableComponent accessoryComp = getItemComponent(
+                    hadesUserOpt.get().getAccessories().get(accessory), ItemStack.EMPTY, showGearPercentage.get());
             if (accessoryComp != null) {
-                nametags.add(new CustomNametag(accessoryComp, customNametagScale.get()));
+                if (accessoryComp.equals(Component.empty())) {
+                    return;
+                }
+                gearNametags.add(new CustomNametag(accessoryComp, customNametagScale.get()));
             }
         }
 
         for (InventoryArmor armor : hadesUserOpt.get().getArmor().descendingKeySet()) {
-            MutableComponent armorComp =
-                    getItemComponent(hadesUserOpt.get().getArmor().get(armor), showGearPercentage.get());
+            MutableComponent armorComp = getItemComponent(
+                    hadesUserOpt.get().getArmor().get(armor),
+                    hitPlayerCache.getInventory().armor.get(armor.getArmorSlot()),
+                    showGearPercentage.get());
             if (armorComp != null) {
-                nametags.add(new CustomNametag(armorComp, customNametagScale.get()));
+                if (armorComp.equals(Component.empty())) {
+                    return;
+                }
+                gearNametags.add(new CustomNametag(armorComp, customNametagScale.get()));
             }
         }
+
+        // Only add the nametags if no invalid gear was found
+        nametags.addAll(gearNametags);
     }
 
-    private static MutableComponent getItemComponent(WynnItem wynnItem, boolean showGearPercentage) {
+    /**
+     * Tries to validate that the decoded WynnItem matches the expected item using the custom model data, if it does then creates a formatted component for the item
+     * using the item tier and overall percentage if applicable.
+     * @param wynnItem The decoded WynnItem the player has shared
+     * @param expectedItem The ItemStack equipped by the player for this slot, or an empty ItemStack for accessories
+     * @param showGearPercentage Whether or not the overall percentage should be displayed
+     * @return null if no item was shared, empty Component if the item was invalid when compared against the expected item or the actual formatted component if valid
+     */
+    private static MutableComponent getItemComponent(
+            WynnItem wynnItem, ItemStack expectedItem, boolean showGearPercentage) {
         if (wynnItem == null) return null;
 
         if (wynnItem instanceof GearItem gearItem) {
+            // For gear without cosmetics we can compare the custom model data to ensure the item sent matches what the
+            // player is actually wearing
+            if (expectedItem != ItemStack.EMPTY
+                    && gearItem.getGearType() != GearType.HELMET
+                    && !gearItem.getGearType().isWeapon()) {
+                ItemStack itemStack =
+                        gearItem.getItemInfo().metaInfo().material().itemStack();
+                CustomModelData expectedModelData = expectedItem.has(DataComponents.CUSTOM_MODEL_DATA)
+                        ? expectedItem.get(DataComponents.CUSTOM_MODEL_DATA)
+                        : null;
+                CustomModelData itemModelData = itemStack.has(DataComponents.CUSTOM_MODEL_DATA)
+                        ? itemStack.get(DataComponents.CUSTOM_MODEL_DATA)
+                        : null;
+
+                if (!expectedModelData.equals(itemModelData)) {
+                    return Component.empty();
+                }
+            }
+
             String itemName = gearItem.getItemInfo().name();
             MutableComponent gearComponent = Component.literal(itemName)
                     .withStyle(gearItem.getItemInfo().tier().getChatFormatting());
