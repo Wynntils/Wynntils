@@ -44,11 +44,10 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
 
         // Render the background
         RenderUtils.drawRect(
-                guiGraphics.pose(),
+                guiGraphics,
                 CommonColors.BLACK.withAlpha(80),
                 this.getX(),
                 this.getY(),
-                0,
                 Texture.TERRITORY_MANAGEMENT_BACKGROUND.width(),
                 110);
 
@@ -81,13 +80,12 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
         RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
+                guiGraphics,
                 TerritoryTypeHighlighter.HEADQUARTERS_BORDER_COLOR,
                 this.getX() + 3,
                 this.getY() + 32,
                 this.getX() + 7 + FontRenderer.getInstance().getFont().width(hqText.getComponent()),
                 this.getY() + 46,
-                0,
                 1f);
 
         StyledText hqConnText = StyledText.fromComponent(Component.literal("[%d] HQ Connection"
@@ -103,13 +101,12 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
         RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
+                guiGraphics,
                 TerritoryTypeHighlighter.HEADQUARTERS_CONNECTION_BORDER_COLOR,
                 this.getX() + 3,
                 this.getY() + 53,
                 this.getX() + 7 + FontRenderer.getInstance().getFont().width(hqConnText.getComponent()),
                 this.getY() + 66,
-                0,
                 1f);
 
         StyledText unconnectedText = StyledText.fromComponent(Component.literal(
@@ -125,13 +122,12 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
         RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
+                guiGraphics,
                 TerritoryTypeHighlighter.NO_ROUTE_BORDER_COLOR,
                 this.getX() + 3,
                 this.getY() + 73,
                 this.getX() + 7 + FontRenderer.getInstance().getFont().width(unconnectedText.getComponent()),
                 this.getY() + 86,
-                0,
                 1f);
 
         // Render the territory bonus effect highlight legends

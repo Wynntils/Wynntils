@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -50,21 +49,18 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         if (scaleTexture) {
             RenderUtils.drawScalingTexturedRect(
-                    poseStack,
+                    guiGraphics,
                     texture.identifier(),
                     this.getX(),
                     this.getY(),
-                    0,
                     getWidth(),
                     getHeight(),
                     texture.width(),
                     texture.height());
         } else {
-            RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
+            RenderUtils.drawTexturedRect(guiGraphics, texture, this.getX(), this.getY());
         }
     }
 

@@ -48,13 +48,7 @@ public class DownloadWidget extends AbstractWidget {
         DownloadDependencyGraph.DownloadDependencyGraphState managerState = Managers.Download.graphState();
 
         RenderUtils.drawRect(
-                guiGraphics.pose(),
-                CommonColors.GRAY.withAlpha(isHovered ? 200 : 100),
-                getX(),
-                getY(),
-                0,
-                width,
-                height);
+                guiGraphics, CommonColors.GRAY.withAlpha(isHovered ? 200 : 100), getX(), getY(), width, height);
 
         DownloadDependencyGraph.NodeState downloadState = Managers.Download.getDownloadState(download);
 
@@ -80,11 +74,10 @@ public class DownloadWidget extends AbstractWidget {
             int innerRadius = (int) (outerRadius * 0.85f);
 
             RenderUtils.drawArc(
-                    guiGraphics.pose(),
+                    guiGraphics,
                     CommonColors.BLACK,
                     getX() + getWidth() - height,
                     arcY,
-                    0,
                     0.8f,
                     innerRadius,
                     outerRadius,

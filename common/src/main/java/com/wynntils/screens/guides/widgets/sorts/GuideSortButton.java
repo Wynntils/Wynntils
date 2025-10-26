@@ -50,11 +50,10 @@ public class GuideSortButton extends AbstractWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
-                guiGraphics.pose(),
+                guiGraphics,
                 CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f),
                 getX(),
                 getY(),
-                0,
                 getWidth(),
                 getHeight());
 

@@ -4,8 +4,6 @@
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
@@ -39,7 +37,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -393,13 +390,6 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderBlurredBackground();
-
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-        RenderSystem.enableDepthTest();
         renderMap(guiGraphics);
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -418,12 +408,8 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                     selectedIcon,
                     selectedVisibility);
 
-            MultiBufferSource.BufferSource bufferSource =
-                    McUtils.mc().renderBuffers().bufferSource();
-
             poi.renderAt(
-                    poseStack,
-                    bufferSource,
+                    guiGraphics,
                     MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
                     MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
                     hovered == poi,
@@ -431,12 +417,10 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                     zoomRenderScale,
                     zoomLevel,
                     true);
-
-            bufferSource.endBatch();
         }
 
         renderCursor(
-                poseStack,
+                guiGraphics,
                 1.5f,
                 Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .pointerColor
@@ -447,7 +431,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         RenderUtils.disableScissor(guiGraphics);
 
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        renderMapBorder(guiGraphics);
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()

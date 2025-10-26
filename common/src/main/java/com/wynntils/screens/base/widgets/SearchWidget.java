@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -49,10 +48,10 @@ public class SearchWidget extends TextInputBoxWidget {
             int lastWidth) {
         boolean defaultText = Objects.equals(textBoxInput, "");
 
-        renderBackground(poseStack);
+        renderBackground(guiGraphics);
 
         renderText(
-                poseStack,
+                guiGraphics,
                 renderedText,
                 renderedTextStart,
                 firstPortion,
@@ -118,7 +117,7 @@ public class SearchWidget extends TextInputBoxWidget {
         }
 
         drawCursor(
-                poseStack,
+                guiGraphics,
                 this.getX()
                         + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length())))
                         + textPadding
@@ -128,16 +127,15 @@ public class SearchWidget extends TextInputBoxWidget {
                 false);
     }
 
-    protected void renderBackground(PoseStack poseStack) {
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.getX(), this.getY(), 0, this.width, this.height);
+    protected void renderBackground(GuiGraphics guiGraphics) {
+        RenderUtils.drawRect(guiGraphics, CommonColors.BLACK, this.getX(), this.getY(), this.width, this.height);
         RenderUtils.drawRectBorders(
-                poseStack,
+                guiGraphics,
                 isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
                 this.getX(),
                 this.getY(),
                 this.getX() + this.width,
                 this.getY() + this.height,
-                0,
                 1f);
     }
 

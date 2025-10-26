@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.crowdsourcing.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.text.StyledText;
@@ -57,10 +56,8 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         CustomColor backgroundColor = this.isHovered ? BUTTON_COLOR.b() : BUTTON_COLOR.a();
-        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
+        RenderUtils.drawRect(guiGraphics, backgroundColor, this.getX(), this.getY(), this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
@@ -82,15 +79,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
                     case UNCONFIRMED -> Texture.QUESTION_MARK;
                 };
 
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                stateTexture.identifier(),
-                this.getX() + 1,
-                this.getY() + 1,
-                stateTexture.width(),
-                stateTexture.height(),
-                stateTexture.width(),
-                stateTexture.height());
+        RenderUtils.drawTexturedRect(guiGraphics, stateTexture, this.getX() + 1, this.getY() + 1);
     }
 
     @Override

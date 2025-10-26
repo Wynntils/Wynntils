@@ -125,12 +125,12 @@ public class ItemCompareFeature extends Feature {
     @SubscribeEvent
     public void onSlotRenderEvent(SlotRenderEvent.Pre event) {
         Slot slot = event.getSlot();
-        drawSelectionArc(event.getPoseStack(), slot.getItem(), slot.x, slot.y, false);
+        drawSelectionArc(event.getGuiGraphics(), slot.getItem(), slot.x, slot.y);
     }
 
     @SubscribeEvent
     public void onHotbarSlotRenderEvent(HotbarSlotRenderEvent.Pre event) {
-        drawSelectionArc(event.getPoseStack(), event.getItemStack(), event.getX(), event.getY(), true);
+        drawSelectionArc(event.getGuiGraphics(), event.getItemStack(), event.getX(), event.getY());
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -427,11 +427,11 @@ public class ItemCompareFeature extends Feature {
         return I18n.get(key);
     }
 
-    private void drawSelectionArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+    private void drawSelectionArc(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
         if (isItemStackSelected(itemStack)) {
-            RenderUtils.drawArc(poseStack, CommonColors.LIGHT_BLUE, slotX, slotY, hotbar ? 0 : 200, 1, 6, 8);
+            RenderUtils.drawArc(guiGraphics, CommonColors.LIGHT_BLUE, slotX, slotY, 1, 6, 8);
         }
     }
 

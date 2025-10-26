@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -20,13 +19,12 @@ public class ListSearchWidget extends SearchWidget {
     }
 
     @Override
-    protected void renderBackground(PoseStack poseStack) {
+    protected void renderBackground(GuiGraphics guiGraphics) {
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.LIST_SEARCH.identifier(),
                 this.getX(),
                 this.getY(),
-                0,
                 this.width,
                 this.height,
                 Texture.LIST_SEARCH.width(),

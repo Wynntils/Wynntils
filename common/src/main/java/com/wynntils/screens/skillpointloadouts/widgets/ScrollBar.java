@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.skillpointloadouts.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -31,14 +30,11 @@ public class ScrollBar extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 this.isMouseOver(mouseX, mouseY) ? HOVERED : CommonColors.LIGHT_GRAY,
                 getX(),
                 getY(),
-                0,
                 getWidth(),
                 getHeight());
     }
