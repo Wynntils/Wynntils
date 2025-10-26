@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.utils.render.buffered;
+package com.wynntils.utils.render.pipelines;
 
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -19,6 +19,13 @@ public class CustomRenderPipelines extends RenderPipelines {
             .withBlend(CustomBlendFunction.SEMI_TRANSPARENT_BLEND_FUNCTION)
             .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
             .withDepthWrite(false)
+            .buildSnippet();
+
+    private static final RenderPipeline.Snippet GUI_ARC_SNIPPET = RenderPipeline.builder(MATRICES_PROJECTION_SNIPPET)
+            .withVertexShader("core/gui")
+            .withFragmentShader("core/gui")
+            .withBlend(BlendFunction.TRANSLUCENT)
+            .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLE_STRIP)
             .buildSnippet();
 
     public static final RenderPipeline LOOTRUN_QUAD_PIPELINE =
@@ -38,4 +45,8 @@ public class CustomRenderPipelines extends RenderPipelines {
                     .withLocation("pipeline/wynntils_position_color_quad")
                     .withCull(false)
                     .build());
+
+    public static final RenderPipeline GUI_ARC = register(RenderPipeline.builder(GUI_ARC_SNIPPET)
+            .withLocation("pipeline/wynntils_arc")
+            .build());
 }

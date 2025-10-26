@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.itemfilter.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
 import com.wynntils.services.itemfilter.type.SortDirection;
@@ -70,16 +69,13 @@ public class SortWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         RenderUtils.drawRectBorders(
-                poseStack,
+                guiGraphics,
                 sortInfo.direction() == SortDirection.DESCENDING ? CommonColors.WHITE : CommonColors.BLACK,
                 getX(),
                 getY(),
                 getX() + width,
                 getY() + height,
-                1,
                 1);
 
         FontRenderer.getInstance()

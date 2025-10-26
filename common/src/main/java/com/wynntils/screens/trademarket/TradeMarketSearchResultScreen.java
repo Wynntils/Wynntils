@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.trademarket;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
@@ -159,12 +158,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         updateItems();
 
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        renderScrollButton(poseStack);
+        renderScrollButton(guiGraphics);
 
         renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
 
@@ -194,22 +191,20 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        PoseStack poseStack = guiGraphics.pose();
-
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
         // Container
-        RenderUtils.drawTexturedRect(
-                poseStack, CONTAINER_BACKGROUND, x, y, this.imageWidth, this.menu.getRowCount() * 18 + 17, 256, 256);
+        //        RenderUtils.drawTexturedRect(
+        //                guiGraphics, CONTAINER_BACKGROUND, x, y, this.imageWidth, this.menu.getRowCount() * 18 + 17,
+        // 256, 256);
 
         // Inventory
         RenderUtils.drawTexturedRect(
-                poseStack,
+                guiGraphics,
                 CONTAINER_BACKGROUND,
                 x,
                 y + this.menu.getRowCount() * 18 + 17,
-                0,
                 this.imageWidth,
                 96,
                 0,
@@ -220,21 +215,21 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 256);
 
         // Scrollbar
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLLBAR_BACKGROUND, x + this.imageWidth - 7, y);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLLBAR_BACKGROUND, x + this.imageWidth - 7, y);
 
         // Sidebar
         RenderUtils.drawTexturedRect(
-                poseStack, Texture.CONTAINER_SIDEBAR, x - Texture.CONTAINER_SIDEBAR.width() + 7, y);
+                guiGraphics, Texture.CONTAINER_SIDEBAR, x - Texture.CONTAINER_SIDEBAR.width() + 7, y);
     }
 
-    private void renderScrollButton(PoseStack poseStack) {
-        float renderX =
+    private void renderScrollButton(GuiGraphics guiGraphics) {
+        int renderX =
                 (this.width - this.imageWidth) / 2 + this.imageWidth + Texture.SCROLLBAR_BACKGROUND.width() / 2 - 14;
-        float renderY = (this.height - this.imageHeight) / 2
+        int renderY = (int) ((this.height - this.imageHeight) / 2
                 + Texture.SCROLLBAR_BUTTON.height() / 2
-                + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
+                + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT));
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLLBAR_BUTTON, renderX, renderY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLLBAR_BUTTON, renderX, renderY);
     }
 
     @Override

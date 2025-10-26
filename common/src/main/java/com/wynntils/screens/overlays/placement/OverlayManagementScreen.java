@@ -5,7 +5,6 @@
 package com.wynntils.screens.overlays.placement;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Corner;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
@@ -134,12 +133,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         if (selectionMode != SelectionMode.NONE) {
-            renderAlignmentLines(poseStack);
+            renderAlignmentLines(guiGraphics);
         } else {
-            renderSections(poseStack);
+            renderSections(guiGraphics);
         }
 
         Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
@@ -162,25 +159,23 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
             CustomColor color = getOverlayColor(overlay);
             RenderUtils.drawRectBorders(
-                    poseStack,
+                    guiGraphics,
                     color,
                     overlay.getRenderX(),
                     overlay.getRenderY(),
                     overlay.getRenderX() + overlay.getWidth(),
                     overlay.getRenderY() + overlay.getHeight(),
-                    1,
                     1.8f);
             int colorAlphaRect = fixedSelection && overlay == selectedOverlay
                     ? (int) Math.max(MathUtils.map(animationLengthRemaining, 0, ANIMATION_LENGTH, 30, 255), 30)
                     : 30;
             RenderUtils.drawRect(
-                    poseStack,
+                    guiGraphics,
                     color.withAlpha(colorAlphaRect),
-                    overlay.getRenderX(),
-                    overlay.getRenderY(),
-                    0,
-                    overlay.getWidth(),
-                    overlay.getHeight());
+                    (int) overlay.getRenderX(),
+                    (int) overlay.getRenderY(),
+                    (int) overlay.getWidth(),
+                    (int) overlay.getHeight());
 
             String overlayName = overlay.getTranslatedName();
 
@@ -713,34 +708,32 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         return new Pair<>(dragX, dragY);
     }
 
-    private void renderSections(PoseStack poseStack) {
+    private void renderSections(GuiGraphics guiGraphics) {
         for (SectionCoordinates section : Managers.Overlay.getSections()) {
             RenderUtils.drawRectBorders(
-                    poseStack, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 0, 1);
+                    guiGraphics, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 1);
         }
     }
 
-    private void renderAlignmentLines(PoseStack poseStack) {
+    private void renderAlignmentLines(GuiGraphics guiGraphics) {
         for (Map.Entry<Edge, Float> entry : alignmentLinesToRender.entrySet()) {
             if (entry.getKey().isVerticalLine()) {
                 RenderUtils.drawLine(
-                        poseStack,
+                        guiGraphics,
                         CommonColors.ORANGE,
                         this.width * entry.getValue(),
                         0,
                         this.width * entry.getValue(),
                         this.height,
-                        1,
                         1);
             } else {
                 RenderUtils.drawLine(
-                        poseStack,
+                        guiGraphics,
                         CommonColors.ORANGE,
                         0,
                         this.height * entry.getValue(),
                         this.width,
                         this.height * entry.getValue(),
-                        1,
                         1);
             }
         }

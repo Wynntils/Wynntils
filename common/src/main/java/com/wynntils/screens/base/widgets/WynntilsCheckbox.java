@@ -107,7 +107,7 @@ public class WynntilsCheckbox extends AbstractButton {
         }
 
         RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(), resourceLocation, this.getX(), this.getY(), 0, this.width, this.height, 20, 20);
+                guiGraphics, resourceLocation, this.getX(), this.getY(), this.width, this.height, 20, 20);
 
         FontRenderer.getInstance()
                 .renderScrollingText(

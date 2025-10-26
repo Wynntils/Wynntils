@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.overlays.selection;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
@@ -46,7 +45,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -85,8 +83,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     // UI size, positions, etc
     private boolean draggingOverlayScroll = false;
     private boolean draggingConfigScroll = false;
-    private float configScrollY;
-    private float overlayScrollY;
+    private int configScrollY;
+    private int overlayScrollY;
     private int offsetX;
     private int offsetY;
     private int configScrollOffset = 0;
@@ -156,11 +154,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         // When not rendering a preview of the selected overlay
         if (!renderPreview) {
-            RenderUtils.drawTexturedRect(poseStack, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
+            RenderUtils.drawTexturedRect(guiGraphics, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
 
             searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -206,12 +202,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             }
 
             if (overlayList.size() > MAX_OVERLAYS_PER_PAGE) {
-                renderOverlayScroll(poseStack);
+                renderOverlayScroll(guiGraphics);
             }
 
             if (selectedOverlay != null
                     && selectedOverlay.getVisibleConfigOptions().size() > CONFIGS_PER_PAGE) {
-                renderConfigScroll(poseStack);
+                renderConfigScroll(guiGraphics);
             }
 
             renderTooltips(guiGraphics, mouseX, mouseY);
@@ -224,17 +220,13 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             renderOverlaysCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
             exitPreviewButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
-            // We don't have a delta tracker here, so we'll just use a zero delta tracker
-            selectedOverlay.renderPreview(guiGraphics, guiGraphics.bufferSource, DeltaTracker.ZERO, McUtils.window());
-
             RenderUtils.drawRectBorders(
-                    poseStack,
+                    guiGraphics,
                     CommonColors.RED,
                     selectedOverlay.getRenderX(),
                     selectedOverlay.getRenderY(),
                     selectedOverlay.getRenderX() + selectedOverlay.getWidth(),
                     selectedOverlay.getRenderY() + selectedOverlay.getHeight(),
-                    1,
                     1);
         }
     }
@@ -261,8 +253,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                         (int) event.y(),
                         offsetX + 133,
                         offsetX + 133 + Texture.SCROLL_BUTTON.width(),
-                        (int) (overlayScrollY),
-                        (int) (overlayScrollY + Texture.SCROLL_BUTTON.height()))) {
+                        overlayScrollY,
+                        overlayScrollY + Texture.SCROLL_BUTTON.height())) {
                     draggingOverlayScroll = true;
 
                     return true;
@@ -277,8 +269,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                         (int) event.y(),
                         offsetX + 344,
                         offsetX + 344 + Texture.SCROLL_BUTTON.width(),
-                        (int) configScrollY,
-                        (int) (configScrollY + Texture.SCROLL_BUTTON.height()))) {
+                        configScrollY,
+                        configScrollY + Texture.SCROLL_BUTTON.height())) {
                     draggingConfigScroll = true;
 
                     return true;
@@ -936,30 +928,30 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderOverlayScroll(PoseStack poseStack) {
-        overlayScrollY = 24
+    private void renderOverlayScroll(GuiGraphics guiGraphics) {
+        overlayScrollY = (int) (24
                 + offsetY
                 + MathUtils.map(
                         overlayScrollOffset,
                         0,
                         getMaxOverlayScrollOffset(),
                         0,
-                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
+                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height()));
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 133 + offsetX, overlayScrollY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 133 + offsetX, overlayScrollY);
     }
 
-    private void renderConfigScroll(PoseStack poseStack) {
-        configScrollY = 24
+    private void renderConfigScroll(GuiGraphics guiGraphics) {
+        configScrollY = (int) (24
                 + offsetY
                 + MathUtils.map(
                         configScrollOffset,
                         0,
                         getMaxConfigScrollOffset(),
                         0,
-                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
+                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height()));
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 344 + offsetX, configScrollY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 344 + offsetX, configScrollY);
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {

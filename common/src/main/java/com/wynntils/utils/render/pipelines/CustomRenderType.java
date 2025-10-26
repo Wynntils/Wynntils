@@ -2,28 +2,23 @@
  * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.utils.render.buffered;
+package com.wynntils.utils.render.pipelines;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.wynntils.utils.render.Texture;
 import java.util.OptionalDouble;
 import java.util.function.Function;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.CoreShaders;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.TriState;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import com.wynntils.utils.render.Texture;
-import java.util.OptionalDouble;
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
 
 public abstract class CustomRenderType extends RenderType {
     // Copied from RenderType.LINE_STRIP and changed the line width from the default
