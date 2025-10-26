@@ -5,7 +5,6 @@
 package com.wynntils.screens.container.widgets;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -16,6 +15,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderHoverDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
@@ -46,9 +46,8 @@ public class QuickJumpButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.QUICK_JUMP_BUTTON, getX(), getY(), isHovered);
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics, Texture.QUICK_JUMP_BUTTON, getX(), getY(), isHovered, RenderHoverDirection.VERTICAL);
 
         CustomColor color = CommonColors.WHITE;
         Component tooltip = Component.translatable(

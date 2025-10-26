@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps;
 
 import com.google.gson.JsonSyntaxException;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.config.HiddenConfig;
@@ -81,13 +80,13 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
     // UI size, position etc
     private boolean draggingScroll = false;
-    private float backgroundHeight;
-    private float backgroundWidth;
-    private float backgroundX;
-    private float backgroundY;
-    private float scrollButtonHeight;
-    private float scrollButtonRenderX;
-    private float scrollButtonRenderY;
+    private int backgroundHeight;
+    private int backgroundWidth;
+    private int backgroundX;
+    private int backgroundY;
+    private int scrollButtonHeight;
+    private int scrollButtonRenderX;
+    private int scrollButtonRenderY;
     private int maxPoisToDisplay;
     private int scrollAreaHeight;
     private int scrollOffset = 0;
@@ -123,19 +122,20 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         super.doInit();
         // How many pois can fit on the background
         maxPoisToDisplay = (int) (dividedHeight * GRID_ROWS_PER_PAGE) / 20;
-        backgroundX = dividedWidth * 10;
-        backgroundWidth = dividedWidth * 44;
-        backgroundY = dividedHeight * 7;
-        backgroundHeight = dividedHeight * 50;
+        backgroundX = (int) (dividedWidth * 10);
+        backgroundWidth = (int) (dividedWidth * 44);
+        backgroundY = (int) (dividedHeight * 7);
+        backgroundHeight = (int) (dividedHeight * 50);
 
         // Height of the scroll button relative to the scaled width
-        scrollButtonHeight = ((dividedWidth / 2) / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
+        scrollButtonHeight =
+                (int) (((dividedWidth / 2) / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height());
 
         // How far the scrollbar should be able to go
-        scrollAreaHeight = (int) (backgroundHeight - scrollButtonHeight) - (int) (dividedHeight * 4);
+        scrollAreaHeight = backgroundHeight - scrollButtonHeight - (int) (dividedHeight * 4);
 
         // X position of the scroll button
-        scrollButtonRenderX = (int) (dividedWidth * 52) + (dividedWidth / 4);
+        scrollButtonRenderX = (int) ((int) (dividedWidth * 52) + (dividedWidth / 4));
 
         int importExportButtonWidth = (int) (dividedWidth * 6);
 
@@ -387,8 +387,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-        renderScrollButton(poseStack);
+        renderScrollButton(guiGraphics);
 
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
@@ -433,13 +432,13 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         } else {
-            RenderUtils.drawRect(
-                    poseStack,
+            RenderUtils.drawLine(
+                    guiGraphics,
                     CommonColors.WHITE,
                     (int) (dividedWidth * 12),
                     (int) (dividedHeight * HEADER_HEIGHT),
-                    0,
-                    (int) (dividedWidth * 38),
+                    (int) (dividedWidth * 50),
+                    (int) (dividedHeight * HEADER_HEIGHT),
                     1);
         }
     }
@@ -449,11 +448,10 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(),
-                Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
+                guiGraphics,
+                Texture.WAYPOINT_MANAGER_BACKGROUND,
                 backgroundX,
                 backgroundY,
-                0,
                 backgroundWidth,
                 backgroundHeight,
                 Texture.WAYPOINT_MANAGER_BACKGROUND.width(),
@@ -630,22 +628,21 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         this.filteredIcons = filteredIcons;
     }
 
-    private void renderScrollButton(PoseStack poseStack) {
+    private void renderScrollButton(GuiGraphics guiGraphics) {
         // Don't render the scroll button if it will not be useable
         if (pois.size() <= maxPoisToDisplay) return;
 
         // Calculate where the scroll button should be on the Y axis
-        scrollButtonRenderY = (this.height - backgroundHeight) / 2
+        scrollButtonRenderY = (int) ((this.height - backgroundHeight) / 2
                 + (int) (dividedHeight * 3)
-                + MathUtils.map(scrollOffset, 0, pois.size() - maxPoisToDisplay, 0, scrollAreaHeight);
+                + MathUtils.map(scrollOffset, 0, pois.size() - maxPoisToDisplay, 0, scrollAreaHeight));
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.SCROLL_BUTTON.resource(),
+                guiGraphics,
+                Texture.SCROLL_BUTTON,
                 scrollButtonRenderX,
                 scrollButtonRenderY,
-                1,
-                (dividedWidth / 2),
+                (int) (dividedWidth / 2),
                 scrollButtonHeight,
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());

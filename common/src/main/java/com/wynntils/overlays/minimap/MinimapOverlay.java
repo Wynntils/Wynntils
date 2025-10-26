@@ -5,8 +5,6 @@
 package com.wynntils.overlays.minimap;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -123,10 +121,6 @@ public class MinimapOverlay extends Overlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
         float width = getWidth();
         float height = getHeight();
         float renderX = getRenderX();
@@ -158,13 +152,13 @@ public class MinimapOverlay extends Overlay {
         }
 
         // Always draw a black background to cover transparent map areas
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, renderX, renderY, 0, width, height);
+        RenderUtils.drawRect(guiGraphics, CommonColors.BLACK, (int) renderX, (int) renderY, (int) width, (int) height);
 
         // enable rotation if necessary
         if (followPlayerRotation.get()) {
-            poseStack.pushPose();
+            guiGraphics.pose().pushMatrix();
             RenderUtils.rotatePose(
-                    poseStack,
+                    guiGraphics.pose(),
                     centerX,
                     centerZ,
                     180 - McUtils.mc().gameRenderer.getMainCamera().getYRot());
@@ -187,21 +181,21 @@ public class MinimapOverlay extends Overlay {
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(playerX);
             float textureZ = map.getTextureZPosition(playerZ);
-            MapRenderer.renderMapQuad(
-                    map,
-                    poseStack,
-                    centerX,
-                    centerZ,
-                    textureX,
-                    textureZ,
-                    width * extraFactor,
-                    height * extraFactor,
-                    zoomRenderScale);
+            //            MapRenderer.renderMapQuad(
+            //                    map,
+            //                    poseStack,
+            //                    x,
+            //                    centerZ,
+            //                    textureX,
+            //                    textureZ,
+            //                    width * extraFactor,
+            //                    height * extraFactor,
+            //                    zoomRenderScale);
         }
 
         // disable rotation if necessary
         if (followPlayerRotation.get()) {
-            poseStack.popPose();
+            guiGraphics.pose().popMatrix();
         }
 
         renderPois(
@@ -218,7 +212,7 @@ public class MinimapOverlay extends Overlay {
 
         // cursor
         MapRenderer.renderCursor(
-                poseStack,
+                guiGraphics,
                 centerX,
                 centerZ,
                 this.pointerScale.get(),
@@ -233,7 +227,7 @@ public class MinimapOverlay extends Overlay {
         }
 
         // render border
-        renderMapBorder(poseStack, renderX, renderY, width, height);
+        renderMapBorder(guiGraphics, renderX, renderY, width, height);
 
         // Directional Text
         renderCardinalDirections(guiGraphics, width, height, centerX, centerZ);
@@ -303,16 +297,16 @@ public class MinimapOverlay extends Overlay {
                     poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
             if (BoundingShape.intersects(box, textureBoundingCircle)) {
-                poi.renderAt(
-                        poseStack,
-                        bufferSource,
-                        poiRenderX,
-                        poiRenderZ,
-                        false,
-                        poiScale.get(),
-                        currentZoom,
-                        zoomLevel,
-                        false);
+                //                poi.renderAt(
+                //                        poseStack,
+                //                        bufferSource,
+                //                        poiRenderX,
+                //                        poiRenderZ,
+                //                        false,
+                //                        poiScale.get(),
+                //                        currentZoom,
+                //                        zoomLevel,
+                //                        false);
             }
         }
 
@@ -414,13 +408,12 @@ public class MinimapOverlay extends Overlay {
             float w = font.width(text) / 2f, h = font.lineHeight / 2f;
 
             RenderUtils.drawRect(
-                    poseStack,
+                    guiGraphics,
                     new CustomColor(0f, 0f, 0f, 0.7f),
-                    compassRenderX - w - 3f,
-                    compassRenderZ - h - 1f,
-                    0,
-                    2 * w + 6,
-                    2 * h + 1);
+                    (int) (compassRenderX - w - 3f),
+                    (int) (compassRenderZ - h - 1f),
+                    (int) (2 * w + 6),
+                    (int) (2 * h + 1));
             fontRenderer.renderText(
                     guiGraphics,
                     StyledText.fromString(text),
@@ -431,7 +424,7 @@ public class MinimapOverlay extends Overlay {
                     VerticalAlignment.TOP,
                     TextShadow.NORMAL);
 
-            poseStack.popPose();
+            //            poseStack.popPose();
         }
     }
 
@@ -525,7 +518,7 @@ public class MinimapOverlay extends Overlay {
                         new TextRenderTask("W", TextRenderSetting.CENTERED));
     }
 
-    private void renderMapBorder(PoseStack poseStack, float renderX, float renderY, float width, float height) {
+    private void renderMapBorder(GuiGraphics guiGraphics, float renderX, float renderY, float width, float height) {
         Texture texture = borderType.get().texture();
         int grooves = borderType.get().groovesSize();
         BorderInfo borderInfo = maskType.get() == MapMaskType.CIRCLE
@@ -541,13 +534,12 @@ public class MinimapOverlay extends Overlay {
         float groovesHeight = grooves * height / DEFAULT_SIZE;
 
         RenderUtils.drawTexturedRect(
-                poseStack,
+                guiGraphics,
                 texture.resource(),
-                renderX - groovesWidth,
-                renderY - groovesHeight,
-                0,
-                width + 2 * groovesWidth,
-                height + 2 * groovesHeight,
+                (int) (renderX - groovesWidth),
+                (int) (renderY - groovesHeight),
+                (int) (width + 2 * groovesWidth),
+                (int) (height + 2 * groovesHeight),
                 tx1,
                 ty1,
                 tx2 - tx1,

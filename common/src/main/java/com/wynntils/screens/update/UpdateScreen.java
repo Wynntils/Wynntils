@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.update;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
@@ -120,8 +119,6 @@ public final class UpdateScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-
-        PoseStack poseStack = guiGraphics.pose();
 
         FontRenderer.getInstance()
                 .renderText(

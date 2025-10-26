@@ -69,17 +69,14 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
 
         if (territoryColor.borderColor() != CustomColor.NONE) {
             RenderUtils.drawRectBorders(
-                    guiGraphics.pose(),
+                    guiGraphics,
                     territoryColor.borderColor(),
                     this.getX() + 0.75f,
                     this.getY() + 0.75f,
                     this.getX() + this.getWidth() - 0.75f,
                     this.getY() + this.getHeight() - 0.75f,
-                    0,
                     1.5f);
         }
-
-        guiGraphics.pose().pushPose();
 
         // Pick the texture based on the item type
         Texture texture = Texture.TERRITORY_ITEM;
@@ -100,17 +97,14 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
 
         // Render at the center of the widget
         RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(),
-                texture.resource(),
+                guiGraphics,
+                texture,
                 itemRenderX,
                 itemRenderY,
-                0,
                 itemWidth,
                 itemHeight,
                 texture.width(),
                 texture.height());
-
-        guiGraphics.pose().popPose();
 
         // Render the territory production type icons
         Set<GuildResource> productionTypes = territoryItem.getProduction().keySet().stream()

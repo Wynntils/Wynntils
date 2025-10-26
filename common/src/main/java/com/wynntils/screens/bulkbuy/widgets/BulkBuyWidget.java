@@ -46,7 +46,7 @@ public class BulkBuyWidget extends AbstractWidget {
         this.setX(originalX - (int) (getWidth() * animationPercentage.getAnimation()));
         // Prevent widget from rendering behind highlights
         RenderUtils.createRectMask(guiGraphics.pose(), originalX - getWidth(), getY(), getWidth(), getHeight());
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BULK_BUY_PANEL, getX(), getY());
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.BULK_BUY_PANEL, getX(), getY());
 
         // bulkBoughtItemStack is null when there is no item being bulk bought
         if (bulkBoughtItem == null) {

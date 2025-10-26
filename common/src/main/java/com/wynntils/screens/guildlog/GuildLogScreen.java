@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guildlog;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
@@ -46,7 +45,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
 
     // UI size, positions, etc
     private boolean draggingScroll = false;
-    private float scrollY;
+    private int scrollY;
     private int scrollOffset = 0;
     private int maxScrollOffset = 0;
     private int offsetX;
@@ -102,10 +101,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
-        RenderUtils.drawTexturedRect(poseStack, Texture.GUILD_LOG_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.GUILD_LOG_BACKGROUND, offsetX, offsetY);
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -119,7 +115,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
 
         renderLogs(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderScroll(poseStack);
+        renderScroll(guiGraphics);
 
         renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
     }
@@ -237,11 +233,12 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderScroll(PoseStack poseStack) {
-        scrollY =
-                offsetY + 15 + MathUtils.map(scrollOffset, 0, maxScrollOffset, 0, 141 - Texture.SCROLL_BUTTON.height());
+    private void renderScroll(GuiGraphics guiGraphics) {
+        scrollY = (int) (offsetY
+                + 15
+                + MathUtils.map(scrollOffset, 0, maxScrollOffset, 0, 141 - Texture.SCROLL_BUTTON.height()));
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, offsetX + 393, scrollY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, offsetX + 393, scrollY);
     }
 
     @Override

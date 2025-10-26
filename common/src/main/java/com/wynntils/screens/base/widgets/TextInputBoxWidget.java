@@ -137,20 +137,13 @@ public class TextInputBoxWidget extends AbstractWidget {
             int firstWidth,
             int highlightedWidth,
             int lastWidth) {
-        poseStack.pushPose();
+        guiGraphics.pose().pushMatrix();
 
-        poseStack.translate(this.getX(), this.getY(), 0);
+        guiGraphics.pose().translate(this.getX(), this.getY());
 
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
+        RenderUtils.drawRect(guiGraphics, CommonColors.BLACK, 0, 0, this.width, this.height);
         RenderUtils.drawRectBorders(
-                poseStack,
-                isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
-                0,
-                0,
-                this.width,
-                this.height,
-                1,
-                2);
+                guiGraphics, isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY, 0, 0, this.width, this.height, 2);
 
         boolean defaultText = Objects.equals(textBoxInput, "");
 
@@ -209,7 +202,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     protected int getMaxTextWidth() {

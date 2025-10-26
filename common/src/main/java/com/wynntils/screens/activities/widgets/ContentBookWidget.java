@@ -95,12 +95,11 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                 ? UNAVAILABLE_COLOR
                 : activityInfo.type().getColor();
         RenderUtils.fillSidewaysGradient(
-                guiGraphics.pose(),
+                guiGraphics,
                 getX(),
                 getY(),
                 getX() + width,
                 getY() + height,
-                0,
                 gradientColor,
                 gradientColor.withAlpha(0));
         guiGraphics.renderItem(itemStack, getX(), getY());
@@ -127,7 +126,7 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
 
         if (searchMatch) return;
 
-        RenderUtils.drawRect(guiGraphics.pose(), CommonColors.BLACK.withAlpha(100), getX(), getY(), 1, width, height);
+        RenderUtils.drawRect(guiGraphics, CommonColors.BLACK.withAlpha(100), getX(), getY(), width, height);
     }
 
     @Override

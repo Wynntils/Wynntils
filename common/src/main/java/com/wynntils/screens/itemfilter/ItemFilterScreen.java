@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.itemfilter;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -98,8 +97,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
     // UI size, positions, etc
     private boolean draggingProviderScroll = false;
     private boolean draggingSortScroll = false;
-    private float providerScrollY;
-    private float sortScrollY;
+    private int providerScrollY;
+    private int sortScrollY;
     private int presetsScrollOffset = 0;
     private int providersScrollOffset = 0;
     private int sortScrollOffset = 0;
@@ -328,11 +327,9 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         hovered = null;
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.ITEM_FILTER_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_FILTER_BACKGROUND, offsetX, offsetY);
 
         if (selectedProvider == null && !sortMode) {
             FontRenderer.getInstance()
@@ -442,11 +439,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
 
         if (itemStatProviders.size() > MAX_PROVIDERS_PER_PAGE) {
-            renderProvidersScroll(poseStack);
+            renderProvidersScroll(guiGraphics);
         }
 
         if (sortMode && sorts.size() > MAX_SORTS_PER_PAGE) {
-            renderSortScroll(poseStack);
+            renderSortScroll(guiGraphics);
         }
 
         renderTooltips(guiGraphics, mouseX, mouseY);
@@ -1069,33 +1066,32 @@ public final class ItemFilterScreen extends WynntilsScreen {
         guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
     }
 
-    private void renderProvidersScroll(PoseStack poseStack) {
-        providerScrollY = 24
+    private void renderProvidersScroll(GuiGraphics guiGraphics) {
+        providerScrollY = (int) (24
                 + offsetY
                 + MathUtils.map(
                         providersScrollOffset,
                         0,
                         getMaxProviderScrollOffset(),
                         0,
-                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
+                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height()));
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 133 + offsetX, providerScrollY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 133 + offsetX, providerScrollY);
     }
 
-    private void renderSortScroll(PoseStack poseStack) {
+    private void renderSortScroll(GuiGraphics guiGraphics) {
         RenderUtils.drawRect(
-                poseStack, CommonColors.LIGHT_GRAY, 330 + offsetX, 30 + offsetY, 0, 6, MAX_SORTS_PER_PAGE * 21);
+                guiGraphics, CommonColors.LIGHT_GRAY, 330 + offsetX, 30 + offsetY, 6, MAX_SORTS_PER_PAGE * 21);
 
-        sortScrollY = 30
+        sortScrollY = (int) (30
                 + offsetY
-                + MathUtils.map(sortScrollOffset, 0, getMaxSortsScrollOffset(), 0, MAX_SORTS_PER_PAGE * 21 - 20);
+                + MathUtils.map(sortScrollOffset, 0, getMaxSortsScrollOffset(), 0, MAX_SORTS_PER_PAGE * 21 - 20));
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 draggingSortScroll ? CommonColors.BLACK : CommonColors.GRAY,
                 330 + offsetX,
                 sortScrollY,
-                0,
                 6,
                 20);
     }

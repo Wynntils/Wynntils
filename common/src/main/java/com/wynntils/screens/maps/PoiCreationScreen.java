@@ -4,8 +4,6 @@
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
@@ -22,7 +20,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -393,13 +390,6 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderBlurredBackground();
-
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-        RenderSystem.enableDepthTest();
         renderMap(guiGraphics);
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -421,22 +411,22 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();
 
-            poi.renderAt(
-                    poseStack,
-                    bufferSource,
-                    MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
-                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
-                    hovered == poi,
-                    1,
-                    zoomRenderScale,
-                    zoomLevel,
-                    true);
+            //            poi.renderAt(
+            //                    poseStack,
+            //                    bufferSource,
+            //                    MapRenderer.getRenderX(poi, mapCenterX, x, zoomRenderScale),
+            //                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
+            //                    hovered == poi,
+            //                    1,
+            //                    zoomRenderScale,
+            //                    zoomLevel,
+            //                    true);
 
             bufferSource.endBatch();
         }
 
         renderCursor(
-                poseStack,
+                guiGraphics,
                 1.5f,
                 Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .pointerColor
@@ -447,7 +437,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         RenderUtils.disableScissor(guiGraphics);
 
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        renderMapBorder(guiGraphics);
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()

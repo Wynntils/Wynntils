@@ -40,32 +40,23 @@ public class SaturationBrightnessWidget extends AbstractWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.fillSidewaysGradient(
-                guiGraphics.pose(),
-                getX(),
-                getY(),
-                getX() + width,
-                getY() + height,
-                0,
-                CommonColors.WHITE,
-                color.withAlpha(255));
+                guiGraphics, getX(), getY(), getX() + width, getY() + height, CommonColors.WHITE, color.withAlpha(255));
         RenderUtils.fillGradient(
-                guiGraphics.pose(),
+                guiGraphics,
                 getX(),
                 getY(),
                 getX() + width,
                 getY() + height,
-                0,
                 CommonColors.WHITE.withAlpha(0),
                 CommonColors.BLACK);
 
         RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
+                guiGraphics,
                 CommonColors.BLACK,
                 getX() + cursorX - 2,
                 getY() + cursorY - 2,
                 getX() + cursorX + 2,
                 getY() + cursorY + 2,
-                2,
                 1);
     }
 

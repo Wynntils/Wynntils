@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -26,7 +25,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -41,9 +39,8 @@ public class ItemHighlightFeature extends Feature {
     private static final List<String> DEFAULT_HIGHLIGHT_KEYS =
             List.of("item_tier", "ingredient_tier", "material_tier", "store_tier");
 
-    // TODO: Set default to WYNN when porting to 1.21.6+
     @Persisted
-    private final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.TAG);
+    private final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.WYNN);
 
     @Persisted
     private final Config<Boolean> normalHighlightEnabled = new Config<>(true);
@@ -160,7 +157,7 @@ public class ItemHighlightFeature extends Feature {
     private final Config<Boolean> selectedItemHighlight = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onRenderSlot(SlotRenderEvent.CountPre e) {
+    public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!inventoryHighlightEnabled.get()) return;
 
         CustomColor color = getHighlightColor(e.getSlot().getItem(), false);
@@ -168,40 +165,33 @@ public class ItemHighlightFeature extends Feature {
 
         if (selectedItemHighlight.get()
                 && McUtils.inventory().getSelectedItem().equals(e.getSlot().getItem())) {
-            RenderSystem.enableDepthTest();
             RenderUtils.drawTexturedRectWithColor(
-                    e.getPoseStack(),
-                    Texture.HOTBAR_SELECTED_HIGHLIGHT.resource(),
+                    e.getGuiGraphics(),
+                    Texture.HOTBAR_SELECTED_HIGHLIGHT,
                     color,
                     e.getSlot().x,
                     e.getSlot().y,
-                    100,
                     16,
                     16,
                     16,
                     16);
-            RenderSystem.disableDepthTest();
             return;
         }
 
-        RenderSystem.enableDepthTest();
         RenderUtils.drawTexturedRectWithColor(
-                e.getPoseStack(),
+                e.getGuiGraphics(),
                 Texture.HIGHLIGHT.resource(),
                 color,
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
-                100,
                 18,
                 18,
-                // TODO: Remove +18 when porting to 1.21.6+
-                (highlightTexture.get().ordinal() * 18) + 18,
+                highlightTexture.get().ordinal() * 18,
                 0,
                 18,
                 18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
-        RenderSystem.disableDepthTest();
     }
 
     @SubscribeEvent
@@ -212,28 +202,20 @@ public class ItemHighlightFeature extends Feature {
         if (color == CustomColor.NONE) return;
 
         if (selectedItemHighlight.get() && McUtils.inventory().getSelectedItem().equals(e.getItemStack())) {
-            BufferedRenderUtils.drawTexturedRectWithColor(
-                    e.getPoseStack(),
-                    e.getGuiGraphics().bufferSource,
-                    Texture.HOTBAR_SELECTED_HIGHLIGHT,
-                    color,
-                    e.getX(),
-                    e.getY());
+            RenderUtils.drawTexturedRectWithColor(
+                    e.getGuiGraphics(), Texture.HOTBAR_SELECTED_HIGHLIGHT, color, e.getX(), e.getY(), 16, 16, 16, 16);
             return;
         }
 
-        BufferedRenderUtils.drawTexturedRectWithColor(
-                e.getPoseStack(),
-                e.getGuiGraphics().bufferSource,
+        RenderUtils.drawTexturedRectWithColor(
+                e.getGuiGraphics(),
                 Texture.HIGHLIGHT.resource(),
                 color,
                 e.getX() - 1,
                 e.getY() - 1,
-                0,
                 18,
                 18,
-                // TODO: Remove +18 when porting to 1.21.6+
-                (highlightTexture.get().ordinal() * 18) + 18,
+                highlightTexture.get().ordinal() * 18,
                 0,
                 18,
                 18,
@@ -456,8 +438,7 @@ public class ItemHighlightFeature extends Feature {
     }
 
     public enum HighlightTexture {
-        // TODO: Add WYNN back when porting to 1.21.6+
-        // WYNN,
+        WYNN,
         TAG,
         CIRCLE_TRANSPARENT,
         CIRCLE_OPAQUE,

@@ -27,6 +27,7 @@ import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
@@ -158,7 +159,7 @@ public final class MapRenderer {
     }
 
     public static void renderCursor(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             float renderX,
             float renderY,
             float pointerScale,
@@ -173,21 +174,20 @@ public final class MapRenderer {
             rotationAngle = 180 + McUtils.player().getYRot();
         }
 
-        poseStack.pushPose();
-        RenderUtils.rotatePose(poseStack, renderX, renderY, rotationAngle);
+        guiGraphics.pose().pushMatrix();
+        RenderUtils.rotatePose(guiGraphics.pose(), renderX, renderY, rotationAngle);
 
         float renderedWidth = pointerType.width * pointerScale;
         float renderedHeight = pointerType.height * pointerScale;
 
         RenderUtils.drawTexturedRectWithColor(
-                poseStack,
+                guiGraphics,
                 Texture.MAP_POINTERS.resource(),
                 pointerColor,
-                renderX - renderedWidth / 2f,
-                renderY - renderedHeight / 2f,
-                0,
-                renderedWidth,
-                renderedHeight,
+                (int) (renderX - renderedWidth / 2f),
+                (int) (renderY - renderedHeight / 2f),
+                (int) renderedWidth,
+                (int) renderedHeight,
                 0,
                 pointerType.textureY,
                 pointerType.width,
@@ -195,7 +195,7 @@ public final class MapRenderer {
                 Texture.MAP_POINTERS.width(),
                 Texture.MAP_POINTERS.height());
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     public static void renderChunks(
@@ -500,7 +500,7 @@ public final class MapRenderer {
     /**
      * {@param poi} POI that we get the render coordinate for
      * {@param mapCenterX} center coordinates of map (in-game coordinates)
-     * {@param centerX} center coordinates of map (screen render coordinates)
+     * {@param x} center coordinates of map (screen render coordinates)
      * {@param currentZoom} the bigger, the more detailed the map is
      */
     public static float getRenderX(Poi poi, float mapCenterX, float centerX, float currentZoom) {

@@ -48,13 +48,7 @@ public class DownloadWidget extends AbstractWidget {
         DownloadDependencyGraph.DownloadDependencyGraphState managerState = Managers.Download.graphState();
 
         RenderUtils.drawRect(
-                guiGraphics.pose(),
-                CommonColors.GRAY.withAlpha(isHovered ? 200 : 100),
-                getX(),
-                getY(),
-                0,
-                width,
-                height);
+                guiGraphics, CommonColors.GRAY.withAlpha(isHovered ? 200 : 100), getX(), getY(), width, height);
 
         DownloadDependencyGraph.NodeState downloadState = Managers.Download.getDownloadState(download);
 

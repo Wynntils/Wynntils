@@ -4,8 +4,6 @@
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
@@ -66,10 +64,10 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     private boolean firstInit = true;
     private double currentUnusedScroll = 0;
     private float currentTextureScale;
-    private float departureBoardY;
-    private float destinationButtonsRenderX;
-    private float scrollButtonRenderX;
-    private float scrollButtonRenderY;
+    private int departureBoardY;
+    private int destinationButtonsRenderX;
+    private int scrollButtonRenderX;
+    private int scrollButtonRenderY;
     private int scrollAreaHeight;
     private int scrollOffset = 0;
 
@@ -92,12 +90,12 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         centerX += (departureListWidth) / 2f;
         renderedBorderXOffset -= 1;
         mapWidth -= (departureListWidth) - 5;
-        departureBoardY = (this.height
+        departureBoardY = (int) ((this.height
                         - (Texture.DESTINATION_LIST.height() * currentTextureScale
                                 + (Texture.TRAVEL_BUTTON.height() / 2) * currentTextureScale))
-                / 2;
-        scrollButtonRenderX = 5 + departureListWidth * 0.933f;
-        destinationButtonsRenderX = 5 + departureListWidth * 0.027f;
+                / 2);
+        scrollButtonRenderX = (int) (5 + departureListWidth * 0.933f);
+        destinationButtonsRenderX = (int) (5 + departureListWidth * 0.027f);
         scrollAreaHeight = (int) (SCROLL_HEIGHT * currentTextureScale);
 
         // region Map buttons
@@ -194,11 +192,6 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-        RenderSystem.enableDepthTest();
-
         renderMap(guiGraphics);
 
         RenderUtils.enableScissor(
@@ -211,7 +204,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         renderPois(guiGraphics, mouseX, mouseY);
 
         renderCursor(
-                poseStack,
+                guiGraphics,
                 1.5f,
                 Managers.Feature.getFeatureInstance(CustomSeaskipperScreenFeature.class)
                         .pointerColor
@@ -222,7 +215,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         RenderUtils.disableScissor(guiGraphics);
 
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        renderMapBorder(guiGraphics);
 
         renderCoordinates(guiGraphics, mouseX, mouseY);
 
@@ -233,17 +226,16 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         renderTooltip(guiGraphics, mouseX, mouseY);
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.DESTINATION_LIST.resource(),
+                guiGraphics,
+                Texture.DESTINATION_LIST,
                 5,
                 departureBoardY,
-                0,
-                Texture.DESTINATION_LIST.width() * currentTextureScale,
-                Texture.DESTINATION_LIST.height() * currentTextureScale,
+                (int) (Texture.DESTINATION_LIST.width() * currentTextureScale),
+                (int) (Texture.DESTINATION_LIST.height() * currentTextureScale),
                 Texture.DESTINATION_LIST.width(),
                 Texture.DESTINATION_LIST.height());
 
-        renderScrollButton(poseStack);
+        renderScrollButton(guiGraphics);
 
         for (SeaskipperDestinationButton destinationButton : destinationButtons) {
             destinationButton.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -494,8 +486,6 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     private void renderHoveredSeaskipperDestination(GuiGraphics guiGraphics) {
         if (hoveredPoi == null) return;
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 101);
         int xOffset = (int) (width - SCREEN_SIDE_OFFSET - 250);
         int yOffset = (int) (SCREEN_SIDE_OFFSET + 40);
 
@@ -504,21 +494,18 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         final float centerHeight = isAccessible ? 50 : 30;
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
         RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
+                guiGraphics,
+                Texture.MAP_INFO_TOOLTIP_CENTER,
                 xOffset,
                 Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
                 textureWidth,
-                centerHeight,
+                (int) centerHeight,
                 textureWidth,
                 Texture.MAP_INFO_TOOLTIP_CENTER.height());
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.MAP_INFO_NAME_BOX,
-                xOffset,
-                Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.MAP_INFO_NAME_BOX, xOffset, (int)
+                (Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset));
 
         FontRenderer.getInstance()
                 .renderText(
@@ -623,29 +610,26 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
-
-        poseStack.popPose();
     }
 
-    private void renderScrollButton(PoseStack poseStack) {
+    private void renderScrollButton(GuiGraphics guiGraphics) {
         if (availablePois.size() <= MAX_DESTINATIONS) return;
 
-        scrollButtonRenderY = (int) (departureBoardY + 4 * currentTextureScale * 0.933f)
+        scrollButtonRenderY = (int) ((int) (departureBoardY + 4 * currentTextureScale * 0.933f)
                 + MathUtils.map(
                         scrollOffset,
                         0,
                         availablePois.size() - MAX_DESTINATIONS,
                         0,
-                        scrollAreaHeight - Texture.SCROLL_BUTTON.height() * currentTextureScale);
+                        scrollAreaHeight - Texture.SCROLL_BUTTON.height() * currentTextureScale));
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.SCROLL_BUTTON.resource(),
                 scrollButtonRenderX,
                 scrollButtonRenderY,
-                0,
-                Texture.SCROLL_BUTTON.width() * currentTextureScale,
-                Texture.SCROLL_BUTTON.height() * currentTextureScale,
+                (int) (Texture.SCROLL_BUTTON.width() * currentTextureScale),
+                (int) (Texture.SCROLL_BUTTON.height() * currentTextureScale),
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());
     }

@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.itemsharing;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -24,7 +23,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -168,8 +166,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        BufferedRenderUtils.drawTexturedRect(
-                guiGraphics.pose(), guiGraphics.bufferSource, Texture.ITEM_RECORD, this.leftPos, this.topPos);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_RECORD, this.leftPos, this.topPos);
     }
 
     @Override
@@ -207,7 +204,6 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
 
         if (!addingCategory && !editingCategory) {
             FontRenderer.getInstance()
@@ -226,19 +222,17 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         }
 
         for (int selectedSlot : selectedSlots) {
-            BufferedRenderUtils.drawRectBorders(
-                    poseStack,
-                    guiGraphics.bufferSource,
+            RenderUtils.drawRectBorders(
+                    guiGraphics,
                     CommonColors.WHITE,
                     this.leftPos + this.getMenu().getSlot(selectedSlot).x,
                     this.topPos + this.getMenu().getSlot(selectedSlot).y,
                     this.leftPos + this.getMenu().getSlot(selectedSlot).x + 16,
                     this.topPos + this.getMenu().getSlot(selectedSlot).y + 16,
-                    200,
                     1);
         }
 
-        renderScrollButton(poseStack);
+        renderScrollButton(guiGraphics);
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -383,12 +377,12 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         populateItems();
     }
 
-    private void renderScrollButton(PoseStack poseStack) {
-        float renderX = this.leftPos + 155;
-        float renderY =
-                this.topPos + 18 + MathUtils.map(itemScrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
+    private void renderScrollButton(GuiGraphics guiGraphics) {
+        int renderX = this.leftPos + 155;
+        int renderY = (int)
+                (this.topPos + 18 + MathUtils.map(itemScrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT));
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.ITEM_RECORD_SCROLL, renderX, renderY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_RECORD_SCROLL, renderX, renderY);
     }
 
     private void addCategoryInput() {

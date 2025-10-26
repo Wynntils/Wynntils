@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.changelog;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsPagedScreen;
@@ -106,9 +105,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
         RenderUtils.enableScissor(guiGraphics, offsetX + 40, offsetY + 11, 220, SCISSOR_HEIGHT);
         FontRenderer.getInstance()
@@ -116,7 +113,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         RenderUtils.disableScissor(guiGraphics);
 
         if (getMaxScrollOffset() != 0) {
-            renderScrollBar(poseStack);
+            renderScrollBar(guiGraphics);
         }
 
         renderPageInfo(guiGraphics, getCurrentPage() + 1, getMaxPage() + 1);
@@ -140,13 +137,12 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
                         TextShadow.OUTLINE);
     }
 
-    private void renderScrollBar(PoseStack poseStack) {
+    private void renderScrollBar(GuiGraphics guiGraphics) {
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.LIGHT_GRAY,
                 offsetX + SCROLLBAR_RENDER_X,
                 offsetY + 14,
-                0,
                 SCROLLBAR_WIDTH,
                 SCROLL_AREA_HEIGHT);
 
@@ -155,11 +151,10 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT - SCROLLBAR_HEIGHT));
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 draggingScroll ? CommonColors.BLACK : CommonColors.GRAY,
                 offsetX + SCROLLBAR_RENDER_X,
                 scrollRenderY,
-                0,
                 SCROLLBAR_WIDTH,
                 SCROLLBAR_HEIGHT);
     }

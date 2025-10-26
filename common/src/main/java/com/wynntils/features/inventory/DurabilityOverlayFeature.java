@@ -41,21 +41,21 @@ public class DurabilityOverlayFeature extends Feature {
     private final Config<DurabilityRenderMode> durabilityRenderMode = new Config<>(DurabilityRenderMode.ARC);
 
     @SubscribeEvent
-    public void onRenderHotbarSlot(HotbarSlotRenderEvent.CountPre e) {
+    public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
         if (!renderDurabilityOverlayHotbar.get()) return;
         switch (durabilityRenderMode.get()) {
             case ARC -> drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
-            case BAR -> drawDurabilityBar(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+            case BAR -> drawDurabilityBar(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY());
             case PERCENTAGE -> drawDurabilityPercentage(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY());
         }
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.CountPre e) {
+    public void onRenderSlot(SlotRenderEvent.Post e) {
         if (!renderDurabilityOverlayInventories.get()) return;
         switch (durabilityRenderMode.get()) {
             case ARC -> drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
-            case BAR -> drawDurabilityBar(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+            case BAR -> drawDurabilityBar(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
             case PERCENTAGE ->
                 drawDurabilityPercentage(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
         }
@@ -79,7 +79,7 @@ public class DurabilityOverlayFeature extends Feature {
         RenderSystem.disableDepthTest();
     }
 
-    private void drawDurabilityBar(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
+    private void drawDurabilityBar(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<DurableItemProperty> durableItemProperty =
                 Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemProperty.isEmpty()) return;
@@ -95,8 +95,8 @@ public class DurabilityOverlayFeature extends Feature {
         // draw
         int i = slotX + 2;
         int j = slotY + 13;
-        RenderUtils.drawRect(poseStack, CustomColor.fromInt(-16777216), i, j, 200, 13, 2);
-        RenderUtils.drawRect(poseStack, CustomColor.fromHSV(hue, 1.0f, 1.0f, 1.0f), i, j, 200, width, 1);
+        RenderUtils.drawRect(guiGraphics, CustomColor.fromInt(-16777216), i, j, 13, 2);
+        RenderUtils.drawRect(guiGraphics, CustomColor.fromHSV(hue, 1.0f, 1.0f, 1.0f), i, j, width, 1);
     }
 
     // Inspiration taken from https://github.com/GTNewHorizons/DuraDisplay

@@ -4,7 +4,6 @@
  */
 package com.wynntils.utils.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -18,22 +17,27 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.state.HorizontalRectangleRenderState;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderHoverDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix3x2f;
+import org.joml.Matrix3x2fStack;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
 
 public final class RenderUtils {
@@ -246,28 +250,288 @@ public final class RenderUtils {
         RenderSystem.disableBlend();
     }
 
-    public static void drawHoverableTexturedRect(
-            PoseStack poseStack, Texture texture, float x, float y, boolean hovered) {
-        drawTexturedRect(
-                poseStack,
+    public static void drawLine(
+            GuiGraphics guiGraphics, CustomColor color, float x1, float y1, float x2, float y2, float width) {
+        if (y1 == y2) {
+            float xPos = Math.min(x1, x2);
+            float lineWidth = Math.abs(x2 - x1);
+            drawRect(guiGraphics, color, (int) xPos, (int) (y1 - width / 2f), (int) lineWidth, (int) width);
+        } else if (x1 == x2) {
+            float yPos = Math.min(y1, y2);
+            float lineHeight = Math.abs(y2 - y1);
+            drawRect(guiGraphics, color, (int) (x1 - width / 2f), (int) yPos, (int) width, (int) lineHeight);
+        }
+    }
+
+    public static void drawRect(GuiGraphics guiGraphics, CustomColor color, int x, int y, int width, int height) {
+        guiGraphics.fill(x, y, x + width, y + height, color.asInt());
+    }
+
+    public static void drawRectBorders(
+            GuiGraphics guiGraphics, CustomColor color, float x1, float y1, float x2, float y2, float lineWidth) {
+        drawLine(guiGraphics, color, x1, y1, x2, y1, lineWidth);
+        drawLine(guiGraphics, color, x2, y1, x2, y2, lineWidth);
+        drawLine(guiGraphics, color, x2, y2, x1, y2, lineWidth);
+        drawLine(guiGraphics, color, x1, y2, x1, y1, lineWidth);
+    }
+
+    public static void drawTexturedRect(
+            GuiGraphics guiGraphics,
+            ResourceLocation resourceLocation,
+            int x,
+            int y,
+            int width,
+            int height,
+            int uOffset,
+            int vOffset,
+            int u,
+            int v,
+            int textureWidth,
+            int textureHeight) {
+        guiGraphics.blit(
+                RenderPipelines.GUI_TEXTURED,
+                resourceLocation,
+                x,
+                y,
+                uOffset,
+                vOffset,
+                width,
+                height,
+                u,
+                v,
+                textureWidth,
+                textureHeight);
+    }
+
+    public static void drawTexturedRect(
+            GuiGraphics guiGraphics, Texture texture, int x, int y, int width, int height, int u, int v) {
+        guiGraphics.blit(
+                RenderPipelines.GUI_TEXTURED,
                 texture.resource(),
                 x,
                 y,
-                0,
-                texture.width(),
-                texture.height() / 2f,
-                0,
-                hovered ? texture.height() / 2 : 0,
-                texture.width(),
-                texture.height() / 2,
+                u,
+                v,
+                width,
+                height,
                 texture.width(),
                 texture.height());
     }
 
-    public static void drawTexturedRect(PoseStack poseStack, Texture texture, float x, float y) {
+    public static void drawTexturedRect(GuiGraphics guiGraphics, Texture texture, int x, int y) {
+        drawTexturedRect(guiGraphics, texture, x, y, texture.width(), texture.height(), 0, 0);
+    }
+
+    public static void drawTexturedRect(
+            GuiGraphics guiGraphics,
+            ResourceLocation resourceLocation,
+            int x,
+            int y,
+            int width,
+            int height,
+            int textureWidth,
+            int textureHeight) {
         drawTexturedRect(
-                poseStack,
+                guiGraphics,
+                resourceLocation,
+                x,
+                y,
+                width,
+                height,
+                0,
+                0,
+                textureWidth,
+                textureHeight,
+                textureWidth,
+                textureHeight);
+    }
+
+    public static void drawScalingTexturedRect(
+            GuiGraphics guiGraphics,
+            ResourceLocation resourceLocation,
+            int x,
+            int y,
+            int width,
+            int height,
+            int textureWidth,
+            int textureHeight) {
+        guiGraphics.blit(
+                RenderPipelines.GUI_TEXTURED,
+                resourceLocation,
+                x,
+                y,
+                0,
+                0,
+                width,
+                height,
+                textureWidth,
+                textureHeight,
+                textureWidth,
+                textureHeight);
+    }
+
+    public static void drawScalingTexturedRect(
+            GuiGraphics guiGraphics,
+            Texture texture,
+            int x,
+            int y,
+            int width,
+            int height,
+            int textureWidth,
+            int textureHeight) {
+        drawScalingTexturedRect(guiGraphics, texture.resource(), x, y, width, height, textureWidth, textureHeight);
+    }
+
+    public static void drawScalingTexturedRectWithColor(
+            GuiGraphics guiGraphics,
+            ResourceLocation resourceLocation,
+            CustomColor color,
+            int x,
+            int y,
+            int width,
+            int height,
+            int textureWidth,
+            int textureHeight) {
+        guiGraphics.blit(
+                RenderPipelines.GUI_TEXTURED,
+                resourceLocation,
+                x,
+                y,
+                0,
+                0,
+                width,
+                height,
+                textureWidth,
+                textureHeight,
+                textureWidth,
+                textureHeight,
+                color.asInt());
+    }
+
+    public static void drawHoverableTexturedRect(
+            GuiGraphics guiGraphics, Texture texture, int x, int y, boolean hovered, RenderHoverDirection dir) {
+        int textureWidth = texture.width();
+        int textureHeight = texture.height();
+
+        int renderWidth = (dir == RenderHoverDirection.HORIZONTAL ? textureWidth / 2 : textureWidth);
+        int renderHeight = (dir == RenderHoverDirection.VERTICAL ? textureHeight / 2 : textureHeight);
+
+        float uOffset = (hovered && dir == RenderHoverDirection.HORIZONTAL ? textureWidth / 2f : 0f);
+        float vOffset = (hovered && dir == RenderHoverDirection.VERTICAL ? textureHeight / 2f : 0f);
+
+        guiGraphics.blit(
+                RenderPipelines.GUI_TEXTURED,
                 texture.resource(),
+                x,
+                y,
+                uOffset,
+                vOffset,
+                renderWidth,
+                renderHeight,
+                textureWidth,
+                textureHeight);
+    }
+
+    public static void drawScalingHoverableTexturedRect(
+            GuiGraphics guiGraphics,
+            Texture texture,
+            int x,
+            int y,
+            int width,
+            int height,
+            boolean hovered,
+            RenderHoverDirection dir) {
+        int textureWidth = texture.width();
+        int textureHeight = texture.height();
+
+        int regionWidth = (dir == RenderHoverDirection.HORIZONTAL ? textureWidth / 2 : textureWidth);
+        int regionHeight = (dir == RenderHoverDirection.VERTICAL ? textureHeight / 2 : textureHeight);
+
+        float uOffset = (hovered && dir == RenderHoverDirection.HORIZONTAL ? regionWidth : 0f);
+        float vOffset = (hovered && dir == RenderHoverDirection.VERTICAL ? regionHeight : 0f);
+
+        guiGraphics.blit(
+                RenderPipelines.GUI_TEXTURED,
+                texture.resource(),
+                x,
+                y,
+                uOffset,
+                vOffset,
+                width,
+                height,
+                regionWidth,
+                regionHeight,
+                textureWidth,
+                textureHeight);
+    }
+
+    public static void drawTexturedRectWithColor(
+            GuiGraphics guiGraphics,
+            ResourceLocation tex,
+            CustomColor color,
+            int x,
+            int y,
+            int width,
+            int height,
+            int uOffset,
+            int vOffset,
+            int u,
+            int v,
+            int textureWidth,
+            int textureHeight) {
+        guiGraphics.blit(
+                RenderPipelines.GUI_TEXTURED,
+                tex,
+                x,
+                y,
+                (float) uOffset,
+                (float) vOffset,
+                width,
+                height,
+                u,
+                v,
+                textureWidth,
+                textureHeight,
+                color.asInt());
+    }
+
+    public static void drawTexturedRectWithColor(
+            GuiGraphics guiGraphics,
+            Texture texture,
+            CustomColor color,
+            int x,
+            int y,
+            int width,
+            int height,
+            int textureWidth,
+            int textureHeight) {
+        drawTexturedRectWithColor(
+                guiGraphics,
+                texture.resource(),
+                color,
+                x,
+                y,
+                width,
+                height,
+                0,
+                0,
+                textureWidth,
+                textureHeight,
+                textureWidth,
+                textureHeight);
+    }
+
+    public static void drawTexturedRectWithColor(
+            GuiGraphics guiGraphics, Texture texture, CustomColor color, int x, int y, int width, int height) {
+        drawTexturedRectWithColor(guiGraphics, texture, color, x, y, width, height, width, height);
+    }
+
+    public static void drawTexturedRectWithColor(
+            GuiGraphics guiGraphics, Texture texture, CustomColor color, int x, int y) {
+        drawTexturedRectWithColor(
+                guiGraphics,
+                texture,
+                color,
                 x,
                 y,
                 texture.width(),
@@ -276,61 +540,43 @@ public final class RenderUtils {
                 texture.height());
     }
 
-    public static void drawTexturedRect(
-            PoseStack poseStack,
-            ResourceLocation tex,
-            float x,
-            float y,
-            float width,
-            float height,
-            int textureWidth,
-            int textureHeight) {
-        drawTexturedRect(
-                poseStack, tex, x, y, 0, width, height, 0, 0, (int) width, (int) height, textureWidth, textureHeight);
+    public static void renderVignetteOverlay(GuiGraphics guiGraphics, CustomColor color, float alpha) {
+        Window window = McUtils.window();
+
+        RenderUtils.drawTexturedRectWithColor(
+                guiGraphics,
+                Texture.VIGNETTE.resource(),
+                color.withAlpha(alpha),
+                0,
+                0,
+                window.getGuiScaledWidth(),
+                window.getGuiScaledHeight(),
+                0,
+                0,
+                Texture.VIGNETTE.width(),
+                Texture.VIGNETTE.height(),
+                Texture.VIGNETTE.width(),
+                Texture.VIGNETTE.height());
     }
 
-    public static void drawTexturedRect(
-            PoseStack poseStack,
-            ResourceLocation tex,
-            float x,
-            float y,
-            float z,
-            float width,
-            float height,
-            int textureWidth,
-            int textureHeight) {
-        drawTexturedRect(
-                poseStack, tex, x, y, z, width, height, 0, 0, (int) width, (int) height, textureWidth, textureHeight);
+    public static void fillGradient(
+            GuiGraphics guiGraphics, int x1, int y1, int x2, int y2, CustomColor colorA, CustomColor colorB) {
+        guiGraphics.fillGradient(x1, y1, x2, y2, colorA.asInt(), colorB.asInt());
     }
 
-    public static void drawTexturedRect(
-            PoseStack poseStack,
-            ResourceLocation tex,
-            float x,
-            float y,
-            float z,
-            float width,
-            float height,
-            int uOffset,
-            int vOffset,
-            int u,
-            int v,
-            int textureWidth,
-            int textureHeight) {
-        float uScale = 1f / textureWidth;
-        float vScale = 1f / textureHeight;
-
-        Matrix4f matrix = poseStack.last().pose();
-
-        RenderSystem.setShader(CoreShaders.POSITION_TEX);
-        RenderSystem.setShaderTexture(0, tex);
-        BufferBuilder bufferBuilder =
-                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferBuilder.addVertex(matrix, x, y + height, z).setUv(uOffset * uScale, (vOffset + v) * vScale);
-        bufferBuilder.addVertex(matrix, x + width, y + height, z).setUv((uOffset + u) * uScale, (vOffset + v) * vScale);
-        bufferBuilder.addVertex(matrix, x + width, y, z).setUv((uOffset + u) * uScale, vOffset * vScale);
-        bufferBuilder.addVertex(matrix, x, y, z).setUv(uOffset * uScale, vOffset * vScale);
-        BufferUploader.drawWithShader(bufferBuilder.build());
+    public static void fillSidewaysGradient(
+            GuiGraphics guiGraphics, int x1, int y1, int x2, int y2, CustomColor colorA, CustomColor colorB) {
+        guiGraphics.guiRenderState.submitGuiElement(new HorizontalRectangleRenderState(
+                RenderPipelines.GUI,
+                TextureSetup.noTexture(),
+                new Matrix3x2f(guiGraphics.pose()),
+                x1,
+                y1,
+                x2,
+                y2,
+                colorA.asInt(),
+                colorB.asInt(),
+                guiGraphics.scissorStack.peek()));
     }
 
     public static void drawScalingTexturedRect(
@@ -342,84 +588,7 @@ public final class RenderUtils {
             float width,
             float height,
             int textureWidth,
-            int textureHeight) {
-        drawTexturedRect(
-                poseStack, tex, x, y, z, width, height, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
-    }
-
-    public static void drawTexturedRectWithColor(
-            PoseStack poseStack,
-            ResourceLocation tex,
-            CustomColor color,
-            float x,
-            float y,
-            float z,
-            float width,
-            float height,
-            int textureWidth,
-            int textureHeight) {
-        drawTexturedRectWithColor(
-                poseStack,
-                tex,
-                color,
-                x,
-                y,
-                z,
-                width,
-                height,
-                0,
-                0,
-                (int) width,
-                (int) height,
-                textureWidth,
-                textureHeight);
-    }
-
-    public static void drawTexturedRectWithColor(
-            PoseStack poseStack,
-            ResourceLocation tex,
-            CustomColor color,
-            float x,
-            float y,
-            float z,
-            float width,
-            float height,
-            int uOffset,
-            int vOffset,
-            int u,
-            int v,
-            int textureWidth,
-            int textureHeight) {
-        float uScale = 1f / textureWidth;
-        float vScale = 1f / textureHeight;
-
-        Matrix4f matrix = poseStack.last().pose();
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(CoreShaders.POSITION_TEX_COLOR);
-        RenderSystem.setShaderTexture(0, tex);
-        BufferBuilder bufferBuilder =
-                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        bufferBuilder
-                .addVertex(matrix, x, y + height, z)
-                .setUv(uOffset * uScale, (vOffset + v) * vScale)
-                .setColor(color.r(), color.g(), color.b(), color.a());
-        bufferBuilder
-                .addVertex(matrix, x + width, y + height, z)
-                .setUv((uOffset + u) * uScale, (vOffset + v) * vScale)
-                .setColor(color.r(), color.g(), color.b(), color.a());
-        bufferBuilder
-                .addVertex(matrix, x + width, y, z)
-                .setUv((uOffset + u) * uScale, vOffset * vScale)
-                .setColor(color.r(), color.g(), color.b(), color.a());
-        bufferBuilder
-                .addVertex(matrix, x, y, z)
-                .setUv(uOffset * uScale, vOffset * vScale)
-                .setColor(color.r(), color.g(), color.b(), color.a());
-        BufferUploader.drawWithShader(bufferBuilder.build());
-        RenderSystem.disableBlend();
-    }
+            int textureHeight) {}
 
     public static void drawArc(
             PoseStack poseStack,
@@ -759,66 +928,6 @@ public final class RenderUtils {
         BufferUploader.drawWithShader(bufferBuilder.build());
     }
 
-    public static void fillGradient(
-            PoseStack poseStack,
-            float x1,
-            float y1,
-            float x2,
-            float y2,
-            int blitOffset,
-            CustomColor colorA,
-            CustomColor colorB) {
-        Matrix4f matrix = poseStack.last().pose();
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
-        RenderSystem.setShader(CoreShaders.POSITION_COLOR);
-
-        BufferBuilder bufferBuilder =
-                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-
-        bufferBuilder.addVertex(matrix, x2, y1, blitOffset).setColor(colorA.r(), colorA.g(), colorA.b(), colorA.a());
-        bufferBuilder.addVertex(matrix, x1, y1, blitOffset).setColor(colorA.r(), colorA.g(), colorA.b(), colorA.a());
-        bufferBuilder.addVertex(matrix, x1, y2, blitOffset).setColor(colorB.r(), colorB.g(), colorB.b(), colorB.a());
-        bufferBuilder.addVertex(matrix, x2, y2, blitOffset).setColor(colorB.r(), colorB.g(), colorB.b(), colorB.a());
-
-        BufferUploader.drawWithShader(bufferBuilder.build());
-
-        RenderSystem.disableDepthTest();
-        RenderSystem.disableBlend();
-    }
-
-    public static void fillSidewaysGradient(
-            PoseStack poseStack,
-            float x1,
-            float y1,
-            float x2,
-            float y2,
-            int blitOffset,
-            CustomColor colorA,
-            CustomColor colorB) {
-        Matrix4f matrix = poseStack.last().pose();
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
-        RenderSystem.setShader(CoreShaders.POSITION_COLOR);
-
-        BufferBuilder bufferBuilder =
-                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-
-        bufferBuilder.addVertex(matrix, x1, y1, blitOffset).setColor(colorA.r(), colorA.g(), colorA.b(), colorA.a());
-        bufferBuilder.addVertex(matrix, x1, y2, blitOffset).setColor(colorA.r(), colorA.g(), colorA.b(), colorA.a());
-        bufferBuilder.addVertex(matrix, x2, y2, blitOffset).setColor(colorB.r(), colorB.g(), colorB.b(), colorB.a());
-        bufferBuilder.addVertex(matrix, x2, y1, blitOffset).setColor(colorB.r(), colorB.g(), colorB.b(), colorB.a());
-
-        BufferUploader.drawWithShader(bufferBuilder.build());
-
-        RenderSystem.disableDepthTest();
-        RenderSystem.disableBlend();
-    }
-
     public static void enableScissor(GuiGraphics guiGraphics, int x, int y, int width, int height) {
         guiGraphics.enableScissor(x, y, x + width, y + height);
     }
@@ -829,47 +938,14 @@ public final class RenderUtils {
         guiGraphics.disableScissor();
     }
 
-    public static void rotatePose(PoseStack poseStack, float centerX, float centerZ, float angle) {
-        poseStack.translate(centerX, centerZ, 0);
-        // See Quaternion#fromXYZ
-        poseStack.mulPose(new Quaternionf(0F, 0, (float) StrictMath.sin(Math.toRadians(angle) / 2), (float)
-                StrictMath.cos(-Math.toRadians(angle) / 2)));
-        poseStack.translate(-centerX, -centerZ, 0);
+    public static void rotatePose(Matrix3x2fStack matrix3x2fStack, float centerX, float centerZ, float angle) {
+        matrix3x2fStack.translate(centerX, centerZ);
+        matrix3x2fStack.rotate((float) Math.toRadians(angle));
+        matrix3x2fStack.translate(-centerX, -centerZ);
     }
 
     public static void renderItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
         guiGraphics.renderItem(itemStack, x, y);
-    }
-
-    public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {
-        float[] colorArray = color.asFloatArray();
-        RenderSystem.setShaderColor(colorArray[0], colorArray[1], colorArray[2], alpha);
-        RenderSystem.disableDepthTest();
-        RenderSystem.enableBlend();
-        RenderSystem.depthMask(false);
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-
-        Window window = McUtils.window();
-
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.VIGNETTE.resource(),
-                0,
-                0,
-                0,
-                window.getGuiScaledWidth(),
-                window.getGuiScaledHeight(),
-                0,
-                0,
-                Texture.VIGNETTE.width(),
-                Texture.VIGNETTE.height(),
-                Texture.VIGNETTE.width(),
-                Texture.VIGNETTE.height());
-
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.disableBlend();
-        RenderSystem.depthMask(true);
-        RenderSystem.defaultBlendFunc();
     }
 
     public static void renderCustomNametag(
@@ -1061,20 +1137,20 @@ public final class RenderUtils {
         // Draw textured image
         int width = texture.width();
         int height = texture.height();
-        drawTexturedRect(
-                poseStack,
-                texture.resource(),
-                x1,
-                y1,
-                0f,
-                x2 - x1,
-                y2 - y1,
-                tx1,
-                ty1,
-                tx2 - tx1,
-                ty2 - ty1,
-                width,
-                height);
+        //        drawTexturedRect(
+        //                poseStack,
+        //                texture.resource(),
+        //                x1,
+        //                y1,
+        //                0f,
+        //                x2 - x1,
+        //                y2 - y1,
+        //                tx1,
+        //                ty1,
+        //                tx2 - tx1,
+        //                ty2 - ty1,
+        //                width,
+        //                height);
 
         // Reenable color and depth
         RenderSystem.colorMask(true, true, true, true);
@@ -1131,8 +1207,8 @@ public final class RenderUtils {
         for (int i = 1; i <= gridDivisions - 1; i++) {
             double x = dividedWidth * i;
             double y = dividedHeight * i;
-            RenderUtils.drawRect(poseStack, CommonColors.GRAY, (float) x, 0, 0, 1, dividedHeight * gridDivisions);
-            RenderUtils.drawRect(poseStack, CommonColors.GRAY, 0, (float) y, 0, dividedWidth * gridDivisions, 1);
+            drawRect(guiGraphics, CommonColors.GRAY, (int) x, 0, 1, (int) (dividedHeight * gridDivisions));
+            drawRect(guiGraphics, CommonColors.GRAY, 0, (int) y, (int) (dividedWidth * gridDivisions), 1);
             if (i % 2 == 0) continue; // reduce clutter
             FontRenderer.getInstance()
                     .renderText(

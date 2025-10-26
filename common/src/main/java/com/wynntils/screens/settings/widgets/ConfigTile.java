@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -74,20 +73,17 @@ public class ConfigTile extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         resetButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
         renderDisplayName(guiGraphics);
 
         RenderUtils.drawLine(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 this.getX(),
                 this.getY() + this.height,
                 this.getX() + this.width,
                 this.getY() + this.height,
-                0,
                 1);
 
         configOptionElement.render(guiGraphics, mouseX, mouseY, partialTick);
