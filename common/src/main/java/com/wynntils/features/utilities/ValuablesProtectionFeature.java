@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.utilities;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -100,14 +99,12 @@ public class ValuablesProtectionFeature extends Feature {
         if (currentContainerType != null && !currentContainerType.isInstance(currentContainer)) return;
         if (!slotsToWarn.contains(e.getSlot().index)) return;
 
-        RenderSystem.enableDepthTest();
-        RenderUtils.drawTexturedRectWithColor(
-                e.getPoseStack(),
+        RenderUtils.drawTexturedRect(
+                e.getGuiGraphics(),
                 CIRCLE_TEXTURE,
                 CommonColors.RED,
                 e.getSlot().x - 16,
                 e.getSlot().y - 16,
-                200,
                 48,
                 48,
                 0,
@@ -116,7 +113,6 @@ public class ValuablesProtectionFeature extends Feature {
                 48,
                 48,
                 192);
-        RenderSystem.disableDepthTest();
     }
 
     @SubscribeEvent

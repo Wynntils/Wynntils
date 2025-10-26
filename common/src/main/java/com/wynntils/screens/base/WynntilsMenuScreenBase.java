@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.base;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -46,8 +45,8 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         McUtils.playSoundUI(BOOK_OPEN_SOUND);
     }
 
-    protected void renderBackgroundTexture(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
+    protected void renderBackgroundTexture(GuiGraphics guiGraphics) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
     protected void renderVersion(GuiGraphics guiGraphics) {
@@ -69,7 +68,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
     }
 
     protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
 
         FontRenderer.getInstance()
                 .renderText(

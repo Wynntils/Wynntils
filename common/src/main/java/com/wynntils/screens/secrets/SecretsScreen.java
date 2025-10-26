@@ -63,7 +63,7 @@ public class SecretsScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SECRETS_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SECRETS_BACKGROUND, offsetX, offsetY);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -198,6 +198,6 @@ public class SecretsScreen extends WynntilsScreen {
                 + 7
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, 135 - Texture.SCROLL_BUTTON.height());
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SCROLL_BUTTON, offsetX + 336, scrollY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, offsetX + 336, scrollY);
     }
 }

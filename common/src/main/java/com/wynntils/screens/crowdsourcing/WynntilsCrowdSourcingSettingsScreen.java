@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.crowdsourcing;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
@@ -60,9 +59,7 @@ public class WynntilsCrowdSourcingSettingsScreen
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderBackgroundTexture(poseStack);
+        renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsCrowdSourcing.name"));
 

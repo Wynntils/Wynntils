@@ -112,7 +112,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.ITEM_SHARING_BACKGROUND, backgroundX, backgroundY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_SHARING_BACKGROUND, backgroundX, backgroundY);
     }
 
     @Override

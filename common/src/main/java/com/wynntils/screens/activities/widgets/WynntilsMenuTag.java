@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.activities.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
@@ -34,8 +33,6 @@ public class WynntilsMenuTag extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         if (isHovered) {
             offset = Math.min(2, offset + 1);
         } else {
@@ -43,19 +40,14 @@ public class WynntilsMenuTag extends WynntilsButton {
         }
 
         RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.CONTENT_BOOK_TAG.identifier(),
+                guiGraphics,
+                Texture.CONTENT_BOOK_TAG,
                 getX(),
                 getY(),
-                0,
                 Texture.CONTENT_BOOK_TAG.width(),
                 height,
                 0,
-                height * offset,
-                Texture.CONTENT_BOOK_TAG.width(),
-                height,
-                Texture.CONTENT_BOOK_TAG.width(),
-                Texture.CONTENT_BOOK_TAG.height());
+                height * offset);
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,

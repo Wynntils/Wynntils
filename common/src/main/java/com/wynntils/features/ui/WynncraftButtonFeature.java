@@ -27,8 +27,8 @@ import com.wynntils.screens.update.UpdateScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -228,13 +228,12 @@ public class WynncraftButtonFeature extends Feature {
             }
 
             // Insets the icon by 3
-            BufferedRenderUtils.drawScalingTexturedRect(
-                    guiGraphics.pose(),
-                    guiGraphics.bufferSource,
+            RenderUtils.drawScalingTexturedRect(
+                    guiGraphics,
                     serverIcon.getServerIconLocation(),
+                    CommonColors.WHITE.withAlpha(this.alpha),
                     this.getX() + 3,
                     this.getY() + 3,
-                    0,
                     this.width - 6,
                     this.height - 6,
                     64,
@@ -247,7 +246,7 @@ public class WynncraftButtonFeature extends Feature {
                                 StyledText.fromString("⚠"),
                                 this.getX() + 20,
                                 this.getY(),
-                                CommonColors.RED,
+                                CommonColors.RED.withAlpha(this.alpha),
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.MIDDLE,
                                 TextShadow.OUTLINE);
@@ -258,7 +257,7 @@ public class WynncraftButtonFeature extends Feature {
                                 StyledText.fromString("⟳"),
                                 this.getX() + 2,
                                 this.getY(),
-                                CommonColors.YELLOW,
+                                CommonColors.YELLOW.withAlpha(this.alpha),
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.MIDDLE,
                                 TextShadow.OUTLINE,

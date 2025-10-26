@@ -4,11 +4,11 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.RenderDirection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -81,58 +81,21 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawRect(poseStack, getButtonColor(), getX(), getY(), 0, width, height);
+        RenderUtils.drawRect(guiGraphics, getButtonColor(), getX(), getY(), width, height);
 
         if (!this.dynamicTexture) {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    texture.identifier(),
-                    getX() + (width - texture.width()) / 2f,
-                    getY() + (height - texture.height()) / 2f,
-                    1,
-                    texture.width(),
-                    texture.height(),
-                    0,
-                    0,
-                    texture.width(),
-                    texture.height(),
-                    texture.width(),
-                    texture.height());
-        } else {
-            if (this.isHovered) {
-                RenderUtils.drawTexturedRect(
-                        poseStack,
-                        texture.identifier(),
-                        getX() + (width - texture.width()) / 2f,
-                        getY() + (height - texture.height() / 2f) / 2f,
-                        1,
-                        texture.width(),
-                        texture.height() / 2f,
-                        0,
-                        texture.height() / 2,
-                        texture.width(),
-                        texture.height() / 2,
-                        texture.width(),
-                        texture.height());
-            } else {
-                RenderUtils.drawTexturedRect(
-                        poseStack,
-                        texture.identifier(),
-                        getX() + (width - texture.width()) / 2f,
-                        getY() + (height - texture.height() / 2f) / 2f,
-                        1,
-                        texture.width(),
-                        texture.height() / 2f,
-                        0,
-                        0,
-                        texture.width(),
-                        texture.height() / 2,
-                        texture.width(),
-                        texture.height());
-            }
+            RenderUtils.drawTexturedRect(guiGraphics, texture, (int) (getX() + (width - texture.width()) / 2f), (int)
+                    (getY() + (height - texture.height()) / 2f));
+            return;
         }
+
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics,
+                texture,
+                (int) (getX() + (width - texture.width()) / 2f),
+                (int) (getY() + (height - texture.height() / 2f) / 2f),
+                isHovered,
+                RenderDirection.VERTICAL);
     }
 
     private CustomColor getButtonColor() {

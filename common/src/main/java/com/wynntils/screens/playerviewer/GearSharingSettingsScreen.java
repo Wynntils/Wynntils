@@ -134,7 +134,7 @@ public class GearSharingSettingsScreen extends WynntilsScreen {
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.PLAYER_VIEWER_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.PLAYER_VIEWER_BACKGROUND, offsetX, offsetY);
 
         InventoryScreen.renderEntityInInventoryFollowsMouse(
                 guiGraphics,

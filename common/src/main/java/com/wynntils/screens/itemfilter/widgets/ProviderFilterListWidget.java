@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.itemfilter.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
 import com.wynntils.screens.itemfilter.type.NumericFilterWidgetFactory;
@@ -160,7 +159,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         RenderUtils.disableScissor(guiGraphics);
 
         if (isScrollable()) {
-            renderScrollBar(guiGraphics.pose());
+            renderScrollBar(guiGraphics);
         }
     }
 
@@ -406,7 +405,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         }
     }
 
-    private float getScrollbarHeight() {
+    private int getScrollbarHeight() {
         if (provider.getValidInputs().isEmpty() && !anyFilterActive()) {
             return MAX_WIDGETS_PER_PAGE * 24;
         } else {
@@ -432,13 +431,12 @@ public class ProviderFilterListWidget extends AbstractWidget {
         numericChoiceButton.setMessage(Component.literal(EnumUtils.toNiceString(numericChoice)));
     }
 
-    private void renderScrollBar(PoseStack poseStack) {
+    private void renderScrollBar(GuiGraphics guiGraphics) {
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.LIGHT_GRAY,
                 getX() + SCROLLBAR_RENDER_X,
                 getY(),
-                0,
                 SCROLLBAR_WIDTH,
                 getScrollbarHeight());
 
@@ -446,11 +444,10 @@ public class ProviderFilterListWidget extends AbstractWidget {
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, getScrollbarHeight() - SCROLLBAR_HEIGHT));
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 draggingScroll ? CommonColors.BLACK : CommonColors.GRAY,
                 getX() + SCROLLBAR_RENDER_X,
                 scrollRenderY,
-                0,
                 SCROLLBAR_WIDTH,
                 SCROLLBAR_HEIGHT);
     }

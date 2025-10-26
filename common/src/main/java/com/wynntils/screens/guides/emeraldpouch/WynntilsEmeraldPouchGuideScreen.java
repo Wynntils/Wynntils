@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.emeraldpouch;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
@@ -80,9 +79,7 @@ public final class WynntilsEmeraldPouchGuideScreen
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderBackgroundTexture(poseStack);
+        renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.emeraldPouch.name"));
 
@@ -101,18 +98,7 @@ public final class WynntilsEmeraldPouchGuideScreen
 
     @Override
     protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
-        int txWidth = Texture.CONTENT_BOOK_TITLE.width();
-        int txHeight = Texture.CONTENT_BOOK_TITLE.height();
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.CONTENT_BOOK_TITLE.identifier(),
-                offsetX,
-                30 + offsetY,
-                0,
-                txWidth,
-                txHeight,
-                txWidth,
-                txHeight);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
 
         FontRenderer.getInstance()
                 .renderText(

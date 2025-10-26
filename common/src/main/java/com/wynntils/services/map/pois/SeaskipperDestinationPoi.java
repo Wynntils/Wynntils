@@ -15,12 +15,11 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 public class SeaskipperDestinationPoi implements Poi {
     private final SeaskipperDestination destination;
@@ -67,7 +66,6 @@ public class SeaskipperDestinationPoi implements Poi {
     @Override
     public void renderAt(
             GuiGraphics guiGraphics,
-            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,
@@ -75,21 +73,15 @@ public class SeaskipperDestinationPoi implements Poi {
             float zoomRenderScale,
             float zoomLevel,
             boolean showLabels) {
-        renderPoi(guiGraphics, bufferSource, renderX, renderY, zoomRenderScale, true);
+        renderPoi(guiGraphics, renderX, renderY, zoomRenderScale, true);
     }
 
-    public void renderAtWithoutBorders(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderX, float renderY, float mapZoom) {
-        renderPoi(guiGraphics, bufferSource, renderX, renderY, mapZoom, false);
+    public void renderAtWithoutBorders(GuiGraphics guiGraphics, float renderX, float renderY, float mapZoom) {
+        renderPoi(guiGraphics, renderX, renderY, mapZoom, false);
     }
 
     private void renderPoi(
-            GuiGraphics guiGraphics,
-            MultiBufferSource bufferSource,
-            float renderX,
-            float renderY,
-            float mapZoom,
-            boolean renderBorders) {
+            GuiGraphics guiGraphics, float renderX, float renderY, float mapZoom, boolean renderBorders) {
         poseStack.pushPose();
         poseStack.translate(0, 0, 100);
 
@@ -106,25 +98,16 @@ public class SeaskipperDestinationPoi implements Poi {
         CustomColor color = getColor();
 
         if (renderBorders) {
-            BufferedRenderUtils.drawRect(
-                    poseStack,
-                    bufferSource,
-                    color.withAlpha(65),
-                    actualRenderX,
-                    actualRenderZ,
-                    0,
-                    renderWidth,
-                    renderHeight);
+            RenderUtils.drawRect(
+                    guiGraphics, color.withAlpha(65), actualRenderX, actualRenderZ, renderWidth, renderHeight);
 
-            BufferedRenderUtils.drawRectBorders(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawRectBorders(
+                    guiGraphics,
                     color,
                     actualRenderX,
                     actualRenderZ,
                     actualRenderX + renderWidth,
                     actualRenderZ + renderHeight,
-                    0,
                     1.5f);
         }
 

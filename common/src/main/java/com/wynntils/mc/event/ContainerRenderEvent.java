@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
@@ -40,10 +39,6 @@ public class ContainerRenderEvent extends Event {
 
     public GuiGraphics getGuiGraphics() {
         return guiGraphics;
-    }
-
-    public PoseStack getPoseStack() {
-        return guiGraphics.pose();
     }
 
     public int getMouseX() {

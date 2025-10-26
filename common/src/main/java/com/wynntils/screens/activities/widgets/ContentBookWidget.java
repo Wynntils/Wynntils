@@ -21,6 +21,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
@@ -94,15 +95,15 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
         final CustomColor gradientColor = activityInfo.status() == ActivityStatus.UNAVAILABLE
                 ? UNAVAILABLE_COLOR
                 : activityInfo.type().getColor();
-        RenderUtils.fillSidewaysGradient(
-                guiGraphics.pose(),
+        RenderUtils.fillGradient(
+                guiGraphics,
                 getX(),
                 getY(),
                 getX() + width,
                 getY() + height,
-                0,
                 gradientColor,
-                gradientColor.withAlpha(0));
+                gradientColor.withAlpha(0),
+                RenderDirection.HORIZONTAL);
         guiGraphics.renderItem(itemStack, getX(), getY());
 
         nameStyle = nameStyle.withBold(this.isHovered || activityInfo.trackingState() == ActivityTrackingState.TRACKED);
@@ -122,12 +123,12 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
 
         if (holder.inTutorial) {
             RenderUtils.drawRotatingBorderSegment(
-                    guiGraphics.pose(), CommonColors.RED, getX(), getY(), getX() + width, getY() + height, 1, 2, 0.25f);
+                    guiGraphics, CommonColors.RED, getX(), getY(), getX() + width, getY() + height, 2, 0.25f);
         }
 
         if (searchMatch) return;
 
-        RenderUtils.drawRect(guiGraphics.pose(), CommonColors.BLACK.withAlpha(100), getX(), getY(), 1, width, height);
+        RenderUtils.drawRect(guiGraphics, CommonColors.BLACK.withAlpha(100), getX(), getY(), width, height);
     }
 
     @Override

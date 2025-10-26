@@ -4,12 +4,12 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class SettingsSearchWidget extends SearchWidget {
     public SettingsSearchWidget(
@@ -18,7 +18,7 @@ public class SettingsSearchWidget extends SearchWidget {
     }
 
     @Override
-    protected void renderBackground(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.TAG_SEARCH, getX() - 25, getY() - 9);
+    protected void renderBackground(GuiGraphics guiGraphics) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.TAG_SEARCH, getX() - 25, getY() - 9);
     }
 }

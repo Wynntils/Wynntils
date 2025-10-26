@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.activities;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -160,11 +159,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderBackgroundTexture(poseStack);
+        renderBackgroundTexture(guiGraphics);
 
         contentBookWidgets
                 .get(currentPage)
@@ -457,8 +452,8 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         scrollDownButton.visible = scrollDownActive || currentPage < contentBookWidgets.size() - 1;
     }
 
-    private void renderBackgroundTexture(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.CUSTOM_CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
+    private void renderBackgroundTexture(GuiGraphics guiGraphics) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CUSTOM_CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {

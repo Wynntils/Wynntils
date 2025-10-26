@@ -16,7 +16,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 public class LabelPoi implements Poi {
     private static final CustomColor AQUA = new CustomColor(0f, 0.8f, 0.8f);
@@ -95,7 +94,6 @@ public class LabelPoi implements Poi {
     @Override
     public void renderAt(
             GuiGraphics guiGraphics,
-            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,

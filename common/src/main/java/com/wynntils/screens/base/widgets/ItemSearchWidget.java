@@ -159,7 +159,7 @@ public class ItemSearchWidget extends SearchWidget {
                         TextShadow.NORMAL);
 
         drawCursor(
-                poseStack,
+                guiGraphics,
                 this.getX()
                         + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length())))
                         + textPadding

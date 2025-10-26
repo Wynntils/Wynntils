@@ -5,7 +5,6 @@
 package com.wynntils.overlays.custombars;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
@@ -14,8 +13,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
@@ -86,11 +85,9 @@ public class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
     }
 
     @Override
-    protected void renderBar(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
-        BufferedRenderUtils.drawColoredProgressBar(
-                poseStack,
-                bufferSource,
+    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+        RenderUtils.drawColoredProgressBar(
+                guiGraphics,
                 Texture.UNIVERSAL_BAR,
                 colorCache.getValue(),
                 getRenderX(),

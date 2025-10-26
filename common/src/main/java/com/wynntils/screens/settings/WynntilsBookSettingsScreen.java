@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.settings;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
@@ -36,6 +35,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
@@ -99,8 +99,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private int configScrollOffset = 0;
     private int offsetX;
     private int offsetY;
-    private float configurableScrollRenderY;
-    private float configScrollRenderY;
+    private int configurableScrollRenderY;
+    private int configScrollRenderY;
 
     // Settings display
     private boolean unsavedChanges = false;
@@ -305,9 +305,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-
         if (displayWarning) {
             unsavedChangesWidget.render(guiGraphics, mouseX, mouseY, partialTick);
             return;
@@ -315,7 +312,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         renderTags(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderBg(poseStack);
+        renderBg(guiGraphics);
 
         String categoryName = selectedCategory == null
                 ? I18n.get("screens.wynntils.settingsScreen.all")
@@ -333,13 +330,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         TextShadow.NORMAL);
 
         RenderUtils.drawLine(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 offsetX + 11,
                 offsetY + 19,
                 Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 6 + offsetX,
                 19 + offsetY,
-                0,
                 1);
 
         if (selectedConfigurable != null || hoveredConfigurable != null) {
@@ -365,13 +361,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                             TextShadow.NORMAL);
 
             RenderUtils.drawLine(
-                    poseStack,
+                    guiGraphics,
                     CommonColors.GRAY,
                     Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 6 + offsetX,
                     19 + offsetY,
                     Texture.CONFIG_BOOK_BACKGROUND.width() - 11 + offsetX,
                     19 + offsetY,
-                    0,
                     1);
         } else {
             FontRenderer.getInstance()
@@ -392,14 +387,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         }
 
         if (configurables.size() > CONFIGURABLES_PER_PAGE) {
-            renderConfigurableScroll(poseStack);
+            renderConfigurableScroll(guiGraphics);
         }
 
         if (hoveredConfigurable == null && configs.size() > CONFIGS_PER_PAGE) {
-            renderSelectedConfigScroll(poseStack);
+            renderSelectedConfigScroll(guiGraphics);
         } else if (hoveredConfigurable != null
                 && configurableMap.get(hoveredConfigurable).size() > CONFIGS_PER_PAGE) {
-            renderHoveredConfigScroll(poseStack);
+            renderHoveredConfigScroll(guiGraphics);
         }
 
         renderConfigurables(guiGraphics, mouseX, mouseY, partialTick);
@@ -467,7 +462,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         (int) event.y(),
                         CONFIGURABLE_SCROLL_X + offsetX,
                         CONFIGURABLE_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
-                        (int) configurableScrollRenderY,
+                        configurableScrollRenderY,
                         (int) (configurableScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
             draggingConfigurableScroll = true;
             return true;
@@ -1014,8 +1009,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         return StringUtils.partialMatch(translatable.getTranslatedName(), searchWidget.getTextBoxInput());
     }
 
-    private void renderBg(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.CONFIG_BOOK_BACKGROUND, offsetX, offsetY);
+    private void renderBg(GuiGraphics guiGraphics) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONFIG_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
     private void renderTags(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -1044,31 +1039,31 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderConfigurableScroll(PoseStack poseStack) {
+    private void renderConfigurableScroll(GuiGraphics guiGraphics) {
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 CONFIGURABLE_SCROLL_X + offsetX,
                 21 + offsetY,
-                0,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
                 SCROLL_AREA_HEIGHT);
 
-        configurableScrollRenderY = SCROLL_START_Y
+        configurableScrollRenderY = (int) (SCROLL_START_Y
                 + offsetY
                 + MathUtils.map(
                         configurablesScrollOffset,
                         0,
                         getMaxConfigurableScrollOffset(),
                         0,
-                        SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f);
+                        SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f));
 
         RenderUtils.drawHoverableTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON,
                 CONFIGURABLE_SCROLL_X + offsetX,
                 configurableScrollRenderY,
-                draggingConfigurableScroll);
+                draggingConfigurableScroll,
+                RenderDirection.VERTICAL);
     }
 
     private void renderSelectedConfigs(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -1101,53 +1096,53 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderSelectedConfigScroll(PoseStack poseStack) {
+    private void renderSelectedConfigScroll(GuiGraphics guiGraphics) {
         if (configs.size() <= CONFIGS_PER_PAGE) return;
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 CONFIG_SCROLL_X + offsetX,
                 SCROLL_START_Y + offsetY,
-                0,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
                 SCROLL_AREA_HEIGHT);
 
-        configScrollRenderY = SCROLL_START_Y
+        configScrollRenderY = (int) (SCROLL_START_Y
                 + offsetY
                 + MathUtils.map(
                         configScrollOffset,
                         0,
                         getMaxConfigScrollOffset(),
                         0,
-                        SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f);
+                        SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f));
 
         RenderUtils.drawHoverableTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON,
                 CONFIG_SCROLL_X + offsetX,
                 configScrollRenderY,
-                draggingConfigScroll);
+                draggingConfigScroll,
+                RenderDirection.VERTICAL);
     }
 
-    private void renderHoveredConfigScroll(PoseStack poseStack) {
+    private void renderHoveredConfigScroll(GuiGraphics guiGraphics) {
         if (configurableMap.get(hoveredConfigurable).size() <= CONFIGS_PER_PAGE) return;
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 CONFIG_SCROLL_X + offsetX,
                 SCROLL_START_Y + offsetY,
-                0,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
                 SCROLL_AREA_HEIGHT);
 
         RenderUtils.drawHoverableTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON,
                 CONFIG_SCROLL_X + offsetX,
                 SCROLL_START_Y + offsetY,
-                draggingConfigScroll);
+                draggingConfigScroll,
+                RenderDirection.VERTICAL);
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {

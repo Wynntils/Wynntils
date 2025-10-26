@@ -16,7 +16,7 @@ import com.wynntils.services.lootrunpaths.type.ColoredPosition;
 import com.wynntils.services.lootrunpaths.type.LootrunNote;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
-import com.wynntils.utils.render.buffered.CustomRenderTypes;
+import com.wynntils.utils.render.pipelines.CustomRenderTypes;
 import com.wynntils.utils.type.Pair;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import java.util.ArrayList;

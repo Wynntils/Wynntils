@@ -15,15 +15,14 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 public class TerritoryPoi implements Poi {
     private final Supplier<TerritoryProfile> territoryProfileSupplier;
@@ -71,7 +70,6 @@ public class TerritoryPoi implements Poi {
     @Override
     public void renderAt(
             GuiGraphics guiGraphics,
-            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,
@@ -106,31 +104,19 @@ public class TerritoryPoi implements Poi {
                     isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getGuild()));
         }
 
-        BufferedRenderUtils.drawMulticoloredRect(
-                poseStack,
-                bufferSource,
+        RenderUtils.drawMulticoloredRect(
+                guiGraphics,
                 colors.stream().map(x -> x.withAlpha(80)).toList(),
                 actualRenderX,
                 actualRenderZ,
-                0,
                 renderWidth,
                 renderHeight);
-        BufferedRenderUtils.drawMulticoloredRectBorders(
-                poseStack,
-                bufferSource,
-                colors,
-                actualRenderX,
-                actualRenderZ,
-                0,
-                renderWidth,
-                renderHeight,
-                1.5f,
-                0.5f);
+        RenderUtils.drawMulticoloredRectBorders(
+                guiGraphics, colors, actualRenderX, actualRenderZ, renderWidth, renderHeight, 1.5f, 0.5f);
 
         if (isTerritoryInfoUsable() && territoryInfo.isHeadquarters()) {
-            BufferedRenderUtils.drawTexturedRect(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
                     Texture.GUILD_HEADQUARTERS,
                     actualRenderX + renderWidth / 2f - Texture.GUILD_HEADQUARTERS.width() / 2f,
                     actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS.height() / 2f);

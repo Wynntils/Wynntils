@@ -122,7 +122,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
 
         @Override
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX(), getY());
+            RenderUtils.drawTexturedRect(guiGraphics, texture, getX(), getY());
 
             if (!isHovered && state == ConfirmedBoolean.UNCONFIRMED) return;
 
@@ -135,13 +135,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
             }
 
             RenderUtils.drawRect(
-                    guiGraphics.pose(),
-                    color.withAlpha(isHovered ? 0.7f : 0.5f),
-                    getX(),
-                    getY(),
-                    0,
-                    getWidth(),
-                    getHeight());
+                    guiGraphics, color.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), getWidth(), getHeight());
 
             if (isHovered) {
                 McUtils.screen()

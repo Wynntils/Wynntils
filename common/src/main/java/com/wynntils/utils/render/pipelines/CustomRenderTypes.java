@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.utils.render.buffered;
+package com.wynntils.utils.render.pipelines;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -27,40 +27,13 @@ public class CustomRenderTypes {
                     .withTexture("Sampler0", Texture.LOOTRUN_LINE.identifier())
                     .createRenderSetup());
 
-    public static final RenderType POSITION_COLOR_TRIANGLE_STRIP = RenderType.create(
-            "wynntils_position_color_triangle_strip",
-            DefaultVertexFormat.POSITION_COLOR,
-            Mode.TRIANGLE_STRIP,
-            256,
-            false,
-            false,
-            CompositeState.builder()
-                    .setShaderState(POSITION_COLOR_SHADER)
-                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                    .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
-                    .createCompositeState(false));
-
     public static final RenderType POSITION_COLOR_QUAD = RenderType.create(
             "wynntils_position_color_quad",
             RenderSetup.builder(CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE)
                     .createRenderSetup());
 
-    private static final Function<Identifier, RenderType> POSITION_TEXTURE_QUAD =
-            Util.memoize(resource -> RenderType.create(
-                    "wynntils_position_texture_quad",
-                    DefaultVertexFormat.POSITION_TEX,
-                    Mode.QUADS,
-                    256,
-                    false,
-                    false,
-                    CompositeState.builder()
-                            .setShaderState(POSITION_TEX_SHADER)
-                            .setTextureState(new TextureStateShard(resource, TriState.FALSE, false))
-                            .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
-                            .createCompositeState(false)));
-
     private static final Function<Identifier, RenderType> MAP_POSITION_TEXTURE_QUAD =
-            Util.memoize(resource -> RenderType.create(
+            Util.memoize(identifier -> RenderType.create(
                     "wynntils_map_position_texture_quad",
                     DefaultVertexFormat.POSITION_TEX,
                     Mode.QUADS,
@@ -69,7 +42,7 @@ public class CustomRenderTypes {
                     false,
                     CompositeState.builder()
                             .setShaderState(POSITION_TEX_SHADER)
-                            .setTextureState(new TextureStateShard(resource, TriState.FALSE, false))
+                            .setTextureState(new TextureStateShard(identifier, TriState.FALSE, false))
                             .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
                             .setTexturingState(new TexturingStateShard(
                                     "map_clamping",
@@ -89,29 +62,6 @@ public class CustomRenderTypes {
                                         // but doing so causes weirdness when using Sodium
                                     }))
                             .createCompositeState(false)));
-
-    private static final Function<Identifier, RenderType> POSITION_COLOR_TEXTURE_QUAD =
-            Util.memoize(resource -> RenderType.create(
-                    "wynntils_position_color_texture_quad",
-                    DefaultVertexFormat.POSITION_TEX_COLOR,
-                    Mode.QUADS,
-                    256,
-                    false,
-                    false,
-                    CompositeState.builder()
-                            .setShaderState(new ShaderStateShard(CoreShaders.POSITION_TEX_COLOR))
-                            .setTextureState(new TextureStateShard(resource, TriState.FALSE, false))
-                            .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
-                            .setWriteMaskState(COLOR_WRITE)
-                            .createCompositeState(false)));
-
-    public static RenderType getPositionColorTextureQuad(Identifier resource) {
-        return POSITION_COLOR_TEXTURE_QUAD.apply(resource);
-    }
-
-    public static RenderType getPositionTextureQuad(Identifier resource) {
-        return POSITION_TEXTURE_QUAD.apply(resource);
-    }
 
     public static RenderType getMapPositionTextureQuad(Identifier resource) {
         return MAP_POSITION_TEXTURE_QUAD.apply(resource);

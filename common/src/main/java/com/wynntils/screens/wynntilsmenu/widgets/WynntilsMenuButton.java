@@ -4,11 +4,11 @@
  */
 package com.wynntils.screens.wynntilsmenu.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.RenderDirection;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -54,60 +54,23 @@ public class WynntilsMenuButton extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         RenderUtils.drawRect(
-                poseStack, isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR, getX(), getY(), 0, width, height);
+                guiGraphics, isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR, getX(), getY(), width, height);
 
         if (!dynamicTexture) {
             RenderUtils.drawTexturedRect(
-                    poseStack,
-                    buttonTexture.identifier(),
-                    getX() + (width - buttonTexture.width()) / 2f,
-                    getY() + (height - buttonTexture.height()) / 2f,
-                    1,
-                    buttonTexture.width(),
-                    buttonTexture.height(),
-                    0,
-                    0,
-                    buttonTexture.width(),
-                    buttonTexture.height(),
-                    buttonTexture.width(),
-                    buttonTexture.height());
+                    guiGraphics, buttonTexture, (int) (getX() + (width - buttonTexture.width()) / 2f), (int)
+                            (getY() + (height - buttonTexture.height()) / 2f));
             return;
         }
 
-        if (isHovered) {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    buttonTexture.identifier(),
-                    getX() + (width - buttonTexture.width()) / 2f,
-                    getY() + (height - buttonTexture.height() / 2f) / 2f,
-                    1,
-                    buttonTexture.width(),
-                    buttonTexture.height() / 2f,
-                    0,
-                    buttonTexture.height() / 2,
-                    buttonTexture.width(),
-                    buttonTexture.height() / 2,
-                    buttonTexture.width(),
-                    buttonTexture.height());
-        } else {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    buttonTexture.identifier(),
-                    getX() + (width - buttonTexture.width()) / 2f,
-                    getY() + (height - buttonTexture.height() / 2f) / 2f,
-                    1,
-                    buttonTexture.width(),
-                    buttonTexture.height() / 2f,
-                    0,
-                    0,
-                    buttonTexture.width(),
-                    buttonTexture.height() / 2,
-                    buttonTexture.width(),
-                    buttonTexture.height());
-        }
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics,
+                buttonTexture,
+                (int) (getX() + (width - buttonTexture.width()) / 2f),
+                (int) (getY() + (height - buttonTexture.height() / 2f) / 2f),
+                isHovered,
+                RenderDirection.VERTICAL);
     }
 
     public Runnable getClickAction() {

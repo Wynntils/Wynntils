@@ -5,7 +5,6 @@
 package com.wynntils.screens.itemfilter.widgets;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
@@ -77,11 +76,9 @@ public class ProviderButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        RenderUtils.drawRect(guiGraphics, getRectColor().withAlpha(100), getX(), getY(), width, height);
 
-        RenderUtils.drawRect(poseStack, getRectColor().withAlpha(100), getX(), getY(), 0, width, height);
-
-        RenderUtils.drawRectBorders(poseStack, getBorderColor(), getX(), getY(), getX() + width, getY() + height, 1, 2);
+        RenderUtils.drawRectBorders(guiGraphics, getBorderColor(), getX(), getY(), getX() + width, getY() + height, 2);
 
         FontRenderer.getInstance()
                 .renderScrollingText(

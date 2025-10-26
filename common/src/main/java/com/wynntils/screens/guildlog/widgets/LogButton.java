@@ -34,7 +34,7 @@ public class LogButton extends BasicTexturedButton {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), logType.getIcon(), getX() + 3, getY() + 3);
+        RenderUtils.drawTexturedRect(guiGraphics, logType.getIcon(), getX() + 3, getY() + 3);
 
         FontRenderer.getInstance()
                 .renderText(

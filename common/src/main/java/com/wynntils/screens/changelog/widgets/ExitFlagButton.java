@@ -4,10 +4,10 @@
  */
 package com.wynntils.screens.changelog.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.RenderDirection;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
@@ -22,23 +22,8 @@ public class ExitFlagButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        Texture texture = Texture.EXIT_FLAG;
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                texture.identifier(),
-                this.getX(),
-                this.getY(),
-                0,
-                this.width,
-                this.height,
-                0,
-                isHovered ? texture.height() / 2 : 0,
-                texture.width(),
-                texture.height() / 2,
-                texture.width(),
-                texture.height());
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics, Texture.EXIT_FLAG, this.getX(), this.getY(), isHovered, RenderDirection.VERTICAL);
     }
 
     @Override

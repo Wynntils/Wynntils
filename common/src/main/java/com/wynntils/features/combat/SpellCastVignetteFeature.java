@@ -83,7 +83,7 @@ public class SpellCastVignetteFeature extends Feature {
         int fade = vignetteFadeTime.get() - shownTicks;
         if (fade > 0) {
             float alpha = intensity * ((float) fade / vignetteFadeTime.get());
-            RenderUtils.renderVignetteOverlay(event.getPoseStack(), vignetteColor.get(), alpha);
+            RenderUtils.renderVignetteOverlay(event.getGuiGraphics(), vignetteColor.get(), alpha);
         }
     }
 }

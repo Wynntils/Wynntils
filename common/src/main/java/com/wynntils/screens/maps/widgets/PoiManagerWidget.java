@@ -4,9 +4,6 @@
  */
 package com.wynntils.screens.maps.widgets;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.PoiCreationScreen;
@@ -112,9 +109,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderIcon(poseStack);
+        renderIcon(guiGraphics);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
@@ -171,13 +166,12 @@ public class PoiManagerWidget extends AbstractWidget {
 
             // Border to show selected pois, orange when selected, white if not
             RenderUtils.drawRectBorders(
-                    poseStack,
+                    guiGraphics,
                     selected ? CommonColors.ORANGE : CommonColors.WHITE,
                     getX(),
                     getY() + 1,
                     getX() + width,
                     getY() + height - 1,
-                    0,
                     1f);
         } else {
             editButton.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -223,21 +217,13 @@ public class PoiManagerWidget extends AbstractWidget {
         }
     }
 
-    private void renderIcon(PoseStack poseStack) {
-        float[] poiColor = CustomColor.fromInt(poi.getColor().asInt()).asFloatArray();
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(poiColor[0], poiColor[1], poiColor[2], 1);
-
+    private void renderIcon(GuiGraphics guiGraphics) {
         RenderUtils.drawTexturedRect(
-                poseStack,
+                guiGraphics,
                 poi.getIcon(),
-                getX() + dividedWidth - (poi.getIcon().width() / 2f),
-                getY() + 10 - (poi.getIcon().height() / 2f));
-
-        RenderSystem.disableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+                poi.getColor(),
+                (int) (getX() + dividedWidth - (poi.getIcon().width() / 2f)),
+                (int) (getY() + 10 - (poi.getIcon().height() / 2f)));
     }
 
     @Override

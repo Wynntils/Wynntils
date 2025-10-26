@@ -5,7 +5,6 @@
 package com.wynntils.core.consumers.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
@@ -13,8 +12,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -56,8 +55,6 @@ public abstract class BarOverlay extends DynamicOverlay {
     @Override
     public void render(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PoseStack poseStack = guiGraphics.pose();
-
         BarOverlayTemplatePair template = getTemplate();
 
         if (templateCache == null) {
@@ -123,7 +120,7 @@ public abstract class BarOverlay extends DynamicOverlay {
         renderText(guiGraphics, bufferSource, renderY, textValue);
 
         float progress = (flip.get() ? -1 : 1) * renderedProgress;
-        renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
+        renderBar(guiGraphics, renderY + 10, barHeight, progress);
     }
 
     @Override
@@ -156,14 +153,12 @@ public abstract class BarOverlay extends DynamicOverlay {
 
     protected abstract float getTextureHeight();
 
-    protected void renderBar(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
+    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
         Texture texture = getTexture();
 
         if (getRenderColor() == CommonColors.WHITE) {
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawProgressBar(
+                    guiGraphics,
                     texture,
                     getRenderX(),
                     renderY,
@@ -175,9 +170,8 @@ public abstract class BarOverlay extends DynamicOverlay {
                     texture.height(),
                     progress);
         } else {
-            BufferedRenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawColoredProgressBar(
+                    guiGraphics,
                     texture,
                     getRenderColor(),
                     getRenderX(),

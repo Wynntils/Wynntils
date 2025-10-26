@@ -6,7 +6,6 @@ package com.wynntils.screens.overlays.selection.widgets;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -110,13 +109,12 @@ public class OverlayButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
         boolean enabled = Managers.Overlay.isEnabled(overlay);
 
-        RenderUtils.drawRect(poseStack, getRectColor(enabled).withAlpha(100), getX(), getY(), 0, width, height);
+        RenderUtils.drawRect(guiGraphics, getRectColor(enabled).withAlpha(100), getX(), getY(), width, height);
 
         RenderUtils.drawRectBorders(
-                poseStack, getBorderColor(enabled), getX(), getY(), getX() + width, getY() + height, 1, 2);
+                guiGraphics, getBorderColor(enabled), getX(), getY(), getX() + width, getY() + height, 2);
 
         FontRenderer.getInstance()
                 .renderScrollingText(

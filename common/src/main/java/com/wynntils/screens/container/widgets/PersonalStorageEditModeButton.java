@@ -5,7 +5,6 @@
 package com.wynntils.screens.container.widgets;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
@@ -40,14 +39,11 @@ public class PersonalStorageEditModeButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.EDIT_NAME_ICON.identifier(),
                 this.getX(),
                 this.getY(),
-                0,
                 this.width,
                 this.height,
                 Texture.EDIT_NAME_ICON.width(),

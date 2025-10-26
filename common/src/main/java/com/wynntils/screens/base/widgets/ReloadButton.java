@@ -4,10 +4,10 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.RenderDirection;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -31,40 +31,8 @@ public class ReloadButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        Texture reloadButton = Texture.RELOAD_ICON_OFFSET;
-        if (this.isHovered) {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    reloadButton.identifier(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    this.width,
-                    this.height,
-                    reloadButton.width() / 2,
-                    0,
-                    reloadButton.width() / 2,
-                    reloadButton.height(),
-                    reloadButton.width(),
-                    reloadButton.height());
-        } else {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    reloadButton.identifier(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    this.width,
-                    this.height,
-                    0,
-                    0,
-                    reloadButton.width() / 2,
-                    reloadButton.height(),
-                    reloadButton.width(),
-                    reloadButton.height());
-        }
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics, Texture.RELOAD_ICON_OFFSET, getX(), getY(), this.isHovered, RenderDirection.HORIZONTAL);
     }
 
     @Override

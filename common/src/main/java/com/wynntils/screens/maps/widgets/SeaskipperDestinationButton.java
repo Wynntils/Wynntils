@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps.widgets;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -18,6 +17,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
@@ -44,24 +44,15 @@ public class SeaskipperDestinationButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.DESTINATION_BUTTON.identifier(),
+        RenderUtils.drawScalingHoverableTexturedRect(
+                guiGraphics,
+                Texture.DESTINATION_BUTTON,
                 this.getX(),
                 this.getY(),
-                0,
-                this.width,
-                this.height,
-                0,
-                this.isHovered || seaskipperScreen.getSelectedDestination() == destination
-                        ? Texture.DESTINATION_BUTTON.height() / 2
-                        : 0,
-                Texture.DESTINATION_BUTTON.width(),
-                Texture.DESTINATION_BUTTON.height() / 2,
-                Texture.DESTINATION_BUTTON.width(),
-                Texture.DESTINATION_BUTTON.height());
+                width,
+                height,
+                isHovered,
+                RenderDirection.VERTICAL);
 
         float x = this.getX() + this.width * 0.05f;
         float y = this.getY() + this.height * 0.16f;

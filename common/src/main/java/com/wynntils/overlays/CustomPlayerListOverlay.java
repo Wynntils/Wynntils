@@ -5,8 +5,6 @@
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.persisted.Persisted;
@@ -114,9 +112,6 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     private void renderPlayerList(GuiGraphics guiGraphics, double animation) {
-        RenderSystem.disableDepthTest();
-        PoseStack poseStack = guiGraphics.pose();
-
         if (animation < 1) {
             RenderUtils.enableScissor(
                     guiGraphics,
@@ -126,7 +121,7 @@ public class CustomPlayerListOverlay extends Overlay {
                     McUtils.mc().getWindow().getScreenHeight());
         }
 
-        renderBackground(poseStack);
+        renderBackground(guiGraphics);
 
         renderPlayerNames(guiGraphics, availablePlayers.get());
 
@@ -135,22 +130,19 @@ public class CustomPlayerListOverlay extends Overlay {
         }
 
         float middle = getRenderX() + HALF_WIDTH + ROLL_WIDTH;
-        renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 11 - HALF_WIDTH * animation), 0);
+        renderRoll(guiGraphics, (float) (middle - ROLL_WIDTH + 11 - HALF_WIDTH * animation), 0);
         renderRoll(
-                poseStack,
+                guiGraphics,
                 (float) (middle - 11 + HALF_WIDTH * animation),
                 Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH);
-
-        RenderSystem.enableDepthTest();
     }
 
-    private void renderRoll(PoseStack poseStack, float xPos, int uOffset) {
+    private void renderRoll(GuiGraphics guiGraphics, float xPos, int uOffset) {
         RenderUtils.drawTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.PLAYER_LIST_OVERLAY.identifier(),
                 xPos,
                 getRenderY(),
-                0,
                 ROLL_WIDTH,
                 Texture.PLAYER_LIST_OVERLAY.height(),
                 uOffset,
@@ -188,13 +180,12 @@ public class CustomPlayerListOverlay extends Overlay {
         }
     }
 
-    private void renderBackground(PoseStack poseStack) {
+    private void renderBackground(GuiGraphics guiGraphics) {
         RenderUtils.drawTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.PLAYER_LIST_OVERLAY.identifier(),
                 getRenderX() + ROLL_WIDTH,
                 getRenderY(),
-                0,
                 Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH,
                 Texture.PLAYER_LIST_OVERLAY.height(),
                 ROLL_WIDTH,

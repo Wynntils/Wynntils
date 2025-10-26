@@ -27,7 +27,7 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.buffered.CustomRenderTypes;
+import com.wynntils.utils.render.pipelines.CustomRenderTypes;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;

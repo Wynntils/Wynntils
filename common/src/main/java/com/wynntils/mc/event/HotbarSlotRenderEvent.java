@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.Event;
@@ -24,10 +23,6 @@ public abstract class HotbarSlotRenderEvent extends Event {
 
     public GuiGraphics getGuiGraphics() {
         return guiGraphics;
-    }
-
-    public PoseStack getPoseStack() {
-        return guiGraphics.pose();
     }
 
     public ItemStack getItemStack() {

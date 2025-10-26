@@ -4,7 +4,6 @@
  */
 package com.wynntils.overlays.gamebars;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -17,8 +16,8 @@ import com.wynntils.models.abilities.bossbars.MomentumBar;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
@@ -60,11 +59,9 @@ public class MomentumBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderBar(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
-        BufferedRenderUtils.drawColoredProgressBar(
-                poseStack,
-                bufferSource,
+    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+        RenderUtils.drawColoredProgressBar(
+                guiGraphics,
                 Texture.UNIVERSAL_BAR,
                 Models.Ability.momentumBar.isMax() ? this.maximumColor.get() : this.textColor.get(),
                 this.getRenderX(),

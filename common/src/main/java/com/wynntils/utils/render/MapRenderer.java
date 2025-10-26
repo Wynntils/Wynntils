@@ -20,13 +20,13 @@ import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
-import com.wynntils.utils.render.buffered.CustomRenderTypes;
+import com.wynntils.utils.render.pipelines.CustomRenderTypes;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
@@ -158,7 +158,7 @@ public final class MapRenderer {
     }
 
     public static void renderCursor(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             float renderX,
             float renderY,
             float pointerScale,
@@ -173,19 +173,18 @@ public final class MapRenderer {
             rotationAngle = 180 + McUtils.player().getYRot();
         }
 
-        poseStack.pushPose();
-        RenderUtils.rotatePose(poseStack, renderX, renderY, rotationAngle);
+        guiGraphics.pose().pushMatrix();
+        RenderUtils.rotatePose(guiGraphics.pose(), renderX, renderY, rotationAngle);
 
         float renderedWidth = pointerType.width * pointerScale;
         float renderedHeight = pointerType.height * pointerScale;
 
-        RenderUtils.drawTexturedRectWithColor(
-                poseStack,
+        RenderUtils.drawTexturedRect(
+                guiGraphics,
                 Texture.MAP_POINTERS.identifier(),
                 pointerColor,
                 renderX - renderedWidth / 2f,
                 renderY - renderedHeight / 2f,
-                0,
                 renderedWidth,
                 renderedHeight,
                 0,
@@ -195,12 +194,11 @@ public final class MapRenderer {
                 Texture.MAP_POINTERS.width(),
                 Texture.MAP_POINTERS.height());
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     public static void renderChunks(
-            PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            GuiGraphics guiGraphics,
             BoundingBox renderedWorldBoundingBox,
             Set<Long> mappedChunks,
             float mapCenterX,
@@ -237,10 +235,8 @@ public final class MapRenderer {
                         mappedChunks.contains(new ChunkPos(x - 1, z).toLong()) ? CommonColors.GREEN : renderColor;
 
                 // Render the top and left borders of the chunk
-                BufferedRenderUtils.drawLine(
-                        poseStack, bufferSource, topRenderColor, x1, z1, x2, z1, 0, CHUNK_LINE_WIDTH);
-                BufferedRenderUtils.drawLine(
-                        poseStack, bufferSource, leftRenderColor, x1, z1, x1, z2, 0, CHUNK_LINE_WIDTH);
+                RenderUtils.drawLine(guiGraphics, topRenderColor, x1, z1, x2, z1, CHUNK_LINE_WIDTH);
+                RenderUtils.drawLine(guiGraphics, leftRenderColor, x1, z1, x1, z2, CHUNK_LINE_WIDTH);
 
                 // Render the right border, if the chunk is the rightmost chunk
                 if (x == bottomRight.x) {
@@ -248,8 +244,7 @@ public final class MapRenderer {
                     CustomColor rightRenderColor =
                             mappedChunks.contains(new ChunkPos(x + 1, z).toLong()) ? CommonColors.GREEN : renderColor;
 
-                    BufferedRenderUtils.drawLine(
-                            poseStack, bufferSource, rightRenderColor, x2, z1, x2, z2, 0, CHUNK_LINE_WIDTH);
+                    RenderUtils.drawLine(guiGraphics, rightRenderColor, x2, z1, x2, z2, CHUNK_LINE_WIDTH);
                 }
 
                 // Render the bottom border, if the chunk is the bottommost chunk
@@ -258,8 +253,7 @@ public final class MapRenderer {
                     CustomColor bottomRenderColor =
                             mappedChunks.contains(new ChunkPos(x, z + 1).toLong()) ? CommonColors.GREEN : renderColor;
 
-                    BufferedRenderUtils.drawLine(
-                            poseStack, bufferSource, bottomRenderColor, x1, z2, x2, z2, 0, CHUNK_LINE_WIDTH);
+                    RenderUtils.drawLine(guiGraphics, bottomRenderColor, x1, z2, x2, z2, CHUNK_LINE_WIDTH);
                 }
             }
         }
@@ -500,7 +494,7 @@ public final class MapRenderer {
     /**
      * {@param poi} POI that we get the render coordinate for
      * {@param mapCenterX} center coordinates of map (in-game coordinates)
-     * {@param centerX} center coordinates of map (screen render coordinates)
+     * {@param x} center coordinates of map (screen render coordinates)
      * {@param currentZoom} the bigger, the more detailed the map is
      */
     public static float getRenderX(Poi poi, float mapCenterX, float centerX, float currentZoom) {

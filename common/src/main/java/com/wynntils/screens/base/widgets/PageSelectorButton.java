@@ -4,11 +4,11 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.WynntilsPagedScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.RenderDirection;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
@@ -44,32 +44,10 @@ public class PageSelectorButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         Texture arrowTexture = this.forward ? Texture.FORWARD_ARROW_OFFSET : Texture.BACKWARD_ARROW_OFFSET;
 
-        if (isValid() && !isHovered) {
-            drawTexture(poseStack, arrowTexture, arrowTexture.width() / 2);
-        } else {
-            drawTexture(poseStack, arrowTexture, 0);
-        }
-    }
-
-    private void drawTexture(PoseStack poseStack, Texture texture, int uOffset) {
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                texture.identifier(),
-                this.getX(),
-                this.getY(),
-                0,
-                this.width,
-                this.height,
-                uOffset,
-                0,
-                texture.width() / 2,
-                texture.height(),
-                texture.width(),
-                texture.height());
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics, arrowTexture, getX(), getY(), isValid() && !isHovered, RenderDirection.HORIZONTAL);
     }
 
     private boolean isValid() {

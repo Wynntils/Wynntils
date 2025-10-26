@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.skillpointloadouts.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.SavableSkillPointSet;
@@ -58,22 +57,19 @@ public class LoadoutWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         if (this.isMouseOver(mouseX, mouseY)) {
             RenderUtils.drawRect(
-                    poseStack, CommonColors.GRAY.withAlpha(100), this.getX(), this.getY(), 0, width, height);
+                    guiGraphics, CommonColors.GRAY.withAlpha(100), this.getX(), this.getY(), width, height);
         }
         if (parent.getSelectedLoadout() != null
                 && parent.getSelectedLoadout().key().equals(this.name)) {
             RenderUtils.drawRectBorders(
-                    poseStack,
+                    guiGraphics,
                     CommonColors.WHITE,
                     this.getX(),
                     this.getY(),
                     this.getX() + this.getWidth(),
                     this.getY() + this.getHeight(),
-                    1,
                     0.5f);
         }
 

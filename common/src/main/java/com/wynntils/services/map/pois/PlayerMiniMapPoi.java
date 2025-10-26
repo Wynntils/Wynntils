@@ -4,13 +4,12 @@
  */
 package com.wynntils.services.map.pois;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.wynntils.utils.render.RenderUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.Identifier;
 
 public class PlayerMiniMapPoi extends PlayerPoiBase {
@@ -25,8 +24,7 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
 
     @Override
     public void renderAt(
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
+            GuiGraphics guiGraphics,
             float renderX,
             float renderY,
             boolean hovered,
@@ -38,34 +36,19 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
         poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
 
         // outline
-        BufferedRenderUtils.drawRectBorders(
-                poseStack,
-                bufferSource,
+        RenderUtils.drawRectBorders(
+                guiGraphics,
                 user.getRelationColor(),
                 renderX,
                 renderY,
                 renderX + playerHeadRenderSize,
                 renderY + playerHeadRenderSize,
-                0,
                 2);
 
         // head
         Identifier skin = SkinUtils.getSkin(user.getUuid());
-        BufferedRenderUtils.drawTexturedRect(
-                poseStack,
-                bufferSource,
-                skin,
-                renderX,
-                renderY,
-                0,
-                playerHeadRenderSize,
-                playerHeadRenderSize,
-                8,
-                8,
-                8,
-                8,
-                64,
-                64);
+        RenderUtils.drawTexturedRect(
+                guiGraphics, skin, renderX, renderY, playerHeadRenderSize, playerHeadRenderSize, 8, 8, 8, 8, 64, 64);
 
         poseStack.popPose();
     }

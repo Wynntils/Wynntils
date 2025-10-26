@@ -28,20 +28,19 @@ public class HueSlider extends AbstractSliderButton {
         for (int i = 0; i < width; i++) {
             float hue = (float) i / width;
             RenderUtils.drawRect(
-                    guiGraphics.pose(), CustomColor.fromHSV(hue, 1.0f, 1.0f, 1.0f), getX() + i, getY(), 1, 1, height);
+                    guiGraphics, CustomColor.fromHSV(hue, 1.0f, 1.0f, 1.0f), getX() + i, getY(), 1, height);
         }
 
         double exactX = getX() + width * value;
         int handleX = (int) Math.round(exactX);
 
         RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
+                guiGraphics,
                 CommonColors.DARK_GRAY,
                 (float) (handleX - 1.0),
                 (float) getY(),
                 (float) (handleX + 1.0),
                 (float) (getY() + getHeight()),
-                2,
                 1);
     }
 

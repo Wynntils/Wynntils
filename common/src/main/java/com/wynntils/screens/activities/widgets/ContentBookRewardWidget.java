@@ -37,7 +37,7 @@ public class ContentBookRewardWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX() + width - 10, getY() - 1);
+        RenderUtils.drawTexturedRect(guiGraphics, texture, getX() + width - 10, getY() - 1);
 
         if (text != null) {
             FontRenderer.getInstance()
