@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
 import com.wynntils.screens.maps.widgets.IconFilterWidget;
 import com.wynntils.utils.MathUtils;
@@ -80,13 +79,14 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
         backgroundHeight = dividedHeight * 50;
 
         // Height of the scroll button relative to the scaled width
-        scrollButtonHeight = ((dividedWidth / 2) / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
+        scrollButtonHeight =
+                (int) (((dividedWidth / 2) / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height());
 
         // How far the scrollbar should be able to go
         scrollAreaHeight = (int) (backgroundHeight - scrollButtonHeight) - (int) (dividedHeight * 4);
 
         // X position of the scroll button
-        scrollButtonRenderX = (int) (dividedWidth * 52) + (dividedWidth / 4);
+        scrollButtonRenderX = (int) ((dividedWidth * 52) + (dividedWidth / 4));
 
         int filterButtonWidth = (int) (dividedWidth * 10);
 
@@ -140,7 +140,7 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        renderScrollButton(guiGraphics.pose());
+        renderScrollButton(guiGraphics);
     }
 
     @Override
@@ -148,11 +148,10 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(),
+                guiGraphics,
                 Texture.WAYPOINT_MANAGER_BACKGROUND.identifier(),
                 backgroundX,
                 backgroundY,
-                0,
                 backgroundWidth,
                 backgroundHeight,
                 Texture.WAYPOINT_MANAGER_BACKGROUND.width(),
@@ -221,22 +220,21 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
         populateIcons();
     }
 
-    private void renderScrollButton(PoseStack poseStack) {
+    private void renderScrollButton(GuiGraphics guiGraphics) {
         // Don't render the scroll button if it will not be useable
         if (usedIcons.size() <= MAX_ICONS_TO_DISPLAY) return;
 
         // Calculate where the scroll button should be on the Y axis
-        scrollButtonRenderY = (this.height - backgroundHeight) / 2
+        scrollButtonRenderY = (int) ((this.height - backgroundHeight) / 2
                 + (int) (dividedHeight * 3)
-                + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, scrollAreaHeight);
+                + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, scrollAreaHeight));
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.SCROLL_BUTTON.identifier(),
                 scrollButtonRenderX,
                 scrollButtonRenderY,
-                1,
-                (dividedWidth / 2),
+                dividedWidth / 2,
                 scrollButtonHeight,
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());

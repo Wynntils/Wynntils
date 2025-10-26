@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.ui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -79,7 +78,7 @@ public class ProfessionHighlightFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onRenderSlot(SlotRenderEvent.Pre event) {
+    public void onRenderSlot(SlotRenderEvent.Post event) {
         Screen screen = event.getScreen();
 
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
@@ -105,21 +104,20 @@ public class ProfessionHighlightFeature extends Feature {
         if (selectedProfession == null) return;
         if (!professionItemPropertyOpt.get().getProfessionTypes().contains(selectedProfession)) return;
 
-        RenderSystem.enableDepthTest();
-
-        RenderUtils.drawTexturedRectWithColor(
-                event.getPoseStack(),
+        RenderUtils.drawTexturedRect(
+                event.getGuiGraphics(),
                 Texture.HIGHLIGHT.identifier(),
                 highlightColor.get(),
                 slot.x - 1,
                 slot.y - 1,
-                201,
+                18,
+                18,
+                0,
+                0,
                 18,
                 18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
-
-        RenderSystem.disableDepthTest();
     }
 
     private void setSelectedProfession(ProfessionType professionType) {

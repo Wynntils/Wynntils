@@ -45,8 +45,8 @@ public class BulkBuyWidget extends AbstractWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.setX(originalX - (int) (getWidth() * animationPercentage.getAnimation()));
         // Prevent widget from rendering behind highlights
-        RenderUtils.createRectMask(guiGraphics.pose(), originalX - getWidth(), getY(), getWidth(), getHeight());
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BULK_BUY_PANEL, getX(), getY());
+        RenderUtils.enableScissor(guiGraphics, originalX - getWidth(), getY(), getWidth(), getHeight());
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.BULK_BUY_PANEL, getX(), getY());
 
         // bulkBoughtItemStack is null when there is no item being bulk bought
         if (bulkBoughtItem == null) {
@@ -135,7 +135,7 @@ public class BulkBuyWidget extends AbstractWidget {
                             TextShadow.NORMAL);
         }
 
-        RenderUtils.clearMask();
+        RenderUtils.disableScissor(guiGraphics);
     }
 
     public void setBulkBoughtItem(BulkBuyFeature.BulkBoughtItem bulkBoughtItem) {

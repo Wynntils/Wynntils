@@ -19,8 +19,8 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
@@ -135,9 +135,8 @@ public class PowderSpecialBarOverlay extends Overlay {
                         this.getRenderHorizontalAlignment(),
                         this.textShadow.get());
 
-        BufferedRenderUtils.drawColoredProgressBar(
-                poseStack,
-                bufferSource,
+        RenderUtils.drawColoredProgressBar(
+                guiGraphics,
                 universalBarTexture,
                 color,
                 this.getRenderX(),

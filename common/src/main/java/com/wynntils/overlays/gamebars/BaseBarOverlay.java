@@ -5,7 +5,6 @@
 package com.wynntils.overlays.gamebars;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -20,8 +19,8 @@ import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
 import net.minecraft.client.DeltaTracker;
@@ -106,14 +105,12 @@ public abstract class BaseBarOverlay extends Overlay {
     }
 
     private void renderAll(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderedProgress) {
-        PoseStack poseStack = guiGraphics.pose();
-
         float barHeight = textureHeight() * (this.getWidth() / 81);
         float renderY = getModifiedRenderY(barHeight + 10);
 
         renderText(guiGraphics, bufferSource, renderY, text());
 
-        renderBar(poseStack, bufferSource, renderY + 10, barHeight, renderedProgress);
+        renderBar(guiGraphics, renderY + 10, barHeight, renderedProgress);
     }
 
     protected String text() {
@@ -138,11 +135,9 @@ public abstract class BaseBarOverlay extends Overlay {
         };
     }
 
-    protected void renderBar(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
-        BufferedRenderUtils.drawColoredProgressBar(
-                poseStack,
-                bufferSource,
+    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+        RenderUtils.drawColoredProgressBar(
+                guiGraphics,
                 Texture.UNIVERSAL_BAR,
                 this.textColor.get(),
                 getRenderX(),

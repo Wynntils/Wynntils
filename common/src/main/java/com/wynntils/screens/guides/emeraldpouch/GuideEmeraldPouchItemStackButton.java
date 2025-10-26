@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.emeraldpouch;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -38,16 +37,17 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         CustomColor color = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
 
-        RenderUtils.drawTexturedRectWithColor(
-                poseStack,
+        RenderUtils.drawTexturedRect(
+                guiGraphics,
                 Texture.HIGHLIGHT.identifier(),
-                color.withAlpha(1f),
+                color,
                 getX() - 1,
                 getY() - 1,
+                18,
+                18,
+                0,
                 0,
                 18,
                 18,
@@ -56,8 +56,6 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
 
         RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 200);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,
@@ -69,15 +67,13 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
                         color,
                         HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
-        poseStack.popPose();
 
         if (Services.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(
-                    poseStack,
+                    guiGraphics,
                     Texture.FAVORITE_ICON.identifier(),
                     getX() + 12,
                     getY() - 4,
-                    200,
                     9,
                     9,
                     Texture.FAVORITE_ICON.width(),
