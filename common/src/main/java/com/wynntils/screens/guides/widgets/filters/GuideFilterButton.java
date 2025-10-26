@@ -33,16 +33,15 @@ public abstract class GuideFilterButton<T extends ItemStatProvider<?>> extends A
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX(), getY());
+        RenderUtils.drawTexturedRect(guiGraphics, texture, getX(), getY());
 
         if (!isHovered && !state) return;
 
         RenderUtils.drawRect(
-                guiGraphics.pose(),
+                guiGraphics,
                 (state ? CommonColors.ORANGE : CommonColors.WHITE).withAlpha(isHovered ? 0.7f : 0.5f),
                 getX(),
                 getY(),
-                0,
                 getWidth(),
                 getHeight());
 

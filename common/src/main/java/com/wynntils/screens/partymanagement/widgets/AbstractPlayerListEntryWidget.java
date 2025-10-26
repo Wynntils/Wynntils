@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.partymanagement.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
@@ -30,8 +29,6 @@ public abstract class AbstractPlayerListEntryWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be Steves
         Identifier skin = (playerInfo == null)
@@ -39,11 +36,10 @@ public abstract class AbstractPlayerListEntryWidget extends AbstractWidget {
                 : playerInfo.getSkin().body().texturePath();
         // head rendering
         RenderUtils.drawTexturedRect(
-                poseStack,
+                guiGraphics,
                 skin,
                 this.getX() + (this.width / gridDivisions) - 8,
                 this.getY() + (this.height / 2) - 8,
-                8,
                 16,
                 16,
                 8,
@@ -54,11 +50,10 @@ public abstract class AbstractPlayerListEntryWidget extends AbstractWidget {
                 64);
         // hat rendering
         RenderUtils.drawTexturedRect(
-                poseStack,
+                guiGraphics,
                 skin,
                 this.getX() + (this.width / gridDivisions) - 8,
                 this.getY() + (this.height / 2) - 8,
-                8,
                 16,
                 16,
                 40,

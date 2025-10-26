@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.loading;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -15,6 +14,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
@@ -82,8 +82,6 @@ public final class LoadingScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         int textureWidth = Texture.BACKGROUND_SPLASH.width();
         int textureHeight = Texture.BACKGROUND_SPLASH.height();
         float widthScaleFactor = (float) this.width / textureWidth;
@@ -95,18 +93,17 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw background
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.BACKGROUND_SPLASH.identifier(),
-                (this.width - scaledWidth) / 2f,
-                (this.height - scaledHeight) / 2f,
-                0,
-                scaledWidth,
-                scaledHeight,
+                (int) ((this.width - scaledWidth) / 2f),
+                (int) ((this.height - scaledHeight) / 2f),
+                (int) scaledWidth,
+                (int) scaledHeight,
                 textureWidth,
                 textureHeight);
 
         // Draw notebook background
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
         // Draw logo
         int centerX = (int) (Texture.SCROLL_BACKGROUND.width() / 2f + 15 + offsetX);
@@ -160,30 +157,16 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw spinner
         boolean state = (System.currentTimeMillis() % SPINNER_SPEED) < SPINNER_SPEED / 2;
-        drawSpinner(poseStack, centerX, 150 + offsetY, state);
+        drawSpinner(guiGraphics, centerX, 150 + offsetY, state);
     }
 
-    private void drawSpinner(PoseStack poseStack, float x, float y, boolean state) {
-        Identifier resource = Texture.RELOAD_ICON_OFFSET.identifier();
-
-        int fullWidth = Texture.RELOAD_ICON_OFFSET.width();
-        int spinnerWidth = fullWidth / 2;
-        int spinnerHeight = Texture.RELOAD_ICON_OFFSET.height();
-        int uOffset = state ? spinnerWidth : 0;
-
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                resource,
-                x - spinnerWidth / 2f,
+    private void drawSpinner(GuiGraphics guiGraphics, int x, int y, boolean state) {
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics,
+                Texture.RELOAD_ICON_OFFSET,
+                (int) (x - (Texture.RELOAD_ICON_OFFSET.width() / 2f) / 2f),
                 y,
-                0,
-                spinnerWidth,
-                spinnerHeight,
-                uOffset,
-                0,
-                spinnerWidth,
-                spinnerHeight,
-                fullWidth,
-                spinnerHeight);
+                state,
+                RenderDirection.HORIZONTAL);
     }
 }

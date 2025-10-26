@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.ui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -36,14 +35,12 @@ public class CraftingProfessionLevelProgressBarFeature extends Feature {
         if (!(event.getScreen() instanceof ContainerScreen screen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof CraftingStationContainer container)) return;
 
-        PoseStack poseStack = event.getPoseStack();
-
         ProfessionType profession = container.getProfessionType();
         int level = Models.Profession.getLevel(profession);
         double progress = Models.Profession.getProgress(profession);
 
         RenderUtils.drawProgressBar(
-                poseStack,
+                event.getGuiGraphics(),
                 Texture.EXPERIENCE_BAR,
                 screen.leftPos,
                 screen.topPos - 6,

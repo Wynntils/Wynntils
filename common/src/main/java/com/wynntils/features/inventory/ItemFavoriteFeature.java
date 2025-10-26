@@ -24,8 +24,8 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Optional;
@@ -96,7 +96,7 @@ public class ItemFavoriteFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.CountPre event) {
+    public void onRenderSlot(SlotRenderEvent.Post event) {
         if (Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
 
         ItemStack itemStack = event.getSlot().getItem();
@@ -124,14 +124,12 @@ public class ItemFavoriteFeature extends Feature {
         return isFavorite;
     }
 
-    private static void renderFavoriteItem(SlotRenderEvent.CountPre event) {
-        BufferedRenderUtils.drawScalingTexturedRect(
-                event.getPoseStack(),
-                event.getGuiGraphics().bufferSource,
+    private static void renderFavoriteItem(SlotRenderEvent.Post event) {
+        RenderUtils.drawScalingTexturedRect(
+                event.getGuiGraphics(),
                 Texture.FAVORITE_ICON.identifier(),
                 event.getSlot().x + 10,
                 event.getSlot().y,
-                200,
                 9,
                 9,
                 Texture.FAVORITE_ICON.width(),

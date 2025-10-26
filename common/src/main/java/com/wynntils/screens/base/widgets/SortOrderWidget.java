@@ -4,11 +4,11 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.RenderDirection;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,8 +36,6 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         Texture sortTexture =
                 switch (sortableActivityScreen.getActivitySortOrder()) {
                     case LEVEL -> Texture.SORT_LEVEL_OFFSET;
@@ -45,40 +43,8 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
                     case ALPHABETIC -> Texture.SORT_ALPHABETICALLY_OFFSET;
                 };
 
-        float renderX = this.getX();
-        float renderY = this.getY();
-
-        if (this.isHovered) {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    sortTexture.identifier(),
-                    renderX,
-                    renderY,
-                    0,
-                    this.width,
-                    this.height,
-                    0,
-                    sortTexture.height() / 2,
-                    sortTexture.width(),
-                    sortTexture.height() / 2,
-                    sortTexture.width(),
-                    sortTexture.height());
-        } else {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    sortTexture.identifier(),
-                    renderX,
-                    renderY,
-                    0,
-                    this.width,
-                    this.height,
-                    0,
-                    0,
-                    sortTexture.width(),
-                    sortTexture.height() / 2,
-                    sortTexture.width(),
-                    sortTexture.height());
-        }
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics, sortTexture, getX(), getY(), this.isHovered, RenderDirection.VERTICAL);
     }
 
     @Override

@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.colorpicker.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.colorpicker.ColorPickerScreen;
 import com.wynntils.utils.colors.CustomColor;
@@ -28,9 +27,7 @@ public class PresetColorButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawRect(poseStack, color, getX(), getY(), 0, width, height);
+        RenderUtils.drawRect(guiGraphics, color, getX(), getY(), width, height);
     }
 
     @Override

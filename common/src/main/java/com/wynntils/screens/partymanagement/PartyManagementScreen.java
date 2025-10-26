@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.partymanagement;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
@@ -129,7 +128,6 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
 
         boolean inParty = Models.Party.isInParty();
 
@@ -182,12 +180,11 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                             TextShadow.NORMAL,
                             2);
             RenderUtils.drawRect(
-                    poseStack,
+                    guiGraphics,
                     CommonColors.WHITE,
-                    dividedWidth * 4,
-                    dividedHeight * PARTY_LIST_DIV_HEIGHT,
-                    0,
-                    dividedWidth * 30 - dividedWidth * 2,
+                    (int) (dividedWidth * 4),
+                    (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT),
+                    (int) (dividedWidth * 30 - dividedWidth * 2),
                     1);
             FontRenderer.getInstance()
                     .renderText(
@@ -261,12 +258,11 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
 
         // region Suggestions
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.WHITE,
-                dividedWidth * 36,
-                dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
-                0,
-                dividedWidth * 60 - dividedWidth * 36,
+                (int) (dividedWidth * 36),
+                (int) (dividedHeight * SUGGESTION_LIST_DIV_HEIGHT),
+                (int) (dividedWidth * 60 - dividedWidth * 36),
                 1);
         FontRenderer.getInstance()
                 .renderText(

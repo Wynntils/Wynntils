@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.update;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
@@ -15,8 +14,8 @@ import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
@@ -121,8 +120,6 @@ public final class UpdateScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
-
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -162,9 +159,8 @@ public final class UpdateScreen extends WynntilsScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            BufferedRenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    guiGraphics.bufferSource,
+            RenderUtils.drawColoredProgressBar(
+                    guiGraphics,
                     Texture.UNIVERSAL_BAR,
                     CommonColors.LIGHT_GREEN,
                     this.width / 2f - Texture.UNIVERSAL_BAR.width(),

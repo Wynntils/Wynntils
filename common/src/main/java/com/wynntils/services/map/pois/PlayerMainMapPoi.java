@@ -10,14 +10,13 @@ import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.Identifier;
 
 public class PlayerMainMapPoi extends PlayerPoiBase {
@@ -28,7 +27,6 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
     @Override
     public void renderAt(
             GuiGraphics guiGraphics,
-            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,
@@ -42,46 +40,19 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
         Identifier skin = SkinUtils.getSkin(user.getUuid());
 
         // head
-        BufferedRenderUtils.drawTexturedRect(
-                poseStack,
-                bufferSource,
-                skin,
-                renderX,
-                renderY,
-                0,
-                playerHeadRenderSize,
-                playerHeadRenderSize,
-                8,
-                8,
-                8,
-                8,
-                64,
-                64);
+        RenderUtils.drawTexturedRect(
+                guiGraphics, skin, renderX, renderY, playerHeadRenderSize, playerHeadRenderSize, 8, 8, 8, 8, 64, 64);
 
         // hat
-        BufferedRenderUtils.drawTexturedRect(
-                poseStack,
-                bufferSource,
-                skin,
-                renderX,
-                renderY,
-                1,
-                playerHeadRenderSize,
-                playerHeadRenderSize,
-                40,
-                8,
-                8,
-                8,
-                64,
-                64);
+        RenderUtils.drawTexturedRect(
+                guiGraphics, skin, renderX, renderY, playerHeadRenderSize, playerHeadRenderSize, 40, 8, 8, 8, 64, 64);
 
         // health
         HealthTexture healthTexture = Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .remotePlayerHealthTexture
                 .get();
-        BufferedRenderUtils.drawProgressBar(
-                poseStack,
-                bufferSource,
+        RenderUtils.drawProgressBar(
+                guiGraphics,
                 Texture.HEALTH_BAR,
                 renderX - 10,
                 renderY + playerHeadRenderSize + 1,

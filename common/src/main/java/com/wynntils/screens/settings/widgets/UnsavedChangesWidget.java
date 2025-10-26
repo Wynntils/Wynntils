@@ -46,7 +46,7 @@ public class UnsavedChangesWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SETTINGS_WARNING_BACKGROUND, getX(), getY());
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SETTINGS_WARNING_BACKGROUND, getX(), getY());
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(

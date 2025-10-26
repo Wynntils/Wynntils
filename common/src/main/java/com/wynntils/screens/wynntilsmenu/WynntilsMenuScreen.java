@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.wynntilsmenu;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -330,8 +329,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-        renderBackgroundTexture(poseStack);
+        renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
 
@@ -348,18 +346,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     @Override
     protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
-        int txWidth = Texture.CONTENT_BOOK_TITLE.width();
-        int txHeight = Texture.CONTENT_BOOK_TITLE.height();
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.CONTENT_BOOK_TITLE.identifier(),
-                offsetX,
-                15 + offsetY,
-                0,
-                txWidth,
-                txHeight,
-                txWidth,
-                txHeight);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 15 + offsetY);
 
         FontRenderer.getInstance()
                 .renderText(
