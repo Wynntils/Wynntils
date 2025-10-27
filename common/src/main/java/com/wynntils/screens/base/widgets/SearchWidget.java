@@ -45,7 +45,9 @@ public class SearchWidget extends TextInputBoxWidget {
             Font font,
             int firstWidth,
             int highlightedWidth,
-            int lastWidth) {
+            int lastWidth,
+            int mouseX,
+            int mouseY) {
         boolean defaultText = Objects.equals(textBoxInput, "");
 
         renderBackground(guiGraphics);

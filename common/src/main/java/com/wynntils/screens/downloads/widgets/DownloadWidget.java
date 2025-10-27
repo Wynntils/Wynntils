@@ -18,7 +18,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -26,8 +25,8 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class DownloadWidget extends AbstractWidget {
-    private static final List<Component> DOWNLOAD_TOOLTIP =
-            List.of(Component.translatable("screens.wynntils.downloads.tryRedownload"));
+    private static final Component DOWNLOAD_TOOLTIP =
+            Component.translatable("screens.wynntils.downloads.tryRedownload");
 
     private static final String dataPattern = "Data (Static|Athena) ";
 
@@ -86,8 +85,7 @@ public class DownloadWidget extends AbstractWidget {
         }
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(DOWNLOAD_TOOLTIP, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(DOWNLOAD_TOOLTIP, mouseX, mouseY);
         }
     }
 

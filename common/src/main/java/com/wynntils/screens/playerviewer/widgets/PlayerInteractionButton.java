@@ -43,7 +43,8 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
         RenderUtils.drawTexturedRect(guiGraphics, icon, this.getX() + 3, this.getY() + 3);
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltipText, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(tooltipText, Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 }

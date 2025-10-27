@@ -123,7 +123,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
     private void renderPreview(GuiGraphics guiGraphics) {
         if (previewItemStack == null) return;
 
-        guiGraphics.renderTooltip(
+        guiGraphics.setTooltipForNextFrame(
                 FontRenderer.getInstance().getFont(),
                 previewItemStack,
                 tooltipX,

@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -129,8 +130,10 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
                 return;
             }
         }

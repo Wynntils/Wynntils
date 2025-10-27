@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.trademarket;
 
+import com.google.common.collect.Lists;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
@@ -171,8 +172,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         // Render tooltip for hovered widget
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
                 break;
             }
         }

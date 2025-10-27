@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.base;
 
+import com.google.common.collect.Lists;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.ListSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
@@ -120,7 +121,8 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         if (tooltipLines.isEmpty()) return;
 
-        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
+        guiGraphics.setTooltipForNextFrame(
+                Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
     }
 
     @Override
