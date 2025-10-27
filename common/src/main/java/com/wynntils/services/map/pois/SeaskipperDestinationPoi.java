@@ -82,9 +82,6 @@ public class SeaskipperDestinationPoi implements Poi {
 
     private void renderPoi(
             GuiGraphics guiGraphics, float renderX, float renderY, float mapZoom, boolean renderBorders) {
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 100);
-
         final float renderWidth = width * mapZoom;
         final float renderHeight = height * mapZoom;
         final float actualRenderX = renderX - renderWidth / 2f;
@@ -124,8 +121,6 @@ public class SeaskipperDestinationPoi implements Poi {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
-
-        poseStack.popPose();
     }
 
     @Override
