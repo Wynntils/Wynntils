@@ -443,9 +443,8 @@ public final class FontRenderer {
                         case BOTTOM -> y - font.lineHeight - 1;
                     };
 
-            //            RenderUtils.createRectMask(poseStack, (int) scissorX, (int) scissorY, (int) renderWidth, (int)
-            //                    ((font.lineHeight + 1) * textScale)); // + 1 to account for letters that sit lower, eg
-            // y
+            RenderUtils.enableScissor(guiGraphics, (int) scissorX, (int) scissorY, (int) renderWidth, (int)
+                    ((font.lineHeight + 1) * textScale)); // + 1 to account for letters that sit lower, eg y
             renderText(
                     guiGraphics,
                     styledText,
@@ -456,7 +455,7 @@ public final class FontRenderer {
                     verticalAlignment,
                     shadow,
                     textScale);
-            RenderUtils.clearMask();
+            RenderUtils.disableScissor(guiGraphics);
         } else {
             renderText(
                     guiGraphics,
