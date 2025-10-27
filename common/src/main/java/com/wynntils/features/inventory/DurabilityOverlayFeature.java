@@ -107,8 +107,6 @@ public class DurabilityOverlayFeature extends Feature {
         CustomColor color = CustomColor.fromHSV(Math.max(0.0f, durabilityFraction) / 3.0f, 1.0f, 1.0f, 1.0f);
         StyledText text = StyledText.fromString(Math.round(durabilityFraction * 100) + "%");
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 300);
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -120,7 +118,6 @@ public class DurabilityOverlayFeature extends Feature {
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL,
                         0.5f);
-        poseStack.popPose();
     }
 
     private enum DurabilityRenderMode {
