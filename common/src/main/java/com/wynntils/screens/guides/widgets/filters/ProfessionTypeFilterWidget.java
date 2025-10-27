@@ -15,7 +15,6 @@ import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.ConfirmedBoolean;
@@ -138,14 +137,16 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                     guiGraphics, color.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), getWidth(), getHeight());
 
             if (isHovered) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(
                                 ComponentUtils.wrapTooltips(
                                         List.of(Component.translatable(
                                                 "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
                                                 getFilterName())),
                                         200),
-                                Component::getVisualOrderText));
+                                Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
             }
         }
 

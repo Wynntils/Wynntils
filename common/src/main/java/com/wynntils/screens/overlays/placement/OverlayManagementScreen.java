@@ -228,18 +228,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     && overlay != selectedOverlay
                     && isMouseHoveringOverlay(overlay, mouseX, mouseY)
                     && selectionMode == SelectionMode.NONE) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(
-                                List.of(Component.literal(overlayName)), Component::getVisualOrderText));
-
+                guiGraphics.setTooltipForNextFrame(Component.literal(overlayName), mouseX, mouseY);
                 renderedTooltip = true;
             } else if (!renderedTooltip
                     && overlay == selectedOverlay
                     && isMouseHoveringOverlay(overlay, mouseX, mouseY)
                     && selectionMode == SelectionMode.NONE) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(
-                                Lists.transform(HELP_TOOLTIP_LINES, Component::getVisualOrderText));
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(HELP_TOOLTIP_LINES, Component::getVisualOrderText), mouseX, mouseY);
                 renderedTooltip = true;
             }
         }

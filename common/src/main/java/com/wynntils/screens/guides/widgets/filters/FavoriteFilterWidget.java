@@ -15,7 +15,6 @@ import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -62,14 +61,16 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
                         TextShadow.NONE);
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(
                             ComponentUtils.wrapTooltips(
                                     List.of(Component.translatable(
                                             "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
                                             I18n.get("service.wynntils.itemFilter.stat.favorite.name"))),
                                     200),
-                            Component::getVisualOrderText));
+                            Component::getVisualOrderText),
+                    mouseX,
+                    mouseY);
         }
     }
 

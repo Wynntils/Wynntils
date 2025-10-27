@@ -81,7 +81,7 @@ public final class WynntilsTomeGuideScreen extends WynntilsGuideScreen<GuideTome
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideTomeItemStackButton guideTomeItemStackButton) {
-            guiGraphics.renderTooltip(
+            guiGraphics.setTooltipForNextFrame(
                     FontRenderer.getInstance().getFont(), guideTomeItemStackButton.getItemStack(), mouseX, mouseY);
         }
 

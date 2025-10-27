@@ -7,7 +7,6 @@ package com.wynntils.screens.container.widgets;
 import com.google.common.collect.Lists;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
@@ -52,7 +51,8 @@ public class PersonalStorageEditModeButton extends WynntilsButton {
         if (isHovered) {
             List<Component> tooltipToUse = Models.Bank.isEditingMode() ? CONFIRM_TOOLTIP : EDIT_TOOLTIP;
 
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltipToUse, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(tooltipToUse, Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 

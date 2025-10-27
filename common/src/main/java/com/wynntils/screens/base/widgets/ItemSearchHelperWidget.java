@@ -13,7 +13,6 @@ import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
@@ -58,8 +57,8 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
                 getHeight());
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(getTooltipLines(), Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 

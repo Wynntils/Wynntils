@@ -7,7 +7,6 @@ package com.wynntils.screens.maps.widgets;
 import com.google.common.collect.Lists;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.CustomSeaskipperScreen;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.RenderDirection;
@@ -48,7 +47,7 @@ public class SeaskipperTravelButton extends WynntilsButton {
                             seaskipperScreen.getSelectedDestination().getName())
                     .withStyle(ChatFormatting.GRAY));
 
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 }

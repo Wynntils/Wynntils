@@ -79,7 +79,7 @@ public final class WynntilsCharmGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideCharmItemStackButton guideCharmItemStackButton) {
-            guiGraphics.renderTooltip(
+            guiGraphics.setTooltipForNextFrame(
                     FontRenderer.getInstance().getFont(), guideCharmItemStackButton.getItemStack(), mouseX, mouseY);
         }
 

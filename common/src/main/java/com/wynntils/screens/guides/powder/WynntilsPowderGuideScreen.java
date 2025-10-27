@@ -96,7 +96,7 @@ public final class WynntilsPowderGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuidePowderItemStackButton guidePowderItemStack) {
-            guiGraphics.renderTooltip(
+            guiGraphics.setTooltipForNextFrame(
                     FontRenderer.getInstance().getFont(), guidePowderItemStack.getItemStack(), mouseX, mouseY);
         }
 

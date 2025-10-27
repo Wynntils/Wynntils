@@ -120,7 +120,9 @@ public class MaskedTextInputWidget extends AbstractWidget {
                 Font font,
                 int firstWidth,
                 int highlightedWidth,
-                int lastWidth) {
+                int lastWidth,
+                int mouseX,
+                int mouseY) {
             super.doRenderWidget(
                     guiGraphics,
                     masked ? "*".repeat(renderedText.length()) : renderedText,
@@ -131,7 +133,9 @@ public class MaskedTextInputWidget extends AbstractWidget {
                     font,
                     firstWidth,
                     highlightedWidth,
-                    lastWidth);
+                    lastWidth,
+                    mouseX,
+                    mouseY);
         }
     }
 }

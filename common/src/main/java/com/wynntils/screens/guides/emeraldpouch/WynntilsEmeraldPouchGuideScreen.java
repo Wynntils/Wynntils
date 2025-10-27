@@ -116,7 +116,7 @@ public final class WynntilsEmeraldPouchGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideEmeraldPouchItemStackButton guideEmeraldPouchItemStack) {
-            guiGraphics.renderTooltip(
+            guiGraphics.setTooltipForNextFrame(
                     FontRenderer.getInstance().getFont(), guideEmeraldPouchItemStack.getItemStack(), mouseX, mouseY);
         }
 

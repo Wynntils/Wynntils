@@ -122,7 +122,9 @@ public class TextInputBoxWidget extends AbstractWidget {
                 font,
                 firstWidth,
                 highlightedWidth,
-                lastWidth);
+                lastWidth,
+                mouseX,
+                mouseY);
     }
 
     protected void doRenderWidget(
@@ -135,7 +137,9 @@ public class TextInputBoxWidget extends AbstractWidget {
             Font font,
             int firstWidth,
             int highlightedWidth,
-            int lastWidth) {
+            int lastWidth,
+            int mouseX,
+            int mouseY) {
         guiGraphics.pose().pushMatrix();
 
         guiGraphics.pose().translate(this.getX(), this.getY());
@@ -198,7 +202,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                 false);
 
         if (isHovered && tooltip != null) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
 
         guiGraphics.pose().popMatrix();

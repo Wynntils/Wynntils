@@ -7,7 +7,6 @@ package com.wynntils.screens.itemsharing.widgets;
 import com.google.common.collect.Lists;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.RenderDirection;
@@ -36,7 +35,7 @@ public class SavedItemsButton extends WynntilsButton {
                 guiGraphics, buttonTexture, this.getX(), this.getY(), this.isHovered, RenderDirection.VERTICAL);
 
         if (this.isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 

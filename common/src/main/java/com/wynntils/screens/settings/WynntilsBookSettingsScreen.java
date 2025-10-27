@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.settings;
 
+import com.google.common.collect.Lists;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
@@ -1152,8 +1153,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
                 break;
             }
         }

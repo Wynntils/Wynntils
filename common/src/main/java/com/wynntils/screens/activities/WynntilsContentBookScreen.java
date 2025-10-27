@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.activities;
 
+import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -459,8 +460,10 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : getWidgetsForIteration().toList()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
                 break;
             }
         }

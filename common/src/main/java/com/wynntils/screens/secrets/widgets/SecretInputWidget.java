@@ -12,7 +12,6 @@ import com.wynntils.screens.base.widgets.MaskedTextInputWidget;
 import com.wynntils.services.secrets.type.WynntilsSecret;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -70,7 +69,8 @@ public class SecretInputWidget extends AbstractWidget {
         openLinkButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
         if (isHovered && !openLinkButton.isHovered()) {
-            McUtils.screen().setTooltipForNextRenderPass(Component.translatable(wynntilsSecret.getDescriptionKey()));
+            guiGraphics.setTooltipForNextFrame(
+                    Component.translatable(wynntilsSecret.getDescriptionKey()), mouseX, mouseY);
         }
     }
 
