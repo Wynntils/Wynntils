@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.territorymanagement;
 
+import com.google.common.collect.Lists;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -411,7 +412,8 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         List<Component> tooltipLines = tooltipProvider.getTooltipLines();
         if (tooltipLines.isEmpty()) return;
 
-        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
+        guiGraphics.setTooltipForNextFrame(
+                Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
     }
 
     @Override

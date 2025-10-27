@@ -10,7 +10,6 @@ import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
@@ -46,13 +45,15 @@ public abstract class GuideFilterButton<T extends ItemStatProvider<?>> extends A
                 getHeight());
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(
                             ComponentUtils.wrapTooltips(
                                     List.of(Component.translatable(
                                             "screens.wynntils.wynntilsGuides.filterWidget.tooltip", getFilterName())),
                                     200),
-                            Component::getVisualOrderText));
+                            Component::getVisualOrderText),
+                    mouseX,
+                    mouseY);
         }
     }
 

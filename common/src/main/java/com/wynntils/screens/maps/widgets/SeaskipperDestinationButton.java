@@ -12,7 +12,6 @@ import com.wynntils.screens.maps.CustomSeaskipperScreen;
 import com.wynntils.services.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -108,7 +107,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
                                 .withStyle(ChatFormatting.GRAY));
             }
 
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 

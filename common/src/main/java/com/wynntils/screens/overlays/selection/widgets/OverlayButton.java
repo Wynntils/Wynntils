@@ -18,7 +18,6 @@ import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -145,19 +144,23 @@ public class OverlayButton extends WynntilsButton {
         // name is being edited
         if (isHovered) {
             if (!overlay.isParentEnabled()) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(
                                 ComponentUtils.wrapTooltips(
                                         List.of(Component.translatable(
                                                 "screens.wynntils.overlaySelection.parentDisabled",
                                                 overlay.getParentTranslatedName())),
                                         200),
-                                Component::getVisualOrderText));
+                                Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
             } else {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(
                                 (editInput != null && editInput.visible) ? SAVE_NAME_TOOLTIP : descriptionTooltip,
-                                Component::getVisualOrderText));
+                                Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
             }
         }
     }

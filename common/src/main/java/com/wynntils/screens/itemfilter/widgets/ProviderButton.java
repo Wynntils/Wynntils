@@ -100,7 +100,7 @@ public class ProviderButton extends WynntilsButton {
         }
 
         if (this.isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 

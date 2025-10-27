@@ -14,7 +14,6 @@ import com.wynntils.services.itemfilter.type.SortDirection;
 import com.wynntils.services.itemfilter.type.SortInfo;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -82,13 +81,15 @@ public class GuideSortButton extends AbstractWidget {
         }
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(
                             ComponentUtils.wrapTooltips(
                                     List.of(Component.translatable(
                                             "screens.wynntils.wynntilsGuides.sortWidget.tooltip", getSortName())),
                                     200),
-                            Component::getVisualOrderText));
+                            Component::getVisualOrderText),
+                    mouseX,
+                    mouseY);
         }
     }
 
