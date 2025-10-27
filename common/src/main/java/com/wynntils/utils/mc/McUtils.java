@@ -182,7 +182,7 @@ public final class McUtils {
     public static void openChatScreen(String keybindCommand) {
         // TODO: Improve mixin to not require event posting here
         Screen chatScreen = new ChatScreen(keybindCommand, false);
-        ChatScreenCreateEvent event = new ChatScreenCreateEvent(chatScreen, keybindCommand);
+        ChatScreenCreateEvent event = new ChatScreenCreateEvent(chatScreen, keybindCommand, false);
         WynntilsMod.postEvent(event);
 
         setScreen(event.getScreen());
