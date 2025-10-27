@@ -11,12 +11,14 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.AddGuiMessageLineEvent;
 import com.wynntils.mc.event.ChatComponentRenderEvent;
+import com.wynntils.mc.event.ChatScreenCreateEvent;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.util.ARGB;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -140,5 +142,23 @@ public abstract class ChatComponentMixin {
             @Local(ordinal = 5) int y) {
         MixinHelper.post(new ChatComponentRenderEvent.Text(
                 (ChatComponent) (Object) this, guiGraphics, line, this.minecraft.font, y, ARGB.color(g, -1)));
+    }
+
+    @WrapOperation(
+            method =
+                    "createScreen(Lnet/minecraft/client/gui/components/ChatComponent$ChatMethod;Lnet/minecraft/client/gui/screens/ChatScreen$ChatConstructor;)Lnet/minecraft/client/gui/screens/ChatScreen;",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/screens/ChatScreen$ChatConstructor;create(Ljava/lang/String;Z)Lnet/minecraft/client/gui/screens/ChatScreen;"))
+    private <T extends ChatScreen> T wrapCreateScreen(
+            ChatScreen.ChatConstructor<T> constructor, String text, boolean draft, Operation<T> original) {
+        T screen = original.call(constructor, text, draft);
+
+        ChatScreenCreateEvent event = new ChatScreenCreateEvent(screen, text, draft);
+        MixinHelper.post(event);
+
+        return (T) event.getScreen();
     }
 }
