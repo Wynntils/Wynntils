@@ -7,7 +7,6 @@ package com.wynntils.screens.activities.widgets;
 import com.google.common.collect.Lists;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -54,7 +53,7 @@ public class ContentBookRewardWidget extends AbstractWidget {
         }
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 

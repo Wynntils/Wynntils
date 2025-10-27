@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.itemfilter;
 
+import com.google.common.collect.Lists;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -1063,7 +1064,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         if (tooltipLines.isEmpty()) return;
 
-        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
+        guiGraphics.setTooltipForNextFrame(
+                Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
     }
 
     private void renderProvidersScroll(GuiGraphics guiGraphics) {

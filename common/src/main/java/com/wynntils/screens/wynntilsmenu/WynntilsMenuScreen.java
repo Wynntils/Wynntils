@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.wynntilsmenu;
 
+import com.google.common.collect.Lists;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -490,9 +491,10 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     private void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (this.hovered != null) {
-            guiGraphics.renderComponentTooltip(
-                    FontRenderer.getInstance().getFont(),
-                    ComponentUtils.wrapTooltips(this.hovered.getTooltipList(), 250),
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(
+                            ComponentUtils.wrapTooltips(this.hovered.getTooltipList(), 250),
+                            Component::getVisualOrderText),
                     mouseX,
                     mouseY);
         }

@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 import com.wynntils.screens.maps.IconFilterScreen;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
@@ -67,7 +66,7 @@ public class IconFilterWidget extends AbstractWidget {
                 icon.height());
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
 
         // Highlight to show inclusion
