@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.overlays.selection;
 
+import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
@@ -969,8 +970,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
         for (GuiEventListener child : optionButtons) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
                 break;
             }
         }

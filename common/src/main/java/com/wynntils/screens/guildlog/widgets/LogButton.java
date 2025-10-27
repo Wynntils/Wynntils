@@ -9,7 +9,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.guild.type.GuildLogType;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -48,8 +47,8 @@ public class LogButton extends BasicTexturedButton {
                         TextShadow.NORMAL);
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(getTooltipLines(), Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 }
