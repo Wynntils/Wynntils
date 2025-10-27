@@ -153,7 +153,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected void renderPois(
             List<Poi> pois,
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             BoundingBox textureBoundingBox,
             float poiScale,
             int mouseX,
@@ -161,9 +161,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         hovered = null;
 
         List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
-
-        MultiBufferSource.BufferSource bufferSource =
-                McUtils.mc().renderBuffers().bufferSource();
 
         // Reverse and Render
         for (int i = filteredPois.size() - 1; i >= 0; i--) {
@@ -173,18 +170,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
             poi.renderAt(
-                    poseStack,
-                    bufferSource,
-                    poiRenderX,
-                    poiRenderZ,
-                    hovered == poi,
-                    poiScale,
-                    zoomRenderScale,
-                    zoomLevel,
-                    true);
+                    guiGraphics, poiRenderX, poiRenderZ, hovered == poi, poiScale, zoomRenderScale, zoomLevel, true);
         }
-
-        bufferSource.endBatch();
     }
 
     protected List<Poi> getRenderedPois(

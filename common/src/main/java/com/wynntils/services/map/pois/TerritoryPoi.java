@@ -23,7 +23,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 public class TerritoryPoi implements Poi {
     private final Supplier<TerritoryProfile> territoryProfileSupplier;
@@ -71,7 +70,6 @@ public class TerritoryPoi implements Poi {
     @Override
     public void renderAt(
             GuiGraphics guiGraphics,
-            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,

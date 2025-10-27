@@ -297,16 +297,7 @@ public class MinimapOverlay extends Overlay {
                     poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
             if (BoundingShape.intersects(box, textureBoundingCircle)) {
-                //                poi.renderAt(
-                //                        poseStack,
-                //                        bufferSource,
-                //                        poiRenderX,
-                //                        poiRenderZ,
-                //                        false,
-                //                        poiScale.get(),
-                //                        currentZoom,
-                //                        zoomLevel,
-                //                        false);
+                poi.renderAt(guiGraphics, poiRenderX, poiRenderZ, false, poiScale.get(), currentZoom, zoomLevel, false);
             }
         }
 
@@ -371,8 +362,7 @@ public class MinimapOverlay extends Overlay {
                 waypointPoi
                         .getPointerPoi()
                         .renderAt(
-                                poseStack,
-                                bufferSource,
+                                guiGraphics,
                                 compassRenderX,
                                 compassRenderZ,
                                 false,
@@ -383,8 +373,7 @@ public class MinimapOverlay extends Overlay {
                 guiGraphics.pose().popMatrix();
             } else {
                 waypointPoi.renderAt(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         compassRenderX,
                         compassRenderZ,
                         false,

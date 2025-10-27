@@ -11,13 +11,12 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 public abstract class IconPoi implements Poi {
     @Override
@@ -62,7 +61,6 @@ public abstract class IconPoi implements Poi {
     @Override
     public void renderAt(
             GuiGraphics guiGraphics,
-            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,
@@ -78,18 +76,15 @@ public abstract class IconPoi implements Poi {
 
         Texture icon = getIcon();
 
-        float width = icon.width() * modifier;
-        float height = icon.height() * modifier;
+        int width = (int) (icon.width() * modifier);
+        int height = (int) (icon.height() * modifier);
 
-        BufferedRenderUtils.drawColoredTexturedRect(
-                poseStack,
-                bufferSource,
-                icon.resource(),
-                this.getIconColor(),
-                this.getIconAlpha(zoomRenderScale),
-                renderX - width / 2,
-                renderY - height / 2,
-                getDisplayPriority().ordinal(), // z-index for rendering
+        RenderUtils.drawTexturedRectWithColor(
+                guiGraphics,
+                icon,
+                this.getIconColor().withAlpha(this.getIconAlpha(zoomRenderScale)),
+                (int) (renderX - width / 2f),
+                (int) (renderY - height / 2f),
                 width,
                 height);
 

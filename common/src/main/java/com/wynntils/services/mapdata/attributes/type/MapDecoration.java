@@ -5,6 +5,7 @@
 package com.wynntils.services.mapdata.attributes.type;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 // Allow dynamic map features to arbitrarily extend the rendering
@@ -16,10 +17,10 @@ public interface MapDecoration {
         }
 
         @Override
-        public void render(PoseStack poseStack, MultiBufferSource bufferSource, boolean hovered, float zoomLevel) {}
+        public void render(GuiGraphics guiGraphics, boolean hovered, float zoomLevel) {}
     };
 
     boolean isVisible();
 
-    void render(PoseStack poseStack, MultiBufferSource bufferSource, boolean hovered, float zoomLevel);
+    void render(GuiGraphics guiGraphics, boolean hovered, float zoomLevel);
 }

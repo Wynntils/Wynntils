@@ -527,6 +527,11 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRectWithColor(
+            GuiGraphics guiGraphics, ResourceLocation resourceLocation, CustomColor color, int x, int y, int width, int height) {
+        drawTexturedRectWithColor(guiGraphics, resourceLocation, color, x, y, width, height, width, height, width, height, width, height);
+    }
+
+    public static void drawTexturedRectWithColor(
             GuiGraphics guiGraphics, Texture texture, CustomColor color, int x, int y) {
         drawTexturedRectWithColor(
                 guiGraphics,
@@ -578,17 +583,6 @@ public final class RenderUtils {
                 colorB.asInt(),
                 guiGraphics.scissorStack.peek()));
     }
-
-    public static void drawScalingTexturedRect(
-            PoseStack poseStack,
-            ResourceLocation tex,
-            float x,
-            float y,
-            float z,
-            float width,
-            float height,
-            int textureWidth,
-            int textureHeight) {}
 
     public static void drawArc(
             PoseStack poseStack,

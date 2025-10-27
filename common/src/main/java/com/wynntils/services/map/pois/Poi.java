@@ -1,13 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.utils.mc.type.PoiLocation;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 
 public interface Poi {
     PoiLocation getLocation();
@@ -21,8 +20,7 @@ public interface Poi {
     boolean hasStaticLocation();
 
     void renderAt(
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
+            GuiGraphics guiGraphics,
             float renderX,
             float renderY,
             boolean hovered,

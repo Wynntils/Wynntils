@@ -20,6 +20,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -36,7 +37,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -408,21 +408,15 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                     selectedIcon,
                     selectedVisiblity);
 
-            MultiBufferSource.BufferSource bufferSource =
-                    McUtils.mc().renderBuffers().bufferSource();
-
-            //            poi.renderAt(
-            //                    poseStack,
-            //                    bufferSource,
-            //                    MapRenderer.getRenderX(poi, mapCenterX, x, zoomRenderScale),
-            //                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
-            //                    hovered == poi,
-            //                    1,
-            //                    zoomRenderScale,
-            //                    zoomLevel,
-            //                    true);
-
-            bufferSource.endBatch();
+            poi.renderAt(
+                    guiGraphics,
+                    MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
+                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
+                    hovered == poi,
+                    1,
+                    zoomRenderScale,
+                    zoomLevel,
+                    true);
         }
 
         renderCursor(

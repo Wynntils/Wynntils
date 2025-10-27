@@ -426,11 +426,10 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
             if (hideTerritoryBorders) {
-                poi.renderAtWithoutBorders(guiGraphics, bufferSource, poiRenderX, poiRenderZ, zoomRenderScale);
+                poi.renderAtWithoutBorders(guiGraphics, poiRenderX, poiRenderZ, zoomRenderScale);
             } else {
                 poi.renderAt(
                         guiGraphics,
-                        bufferSource,
                         poiRenderX,
                         poiRenderZ,
                         hoveredPoi == poi,

@@ -12,6 +12,7 @@ import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -25,7 +26,6 @@ public final class MapFeatureRenderer {
 
     public static void renderMapFeature(
             GuiGraphics guiGraphics,
-            MultiBufferSource bufferSource,
             MapFeature feature,
             ResolvedMapAttributes attributes,
             float renderX,
@@ -58,15 +58,12 @@ public final class MapFeatureRenderer {
                 iconAlpha = 1f;
             }
 
-            BufferedRenderUtils.drawColoredTexturedRect(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawTexturedRectWithColor(
+                    guiGraphics,
                     icon.get().getResourceLocation(),
-                    attributes.iconColor(),
-                    iconAlpha,
-                    0 - iconWidth / 2f,
-                    yOffset - iconHeight / 2f,
-                    0,
+                    attributes.iconColor().withAlpha(iconAlpha),
+                    (int) (0 - iconWidth / 2f),
+                    (int) (yOffset - iconHeight / 2f),
                     iconWidth,
                     iconHeight);
             yOffset += (iconHeight + labelHeight) / 2 + SPACING;
@@ -122,7 +119,7 @@ public final class MapFeatureRenderer {
         // Draw decoration, if applicable
         MapDecoration decoration = attributes.iconDecoration();
         if (decoration.isVisible()) {
-            decoration.render(poseStack, bufferSource, hovered, zoomLevel);
+            decoration.render(guiGraphics, hovered, zoomLevel);
         }
 
         guiGraphics.pose().popMatrix();

@@ -1,16 +1,15 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
 public class PlayerMiniMapPoi extends PlayerPoiBase {
@@ -25,8 +24,7 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
 
     @Override
     public void renderAt(
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
+            GuiGraphics guiGraphics,
             float renderX,
             float renderY,
             boolean hovered,

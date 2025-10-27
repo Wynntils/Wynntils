@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -249,11 +248,10 @@ public final class MainMapScreen extends AbstractMapScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(poseStack, mouseX, mouseY);
+        renderPois(guiGraphics, mouseX, mouseY);
 
         if (Managers.Feature.getFeatureInstance(MappingProgressFeature.class).isEnabled()) {
             renderChunkBorders(poseStack);
-            BUFFER_SOURCE.endBatch();
         }
 
         // Cursor
@@ -299,7 +297,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         Stream<? extends Poi> pois = Services.Poi.getServicePois();
 
         pois = Stream.concat(pois, Services.Poi.getCombatPois());
@@ -326,7 +324,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         renderPois(
                 pois.collect(Collectors.toList()),
-                poseStack,
+                guiGraphics,
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
                 Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .poiScale

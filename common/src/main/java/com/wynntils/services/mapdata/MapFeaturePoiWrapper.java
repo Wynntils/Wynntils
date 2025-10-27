@@ -16,7 +16,7 @@ import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.Optional;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class MapFeaturePoiWrapper implements Poi {
     public static final int SPACING = 2;
@@ -105,8 +105,7 @@ public class MapFeaturePoiWrapper implements Poi {
 
     @Override
     public void renderAt(
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
+            GuiGraphics guiGraphics,
             float renderX,
             float renderY,
             boolean hovered,
@@ -115,6 +114,6 @@ public class MapFeaturePoiWrapper implements Poi {
             float zoomLevel,
             boolean showLabels) {
         MapFeatureRenderer.renderMapFeature(
-                poseStack, bufferSource, feature, attributes, renderX, renderY, hovered, scale, zoomLevel, showLabels);
+                guiGraphics, feature, attributes, renderX, renderY, hovered, scale, zoomLevel, showLabels);
     }
 }
