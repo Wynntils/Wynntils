@@ -5,7 +5,6 @@
 package com.wynntils.features.tooltips;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -17,6 +16,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.network.chat.Component;
@@ -78,9 +78,9 @@ public class TooltipFittingFeature extends Feature {
         lastScaleFactor = scaleFactor;
 
         // push pose before scaling, so we can pop it afterwards
-        PoseStack poseStack = e.getPoseStack();
-        poseStack.pushPose();
-        poseStack.scale(scaleFactor, scaleFactor, 1);
+        GuiGraphics guiGraphics = e.getGuiGraphics();
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().scale(scaleFactor, scaleFactor);
 
         scaledLast = true;
     }
@@ -90,7 +90,7 @@ public class TooltipFittingFeature extends Feature {
     public void onTooltipPost(ItemTooltipRenderEvent.Post e) {
         if (!scaledLast) return;
 
-        e.getPoseStack().popPose();
+        e.getGuiGraphics().pose().popMatrix();
         scaledLast = false;
     }
 

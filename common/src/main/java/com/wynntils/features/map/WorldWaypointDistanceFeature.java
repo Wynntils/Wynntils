@@ -5,7 +5,6 @@
 package com.wynntils.features.map;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -29,10 +28,12 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Camera;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.joml.Matrix3x2f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
@@ -258,16 +259,16 @@ public class WorldWaypointDistanceFeature extends Feature {
                         icon.height());
 
                 // apply rotation
-                PoseStack poseStack = event.getPoseStack();
-                poseStack.pushPose();
-                poseStack.translate(pointerDisplayPositionX, pointerDisplayPositionY, 0);
-                poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
-                poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
+                GuiGraphics guiGraphics = event.getGuiGraphics();
+                guiGraphics.pose().pushMatrix();
+                guiGraphics.pose().translate(pointerDisplayPositionX, pointerDisplayPositionY);
+                guiGraphics.pose().mul(new Matrix3x2f().rotation((float) Math.toRadians(angle)));
+                guiGraphics.pose().translate(-pointerDisplayPositionX, -pointerDisplayPositionY);
 
                 DUMMY_WAYPOINT
                         .getPointerPoi()
                         .renderAt(
-                                event.getGuiGraphics(),
+                                guiGraphics,
                                 pointerDisplayPositionX,
                                 pointerDisplayPositionY,
                                 false,
@@ -275,7 +276,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                                 1,
                                 50,
                                 true);
-                poseStack.popPose();
+                guiGraphics.pose().popMatrix();
             }
         }
     }

@@ -91,8 +91,6 @@ public abstract class IconPoi implements Poi {
         if (hovered) {
             // Render name if hovered
 
-            poseStack.pushPose();
-
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
@@ -103,8 +101,6 @@ public abstract class IconPoi implements Poi {
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
                             TextShadow.OUTLINE);
-
-            poseStack.popPose();
         }
     }
 
