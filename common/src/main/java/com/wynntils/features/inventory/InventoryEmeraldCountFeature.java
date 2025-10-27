@@ -142,9 +142,6 @@ public class InventoryEmeraldCountFeature extends Feature {
                 textDisplaySide.get() == TextDisplaySide.LEFT ? HorizontalAlignment.LEFT : HorizontalAlignment.RIGHT;
         final int emeraldTextOffsetX = textDisplaySide.get() == TextDisplaySide.LEFT ? 1 : -1;
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 200);
-
         String emeraldText;
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             emeraldText = emeralds + EmeraldUnits.EMERALD.getSymbol();
@@ -163,8 +160,6 @@ public class InventoryEmeraldCountFeature extends Feature {
                         emeraldTextAlignment,
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
-
-        poseStack.popPose();
     }
 
     private void renderTexturedCount(GuiGraphics guiGraphics, int x, int y, int emeralds) {

@@ -220,14 +220,10 @@ public class ItemCompareFeature extends Feature {
         Window window = McUtils.mc().getWindow();
         GuiGraphics guiGraphics = event.getGuiGraphics();
         Font font = FontRenderer.getInstance().getFont();
-        final PoseStack poseStack = guiGraphics.pose();
         float universalScale = Managers.Feature.getFeatureInstance(TooltipFittingFeature.class)
                 .universalScale
                 .get();
         int twoPad = COMPARE_ITEM_PAD * 2;
-
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 300);
 
         List<Component> hoveredLines = new ArrayList<>(event.getTooltips());
         if (removeFlavourText.get()) {
@@ -344,28 +340,26 @@ public class ItemCompareFeature extends Feature {
         event.setCanceled(true);
 
         changePositioner = true;
-        poseStack.pushPose();
-        poseStack.scale(hoveredScaleFactor, hoveredScaleFactor, 1);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().scale(hoveredScaleFactor, hoveredScaleFactor);
         guiGraphics.renderTooltip(
                 font, hoveredLines, hoveredItemStack.getTooltipImage(), (int) (hoveredX / hoveredScaleFactor), (int)
                         (hoveredY / hoveredScaleFactor));
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
 
         for (Tooltip tooltip : tooltips) {
-            poseStack.pushPose();
+            guiGraphics.pose().pushMatrix();
             float scaleFactor = tooltip.getScaleFactor();
-            poseStack.scale(scaleFactor, scaleFactor, 1);
+            guiGraphics.pose().scale(scaleFactor, scaleFactor);
             guiGraphics.renderTooltip(
                     font,
                     tooltip.getLines(),
                     tooltip.getVisualTooltipComponent(),
                     (int) (tooltip.getX() / scaleFactor),
                     (int) (tooltip.getY() / scaleFactor));
-            poseStack.popPose();
+            guiGraphics.pose().popMatrix();
         }
         changePositioner = false;
-
-        poseStack.popPose();
     }
 
     private boolean isMatchingType(WynnItem wynnItem, GearTypeItemProperty gearItemReference) {

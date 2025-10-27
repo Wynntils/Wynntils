@@ -352,8 +352,8 @@ public class MinimapOverlay extends Overlay {
                 // Replace with pointer
                 float angle = (float) Math.toDegrees(StrictMath.atan2(compassOffsetZ, compassOffsetX)) + 90f;
 
-                poseStack.pushPose();
-                RenderUtils.rotatePose(poseStack, compassRenderX, compassRenderZ, angle);
+                guiGraphics.pose().pushMatrix();
+                RenderUtils.rotatePose(guiGraphics.pose(), compassRenderX, compassRenderZ, angle);
                 waypointPoi
                         .getPointerPoi()
                         .renderAt(
@@ -365,7 +365,7 @@ public class MinimapOverlay extends Overlay {
                                 1f / zoomRenderScale,
                                 zoomLevel,
                                 false);
-                poseStack.popPose();
+                guiGraphics.pose().popMatrix();
             } else {
                 waypointPoi.renderAt(
                         guiGraphics,
@@ -378,10 +378,10 @@ public class MinimapOverlay extends Overlay {
                         false);
             }
 
-            poseStack.pushPose();
-            poseStack.translate(centerX, centerZ, 0);
-            poseStack.scale(0.8f, 0.8f, 1);
-            poseStack.translate(-centerX, -centerZ, 0);
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().translate(centerX, centerZ);
+            guiGraphics.pose().scale(0.8f, 0.8f);
+            guiGraphics.pose().translate(-centerX, -centerZ);
 
             FontRenderer fontRenderer = FontRenderer.getInstance();
             Font font = fontRenderer.getFont();
@@ -406,7 +406,7 @@ public class MinimapOverlay extends Overlay {
                     VerticalAlignment.TOP,
                     TextShadow.NORMAL);
 
-            //            poseStack.popPose();
+            guiGraphics.pose().popMatrix();
         }
     }
 

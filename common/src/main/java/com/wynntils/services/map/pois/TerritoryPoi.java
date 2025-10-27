@@ -77,9 +77,6 @@ public class TerritoryPoi implements Poi {
             float zoomRenderScale,
             float zoomLevel,
             boolean showLabels) {
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 100);
-
         final float renderWidth = width * zoomRenderScale;
         final float renderHeight = height * zoomRenderScale;
         final float actualRenderX = renderX - renderWidth / 2f;
@@ -172,8 +169,6 @@ public class TerritoryPoi implements Poi {
                             VerticalAlignment.TOP,
                             TextShadow.OUTLINE);
         }
-
-        poseStack.popPose();
     }
 
     private boolean isTerritoryInfoUsable() {
