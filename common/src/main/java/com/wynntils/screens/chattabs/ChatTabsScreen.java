@@ -18,8 +18,8 @@ import org.lwjgl.glfw.GLFW;
 public class ChatTabsScreen extends ChatScreen {
     private final boolean oldTabHotkey;
 
-    public ChatTabsScreen(String initial, boolean oldTabHotkey) {
-        super(initial, false);
+    public ChatTabsScreen(String initial, boolean isDraft, boolean oldTabHotkey) {
+        super(initial, isDraft);
         this.oldTabHotkey = oldTabHotkey;
     }
 
