@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -37,23 +36,14 @@ public class LootchestTextFeature extends Feature {
     public void onRenderLootChest(ContainerRenderEvent event) {
         if (!(Models.Container.getCurrentContainer() instanceof LootChestContainer)) return;
 
-        int startX = event.getScreen().leftPos;
-        int startY = event.getScreen().topPos;
         int width = event.getScreen().imageWidth;
         int titleLabelX = event.getScreen().titleLabelX;
         int titleLabelY = event.getScreen().titleLabelY;
         int inventoryLabelX = event.getScreen().inventoryLabelX;
         int inventoryLabelY = event.getScreen().inventoryLabelY;
 
-        PoseStack poseStack = event.getPoseStack();
-
-        poseStack.pushPose();
-        poseStack.translate(startX, startY, 200);
-
         renderTitleTemplate(event.getGuiGraphics(), width - titleLabelX, titleLabelY);
         renderInventoryTemplate(event.getGuiGraphics(), width - inventoryLabelX, inventoryLabelY);
-
-        poseStack.popPose();
     }
 
     private void renderTitleTemplate(GuiGraphics guiGraphics, int x, int y) {

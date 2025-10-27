@@ -40,10 +40,9 @@ public final class MapFeatureRenderer {
 
         int yOffset = 0;
 
-        poseStack.pushPose();
-        // z-index for rendering
-        poseStack.translate(renderX, renderY, attributes.priority());
-        poseStack.scale(renderScale, renderScale, renderScale);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(renderX, renderY);
+        guiGraphics.pose().scale(renderScale, renderScale);
 
         // Draw icon, if applicable
         float iconAlpha =
@@ -126,6 +125,6 @@ public final class MapFeatureRenderer {
             decoration.render(poseStack, bufferSource, hovered, zoomLevel);
         }
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 }

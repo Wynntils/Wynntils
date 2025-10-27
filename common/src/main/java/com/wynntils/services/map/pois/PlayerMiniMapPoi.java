@@ -34,8 +34,9 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
             float zoomRenderScale,
             float zoomLevel,
             boolean showLabels) {
-        poseStack.pushPose();
-        poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f); // center the player
+        // icon
 
         // outline
         BufferedRenderUtils.drawRectBorders(
@@ -67,6 +68,6 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
                 64,
                 64);
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 }

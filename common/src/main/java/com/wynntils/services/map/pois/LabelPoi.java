@@ -114,9 +114,9 @@ public class LabelPoi implements Poi {
         }
         CustomColor color = getRenderedColor(alpha);
 
-        poseStack.pushPose();
-        poseStack.translate(renderX, renderY, getDisplayPriority().ordinal());
-        poseStack.scale(modifier, modifier, modifier);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(renderX, renderY);
+        guiGraphics.pose().scale(modifier, modifier);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -145,7 +145,7 @@ public class LabelPoi implements Poi {
                                 1f);
             }
         }
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     @Override

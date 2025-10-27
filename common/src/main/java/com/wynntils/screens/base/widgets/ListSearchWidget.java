@@ -43,9 +43,9 @@ public class ListSearchWidget extends SearchWidget {
             int highlightedWidth,
             int lastWidth,
             boolean defaultText) {
-        poseStack.pushPose();
+        guiGraphics.pose().pushMatrix();
 
-        poseStack.translate(getXOffset(), getYOffset(), 0);
+        guiGraphics.pose().translate(getXOffset(), getYOffset());
 
         super.renderText(
                 poseStack,
@@ -60,7 +60,7 @@ public class ListSearchWidget extends SearchWidget {
                 lastWidth,
                 defaultText);
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     @Override

@@ -36,8 +36,9 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
             float zoomRenderScale,
             float zoomLevel,
             boolean showLabels) {
-        poseStack.pushPose();
-        poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f); // center the player
+        // icon
 
         ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
 
@@ -110,6 +111,6 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                                 .get(),
                         1f);
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 }

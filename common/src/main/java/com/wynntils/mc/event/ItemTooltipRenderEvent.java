@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.event;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.Font;
@@ -37,10 +36,6 @@ public abstract class ItemTooltipRenderEvent extends Event {
 
     public GuiGraphics getGuiGraphics() {
         return guiGraphics;
-    }
-
-    public PoseStack getPoseStack() {
-        return guiGraphics.pose();
     }
 
     public ItemStack getItemStack() {
