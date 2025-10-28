@@ -4,12 +4,11 @@
  */
 package com.wynntils.handlers.tooltip.impl.identifiable;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
-import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
+import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.ItemWeightSource;
@@ -17,10 +16,8 @@ import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.services.itemweight.type.ItemWeighting;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -76,9 +73,11 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     }
 
     @Override
-    protected List<Component> getWeightedHeaderLines(List<Component> originalHeader, TooltipStyle style) {
-        ItemWeightSource weightSource = style.weightSource();
-
+    protected List<Component> getWeightedHeaderLines(
+            List<Component> originalHeader,
+            ItemWeightSource weightSource,
+            TooltipWeightDecorator weightDecorator,
+            TooltipStyle style) {
         // Only gear will have weightings
         if (weightSource == ItemWeightSource.NONE
                 || !itemInfo.hasOverallValue()
@@ -96,7 +95,6 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         boolean addWynnpool = (weightSource == ItemWeightSource.WYNNPOOL || weightSource == ItemWeightSource.ALL)
                 && !wynnpoolWeightings.isEmpty();
 
-        ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
         int currentIndex = 1;
 
         List<Component> weightedHeader = new ArrayList<>(originalHeader);
@@ -104,13 +102,13 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         if (addNori) {
             weightedHeader.add(currentIndex, Services.ItemWeight.NORI_HEADER);
             currentIndex++;
-            currentIndex = addWeightingLine(weightedHeader, noriWeightings, currentIndex, isif);
+            currentIndex = addWeightingLines(weightedHeader, noriWeightings, weightDecorator, currentIndex);
         }
 
         if (addWynnpool) {
             weightedHeader.add(currentIndex, Services.ItemWeight.WYNNPOOL_HEADER);
             currentIndex++;
-            currentIndex = addWeightingLine(weightedHeader, wynnpoolWeightings, currentIndex, isif);
+            currentIndex = addWeightingLines(weightedHeader, wynnpoolWeightings, weightDecorator, currentIndex);
         }
 
         // We only need to add an empty line for weapons if any weightings were added, otherwise there will be extra
@@ -122,22 +120,16 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         return weightedHeader;
     }
 
-    private int addWeightingLine(
+    private int addWeightingLines(
             List<Component> originalHeader,
             List<ItemWeighting> weightings,
-            int currentIndex,
-            ItemStatInfoFeature isif) {
+            TooltipWeightDecorator weightDecorator,
+            int currentIndex) {
         for (ItemWeighting weighting : weightings) {
-            MutableComponent weightingComponent = Component.literal(" - ")
-                    .append(Component.literal(weighting.weightName() + " Scale"))
-                    .withStyle(ChatFormatting.GRAY);
-
-            float percentage = Services.ItemWeight.calculateWeighting(weighting, itemInfo);
-            weightingComponent.append(ColorScaleUtils.getPercentageTextComponent(
-                    isif.getColorMap(), percentage, isif.colorLerp.get(), isif.decimalPlaces.get()));
-
-            originalHeader.add(currentIndex, weightingComponent);
-            currentIndex++;
+            for (MutableComponent component : weightDecorator.getLines(weighting, itemInfo)) {
+                originalHeader.add(currentIndex, component);
+                currentIndex++;
+            }
         }
 
         return currentIndex;

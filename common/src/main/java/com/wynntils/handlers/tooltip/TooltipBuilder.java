@@ -7,6 +7,7 @@ package com.wynntils.handlers.tooltip;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
+import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.ItemWeightSource;
@@ -22,15 +23,17 @@ import net.minecraft.network.chat.Component;
 
 public abstract class TooltipBuilder {
     private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
-            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, ItemWeightSource.NONE, true);
+            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, true);
     private final List<Component> header;
     private final List<Component> footer;
     private final String source;
 
     // The identificationsCache is only valid if the cached dependencies matchs
     private ClassType cachedCurrentClass;
+    private ItemWeightSource cachedWeightSource;
     private TooltipStyle cachedStyle;
-    private TooltipIdentificationDecorator cachedDecorator;
+    private TooltipIdentificationDecorator cachedIdentificationDecorator;
+    private TooltipWeightDecorator cachedWeightDecorator;
     private List<Component> identificationsCache;
     private List<Component> weightedHeaderCache;
 
@@ -41,11 +44,15 @@ public abstract class TooltipBuilder {
     }
 
     public List<Component> getTooltipLines(ClassType currentClass) {
-        return getTooltipLines(currentClass, DEFAULT_TOOLTIP_STYLE, null);
+        return getTooltipLines(currentClass, DEFAULT_TOOLTIP_STYLE, null, ItemWeightSource.NONE, null);
     }
 
     public List<Component> getTooltipLines(
-            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator) {
+            ClassType currentClass,
+            TooltipStyle style,
+            TooltipIdentificationDecorator identificationDecorator,
+            ItemWeightSource weightSource,
+            TooltipWeightDecorator weightDecorator) {
         List<Component> tooltip;
         List<Component> identifications;
         List<Component> weightings;
@@ -53,27 +60,31 @@ public abstract class TooltipBuilder {
         // Identification lines are rendered differently depending on current class, requested
         // style and provided decorator. If all match, use cache.
         if (currentClass != cachedCurrentClass
+                || cachedWeightSource != weightSource
                 || !Objects.equals(cachedStyle, style)
-                || !Objects.equals(cachedDecorator, decorator)) {
-            identifications = getIdentificationLines(currentClass, style, decorator);
+                || !Objects.equals(this.cachedIdentificationDecorator, identificationDecorator)
+                || !Objects.equals(this.cachedWeightDecorator, weightDecorator)) {
+            identifications = getIdentificationLines(currentClass, style, identificationDecorator);
             identificationsCache = identifications;
             cachedCurrentClass = currentClass;
+            cachedWeightSource = weightSource;
             cachedStyle = style;
-            cachedDecorator = decorator;
+            this.cachedIdentificationDecorator = identificationDecorator;
+            this.cachedWeightDecorator = weightDecorator;
             weightings = null;
 
-            if (style.weightSource() != ItemWeightSource.NONE) {
-                weightings = getWeightedHeaderLines(header, style);
+            if (weightSource != ItemWeightSource.NONE) {
+                weightings = getWeightedHeaderLines(header, weightSource, weightDecorator, style);
             }
 
             weightedHeaderCache = weightings;
         }
 
         // Determine header to use
-        if (style.weightSource() != ItemWeightSource.NONE) {
+        if (weightSource != ItemWeightSource.NONE) {
             // Recalculate weighted header if not cached
             if (weightedHeaderCache == null) {
-                weightedHeaderCache = getWeightedHeaderLines(header, style);
+                weightedHeaderCache = getWeightedHeaderLines(header, weightSource, weightDecorator, style);
             }
             tooltip = new ArrayList<>(weightedHeaderCache);
         } else {
@@ -95,7 +106,11 @@ public abstract class TooltipBuilder {
         return tooltip;
     }
 
-    protected abstract List<Component> getWeightedHeaderLines(List<Component> originalHeader, TooltipStyle style);
+    protected abstract List<Component> getWeightedHeaderLines(
+            List<Component> originalHeader,
+            ItemWeightSource weightSource,
+            TooltipWeightDecorator weightDecorator,
+            TooltipStyle style);
 
     protected abstract List<Component> getIdentificationLines(
             ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator);
