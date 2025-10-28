@@ -256,6 +256,27 @@ public enum Texture {
     PARTY_KICK_ICON("icons/player_viewer/party_kick_icon.png", 14, 14),
     STATS_ICON("icons/player_viewer/stats_icon.png", 14, 14),
     TRADE_ICON("icons/player_viewer/trade_icon.png", 14, 14),
+
+    // Bank
+    LIQUID_EMERALD_ICON("icons/quick_jump/liquid_emerald.png", 16, 16),
+    EMERALD_ICON("icons/quick_jump/emerald.png", 16, 16),
+
+    POTION_ICON("icons/quick_jump/potion.png", 16, 16),
+    POWDER_ICON("icons/quick_jump/powder.png", 16, 16),
+    TOME_ICON("icons/quick_jump/tome.png", 16, 16),
+    SCROLL_ICON("icons/quick_jump/scroll.png", 16, 16),
+    GEM_ICON("icons/quick_jump/gem.png", 16, 16),
+    KEY_ICON("icons/quick_jump/key.png", 16, 16),
+    RING_ICON("icons/quick_jump/ring.png", 16, 16),
+
+    SWORD_ICON("icons/quick_jump/sword.png", 16, 16),
+    HELMET_ICON("icons/quick_jump/helmet.png", 16, 16),
+    CHESTPLATE_ICON("icons/quick_jump/chestplate.png", 16, 16),
+    LEGGINGS_ICON("icons/quick_jump/leggings.png", 16, 16),
+    BOOTS_ICON("icons/quick_jump/boots.png", 16, 16),
+
+    QUESTION_MARK_ICON("icons/quick_jump/question_mark.png", 16, 16),
+    STAR_ICON("icons/quick_jump/star.png", 16, 16),
     // endregion
 
     // region Item Storage

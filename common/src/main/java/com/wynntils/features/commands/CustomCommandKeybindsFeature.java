@@ -13,7 +13,6 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.client.gui.screens.ChatScreen;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMMANDS)
@@ -99,7 +98,7 @@ public class CustomCommandKeybindsFeature extends Feature {
     private void executeKeybind(String keybindCommand, CommandType commandType) {
         switch (commandType) {
             case EXECUTE -> Handlers.Command.sendCommandImmediately(keybindCommand);
-            case SUGGEST -> McUtils.setScreen(new ChatScreen(keybindCommand));
+            case SUGGEST -> McUtils.openChatScreen(keybindCommand);
         }
     }
 

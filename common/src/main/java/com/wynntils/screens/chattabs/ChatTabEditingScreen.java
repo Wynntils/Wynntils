@@ -29,7 +29,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -362,7 +361,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public void onClose() {
-        McUtils.setScreen(new ChatScreen(""));
+        McUtils.openChatScreen("");
     }
 
     private void saveChatTab() {

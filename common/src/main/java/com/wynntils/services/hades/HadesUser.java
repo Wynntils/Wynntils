@@ -7,9 +7,11 @@ package com.wynntils.services.hades;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.colors.CommonColors;
@@ -119,28 +121,33 @@ public class HadesUser {
         this.health = new CappedValue(packet.getHealth(), packet.getMaxHealth());
         this.mana = new CappedValue(packet.getMana(), packet.getMaxMana());
 
-        handleArmorData(InventoryArmor.HELMET, packet.getHelmet());
-        handleArmorData(InventoryArmor.CHESTPLATE, packet.getChestplate());
-        handleArmorData(InventoryArmor.LEGGINGS, packet.getLeggings());
-        handleArmorData(InventoryArmor.BOOTS, packet.getBoots());
+        handleArmorData(InventoryArmor.HELMET, GearType.HELMET, packet.getHelmet());
+        handleArmorData(InventoryArmor.CHESTPLATE, GearType.CHESTPLATE, packet.getChestplate());
+        handleArmorData(InventoryArmor.LEGGINGS, GearType.LEGGINGS, packet.getLeggings());
+        handleArmorData(InventoryArmor.BOOTS, GearType.BOOTS, packet.getBoots());
 
-        handleAccessoryData(InventoryAccessory.RING_1, packet.getRingOne());
-        handleAccessoryData(InventoryAccessory.RING_2, packet.getRingTwo());
-        handleAccessoryData(InventoryAccessory.BRACELET, packet.getBracelet());
-        handleAccessoryData(InventoryAccessory.NECKLACE, packet.getNecklace());
+        handleAccessoryData(InventoryAccessory.RING_1, GearType.RING, packet.getRingOne());
+        handleAccessoryData(InventoryAccessory.RING_2, GearType.RING, packet.getRingTwo());
+        handleAccessoryData(InventoryAccessory.BRACELET, GearType.BRACELET, packet.getBracelet());
+        handleAccessoryData(InventoryAccessory.NECKLACE, GearType.NECKLACE, packet.getNecklace());
 
-        if (!packet.getHeldItem().isEmpty()) {
+        if (packet.getHeldItem().isEmpty()) {
+            this.heldItem = null;
+            this.heldItemCache = "";
+        } else if (!this.heldItemCache.equals(packet.getHeldItem())) {
             ErrorOr<WynnItem> errorOrDecodedItem = decodeItem(packet.getHeldItem());
 
             if (errorOrDecodedItem.hasError()) {
                 WynntilsMod.warn("Failed to decode Hades user held item: " + errorOrDecodedItem.getError());
-            } else if (!this.heldItemCache.equals(packet.getHeldItem())) {
-                this.heldItem = errorOrDecodedItem.getValue();
-                this.heldItemCache = packet.getHeldItem();
+            } else {
+                WynnItem item = errorOrDecodedItem.getValue();
+
+                if (item instanceof GearTypeItemProperty gearItemType
+                        && gearItemType.getGearType().isWeapon()) {
+                    this.heldItem = item;
+                    this.heldItemCache = packet.getHeldItem();
+                }
             }
-        } else {
-            this.heldItem = null;
-            this.heldItemCache = "";
         }
 
         this.relation = packet.isPartyMember()
@@ -158,7 +165,7 @@ public class HadesUser {
         return relation;
     }
 
-    private void handleArmorData(InventoryArmor armor, String armorData) {
+    private void handleArmorData(InventoryArmor armor, GearType expectedGearType, String armorData) {
         if (armorData.isEmpty()) {
             this.armor.remove(armor);
             this.armorCache.remove(armor);
@@ -168,13 +175,18 @@ public class HadesUser {
             if (errorOrDecodedItem.hasError()) {
                 WynntilsMod.warn("Failed to decode Hades user " + armor + ": " + errorOrDecodedItem.getError());
             } else {
-                this.armor.put(armor, errorOrDecodedItem.getValue());
-                this.armorCache.put(armor, armorData);
+                WynnItem item = errorOrDecodedItem.getValue();
+
+                if (item instanceof GearTypeItemProperty gearItemType
+                        && gearItemType.getGearType() == expectedGearType) {
+                    this.armor.put(armor, errorOrDecodedItem.getValue());
+                    this.armorCache.put(armor, armorData);
+                }
             }
         }
     }
 
-    private void handleAccessoryData(InventoryAccessory accessory, String accessoryData) {
+    private void handleAccessoryData(InventoryAccessory accessory, GearType expectedGearType, String accessoryData) {
         if (accessoryData.isEmpty()) {
             this.accessories.remove(accessory);
             this.accessoriesCache.remove(accessory);
@@ -184,8 +196,13 @@ public class HadesUser {
             if (errorOrDecodedItem.hasError()) {
                 WynntilsMod.warn("Failed to decode Hades user " + accessory + ": " + errorOrDecodedItem.getError());
             } else {
-                this.accessories.put(accessory, errorOrDecodedItem.getValue());
-                this.accessoriesCache.put(accessory, accessoryData);
+                WynnItem item = errorOrDecodedItem.getValue();
+
+                if (item instanceof GearTypeItemProperty gearItemType
+                        && gearItemType.getGearType() == expectedGearType) {
+                    this.accessories.put(accessory, errorOrDecodedItem.getValue());
+                    this.accessoriesCache.put(accessory, accessoryData);
+                }
             }
         }
     }
