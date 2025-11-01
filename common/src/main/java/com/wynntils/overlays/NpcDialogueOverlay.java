@@ -230,7 +230,7 @@ public class NpcDialogueOverlay extends Overlay {
             StyledText protection = isProtected ? StyledText.fromString("§f<protected> §r") : StyledText.EMPTY;
             if (dialogueType == NpcDialogueType.NORMAL) {
                 TextRenderTask pressSneakMessage =
-                        new TextRenderTask(PRESS_SNEAK_TO_CONTINUE.prepend(protection), renderSetting);
+                        new TextRenderTask(getPressSneakOrKeyToContinue().prepend(protection), renderSetting);
                 helperRenderTasks.add(pressSneakMessage);
             } else if (dialogueType == NpcDialogueType.SELECTION) {
                 String msg;
@@ -274,5 +274,21 @@ public class NpcDialogueOverlay extends Overlay {
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }
+    }
+
+    private StyledText getPressSneakOrKeyToContinue() {
+        NpcDialogueFeature feature = Managers.Feature.getFeatureInstance(NpcDialogueFeature.class);
+        if (!feature.npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
+            String keyName = feature.npcDialogKeyOverrideKeybind
+                    .getKeyMapping()
+                    .getTranslatedKeyMessage()
+                    .getString();
+
+            if (feature.overrideSneakKey.get()) {
+                return StyledText.fromString(PRESS_SNEAK_TO_CONTINUE.getString().replace("SNEAK", keyName));
+            }
+            return StyledText.fromString(PRESS_SNEAK_TO_CONTINUE.getString().replace("SNEAK", "SNEAK or " + keyName));
+        }
+        return PRESS_SNEAK_TO_CONTINUE;
     }
 }
