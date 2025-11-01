@@ -59,7 +59,8 @@ public class ItemStatInfoFeature extends Feature {
 
     private final Map<WeightDecoratorType, TooltipWeightDecorator> weightDecorators = Map.of(
             WeightDecoratorType.OVERALL, new SimpleWeightDecorator(),
-            WeightDecoratorType.FULL, new FullWeightDecorator());
+            WeightDecoratorType.FULL_DISTRIBUTION, new FullWeightDecorator(true),
+            WeightDecoratorType.FULL_CONTRIBUTION, new FullWeightDecorator(false));
 
     private final Set<WynnItem> brokenItems = new HashSet<>();
 
@@ -312,7 +313,13 @@ public class ItemStatInfoFeature extends Feature {
         }
     }
 
-    private class FullWeightDecorator extends WeightingDecorator {
+    private final class FullWeightDecorator extends WeightingDecorator {
+        private final boolean distribution;
+
+        private FullWeightDecorator(boolean distribution) {
+            this.distribution = distribution;
+        }
+
         @Override
         protected List<MutableComponent> getWeightLines(
                 ItemWeighting weighting, IdentifiableItemProperty<?, ?> itemInfo) {
@@ -321,9 +328,9 @@ public class ItemStatInfoFeature extends Feature {
                     .append(Component.literal(weighting.weightName() + " Scale"))
                     .withStyle(ChatFormatting.GRAY);
 
-            float percentage = Services.ItemWeight.calculateWeighting(weighting, itemInfo);
+            float weightPercentage = Services.ItemWeight.calculateWeighting(weighting, itemInfo);
             weightingComponent.append(ColorScaleUtils.getPercentageTextComponent(
-                    getColorMap(), percentage, colorLerp.get(), decimalPlaces.get()));
+                    getColorMap(), weightPercentage, colorLerp.get(), decimalPlaces.get()));
 
             lines.add(weightingComponent);
 
@@ -337,13 +344,14 @@ public class ItemStatInfoFeature extends Feature {
                 }
 
                 String weightStr = String.format(Locale.ROOT, "(%.1f%%)", weight.a());
+                float percentage = distribution ? weight.b() : ((weight.a() / 100f) * weight.b());
 
                 lines.add(Component.literal("   - ")
                         .withStyle(ChatFormatting.GRAY)
                         .append(Component.literal(displayName))
                         .append(Component.literal(weightStr).withStyle(ChatFormatting.WHITE))
                         .append(ColorScaleUtils.getPercentageTextComponent(
-                                getColorMap(), weight.b(), colorLerp.get(), decimalPlaces.get())));
+                                getColorMap(), percentage, colorLerp.get(), decimalPlaces.get())));
             });
             lines.add(Component.empty());
 
@@ -375,7 +383,8 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     private enum WeightDecoratorType {
-        FULL(Set.of(GLFW.GLFW_KEY_LEFT_SHIFT)),
+        FULL_CONTRIBUTION(Set.of(GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_LEFT_CONTROL)),
+        FULL_DISTRIBUTION(Set.of(GLFW.GLFW_KEY_LEFT_SHIFT)),
         OVERALL(Set.of());
 
         private final Set<Integer> keyCodes;
