@@ -21,10 +21,13 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -107,7 +110,7 @@ public class ItemWeightService extends Service {
             ItemWeighting weighting, IdentifiableItemProperty<?, ?> itemInfo) {
         if (weighting == null || itemInfo == null) return Map.of();
 
-        Map<StatType, Pair<Float, Float>> statWeights = new HashMap<>();
+        Map<StatType, Pair<Float, Float>> statWeights = new LinkedHashMap<>();
 
         for (Map.Entry<String, Double> entry : weighting.identifications().entrySet()) {
             String statApiName = entry.getKey();
@@ -162,10 +165,10 @@ public class ItemWeightService extends Service {
                 String weightName = weightEntry.getKey();
                 JsonObject identificationsObj = weightEntry.getValue().getAsJsonObject();
 
-                Map<String, Double> identifications = new HashMap<>();
-                for (Map.Entry<String, JsonElement> statEntry : identificationsObj.entrySet()) {
-                    identifications.put(statEntry.getKey(), statEntry.getValue().getAsDouble());
-                }
+                Map<String, Double> identifications = identificationsObj.entrySet().stream()
+                        .sorted(Map.Entry.comparingByValue(Comparator.comparingDouble(JsonElement::getAsDouble)))
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey, e -> e.getValue().getAsDouble(), (a, b) -> a, LinkedHashMap::new));
 
                 itemWeights.add(new ItemWeighting(weightName, identifications));
             }
