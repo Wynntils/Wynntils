@@ -80,16 +80,13 @@ public class NpcDialogueFeature extends Feature {
     public final Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
 
     @Persisted
-    public final Config<Boolean> npcDialogueKeyOverride = new Config<>(true);
-
-    @Persisted
     public final Config<Boolean> overrideSneakKey = new Config<>(true);
 
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
     private final ScheduledExecutorService npcDialogKeyOverrideExecutor = Executors.newSingleThreadScheduledExecutor();
-    private ScheduledFuture<?> scheduledNPCDialogKeyOverrideKeyPress = null;
+    private boolean isReleaseShiftScheduled;
 
     // Normal mode
     // This list holds a constructed dialogue screen,
@@ -145,13 +142,14 @@ public class NpcDialogueFeature extends Feature {
 
     @SubscribeEvent
     public void onDialogueSneakPress(KeyInputEvent e) {
-        if (!npcDialogueKeyOverride.get()) return;
-        if (!overrideSneakKey.get()) return;
         if (npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) return;
+        if (!overrideSneakKey.get()) return;
         if (e.getKey() != McUtils.options().keyShift.key.getValue()) return;
 
         if (Models.NpcDialogue.getCurrentDialogue().dialogueType() == NpcDialogueType.NORMAL
-                && Models.NpcDialogue.getCurrentDialogue().isProtected()) e.setCanceled(true);
+                && Models.NpcDialogue.getCurrentDialogue().isProtected()) {
+            e.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
@@ -197,14 +195,14 @@ public class NpcDialogueFeature extends Feature {
             scheduledAutoProgressKeyPress = null;
         }
 
-        if (scheduledNPCDialogKeyOverrideKeyPress != null) {
+        if (isReleaseShiftScheduled) {
             npcDialogKeyOverrideExecutor.schedule(
                     () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
                             McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY)),
                     100,
                     TimeUnit.MILLISECONDS);
 
-            scheduledNPCDialogKeyOverrideKeyPress = null;
+            isReleaseShiftScheduled = false;
         }
     }
 
@@ -236,14 +234,11 @@ public class NpcDialogueFeature extends Feature {
     }
 
     private void progressNPCDialogue() {
-        if (!npcDialogueKeyOverride.get()) return;
-
         if (Models.NpcDialogue.getCurrentDialogue().dialogueType() == NpcDialogueType.NORMAL) {
-            scheduledNPCDialogKeyOverrideKeyPress = npcDialogKeyOverrideExecutor.schedule(
-                    () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                            McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY)),
-                    100,
-                    TimeUnit.MILLISECONDS);
+            McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                    McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY));
+
+            isReleaseShiftScheduled = true;
         }
     }
 
@@ -279,22 +274,18 @@ public class NpcDialogueFeature extends Feature {
     }
 
     private StyledText getNormalDisplayedHelperMessage() {
-        if (npcDialogueKeyOverride.get()
-                && !npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
-            if (overrideSneakKey.get())
+        if (!npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
+            String keyName = npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString();
+
+            if (overrideSneakKey.get()) {
                 return StyledText.fromComponent(Component.translatable(
                                 "feature.wynntils.npcDialogue.keyToProgress",
-                                npcDialogKeyOverrideKeybind
-                                        .getKeyMapping()
-                                        .getTranslatedKeyMessage()
-                                        .getString())
+                                keyName)
                         .withStyle(ChatFormatting.GREEN));
+            }
             return StyledText.fromComponent(Component.translatable(
                             "feature.wynntils.npcDialogue.shiftOrKeyToProgress",
-                            npcDialogKeyOverrideKeybind
-                                    .getKeyMapping()
-                                    .getTranslatedKeyMessage()
-                                    .getString())
+                            keyName)
                     .withStyle(ChatFormatting.GREEN));
         }
         return StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
@@ -351,26 +342,22 @@ public class NpcDialogueFeature extends Feature {
     }
 
     private StyledText getPressShiftOrKeyToContinue() {
-        if (npcDialogueKeyOverride.get()
-                && !npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
-            if (overrideSneakKey.get())
+        if (!npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
+            String keyName = npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString();
+
+            if (overrideSneakKey.get()) {
                 return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE
                         .getString()
                         .replace(
                                 "SHIFT",
-                                npcDialogKeyOverrideKeybind
-                                        .getKeyMapping()
-                                        .getTranslatedKeyMessage()
-                                        .getString()));
+                                keyName));
+            }
             return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE
                     .getString()
                     .replace(
                             "SHIFT",
                             "SHIFT §7or §f"
-                                    + npcDialogKeyOverrideKeybind
-                                            .getKeyMapping()
-                                            .getTranslatedKeyMessage()
-                                            .getString()));
+                                    + keyName));
         }
         return PRESS_SHIFT_TO_CONTINUE;
     }
