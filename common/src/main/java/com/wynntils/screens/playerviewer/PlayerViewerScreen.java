@@ -9,13 +9,14 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.playerviewer.widgets.FriendButton;
@@ -34,6 +35,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.core.component.DataComponentMap;
@@ -91,12 +93,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
         List<ItemStack> accessoryItems = new ArrayList<>();
 
         if (hadesUserOpt.isPresent()) {
-            heldItem = createDecoratedItemStack(hadesUserOpt.get().getHeldItem(), player.getMainHandItem(), player);
-
-            if (heldItem == null) {
-                noGear = true;
-                return new PlayerViewerScreen(player, PlayerViewerMenu.create(ItemStack.EMPTY, List.of(), List.of()));
-            }
+            heldItem = createDecoratedItemStack(hadesUserOpt.get().getHeldItem(), player);
 
             noGear = heldItem.isEmpty();
 
@@ -108,13 +105,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                     continue;
                 }
 
-                ItemStack accessoryItemStack = createDecoratedItemStack(wynnItem, ItemStack.EMPTY, player);
-
-                if (accessoryItemStack == null) {
-                    noGear = true;
-                    return new PlayerViewerScreen(
-                            player, PlayerViewerMenu.create(ItemStack.EMPTY, List.of(), List.of()));
-                }
+                ItemStack accessoryItemStack = createDecoratedItemStack(wynnItem, player);
 
                 accessoryItems.add(accessoryItemStack);
                 noGear = false;
@@ -128,53 +119,21 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                     continue;
                 }
 
-                ItemStack armorItemStack = createDecoratedItemStack(
-                        wynnItem, player.getInventory().armor.get(armor.getArmorSlot()), player);
-
-                if (armorItemStack == null) {
-                    noGear = true;
-                    return new PlayerViewerScreen(
-                            player, PlayerViewerMenu.create(ItemStack.EMPTY, List.of(), List.of()));
-                }
+                ItemStack armorItemStack = createDecoratedItemStack(wynnItem, player);
 
                 armorItems.add(armorItemStack);
                 noGear = false;
             }
         }
 
-        // Only show gear if no invalid gear was found
         return new PlayerViewerScreen(player, PlayerViewerMenu.create(heldItem, armorItems, accessoryItems));
     }
 
-    /**
-     * Tries to validate that the decoded WynnItem matches the expected item using the custom model data, if it does then creates an ItemStack with the proper
-     * item and custom model data.
-     * @param wynnItem The decoded WynnItem the player has shared.
-     * @param expectedItem The ItemStack equipped by the player for this slot, or an empty ItemStack for accessories
-     * @param player The player being viewed
-     * @return null if the item shared was invalid or an ItemStack with the proper item and custom model data if valid
-     */
-    private static ItemStack createDecoratedItemStack(WynnItem wynnItem, ItemStack expectedItem, Player player) {
+    private static ItemStack createDecoratedItemStack(WynnItem wynnItem, Player player) {
         ItemStack itemStack = ItemStack.EMPTY;
 
         if (wynnItem instanceof GearItem gearItem) {
             itemStack = gearItem.getItemInfo().metaInfo().material().itemStack();
-
-            // For gear without cosmetics we can compare the custom model data to ensure the item sent matches what the
-            // player is actually wearing
-            if (gearItem.getGearType() != GearType.HELMET
-                    && !gearItem.getGearType().isWeapon()) {
-                CustomModelData expectedModelData = expectedItem.has(DataComponents.CUSTOM_MODEL_DATA)
-                        ? expectedItem.get(DataComponents.CUSTOM_MODEL_DATA)
-                        : null;
-                CustomModelData itemModelData = itemStack.has(DataComponents.CUSTOM_MODEL_DATA)
-                        ? itemStack.get(DataComponents.CUSTOM_MODEL_DATA)
-                        : null;
-
-                if (expectedItem != ItemStack.EMPTY && !expectedModelData.equals(itemModelData)) {
-                    return null;
-                }
-            }
         } else if (wynnItem instanceof CraftedGearItem craftedGearItem) {
             // Armor and weapons are sent by Wynn so we can use those itemstacks, accessories we will have to use
             // a default texture
