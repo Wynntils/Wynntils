@@ -275,18 +275,19 @@ public class NpcDialogueFeature extends Feature {
 
     private StyledText getNormalDisplayedHelperMessage() {
         if (!npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
-            String keyName = npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString();
+            String keyName = npcDialogKeyOverrideKeybind
+                    .getKeyMapping()
+                    .getTranslatedKeyMessage()
+                    .getString();
 
             if (overrideSneakKey.get()) {
-                return StyledText.fromComponent(Component.translatable(
-                                "feature.wynntils.npcDialogue.keyToProgress",
-                                keyName)
-                        .withStyle(ChatFormatting.GREEN));
+                return StyledText.fromComponent(
+                        Component.translatable("feature.wynntils.npcDialogue.keyToProgress", keyName)
+                                .withStyle(ChatFormatting.GREEN));
             }
-            return StyledText.fromComponent(Component.translatable(
-                            "feature.wynntils.npcDialogue.shiftOrKeyToProgress",
-                            keyName)
-                    .withStyle(ChatFormatting.GREEN));
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.npcDialogue.shiftOrKeyToProgress", keyName)
+                            .withStyle(ChatFormatting.GREEN));
         }
         return StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
                 .withStyle(ChatFormatting.GREEN));
@@ -343,21 +344,16 @@ public class NpcDialogueFeature extends Feature {
 
     private StyledText getPressShiftOrKeyToContinue() {
         if (!npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
-            String keyName = npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString();
+            String keyName = npcDialogKeyOverrideKeybind
+                    .getKeyMapping()
+                    .getTranslatedKeyMessage()
+                    .getString();
 
             if (overrideSneakKey.get()) {
-                return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE
-                        .getString()
-                        .replace(
-                                "SHIFT",
-                                keyName));
+                return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE.getString().replace("SHIFT", keyName));
             }
-            return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE
-                    .getString()
-                    .replace(
-                            "SHIFT",
-                            "SHIFT §7or §f"
-                                    + keyName));
+            return StyledText.fromString(
+                    PRESS_SHIFT_TO_CONTINUE.getString().replace("SHIFT", "SHIFT §7or §f" + keyName));
         }
         return PRESS_SHIFT_TO_CONTINUE;
     }

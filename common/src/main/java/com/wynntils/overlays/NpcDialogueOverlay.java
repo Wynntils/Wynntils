@@ -279,21 +279,15 @@ public class NpcDialogueOverlay extends Overlay {
     private StyledText getPressSneakOrKeyToContinue() {
         NpcDialogueFeature feature = Managers.Feature.getFeatureInstance(NpcDialogueFeature.class);
         if (!feature.npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
-            String keyName = feature.npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString();
+            String keyName = feature.npcDialogKeyOverrideKeybind
+                    .getKeyMapping()
+                    .getTranslatedKeyMessage()
+                    .getString();
 
             if (feature.overrideSneakKey.get()) {
-                return StyledText.fromString(PRESS_SNEAK_TO_CONTINUE
-                        .getString()
-                        .replace(
-                                "SNEAK",
-                                keyName));
+                return StyledText.fromString(PRESS_SNEAK_TO_CONTINUE.getString().replace("SNEAK", keyName));
             }
-            return StyledText.fromString(PRESS_SNEAK_TO_CONTINUE
-                    .getString()
-                    .replace(
-                            "SNEAK",
-                            "SNEAK or "
-                                    + keyName));
+            return StyledText.fromString(PRESS_SNEAK_TO_CONTINUE.getString().replace("SNEAK", "SNEAK or " + keyName));
         }
         return PRESS_SNEAK_TO_CONTINUE;
     }
