@@ -3,7 +3,6 @@
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
-
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -17,6 +16,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
+import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.PacketEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -25,6 +25,11 @@ import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.overlays.NpcDialogueOverlay;
 import com.wynntils.utils.mc.McUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
+import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,11 +37,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
-import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * Feature for handling NPC dialogues.
@@ -62,6 +62,10 @@ public class NpcDialogueFeature extends Feature {
     public final KeyBind cancelAutoProgressKeybind =
             new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
 
+    @RegisterKeyBind
+    public final KeyBind npcDialogKeyOverrideKeybind =
+            new KeyBind("NPC Dialogue Key Override Keybind", GLFW.GLFW_KEY_UNKNOWN, true, this::progressNPCDialogue);
+
     @Persisted
     private final Config<NpcDialogueChatDisplayType> chatDisplayType = new Config<>(NpcDialogueChatDisplayType.NORMAL);
 
@@ -74,8 +78,17 @@ public class NpcDialogueFeature extends Feature {
     @Persisted
     public final Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
 
+    @Persisted
+    public final Config<Boolean> npcDialogueKeyOverride = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> overrideSneakKey = new Config<>(true);
+
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
+
+    private final ScheduledExecutorService npcDialogKeyOverrideExecutor = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture<?> scheduledNPCDialogKeyOverrideKeyPress = null;
 
     // Normal mode
     // This list holds a constructed dialogue screen,
@@ -130,6 +143,16 @@ public class NpcDialogueFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onDialogueSneakPress(KeyInputEvent e) {
+        if (!npcDialogueKeyOverride.get()) return;
+        if (!overrideSneakKey.get()) return;
+        if (npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) return;
+        if (e.getKey() != McUtils.options().keyShift.key.getValue()) return;
+
+        if (Models.NpcDialogue.getCurrentDialogue().dialogueType() == NpcDialogueType.NORMAL && Models.NpcDialogue.getCurrentDialogue().isProtected()) e.setCanceled(true);
+    }
+
+    @SubscribeEvent
     public void onTick(TickEvent event) {
         if (Managers.Overlay.isEnabled(npcDialogueOverlay)) return;
 
@@ -156,20 +179,31 @@ public class NpcDialogueFeature extends Feature {
 
     @SubscribeEvent
     public void onPacketSent(PacketEvent.PacketSentEvent<?> e) {
-        if (scheduledAutoProgressKeyPress == null) return;
         if (!(e.getPacket() instanceof ServerboundPlayerCommandPacket packet)) return;
         if (packet.getAction() != ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY) return;
 
-        scheduledAutoProgressKeyPress.cancel(true);
+        if (scheduledAutoProgressKeyPress != null) {
+            scheduledAutoProgressKeyPress.cancel(true);
 
-        // Must be scheduled, can't be sent immediately
-        autoProgressExecutor.schedule(
-                () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                        McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY)),
-                100,
-                TimeUnit.MILLISECONDS);
+            // Must be scheduled, can't be sent immediately
+            autoProgressExecutor.schedule(
+                    () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                            McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY)),
+                    100,
+                    TimeUnit.MILLISECONDS);
 
-        scheduledAutoProgressKeyPress = null;
+            scheduledAutoProgressKeyPress = null;
+        }
+
+        if (scheduledNPCDialogKeyOverrideKeyPress != null) {
+            npcDialogKeyOverrideExecutor.schedule(
+                    () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                            McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY)),
+                    100,
+                    TimeUnit.MILLISECONDS);
+
+            scheduledNPCDialogKeyOverrideKeyPress = null;
+        }
     }
 
     @SubscribeEvent
@@ -199,6 +233,18 @@ public class NpcDialogueFeature extends Feature {
         return scheduledAutoProgressKeyPress;
     }
 
+    private void progressNPCDialogue() {
+        if (!npcDialogueKeyOverride.get()) return;
+
+        if (Models.NpcDialogue.getCurrentDialogue().dialogueType() == NpcDialogueType.NORMAL) {
+            scheduledNPCDialogKeyOverrideKeyPress = npcDialogKeyOverrideExecutor.schedule(
+                    () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                            McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY)),
+                    100,
+                    TimeUnit.MILLISECONDS);
+        }
+    }
+
     private ScheduledFuture<?> scheduledSneakPress(List<StyledText> dialogue) {
         long delay = Models.NpcDialogue.calculateMessageReadTime(dialogue);
 
@@ -225,11 +271,21 @@ public class NpcDialogueFeature extends Feature {
                             .withStyle(ChatFormatting.RED));
             displayHelperMessage();
         } else if (type == NpcDialogueType.NORMAL) {
-            displayedHelperMessage =
-                    StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
-                            .withStyle(ChatFormatting.GREEN));
+            displayedHelperMessage = getNormalDisplayedHelperMessage();
             displayHelperMessage();
         }
+    }
+
+    private StyledText getNormalDisplayedHelperMessage() {
+        if (npcDialogueKeyOverride.get() && !npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
+            if (overrideSneakKey.get())
+                return StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.keyToProgress", npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString())
+                        .withStyle(ChatFormatting.GREEN));
+            return StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftOrKeyToProgress", npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString())
+                    .withStyle(ChatFormatting.GREEN));
+        }
+        return StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
+                .withStyle(ChatFormatting.GREEN));
     }
 
     private void updateDialogueScreen() {
@@ -265,7 +321,8 @@ public class NpcDialogueFeature extends Feature {
                     .map(StyledText::getComponent)
                     .toList());
             screenLines.add(Component.empty());
-            screenLines.add(PRESS_SHIFT_TO_CONTINUE.getComponent());
+            StyledText PRESS_SHIFT_OR_KEY_TO_CONTINUE = getPressShiftOrKeyToContinue();
+            screenLines.add(PRESS_SHIFT_OR_KEY_TO_CONTINUE.getComponent());
             screenLines.add(Component.empty());
         } else {
             // Add an empty line after the last confirmationless dialogue
@@ -278,6 +335,15 @@ public class NpcDialogueFeature extends Feature {
         // Send the dialogue to the client
         screenLines.forEach(McUtils::sendMessageToClient);
         currentlyDisplayedDialogue = screenLines;
+    }
+
+    private StyledText getPressShiftOrKeyToContinue() {
+        if (npcDialogueKeyOverride.get() && !npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
+            if (overrideSneakKey.get())
+                return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE.getString().replace("SHIFT", npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString()));
+            return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE.getString().replace("SHIFT", "SHIFT §7or §f" + npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString()));
+        }
+        return PRESS_SHIFT_TO_CONTINUE;
     }
 
     private void updateAutoProgressNotification() {
