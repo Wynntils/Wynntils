@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.leaderboard.type;
@@ -52,12 +52,27 @@ public enum LeaderboardType {
     HICH("hichContent"),
     HIC("hicContent"),
     // Misc
-    WARS("warsCompletion");
+    WARS("warsCompletion"),
+    HARDCORE_LEGACY_LEVEL("hardcoreLegacyLevel"), // Should move to Solo Gamemodes when a badge is added
+    // Guild
+    GUILD_LEVEL("guildLevel", true),
+    GUILD_TERRITORIES("guildTerritories", true),
+    GUILD_WARS("guildWars", true),
+    GUILD_NOG("grootslangSrGuilds", true),
+    GUILD_NOL("orphionSrGuilds", true),
+    GUILD_TCC("colossusSrGuilds", true),
+    GUILD_TNA("namelessSrGuilds", true);
 
     private final String key;
+    private final boolean guildLeaderboard;
+
+    LeaderboardType(String key, boolean guildLeaderboard) {
+        this.key = key;
+        this.guildLeaderboard = guildLeaderboard;
+    }
 
     LeaderboardType(String key) {
-        this.key = key;
+        this(key, false);
     }
 
     public String getKey() {
@@ -72,5 +87,9 @@ public enum LeaderboardType {
         }
 
         return null;
+    }
+
+    public boolean isGuildLeaderboard() {
+        return guildLeaderboard;
     }
 }
