@@ -345,6 +345,7 @@ public class ItemStatInfoFeature extends Feature {
                         .append(ColorScaleUtils.getPercentageTextComponent(
                                 getColorMap(), weight.b(), colorLerp.get(), decimalPlaces.get())));
             });
+            lines.add(Component.empty());
 
             return lines;
         }

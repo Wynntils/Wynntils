@@ -103,18 +103,34 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             weightedHeader.add(currentIndex, Services.ItemWeight.NORI_HEADER);
             currentIndex++;
             currentIndex = addWeightingLines(weightedHeader, noriWeightings, weightDecorator, currentIndex);
+
+            if (!weightedHeader.get(currentIndex - 1).equals(Component.empty())) {
+                weightedHeader.add(currentIndex, Component.empty());
+                currentIndex++;
+            }
         }
 
         if (addWynnpool) {
             weightedHeader.add(currentIndex, Services.ItemWeight.WYNNPOOL_HEADER);
             currentIndex++;
             currentIndex = addWeightingLines(weightedHeader, wynnpoolWeightings, weightDecorator, currentIndex);
+
+            if (!weightedHeader.get(currentIndex - 1).equals(Component.empty())) {
+                weightedHeader.add(currentIndex, Component.empty());
+                currentIndex++;
+            }
         }
 
-        // We only need to add an empty line for weapons if any weightings were added, otherwise there will be extra
-        // empty lines
-        if ((addNori || addWynnpool) && gearInfo.type().isWeapon()) {
-            weightedHeader.add(currentIndex, Component.empty());
+        if (addNori || addWynnpool) {
+            if (gearInfo.type().isWeapon() && weightedHeader.get(currentIndex).equals(Component.empty())) {
+                weightedHeader.remove(currentIndex);
+            } else if (gearInfo.type().isWeapon()
+                    && !weightedHeader.get(currentIndex - 1).equals(Component.empty())) {
+                weightedHeader.add(currentIndex, Component.empty());
+            } else if (!gearInfo.type().isWeapon()
+                    && weightedHeader.get(currentIndex - 1).equals(Component.empty())) {
+                weightedHeader.remove(currentIndex - 1);
+            }
         }
 
         return weightedHeader;
