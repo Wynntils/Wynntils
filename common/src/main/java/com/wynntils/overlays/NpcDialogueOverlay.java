@@ -3,6 +3,7 @@
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
+
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
@@ -30,6 +31,10 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
@@ -37,10 +42,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.bus.api.SubscribeEvent;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class NpcDialogueOverlay extends Overlay {
     private static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromString("§cPress SNEAK to continue");
@@ -277,10 +278,26 @@ public class NpcDialogueOverlay extends Overlay {
 
     private StyledText getPressSneakOrKeyToContinue() {
         NpcDialogueFeature feature = Managers.Feature.getFeatureInstance(NpcDialogueFeature.class);
-        if (feature.npcDialogueKeyOverride.get() && !feature.npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
+        if (feature.npcDialogueKeyOverride.get()
+                && !feature.npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
             if (feature.overrideSneakKey.get())
-                return StyledText.fromString(PRESS_SNEAK_TO_CONTINUE.getString().replace("SNEAK", feature.npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString()));
-            return StyledText.fromString(PRESS_SNEAK_TO_CONTINUE.getString().replace("SNEAK", "SNEAK or " + feature.npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString()));
+                return StyledText.fromString(PRESS_SNEAK_TO_CONTINUE
+                        .getString()
+                        .replace(
+                                "SNEAK",
+                                feature.npcDialogKeyOverrideKeybind
+                                        .getKeyMapping()
+                                        .getTranslatedKeyMessage()
+                                        .getString()));
+            return StyledText.fromString(PRESS_SNEAK_TO_CONTINUE
+                    .getString()
+                    .replace(
+                            "SNEAK",
+                            "SNEAK or "
+                                    + feature.npcDialogKeyOverrideKeybind
+                                            .getKeyMapping()
+                                            .getTranslatedKeyMessage()
+                                            .getString()));
         }
         return PRESS_SNEAK_TO_CONTINUE;
     }

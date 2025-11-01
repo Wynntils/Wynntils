@@ -3,6 +3,7 @@
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
+
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -25,11 +26,6 @@ import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.overlays.NpcDialogueOverlay;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
-import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,6 +33,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
+import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Feature for handling NPC dialogues.
@@ -149,7 +150,8 @@ public class NpcDialogueFeature extends Feature {
         if (npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) return;
         if (e.getKey() != McUtils.options().keyShift.key.getValue()) return;
 
-        if (Models.NpcDialogue.getCurrentDialogue().dialogueType() == NpcDialogueType.NORMAL && Models.NpcDialogue.getCurrentDialogue().isProtected()) e.setCanceled(true);
+        if (Models.NpcDialogue.getCurrentDialogue().dialogueType() == NpcDialogueType.NORMAL
+                && Models.NpcDialogue.getCurrentDialogue().isProtected()) e.setCanceled(true);
     }
 
     @SubscribeEvent
@@ -277,11 +279,22 @@ public class NpcDialogueFeature extends Feature {
     }
 
     private StyledText getNormalDisplayedHelperMessage() {
-        if (npcDialogueKeyOverride.get() && !npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
+        if (npcDialogueKeyOverride.get()
+                && !npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
             if (overrideSneakKey.get())
-                return StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.keyToProgress", npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString())
+                return StyledText.fromComponent(Component.translatable(
+                                "feature.wynntils.npcDialogue.keyToProgress",
+                                npcDialogKeyOverrideKeybind
+                                        .getKeyMapping()
+                                        .getTranslatedKeyMessage()
+                                        .getString())
                         .withStyle(ChatFormatting.GREEN));
-            return StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftOrKeyToProgress", npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString())
+            return StyledText.fromComponent(Component.translatable(
+                            "feature.wynntils.npcDialogue.shiftOrKeyToProgress",
+                            npcDialogKeyOverrideKeybind
+                                    .getKeyMapping()
+                                    .getTranslatedKeyMessage()
+                                    .getString())
                     .withStyle(ChatFormatting.GREEN));
         }
         return StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
@@ -338,10 +351,26 @@ public class NpcDialogueFeature extends Feature {
     }
 
     private StyledText getPressShiftOrKeyToContinue() {
-        if (npcDialogueKeyOverride.get() && !npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
+        if (npcDialogueKeyOverride.get()
+                && !npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
             if (overrideSneakKey.get())
-                return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE.getString().replace("SHIFT", npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString()));
-            return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE.getString().replace("SHIFT", "SHIFT §7or §f" + npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString()));
+                return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE
+                        .getString()
+                        .replace(
+                                "SHIFT",
+                                npcDialogKeyOverrideKeybind
+                                        .getKeyMapping()
+                                        .getTranslatedKeyMessage()
+                                        .getString()));
+            return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE
+                    .getString()
+                    .replace(
+                            "SHIFT",
+                            "SHIFT §7or §f"
+                                    + npcDialogKeyOverrideKeybind
+                                            .getKeyMapping()
+                                            .getTranslatedKeyMessage()
+                                            .getString()));
         }
         return PRESS_SHIFT_TO_CONTINUE;
     }
