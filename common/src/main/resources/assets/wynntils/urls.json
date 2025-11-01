@@ -96,6 +96,10 @@
     "url": "https://athena.wynntils.com/cache/get/serverList"
   },
   {
+    "id": "dataAthenaTerritoryListV2",
+    "url": "https://athena.wynntils.com/v2/cache/get/territoryList"
+  },
+  {
     "id": "dataStaticAbilities",
     "md5": "fd5e9a5b76988ae00265695ee90d622a",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/abilities.json"

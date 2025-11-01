@@ -99,6 +99,8 @@ public class TerritoryPoi implements Poi {
                 || territoryProfile.getGuildInfo() == TerritoryProfile.GuildInfo.NONE) {
             // Uncaptured territory at season reset
             colors = List.of(CommonColors.WHITE);
+        } else if (territoryProfile.getGuildInfo().color().isPresent()) {
+            colors = List.of(territoryProfile.getGuildInfo().color().get());
         } else {
             colors = List.of(Models.Guild.getColor(
                     isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getGuild()));
