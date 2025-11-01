@@ -65,7 +65,7 @@ public class NpcDialogueFeature extends Feature {
 
     @RegisterKeyBind
     public final KeyBind npcDialogKeyOverrideKeybind =
-            new KeyBind("NPC Dialogue Key Override Keybind", GLFW.GLFW_KEY_UNKNOWN, true, this::progressNPCDialogue);
+            new KeyBind("Progress NPC Dialogue", GLFW.GLFW_KEY_UNKNOWN, true, this::progressNPCDialogue);
 
     @Persisted
     private final Config<NpcDialogueChatDisplayType> chatDisplayType = new Config<>(NpcDialogueChatDisplayType.NORMAL);
