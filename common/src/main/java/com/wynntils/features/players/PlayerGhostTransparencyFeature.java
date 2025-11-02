@@ -48,7 +48,7 @@ public class PlayerGhostTransparencyFeature extends Feature {
     @SubscribeEvent
     public void onPlayerArmorRender(PlayerRenderLayerEvent.Armor event) {
         if (!transparentPlayerGhostArmor.get()) return;
-        Entity entity = ((EntityRenderStateExtension) event.getAvatarRenderState()).getEntity();
+        Entity entity = ((EntityRenderStateExtension) event.getHumanoidRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
 
         if (Models.Player.isPlayerGhost(player)) {
