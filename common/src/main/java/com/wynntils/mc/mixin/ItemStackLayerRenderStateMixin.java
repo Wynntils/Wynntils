@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.mc.extension.ItemStackRenderStateExtension;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.spongepowered.asm.mixin.Final;
@@ -26,17 +26,18 @@ public abstract class ItemStackLayerRenderStateMixin {
 
     @Inject(
             method =
-                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V",
+                    "submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V",
             at =
                     @At(
                             target =
-                                    "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack;)V",
+                                    "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V",
                             value = "INVOKE"))
     private void onRenderItem(
             PoseStack poseStack,
-            MultiBufferSource multiBufferSource,
+            SubmitNodeCollector nodeCollector,
             int packedLight,
             int packedOverlay,
+            int outlineColor,
             CallbackInfo ci) {
         if (field_55345.displayContext != ItemDisplayContext.GROUND) return;
 
