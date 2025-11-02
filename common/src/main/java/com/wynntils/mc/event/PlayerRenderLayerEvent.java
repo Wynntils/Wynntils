@@ -4,27 +4,27 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class PlayerRenderLayerEvent extends Event implements ICancellableEvent {
-    private final AvatarRenderState avatarRenderState;
+    private final HumanoidRenderState humanoidRenderState;
 
-    protected PlayerRenderLayerEvent(AvatarRenderState avatarRenderState) {
-        this.avatarRenderState = avatarRenderState;
+    protected PlayerRenderLayerEvent(HumanoidRenderState humanoidRenderState) {
+        this.humanoidRenderState = humanoidRenderState;
     }
 
-    public AvatarRenderState getAvatarRenderState() {
-        return avatarRenderState;
+    public HumanoidRenderState getHumanoidRenderState() {
+        return humanoidRenderState;
     }
 
     public static class Armor extends PlayerRenderLayerEvent {
         private final EquipmentSlot slot;
 
-        public Armor(AvatarRenderState avatarRenderState, EquipmentSlot slot) {
-            super(avatarRenderState);
+        public Armor(HumanoidRenderState humanoidRenderState, EquipmentSlot slot) {
+            super(humanoidRenderState);
             this.slot = slot;
         }
 
@@ -34,14 +34,14 @@ public abstract class PlayerRenderLayerEvent extends Event implements ICancellab
     }
 
     public static class Cape extends PlayerRenderLayerEvent {
-        public Cape(AvatarRenderState avatarRenderState) {
-            super(avatarRenderState);
+        public Cape(HumanoidRenderState humanoidRenderState) {
+            super(humanoidRenderState);
         }
     }
 
     public static class Elytra extends PlayerRenderLayerEvent {
-        public Elytra(AvatarRenderState avatarRenderState) {
-            super(avatarRenderState);
+        public Elytra(HumanoidRenderState humanoidRenderState) {
+            super(humanoidRenderState);
         }
     }
 }
