@@ -7,7 +7,6 @@ package com.wynntils.features.ui;
 import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
@@ -367,7 +366,7 @@ public class WynncraftButtonFeature extends Feature {
                 Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 
                 synchronized (this) {
-                    RenderSystem.recordRenderCall(() -> {
+                    McUtils.mc().execute(() -> {
                         McUtils.mc()
                                 .getTextureManager()
                                 .register(destination, new DynamicTexture(() -> "Wynncraft Server Icon", nativeImage));
