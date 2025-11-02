@@ -7,7 +7,6 @@ package com.wynntils.models.players;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -239,7 +238,7 @@ public final class PlayerModel extends Model {
                     fetching.remove(uuid);
 
                     // Schedule cape loading for next render tick
-                    RenderSystem.recordRenderCall(() -> Services.Cosmetics.loadCosmeticTextures(uuid, user));
+                    McUtils.mc().execute(() -> Services.Cosmetics.loadCosmeticTextures(uuid, user));
                 },
                 onError -> {
                     errors.put(System.currentTimeMillis());
