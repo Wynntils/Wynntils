@@ -7,9 +7,10 @@ package com.wynntils.mc.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,12 +22,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CustomHeadLayerMixin<T extends LivingEntityRenderState> {
     @Inject(
             method =
-                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;FF)V",
+                    "submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;FF)V",
             at = @At("HEAD"),
             cancellable = true)
     private void render(
-            PoseStack matrixStack,
-            MultiBufferSource buffer,
+            PoseStack poseStack,
+            SubmitNodeCollector submitNodeCollector,
             int packedLight,
             T renderState,
             float yRot,
