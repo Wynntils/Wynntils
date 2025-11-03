@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories.profile;
@@ -11,10 +11,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.utils.DateFormatter;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.PoiLocation;
 import java.lang.reflect.Type;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 
@@ -176,7 +178,15 @@ public class TerritoryProfile {
                     || guildJson.getAsJsonObject().get("prefix").isJsonNull()) {
                 guild = GuildInfo.NONE;
             } else {
-                guild = context.deserialize(guildJson, GuildInfo.class);
+                JsonObject guildObject = guildJson.getAsJsonObject();
+                String guildName = guildObject.get("name").getAsString();
+                String guildPrefix = guildObject.get("prefix").getAsString();
+                Optional<CustomColor> guildColor = guildObject.has("color")
+                        ? Optional.of(CustomColor.fromHexString(
+                                guildObject.get("color").getAsString()))
+                        : Optional.empty();
+
+                guild = new GuildInfo(guildName, guildPrefix, guildColor);
             }
 
             Instant acquired;
@@ -191,8 +201,8 @@ public class TerritoryProfile {
         }
     }
 
-    public record GuildInfo(String name, String prefix) {
-        public static final GuildInfo NONE = new GuildInfo("No owner", "None");
+    public record GuildInfo(String name, String prefix, Optional<CustomColor> color) {
+        public static final GuildInfo NONE = new GuildInfo("No owner", "None", Optional.empty());
     }
 
     public record TerritoryLocation(int startX, int startZ, int endX, int endZ) {}
