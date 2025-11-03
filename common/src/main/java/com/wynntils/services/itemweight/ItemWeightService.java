@@ -166,7 +166,7 @@ public class ItemWeightService extends Service {
                 JsonObject identificationsObj = weightEntry.getValue().getAsJsonObject();
 
                 Map<String, Double> identifications = identificationsObj.entrySet().stream()
-                        .sorted(Map.Entry.comparingByValue(Comparator.comparingDouble(JsonElement::getAsDouble)))
+                        .sorted(Map.Entry.comparingByValue(Comparator.comparingDouble(JsonElement::getAsDouble).reversed()))
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey, e -> e.getValue().getAsDouble(), (a, b) -> a, LinkedHashMap::new));
 
