@@ -298,7 +298,7 @@ public class CustomNametagRendererFeature extends Feature {
         Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
 
-        List<LeaderboardBadge> allBadges = Services.Leaderboard.getBadges(Models.Player.getUserUUID(player));
+        List<LeaderboardBadge> allBadges = Services.Leaderboard.getPlayerBadges(Models.Player.getUserUUID(player));
 
         if (allBadges.isEmpty()) return;
 
