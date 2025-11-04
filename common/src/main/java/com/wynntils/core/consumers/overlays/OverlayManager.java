@@ -94,8 +94,7 @@ public final class OverlayManager extends Manager {
         enabledOverlays.remove(disabledOverlay);
         WynntilsMod.unregisterEventListener(disabledOverlay);
 
-        enabledOverlays.forEach(
-                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::callOnConfigUpdate));
+        disabledOverlay.getConfigOptionFromString("userEnabled").ifPresent(disabledOverlay::callOnConfigUpdate);
     }
 
     public void enableOverlays(Feature parent) {
