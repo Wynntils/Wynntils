@@ -101,14 +101,13 @@ public final class OverlayManager extends Manager {
         overlayParentMap.getOrDefault(parent, List.of()).forEach(this::enableOverlay);
     }
 
-    public void enableOverlay(Overlay enableOverlay) {
-        if (!enableOverlay.shouldBeEnabled() || isEnabled(enableOverlay)) return;
+    public void enableOverlay(Overlay enabledOverlay) {
+        if (!enabledOverlay.shouldBeEnabled() || isEnabled(enabledOverlay)) return;
 
-        enabledOverlays.add(enableOverlay);
-        WynntilsMod.registerEventListener(enableOverlay);
+        enabledOverlays.add(enabledOverlay);
+        WynntilsMod.registerEventListener(enabledOverlay);
 
-        enabledOverlays.forEach(
-                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::callOnConfigUpdate));
+        enabledOverlay.getConfigOptionFromString("userEnabled").ifPresent(enabledOverlay::callOnConfigUpdate);
     }
 
     public void discoverOverlays(Feature feature) {
