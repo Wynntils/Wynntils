@@ -125,9 +125,9 @@ public final class StyledTextPart {
                     currentString = new StringBuilder();
                 }
 
-                // Color formatting resets the style
+                // Color formatting resets the style besides the font
                 if (formatting.isColor()) {
-                    currentStyle = Style.EMPTY.withColor(formatting);
+                    currentStyle = Style.EMPTY.withColor(formatting).withFont(currentStyle.getFont());
                 } else {
                     currentStyle = currentStyle.applyFormat(formatting);
                 }
