@@ -273,18 +273,19 @@ public class NpcDialogueFeature extends Feature {
 
     private StyledText getNormalDisplayedHelperMessage() {
         if (!npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
-            String keyName = npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString();
+            String keyName = npcDialogKeyOverrideKeybind
+                    .getKeyMapping()
+                    .getTranslatedKeyMessage()
+                    .getString();
 
             if (overrideSneakKey.get()) {
-                return StyledText.fromComponent(Component.translatable(
-                                "feature.wynntils.npcDialogue.keyToProgress",
-                                keyName)
-                        .withStyle(ChatFormatting.GREEN));
+                return StyledText.fromComponent(
+                        Component.translatable("feature.wynntils.npcDialogue.keyToProgress", keyName)
+                                .withStyle(ChatFormatting.GREEN));
             }
-            return StyledText.fromComponent(Component.translatable(
-                            "feature.wynntils.npcDialogue.shiftOrKeyToProgress",
-                            keyName)
-                    .withStyle(ChatFormatting.GREEN));
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.npcDialogue.shiftOrKeyToProgress", keyName)
+                            .withStyle(ChatFormatting.GREEN));
         }
         return StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
                 .withStyle(ChatFormatting.GREEN));
@@ -341,16 +342,17 @@ public class NpcDialogueFeature extends Feature {
 
     private StyledText getPressShiftOrKeyToContinue() {
         if (!npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
-            String keyName = npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString();
+            String keyName = npcDialogKeyOverrideKeybind
+                    .getKeyMapping()
+                    .getTranslatedKeyMessage()
+                    .getString();
 
             if (overrideSneakKey.get()) {
-                return StyledText.fromComponent(Component.translatable(
-                        "feature.wynntils.npcDialogue.pressKeyToContinue",
-                        keyName));
+                return StyledText.fromComponent(
+                        Component.translatable("feature.wynntils.npcDialogue.pressKeyToContinue", keyName));
             }
-            return StyledText.fromComponent(Component.translatable(
-                    "feature.wynntils.npcDialogue.pressShiftOrKeyToContinue",
-                    keyName));
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.npcDialogue.pressShiftOrKeyToContinue", keyName));
         }
         return PRESS_SHIFT_TO_CONTINUE;
     }
@@ -362,11 +364,14 @@ public class NpcDialogueFeature extends Feature {
 
         long timeUntilProgress = getScheduledAutoProgressKeyPress().getDelay(TimeUnit.MILLISECONDS);
 
-        StyledText autoProgressStyledText = StyledText.fromComponent(
-                Component.translatable("feature.wynntils.npcDialogue.autoProgressMessage",
+        StyledText autoProgressStyledText = StyledText.fromComponent(Component.translatable(
+                        "feature.wynntils.npcDialogue.autoProgressMessage",
                         Math.max(0, Math.round(timeUntilProgress / 1000f)),
-                        cancelAutoProgressKeybind.getKeyMapping().getTranslatedKeyMessage().getString()).
-                        withStyle(ChatFormatting.GREEN));
+                        cancelAutoProgressKeybind
+                                .getKeyMapping()
+                                .getTranslatedKeyMessage()
+                                .getString())
+                .withStyle(ChatFormatting.GREEN));
 
         if (autoProgressContainer != null) {
             autoProgressContainer = Managers.Notification.editMessage(autoProgressContainer, autoProgressStyledText);

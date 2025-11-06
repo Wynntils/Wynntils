@@ -45,9 +45,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class NpcDialogueOverlay extends Overlay {
     private static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromComponent(
-            Component.translatable(
-                    "feature.wynntils.npcDialogue.overlay.npcDialogue.pressSneakToContinue").
-                    withStyle(ChatFormatting.RED));
+            Component.translatable("feature.wynntils.npcDialogue.overlay.npcDialogue.pressSneakToContinue")
+                    .withStyle(ChatFormatting.RED));
 
     @Persisted
     private final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
@@ -89,8 +88,8 @@ public class NpcDialogueOverlay extends Overlay {
 
             // This is a bit of a workaround to be able to select the options
             MutableComponent clickMsg = Component.translatable(
-                    "feature.wynntils.npcDialogue.overlay.npcDialogue.clickMessage").
-                    withStyle(ChatFormatting.AQUA);
+                            "feature.wynntils.npcDialogue.overlay.npcDialogue.clickMessage")
+                    .withStyle(ChatFormatting.AQUA);
             event.getPostProcessedDialogue()
                     .forEach(line -> clickMsg.append(Component.literal("\n").append(line.getComponent())));
             McUtils.sendMessageToClient(clickMsg);
@@ -151,12 +150,10 @@ public class NpcDialogueOverlay extends Overlay {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         List<StyledText> fakeDialogue = List.of(
                 StyledText.fromComponent(
-                        Component.translatable(
-                                "feature.wynntils.npcDialogue.overlay.npcDialogue.fakeDialogue.1")),
+                        Component.translatable("feature.wynntils.npcDialogue.overlay.npcDialogue.fakeDialogue.1")),
                 StyledText.EMPTY,
                 StyledText.fromComponent(
-                        Component.translatable(
-                                "feature.wynntils.npcDialogue.overlay.npcDialogue.fakeDialogue.2")));
+                        Component.translatable("feature.wynntils.npcDialogue.overlay.npcDialogue.fakeDialogue.2")));
         // we have to force update every time
         updateTextRenderSettings();
 
@@ -233,7 +230,10 @@ public class NpcDialogueOverlay extends Overlay {
         if (showHelperTexts.get()) {
             // Render "To continue" message
             List<TextRenderTask> helperRenderTasks = new LinkedList<>();
-            StyledText protection = isProtected ? StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.overlay.npcDialogue.protection")) : StyledText.EMPTY;
+            StyledText protection = isProtected
+                    ? StyledText.fromComponent(
+                            Component.translatable("feature.wynntils.npcDialogue.overlay.npcDialogue.protection"))
+                    : StyledText.EMPTY;
             if (dialogueType == NpcDialogueType.NORMAL) {
                 TextRenderTask pressSneakMessage =
                         new TextRenderTask(getPressSneakOrKeyToContinue().prepend(protection), renderSetting);
@@ -241,9 +241,13 @@ public class NpcDialogueOverlay extends Overlay {
             } else if (dialogueType == NpcDialogueType.SELECTION) {
                 StyledText msg;
                 if (isProtected) {
-                    msg = StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.overlay.npcDialogue.protected").withStyle(ChatFormatting.RED));
+                    msg = StyledText.fromComponent(
+                            Component.translatable("feature.wynntils.npcDialogue.overlay.npcDialogue.protected")
+                                    .withStyle(ChatFormatting.RED));
                 } else {
-                    msg = StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.overlay.npcDialogue.notProtected").withStyle(ChatFormatting.RED));
+                    msg = StyledText.fromComponent(
+                            Component.translatable("feature.wynntils.npcDialogue.overlay.npcDialogue.notProtected")
+                                    .withStyle(ChatFormatting.RED));
                 }
 
                 TextRenderTask pressSneakMessage = new TextRenderTask(protection.append(msg), renderSetting);
@@ -256,12 +260,14 @@ public class NpcDialogueOverlay extends Overlay {
                 long timeUntilProgress =
                         feature.getScheduledAutoProgressKeyPress().getDelay(TimeUnit.MILLISECONDS);
                 TextRenderTask autoProgressMessage = new TextRenderTask(
-                        StyledText.fromComponent(
-                                Component.translatable(
+                        StyledText.fromComponent(Component.translatable(
                                         "feature.wynntils.npcDialogue.autoProgressMessage",
                                         Math.max(0, Math.round(timeUntilProgress / 1000f)),
-                                        feature.cancelAutoProgressKeybind.getKeyMapping().getTranslatedKeyMessage().getString()).
-                                        withStyle(ChatFormatting.GREEN)),
+                                        feature.cancelAutoProgressKeybind
+                                                .getKeyMapping()
+                                                .getTranslatedKeyMessage()
+                                                .getString())
+                                .withStyle(ChatFormatting.GREEN)),
                         renderSetting);
                 helperRenderTasks.add(autoProgressMessage);
             }
@@ -283,18 +289,19 @@ public class NpcDialogueOverlay extends Overlay {
     private StyledText getPressSneakOrKeyToContinue() {
         NpcDialogueFeature feature = Managers.Feature.getFeatureInstance(NpcDialogueFeature.class);
         if (!feature.npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
-            String keyName = feature.npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString();
+            String keyName = feature.npcDialogKeyOverrideKeybind
+                    .getKeyMapping()
+                    .getTranslatedKeyMessage()
+                    .getString();
 
             if (feature.overrideSneakKey.get()) {
-                return StyledText.fromComponent(
-                        Component.translatable(
-                                "feature.wynntils.npcDialogue.overlay.npcDialogue.pressKeyToContinue",
-                                keyName).withStyle(ChatFormatting.RED));
+                return StyledText.fromComponent(Component.translatable(
+                                "feature.wynntils.npcDialogue.overlay.npcDialogue.pressKeyToContinue", keyName)
+                        .withStyle(ChatFormatting.RED));
             }
-            return StyledText.fromComponent(
-                    Component.translatable(
-                            "feature.wynntils.npcDialogue.overlay.npcDialogue.pressSneakOrKeyToContinue",
-                            keyName).withStyle(ChatFormatting.RED));
+            return StyledText.fromComponent(Component.translatable(
+                            "feature.wynntils.npcDialogue.overlay.npcDialogue.pressSneakOrKeyToContinue", keyName)
+                    .withStyle(ChatFormatting.RED));
         }
         return PRESS_SNEAK_TO_CONTINUE;
     }
