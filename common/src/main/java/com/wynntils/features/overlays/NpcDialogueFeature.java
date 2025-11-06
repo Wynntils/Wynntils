@@ -52,9 +52,8 @@ import org.lwjgl.glfw.GLFW;
  */
 @ConfigCategory(Category.OVERLAYS)
 public class NpcDialogueFeature extends Feature {
-    // This is deliberately a styled text, so we construct new components every time
     private static final StyledText PRESS_SHIFT_TO_CONTINUE =
-            StyledText.fromString("                   §7Press §fSHIFT §7to continue");
+            StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.pressShiftToContinue"));
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final NpcDialogueOverlay npcDialogueOverlay = new NpcDialogueOverlay();
@@ -235,10 +234,9 @@ public class NpcDialogueFeature extends Feature {
 
     private void progressNPCDialogue() {
         if (Models.NpcDialogue.getCurrentDialogue().dialogueType() == NpcDialogueType.NORMAL) {
+            isReleaseShiftScheduled = true;
             McUtils.sendPacket(new ServerboundPlayerCommandPacket(
                     McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY));
-
-            isReleaseShiftScheduled = true;
         }
     }
 
@@ -346,18 +344,13 @@ public class NpcDialogueFeature extends Feature {
             String keyName = npcDialogKeyOverrideKeybind.getKeyMapping().getTranslatedKeyMessage().getString();
 
             if (overrideSneakKey.get()) {
-                return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE
-                        .getString()
-                        .replace(
-                                "SHIFT",
-                                keyName));
+                return StyledText.fromComponent(Component.translatable(
+                        "feature.wynntils.npcDialogue.pressKeyToContinue",
+                        keyName));
             }
-            return StyledText.fromString(PRESS_SHIFT_TO_CONTINUE
-                    .getString()
-                    .replace(
-                            "SHIFT",
-                            "SHIFT §7or §f"
-                                    + keyName));
+            return StyledText.fromComponent(Component.translatable(
+                    "feature.wynntils.npcDialogue.pressShiftOrKeyToContinue",
+                    keyName));
         }
         return PRESS_SHIFT_TO_CONTINUE;
     }
@@ -369,13 +362,11 @@ public class NpcDialogueFeature extends Feature {
 
         long timeUntilProgress = getScheduledAutoProgressKeyPress().getDelay(TimeUnit.MILLISECONDS);
 
-        StyledText autoProgressStyledText = StyledText.fromString(ChatFormatting.GREEN + "Auto-progress: "
-                + Math.max(0, Math.round(timeUntilProgress / 1000f))
-                + " seconds (Press "
-                + StyledText.fromComponent(
-                                cancelAutoProgressKeybind.getKeyMapping().getTranslatedKeyMessage())
-                        .getStringWithoutFormatting()
-                + " to cancel)");
+        StyledText autoProgressStyledText = StyledText.fromComponent(
+                Component.translatable("feature.wynntils.npcDialogue.autoProgressMessage",
+                        Math.max(0, Math.round(timeUntilProgress / 1000f)),
+                        cancelAutoProgressKeybind.getKeyMapping().getTranslatedKeyMessage().getString()).
+                        withStyle(ChatFormatting.GREEN));
 
         if (autoProgressContainer != null) {
             autoProgressContainer = Managers.Notification.editMessage(autoProgressContainer, autoProgressStyledText);
