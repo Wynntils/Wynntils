@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -146,6 +146,23 @@ public abstract class GuiMixin {
 
         RenderEvent.Pre event = new RenderEvent.Pre(
                 guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.HEALTH_BAR);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(
+            method =
+                    "renderScoreboardSidebar(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void onRenderScoreboardSidebarPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (!MixinHelper.onWynncraft()) return;
+
+        RenderEvent.Pre event = new RenderEvent.Pre(
+                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.SCOREBOARD);
         MixinHelper.post(event);
 
         if (event.isCanceled()) {
