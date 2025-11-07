@@ -7,6 +7,7 @@ package com.wynntils.models.worlds;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
@@ -53,13 +54,11 @@ public final class WorldStateModel extends Model {
     private static final StreamerModeBar streamerModeBar = new StreamerModeBar();
 
     private String currentWorldName = "";
-    private String currentHousingName = "";
     private ServerRegion currentRegion = ServerRegion.WC;
     private long serverJoinTimestamp = 0;
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
     private boolean inStream = false;
-    private boolean onHousing = false;
     private boolean inCharacterWardrobe = false;
     private WynncraftVersion worldVersion = null;
 
@@ -80,10 +79,6 @@ public final class WorldStateModel extends Model {
 
     public boolean inCharacterWardrobe() {
         return inCharacterWardrobe;
-    }
-
-    public boolean onHousing() {
-        return onHousing;
     }
 
     public boolean isInStream() {
@@ -235,8 +230,7 @@ public final class WorldStateModel extends Model {
             }
             setState(WorldState.WORLD, worldName, !hasJoinedAnyWorld);
             hasJoinedAnyWorld = true;
-            onHousing = housing;
-            currentHousingName = onHousing ? m.group(1) : "";
+            Models.Housing.updateHousingState(housing, housing ? m.group(1) : "");
             return true;
         }
         return false;
@@ -273,10 +267,6 @@ public final class WorldStateModel extends Model {
 
     public ServerRegion getCurrentServerRegion() {
         return currentRegion;
-    }
-
-    public String getCurrentHousingName() {
-        return currentHousingName;
     }
 
     public long getServerJoinTimestamp() {
