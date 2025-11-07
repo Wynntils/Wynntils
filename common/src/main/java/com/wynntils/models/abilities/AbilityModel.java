@@ -16,6 +16,7 @@ import com.wynntils.models.abilities.bossbars.CorruptedBar;
 import com.wynntils.models.abilities.bossbars.FocusBar;
 import com.wynntils.models.abilities.bossbars.HolyPowerBar;
 import com.wynntils.models.abilities.bossbars.ManaBankBar;
+import com.wynntils.models.abilities.bossbars.MomentumBar;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Arrays;
@@ -44,10 +45,20 @@ public final class AbilityModel extends Model {
 
     public static final CommanderBar commanderBar = new CommanderBar();
 
+    public static final MomentumBar momentumBar = new MomentumBar();
+
     public boolean hummingBirdsState = false;
 
     private static final List<TrackedBar> ALL_BARS = Arrays.asList(
-            manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar, ophanimBar, holyPowerBar, commanderBar);
+            manaBankBar,
+            bloodPoolBar,
+            awakenedBar,
+            focusBar,
+            corruptedBar,
+            ophanimBar,
+            holyPowerBar,
+            commanderBar,
+            momentumBar);
 
     public AbilityModel() {
         super(List.of());
