@@ -38,4 +38,9 @@ public class MomentumBar extends TrackedBar {
                     String.format("Failed to parse momentum count for momentum bar (%s)", match.group("momentum")));
         }
     }
+
+    @Override
+    public void onUpdateProgress(float progress) {
+        updateValue((int) (progress * 100), 100);
+    }
 }
