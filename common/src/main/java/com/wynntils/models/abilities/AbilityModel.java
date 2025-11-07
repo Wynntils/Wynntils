@@ -50,15 +50,15 @@ public final class AbilityModel extends Model {
     public boolean hummingBirdsState = false;
 
     private static final List<TrackedBar> ALL_BARS = Arrays.asList(
-            manaBankBar,
-            bloodPoolBar,
             awakenedBar,
-            focusBar,
-            corruptedBar,
-            ophanimBar,
-            holyPowerBar,
+            bloodPoolBar,
             commanderBar,
-            momentumBar);
+            corruptedBar,
+            focusBar,
+            holyPowerBar,
+            manaBankBar,
+            momentumBar,
+            ophanimBar);
 
     public AbilityModel() {
         super(List.of());
