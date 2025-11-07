@@ -152,4 +152,21 @@ public abstract class GuiMixin {
             ci.cancel();
         }
     }
+
+    @Inject(
+            method =
+                    "renderScoreboardSidebar(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void onRenderScoreboardSidebarPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (!MixinHelper.onWynncraft()) return;
+
+        RenderEvent.Pre event = new RenderEvent.Pre(
+                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.SCOREBOARD);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+    }
 }
