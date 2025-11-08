@@ -87,9 +87,9 @@ public class WorldMarkersFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        int r = currentRainbowColor.r;
-        int g = currentRainbowColor.g;
-        int b = currentRainbowColor.b;
+        int r = currentRainbowColor.r();
+        int g = currentRainbowColor.g();
+        int b = currentRainbowColor.b();
 
         if (r > 0 && b == 0) {
             r -= RAINBOW_CHANGE_RATE;

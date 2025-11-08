@@ -226,6 +226,10 @@ public final class LootChestModel extends Model {
         return dryBoxes.get();
     }
 
+    public int getDryPouchCount(int tier) {
+        return dryEmeraldPouchCount.get().getOrDefault(tier, 0);
+    }
+
     public int getOpenedChestCount() {
         return openedChestCount.get();
     }

@@ -780,11 +780,11 @@ public final class BufferedRenderUtils {
 
                 // Triangle strip needs v0, v1, v2 in sequence, then v1, v2, v3, and so on
                 buffer.addVertex(matrix, firstVertex.x(), firstVertex.y(), z)
-                        .setColor(fillColor.r, fillColor.g, fillColor.b, fillColor.a);
+                        .setColor(fillColor.r(), fillColor.g(), fillColor.b(), fillColor.a());
                 buffer.addVertex(matrix, v1.x(), v1.y(), z)
-                        .setColor(fillColor.r, fillColor.g, fillColor.b, fillColor.a);
+                        .setColor(fillColor.r(), fillColor.g(), fillColor.b(), fillColor.a());
                 buffer.addVertex(matrix, v2.x(), v2.y(), z)
-                        .setColor(fillColor.r, fillColor.g, fillColor.b, fillColor.a);
+                        .setColor(fillColor.r(), fillColor.g(), fillColor.b(), fillColor.a());
             }
         }
 

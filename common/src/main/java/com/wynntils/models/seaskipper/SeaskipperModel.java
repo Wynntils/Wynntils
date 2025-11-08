@@ -109,7 +109,7 @@ public final class SeaskipperModel extends Model {
 
         // Reload the map
         if (McUtils.screen() instanceof CustomSeaskipperScreen customSeaskipperScreen) {
-            customSeaskipperScreen.reloadDestinationPois();
+            customSeaskipperScreen.reloadDestinations();
         }
     }
 
