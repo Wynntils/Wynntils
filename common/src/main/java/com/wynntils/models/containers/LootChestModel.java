@@ -104,7 +104,6 @@ public final class LootChestModel extends Model {
     @Override
     public void onStorageLoad(Storage<?> storage) {
         if (storage == foundChestLocations) {
-            startPoiMigration();
             LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
         }
     }
@@ -342,7 +341,7 @@ public final class LootChestModel extends Model {
         return nameIsLootChest && colorIsLootChest && iconIsLootChest && visibilityIsLootChest;
     }
 
-    private void startPoiMigration() {
+    public void startPoiMigration() {
         // The feature instance is not guaranteed to be present, so we have to check
         MainMapFeature featureInstance = Managers.Feature.getFeatureInstance(MainMapFeature.class);
         if (featureInstance == null) return;
