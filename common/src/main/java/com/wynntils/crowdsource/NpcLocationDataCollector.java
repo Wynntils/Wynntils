@@ -14,7 +14,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class NpcLocationDataCollector extends CrowdSourcedDataCollector<NpcLabelInfo> {
     @SubscribeEvent
     public void onLabelIdentified(LabelIdentifiedEvent event) {
-        if (Models.WorldState.onHousing()) return;
+        if (Models.Housing.isOnHousing()) return;
 
         if (event.getLabelInfo() instanceof NpcLabelInfo npcLabelInfo) {
             collect(npcLabelInfo);
