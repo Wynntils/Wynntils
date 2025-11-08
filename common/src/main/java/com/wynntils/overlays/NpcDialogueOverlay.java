@@ -76,6 +76,7 @@ public class NpcDialogueOverlay extends Overlay {
                 HorizontalAlignment.CENTER,
                 VerticalAlignment.MIDDLE);
         updateTextRenderSettings();
+        this.userEnabled.store(false);
     }
 
     @SubscribeEvent
