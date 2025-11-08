@@ -1,31 +1,35 @@
-Custom Loading Screen
-- Disabled by default
-
+Game Bars
+- New overlay Momentum Bar
+  - Displays the momentum count & progress from the Assassin ability
+  - Normal bar configs
+  - Maximum Color config, the color of the bar when maximum momentum is reached
+ 
 Item Statistics Info
-- Holding shift whilst viewing an item with weights will now display the weights for each stat in that particular weighting
+- Weight stats when holding shift are now sorted from most to least impactful
+- Improved spacing in weight tooltip section
+- Holding Shift + Control now displays the contribution per stat instead for weightings
 
-Item Text Overlays
-- New config Trade Market Identification Filter, displays an abbreviation of the identification over the filters, default enabled
-- New config Trade Market Identification Filter Text Shadow, the text shadow to use for the identification filter, default Outline
+NPC Dialogue
+- New keybind Progress NPC Dialogue, when pressed will send the sneak input to progress dialogue, default unbound
+- New config Override Sneak Key, only allow progressing NPC dialogue via the custom keybind if bound, default enabled
 
-Nametag Rendering & Player Viewer
-- Gear sharing is now enabled by default including crafted gear
-- Use `/wynntils gearsharing` to edit your sharing settings
+NPC Dialogue Overlay
+- Disabled by default until issues with parsing background chat issues fixed
 
-Personal Storage Utilities
-- Added icon customisation for pages
-- Clicking the name edit button now enters "edit mode", from here left/right click page buttons to cycle through the available options
+Remove Shiny Glint
+- Disabled by default
+- Removes the default glint effect from shiny items for shader compatibility
+- Replace Glint config, gives shiny items the vanilla enchanted glint, default enabled
 
-Compass Command
-- Added `c` and `comp` aliases
-
-Quest Command
-- Removed, depended on the old content book system which was removed in v3.1.0
-
-Localisation
-- Added missing Russian translations
+Functions
+- Character Functions
+  - `momentum_percent` or `momentum_pct` returns a CappedValue of the progress towards the next momentum charge
+  - `momentum` returns the current momentum count
 
 Fixes
-- Fix cases where chat tabs were not visible
-- NPC Dialogue should no longer remain on screen after switching worlds
-- Favourite icon will now be displayed on unidentified revealed tomes
+- Spell inputs will no longer remain on screen if swapping item before they should clear
+- Shiny perfect/defective items will now show their shiny status in the item name
+- Gear sharing will work once again if your chestplate, leggings or boots have cosmetics enabled
+- Spell inputs will now be visible if the Spell Message feature is disabled
+- Status Effects should now always use the correct font for symbols
+- Item lock slots will no longer function whilst in housing edit mode
