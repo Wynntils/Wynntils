@@ -21,6 +21,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.AmplifierItem;
 import com.wynntils.models.items.items.game.AspectItem;
+import com.wynntils.models.items.items.game.CrafterBagItem;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
@@ -30,6 +31,7 @@ import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
+import com.wynntils.models.items.items.gui.TradeMarketIdentificationFilterItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -64,6 +66,12 @@ public class ItemTextOverlayFeature extends Feature {
 
     @Persisted
     private final Config<TextShadow> aspectShadow = new Config<>(TextShadow.OUTLINE);
+
+    @Persisted
+    private final Config<Boolean> crafterBagEnabled = new Config<>(true);
+
+    @Persisted
+    private final Config<TextShadow> crafterBagShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
     private final Config<Boolean> dungeonKeyEnabled = new Config<>(true);
@@ -125,6 +133,12 @@ public class ItemTextOverlayFeature extends Feature {
     @Persisted
     private final Config<TextShadow> teleportScrollShadow = new Config<>(TextShadow.OUTLINE);
 
+    @Persisted
+    private final Config<Boolean> tradeMarketFilterEnabled = new Config<>(true);
+
+    @Persisted
+    private final Config<TextShadow> tradeMarketFilterShadow = new Config<>(TextShadow.OUTLINE);
+
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Post e) {
         if (!inventoryTextOverlayEnabled.get()) return;
@@ -172,6 +186,9 @@ public class ItemTextOverlayFeature extends Feature {
         if (wynnItem instanceof AspectItem aspectItem) {
             return new AspectOverlay(aspectItem);
         }
+        if (wynnItem instanceof CrafterBagItem crafterBagItem) {
+            return new CrafterBagOverlay(crafterBagItem);
+        }
         if (wynnItem instanceof DungeonKeyItem dungeonKeyItem) {
             return new DungeonKeyOverlay(dungeonKeyItem);
         }
@@ -198,6 +215,9 @@ public class ItemTextOverlayFeature extends Feature {
         }
         if (wynnItem instanceof TeleportScrollItem teleportScrollItem) {
             return new TeleportScrollOverlay(teleportScrollItem);
+        }
+        if (wynnItem instanceof TradeMarketIdentificationFilterItem tradeMarketIdentificationFilterItem) {
+            return new TradeMarketIdentificationFilterOverlay(tradeMarketIdentificationFilterItem);
         }
 
         return null;
@@ -271,6 +291,28 @@ public class ItemTextOverlayFeature extends Feature {
         @Override
         public boolean isTextOverlayEnabled() {
             return amplifierTierEnabled.get();
+        }
+    }
+
+    private final class CrafterBagOverlay implements TextOverlayInfo {
+        private final CrafterBagItem item;
+
+        private CrafterBagOverlay(CrafterBagItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(item.getRaidKind().getRaidColor())
+                    .withTextShadow(crafterBagShadow.get());
+
+            return new TextOverlay(new TextRenderTask(item.getRaidKind().getAbbreviation(), style), -1, 1, 0.75f);
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return crafterBagEnabled.get();
         }
     }
 
@@ -512,6 +554,28 @@ public class ItemTextOverlayFeature extends Feature {
                     TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(teleportScrollShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), 0, 0, 1f);
+        }
+    }
+
+    private final class TradeMarketIdentificationFilterOverlay implements TextOverlayInfo {
+        private final TradeMarketIdentificationFilterItem item;
+
+        private TradeMarketIdentificationFilterOverlay(TradeMarketIdentificationFilterItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return tradeMarketFilterEnabled.get();
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.GOLD))
+                    .withTextShadow(tradeMarketFilterShadow.get());
+
+            return new TextOverlay(new TextRenderTask(item.getInitials(), style), 0, 0, 0.75f);
         }
     }
 

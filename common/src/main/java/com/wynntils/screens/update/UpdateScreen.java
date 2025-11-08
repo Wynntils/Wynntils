@@ -267,8 +267,8 @@ public final class UpdateScreen extends WynntilsScreen {
         Services.Update.setHasPromptedUpdate(true);
         toggleButtons(false);
 
-        Services.Update.tryUpdate().thenAccept(updateResult -> {
-            if (updateResult == UpdateResult.SUCCESSFUL) {
+        Services.Update.tryUpdate().thenAccept(result -> {
+            if (result == UpdateResult.SUCCESSFUL) {
                 completionFinish = System.currentTimeMillis() + 3000L;
                 Executors.newSingleThreadScheduledExecutor()
                         .schedule(
@@ -288,7 +288,7 @@ public final class UpdateScreen extends WynntilsScreen {
                 toggleButtons(true);
             }
 
-            this.updateResult = updateResult;
+            this.updateResult = result;
         });
     }
 
@@ -316,7 +316,7 @@ public final class UpdateScreen extends WynntilsScreen {
                         return;
                     }
                     Managers.TickScheduler.scheduleNextTick(
-                            () -> McUtils.mc().setScreen(ChangelogScreen.create(changelog, this)));
+                            () -> McUtils.setScreen(ChangelogScreen.create(changelog, this)));
                 });
     }
 

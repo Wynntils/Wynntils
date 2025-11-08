@@ -16,10 +16,13 @@ import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.containers.event.BankPageSetEvent;
+import com.wynntils.models.containers.type.BankPageCustomization;
 import com.wynntils.models.containers.type.PersonalStorageType;
+import com.wynntils.models.containers.type.QuickJumpButtonIcon;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
@@ -43,28 +46,32 @@ public final class BankModel extends Model {
     private final Storage<Map<String, Integer>> finalCharacterBankPages = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<Integer, String>> customAccountBankPageNames = new Storage<>(new TreeMap<>());
+    private final Storage<Map<Integer, BankPageCustomization>> customAccountBankPageCustomizations =
+            new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<Integer, String>> customBlockBankPageNames = new Storage<>(new TreeMap<>());
+    private final Storage<Map<Integer, BankPageCustomization>> customBlockBankPageCustomizations =
+            new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<Integer, String>> customBookshelfPageNames = new Storage<>(new TreeMap<>());
+    private final Storage<Map<Integer, BankPageCustomization>> customBookshelfPageCustomizations =
+            new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<Integer, String>> customMiscBucketPageNames = new Storage<>(new TreeMap<>());
+    private final Storage<Map<Integer, BankPageCustomization>> customMiscBucketPageCustomizations =
+            new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<String, Map<Integer, String>>> customCharacterBankPagesNames =
+    private final Storage<Map<String, Map<Integer, BankPageCustomization>>> customCharacterBankPagesCustomizations =
             new Storage<>(new TreeMap<>());
 
     public static final int QUICK_JUMP_SLOT = 7;
     private static final String FINAL_PAGE_NAME = "\uDB3F\uDFFF";
 
-    private static final int MAX_CHARACTER_BANK_PAGES = 10;
+    private static final int MAX_CHARACTER_BANK_PAGES = 12;
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
 
-    private boolean editingName;
+    private boolean editingMode;
     private boolean updatedPage;
     private int currentPage = 1;
     private PersonalStorageContainer personalStorageContainer = null;
@@ -85,15 +92,15 @@ public final class BankModel extends Model {
 
         storageContainerType = personalStorageContainer.getPersonalStorageType();
 
-        editingName = false;
+        editingMode = false;
         updatedPage = false;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onScreenClose(ScreenClosedEvent e) {
+    public void onScreenClose(ScreenClosedEvent.Post e) {
         storageContainerType = null;
         currentPage = 1;
-        editingName = false;
+        editingMode = false;
         updatedPage = false;
     }
 
@@ -128,76 +135,68 @@ public final class BankModel extends Model {
         }
     }
 
-    public String getPageName(int page) {
-        Map<Integer, String> pageNamesMap = getCurrentNameMap();
+    public BankPageCustomization getPageCustomization(int page) {
+        Map<Integer, BankPageCustomization> pageNamesMap = getCurrentCustomizationMap();
+        if (pageNamesMap == null) return new BankPageCustomization(page);
 
-        if (pageNamesMap == null) return I18n.get("feature.wynntils.personalStorageUtilities.page", page);
-
-        return pageNamesMap.getOrDefault(page, I18n.get("feature.wynntils.personalStorageUtilities.page", page));
+        return pageNamesMap.getOrDefault(page, new BankPageCustomization(page));
     }
 
     public void saveCurrentPageName(String nameToSet) {
+        updatePageCustomization(currentPage, (customPageCustomization) -> customPageCustomization.setName(nameToSet));
+    }
+
+    public void savePageIcon(Integer pageIndex, QuickJumpButtonIcon iconToSet) {
+        updatePageCustomization(pageIndex, (customPageCustomization) -> customPageCustomization.setIcon(iconToSet));
+    }
+
+    private void updatePageCustomization(Integer pageIndex, Consumer<BankPageCustomization> updater) {
         switch (storageContainerType) {
-            case ACCOUNT_BANK -> {
-                customAccountBankPageNames.get().put(currentPage, nameToSet);
-                customAccountBankPageNames.touched();
-            }
-            case BLOCK_BANK -> {
-                customBlockBankPageNames.get().put(currentPage, nameToSet);
-                customBlockBankPageNames.touched();
-            }
-            case BOOKSHELF -> {
-                customBookshelfPageNames.get().put(currentPage, nameToSet);
-                customBookshelfPageNames.touched();
-            }
+            case ACCOUNT_BANK -> updatePageCustomization(pageIndex, updater, customAccountBankPageCustomizations);
+            case BLOCK_BANK -> updatePageCustomization(pageIndex, updater, customBlockBankPageCustomizations);
+            case BOOKSHELF -> updatePageCustomization(pageIndex, updater, customBookshelfPageCustomizations);
             case CHARACTER_BANK -> {
-                customCharacterBankPagesNames.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
+                customCharacterBankPagesCustomizations.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
 
-                Map<Integer, String> nameMap =
-                        customCharacterBankPagesNames.get().get(Models.Character.getId());
+                Map<Integer, BankPageCustomization> nameMap =
+                        customCharacterBankPagesCustomizations.get().get(Models.Character.getId());
 
-                nameMap.put(currentPage, nameToSet);
+                var cusomization = nameMap.getOrDefault(pageIndex, new BankPageCustomization(pageIndex));
 
-                customCharacterBankPagesNames.get().put(Models.Character.getId(), nameMap);
-                customCharacterBankPagesNames.touched();
+                updater.accept(cusomization);
+
+                if (cusomization.equals(new BankPageCustomization(pageIndex))) {
+                    nameMap.remove(pageIndex);
+                } else {
+                    nameMap.put(pageIndex, cusomization);
+                }
+
+                customCharacterBankPagesCustomizations.get().put(Models.Character.getId(), nameMap);
+                customCharacterBankPagesCustomizations.touched();
             }
-            case MISC_BUCKET -> {
-                customMiscBucketPageNames.get().put(currentPage, nameToSet);
-                customMiscBucketPageNames.touched();
-            }
+            case MISC_BUCKET -> updatePageCustomization(pageIndex, updater, customMiscBucketPageCustomizations);
+        }
+    }
+
+    private void updatePageCustomization(
+            Integer pageIndex,
+            Consumer<BankPageCustomization> updater,
+            Storage<Map<Integer, BankPageCustomization>> storage) {
+        var cusomization = storage.get().getOrDefault(pageIndex, new BankPageCustomization(pageIndex));
+
+        updater.accept(cusomization);
+
+        if (cusomization.equals(new BankPageCustomization(pageIndex))) {
+            storage.get().remove(pageIndex);
+        } else {
+            storage.get().put(pageIndex, cusomization);
         }
 
-        editingName = false;
+        storage.touched();
     }
 
     public void resetCurrentPageName() {
-        switch (storageContainerType) {
-            case ACCOUNT_BANK -> {
-                customAccountBankPageNames.get().remove(currentPage);
-                customAccountBankPageNames.touched();
-            }
-            case BLOCK_BANK -> {
-                customBlockBankPageNames.get().remove(currentPage);
-                customBlockBankPageNames.touched();
-            }
-            case BOOKSHELF -> {
-                customBookshelfPageNames.get().remove(currentPage);
-                customBookshelfPageNames.touched();
-            }
-            case CHARACTER_BANK -> {
-                customCharacterBankPagesNames
-                        .get()
-                        .getOrDefault(Models.Character.getId(), new TreeMap<>())
-                        .remove(currentPage);
-                customCharacterBankPagesNames.touched();
-            }
-            case MISC_BUCKET -> {
-                customMiscBucketPageNames.get().remove(currentPage);
-                customMiscBucketPageNames.touched();
-            }
-        }
-
-        editingName = false;
+        saveCurrentPageName(I18n.get("feature.wynntils.personalStorageUtilities.page", currentPage));
     }
 
     public int getFinalPage() {
@@ -219,12 +218,12 @@ public final class BankModel extends Model {
         return currentPage;
     }
 
-    public boolean isEditingName() {
-        return editingName;
+    public boolean isEditingMode() {
+        return editingMode;
     }
 
-    public void toggleEditingName(boolean editingName) {
-        this.editingName = editingName;
+    public void toggleEditingMode(boolean editingMode) {
+        this.editingMode = editingMode;
     }
 
     private void updateState(ItemStack previousPageItem, ItemStack nextPageItem) {
@@ -277,14 +276,14 @@ public final class BankModel extends Model {
         }
     }
 
-    private Map<Integer, String> getCurrentNameMap() {
+    private Map<Integer, BankPageCustomization> getCurrentCustomizationMap() {
         return switch (storageContainerType) {
-            case ACCOUNT_BANK -> customAccountBankPageNames.get();
-            case BLOCK_BANK -> customBlockBankPageNames.get();
-            case BOOKSHELF -> customBookshelfPageNames.get();
+            case ACCOUNT_BANK -> customAccountBankPageCustomizations.get();
+            case BLOCK_BANK -> customBlockBankPageCustomizations.get();
+            case BOOKSHELF -> customBookshelfPageCustomizations.get();
             case CHARACTER_BANK ->
-                customCharacterBankPagesNames.get().getOrDefault(Models.Character.getId(), new TreeMap<>());
-            case MISC_BUCKET -> customMiscBucketPageNames.get();
+                customCharacterBankPagesCustomizations.get().getOrDefault(Models.Character.getId(), new TreeMap<>());
+            case MISC_BUCKET -> customMiscBucketPageCustomizations.get();
         };
     }
 }

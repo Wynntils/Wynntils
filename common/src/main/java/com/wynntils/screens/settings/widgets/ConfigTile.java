@@ -55,7 +55,7 @@ public class ConfigTile extends WynntilsButton {
                     : StyledText.fromString(config.getDisplayName());
         } else {
             maskTopY = 0;
-            maskBottomY = McUtils.mc().screen.height;
+            maskBottomY = McUtils.screen().height;
             displayName = StyledText.fromString(config.getDisplayName());
         }
 
@@ -111,7 +111,7 @@ public class ConfigTile extends WynntilsButton {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies to drag and released
         if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
 
-        if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+        if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.changesMade();
         }
 

@@ -6,10 +6,15 @@ package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.mc.extension.ChatComponentExtension;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.text.StyledText;
+import java.io.File;
+import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -29,6 +34,20 @@ import net.minecraft.world.inventory.InventoryMenu;
 public final class McUtils {
     public static Minecraft mc() {
         return Minecraft.getInstance();
+    }
+
+    public static UUID getUserProfileUUID() {
+        // If we are running tests, then Minecraft is not available, so return a dummy UUID
+        if (mc() == null) return UUID.fromString("00000000-0000-0000-0000-000000000000");
+
+        return mc().getUser().getProfileId();
+    }
+
+    public static File getGameDirectory() {
+        // If we are running tests, then Minecraft is not available, so return a suitable directory
+        if (mc() == null) return new File("../build/tmp/");
+
+        return mc().gameDirectory;
     }
 
     public static LocalPlayer player() {
@@ -61,6 +80,14 @@ public final class McUtils {
 
     public static double guiScale() {
         return window().getGuiScale();
+    }
+
+    public static Screen screen() {
+        return mc().screen;
+    }
+
+    public static void setScreen(Screen screen) {
+        mc().setScreen(screen);
     }
 
     public static void playSoundUI(SoundEvent sound) {
@@ -107,7 +134,9 @@ public final class McUtils {
     }
 
     public static void sendMessageToClient(Component component) {
+        Handlers.Chat.setLocalMessage(true);
         mc().getChatListener().handleSystemMessage(component, false);
+        Handlers.Chat.setLocalMessage(false);
     }
 
     public static void sendMessageToClientWithPillHeader(Component component) {
@@ -115,7 +144,9 @@ public final class McUtils {
     }
 
     public static void removeMessageFromChat(Component component) {
-        ((ChatComponentExtension) mc().gui.getChat()).deleteMessage(component);
+        StyledText comparison = StyledText.fromComponent(component);
+        Services.ChatTab.modifyChatHistory(allMessages -> allMessages.removeIf(
+                guiMessage -> StyledText.fromComponent(guiMessage.content()).equals(comparison)));
     }
 
     public static void sendErrorToClient(String errorMsg) {
@@ -144,5 +175,9 @@ public final class McUtils {
      */
     public static void sendChat(String message) {
         mc().getConnection().sendChat(message);
+    }
+
+    public static void openChatScreen(String keybindCommand) {
+        mc().openChatScreen(keybindCommand);
     }
 }

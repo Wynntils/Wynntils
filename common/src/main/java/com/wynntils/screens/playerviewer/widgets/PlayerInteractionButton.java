@@ -58,9 +58,7 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
         RenderSystem.disableDepthTest();
 
         if (isHovered) {
-            McUtils.mc()
-                    .screen
-                    .setTooltipForNextRenderPass(Lists.transform(tooltipText, Component::getVisualOrderText));
+            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltipText, Component::getVisualOrderText));
         }
     }
 }

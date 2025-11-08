@@ -6,30 +6,25 @@ package com.wynntils.handlers.actionbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
-    private static final List<ResourceLocation> ACTION_BAR_FONTS = List.of(
-            ResourceLocation.withDefaultNamespace("hud/gameplay/default/bottom_middle"),
-            ResourceLocation.withDefaultNamespace("hud/wardrobe/default/top_middle"),
-            ResourceLocation.withDefaultNamespace("hud/wardrobe/default/bottom_middle"),
-            ResourceLocation.withDefaultNamespace("hud/gameplay/default/center_middle"));
     private static final ResourceLocation COORDINATES_FONT =
             ResourceLocation.withDefaultNamespace("hud/gameplay/default/top_right");
 
     private static final FallBackSegmentMatcher FALLBACK_SEGMENT_MATCHER = new FallBackSegmentMatcher();
+    private static final Pattern PERCENT_PATTERN = Pattern.compile("%");
 
     private final List<ActionBarSegmentMatcher> segmentMatchers = new ArrayList<>();
 
@@ -41,62 +36,51 @@ public final class ActionBarHandler extends Handler {
     }
 
     @SubscribeEvent
-    public void onActionBarUpdate(ChatPacketReceivedEvent.GameInfo event) {
-        // FIXME: Reverse dependency!
-        WorldState currentState = Models.WorldState.getCurrentState();
-        if (currentState == WorldState.WORLD) {
-            StyledText packetText = StyledText.fromComponent(event.getMessage());
+    public void onActionBarUpdate(SystemMessageEvent.GameInfoReceivedEvent event) {
+        StyledText packetText = StyledText.fromComponent(event.getMessage());
 
-            // Separate the action bar text from the coordinates
-            StyledText actionBarText = packetText.iterate((part, changes) -> {
-                if (ACTION_BAR_FONTS.stream()
-                        .noneMatch(font -> font.equals(part.getPartStyle().getFont()))) {
+        // Separate the action bar text from the coordinates
+        StyledText actionBarText = packetText.iterate((part, changes) -> {
+            if (part.getPartStyle().getFont().equals(COORDINATES_FONT)) {
+                changes.remove(part);
+                return IterationDecision.BREAK;
+            }
+
+            return IterationDecision.CONTINUE;
+        });
+
+        if (actionBarText.isEmpty()) {
+            WynntilsMod.warn("Failed to find action bar text in packet: " + packetText.getString());
+            return;
+        }
+
+        List<ActionBarSegment> matchedSegments = matchSegments(actionBarText, packetText);
+        ActionBarRenderEvent actionBarRenderEvent = new ActionBarRenderEvent(matchedSegments);
+        WynntilsMod.postEvent(actionBarRenderEvent);
+
+        // Remove disabled segments from the action bar text
+        for (ActionBarSegment disabledSegment : actionBarRenderEvent.getDisabledSegments()) {
+            actionBarText = actionBarText.replaceFirst(disabledSegment.getSegmentText(), "");
+        }
+
+        StyledText renderedText = actionBarText;
+
+        // Append coordinates if needed
+        if (actionBarRenderEvent.shouldRenderCoordinates()) {
+            StyledText coordinatesText = packetText.iterate((part, changes) -> {
+                if (!COORDINATES_FONT.equals(part.getPartStyle().getFont())) {
                     changes.remove(part);
                 }
 
                 return IterationDecision.CONTINUE;
             });
 
-            if (actionBarText.isEmpty()) {
-                WynntilsMod.warn("Failed to find action bar text in packet: " + packetText.getString());
-                return;
-            }
-
-            List<ActionBarSegment> matchedSegments = matchSegments(actionBarText, packetText);
-            ActionBarRenderEvent actionBarRenderEvent = new ActionBarRenderEvent(matchedSegments);
-            WynntilsMod.postEvent(actionBarRenderEvent);
-
-            // Remove disabled segments from the action bar text
-            for (ActionBarSegment disabledSegment : actionBarRenderEvent.getDisabledSegments()) {
-                actionBarText = actionBarText.replaceFirst(disabledSegment.getSegmentText(), "");
-            }
-
-            StyledText renderedText = actionBarText;
-
-            // Append coordinates if needed
-            if (actionBarRenderEvent.shouldRenderCoordinates()) {
-                StyledText coordinatesText = packetText.iterate((part, changes) -> {
-                    if (!COORDINATES_FONT.equals(part.getPartStyle().getFont())) {
-                        changes.remove(part);
-                    }
-
-                    return IterationDecision.CONTINUE;
-                });
-
-                renderedText = renderedText.append(coordinatesText);
-            }
-
-            event.setMessage(renderedText.getComponent());
-        } else if (currentState == WorldState.INTERIM || currentState == WorldState.CHARACTER_SELECTION) {
-            StyledText packetText = StyledText.fromComponent(event.getMessage());
-
-            // We can't do any filtering by font here as whilst the navigation text font is always the same, the version
-            // is not
-
-            // We're only expecting to be on the character selection screen here so we don't need to do anything with
-            // matched segments
-            matchSegments(packetText, packetText);
+            renderedText = renderedText.append(coordinatesText);
         }
+
+        if (packetText.equals(renderedText)) return;
+
+        event.setMessage(renderedText.getComponent());
     }
 
     private List<ActionBarSegment> matchSegments(StyledText actionBarText, StyledText packetText) {
@@ -131,8 +115,8 @@ public final class ActionBarHandler extends Handler {
         List<ActionBarSegment> matchedSegments = new ArrayList<>();
 
         for (ActionBarSegmentMatcher segmentMatcher : segmentMatchers) {
-            ActionBarSegment parsedSegment =
-                    segmentMatcher.parse(actionBarText.getString().replaceAll("%", ""));
+            ActionBarSegment parsedSegment = segmentMatcher.parse(
+                    PERCENT_PATTERN.matcher(actionBarText.getString()).replaceAll(""));
             if (parsedSegment == null) continue;
 
             matchedSegments.add(parsedSegment);

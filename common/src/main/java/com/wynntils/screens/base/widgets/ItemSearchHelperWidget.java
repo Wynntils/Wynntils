@@ -64,8 +64,7 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
                 Texture.INFO.height());
 
         if (isHovered) {
-            McUtils.mc()
-                    .screen
+            McUtils.screen()
                     .setTooltipForNextRenderPass(Lists.transform(getTooltipLines(), Component::getVisualOrderText));
         }
     }

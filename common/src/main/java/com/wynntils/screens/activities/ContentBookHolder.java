@@ -25,7 +25,6 @@ import java.util.TreeMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -59,7 +58,7 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
 
     @SubscribeEvent
     public void onSetSlot(ContainerSetSlotEvent.Post event) {
-        if (!(McUtils.mc().screen instanceof WynntilsContentBookScreen contentBookScreen)) return;
+        if (!(McUtils.screen() instanceof WynntilsContentBookScreen contentBookScreen)) return;
 
         if (event.getContainerId() == McUtils.inventoryMenu().containerId) {
             for (Pair<Integer, Integer> slotPair : ACTION_SLOTS) {
@@ -70,7 +69,7 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
             }
         } else if (event.getContainerId()
                 == wrappedScreen.getWrappedScreenInfo().containerId()) {
-            if (event.getItemStack().getItem() == Items.AIR) {
+            if (event.getItemStack().isEmpty()) {
                 activities.remove(event.getSlot());
                 contentBookScreen.reloadContentBookWidgets(true);
                 return;
@@ -84,7 +83,7 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Post event) {
         if (event.getContainerId() != wrappedScreen.getWrappedScreenInfo().containerId()) return;
-        if (McUtils.mc().screen instanceof WynntilsContentBookScreen contentBookScreen) {
+        if (McUtils.screen() instanceof WynntilsContentBookScreen contentBookScreen) {
             activities = new TreeMap<>();
 
             for (int i = 0; i < event.getItems().size(); i++) {
@@ -100,7 +99,7 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
                 }
 
                 if (actionSlot) continue;
-                if (item.getItem() == Items.AIR) {
+                if (item.isEmpty()) {
                     activities.remove(i);
                     continue;
                 }
@@ -184,7 +183,7 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
     }
 
     private void handleActionSlot(ItemStack itemStack, int slot) {
-        if (McUtils.mc().screen instanceof WynntilsContentBookScreen contentBookScreen) {
+        if (McUtils.screen() instanceof WynntilsContentBookScreen contentBookScreen) {
             if (slot == DIALOGUE_HISTORY_SLOTS.b()) {
                 contentBookScreen.setDialogueHistoryItem(itemStack, DIALOGUE_HISTORY_SLOTS.b());
                 actions.put(DIALOGUE_HISTORY_SLOTS.b(), itemStack);

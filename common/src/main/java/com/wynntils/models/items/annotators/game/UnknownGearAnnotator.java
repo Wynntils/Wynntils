@@ -21,7 +21,7 @@ public final class UnknownGearAnnotator implements GameItemAnnotator {
         Matcher matcher = name.getMatcher(Models.Gear.GEAR_PATTERN);
         if (!matcher.matches()) return null;
 
-        GearType gearType = GearType.fromItemStack(itemStack);
+        GearType gearType = GearType.fromItemStack(itemStack, false);
         if (gearType == null) return null;
 
         String gearName = matcher.group("name");

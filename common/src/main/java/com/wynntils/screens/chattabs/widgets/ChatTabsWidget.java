@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.chattabs.widgets;
@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;
-import com.wynntils.services.chat.ChatTab;
+import com.wynntils.services.chat.type.ChatTab;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -41,7 +41,7 @@ public class ChatTabsWidget extends AbstractWidget {
             ChatTab chatTab,
             float gridDivisions,
             ChatTabEditingScreen parent) {
-        super((int) x, (int) y, width, height, Component.literal(chatTab.getName()));
+        super((int) x, (int) y, width, height, Component.literal(chatTab.name()));
 
         this.chatTab = chatTab;
         this.gridDivisions = gridDivisions;
@@ -52,7 +52,7 @@ public class ChatTabsWidget extends AbstractWidget {
                                 .withStyle(ChatFormatting.RED),
                         (button) -> {
                             Services.ChatTab.removeTab(chatTab);
-                            McUtils.mc().setScreen(ChatTabEditingScreen.create());
+                            McUtils.setScreen(ChatTabEditingScreen.create());
                         })
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 17)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 5) - 3, 20)
@@ -81,7 +81,7 @@ public class ChatTabsWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(chatTab.getName()),
+                        StyledText.fromString(chatTab.name()),
                         this.getX() + 4,
                         this.getY() + (this.height >> 1),
                         nameColor,
@@ -102,14 +102,7 @@ public class ChatTabsWidget extends AbstractWidget {
                 MathUtils.clamp(Services.ChatTab.getTabIndex(chatTab) + offset, 0, Services.ChatTab.getTabCount() - 1);
 
         Services.ChatTab.removeTab(chatTab);
-
-        ChatTab newChatTab = new ChatTab(
-                chatTab.getName(),
-                chatTab.isConsuming(),
-                chatTab.getAutoCommand(),
-                chatTab.getFilteredTypes(),
-                chatTab.getCustomRegexString());
-        Services.ChatTab.addTab(newIndex, newChatTab);
+        Services.ChatTab.addTab(newIndex, chatTab);
     }
 
     @Override
@@ -121,7 +114,7 @@ public class ChatTabsWidget extends AbstractWidget {
             return true;
         }
 
-        McUtils.mc().setScreen(ChatTabEditingScreen.create(this.chatTab));
+        McUtils.setScreen(ChatTabEditingScreen.create(this.chatTab));
         return true;
     }
 }

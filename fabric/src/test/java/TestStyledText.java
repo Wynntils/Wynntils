@@ -2,21 +2,22 @@
  * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.server.Bootstrap;
+import net.minecraft.resources.ResourceLocation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,73 @@ import org.junit.jupiter.api.Test;
 public class TestStyledText {
     @BeforeAll
     public static void setup() {
-        SharedConstants.tryDetectVersion();
-        Bootstrap.bootStrap();
+        WynntilsMod.setupTestEnv();
+    }
+
+    @Test
+    public void fontStyle() {
+        ResourceLocation bannerPillFont = ResourceLocation.fromNamespaceAndPath("minecraft", "banner/pill");
+        final Component component = Component.empty()
+                .withStyle(ChatFormatting.RED)
+                .withStyle(Style.EMPTY.withFont(bannerPillFont))
+                .append(Component.literal("inherited font"));
+        final String expected = "§c§{f:bp}inherited font";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        Assertions.assertEquals(
+                expected,
+                styledText.getString(StyleType.INCLUDE_FONTS),
+                "StyledText for font formats returned an unexpected value.");
+
+        StyledText roundtrip = StyledText.fromString(expected);
+        String strippedFromFont = roundtrip.getStringWithoutFormatting();
+        Assertions.assertEquals(
+                "inherited font",
+                strippedFromFont,
+                "StyledText roundtrip string without formatting returned an unexpected value.");
+        String roundtripStr = roundtrip.getString(StyleType.INCLUDE_FONTS);
+        Assertions.assertEquals(roundtripStr, expected, "StyledText roundtrip string returned an unexpected value.");
+
+        Assertions.assertEquals(styledText, roundtrip, "StyledText roundtrip ST returned an unexpected value.");
+
+        Component roundtripComp = roundtrip.getComponent();
+        if (roundtripComp instanceof MutableComponent mutableComponent) {
+            Assertions.assertEquals(
+                    mutableComponent.getSiblings().getFirst().getStyle().getFont(),
+                    bannerPillFont,
+                    "Component roundtrip contained an unexpected font.");
+        } else {
+            Assertions.fail("StyledText roundtrip Component was not a MutableComponent.");
+        }
+    }
+
+    @Test
+    public void fontStyleInvalidFonts() {
+        final Component component = Component.empty()
+                .withStyle(ChatFormatting.RED)
+                .withStyle(
+                        Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "banner/nosuchfont")))
+                .append(Component.literal("inherited font"));
+        final String expected = "§c§{f:minecraft:banner/nosuchfont}inherited font";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        Assertions.assertEquals(
+                expected,
+                styledText.getString(StyleType.INCLUDE_FONTS),
+                "StyledText for font formats returned an unexpected value.");
+
+        StyledText roundtrip = StyledText.fromString(expected);
+        String strippedFromFont = roundtrip.getStringWithoutFormatting();
+        Assertions.assertEquals(
+                "inherited font",
+                strippedFromFont,
+                "StyledText roundtrip string without formatting returned an unexpected value.");
+        String roundtripStr = roundtrip.getString(StyleType.INCLUDE_FONTS);
+        Assertions.assertEquals(roundtripStr, expected, "StyledText roundtrip string returned an unexpected value.");
+
+        Assertions.assertEquals(styledText, roundtrip, "StyledText roundtrip ST returned an unexpected value.");
     }
 
     @Test
@@ -53,15 +119,15 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expectedIncludeEvents,
-                styledText.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                styledText.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
         Assertions.assertEquals(
                 expectedDefault,
-                styledText.getString(PartStyle.StyleType.DEFAULT),
+                styledText.getString(StyleType.DEFAULT),
                 "StyledText.getString(DEFAULT) returned an unexpected value.");
         Assertions.assertEquals(
                 expectedNoFormat,
-                styledText.getString(PartStyle.StyleType.NONE),
+                styledText.getString(StyleType.NONE),
                 "StyledText.getString(NONE) returned an unexpected value.");
     }
 
@@ -100,14 +166,14 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                styledText.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
 
         StyledText fromString = StyledText.fromModifiedString(expected, styledText);
 
         Assertions.assertEquals(
                 expected,
-                fromString.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                fromString.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
     }
 
@@ -127,14 +193,14 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                styledText.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
 
         StyledText fromString = StyledText.fromModifiedString(expected, styledText);
 
         Assertions.assertEquals(
                 expected,
-                fromString.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                fromString.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
     }
 
@@ -155,14 +221,14 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                styledText.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
 
         StyledText fromString = StyledText.fromModifiedString(expected, styledText);
 
         Assertions.assertEquals(
                 expected,
-                fromString.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                fromString.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
     }
 
@@ -182,14 +248,14 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                styledText.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
 
         StyledText fromString = StyledText.fromModifiedString(expected, styledText);
 
         Assertions.assertEquals(
                 expected,
-                fromString.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                fromString.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
     }
 
@@ -210,14 +276,14 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                styledText.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
 
         StyledText fromString = StyledText.fromModifiedString(expected, styledText);
 
         Assertions.assertEquals(
                 expected,
-                fromString.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                fromString.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
     }
 
@@ -275,7 +341,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 stringWithEvents,
-                styledText.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                styledText.getString(StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
     }
 
@@ -291,7 +357,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.getString(PartStyle.StyleType.DEFAULT),
+                styledText.getString(StyleType.DEFAULT),
                 "StyledText.getString() returned an unexpected value.");
     }
 
@@ -323,27 +389,27 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 firstExpected,
-                StyledText.fromComponent(firstTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                StyledText.fromComponent(firstTestComponent).getString(StyleType.DEFAULT),
                 "StyledText.getString() returned an unexpected value.");
 
         Assertions.assertEquals(
                 secondExpected,
-                StyledText.fromComponent(secondTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                StyledText.fromComponent(secondTestComponent).getString(StyleType.DEFAULT),
                 "StyledText.getString() returned an unexpected value.");
 
         Assertions.assertEquals(
                 thirdExpected,
-                StyledText.fromComponent(thirdTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                StyledText.fromComponent(thirdTestComponent).getString(StyleType.DEFAULT),
                 "StyledText.getString() returned an unexpected value.");
 
         Assertions.assertEquals(
                 fourthExpected,
-                StyledText.fromComponent(fourthTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                StyledText.fromComponent(fourthTestComponent).getString(StyleType.DEFAULT),
                 "StyledText.getString() returned an unexpected value.");
 
         Assertions.assertEquals(
                 fifthExpected,
-                StyledText.fromComponent(fifthTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                StyledText.fromComponent(fifthTestComponent).getString(StyleType.DEFAULT),
                 "StyledText.getString() returned an unexpected value.");
     }
 
@@ -356,7 +422,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.getNormalized().getString(PartStyle.StyleType.NONE),
+                styledText.getNormalized().getString(StyleType.NONE),
                 "StyledText.getNormalized().getString() returned an unexpected value.");
     }
 
@@ -370,7 +436,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.stripAlignment().getString(PartStyle.StyleType.DEFAULT),
+                styledText.stripAlignment().getString(StyleType.DEFAULT),
                 "StyledText.stripAlignment().getString() returned an unexpected value.");
     }
 
@@ -383,7 +449,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.stripAlignment().getString(PartStyle.StyleType.DEFAULT),
+                styledText.stripAlignment().getString(StyleType.DEFAULT),
                 "StyledText.stripAlignment().getString() returned an unexpected value.");
     }
 
@@ -396,7 +462,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.trim().getString(PartStyle.StyleType.NONE),
+                styledText.trim().getString(StyleType.NONE),
                 "StyledText.getString() returned an unexpected value.");
     }
 
@@ -441,7 +507,7 @@ public class TestStyledText {
                     styledText.contains(StyledText.fromString(expectedPart)),
                     "StyledText.contains() could not find a part matching: " + expectedPart);
             Assertions.assertTrue(
-                    styledText.contains(StyledText.fromString(expectedPart), PartStyle.StyleType.NONE),
+                    styledText.contains(StyledText.fromString(expectedPart), StyleType.NONE),
                     "StyledText.contains(NONE) could not find a part matching: " + expectedPart);
         }
     }
@@ -503,7 +569,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                joinedStyled.getString(PartStyle.StyleType.NONE),
+                joinedStyled.getString(StyleType.NONE),
                 "StyledText.join() did not produce a correct result.");
     }
 
@@ -518,7 +584,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                joinedStyled.getString(PartStyle.StyleType.NONE),
+                joinedStyled.getString(StyleType.NONE),
                 "StyledText.concat() did not produce a correct result.");
     }
 
@@ -533,7 +599,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                joinedStyled.getString(PartStyle.StyleType.NONE),
+                joinedStyled.getString(StyleType.NONE),
                 "StyledText.append() did not produce a correct result.");
     }
 
@@ -548,7 +614,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                joinedStyled.getString(PartStyle.StyleType.NONE),
+                joinedStyled.getString(StyleType.NONE),
                 "StyledText.prepend() did not produce a correct result.");
     }
 
@@ -583,7 +649,7 @@ public class TestStyledText {
         StyledText styledText = StyledText.fromComponent(component);
 
         Matcher formattedMatcher = styledText.getMatcher(formattedPattern);
-        Matcher unformattedMatcher = styledText.getMatcher(unformattedPattern, PartStyle.StyleType.NONE);
+        Matcher unformattedMatcher = styledText.getMatcher(unformattedPattern, StyleType.NONE);
 
         Assertions.assertTrue(formattedMatcher.matches(), "StyledText.matches(DEFAULT) returned an unexpected value.");
         Assertions.assertEquals(
@@ -614,7 +680,7 @@ public class TestStyledText {
         Assertions.assertTrue(
                 styledText.matches(formattedPattern), "StyledText.matches(DEFAULT) returned an unexpected value.");
         Assertions.assertTrue(
-                styledText.matches(unformattedPattern, PartStyle.StyleType.NONE),
+                styledText.matches(unformattedPattern, StyleType.NONE),
                 "StyledText.matches(NONE) returned an unexpected value.");
     }
 
@@ -636,7 +702,7 @@ public class TestStyledText {
 
             Assertions.assertEquals(
                     results[i],
-                    result.getString(PartStyle.StyleType.DEFAULT),
+                    result.getString(StyleType.DEFAULT),
                     "StyledText.split() returned an unexpected value.");
         }
     }
@@ -654,9 +720,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(1, splitTexts.length, "StyledText.split() returned an unexpected value.");
         Assertions.assertEquals(
-                result,
-                splitTexts[0].getString(PartStyle.StyleType.DEFAULT),
-                "StyledText.split() returned an unexpected value.");
+                result, splitTexts[0].getString(StyleType.DEFAULT), "StyledText.split() returned an unexpected value.");
     }
 
     @Test
@@ -671,7 +735,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 result,
-                substringText.getString(PartStyle.StyleType.DEFAULT),
+                substringText.getString(StyleType.DEFAULT),
                 "StyledText.substring() returned an unexpected value.");
     }
 
@@ -691,7 +755,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 result,
-                substringText.getString(PartStyle.StyleType.DEFAULT),
+                substringText.getString(StyleType.DEFAULT),
                 "StyledText.substring() returned an unexpected value.");
     }
 
@@ -712,7 +776,7 @@ public class TestStyledText {
     public void styledText_substringWithFormattingShouldWork() {
         final StyledText text = StyledText.fromString("§1koala§2bear");
 
-        StyledText substringText = text.substring(0, 4, PartStyle.StyleType.DEFAULT);
+        StyledText substringText = text.substring(0, 4, StyleType.DEFAULT);
 
         String substring = substringText.getString();
 
@@ -727,7 +791,7 @@ public class TestStyledText {
 
         Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> text.substring(0, 1, PartStyle.StyleType.DEFAULT),
+                () -> text.substring(0, 1, StyleType.DEFAULT),
                 "StyledText.substring() did not throw an exception for split formatting code.");
     }
 
@@ -798,7 +862,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 result,
-                replacedText.getString(PartStyle.StyleType.DEFAULT),
+                replacedText.getString(StyleType.DEFAULT),
                 "StyledText.replace() returned an unexpected value.");
     }
 
@@ -818,7 +882,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 result,
-                replacedText.getString(PartStyle.StyleType.DEFAULT),
+                replacedText.getString(StyleType.DEFAULT),
                 "StyledText.replaceAll() returned an unexpected value.");
     }
 
@@ -836,13 +900,11 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 result,
-                styledText.getString(PartStyle.StyleType.DEFAULT),
+                styledText.getString(StyleType.DEFAULT),
                 "StyledText.replaceAll() returned an unexpected value.");
 
         Assertions.assertEquals(
-                result,
-                styledText.getString(PartStyle.StyleType.NONE),
-                "StyledText.replaceAll() returned an unexpected value.");
+                result, styledText.getString(StyleType.NONE), "StyledText.replaceAll() returned an unexpected value.");
     }
 
     @Test
@@ -855,7 +917,7 @@ public class TestStyledText {
         final String result = "§#240c2afftest";
         Assertions.assertEquals(
                 result,
-                styledText.getString(PartStyle.StyleType.DEFAULT),
+                styledText.getString(StyleType.DEFAULT),
                 "StyledText.getString() returned an unexpected value.");
     }
 
@@ -903,7 +965,7 @@ public class TestStyledText {
         StyledText styledText = StyledText.fromComponent(component);
 
         StyledText mappedText = styledText.map(part -> new StyledTextPart(
-                "." + part.getString(null, PartStyle.StyleType.NONE),
+                "." + part.getString(null, StyleType.NONE),
                 part.getPartStyle().withColor(ChatFormatting.AQUA).getStyle(),
                 part.getParent(),
                 null));
@@ -911,8 +973,6 @@ public class TestStyledText {
         final String result = "§b§l.a.bb.ccc.dddd";
 
         Assertions.assertEquals(
-                result,
-                mappedText.getString(PartStyle.StyleType.DEFAULT),
-                "StyledText.map() returned an unexpected value.");
+                result, mappedText.getString(StyleType.DEFAULT), "StyledText.map() returned an unexpected value.");
     }
 }

@@ -17,8 +17,8 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.extension.MinecraftExtension;
 import com.wynntils.utils.SystemUtils;
@@ -78,7 +78,7 @@ public class ItemScreenshotFeature extends Feature {
         if (!Models.WorldState.onWorld()) return;
         if (screenshotSlot == null || !screenshotSlot.hasItem()) return;
 
-        Screen screen = McUtils.mc().screen;
+        Screen screen = McUtils.screen();
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
 
         // has to be called during a render period
@@ -156,7 +156,7 @@ public class ItemScreenshotFeature extends Feature {
                     .replaceAll("⬡ ", "") // remove shiny indicator
                     .replaceAll("[/ ]", "_")
                     .getNormalized()
-                    .getString(PartStyle.StyleType.NONE);
+                    .getString(StyleType.NONE);
             File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
             String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
             try {

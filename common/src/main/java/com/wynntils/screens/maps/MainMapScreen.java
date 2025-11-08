@@ -390,12 +390,12 @@ public final class MainMapScreen extends AbstractMapScreen {
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
                 if (hoveredFeature instanceof WaypointLocation location) {
-                    McUtils.mc().setScreen(WaypointCreationScreen.create(this, location));
+                    McUtils.setScreen(WaypointCreationScreen.create(this, location));
                 } else {
                     int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
                     int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
 
-                    McUtils.mc().setScreen(WaypointCreationScreen.create(this, new Location(gameX, 0, gameZ)));
+                    McUtils.setScreen(WaypointCreationScreen.create(this, new Location(gameX, 0, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hoveredFeature instanceof WaypointLocation waypointLocation) {

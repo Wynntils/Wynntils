@@ -19,6 +19,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.screens.downloads.DownloadScreen;
@@ -41,6 +42,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
@@ -54,6 +56,7 @@ import org.apache.commons.lang3.Validate;
 public class WynncraftButtonFeature extends Feature {
     private static final String WYNNCRAFT_DOMAIN = ".wynncraft.com";
     private boolean firstTitleScreenInit = true;
+    private boolean hasUsedButton = false;
 
     @Persisted
     private final Config<ServerType> serverType = new Config<>(ServerType.GAME);
@@ -73,11 +76,31 @@ public class WynncraftButtonFeature extends Feature {
     @Persisted
     public final Storage<Boolean> ignoreFailedDownloads = new Storage<>(false);
 
+    @Persisted
+    private final Config<Boolean> returnToTitle = new Config<>(true);
+
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post event) {
         TitleScreen titleScreen = event.getTitleScreen();
 
         addWynncraftButton(titleScreen);
+    }
+
+    @SubscribeEvent
+    public void onScreenOpen(ScreenOpenedEvent.Pre event) {
+        if (!hasUsedButton) return;
+
+        if (event.getScreen() instanceof TitleScreen) {
+            hasUsedButton = false;
+            return;
+        }
+        if (event.getScreen() instanceof JoinMultiplayerScreen) {
+            hasUsedButton = false;
+            if (returnToTitle.get()) {
+                event.setCanceled(true);
+                McUtils.setScreen(new TitleScreen());
+            }
+        }
     }
 
     @SubscribeEvent
@@ -119,7 +142,8 @@ public class WynncraftButtonFeature extends Feature {
                 titleScreen.width / 2 + 104,
                 titleScreen.height / 4 + 48 + 24,
                 warningType,
-                ignoreFailedDownloads.get());
+                ignoreFailedDownloads.get(),
+                this::onPress);
         titleScreen.addRenderableWidget(wynncraftButton);
     }
 
@@ -135,9 +159,23 @@ public class WynncraftButtonFeature extends Feature {
         return wynncraftServer;
     }
 
-    private static void connectToServer(ServerData serverData) {
+    private void connectToServer(ServerData serverData) {
+        hasUsedButton = true;
         ConnectScreen.startConnecting(
-                McUtils.mc().screen, McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData, false, null);
+                McUtils.screen(), McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData, false, null);
+    }
+
+    private void onPress(Button button) {
+        if (!(button instanceof WynncraftButton wynncraftButton)) return;
+        if (!Managers.Download.graphState().finished()) return;
+
+        if (wynncraftButton.warningType == WarningType.UPDATE) {
+            McUtils.setScreen(UpdateScreen.create(wynncraftButton.serverData, wynncraftButton.titleScreen));
+        } else if (wynncraftButton.warningType == WarningType.DOWNLOADS && !wynncraftButton.ignoreFailedDownloads) {
+            McUtils.setScreen(DownloadScreen.create(McUtils.screen(), wynncraftButton.serverData));
+        } else {
+            connectToServer(wynncraftButton.serverData);
+        }
     }
 
     private static class WynncraftButton extends Button {
@@ -161,8 +199,9 @@ public class WynncraftButtonFeature extends Feature {
                 int x,
                 int y,
                 WarningType warningType,
-                boolean ignoreFailedDownloads) {
-            super(x, y, 20, 20, Component.literal(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
+                boolean ignoreFailedDownloads,
+                OnPress onPress) {
+            super(x, y, 20, 20, Component.literal(""), onPress, Button.DEFAULT_NARRATION);
             this.serverData = serverData;
             this.titleScreen = titleScreen;
 
@@ -227,22 +266,7 @@ public class WynncraftButtonFeature extends Feature {
             }
 
             if (isHovered) {
-                McUtils.mc()
-                        .screen
-                        .setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
-            }
-        }
-
-        protected static void onPress(Button button) {
-            if (!(button instanceof WynncraftButton wynncraftButton)) return;
-            if (!Managers.Download.graphState().finished()) return;
-
-            if (wynncraftButton.warningType == WarningType.UPDATE) {
-                McUtils.mc().setScreen(UpdateScreen.create(wynncraftButton.serverData, wynncraftButton.titleScreen));
-            } else if (wynncraftButton.warningType == WarningType.DOWNLOADS && !wynncraftButton.ignoreFailedDownloads) {
-                McUtils.mc().setScreen(DownloadScreen.create(McUtils.mc().screen, wynncraftButton.serverData));
-            } else {
-                connectToServer(wynncraftButton.serverData);
+                McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
             }
         }
     }
@@ -271,9 +295,9 @@ public class WynncraftButtonFeature extends Feature {
             this.serverIconLocation = FALLBACK;
         }
 
-        @SuppressWarnings("deprecation")
         private void loadResource(boolean allowStale) {
             // Try default
+            @SuppressWarnings("deprecation")
             ResourceLocation destination = ResourceLocation.withDefaultNamespace(
                     "servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
 
@@ -329,15 +353,16 @@ public class WynncraftButtonFeature extends Feature {
         // Modified from
         // net.minecraft.client.gui.screens.multiplayer.ServerSelectionList#uploadServerIcon
         private synchronized void loadServerIcon(ResourceLocation destination) {
-            ByteBuffer iconBytes = ByteBuffer.wrap(server.getIconBytes());
-            // failed to ping server or icon wasn't sent
+            byte[] iconBytes = server.getIconBytes();
             if (iconBytes == null) {
+                // failed to ping server or icon wasn't sent
                 WynntilsMod.warn("Unable to load icon");
                 serverIconLocation = FALLBACK;
                 return;
             }
+            ByteBuffer iconBytesBuffer = ByteBuffer.wrap(iconBytes);
 
-            try (NativeImage nativeImage = NativeImage.read(iconBytes)) {
+            try (NativeImage nativeImage = NativeImage.read(iconBytesBuffer)) {
                 Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
                 Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
@@ -8,8 +8,8 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.SoundPlayedEvent;
 import com.wynntils.models.territories.type.GuildResourceValues;
@@ -38,16 +38,16 @@ public class TerritoryDefenseMessageFeature extends Feature {
 
     @SubscribeEvent
     public void onInventoryClick(InventoryMouseClickedEvent event) {
-        if (event.getHoveredSlot() == null || McUtils.mc().screen == null) return;
+        if (event.getHoveredSlot() == null || McUtils.screen() == null) return;
         Matcher titleMatcher =
-                ATTACK_SCREEN_TITLE.matcher(McUtils.mc().screen.getTitle().getString());
+                ATTACK_SCREEN_TITLE.matcher(McUtils.screen().getTitle().getString());
         if (!titleMatcher.matches()) return;
 
         ItemStack itemStack = event.getHoveredSlot().getItem();
 
         for (Component tooltipLine : LoreUtils.getTooltipLines(itemStack)) {
-            Matcher matcher = StyledText.fromComponent(tooltipLine)
-                    .getMatcher(TERRITORY_DEFENSE_PATTERN, PartStyle.StyleType.NONE);
+            Matcher matcher =
+                    StyledText.fromComponent(tooltipLine).getMatcher(TERRITORY_DEFENSE_PATTERN, StyleType.NONE);
             if (matcher.matches()) {
                 // intentionally not localized to match Wynncraft language
                 queuedTerritories.add(new QueuedTerritory(

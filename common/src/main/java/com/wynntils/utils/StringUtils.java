@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 public final class StringUtils {
@@ -23,6 +24,9 @@ public final class StringUtils {
     private static final DecimalFormat FRACTIONAL_FORMAT = new DecimalFormat("#.#");
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
+    private static final Pattern WHITESPACES = Pattern.compile("\\s+");
+    private static final Pattern LINEBREAK = Pattern.compile("\n");
+    private static final Pattern MARKDOWN_HEADER_PATTERN = Pattern.compile("#+\\s+");
 
     /**
      * Converts a delimited list into a {@link java.util.List} of strings
@@ -152,7 +156,8 @@ public final class StringUtils {
      */
     public static boolean initialMatch(String toMatch, String searchTerm) {
         String lookAt = toMatch.toLowerCase(Locale.ROOT);
-        String searchFor = searchTerm.strip().toLowerCase(Locale.ROOT).replaceAll("\\s+", " ");
+        String searchFor =
+                WHITESPACES.matcher(searchTerm.strip().toLowerCase(Locale.ROOT)).replaceAll(" ");
         // Turn all spaces into .*, including start and end
         String regex = (" " + searchFor + " ").replace(" ", ".*");
         return lookAt.matches(regex);
@@ -176,14 +181,15 @@ public final class StringUtils {
     }
 
     public static String convertMarkdownToColorCode(String input) {
-        return ChatFormatting.RESET + input.replaceFirst("#+\\s+", String.valueOf(ChatFormatting.BOLD));
+        return ChatFormatting.RESET
+                + MARKDOWN_HEADER_PATTERN.matcher(input).replaceFirst(String.valueOf(ChatFormatting.BOLD));
     }
 
     public static ByteBuffer decodeBase64(String base64) {
         if (base64 == null) return null;
 
         return Base64.getDecoder()
-                .decode(ByteBuffer.wrap(base64.replaceAll("\n", "").getBytes(StandardCharsets.UTF_8)));
+                .decode(ByteBuffer.wrap(LINEBREAK.matcher(base64).replaceAll("").getBytes(StandardCharsets.UTF_8)));
     }
 
     /**
@@ -202,5 +208,76 @@ public final class StringUtils {
     public static String formatDateTime(long timeMillis) {
         // Format: 2023-01-01 12:00
         return DateFormatUtils.format(timeMillis, "yyyy-MM-dd HH:mm");
+    }
+
+    /**
+     * Converts a timestamp to a relative time string, e.g. "2 seconds ago", "in 5 minutes"
+     * or "now" if the timestamp is within 1 second of the current time.
+     */
+    public static String getRelativeTimeString(long timestamp) {
+        long diffInMillis = timestamp - System.currentTimeMillis();
+        if (diffInMillis > -1000 && diffInMillis < 1000) {
+            return I18n.get("utils.wynntils.time.now");
+        }
+
+        int diffInSeconds = (int) (diffInMillis / 1000);
+        int seconds = Math.abs(diffInSeconds);
+        int minutes = seconds / 60;
+        int hours = minutes / 60;
+        int days = hours / 24;
+
+        String timeStr;
+        if (seconds < 60) {
+            if (seconds == 1) {
+                timeStr = I18n.get("utils.wynntils.time.second", seconds);
+            } else {
+                timeStr = I18n.get("utils.wynntils.time.seconds", seconds);
+            }
+        } else if (minutes < 60) {
+            if (minutes == 1) {
+                timeStr = I18n.get("utils.wynntils.time.minute", minutes);
+            } else {
+                timeStr = I18n.get("utils.wynntils.time.minutes", minutes);
+            }
+        } else if (hours < 24) {
+            if (hours == 1) {
+                timeStr = I18n.get("utils.wynntils.time.hour", hours);
+            } else {
+                timeStr = I18n.get("utils.wynntils.time.hours", hours);
+            }
+        } else {
+            if (days == 1) {
+                timeStr = I18n.get("utils.wynntils.time.day", days);
+            } else {
+                timeStr = I18n.get("utils.wynntils.time.days", days);
+            }
+        }
+
+        if (diffInSeconds < 0) {
+            return I18n.get("utils.wynntils.time.past", timeStr);
+        } else {
+            return I18n.get("utils.wynntils.time.future", timeStr);
+        }
+    }
+
+    public static String getAbbreviation(String input) {
+        if (input == null || input.isBlank()) return "";
+
+        String[] words = WHITESPACES.split(input.trim());
+        StringBuilder abbreviation = new StringBuilder();
+
+        if (words.length == 1) {
+            String word = words[0];
+            abbreviation.append(word, 0, Math.min(3, word.length()));
+        } else {
+            for (int i = 0; i < Math.min(3, words.length); i++) {
+                String word = words[i];
+                if (!word.isEmpty()) {
+                    abbreviation.append(word.charAt(0));
+                }
+            }
+        }
+
+        return abbreviation.toString();
     }
 }

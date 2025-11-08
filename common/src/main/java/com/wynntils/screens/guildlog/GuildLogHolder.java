@@ -33,7 +33,7 @@ public class GuildLogHolder extends WrappedScreenHolder<GuildLogScreen> {
     private static final int NEXT_PAGE_SLOT = 45;
     private static final int REQUEST_TIMEOUT = 5;
 
-    public static final Map<GuildLogType, Integer> LOG_SLOTS_MAP = Map.of(
+    protected static final Map<GuildLogType, Integer> LOG_SLOTS_MAP = Map.of(
             GuildLogType.GENERAL,
             2,
             GuildLogType.OBJECTIVES,

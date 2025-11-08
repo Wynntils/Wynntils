@@ -28,7 +28,7 @@ public final class WrappedScreenHandler extends Handler {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent.Post event) {
-        if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
+        if (!(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
 
         StyledText titleStyledText = StyledText.fromComponent(abstractContainerScreen.getTitle());
 
@@ -58,11 +58,11 @@ public final class WrappedScreenHandler extends Handler {
                 abstractContainerScreen, McUtils.containerMenu(), McUtils.containerMenu().containerId));
 
         holder.setWrappedScreen(currentWrappedScreen);
-        McUtils.mc().setScreen(currentWrappedScreen);
+        McUtils.setScreen(currentWrappedScreen);
     }
 
     @SubscribeEvent
-    public void onScreenClose(ScreenClosedEvent event) {
+    public void onScreenClose(ScreenClosedEvent.Post event) {
         resetWrappedScreen(true);
     }
 

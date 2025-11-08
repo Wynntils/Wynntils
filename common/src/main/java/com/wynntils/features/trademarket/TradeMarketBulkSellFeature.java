@@ -11,8 +11,8 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
+import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -41,7 +41,7 @@ public class TradeMarketBulkSellFeature extends Feature {
 
     @SubscribeEvent
     public void onSellDialogueUpdated(TradeMarketSellDialogueUpdatedEvent e) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
+        if (!(McUtils.screen() instanceof ContainerScreen containerScreen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
         String soldItemName = Models.TradeMarket.getSoldItemName();
@@ -51,14 +51,12 @@ public class TradeMarketBulkSellFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageReceivedEvent e) {
+    public void onTradeMarketChatInput(TradeMarketChatInputEvent e) {
+        if (e.getState() != TradeMarketState.AMOUNT_CHAT_INPUT) return;
         if (!sendAmountMessage) return;
-        if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.AMOUNT_CHAT_INPUT) return;
 
         WynntilsMod.info("Trying to bulk sell " + amountToSend + " items");
-
-        McUtils.sendChat(String.valueOf(amountToSend));
-
+        e.setResponse(String.valueOf(amountToSend));
         sendAmountMessage = false;
     }
 

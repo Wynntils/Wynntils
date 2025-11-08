@@ -84,11 +84,11 @@ public class Location implements Comparable<Location> {
     }
 
     public double distanceToSqr(Position position) {
-        double x_diff = position.x() - this.x;
-        double y_diff = position.y() - this.y;
-        double z_diff = position.z() - this.z;
+        double xDiff = position.x() - this.x;
+        double yDiff = position.y() - this.y;
+        double zDiff = position.z() - this.z;
 
-        return x_diff * x_diff + y_diff * y_diff + z_diff * z_diff;
+        return xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
     }
 
     public String asChatCoordinates() {

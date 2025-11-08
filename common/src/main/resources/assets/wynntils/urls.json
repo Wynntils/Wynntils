@@ -84,6 +84,10 @@
     "url": "https://athena.wynntils.com/cache/get/guildList"
   },
   {
+    "id": "dataAthenaItemWeights",
+    "url": "https://athena.wynntils.com/cache/get/itemWeights"
+  },
+  {
     "id": "dataAthenaLeaderboard",
     "url": "https://athena.wynntils.com/cache/get/leaderboard"
   },
@@ -92,13 +96,17 @@
     "url": "https://athena.wynntils.com/cache/get/serverList"
   },
   {
+    "id": "dataAthenaTerritoryListV2",
+    "url": "https://athena.wynntils.com/v2/cache/get/territoryList"
+  },
+  {
     "id": "dataStaticAbilities",
     "md5": "fd5e9a5b76988ae00265695ee90d622a",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/abilities.json"
   },
   {
     "id": "dataStaticAspects",
-    "md5": "de9814771eaf0b8d4730c1a8dbad363c",
+    "md5": "b0776a3854203fcafd85c4ea4c4a7b00",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/aspects.json"
   },
   {
@@ -108,7 +116,7 @@
   },
   {
     "id": "dataStaticCharms",
-    "md5": "253fd4a50364539a18484bc88d14cbbf",
+    "md5": "b22d45b4298148d0852a8b9885a25c54",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/charms.json"
   },
   {
@@ -128,7 +136,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "51aba5ddd63991ee1b7f5ee9f808679c",
+    "md5": "8f6664c2f5eae98bd6e67549c3d93fcd",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
   },
   {
@@ -167,6 +175,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_obtain.json"
   },
   {
+    "id": "dataStaticItemObtainV2",
+    "md5": "4f3c92acadb5c1331b5886f6e397baa8",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_obtain_v2.json"
+  },
+  {
     "id": "dataStaticItemSets",
     "md5": "071b40d5f63ec963742df664a14e072a",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_sets.json"
@@ -198,12 +211,12 @@
   },
   {
     "id": "dataStaticMaterials",
-    "md5": "78bd3b63cf6e6fe98b2bbbb5880bcfa8",
+    "md5": "0f1db0b421ba88ab1db37e333644cb3b",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/materials.json"
   },
   {
     "id": "dataStaticModelData",
-    "md5": "c2b17aee3f01135d7e7a6f6b64a61980",
+    "md5": "c86a2609838c118c750a03762e2be2fc",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/model_data.json"
   },
   {
@@ -233,7 +246,7 @@
   },
   {
     "id": "dataStaticServicesCrowdsourced",
-    "md5": "d05fc4799aebfb5adae372cc3cebedfe",
+    "md5": "48ccb62960b490d43be6055fde9b9574",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/services_crowdsourced.json"
   },
   {
@@ -248,7 +261,7 @@
   },
   {
     "id": "dataStaticTomes",
-    "md5": "5cd87e3ead6b0152d321e81dc1d3326b",
+    "md5": "8e80179778f53ba55ffefee9820b6476",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/tomes.json"
   },
   {

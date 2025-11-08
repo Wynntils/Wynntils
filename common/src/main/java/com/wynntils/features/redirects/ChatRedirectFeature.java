@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.models.players.type.PlayerRank;
 import com.wynntils.utils.StringUtils;
@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)
@@ -142,9 +141,9 @@ public class ChatRedirectFeature extends Feature {
         redirectors.add(redirector);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChatMessage(ChatMessageReceivedEvent e) {
-        StyledText message = StyledTextUtils.unwrap(e.getOriginalStyledText()).stripAlignment();
+    @SubscribeEvent
+    public void onChatMessage(ChatMessageEvent.Match e) {
+        StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
         MessageType messageType = e.getMessageType();
 
         for (Redirector redirector : redirectors) {
@@ -157,7 +156,7 @@ public class ChatRedirectFeature extends Feature {
             Matcher matcher = message.getMatcher(pattern);
 
             if (matcher.find()) {
-                e.setCanceled(true);
+                e.cancelChat();
                 if (redirector.getAction() == RedirectAction.HIDE) continue;
 
                 for (StyledText notification : redirector.getNotifications(matcher)) {

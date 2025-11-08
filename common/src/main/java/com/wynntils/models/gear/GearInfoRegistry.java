@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear;
@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class GearInfoRegistry {
@@ -39,7 +40,11 @@ public class GearInfoRegistry {
     private Map<String, GearInfo> gearInfoLookupApiName = Map.of();
 
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_GEAR, Dependency.simple(Models.Set, UrlId.DATA_STATIC_ITEM_SETS))
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_GEAR,
+                        Dependency.complex(Set.of(
+                                Dependency.simple(Models.Set, UrlId.DATA_STATIC_ITEM_SETS),
+                                Dependency.simple(Models.WynnItem, UrlId.DATA_STATIC_ITEM_OBTAIN_V2))))
                 .handleJsonObject(this::handleGearInfo);
     }
 

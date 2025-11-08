@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -30,7 +30,7 @@ public class CustomSeaskipperScreenFeature extends Feature {
     @SubscribeEvent
     public void onScreenOpen(ScreenOpenedEvent.Post event) {
         if (!(Models.Container.getCurrentContainer() instanceof SeaskipperContainer)) return;
-        if (McUtils.mc().screen instanceof CustomSeaskipperScreen) return;
+        if (McUtils.screen() instanceof CustomSeaskipperScreen) return;
         if (McUtils.player().isShiftKeyDown()) return;
 
         if (!Models.Seaskipper.isProfileLoaded()) {
@@ -38,6 +38,6 @@ public class CustomSeaskipperScreenFeature extends Feature {
             return;
         }
 
-        McUtils.mc().setScreen(CustomSeaskipperScreen.create());
+        McUtils.setScreen(CustomSeaskipperScreen.create());
     }
 }

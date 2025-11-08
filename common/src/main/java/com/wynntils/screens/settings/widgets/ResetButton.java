@@ -55,7 +55,7 @@ public class ResetButton extends GeneralSettingsButton {
         onClick.run();
 
         // Reload configurables to update checkbox
-        if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+        if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.populateConfigurables();
         }
     }

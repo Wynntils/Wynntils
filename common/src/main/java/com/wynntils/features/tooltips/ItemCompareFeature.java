@@ -136,8 +136,8 @@ public class ItemCompareFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onItemTooltipRenderEvent(ItemTooltipRenderEvent.Pre event) {
         if (!KeyboardUtils.isKeyDown(holdToCompareKeyBind.getKeyMapping().key.getValue())) return;
-        if (McUtils.mc().screen == null
-                || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
+        if (McUtils.screen() == null
+                || !(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
 
         if (abstractContainerScreen.hoveredSlot == null) return;
 
@@ -181,9 +181,10 @@ public class ItemCompareFeature extends Feature {
                             .filter(itemStack -> !ItemUtils.isEmptyAccessorySlot(itemStack))
                             .toList();
                     matchingAccessories.forEach(itemStack -> {
-                        itemsToCompare.add(
-                                Pair.of(Models.Item.getWynnItem(itemStack).get(), itemStack));
-                        equippedCount++;
+                        Models.Item.getWynnItem(itemStack).ifPresent(wynnItem -> {
+                            itemsToCompare.add(Pair.of(wynnItem, itemStack));
+                            equippedCount++;
+                        });
                     });
                 }
                 case SPEAR, WAND, DAGGER, BOW, RELIK -> {
@@ -387,7 +388,7 @@ public class ItemCompareFeature extends Feature {
         for (int i : InventoryAccessory.getSlots()) {
             if (slot == i) return;
         }
-        for (int i : InventoryArmor.getSlots()) {
+        for (int i : InventoryArmor.getArmorSlots()) {
             if (slot == i + Inventory.INVENTORY_SIZE) return;
         }
 

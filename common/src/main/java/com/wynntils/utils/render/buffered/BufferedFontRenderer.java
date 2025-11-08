@@ -106,7 +106,7 @@ public final class BufferedFontRenderer {
                         0,
                         0xF000F0);
             case OUTLINE -> {
-                int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
+                int shadowColor = SHADOW_COLOR.withAlpha(customColor.a()).asInt();
                 Component strippedComponent = text.iterate((part, changes) -> {
                             changes.remove(part);
                             changes.add(part.withStyle(partStyle -> partStyle.withColor(ChatFormatting.BLACK)));
@@ -266,7 +266,7 @@ public final class BufferedFontRenderer {
         }
     }
 
-    private void renderAlignedTextInBox(
+    public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             StyledText text,

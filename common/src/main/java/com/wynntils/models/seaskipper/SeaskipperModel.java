@@ -108,8 +108,8 @@ public final class SeaskipperModel extends Model {
         SEASKIPPER_DESTINATION_AREA_PROVIDER.updateDestinations(allDestinations);
 
         // Reload the map
-        if (McUtils.mc().screen instanceof CustomSeaskipperScreen customSeaskipperScreen) {
-            customSeaskipperScreen.reloadDestinations();
+        if (McUtils.screen() instanceof CustomSeaskipperScreen customSeaskipperScreen) {
+            customSeaskipperScreen.reloadDestinationPois();
         }
     }
 

@@ -6,6 +6,7 @@ package com.wynntils.features.tooltips;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -13,18 +14,25 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
+import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.stats.type.StatUnit;
+import com.wynntils.services.itemweight.type.ItemWeighting;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ColorScaleUtils;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -43,11 +51,16 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends Feature {
-    private final Map<DecoratorType, TooltipIdentificationDecorator> decorators = Map.of(
-            DecoratorType.PERCENTAGE, new PercentageIdentificationDecorator(),
-            DecoratorType.REROLL, new RerollIdentificationDecorator(),
-            DecoratorType.RANGE, new RangeIdentificationDecorator(),
-            DecoratorType.INNER_ROLL, new InnerRollIdentificationDecorator());
+    private final Map<IdentificationDecoratorType, TooltipIdentificationDecorator> identificationDecorators = Map.of(
+            IdentificationDecoratorType.PERCENTAGE, new PercentageIdentificationDecorator(),
+            IdentificationDecoratorType.REROLL, new RerollIdentificationDecorator(),
+            IdentificationDecoratorType.RANGE, new RangeIdentificationDecorator(),
+            IdentificationDecoratorType.INNER_ROLL, new InnerRollIdentificationDecorator());
+
+    private final Map<WeightDecoratorType, TooltipWeightDecorator> weightDecorators = Map.of(
+            WeightDecoratorType.OVERALL, new SimpleWeightDecorator(),
+            WeightDecoratorType.FULL_DISTRIBUTION, new FullWeightDecorator(true),
+            WeightDecoratorType.FULL_CONTRIBUTION, new FullWeightDecorator(false));
 
     private final Set<WynnItem> brokenItems = new HashSet<>();
 
@@ -86,6 +99,9 @@ public class ItemStatInfoFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> identificationDecorations = new Config<>(true);
+
+    @Persisted
+    public final Config<ItemWeightSource> itemWeights = new Config<>(ItemWeightSource.NONE);
 
     @Persisted
     public final Config<Boolean> overallPercentageInName = new Config<>(true);
@@ -158,8 +174,12 @@ public class ItemStatInfoFeature extends Feature {
         return colorLerp.get() ? LERP_MAP : flatMap;
     }
 
-    public TooltipIdentificationDecorator getDecorator() {
-        return decorators.get(DecoratorType.getCurrentType());
+    public TooltipIdentificationDecorator getIdentificationDecorator() {
+        return identificationDecorators.get(IdentificationDecoratorType.getCurrentType());
+    }
+
+    public TooltipWeightDecorator getWeightDecorator() {
+        return weightDecorators.get(WeightDecoratorType.getCurrentType());
     }
 
     private NavigableMap<Float, TextColor> createFlatMap() {
@@ -267,7 +287,79 @@ public class ItemStatInfoFeature extends Feature {
         }
     }
 
-    private enum DecoratorType {
+    private abstract static class WeightingDecorator implements TooltipWeightDecorator {
+        @Override
+        public List<MutableComponent> getLines(ItemWeighting weighting, IdentifiableItemProperty<?, ?> itemInfo) {
+            return getWeightLines(weighting, itemInfo);
+        }
+
+        protected abstract List<MutableComponent> getWeightLines(
+                ItemWeighting weighting, IdentifiableItemProperty<?, ?> itemInfo);
+    }
+
+    private class SimpleWeightDecorator extends WeightingDecorator {
+        @Override
+        protected List<MutableComponent> getWeightLines(
+                ItemWeighting weighting, IdentifiableItemProperty<?, ?> itemInfo) {
+            MutableComponent weightingComponent = Component.literal(" - ")
+                    .append(Component.literal(weighting.weightName() + " Scale"))
+                    .withStyle(ChatFormatting.GRAY);
+
+            float percentage = Services.ItemWeight.calculateWeighting(weighting, itemInfo);
+            weightingComponent.append(ColorScaleUtils.getPercentageTextComponent(
+                    getColorMap(), percentage, colorLerp.get(), decimalPlaces.get()));
+
+            return List.of(weightingComponent);
+        }
+    }
+
+    private final class FullWeightDecorator extends WeightingDecorator {
+        private final boolean distribution;
+
+        private FullWeightDecorator(boolean distribution) {
+            this.distribution = distribution;
+        }
+
+        @Override
+        protected List<MutableComponent> getWeightLines(
+                ItemWeighting weighting, IdentifiableItemProperty<?, ?> itemInfo) {
+            List<MutableComponent> lines = new ArrayList<>();
+            MutableComponent weightingComponent = Component.literal(" - ")
+                    .append(Component.literal(weighting.weightName() + " Scale"))
+                    .withStyle(ChatFormatting.GRAY);
+
+            float weightPercentage = Services.ItemWeight.calculateWeighting(weighting, itemInfo);
+            weightingComponent.append(ColorScaleUtils.getPercentageTextComponent(
+                    getColorMap(), weightPercentage, colorLerp.get(), decimalPlaces.get()));
+
+            lines.add(weightingComponent);
+
+            Map<StatType, Pair<Float, Float>> statWeights = Services.ItemWeight.getStatWeights(weighting, itemInfo);
+
+            statWeights.forEach((statType, weight) -> {
+                String displayName = statType.getDisplayName() + " ";
+
+                if (statType.getUnit() == StatUnit.RAW) {
+                    displayName += "Raw ";
+                }
+
+                String weightStr = String.format(Locale.ROOT, "(%.1f%%)", weight.a());
+                float percentage = distribution ? weight.b() : ((weight.a() / 100f) * weight.b());
+
+                lines.add(Component.literal("   - ")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(Component.literal(displayName))
+                        .append(Component.literal(weightStr).withStyle(ChatFormatting.WHITE))
+                        .append(ColorScaleUtils.getPercentageTextComponent(
+                                getColorMap(), percentage, colorLerp.get(), decimalPlaces.get())));
+            });
+            lines.add(Component.empty());
+
+            return lines;
+        }
+    }
+
+    private enum IdentificationDecoratorType {
         INNER_ROLL(Set.of(GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_LEFT_CONTROL)),
         REROLL(Set.of(GLFW.GLFW_KEY_LEFT_CONTROL)),
         RANGE(Set.of(GLFW.GLFW_KEY_LEFT_SHIFT)),
@@ -275,18 +367,40 @@ public class ItemStatInfoFeature extends Feature {
 
         private final Set<Integer> keyCodes;
 
-        DecoratorType(Set<Integer> keyCodes) {
+        IdentificationDecoratorType(Set<Integer> keyCodes) {
             this.keyCodes = keyCodes;
         }
 
-        public static DecoratorType getCurrentType() {
-            for (DecoratorType type : values()) {
+        public static IdentificationDecoratorType getCurrentType() {
+            for (IdentificationDecoratorType type : values()) {
                 if (type.keyCodes.stream().allMatch(KeyboardUtils::isKeyDown)) {
                     return type;
                 }
             }
 
             return PERCENTAGE;
+        }
+    }
+
+    private enum WeightDecoratorType {
+        FULL_CONTRIBUTION(Set.of(GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_LEFT_CONTROL)),
+        FULL_DISTRIBUTION(Set.of(GLFW.GLFW_KEY_LEFT_SHIFT)),
+        OVERALL(Set.of());
+
+        private final Set<Integer> keyCodes;
+
+        WeightDecoratorType(Set<Integer> keyCodes) {
+            this.keyCodes = keyCodes;
+        }
+
+        public static WeightDecoratorType getCurrentType() {
+            for (WeightDecoratorType type : values()) {
+                if (type.keyCodes.stream().allMatch(KeyboardUtils::isKeyDown)) {
+                    return type;
+                }
+            }
+
+            return OVERALL;
         }
     }
 

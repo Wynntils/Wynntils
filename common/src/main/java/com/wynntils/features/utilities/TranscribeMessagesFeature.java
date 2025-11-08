@@ -10,10 +10,10 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.core.text.type.StyleType;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
@@ -54,9 +54,9 @@ public class TranscribeMessagesFeature extends Feature {
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChat(ChatMessageReceivedEvent event) {
+    public void onChat(ChatMessageEvent.Edit event) {
         if (!transcribeChat.get()) return;
-        if (!Models.WynnAlphabet.hasWynnicOrGavellian(event.getStyledText().getString())) return;
+        if (!Models.WynnAlphabet.hasWynnicOrGavellian(event.getMessage().getString())) return;
 
         boolean transcribeWynnic = Models.WynnAlphabet.shouldTranscribe(transcribeCondition.get(), WynnAlphabet.WYNNIC);
         boolean transcribeGavellian =
@@ -64,11 +64,11 @@ public class TranscribeMessagesFeature extends Feature {
 
         if (!transcribeWynnic && !transcribeGavellian) return;
 
-        StyledText styledText = event.getStyledText();
+        StyledText message = event.getMessage();
 
-        StyledText modified = getStyledTextWithTranscription(styledText, transcribeWynnic, transcribeGavellian, false);
+        StyledText modified = getStyledTextWithTranscription(message, transcribeWynnic, transcribeGavellian, false);
 
-        if (styledText.equals(modified)) return;
+        if (message.equals(modified)) return;
 
         event.setMessage(modified);
     }
@@ -153,7 +153,7 @@ public class TranscribeMessagesFeature extends Feature {
             Function<String, Matcher> matcherFunction,
             Function<StyledTextPart, StyledTextPart> transcriptorFunction) {
         return original.iterateBackwards((part, changes) -> {
-            String partText = part.getString(null, PartStyle.StyleType.NONE);
+            String partText = part.getString(null, StyleType.NONE);
             String transcriptedText = partText;
 
             if (END_OF_HEADER_PATTERN.matcher(partText).matches()) {
@@ -181,7 +181,7 @@ public class TranscribeMessagesFeature extends Feature {
             Function<String, Matcher> matcherFunction,
             Function<StyledTextPart, StyledTextPart> transcriptorFunction,
             List<StyledTextPart> newParts) {
-        String partText = part.getString(null, PartStyle.StyleType.NONE);
+        String partText = part.getString(null, StyleType.NONE);
 
         Matcher matcher = matcherFunction.apply(partText);
 

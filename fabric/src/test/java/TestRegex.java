@@ -2,15 +2,17 @@
  * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
-import com.wynntils.handlers.chat.ChatHandler;
+import com.wynntils.handlers.chat.ChatPageProcessor;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.account.AccountModel;
+import com.wynntils.models.activities.worldevents.WorldEventModel;
 import com.wynntils.models.bonustotems.label.BonusTotemLabelParser;
 import com.wynntils.models.combat.bossbar.DamageBar;
 import com.wynntils.models.combat.label.DamageLabelParser;
@@ -34,6 +36,7 @@ import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.raid.RaidModel;
+import com.wynntils.models.raid.bossbar.ParasiteOvertakenBar;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
@@ -45,8 +48,6 @@ import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
-import net.minecraft.SharedConstants;
-import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -54,8 +55,7 @@ import org.junit.jupiter.api.Test;
 public class TestRegex {
     @BeforeAll
     public static void setup() {
-        SharedConstants.tryDetectVersion();
-        Bootstrap.bootStrap();
+        WynntilsMod.setupTestEnv();
     }
 
     public static final class PatternTester {
@@ -181,15 +181,15 @@ public class TestRegex {
     }
 
     @Test
-    public void ChatHandler_NPC_CONFIRM_PATTERN() {
-        PatternTester p = new PatternTester(ChatHandler.class, "NPC_CONFIRM_PATTERN");
+    public void ChatPageProcessor_NPC_CONFIRM_PATTERN() {
+        PatternTester p = new PatternTester(ChatPageProcessor.class, "NPC_CONFIRM_PATTERN");
         p.shouldMatch("§7Press §fSHIFT §7to continue");
         p.shouldMatch("§4Press §cSNEAK §4to continue");
     }
 
     @Test
-    public void ChatHandler_NPC_SELECT_PATTERN() {
-        PatternTester p = new PatternTester(ChatHandler.class, "NPC_SELECT_PATTERN");
+    public void ChatPageProcessor_NPC_SELECT_PATTERN() {
+        PatternTester p = new PatternTester(ChatPageProcessor.class, "NPC_SELECT_PATTERN");
         p.shouldMatch("§7Select §fan option §7to continue");
         p.shouldMatch("§cCLICK §4an option to continue");
     }
@@ -276,31 +276,27 @@ public class TestRegex {
     @Test
     public void FriendsModel_ONLINE_FRIENDS_HEADER() {
         PatternTester p = new PatternTester(FriendsModel.class, "ONLINE_FRIENDS_HEADER");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Online Friends:");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Online Friends:");
+        p.shouldMatch("§a\uE001 Online Friends:");
+        p.shouldMatch("§a\uE008\uE002 Online Friends:");
     }
 
     @Test
     public void FriendsModel_ONLINE_FRIEND() {
         PatternTester p = new PatternTester(FriendsModel.class, "ONLINE_FRIEND");
-        p.shouldMatch("§2 - §auserName914__§2 [Server: §aWC3§2]");
-        p.shouldMatch("§2 - §av8j§2 [Server: §aWC103§2]");
-        p.shouldMatch("§2 - §a__asdf__§2 [Server: §aWC91§2]");
+        p.shouldMatch("§a\uE001 §2 - §aShadowCat118§2 [Server: §aNA11§2]");
     }
 
     @Test
     public void FriendsModel_JOIN_PATTERN() {
         PatternTester p = new PatternTester(FriendsModel.class, "JOIN_PATTERN");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun§2 has logged into server §aWC1§2 as §aan Archer");
-        p.shouldMatch(
-                "§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun§2 has logged into server §aWC27§2 as §aa Mage");
+        p.shouldMatch("§aShadowCat118§2 has logged into server §aEU16§2 as §aa Shaman");
     }
 
     @Test
     public void FriendsModel_LEAVE_PATTERN() {
         PatternTester p = new PatternTester(FriendsModel.class, "LEAVE_PATTERN");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun left the game.");
-        p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun left the game.");
+        p.shouldMatch("§amag_icus left the game.");
+        p.shouldMatch("§aShadowCat118 left the game.");
     }
 
     @Test
@@ -377,6 +373,24 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildModel_MEMBER_LEFT() {
+        PatternTester p = new PatternTester(GuildModel.class, "MEMBER_LEFT");
+        p.shouldMatch("§b\uE006\uE002 ShadowCat118 has left the guild");
+    }
+
+    @Test
+    public void GuildModel_MEMBER_JOIN() {
+        PatternTester p = new PatternTester(GuildModel.class, "MEMBER_JOIN");
+        p.shouldMatch("§b\uE001 ShadowCat118 has joined the guild, say hello!");
+    }
+
+    @Test
+    public void GuildModel_MEMBER_KICKED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MEMBER_KICKED");
+        p.shouldMatch("§b\uE006\uE002 ShadowCat117 has kicked ShadowCat118 from the guild");
+    }
+
+    @Test
     public void GuildModel_MSG_LEFT_GUILD() {
         PatternTester p = new PatternTester(GuildModel.class, "MSG_LEFT_GUILD");
         p.shouldMatch("§3You have left §bExample Guild§3!");
@@ -391,8 +405,7 @@ public class TestRegex {
     @Test
     public void GuildModel_MSG_RANK_CHANGED() {
         PatternTester p = new PatternTester(GuildModel.class, "MSG_RANK_CHANGED");
-        p.shouldMatch("§3[INFO]§b v8j has set USERNAME's guild rank from Recruit to Chief");
-        p.shouldMatch("§3[INFO]§b v8j has set USERNAMES' guild rank from Recruiter to Chief");
+        p.shouldMatch("§b\uE006\uE002 ShadowCat117 has set ShadowCat118 guild rank from §3 Recruit§b to §3Strategist");
     }
 
     @Test
@@ -587,6 +600,17 @@ public class TestRegex {
         p.shouldMatch("§#ffd750ff§oShadowCat§r§#ffd750ff's§#a0c84bff Mob Totem\n§d\uE01F §74m 59s");
         p.shouldMatch("§#ffd750ff§oShadowCat§r§#ffd750ff's§#a0c84bff Mob Totem\n§d\uE01F §749s");
         p.shouldMatch("§#ffd750ffConventionality's§#a0c84bff Gathering Totem\n§d\uE01F §74m 40s");
+    }
+
+    @Test
+    public void ParasiteOvertakenBar_OVERTAKEN_PATTERN() {
+        PatternTester p = new PatternTester(ParasiteOvertakenBar.class, "OVERTAKEN_PATTERN");
+        p.shouldMatch(
+                "§#aa00ffff|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF§r\uDAFF\uDF81§fOVERTAKEN\uDB00\uDC49");
+        p.shouldMatch(
+                "§#aa00ffff|\uDAFF\uDFFF§8|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF§r\uDAFF\uDF81§fOVERTAKEN\uDB00\uDC49");
+        p.shouldMatch(
+                "§8|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF|\uDAFF\uDFFF§r\uDAFF\uDF81§fOVERTAKEN\uDB00\uDC49");
     }
 
     @Test
@@ -1073,8 +1097,8 @@ public class TestRegex {
     @Test
     public void PartyModel_PARTY_LIST_ALL() {
         PatternTester p = new PatternTester(PartyModel.class, "PARTY_LIST_ALL");
-        p.shouldMatch(
-                "§e󏿼󏿿󏿾 Party members: §bbolyai, §fMrRickroll, Talkair, Angel_Pup, wluma, LaMDaKiS, Tanoranko, GebutterteWurst, kristof345, §eand §fSpeedtart");
+        p.shouldMatch("§e\uE001 Party members: §bShadowCat118, and §fShadowCat117");
+        p.shouldMatch("§e\uE005\uE002 Party members: §be_z_x, §fSaunt, Dopeul, IM_NoOne,§e §f6bccy, and ShadowCat117");
     }
 
     @Test
@@ -1089,5 +1113,28 @@ public class TestRegex {
         PatternTester p = new PatternTester(GambitAnnotator.class, "NAME_PATTERN");
         p.shouldMatch("§#54fffcff§lIngenuous Mage's Gambit");
         p.shouldMatch("§#ac2c01ff§lArcane Incontinent's Gambit");
+    }
+
+    @Test
+    public void TradeMarketModel_PRICE_INPUT_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_INPUT_PATTERN");
+        p.shouldMatch(
+                "§5\uE00A\uE002 Type the price in emeralds or formatted (e.g '10eb', '10stx 5eb') or type 'cancel' to cancel:");
+    }
+
+    @Test
+    public void WorldEventModel_ANNIHILATION_TIMER_PATTERN() {
+        PatternTester p = new PatternTester(WorldEventModel.class, "ANNIHILATION_TIMER_PATTERN");
+        p.shouldMatch("§#00bdbfff\uE001 §cPrepare to defend the province at the Corruption Portal in 39m 22s!");
+        p.shouldMatch("§#00bdbfff\uE001 §cPrepare to defend the province at the Corruption Portal in 11h 30m!");
+    }
+
+    @Test
+    public void WorldEventModel_WORLD_EVENT_PATTERN() {
+        PatternTester p = new PatternTester(WorldEventModel.class, "WORLD_EVENT_PATTERN");
+        p.shouldMatch(
+                "§#00bdbfff\uE00D\uE002 The Shapes in the Dark World Event starts in 6m 59s! §7(509 blocks away) §d§nClick to track");
+        p.shouldMatch(
+                "§#00bdbfff\uE00D\uE002 The Corrupted Spring World Event starts in 2m 59s! §7(271 blocks away) §d§nClick to track");
     }
 }

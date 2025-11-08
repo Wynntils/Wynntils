@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
@@ -19,7 +20,6 @@ import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -34,18 +34,20 @@ public final class SpellModel extends Model {
     private static final Pattern SPELL_CAST =
             Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\](?: §4\\[§c-([0-9]+) ❤§4\\])?$");
     public static final int SPELL_COST_RESET_TICKS = 60;
-    private static final int SPELL_EXPIRE_TICKS = 40;
 
     private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
+
+    private boolean hideSpellInputs = false;
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
     private String lastBurstSpellName = "";
     private String lastSpellName = "";
-    private int lastSpellTick = 0;
     private int repeatedBurstSpellCount = 0;
     private int repeatedSpellCount = 0;
     private int ticksSinceCastBurst = 0;
     private int ticksSinceCast = 0;
+
+    private boolean expireNextClear = false;
 
     public SpellModel() {
         super(List.of());
@@ -84,7 +86,14 @@ public final class SpellModel extends Model {
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        event.runIfPresent(SpellSegment.class, this::updateFromSpellSegment);
+        event.runIfPresentOrElse(SpellSegment.class, this::updateFromSpellSegment, this::handleExpiredSpell);
+    }
+
+    @SubscribeEvent
+    public void onActionBarRender(ActionBarRenderEvent event) {
+        if (hideSpellInputs) {
+            event.setSegmentEnabled(SpellSegment.class, false);
+        }
     }
 
     @SubscribeEvent
@@ -121,20 +130,12 @@ public final class SpellModel extends Model {
             repeatedBurstSpellCount = 0;
             ticksSinceCastBurst = 0;
         }
-
-        if ((lastSpell.length != 0 && lastSpell.length != 3)
-                && McUtils.player().tickCount - lastSpellTick >= SPELL_EXPIRE_TICKS) {
-            lastSpell = SpellDirection.NO_SPELL;
-            lastSpellTick = 0;
-            WynntilsMod.postEvent(new SpellEvent.Expired());
-        }
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
         SPELL_PACKET_QUEUE.clear();
         lastSpell = SpellDirection.NO_SPELL;
-        lastSpellTick = 0;
         lastBurstSpellName = "";
         lastSpellName = "";
         repeatedBurstSpellCount = 0;
@@ -146,8 +147,10 @@ public final class SpellModel extends Model {
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
         SPELL_PACKET_QUEUE.clear();
+        // We need to reset lastSpell here as the actual inputs are now cleared, but they are still visible
+        // so we don't post the expired event until the action bar has actually updated with the cleared inputs
         lastSpell = SpellDirection.NO_SPELL;
-        lastSpellTick = 0;
+        expireNextClear = true;
     }
 
     public void addSpellToQueue(List<SpellDirection> spell) {
@@ -165,6 +168,10 @@ public final class SpellModel extends Model {
 
         SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
         spellDirection.getSendPacketRunnable().run();
+    }
+
+    public void setHideSpellInputs(boolean hideSpellInputs) {
+        this.hideSpellInputs = hideSpellInputs;
     }
 
     public boolean isSpellQueueEmpty() {
@@ -203,13 +210,23 @@ public final class SpellModel extends Model {
         // noop if the spell state hasn't changed
         if (Arrays.equals(spellSegment.getDirections(), lastSpell)) return;
         lastSpell = spellSegment.getDirections();
-        lastSpellTick = McUtils.player().tickCount;
 
         WynntilsMod.postEvent(new SpellEvent.Partial(lastSpell));
 
         if (lastSpell.length == 3) {
             WynntilsMod.postEvent(new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
-            lastSpellTick = 0;
+        }
+    }
+
+    private void handleExpiredSpell() {
+        if (lastSpell.length != 0) {
+            if (lastSpell.length != 3) {
+                lastSpell = SpellDirection.NO_SPELL;
+            }
+            WynntilsMod.postEvent(new SpellEvent.Expired());
+        } else if (expireNextClear) {
+            expireNextClear = false;
+            WynntilsMod.postEvent(new SpellEvent.Expired());
         }
     }
 }

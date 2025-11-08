@@ -58,6 +58,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private static final double ALIGNMENT_SNAP_HARDNESS = 6;
 
     private static final int BUTTON_WIDTH = 60;
+    private static final int BUTTON_SHORT_WIDTH = 20;
     private static final int BUTTON_HEIGHT = 20;
     private static final int MAX_CLICK_DISTANCE = 5;
     private static final int ANIMATION_LENGTH = 30;
@@ -230,8 +231,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     && overlay != selectedOverlay
                     && isMouseHoveringOverlay(overlay, mouseX, mouseY)
                     && selectionMode == SelectionMode.NONE) {
-                McUtils.mc()
-                        .screen
+                McUtils.screen()
                         .setTooltipForNextRenderPass(Lists.transform(
                                 List.of(Component.literal(overlayName)), Component::getVisualOrderText));
 
@@ -240,8 +240,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     && overlay == selectedOverlay
                     && isMouseHoveringOverlay(overlay, mouseX, mouseY)
                     && selectionMode == SelectionMode.NONE) {
-                McUtils.mc()
-                        .screen
+                McUtils.screen()
                         .setTooltipForNextRenderPass(
                                 Lists.transform(HELP_TOOLTIP_LINES, Component::getVisualOrderText));
                 renderedTooltip = true;
@@ -417,11 +416,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         if (keyCode == GLFW.GLFW_KEY_ENTER) {
             Managers.Config.saveConfig();
             onClose();
-            McUtils.mc().setScreen(previousScreen);
+            McUtils.setScreen(previousScreen);
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             onClose();
-            McUtils.mc().setScreen(previousScreen);
+            McUtils.setScreen(previousScreen);
             return true;
         }
 
@@ -800,7 +799,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.overlayManagement.close"), button -> {
                             onClose();
-                            McUtils.mc().setScreen(previousScreen);
+                            McUtils.setScreen(previousScreen);
                         })
                 .pos(this.width / 2 - BUTTON_WIDTH - 12, yPos)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -813,7 +812,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                             setupButtons();
                         })
                 .pos(this.width / 2 - 10, yPos)
-                .size(BUTTON_HEIGHT, BUTTON_HEIGHT)
+                .size(BUTTON_SHORT_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(
                         buttonsAtBottom
                                 ? Component.translatable("screens.wynntils.overlayManagement.moveButtonsUpTooltip")
@@ -824,7 +823,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         Component.translatable("screens.wynntils.overlayManagement.apply"), button -> {
                             Managers.Config.saveConfig();
                             onClose();
-                            McUtils.mc().setScreen(previousScreen);
+                            McUtils.setScreen(previousScreen);
                         })
                 .pos(this.width / 2 + 12, yPos)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)

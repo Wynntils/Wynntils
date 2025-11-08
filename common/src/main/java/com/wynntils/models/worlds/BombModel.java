@@ -10,11 +10,12 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.worlds.bossbars.InfoBar;
 import com.wynntils.models.worlds.event.BombEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.BombInfo;
+import com.wynntils.models.worlds.type.BombSortOrder;
 import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Comparator;
@@ -26,7 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.neoforged.bus.api.EventPriority;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class BombModel extends Model {
@@ -54,11 +56,10 @@ public final class BombModel extends Model {
         Handlers.BossBar.registerBar(InfoBar);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChat(ChatMessageReceivedEvent event) {
-        StyledText message = event.getOriginalStyledText();
-        StyledText unwrapped =
-                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
+    @SubscribeEvent
+    public void onChat(ChatMessageEvent.Match event) {
+        StyledText message = event.getMessage();
+        StyledText unwrapped = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
 
         Matcher bellMatcher = unwrapped.getMatcher(BOMB_BELL_PATTERN);
         if (bellMatcher.matches()) {
@@ -70,7 +71,6 @@ public final class BombModel extends Model {
 
             BombEvent.BombBell bombEvent = new BombEvent.BombBell(bombInfo, message);
             WynntilsMod.postEvent(bombEvent);
-            event.setMessage(bombEvent.getMessage());
 
             return;
         }
@@ -85,7 +85,6 @@ public final class BombModel extends Model {
 
             BombEvent.Local bombEvent = new BombEvent.Local(bombInfo, message);
             WynntilsMod.postEvent(bombEvent);
-            event.setMessage(bombEvent.getMessage());
             return;
         }
 
@@ -143,8 +142,35 @@ public final class BombModel extends Model {
         return BOMBS.asSet();
     }
 
+    public Stream<BombInfo> getBombBellStream(boolean group, BombSortOrder sortOrder) {
+        return getBombBellStream(group, sortOrder, getBombBells().size());
+    }
+
+    public Stream<BombInfo> getBombBellStream(boolean group, BombSortOrder sortOrder, int maxPerGroup) {
+        Stream<BombInfo> stream = getBombBells().stream();
+        Comparator<BombInfo> comparator = sortOrder == BombSortOrder.NEWEST
+                ? Comparator.comparing(BombInfo::getRemainingLong).reversed()
+                : Comparator.comparing(BombInfo::getRemainingLong);
+
+        if (group) {
+            return stream.collect(Collectors.groupingBy(BombInfo::bomb)).values().stream()
+                    .flatMap(list -> list.stream().sorted(comparator).limit(maxPerGroup));
+        } else {
+            return stream.sorted(comparator).limit(maxPerGroup);
+        }
+    }
+
     public BombInfo getLastBomb() {
         return BOMBS.getLastBomb();
+    }
+
+    public void addDummyBombInfo() {
+        BOMBS.forceAdd(new BombInfo("Wanytails", BombType.COMBAT_XP, "EU052", System.currentTimeMillis(), 1));
+        BOMBS.forceAdd(new BombInfo("Wanytails", BombType.PROFESSION_SPEED, "EU052", System.currentTimeMillis(), 1.2f));
+        BOMBS.forceAdd(new BombInfo("Wyntil", BombType.PROFESSION_SPEED, "US152", System.currentTimeMillis(), 0.8f));
+        BOMBS.forceAdd(new BombInfo("Wyntil", BombType.DUNGEON, "EU152", System.currentTimeMillis(), 0.6f));
+        BOMBS.forceAdd(new BombInfo("Player 0", BombType.PROFESSION_XP, "AS558", System.currentTimeMillis(), 1));
+        BOMBS.forceAdd(new BombInfo("Player 0", BombType.COMBAT_XP, "AS558", System.currentTimeMillis(), 0.5f));
     }
 
     private static final class ActiveBombContainer {

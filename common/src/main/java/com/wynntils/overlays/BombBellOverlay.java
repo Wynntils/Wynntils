@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.worlds.type.BombInfo;
+import com.wynntils.models.worlds.type.BombSortOrder;
 import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
@@ -25,7 +26,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
@@ -45,7 +45,7 @@ public class BombBellOverlay extends Overlay {
     private final Config<Integer> maxBombs = new Config<>(5);
 
     @Persisted
-    private final Config<SortOrder> sortOrder = new Config<>(SortOrder.NEWEST);
+    private final Config<BombSortOrder> sortOrder = new Config<>(BombSortOrder.NEWEST);
 
     @Persisted
     private final Config<Boolean> showCombatBombs = new Config<>(true);
@@ -143,26 +143,20 @@ public class BombBellOverlay extends Overlay {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        comparator = sortOrder.get() == SortOrder.NEWEST
-                ? Comparator.comparing(BombInfo::getRemainingLong).reversed()
-                : Comparator.comparing(BombInfo::getRemainingLong);
         updateTextRenderSetting();
     }
 
     @Override
     public void tick() {
-        Stream<BombInfo> filteredBombs = Models.Bomb.getBombBells().stream().filter(bombInfo -> {
-            BombType bombType = bombInfo.bomb();
-            Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
-            return bombTypeSupplier != null && bombTypeSupplier.get();
-        });
+        Stream<BombInfo> bombsToRender = Models.Bomb.getBombBellStream(
+                        groupBombs.get(), sortOrder.get(), maxBombs.get())
+                .filter(bombInfo -> {
+                    BombType bombType = bombInfo.bomb();
+                    Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
+                    return bombTypeSupplier != null && bombTypeSupplier.get();
+                });
 
-        Stream<BombInfo> processedBombs = groupBombs.get()
-                ? filteredBombs.collect(Collectors.groupingBy(BombInfo::bomb)).values().stream()
-                        .flatMap(list -> list.stream().sorted(comparator).limit(maxBombs.get()))
-                : filteredBombs.sorted(comparator).limit(maxBombs.get());
-
-        renderTasks = processedBombs
+        renderTasks = bombsToRender
                 .map(bombInfo -> new TextRenderTask(bombInfo.asString(), textRenderSetting))
                 .toList();
     }
@@ -172,10 +166,5 @@ public class BombBellOverlay extends Overlay {
                 .withMaxWidth(this.getWidth())
                 .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                 .withTextShadow(textShadow.get());
-    }
-
-    private enum SortOrder {
-        NEWEST,
-        OLDEST
     }
 }

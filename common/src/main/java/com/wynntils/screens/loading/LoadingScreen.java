@@ -29,20 +29,22 @@ public final class LoadingScreen extends WynntilsScreen {
     private static final ResourceLocation LOGO_FONT_LOCATION = ResourceLocation.withDefaultNamespace("screen/static");
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
     private static final int SPINNER_SPEED = 1200;
+    private final Runnable onClose;
 
     private int offsetX;
     private int offsetY;
 
     private String message = "";
-    private String title = "";
+    private String stageTitle = "";
     private String subtitle = "";
 
-    private LoadingScreen() {
+    private LoadingScreen(Runnable onClose) {
         super(Component.translatable("screens.wynntils.characterSelection.name"));
+        this.onClose = onClose;
     }
 
-    public static LoadingScreen create() {
-        return new LoadingScreen();
+    public static LoadingScreen create(Runnable onClose) {
+        return new LoadingScreen(onClose);
     }
 
     @Override
@@ -51,6 +53,7 @@ public final class LoadingScreen extends WynntilsScreen {
         if (connection != null) {
             connection.close();
         }
+        onClose.run();
 
         super.onClose();
     }
@@ -59,8 +62,8 @@ public final class LoadingScreen extends WynntilsScreen {
         this.message = message;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setStageTitle(String stageTitle) {
+        this.stageTitle = stageTitle;
     }
 
     public void setSubtitle(String subtitle) {
@@ -135,7 +138,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(title),
+                        StyledText.fromString(stageTitle),
                         centerX,
                         120 + offsetY,
                         MOSS_GREEN,

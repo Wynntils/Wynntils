@@ -5,6 +5,7 @@
 package com.wynntils.models.raid.type;
 
 import com.wynntils.models.raid.raids.RaidKind;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -47,12 +48,16 @@ public class RaidInfo {
         return challenges.get(roomNum);
     }
 
+    public long getRaidStartTime() {
+        return raidStartTime;
+    }
+
     public long getTimeInRaid() {
         return System.currentTimeMillis() - raidStartTime;
     }
 
     public long getIntermissionTime() {
-        return System.currentTimeMillis() - raidStartTime - getTimeInRooms();
+        return getTimeInRaid() - getTimeInRooms();
     }
 
     public long getRaidDamage() {
@@ -67,6 +72,10 @@ public class RaidInfo {
 
     public int completedChallengeCount() {
         return challenges.size();
+    }
+
+    public Map<Integer, RaidRoomInfo> getChallenges() {
+        return Collections.unmodifiableMap(challenges);
     }
 
     private long getTimeInRooms() {

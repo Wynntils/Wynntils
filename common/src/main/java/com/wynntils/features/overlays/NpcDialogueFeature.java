@@ -8,7 +8,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.notifications.MessageContainer;
@@ -18,6 +17,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
+import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.PacketEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -50,12 +50,10 @@ import org.lwjgl.glfw.GLFW;
  * </ol>
  * If the feature is disabled, we stop all special processing for chat screens in ChatHandler.
  */
-@StartDisabled
 @ConfigCategory(Category.OVERLAYS)
 public class NpcDialogueFeature extends Feature {
-    // This is deliberately a styled text, so we construct new components every time
     private static final StyledText PRESS_SHIFT_TO_CONTINUE =
-            StyledText.fromString("                   §7Press §fSHIFT §7to continue");
+            StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.pressShiftToContinue"));
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final NpcDialogueOverlay npcDialogueOverlay = new NpcDialogueOverlay();
@@ -63,6 +61,10 @@ public class NpcDialogueFeature extends Feature {
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
             new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
+
+    @RegisterKeyBind
+    public final KeyBind npcDialogKeyOverrideKeybind =
+            new KeyBind("Progress NPC Dialogue", GLFW.GLFW_KEY_UNKNOWN, true, this::progressNPCDialogue);
 
     @Persisted
     private final Config<NpcDialogueChatDisplayType> chatDisplayType = new Config<>(NpcDialogueChatDisplayType.NORMAL);
@@ -76,8 +78,14 @@ public class NpcDialogueFeature extends Feature {
     @Persisted
     public final Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
 
+    @Persisted
+    public final Config<Boolean> overrideSneakKey = new Config<>(true);
+
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
+
+    private final ScheduledExecutorService npcDialogKeyOverrideExecutor = Executors.newSingleThreadScheduledExecutor();
+    private boolean isReleaseShiftScheduled;
 
     // Normal mode
     // This list holds a constructed dialogue screen,
@@ -132,6 +140,18 @@ public class NpcDialogueFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onDialogueSneakPress(KeyInputEvent e) {
+        if (npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) return;
+        if (!overrideSneakKey.get()) return;
+        if (e.getKey() != McUtils.options().keyShift.key.getValue()) return;
+
+        if (Models.NpcDialogue.getCurrentDialogue().dialogueType() == NpcDialogueType.NORMAL
+                && Models.NpcDialogue.getCurrentDialogue().isProtected()) {
+            e.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
     public void onTick(TickEvent event) {
         if (Managers.Overlay.isEnabled(npcDialogueOverlay)) return;
 
@@ -158,20 +178,31 @@ public class NpcDialogueFeature extends Feature {
 
     @SubscribeEvent
     public void onPacketSent(PacketEvent.PacketSentEvent<?> e) {
-        if (scheduledAutoProgressKeyPress == null) return;
         if (!(e.getPacket() instanceof ServerboundPlayerCommandPacket packet)) return;
         if (packet.getAction() != ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY) return;
 
-        scheduledAutoProgressKeyPress.cancel(true);
+        if (scheduledAutoProgressKeyPress != null) {
+            scheduledAutoProgressKeyPress.cancel(true);
 
-        // Must be scheduled, can't be sent immediately
-        autoProgressExecutor.schedule(
-                () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                        McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY)),
-                100,
-                TimeUnit.MILLISECONDS);
+            // Must be scheduled, can't be sent immediately
+            autoProgressExecutor.schedule(
+                    () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                            McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY)),
+                    100,
+                    TimeUnit.MILLISECONDS);
 
-        scheduledAutoProgressKeyPress = null;
+            scheduledAutoProgressKeyPress = null;
+        }
+
+        if (isReleaseShiftScheduled) {
+            npcDialogKeyOverrideExecutor.schedule(
+                    () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                            McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY)),
+                    100,
+                    TimeUnit.MILLISECONDS);
+
+            isReleaseShiftScheduled = false;
+        }
     }
 
     @SubscribeEvent
@@ -201,6 +232,14 @@ public class NpcDialogueFeature extends Feature {
         return scheduledAutoProgressKeyPress;
     }
 
+    private void progressNPCDialogue() {
+        if (Models.NpcDialogue.getCurrentDialogue().dialogueType() == NpcDialogueType.NORMAL) {
+            isReleaseShiftScheduled = true;
+            McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                    McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY));
+        }
+    }
+
     private ScheduledFuture<?> scheduledSneakPress(List<StyledText> dialogue) {
         long delay = Models.NpcDialogue.calculateMessageReadTime(dialogue);
 
@@ -227,11 +266,29 @@ public class NpcDialogueFeature extends Feature {
                             .withStyle(ChatFormatting.RED));
             displayHelperMessage();
         } else if (type == NpcDialogueType.NORMAL) {
-            displayedHelperMessage =
-                    StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
-                            .withStyle(ChatFormatting.GREEN));
+            displayedHelperMessage = getNormalDisplayedHelperMessage();
             displayHelperMessage();
         }
+    }
+
+    private StyledText getNormalDisplayedHelperMessage() {
+        if (!npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
+            String keyName = npcDialogKeyOverrideKeybind
+                    .getKeyMapping()
+                    .getTranslatedKeyMessage()
+                    .getString();
+
+            if (overrideSneakKey.get()) {
+                return StyledText.fromComponent(
+                        Component.translatable("feature.wynntils.npcDialogue.keyToProgress", keyName)
+                                .withStyle(ChatFormatting.GREEN));
+            }
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.npcDialogue.shiftOrKeyToProgress", keyName)
+                            .withStyle(ChatFormatting.GREEN));
+        }
+        return StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
+                .withStyle(ChatFormatting.GREEN));
     }
 
     private void updateDialogueScreen() {
@@ -261,13 +318,14 @@ public class NpcDialogueFeature extends Feature {
             screenLines.addAll(confirmationlessDialogue.dialogueComponent());
         }
 
-        if (currentDialogue != null && !currentDialogue.isEmpty()) {
+        if (!currentDialogue.isEmpty()) {
             screenLines.add(Component.empty());
             screenLines.addAll(currentDialogue.currentDialogue().stream()
                     .map(StyledText::getComponent)
                     .toList());
             screenLines.add(Component.empty());
-            screenLines.add(PRESS_SHIFT_TO_CONTINUE.getComponent());
+            StyledText PRESS_SHIFT_OR_KEY_TO_CONTINUE = getPressShiftOrKeyToContinue();
+            screenLines.add(PRESS_SHIFT_OR_KEY_TO_CONTINUE.getComponent());
             screenLines.add(Component.empty());
         } else {
             // Add an empty line after the last confirmationless dialogue
@@ -282,6 +340,23 @@ public class NpcDialogueFeature extends Feature {
         currentlyDisplayedDialogue = screenLines;
     }
 
+    private StyledText getPressShiftOrKeyToContinue() {
+        if (!npcDialogKeyOverrideKeybind.getKeyMapping().isUnbound()) {
+            String keyName = npcDialogKeyOverrideKeybind
+                    .getKeyMapping()
+                    .getTranslatedKeyMessage()
+                    .getString();
+
+            if (overrideSneakKey.get()) {
+                return StyledText.fromComponent(
+                        Component.translatable("feature.wynntils.npcDialogue.pressKeyToContinue", keyName));
+            }
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.npcDialogue.pressShiftOrKeyToContinue", keyName));
+        }
+        return PRESS_SHIFT_TO_CONTINUE;
+    }
+
     private void updateAutoProgressNotification() {
         if (!autoProgress.get()) return;
         if (getScheduledAutoProgressKeyPress() == null) return;
@@ -289,13 +364,14 @@ public class NpcDialogueFeature extends Feature {
 
         long timeUntilProgress = getScheduledAutoProgressKeyPress().getDelay(TimeUnit.MILLISECONDS);
 
-        StyledText autoProgressStyledText = StyledText.fromString(ChatFormatting.GREEN + "Auto-progress: "
-                + Math.max(0, Math.round(timeUntilProgress / 1000f))
-                + " seconds (Press "
-                + StyledText.fromComponent(
-                                cancelAutoProgressKeybind.getKeyMapping().getTranslatedKeyMessage())
-                        .getStringWithoutFormatting()
-                + " to cancel)");
+        StyledText autoProgressStyledText = StyledText.fromComponent(Component.translatable(
+                        "feature.wynntils.npcDialogue.autoProgressMessage",
+                        Math.max(0, Math.round(timeUntilProgress / 1000f)),
+                        cancelAutoProgressKeybind
+                                .getKeyMapping()
+                                .getTranslatedKeyMessage()
+                                .getString())
+                .withStyle(ChatFormatting.GREEN));
 
         if (autoProgressContainer != null) {
             autoProgressContainer = Managers.Notification.editMessage(autoProgressContainer, autoProgressStyledText);

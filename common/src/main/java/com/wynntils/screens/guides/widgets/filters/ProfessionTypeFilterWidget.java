@@ -143,8 +143,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                     getHeight());
 
             if (isHovered) {
-                McUtils.mc()
-                        .screen
+                McUtils.screen()
                         .setTooltipForNextRenderPass(Lists.transform(
                                 ComponentUtils.wrapTooltips(
                                         List.of(Component.translatable(

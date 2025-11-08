@@ -100,9 +100,9 @@ public class IconButton extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (McUtils.mc().screen instanceof WaypointCreationScreen waypointCreationScreen) {
+        if (McUtils.screen() instanceof WaypointCreationScreen waypointCreationScreen) {
             waypointCreationScreen.setSelectedIcon(mapIcon);
-        } else if (McUtils.mc().screen instanceof WaypointManagementScreen waypointManagementScreen) {
+        } else if (McUtils.screen() instanceof WaypointManagementScreen waypointManagementScreen) {
             this.selected = !selected;
 
             String id = mapIcon == null ? MapIcon.NO_ICON_ID : mapIcon.getIconId();

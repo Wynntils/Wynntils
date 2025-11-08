@@ -53,7 +53,6 @@ import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class WynntilsContentBookScreen extends WynntilsScreen implements WrappedScreen {
     private static final Integer MAX_COLUMNS = 3;
@@ -145,7 +144,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
             // will close the screen before opening the new one which is a bit disorienting
             McUtils.sendPacket(new ServerboundContainerClosePacket(wrappedScreenInfo.containerId()));
             McUtils.player().containerMenu = McUtils.player().inventoryMenu;
-            McUtils.mc().setScreen(WynntilsMenuScreen.create());
+            McUtils.setScreen(WynntilsMenuScreen.create());
         }));
 
         holder.reloadActions();
@@ -368,7 +367,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     }
 
     public void setScrollUpItem(ItemStack item) {
-        scrollUpActive = item.getItem() != Items.AIR;
+        scrollUpActive = !item.isEmpty();
 
         updateScrollButtonsVisibility();
     }
@@ -389,7 +388,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     }
 
     public void setScrollDownItem(ItemStack item) {
-        scrollDownActive = item.getItem() != Items.AIR;
+        scrollDownActive = !item.isEmpty();
 
         updateScrollButtonsVisibility();
     }

@@ -11,9 +11,9 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -29,7 +29,6 @@ import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -82,7 +81,7 @@ public class BulkBuyFeature extends Feature {
         // Shops are all size 54 for double chest, sometimes size 41 is sent (no idea what it's for)
         if (e.getSlot() != 4 || e.getContainer().getContainerSize() != 54) return;
 
-        initBulkBuyWidget(McUtils.mc().screen);
+        initBulkBuyWidget(McUtils.screen());
     }
 
     @SubscribeEvent
@@ -97,10 +96,8 @@ public class BulkBuyFeature extends Feature {
         if (bulkBoughtSlotNumber != -1) return;
 
         if (!(screen instanceof ContainerScreen containerScreen)) return;
-        if (!(containerScreen.getMenu() instanceof AbstractContainerMenu acm)
-                || acm.getItems().size() != 90) {
-            return;
-        }
+        if (!(containerScreen.getMenu() instanceof AbstractContainerMenu acm)) return;
+        if (acm.getItems().size() != 90) return;
 
         StyledText title = StyledText.fromComponent(acm.getSlot(4).getItem().getHoverName());
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;
@@ -243,23 +240,23 @@ public class BulkBuyFeature extends Feature {
             int newPrice = Integer.parseInt(priceMatcher.group(1).replaceAll(",", "")) * bulkBuyAmount.get();
             StyledText newLine = oldLine.iterateBackwards((part, changes) -> {
                 if (newPrice > Models.Emerald.getAmountInInventory()
-                        && part.getString(null, PartStyle.StyleType.NONE).equals("✔")) {
+                        && part.getString(null, StyleType.NONE).equals("✔")) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
                             "✖", part.getPartStyle().getStyle().withColor(ChatFormatting.RED), null, Style.EMPTY);
                     changes.add(newPart);
                 }
-                if (part.getString(null, PartStyle.StyleType.NONE).startsWith(priceMatcher.group(1))) {
+                if (part.getString(null, StyleType.NONE).startsWith(priceMatcher.group(1))) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
-                            String.format(Locale.ROOT, "%,d² ", newPrice),
+                            Models.Emerald.getEmeraldCountString(newPrice, true) + " ",
                             part.getPartStyle().getStyle(),
                             null,
                             Style.EMPTY);
                     changes.add(newPart);
                     return IterationDecision.CONTINUE;
                 }
-                if (part.getString(null, PartStyle.StyleType.NONE).equals(priceMatcher.group(2))) {
+                if (part.getString(null, StyleType.NONE).equals(priceMatcher.group(2))) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
                             "(" + Models.Emerald.getFormattedString(newPrice, false) + ")",

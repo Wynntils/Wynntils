@@ -10,10 +10,10 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.core.text.type.StyleType;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
@@ -35,8 +35,8 @@ public class RevealNicknamesFeature extends Feature {
             new Config<>(NicknameReplaceOption.PREPEND_USERNAME);
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onPlayerChat(ChatMessageReceivedEvent event) {
-        StyledText styledText = event.getStyledText().iterate((currentPart, changes) -> {
+    public void onPlayerChat(ChatMessageEvent.Edit event) {
+        StyledText styledText = event.getMessage().iterate((currentPart, changes) -> {
             HoverEvent hoverEvent = currentPart.getPartStyle().getStyle().getHoverEvent();
 
             // If the hover event doesn't exist or it is not SHOW_TEXT event, it's not a nickname text part
@@ -67,7 +67,7 @@ public class RevealNicknamesFeature extends Feature {
             }
 
             // If the text part is not the nickname as the text, it's not a nickname text part
-            if (!currentPart.getString(null, PartStyle.StyleType.NONE).startsWith(nickname)) {
+            if (!currentPart.getString(null, StyleType.NONE).startsWith(nickname)) {
                 return IterationDecision.CONTINUE;
             }
 
@@ -79,7 +79,7 @@ public class RevealNicknamesFeature extends Feature {
                 case REPLACE -> {
                     changes.remove(currentPart);
 
-                    String currentText = currentPart.getString(null, PartStyle.StyleType.NONE);
+                    String currentText = currentPart.getString(null, StyleType.NONE);
                     boolean hasColon = currentText.trim().endsWith(":");
 
                     String newText = username + (hasColon ? ": " : "");
@@ -108,10 +108,7 @@ public class RevealNicknamesFeature extends Feature {
 
                     StyledTextPart newPart = new StyledTextPart(username + "/", newStyle, null, Style.EMPTY);
                     StyledTextPart oldPart = new StyledTextPart(
-                            currentPart.getString(null, PartStyle.StyleType.NONE),
-                            newStyle.withItalic(true),
-                            null,
-                            Style.EMPTY);
+                            currentPart.getString(null, StyleType.NONE), newStyle.withItalic(true), null, Style.EMPTY);
 
                     changes.remove(currentPart);
                     changes.add(newPart);

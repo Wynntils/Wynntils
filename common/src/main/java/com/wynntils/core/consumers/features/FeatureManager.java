@@ -14,8 +14,8 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
 import com.wynntils.features.LootrunFeature;
-import com.wynntils.features.MythicFoundFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
+import com.wynntils.features.ValuableFoundFeature;
 import com.wynntils.features.chat.BombBellRelayFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
 import com.wynntils.features.chat.ChatItemFeature;
@@ -30,6 +30,7 @@ import com.wynntils.features.chat.RemoveWynncraftChatWrapFeature;
 import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
 import com.wynntils.features.combat.AutoAttackFeature;
+import com.wynntils.features.combat.ChestBlockerFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
@@ -38,7 +39,6 @@ import com.wynntils.features.combat.HideLabelsFeature;
 import com.wynntils.features.combat.HorseMountFeature;
 import com.wynntils.features.combat.InvertAttackKeybindsFeature;
 import com.wynntils.features.combat.LowHealthVignetteFeature;
-import com.wynntils.features.combat.MythicBlockerFeature;
 import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
@@ -51,13 +51,13 @@ import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
 import com.wynntils.features.commands.FilterAdminCommandsFeature;
 import com.wynntils.features.debug.AbilityTreeDataDumpFeature;
-import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.ContentBookDumpFeature;
 import com.wynntils.features.debug.FunctionDumpFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.embellishments.RemoveShinyGlintFeature;
 import com.wynntils.features.embellishments.WarHornFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
@@ -109,6 +109,7 @@ import com.wynntils.features.overlays.ShamanTotemTimerOverlayFeature;
 import com.wynntils.features.overlays.SpellCastMessageOverlayFeature;
 import com.wynntils.features.overlays.StatusEffectsOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
+import com.wynntils.features.overlays.StreamerModeOverlayFeature;
 import com.wynntils.features.overlays.TerritoryAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.TokenBarsOverlayFeature;
 import com.wynntils.features.overlays.TowerEffectOverlayFeature;
@@ -168,8 +169,8 @@ import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.features.wynntils.WeeklyConfigBackupFeature;
 import com.wynntils.features.wynntils.WynntilsHintMessagesFeature;
-import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
+import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -204,7 +205,6 @@ public final class FeatureManager extends Manager {
     public void init() {
         // debug
         registerFeature(new AbilityTreeDataDumpFeature());
-        registerFeature(new ConnectionProgressFeature());
         registerFeature(new ContentBookDumpFeature());
         registerFeature(new FunctionDumpFeature());
         registerFeature(new ItemDebugTooltipsFeature());
@@ -233,6 +233,7 @@ public final class FeatureManager extends Manager {
         // region combat
         registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new AutoAttackFeature());
+        registerFeature(new ChestBlockerFeature());
         registerFeature(new ContentTrackerFeature());
         registerFeature(new CustomLootrunBeaconsFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
@@ -241,7 +242,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new HorseMountFeature());
         registerFeature(new InvertAttackKeybindsFeature());
         registerFeature(new LowHealthVignetteFeature());
-        registerFeature(new MythicBlockerFeature());
         registerFeature(new MythicBoxScalerFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());
@@ -259,6 +259,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region embellishments
+        registerFeature(new RemoveShinyGlintFeature());
         registerFeature(new WarHornFeature());
         registerFeature(new WybelSoundFeature());
         registerFeature(new WynntilsCosmeticsFeature());
@@ -319,6 +320,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new SpellCastMessageOverlayFeature());
         registerFeature(new StatusEffectsOverlayFeature());
         registerFeature(new StopwatchFeature());
+        registerFeature(new StreamerModeOverlayFeature());
         registerFeature(new TerritoryAttackTimerOverlayFeature());
         registerFeature(new TokenBarsOverlayFeature());
         registerFeature(new TowerEffectOverlayFeature());
@@ -404,8 +406,8 @@ public final class FeatureManager extends Manager {
         // region uncategorized
         registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new ExtendedSeasonLeaderboardFeature());
-        registerFeature(new MythicFoundFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
+        registerFeature(new ValuableFoundFeature());
         // endregion
 
         // Reload Minecraft's config files so our own keybinds get loaded
@@ -484,10 +486,27 @@ public final class FeatureManager extends Manager {
 
         if (!feature.userEnabled.get()) return; // not enabled by user
 
-        enableFeature(feature);
+        doEnableFeature(feature);
     }
 
     public void enableFeature(Feature feature) {
+        try {
+            doEnableFeature(feature);
+        } catch (Throwable exception) {
+            // Log and handle gracefully, just disable this feature
+            crashFeature(feature);
+            WynntilsMod.reportCrash(
+                    CrashType.FEATURE,
+                    feature.getClass().getSimpleName(),
+                    feature.getClass().getName(),
+                    "enable",
+                    true,
+                    true,
+                    exception);
+        }
+    }
+
+    private void doEnableFeature(Feature feature) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException("Tried to enable an unregistered feature: " + feature);
         }
@@ -507,14 +526,14 @@ public final class FeatureManager extends Manager {
         Managers.KeyBind.enableFeatureKeyBinds(feature);
     }
 
-    public void disableFeature(Feature feature) {
+    public void disableFeature(Feature feature, boolean force) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException("Tried to disable an unregistered feature: " + feature);
         }
 
         FeatureState state = FEATURES.get(feature);
 
-        if (state != FeatureState.ENABLED) return;
+        if (state != FeatureState.ENABLED && !force) return;
 
         feature.onDisable();
 
@@ -532,7 +551,7 @@ public final class FeatureManager extends Manager {
             throw new IllegalArgumentException("Tried to crash an unregistered feature: " + feature);
         }
 
-        disableFeature(feature);
+        disableFeature(feature, true);
 
         FEATURES.put(feature, FeatureState.CRASHED);
     }
@@ -554,9 +573,12 @@ public final class FeatureManager extends Manager {
         return FEATURES.keySet().stream().toList();
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends Feature> T getFeatureInstance(Class<T> featureClass) {
-        return (T) FEATURE_INSTANCES.get(featureClass);
+        Feature feature = FEATURE_INSTANCES.get(featureClass);
+        if (!featureClass.isInstance(feature)) {
+            throw new IllegalArgumentException("Feature " + featureClass + " is not registered");
+        }
+        return featureClass.cast(feature);
     }
 
     public Optional<Feature> getFeatureFromString(String featureName) {
@@ -580,7 +602,7 @@ public final class FeatureManager extends Manager {
 
         // If a crash happens in a client-side message event, and we send a new message about disabling X feature,
         // we will cause a new exception and an endless recursion.
-        boolean shouldSendChat = !(event instanceof ClientsideMessageEvent);
+        boolean shouldSendChat = !(event instanceof SystemMessageEvent.ChatReceivedEvent);
 
         WynntilsMod.reportCrash(
                 CrashType.FEATURE,

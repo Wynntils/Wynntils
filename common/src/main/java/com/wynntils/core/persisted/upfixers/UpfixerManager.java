@@ -24,6 +24,8 @@ import com.wynntils.core.persisted.upfixers.config.HideDamageLabelsToHideLabelsU
 import com.wynntils.core.persisted.upfixers.config.ItemHighlightFeatureCosmeticToStoreUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MobTotemTimerOverlayFeatureToBonusTotemTimerOverlayFeature;
+import com.wynntils.core.persisted.upfixers.config.MythicBlockerToChestBlockerUpfixer;
+import com.wynntils.core.persisted.upfixers.config.MythicFoundToValuableFoundUpfixer;
 import com.wynntils.core.persisted.upfixers.config.NpcDialoguesOverlayConfigsMovedUpfixer;
 import com.wynntils.core.persisted.upfixers.config.NpcDialoguesRenamedUpfixer;
 import com.wynntils.core.persisted.upfixers.config.OverlayConfigsIntegrationUpfixer;
@@ -39,6 +41,7 @@ import com.wynntils.core.persisted.upfixers.config.WorldMarkersDistanceConfigRen
 import com.wynntils.core.persisted.upfixers.config.WorldMarkersFeatureRenamesUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WorldMarkersRenameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WynntilsContentBookReplaceToShiftBehaviourUpfixer;
+import com.wynntils.core.persisted.upfixers.storage.BankPageNameToBankPagePropertyUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.UpdateChangelogToModelUpfixer;
 import java.util.ArrayList;
@@ -81,6 +84,8 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new MobTotemTimerOverlayFeatureToBonusTotemTimerOverlayFeature());
         registerConfigUpfixer(new ItemHighlightFeatureCosmeticToStoreUpfixer());
         registerConfigUpfixer(new HideDamageLabelsToHideLabelsUpfixer());
+        registerConfigUpfixer(new MythicFoundToValuableFoundUpfixer());
+        registerConfigUpfixer(new MythicBlockerToChestBlockerUpfixer());
         registerConfigUpfixer(new WorldMarkersRenameUpfixer());
         registerConfigUpfixer(new WorldMarkersDistanceConfigRenameUpfixer());
         registerConfigUpfixer(new BeaconBeamToWorldMarkersUpfixer());
@@ -89,6 +94,7 @@ public class UpfixerManager extends Manager {
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
         registerStorageUpfixer(new UpdateChangelogToModelUpfixer());
+        registerStorageUpfixer(new BankPageNameToBankPagePropertyUpfixer());
     }
 
     private void registerConfigUpfixer(Upfixer upfixer) {

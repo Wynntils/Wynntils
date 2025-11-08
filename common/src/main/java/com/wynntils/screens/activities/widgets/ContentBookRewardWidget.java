@@ -54,7 +54,7 @@ public class ContentBookRewardWidget extends AbstractWidget {
         }
 
         if (isHovered) {
-            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 

@@ -13,10 +13,9 @@ import java.util.Locale;
 import net.minecraft.Util;
 
 public final class CustomStatFormatters {
-    private static final DecimalFormat DECIMAL_FORMAT =
-            Util.make(new DecimalFormat("########0.00"), (decimalFormat) -> {
-                decimalFormat.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
-            });
+    private static final DecimalFormat DECIMAL_FORMAT = Util.make(
+            new DecimalFormat("########0.00"),
+            (decimalFormat) -> decimalFormat.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT)));
 
     /**
      * A time formatter that expects seconds.

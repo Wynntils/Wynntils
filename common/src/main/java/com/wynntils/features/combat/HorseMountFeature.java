@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
@@ -31,7 +31,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -81,10 +80,10 @@ public class HorseMountFeature extends Feature {
         event.setCanceled(true);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST) // this needs to run before ChatRedirectFeature cancels the event
-    public void onChatReceived(ChatMessageReceivedEvent e) {
+    @SubscribeEvent
+    public void onChatReceived(ChatMessageEvent.Match e) {
         cancelMountingHorse = HORSE_ERROR_MESSAGES.stream()
-                .anyMatch(msg -> e.getOriginalStyledText().getString().contains(msg));
+                .anyMatch(msg -> e.getMessage().getString().contains(msg));
     }
 
     private void mountHorse() {

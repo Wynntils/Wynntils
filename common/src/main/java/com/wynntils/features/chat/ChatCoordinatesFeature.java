@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -11,8 +11,8 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.ClientsideMessageEvent;
+import com.wynntils.core.text.type.StyleType;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.IterationDecision;
@@ -29,29 +29,15 @@ public class ChatCoordinatesFeature extends Feature {
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChatReceived(ChatMessageReceivedEvent e) {
+    public void onChatReceived(ChatMessageEvent.Edit e) {
         if (!Models.WorldState.onWorld()) return;
 
-        StyledText styledText = e.getStyledText();
+        StyledText message = e.getMessage();
 
-        StyledText modified = getStyledTextWithCoordinatesInserted(styledText);
-
-        // No changes were made, there were no coordinates.
-        if (styledText.equals(modified)) return;
-
-        e.setMessage(modified);
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onClientsideMessage(ClientsideMessageEvent e) {
-        if (!Models.WorldState.onWorld()) return;
-
-        StyledText styledText = e.getStyledText();
-
-        StyledText modified = getStyledTextWithCoordinatesInserted(styledText);
+        StyledText modified = getStyledTextWithCoordinatesInserted(message);
 
         // No changes were made, there were no coordinates.
-        if (styledText.equals(modified)) return;
+        if (message.equals(modified)) return;
 
         e.setMessage(modified);
     }
@@ -59,14 +45,13 @@ public class ChatCoordinatesFeature extends Feature {
     private static StyledText getStyledTextWithCoordinatesInserted(StyledText styledText) {
         return styledText.iterateBackwards((part, changes) -> {
             if (END_OF_HEADER_PATTERN
-                    .matcher(part.getString(null, PartStyle.StyleType.NONE))
+                    .matcher(part.getString(null, StyleType.NONE))
                     .matches()) {
                 return IterationDecision.BREAK;
             }
 
             StyledTextPart partToReplace = part;
-            Matcher matcher =
-                    LocationUtils.strictCoordinateMatcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
+            Matcher matcher = LocationUtils.strictCoordinateMatcher(partToReplace.getString(null, StyleType.NONE));
 
             while (matcher.find()) {
                 Optional<Location> location = LocationUtils.parseFromString(matcher.group(1));
@@ -75,7 +60,7 @@ public class ChatCoordinatesFeature extends Feature {
                     continue;
                 }
 
-                String match = partToReplace.getString(null, PartStyle.StyleType.NONE);
+                String match = partToReplace.getString(null, StyleType.NONE);
 
                 String firstPart = match.substring(0, matcher.start(1));
                 String lastPart = match.substring(matcher.end(1));

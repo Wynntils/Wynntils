@@ -11,7 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.mc.event.TickEvent;
@@ -78,11 +78,10 @@ public final class GuildAttackTimerModel extends Model {
     }
 
     @SubscribeEvent
-    public void onMessage(ChatMessageReceivedEvent event) {
+    public void onMessage(ChatMessageEvent.Match event) {
         // TODO: Once RecipientType supports Wynncraft 2.1 messages, we can check for RecipientType.GUILD
 
-        StyledText cleanMessaage =
-                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
+        StyledText cleanMessaage = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
         Matcher matcher = cleanMessaage.getMatcher(WAR_MESSAGE_PATTERN);
         if (matcher.matches()) {
             long timerEnd = System.currentTimeMillis();

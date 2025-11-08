@@ -6,6 +6,7 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
@@ -117,8 +118,7 @@ public class LootrunFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("color", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("color", String.class, null)));
         }
     }
 
@@ -134,8 +134,7 @@ public class LootrunFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("index", Integer.class, null),
-                    new FunctionArguments.Argument<>("colored", Boolean.class, null)));
+                    new Argument<>("index", Integer.class, null), new Argument<>("colored", Boolean.class, null)));
         }
     }
 
@@ -149,8 +148,7 @@ public class LootrunFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("index", Integer.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
         }
     }
 
@@ -170,8 +168,7 @@ public class LootrunFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("color", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("color", String.class, null)));
         }
     }
 
@@ -191,8 +188,7 @@ public class LootrunFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("color", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("color", String.class, null)));
         }
     }
 
@@ -212,8 +208,7 @@ public class LootrunFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("color", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("color", String.class, null)));
         }
     }
 
@@ -230,8 +225,7 @@ public class LootrunFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("color", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("color", String.class, null)));
         }
     }
 
@@ -305,6 +299,27 @@ public class LootrunFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.Lootrun.getRerolls();
+        }
+    }
+
+    public static class ChestsOpenedThisSessionFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int tier = arguments.getArgument("tier").getIntegerValue();
+            boolean exact = arguments.getArgument("exact").getBooleanValue();
+
+            return Models.LootChest.getLootChestOpenedThisSession(tier, exact);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("tier", Integer.class, 1), new Argument<>("exact", Boolean.class, false)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("session_chests");
         }
     }
 }

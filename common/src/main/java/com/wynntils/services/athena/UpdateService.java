@@ -60,6 +60,8 @@ public final class UpdateService extends Service {
     }
 
     public CompletableFuture<ModUpdateInfo> getLatestBuild() {
+        if (WynntilsMod.isDevelopmentEnvironment()) return CompletableFuture.completedFuture(null);
+
         CompletableFuture<ModUpdateInfo> future = new CompletableFuture<>();
 
         String stream = getStream();
@@ -151,9 +153,7 @@ public final class UpdateService extends Service {
                 }
             }
 
-            Executors.newSingleThreadExecutor().submit(() -> {
-                tryFetchNewUpdate(modUpdateInfo, future);
-            });
+            Executors.newSingleThreadExecutor().submit(() -> tryFetchNewUpdate(modUpdateInfo, future));
         }
 
         return future;

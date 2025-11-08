@@ -19,17 +19,19 @@ import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
-import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.containers.providers.LootChestsProvider;
+import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.EmeraldItem;
+import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -46,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import java.util.TreeMap;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.BlockPos;
@@ -59,6 +62,7 @@ public final class LootChestModel extends Model {
     private static final LootChestsProvider LOOT_CHESTS_PROVIDER = new LootChestsProvider();
 
     public static final int LOOT_CHEST_ITEM_COUNT = 27;
+    private static final int[] HIGH_TIER_EMERALD_POUCHES = {7, 8, 9, 10};
 
     @Persisted
     private final Storage<List<FoundChestLocation>> foundChestLocations = new Storage<>(new ArrayList<>());
@@ -79,10 +83,14 @@ public final class LootChestModel extends Model {
     private final Storage<Integer> dryEmeralds = new Storage<>(0);
 
     @Persisted
+    private final Storage<Map<Integer, Integer>> dryEmeraldPouchCount = new Storage<>(new TreeMap<>());
+
+    @Persisted
     private final Storage<Map<GearTier, Integer>> dryItemTiers = new Storage<>(new EnumMap<>(GearTier.class));
 
     private BlockPos lastChestPos;
     private int nextExpectedLootContainerId = -2;
+    private final List<LootChestTier> sessionChests = new ArrayList<>();
 
     public LootChestModel() {
         super(List.of());
@@ -125,9 +133,23 @@ public final class LootChestModel extends Model {
 
             openedChestCount.store(openedChestCount.get() + 1);
             dryCount.store(dryCount.get() + 1);
+
+            Map<Integer, Integer> pouchCount = dryEmeraldPouchCount.get();
+            for (int tier : HIGH_TIER_EMERALD_POUCHES) {
+                int currentCount = pouchCount.getOrDefault(tier, 0);
+                pouchCount.put(tier, currentCount + 1);
+            }
+
+            dryEmeraldPouchCount.store(pouchCount);
+            dryEmeraldPouchCount.touched();
         } else {
             lastChestPos = null;
         }
+    }
+
+    @SubscribeEvent
+    public void onScreenClose(ScreenClosedEvent.Post e) {
+        nextExpectedLootContainerId = -2;
     }
 
     @SubscribeEvent
@@ -140,15 +162,29 @@ public final class LootChestModel extends Model {
         processItemFind(itemStack);
 
         Optional<GearBoxItem> gearBoxItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
-        if (gearBoxItem.isEmpty()) return;
+        if (gearBoxItem.isPresent()) {
+            GearBoxItem gearBox = gearBoxItem.get();
+            if (gearBox.getGearTier() == GearTier.MYTHIC) {
+                WynntilsMod.postEvent(new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.LOOT_CHEST));
 
-        GearBoxItem gearBox = gearBoxItem.get();
-        if (gearBox.getGearTier() == GearTier.MYTHIC) {
-            WynntilsMod.postEvent(new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.LOOT_CHEST));
+                if (gearBox.getGearType() != GearType.MASTERY_TOME) {
+                    storeMythicFind(itemStack, gearBox.getLevelRange());
+                    resetNormalDryStatistics();
+                }
+            }
+            return;
+        }
 
-            if (gearBox.getGearType() != GearType.MASTERY_TOME) {
-                storeMythicFind(itemStack, gearBox.getLevelRange());
-                resetNormalDryStatistics();
+        Optional<EmeraldPouchItem> emeraldPouchItem = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
+        if (emeraldPouchItem.isPresent()) {
+            EmeraldPouchItem emeraldPouch = emeraldPouchItem.get();
+            if (emeraldPouch.getTier() >= 7) {
+                WynntilsMod.postEvent(new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.LOOT_CHEST));
+
+                Map<Integer, Integer> pouchCount = dryEmeraldPouchCount.get();
+                pouchCount.put(emeraldPouch.getTier(), 0);
+                dryEmeraldPouchCount.store(pouchCount);
+                dryEmeraldPouchCount.touched();
             }
         }
     }
@@ -165,6 +201,9 @@ public final class LootChestModel extends Model {
 
         LootChestTier chestType = Models.LootChest.getChestType(event.getScreen());
         if (chestType == null) return;
+
+        WynntilsMod.info("Found Loot Chest with tier: " + chestType.getWaypointTier());
+        sessionChests.add(chestType);
 
         Location location = new Location(lastChestPos);
 
@@ -213,6 +252,13 @@ public final class LootChestModel extends Model {
         foundChestLocations.get().remove(location);
         foundChestLocations.touched();
         LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
+    }
+
+    public int getLootChestOpenedThisSession(int tier, boolean exact) {
+        return (int) sessionChests.stream()
+                .filter(lootChestTier ->
+                        exact ? lootChestTier.getWaypointTier() == tier : lootChestTier.getWaypointTier() >= tier)
+                .count();
     }
 
     private void processItemFind(ItemStack itemStack) {

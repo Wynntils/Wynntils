@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.redirects;
@@ -9,7 +9,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,9 +52,9 @@ public class TerritoryMessageRedirectFeature extends Feature {
     // Handles the chat log message event, we don't want a duplicate so just cancel the event and rely on the subtitle
     // text event.
     @SubscribeEvent
-    public void onChat(ChatMessageReceivedEvent event) {
-        if (event.getOriginalStyledText().getMatcher(TERRITORY_MESSAGE_PATTERN).matches()) {
-            event.setCanceled(true);
+    public void onChat(ChatMessageEvent.Match event) {
+        if (event.getMessage().getMatcher(TERRITORY_MESSAGE_PATTERN).matches()) {
+            event.cancelChat();
         }
     }
 }

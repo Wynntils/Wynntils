@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.chattabs.widgets;
@@ -9,7 +9,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;
-import com.wynntils.services.chat.ChatTab;
+import com.wynntils.services.chat.type.ChatTab;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -32,8 +32,6 @@ public class ChatTabButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (tab == null) return;
-
         PoseStack poseStack = guiGraphics.pose();
 
         RenderUtils.drawRect(
@@ -43,7 +41,7 @@ public class ChatTabButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString(tab.getName()),
+                        StyledText.fromString(tab.name()),
                         getX() + 1,
                         getX() + width,
                         getY() + 1,
@@ -68,7 +66,7 @@ public class ChatTabButton extends WynntilsButton {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Services.ChatTab.setFocusedTab(tab);
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            McUtils.mc().setScreen(ChatTabEditingScreen.create(tab));
+            McUtils.setScreen(ChatTabEditingScreen.create(tab));
         }
 
         // Hack: We should return true here,

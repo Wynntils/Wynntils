@@ -257,6 +257,27 @@ public enum Texture {
     PARTY_KICK_ICON("icons/player_viewer/party_kick_icon.png", 14, 14),
     STATS_ICON("icons/player_viewer/stats_icon.png", 14, 14),
     TRADE_ICON("icons/player_viewer/trade_icon.png", 14, 14),
+
+    // Bank
+    LIQUID_EMERALD_ICON("icons/quick_jump/liquid_emerald.png", 16, 16),
+    EMERALD_ICON("icons/quick_jump/emerald.png", 16, 16),
+
+    POTION_ICON("icons/quick_jump/potion.png", 16, 16),
+    POWDER_ICON("icons/quick_jump/powder.png", 16, 16),
+    TOME_ICON("icons/quick_jump/tome.png", 16, 16),
+    SCROLL_ICON("icons/quick_jump/scroll.png", 16, 16),
+    GEM_ICON("icons/quick_jump/gem.png", 16, 16),
+    KEY_ICON("icons/quick_jump/key.png", 16, 16),
+    RING_ICON("icons/quick_jump/ring.png", 16, 16),
+
+    SWORD_ICON("icons/quick_jump/sword.png", 16, 16),
+    HELMET_ICON("icons/quick_jump/helmet.png", 16, 16),
+    CHESTPLATE_ICON("icons/quick_jump/chestplate.png", 16, 16),
+    LEGGINGS_ICON("icons/quick_jump/leggings.png", 16, 16),
+    BOOTS_ICON("icons/quick_jump/boots.png", 16, 16),
+
+    QUESTION_MARK_ICON("icons/quick_jump/question_mark.png", 16, 16),
+    STAR_ICON("icons/quick_jump/star.png", 16, 16),
     // endregion
 
     // region Item Storage
@@ -343,14 +364,14 @@ public enum Texture {
     CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
     EXIT_FLAG("ui_components/exit_flag.png", 73, 62),
-    GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
+    GEAR_ICONS("ui_components/gear_icons.png", 64, 192),
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
     HOTBAR_SELECTED_HIGHLIGHT("ui_components/hotbar_selected_highlight.png", 16, 16),
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     LIST_SEARCH("ui_components/list_search.png", 133, 23),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
-    PLAYER_VIEWER_BACKGROUND("ui_components/player_viewer_background.png", 103, 92),
+    PLAYER_VIEWER_BACKGROUND("ui_components/player_viewer_background.png", 126, 88),
     QUICK_JUMP_BUTTON("ui_components/quick_jump_button.png", 16, 32),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),

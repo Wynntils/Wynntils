@@ -7,7 +7,9 @@ package com.wynntils.handlers.tooltip.impl.crafted;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
+import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
@@ -43,6 +45,16 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
         List<Component> footer = splitLore.b();
 
         return new CraftedTooltipBuilder(craftedItem, header, footer);
+    }
+
+    @Override
+    protected List<Component> getWeightedHeaderLines(
+            List<Component> originalHeader,
+            ItemWeightSource weightSource,
+            TooltipWeightDecorator weightDecorator,
+            TooltipStyle style) {
+        // Crafted items do not have weighting
+        return originalHeader;
     }
 
     @Override

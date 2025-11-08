@@ -20,6 +20,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.BlacksmithContainer;
+import com.wynntils.models.containers.containers.ItemIdentifierAugmentsContainer;
 import com.wynntils.models.containers.containers.ItemIdentifierContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.type.BoundedContainerProperty;
@@ -73,6 +74,9 @@ public class ValuablesProtectionFeature extends Feature {
     @Persisted
     private final Config<Integer> craftedBlacksmithLevel = new Config<>(0);
 
+    @Persisted
+    private final Config<Boolean> requireCtrlToSell = new Config<>(false);
+
     private static final ResourceLocation CIRCLE_TEXTURE =
             ResourceLocation.withDefaultNamespace("textures/wynn/gui/tutorial.png");
 
@@ -119,12 +123,15 @@ public class ValuablesProtectionFeature extends Feature {
 
     @SubscribeEvent
     public void onSetSlot(SetSlotEvent.Post e) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
+        if (!(McUtils.screen() instanceof ContainerScreen cs)) return;
 
         Container currentContainer = Models.Container.getCurrentContainer();
         if (currentContainer == null) return;
 
-        if (currentContainer instanceof ItemIdentifierContainer) {
+        boolean isIdentifier = ProtectableNPCs.IDENTIFIER.getContainers().stream()
+                .anyMatch(container -> container.equals(currentContainer.getClass()));
+
+        if (isIdentifier) {
             if (StyledText.fromComponent(cs.getMenu()
                             .getSlot(BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT)
                             .getItem()
@@ -181,7 +188,7 @@ public class ValuablesProtectionFeature extends Feature {
             break;
         }
 
-        if (!slotsToWarn.isEmpty()) {
+        if (!slotsToWarn.isEmpty() && requireCtrlToSell.get()) {
             ctrlHintTextWidget = new HintTextWidget(
                     cs.width / 2,
                     cs.topPos - 6,
@@ -190,7 +197,9 @@ public class ValuablesProtectionFeature extends Feature {
                     I18n.get(
                             "feature.wynntils.valuablesProtection.ctrlClick",
                             I18n.get("feature.wynntils.valuablesProtection."
-                                    + (currentContainerType == ItemIdentifierContainer.class
+                                    + (ProtectableNPCs.IDENTIFIER
+                                                    .getContainers()
+                                                    .contains(currentContainerType)
                                             ? "identifying"
                                             : "selling"))),
                     HorizontalAlignment.CENTER,
@@ -273,9 +282,10 @@ public class ValuablesProtectionFeature extends Feature {
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (slotsToWarn.isEmpty() || KeyboardUtils.isControlDown()) return;
-        if (e.getSlotNum() != BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT && e.getSlotNum() != TM_CONFIRM_BUTTON_SLOT)
+        if (slotsToWarn.isEmpty() || KeyboardUtils.isControlDown() || !requireCtrlToSell.get()) return;
+        if (e.getSlotNum() != BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT && e.getSlotNum() != TM_CONFIRM_BUTTON_SLOT) {
             return;
+        }
 
         e.setCanceled(true);
         for (int i = 0; i < 12; i += 6) {
@@ -298,7 +308,7 @@ public class ValuablesProtectionFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen)) return;
+        if (!(McUtils.screen() instanceof ContainerScreen)) return;
 
         emphasizeAnimationDelay++;
         if (emphasizeAnimationDelay % 4 == 0) {
@@ -317,7 +327,7 @@ public class ValuablesProtectionFeature extends Feature {
     }
 
     private void resetAll() {
-        if (McUtils.mc().screen instanceof ContainerScreen cs) {
+        if (McUtils.screen() instanceof ContainerScreen cs) {
             cs.removeWidget(ctrlHintTextWidget);
             tmHintTextWidgets.forEach(cs::removeWidget);
         }
@@ -374,11 +384,17 @@ public class ValuablesProtectionFeature extends Feature {
         NONE(List.of()),
         BLACKSMITH(List.of(BlacksmithContainer.class)),
         TRADE_MARKET(List.of(TradeMarketSellContainer.class)),
-        IDENTIFIER(List.of(ItemIdentifierContainer.class)),
+        IDENTIFIER(List.of(ItemIdentifierContainer.class, ItemIdentifierAugmentsContainer.class)),
         BLACKSMITH_AND_TRADE_MARKET(List.of(BlacksmithContainer.class, TradeMarketSellContainer.class)),
-        BLACKSMITH_AND_IDENTIFIER(List.of(BlacksmithContainer.class, ItemIdentifierContainer.class)),
-        TRADE_MARKET_AND_IDENTIFIER(List.of(TradeMarketSellContainer.class, ItemIdentifierContainer.class)),
-        ALL(List.of(BlacksmithContainer.class, TradeMarketSellContainer.class, ItemIdentifierContainer.class));
+        BLACKSMITH_AND_IDENTIFIER(List.of(
+                BlacksmithContainer.class, ItemIdentifierContainer.class, ItemIdentifierAugmentsContainer.class)),
+        TRADE_MARKET_AND_IDENTIFIER(List.of(
+                TradeMarketSellContainer.class, ItemIdentifierContainer.class, ItemIdentifierAugmentsContainer.class)),
+        ALL(List.of(
+                BlacksmithContainer.class,
+                TradeMarketSellContainer.class,
+                ItemIdentifierContainer.class,
+                ItemIdentifierAugmentsContainer.class));
 
         private final List<Class<? extends BoundedContainerProperty>> containers;
 

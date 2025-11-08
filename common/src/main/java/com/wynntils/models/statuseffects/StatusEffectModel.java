@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -91,7 +93,9 @@ public final class StatusEffectModel extends Model {
 
             String color = ChatFormatting.GRAY.toString();
 
-            StyledText prefix = StyledText.fromString(m.group("prefix").trim());
+            Style prefixStyle = effect.getFirstPart().getPartStyle().getStyle();
+            StyledText prefix = StyledText.fromComponent(
+                    Component.literal(m.group("prefix").trim()).withStyle(prefixStyle));
             StyledText name = StyledText.fromString(color + m.group("name").trim());
             StyledText minutes = StyledText.fromString(m.group("minutes")).trim();
             StyledText seconds = StyledText.fromString(m.group("seconds")).trim();

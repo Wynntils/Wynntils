@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.objectives;
 
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -23,6 +23,9 @@ public final class WynnObjective {
     private final boolean isGuildObjective;
     private final boolean hasEventBonus;
 
+    public static final WynnObjective DEMO_GUILD = new WynnObjective(
+            "Slay Loot Chests", new CappedValue(5, 15), 0, StyledText.fromString("Slay Loot Chests 5/15"), true, false);
+
     private WynnObjective(
             String goal,
             CappedValue score,
@@ -39,9 +42,7 @@ public final class WynnObjective {
     }
 
     static WynnObjective parseObjectiveLine(StyledText objectiveLine, boolean isGuildObjective, boolean hasEventBonus) {
-        String stripped = objectiveLine.getString(PartStyle.StyleType.NONE);
-
-        assert stripped != null;
+        String stripped = objectiveLine.getString(StyleType.NONE);
 
         Matcher matcher = OBJECTIVE_PARSER_PATTERN.matcher(stripped);
         String goal = null;

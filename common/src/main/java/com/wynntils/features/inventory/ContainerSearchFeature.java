@@ -62,7 +62,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -187,7 +186,7 @@ public class ContainerSearchFeature extends Feature {
 
         if (!matchedItems
                 && autoSearching
-                && McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
+                && McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen) {
             tryAutoSearch(abstractContainerScreen);
         }
     }
@@ -217,11 +216,11 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         // Don't want to be able to search whilst the edit widget is open
-        if (event.getKeyCode() == GLFW.GLFW_KEY_ENTER && !Models.Bank.isEditingName()) {
+        if (event.getKeyCode() == GLFW.GLFW_KEY_ENTER && !Models.Bank.isEditingMode()) {
             if (lastSearchWidget == null
                     || lastSearchWidget.getTextBoxInput().isEmpty()
                     || currentContainer == null
-                    || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
+                    || !(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)
                     || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
 
             // Set widget as unfocused so number input actions can be performed after searching
@@ -399,7 +398,7 @@ public class ContainerSearchFeature extends Feature {
             String name = StyledText.fromComponent(itemStack.getHoverName())
                     .getStringWithoutFormatting()
                     .toLowerCase(Locale.ROOT);
-            boolean filtered = !search.isEmpty() && name.contains(search) && itemStack.getItem() != Items.AIR;
+            boolean filtered = !search.isEmpty() && name.contains(search) && !itemStack.isEmpty();
 
             wynnItemOpt.get().getData().store(WynnItemData.SEARCHED_KEY, filtered);
             if (filtered) {
@@ -409,7 +408,7 @@ public class ContainerSearchFeature extends Feature {
     }
 
     private void forceUpdateSearch() {
-        Screen screen = McUtils.mc().screen;
+        Screen screen = McUtils.screen();
         if (lastSearchWidget != null
                 && screen instanceof AbstractContainerScreen<?> abstractContainerScreen
                 && abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu) {

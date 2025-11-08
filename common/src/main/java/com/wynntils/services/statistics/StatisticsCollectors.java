@@ -7,9 +7,12 @@ package com.wynntils.services.statistics;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.models.activities.event.AnnihilationEvent;
 import com.wynntils.models.combat.type.DamageDealtEvent;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
-import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.event.ValuableFoundEvent;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.raids.NestOfTheGrootslangsRaid;
@@ -20,6 +23,7 @@ import com.wynntils.models.raid.raids.TheNamelessAnomalyRaid;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.war.event.GuildWarEvent;
 import com.wynntils.services.statistics.type.StatisticKind;
+import java.util.Optional;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class StatisticsCollectors {
@@ -57,12 +61,20 @@ public final class StatisticsCollectors {
     }
 
     @SubscribeEvent
-    public void onMythicFoundEvent(MythicFoundEvent event) {
-        Services.Statistics.increaseStatistics(StatisticKind.MYTHICS_FOUND);
+    public void onValuableFoundEvent(ValuableFoundEvent event) {
+        Optional<GearTierItemProperty> tieredItem =
+                Models.Item.asWynnItemProperty(event.getItem(), GearTierItemProperty.class);
+        if (tieredItem.isEmpty() || tieredItem.get().getGearTier() != GearTier.MYTHIC) return;
 
-        if (event.getMythicSource() == MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST) {
-            Services.Statistics.addToStatistics(
-                    StatisticKind.LOOTRUNS_PULLS_WITHOUT_MYTHIC, Models.Lootrun.dryPulls.get());
+        if (event.getItemSource() == ValuableFoundEvent.ItemSource.WORLD_EVENT) {
+            Services.Statistics.increaseStatistics(StatisticKind.CORRUPTED_CACHES_FOUND);
+        } else {
+            Services.Statistics.increaseStatistics(StatisticKind.MYTHICS_FOUND);
+
+            if (event.getItemSource() == ValuableFoundEvent.ItemSource.LOOTRUN_REWARD_CHEST) {
+                Services.Statistics.addToStatistics(
+                        StatisticKind.LOOTRUNS_PULLS_WITHOUT_MYTHIC, Models.Lootrun.dryPulls.get());
+            }
         }
     }
 
@@ -130,5 +142,15 @@ public final class StatisticsCollectors {
     @SubscribeEvent
     public void onWarJoinedEvent(GuildWarEvent.Started event) {
         Services.Statistics.increaseStatistics(StatisticKind.WARS_JOINED);
+    }
+
+    @SubscribeEvent
+    public void onAnnihilationCompleted(AnnihilationEvent.Completed event) {
+        Services.Statistics.increaseStatistics(StatisticKind.ANNIHILATIONS_COMPLETED);
+    }
+
+    @SubscribeEvent
+    public void onAnnihilationFailed(AnnihilationEvent.Failed event) {
+        Services.Statistics.increaseStatistics(StatisticKind.ANNIHILATIONS_FAILED);
     }
 }

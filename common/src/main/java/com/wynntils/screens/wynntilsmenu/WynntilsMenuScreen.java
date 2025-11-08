@@ -83,7 +83,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         int y = (BUTTON_SIZE + 5) + offsetY + 15;
 
         // region Row 1: Content / Activities
-        buttons.get(0)
+        buttons.getFirst()
                 .add(new WynntilsMenuButton(
                         x,
                         y,

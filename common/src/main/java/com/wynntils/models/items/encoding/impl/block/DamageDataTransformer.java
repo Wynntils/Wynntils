@@ -117,6 +117,6 @@ public class DamageDataTransformer extends DataTransformer<DamageData> {
             damages.add(new Pair<>(damageType, new RangedValue(minDamage, maxDamage)));
         }
 
-        return ErrorOr.of(new DamageData(Optional.ofNullable(attackSpeed), damages));
+        return ErrorOr.of(new DamageData(Optional.of(attackSpeed), damages));
     }
 }

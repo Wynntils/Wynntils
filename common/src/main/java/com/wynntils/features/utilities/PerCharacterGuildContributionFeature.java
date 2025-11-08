@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Map;
@@ -52,16 +52,16 @@ public class PerCharacterGuildContributionFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatReceived(ChatMessageReceivedEvent event) {
+    public void onChatReceived(ChatMessageEvent.Match event) {
         if (Models.Guild.getGuildName().isEmpty()) return;
         if (!Models.Character.hasCharacter()) return;
 
-        StyledText message = event.getOriginalStyledText();
+        StyledText message = event.getMessage();
 
         Matcher contributionMatcher = message.getMatcher(CONTRIBUTION_PATTERN);
 
         if (contributionMatcher.matches()) {
-            event.setCanceled(true);
+            event.cancelChat();
 
             if (waitingForCommandResponse) {
                 waitingForCommandResponse = false;

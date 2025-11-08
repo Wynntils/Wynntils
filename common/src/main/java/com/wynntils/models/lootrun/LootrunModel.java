@@ -18,7 +18,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.particle.event.ParticleVerifiedEvent;
@@ -34,7 +34,7 @@ import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.containers.containers.LootrunRewardChestContainer;
-import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.InsulatorItem;
@@ -313,9 +313,9 @@ public final class LootrunModel extends Model {
     }
 
     @SubscribeEvent
-    public void onChatMessage(ChatMessageReceivedEvent event) {
+    public void onChatMessage(ChatMessageEvent.Match event) {
         if (event.getRecipientType() != RecipientType.INFO) return;
-        StyledText styledText = event.getOriginalStyledText();
+        StyledText styledText = event.getMessage();
 
         if (styledText.matches(LOOTRUN_COMPLETED_PATTERN)) {
             lootrunCompletedBuilder = new LootrunFinishedEventBuilder.Completed();
@@ -539,7 +539,7 @@ public final class LootrunModel extends Model {
                 if (foundMythic) {
                     foundLootrunMythic = true;
                     WynntilsMod.postEvent(
-                            new MythicFoundEvent(itemStack, MythicFoundEvent.MythicSource.LOOTRUN_REWARD_CHEST));
+                            new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.LOOTRUN_REWARD_CHEST));
                 }
             }
         }
@@ -1145,15 +1145,15 @@ public final class LootrunModel extends Model {
         // to rely on those for getting possible locations so we use the gathered task locations instead and we can
         // filter them based on the marker provided. The distance from the marker is also used to filter far
         // away tasks so whilst it would be ideal to only get tasks from current location this is fine for now.
-        taskLocations.values().forEach(hashSet -> {
-            currentTaskLocations.addAll(hashSet.stream()
-                    .filter(task -> task.taskType() == lootrunMarker.getTaskType())
-                    .collect(Collectors.toSet()));
-        });
+        taskLocations
+                .values()
+                .forEach(hashSet -> currentTaskLocations.addAll(hashSet.stream()
+                        .filter(task -> task.taskType() == lootrunMarker.getTaskType())
+                        .collect(Collectors.toSet())));
 
         if (currentTaskLocations.isEmpty()) {
             WynntilsMod.warn("No task locations found!");
-            return foundTask;
+            return false;
         }
 
         List<TaskPrediction> usedTaskLocations = beacons.entrySet().stream()

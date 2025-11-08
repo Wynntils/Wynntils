@@ -54,7 +54,7 @@ public class SeaskipperTravelButton extends WynntilsButton {
                             seaskipperScreen.getSelectedDestination().profile().destination())
                     .withStyle(ChatFormatting.GRAY));
 
-            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 }

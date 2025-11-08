@@ -97,7 +97,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         super.onClose();
 
         if (previousScreen != null) {
-            McUtils.mc().setScreen(previousScreen);
+            McUtils.setScreen(previousScreen);
         }
     }
 

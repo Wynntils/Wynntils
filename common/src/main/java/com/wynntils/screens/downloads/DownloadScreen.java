@@ -103,7 +103,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(previousScreen);
+        McUtils.setScreen(previousScreen);
     }
 
     @Override

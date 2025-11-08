@@ -7,12 +7,14 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ArmSwingEvent;
+import com.wynntils.mc.event.ChatScreenCreateEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -24,6 +26,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
+import net.neoforged.bus.api.Event;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,20 +40,21 @@ public abstract class MinecraftMixin implements MinecraftExtension {
 
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("RETURN"))
     private void setScreenPost(Screen screen, CallbackInfo ci, @Share("oldScreen") LocalRef<Screen> oldScreen) {
-        if (screen == null) {
-            MixinHelper.post(new ScreenClosedEvent(oldScreen.get()));
-        } else {
-            MixinHelper.post(new ScreenOpenedEvent.Post(screen));
-        }
+        Event event = (screen == null)
+                ? new ScreenClosedEvent.Post(oldScreen.get())
+                : new ScreenOpenedEvent.Post(screen, oldScreen.get());
+        MixinHelper.post(event);
     }
 
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("HEAD"), cancellable = true)
     private void setScreenPre(Screen screen, CallbackInfo ci, @Share("oldScreen") LocalRef<Screen> oldScreen) {
         oldScreen.set(((Minecraft) (Object) this).screen);
 
-        if (screen == null) return;
-
-        ScreenOpenedEvent.Pre event = new ScreenOpenedEvent.Pre(screen);
+        // "var" is needed since there is no specific enough common supertype between ScreenOpenedEvent.Pre and
+        // ScreenClosedEvent.Pre
+        var event = (screen == null)
+                ? new ScreenClosedEvent.Pre(oldScreen.get())
+                : new ScreenOpenedEvent.Pre(screen, oldScreen.get());
         MixinHelper.postAlways(event);
         if (event.isCanceled()) {
             ci.cancel();
@@ -121,6 +125,25 @@ public abstract class MinecraftMixin implements MinecraftExtension {
         }
 
         return operation.call();
+    }
+
+    @WrapOperation(
+            method = "openChatScreen(Ljava/lang/String;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V"))
+    private void wrapOpenChatScreenSetScreen(
+            Minecraft instance, Screen screen, Operation<Void> original, String defaultText) {
+        if (screen == null) {
+            original.call(instance, screen);
+            return;
+        }
+
+        ChatScreenCreateEvent event = new ChatScreenCreateEvent(screen, defaultText);
+        MixinHelper.post(event);
+        original.call(instance, event.getScreen());
     }
 
     @Override

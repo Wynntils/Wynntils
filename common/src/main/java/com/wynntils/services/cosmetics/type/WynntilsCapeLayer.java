@@ -40,7 +40,7 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
             RenderLayerParent<PlayerRenderState, PlayerModel> renderLayerParent,
             EntityRendererProvider.Context renderProviderContext) {
         super(renderLayerParent);
-        this.model = new PlayerCapeModel(renderProviderContext.getModelSet().bakeLayer(ModelLayers.PLAYER_CAPE));
+        this.model = new PlayerCapeModel<>(renderProviderContext.getModelSet().bakeLayer(ModelLayers.PLAYER_CAPE));
         this.equipmentAssets = renderProviderContext.getEquipmentAssets();
     }
 

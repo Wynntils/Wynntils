@@ -94,22 +94,20 @@ public final class OverlayManager extends Manager {
         enabledOverlays.remove(disabledOverlay);
         WynntilsMod.unregisterEventListener(disabledOverlay);
 
-        enabledOverlays.forEach(
-                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::callOnConfigUpdate));
+        disabledOverlay.getConfigOptionFromString("userEnabled").ifPresent(disabledOverlay::callOnConfigUpdate);
     }
 
     public void enableOverlays(Feature parent) {
         overlayParentMap.getOrDefault(parent, List.of()).forEach(this::enableOverlay);
     }
 
-    public void enableOverlay(Overlay enableOverlay) {
-        if (!enableOverlay.shouldBeEnabled() || isEnabled(enableOverlay)) return;
+    public void enableOverlay(Overlay enabledOverlay) {
+        if (!enabledOverlay.shouldBeEnabled() || isEnabled(enabledOverlay)) return;
 
-        enabledOverlays.add(enableOverlay);
-        WynntilsMod.registerEventListener(enableOverlay);
+        enabledOverlays.add(enabledOverlay);
+        WynntilsMod.registerEventListener(enabledOverlay);
 
-        enabledOverlays.forEach(
-                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::callOnConfigUpdate));
+        enabledOverlay.getConfigOptionFromString("userEnabled").ifPresent(enabledOverlay::callOnConfigUpdate);
     }
 
     public void discoverOverlays(Feature feature) {
@@ -235,12 +233,12 @@ public final class OverlayManager extends Manager {
         boolean shouldRender = true;
         Overlay selectedOverlay = null;
 
-        if (McUtils.mc().screen instanceof OverlayManagementScreen screen) {
+        if (McUtils.screen() instanceof OverlayManagementScreen screen) {
             shouldRender = false;
             showPreview = screen.showPreview();
             renderNonSelected = screen.shouldRenderAllOverlays();
             selectedOverlay = screen.getSelectedOverlay();
-        } else if (McUtils.mc().screen instanceof OverlaySelectionScreen screen) {
+        } else if (McUtils.screen() instanceof OverlaySelectionScreen screen) {
             if (screen.renderingPreview()) {
                 showPreview = true;
                 renderNonSelected = screen.shouldShowOverlays();

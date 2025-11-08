@@ -16,6 +16,7 @@ import com.wynntils.models.items.annotators.game.CharmAnnotator;
 import com.wynntils.models.items.annotators.game.CorruptedCacheAnnotator;
 import com.wynntils.models.items.annotators.game.CraftedConsumableAnnotator;
 import com.wynntils.models.items.annotators.game.CraftedGearAnnotator;
+import com.wynntils.models.items.annotators.game.CrafterBagAnnotator;
 import com.wynntils.models.items.annotators.game.DungeonKeyAnnotator;
 import com.wynntils.models.items.annotators.game.EmeraldAnnotator;
 import com.wynntils.models.items.annotators.game.EmeraldPouchAnnotator;
@@ -53,6 +54,7 @@ import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.StoreTierAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
+import com.wynntils.models.items.annotators.gui.TradeMarketIdentificationFilterAnnotator;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
@@ -78,6 +80,7 @@ public final class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new CorruptedCacheAnnotator());
         Handlers.Item.registerAnnotator(new CraftedConsumableAnnotator());
         Handlers.Item.registerAnnotator(new CraftedGearAnnotator());
+        Handlers.Item.registerAnnotator(new CrafterBagAnnotator());
         Handlers.Item.registerAnnotator(new DungeonKeyAnnotator());
         Handlers.Item.registerAnnotator(new EmeraldAnnotator());
         Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
@@ -109,6 +112,7 @@ public final class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new StoreTierAnnotator());
         Handlers.Item.registerAnnotator(new TerritoryAnnotator());
         Handlers.Item.registerAnnotator(new TerritoryUpgradeAnnotator());
+        Handlers.Item.registerAnnotator(new TradeMarketIdentificationFilterAnnotator());
 
         // ItemAnnotators
         // This must be done last

@@ -49,7 +49,7 @@ public class WynntilsMenuButton extends AbstractWidget {
             boolean dynamicTexture,
             Screen openedScreen,
             List<Component> tooltipList) {
-        this(x, y, size, buttonTexture, dynamicTexture, () -> McUtils.mc().setScreen(openedScreen), tooltipList);
+        this(x, y, size, buttonTexture, dynamicTexture, () -> McUtils.setScreen(openedScreen), tooltipList);
     }
 
     @Override

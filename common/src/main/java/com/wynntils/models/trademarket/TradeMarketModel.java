@@ -11,7 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -25,7 +25,9 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderCon
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
+import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
+import com.wynntils.models.trademarket.event.TradeMarketStateEvent;
 import com.wynntils.models.trademarket.type.TradeMarketPriceCheckInfo;
 import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
 import com.wynntils.models.trademarket.type.TradeMarketState;
@@ -34,20 +36,24 @@ import com.wynntils.screens.trademarket.TradeMarketSearchResultHolder;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class TradeMarketModel extends Model {
+    private static final Set<TradeMarketState> CHAT_INPUT_STATES = EnumSet.of(
+            TradeMarketState.SEARCH_CHAT_INPUT, TradeMarketState.AMOUNT_CHAT_INPUT, TradeMarketState.PRICE_CHAT_INPUT);
+
     private static final Pattern[] ITEM_NAME_PATTERNS = {
         // Item on the create buy order menu or create sell offer menu
         Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+?)(?:§6)? for .+ Each$"),
@@ -61,6 +67,7 @@ public final class TradeMarketModel extends Model {
             Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the item name or type 'cancel' to cancel:$");
     private static final Pattern AMOUNT_INPUT_PATTERN = Pattern.compile(
             "^§5(\uE00A\uE002|\uE001) Type the amount you wish to (buy|sell) or type 'cancel' to cancel:$");
+    // Test in TradeMarketModel_PRICE_INPUT_PATTERN
     private static final Pattern PRICE_INPUT_PATTERN = Pattern.compile(
             "^§5(\uE00A\uE002|\uE001) Type the price in emeralds or formatted \\(e\\.g '10eb', '10stx 5eb'\\) or type 'cancel' to cancel:$");
     private static final Pattern CANCELLED_PATTERN =
@@ -75,12 +82,16 @@ public final class TradeMarketModel extends Model {
     private static final StyledText TM_SELL_SET_PRICE_PATTERN = StyledText.fromString("§a§lSet Price");
 
     private static final int PRICE_CHECK_SLOT = 51;
+    private static final Set<String> MISSING_PRICE_DATA = Set.of(
+            " §7Price data is only availableafter an item is added",
+            " §7There is no price informationabout this item at the moment");
     // Tests at TradeMarketModel_PRICE_CHECK_BID_PATTERN/TradeMarketModel_PRICE_CHECK_ASK_PATTERN
     private static final Pattern PRICE_CHECK_BID_PATTERN =
             Pattern.compile("§7Highest Buy Offer: §f([\\d,]+) §8\\(.+\\)");
     private static final Pattern PRICE_CHECK_ASK_PATTERN =
             Pattern.compile("§7Cheapest Sell Offer: §f([\\d,]+) §8\\(.+\\)");
-
+    private static final Pattern PRICE_CHECK_RECOMMENDED_PATTERN =
+            Pattern.compile("§dRecommended Price:§f\\s*([\\d,]+) §8\\(.+\\)");
     // Test in TradeMarketModel_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile(
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
@@ -124,10 +135,10 @@ public final class TradeMarketModel extends Model {
     }
 
     @SubscribeEvent
-    public void onScreenClose(ScreenClosedEvent event) {
+    public void onScreenClose(ScreenClosedEvent.Post event) {
         if (inChatInput()) return;
 
-        tradeMarketState = TradeMarketState.NOT_ACTIVE;
+        updateTradeMarketState(TradeMarketState.NOT_ACTIVE);
         filtersActive = false;
         nameFiltersActive = false;
     }
@@ -145,7 +156,7 @@ public final class TradeMarketModel extends Model {
             if (event.getItems().get(slot).getHoverName().getString().equals(NAME_FILTER)) {
                 nameFiltersActive = true;
             } else {
-                filtersActive = filtersActive || event.getItems().get(slot).getItem() != Items.AIR;
+                filtersActive = filtersActive || !event.getItems().get(slot).isEmpty();
             }
         });
     }
@@ -161,23 +172,41 @@ public final class TradeMarketModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChatMessageReceive(ChatMessageReceivedEvent event) {
-        StyledText styledText =
-                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
+    public void onChatMessageReceive(ChatMessageEvent.Match event) {
+        StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+
+        TradeMarketState newState;
 
         if (styledText.matches(SEARCH_INPUT_PATTERN)) {
-            tradeMarketState = TradeMarketState.SEARCH_CHAT_INPUT;
+            newState = TradeMarketState.SEARCH_CHAT_INPUT;
         } else if (styledText.matches(AMOUNT_INPUT_PATTERN)) {
-            tradeMarketState = TradeMarketState.AMOUNT_CHAT_INPUT;
+            newState = TradeMarketState.AMOUNT_CHAT_INPUT;
         } else if (styledText.matches(PRICE_INPUT_PATTERN)) {
-            tradeMarketState = TradeMarketState.PRICE_CHAT_INPUT;
+            newState = TradeMarketState.PRICE_CHAT_INPUT;
         } else if (styledText.matches(CANCELLED_PATTERN)) {
-            tradeMarketState = TradeMarketState.NOT_ACTIVE;
+            newState = TradeMarketState.NOT_ACTIVE;
+        } else {
+            newState = null;
+        }
+
+        if (newState != null) {
+            updateTradeMarketState(newState);
+
+            if (inChatInput()) {
+                TradeMarketChatInputEvent inputEvent = new TradeMarketChatInputEvent(newState, styledText);
+                WynntilsMod.postEvent(inputEvent);
+                if (inputEvent.isCanceled()) {
+                    event.cancelChat();
+                }
+                if (inputEvent.getResponse() != null) {
+                    McUtils.sendChat(inputEvent.getResponse());
+                }
+            }
         }
     }
 
     @SubscribeEvent
-    public void onClientChat(ChatSentEvent event) {
+    public void onChatSent(ChatSentEvent event) {
         if (tradeMarketState != TradeMarketState.SEARCH_CHAT_INPUT) return;
         if (!nameFiltersActive && event.getMessage().equalsIgnoreCase("cancel")) return;
 
@@ -188,7 +217,7 @@ public final class TradeMarketModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
-        tradeMarketState = TradeMarketState.NOT_ACTIVE;
+        updateTradeMarketState(TradeMarketState.NOT_ACTIVE);
         nameFiltersActive = false;
         filtersActive = false;
     }
@@ -250,7 +279,7 @@ public final class TradeMarketModel extends Model {
      * @return The unit price of the item currently being sold in the sell screen.
      */
     public int getUnitPrice() {
-        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return -1;
+        if (!(McUtils.screen() instanceof ContainerScreen cs)) return -1;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return -1;
 
         ItemStack priceCheckItem = cs.getMenu().getItems().get(TM_SELL_PRICE_SLOT);
@@ -270,7 +299,7 @@ public final class TradeMarketModel extends Model {
      * @return The TM's server-side price check item information.
      */
     public TradeMarketPriceCheckInfo getPriceCheckInfo() {
-        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return TradeMarketPriceCheckInfo.EMPTY;
+        if (!(McUtils.screen() instanceof ContainerScreen cs)) return TradeMarketPriceCheckInfo.EMPTY;
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer))
             return TradeMarketPriceCheckInfo.EMPTY;
 
@@ -278,6 +307,18 @@ public final class TradeMarketModel extends Model {
         if (priceCheckItem.isEmpty()) return TradeMarketPriceCheckInfo.EMPTY;
 
         String lore = LoreUtils.getStringLore(priceCheckItem).getString();
+        if (MISSING_PRICE_DATA.contains(lore)) {
+            return TradeMarketPriceCheckInfo.EMPTY;
+        }
+
+        Matcher recommendedMatcher = PRICE_CHECK_RECOMMENDED_PATTERN.matcher(lore);
+        int recommendedPrice = 0;
+        if (recommendedMatcher.find()) {
+            String priceCheckString = recommendedMatcher.group(1);
+            recommendedPrice = Integer.parseInt(priceCheckString.replace(",", ""));
+        } else {
+            WynntilsMod.warn("Cannot find recommended price in price check item lore: " + lore);
+        }
 
         Matcher bidMatcher = PRICE_CHECK_BID_PATTERN.matcher(lore);
         int bidPrice = -1;
@@ -293,7 +334,7 @@ public final class TradeMarketModel extends Model {
             askPrice = Integer.parseInt(priceCheckString.replace(",", ""));
         }
 
-        return new TradeMarketPriceCheckInfo(bidPrice, askPrice);
+        return new TradeMarketPriceCheckInfo(recommendedPrice, bidPrice, askPrice);
     }
 
     public String getSoldItemName() {
@@ -303,7 +344,7 @@ public final class TradeMarketModel extends Model {
     private void handleSellDialogueUpdate() {
         if (tradeMarketState != TradeMarketState.SELLING) return;
 
-        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
+        if (!(McUtils.screen() instanceof ContainerScreen cs)) return;
 
         ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (itemStack != ItemStack.EMPTY) {
@@ -329,27 +370,31 @@ public final class TradeMarketModel extends Model {
     private void updateStateFromContainer() {
         Container currentContainer = Models.Container.getCurrentContainer();
 
+        TradeMarketState newState;
         if (currentContainer instanceof TradeMarketContainer) {
-            tradeMarketState = nameFiltersActive || filtersActive
+            newState = nameFiltersActive || filtersActive
                     ? TradeMarketState.FILTERED_RESULTS
                     : TradeMarketState.DEFAULT_RESULTS;
         } else if (currentContainer instanceof TradeMarketFiltersContainer) {
-            tradeMarketState = TradeMarketState.FILTERS_PAGE;
+            newState = TradeMarketState.FILTERS_PAGE;
         } else if (currentContainer instanceof TradeMarketSellContainer) {
-            tradeMarketState = TradeMarketState.SELLING;
+            newState = TradeMarketState.SELLING;
         } else if (currentContainer instanceof TradeMarketBuyContainer) {
-            tradeMarketState = TradeMarketState.BUYING;
+            newState = TradeMarketState.BUYING;
         } else if (currentContainer instanceof TradeMarketTradesContainer) {
-            tradeMarketState = TradeMarketState.VIEWING_TRADES;
+            newState = TradeMarketState.VIEWING_TRADES;
         } else if (currentContainer instanceof TradeMarketOrderContainer) {
-            tradeMarketState = TradeMarketState.VIEWING_ORDER;
+            newState = TradeMarketState.VIEWING_ORDER;
+        } else {
+            newState = null;
+        }
+        if (newState != null) {
+            updateTradeMarketState(newState);
         }
     }
 
     public boolean inChatInput() {
-        return tradeMarketState == TradeMarketState.SEARCH_CHAT_INPUT
-                || tradeMarketState == TradeMarketState.AMOUNT_CHAT_INPUT
-                || tradeMarketState == TradeMarketState.PRICE_CHAT_INPUT;
+        return CHAT_INPUT_STATES.contains(tradeMarketState);
     }
 
     public boolean inTradeMarket() {
@@ -358,5 +403,14 @@ public final class TradeMarketModel extends Model {
 
     public TradeMarketState getTradeMarketState() {
         return tradeMarketState;
+    }
+
+    private void updateTradeMarketState(TradeMarketState newState) {
+        if (tradeMarketState != newState) {
+            TradeMarketState oldState = tradeMarketState;
+            tradeMarketState = newState;
+
+            WynntilsMod.postEvent(new TradeMarketStateEvent(newState, oldState));
+        }
     }
 }

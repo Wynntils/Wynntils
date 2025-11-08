@@ -4,31 +4,27 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.mc.event.ClientsideMessageEvent;
-import net.minecraft.client.gui.components.ChatComponent;
+import com.wynntils.mc.event.SystemMessageEvent;
 import net.minecraft.client.multiplayer.chat.ChatListener;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ChatListener.class)
 public abstract class ChatListenerMixin {
-    @WrapOperation(
-            method = "handleSystemMessage(Lnet/minecraft/network/chat/Component;Z)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/components/ChatComponent;addMessage(Lnet/minecraft/network/chat/Component;)V"))
-    private void onSystemMessage(ChatComponent instance, Component component, Operation<Void> operation) {
-        ClientsideMessageEvent event = new ClientsideMessageEvent(component);
+    @WrapMethod(method = "handleSystemMessage(Lnet/minecraft/network/chat/Component;Z)V")
+    private void handleSystemMessageWrap(Component message, boolean overlay, Operation<Void> original) {
+        SystemMessageEvent event = overlay
+                ? new SystemMessageEvent.GameInfoReceivedEvent(message)
+                : new SystemMessageEvent.ChatReceivedEvent(message);
         MixinHelper.post(event);
 
+        Component newMessage = event.isMessageChanged() ? event.getMessage() : message;
+
         if (!event.isCanceled()) {
-            operation.call(instance, component);
+            original.call(newMessage, overlay);
         }
     }
 }

@@ -7,7 +7,9 @@ package com.wynntils.features.inventory;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -22,6 +24,8 @@ import com.wynntils.models.containers.containers.personal.PersonalBlockBankConta
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.containers.event.BankPageSetEvent;
 import com.wynntils.screens.container.widgets.PersonalStorageUtilitiesWidget;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -34,6 +38,12 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class PersonalStorageUtilitiesFeature extends Feature {
+    @Persisted
+    private final Config<CustomColor> selectedQuickJumpColor = new Config<>(CommonColors.GREEN);
+
+    @Persisted
+    private final Config<CustomColor> lockedQuickJumpColor = new Config<>(CommonColors.GRAY);
+
     private static final int STORAGE_TYPE_SLOT = 47;
     private static final Pattern PAGE_PATTERN = Pattern.compile("§7- §f.*§8 Page (\\d+)");
 
@@ -65,7 +75,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenClose(ScreenClosedEvent e) {
+    public void onScreenClose(ScreenClosedEvent.Post e) {
         pageDestination = 1;
         quickJumping = false;
     }
@@ -110,26 +120,26 @@ public class PersonalStorageUtilitiesFeature extends Feature {
             }
         }
 
-        Models.Bank.toggleEditingName(false);
-        widget.toggleEditInput(false);
+        widget.toggleEditMode(false);
     }
 
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         if (event.getKeyCode() != GLFW.GLFW_KEY_ENTER) return;
-        if (!Models.Bank.isEditingName()) return;
+        if (!Models.Bank.isEditingMode()) return;
 
-        Models.Bank.saveCurrentPageName(widget.getName());
-        widget.toggleEditInput(false);
+        this.saveEditModeChanges();
+
+        widget.toggleEditMode(false);
         widget.updatePageName();
     }
 
     @SubscribeEvent
     public void onScroll(MouseScrollEvent event) {
-        if (!Models.Bank.isEditingName()) return;
+        if (!Models.Bank.isEditingMode()) return;
 
         // Scrolling with ContainerScrollFeature doesn't call ContainerClickEvent so toggle editing here
-        widget.toggleEditInput(false);
+        widget.toggleEditMode(false);
     }
 
     public void jumpToDestination(int destination) {
@@ -242,5 +252,21 @@ public class PersonalStorageUtilitiesFeature extends Feature {
                 storageContainer.getContainerId(),
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
+    }
+
+    public CustomColor getSelectedQuickJumpColor() {
+        return selectedQuickJumpColor.get();
+    }
+
+    public CustomColor getLockedQuickJumpColor() {
+        return lockedQuickJumpColor.get();
+    }
+
+    public void saveEditModeChanges() {
+        Models.Bank.saveCurrentPageName(widget.getName());
+
+        for (int i = 0; i < storageContainer.getFinalPage(); i++) {
+            Models.Bank.savePageIcon(i + 1, widget.getPageIcon(i + 1));
+        }
     }
 }

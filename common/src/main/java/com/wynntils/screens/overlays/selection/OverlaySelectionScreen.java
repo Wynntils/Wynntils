@@ -369,8 +369,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             if (mouseX < 145 + offsetX || selectedOverlay == null) {
                 int newOffset = Math.max(0, Math.min(overlayScrollOffset + scrollAmount, getMaxOverlayScrollOffset()));
                 scrollOverlays(newOffset);
-            } else if (selectedOverlay != null
-                    && selectedOverlay.getVisibleConfigOptions().size() > CONFIGS_PER_PAGE) {
+            } else if (selectedOverlay.getVisibleConfigOptions().size() > CONFIGS_PER_PAGE) {
                 int newOffset = Math.max(0, Math.min(configScrollOffset + scrollAmount, getMaxConfigScrollOffset()));
                 scrollConfigs(newOffset);
             }
@@ -750,7 +749,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 Texture.BUTTON_TOP.width(),
                 Texture.BUTTON_TOP.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.addCustomBar")),
-                (button) -> McUtils.mc().setScreen(CustomBarSelectionScreen.create(this)),
+                (button) -> McUtils.setScreen(CustomBarSelectionScreen.create(this)),
                 List.of(Component.translatable("screens.wynntils.overlaySelection.addCustomBarTooltip")),
                 Texture.BUTTON_TOP,
                 false,
@@ -839,7 +838,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.freeMove")),
                 (button) -> {
                     Managers.Config.saveConfig();
-                    McUtils.mc().setScreen(OverlayManagementScreen.create(this));
+                    McUtils.setScreen(OverlayManagementScreen.create(this));
                 },
                 List.of(Component.translatable("screens.wynntils.overlaySelection.freeMoveTooltip")),
                 Texture.BUTTON_BOTTOM,
@@ -900,7 +899,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                     (button) -> {
                         if (selectedOverlay != null) {
                             Managers.Config.saveConfig();
-                            McUtils.mc().setScreen(OverlayManagementScreen.create(this, selectedOverlay));
+                            McUtils.setScreen(OverlayManagementScreen.create(this, selectedOverlay));
                         }
                     },
                     List.of(Component.translatable("screens.wynntils.overlaySelection.editTooltip")),
