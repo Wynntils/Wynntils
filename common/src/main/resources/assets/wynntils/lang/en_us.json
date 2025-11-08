@@ -3379,6 +3379,7 @@
   "service.wynntils.lootrunPaths.fabulousWarning": "Fabulous graphics detected - lootrun paths may not be visible on this setting. Switch to fancy or fast graphics to see them.",
   "service.wynntils.lootrunPaths.lootrunCouldNotBeLoaded": "Lootrun \"%s\" could not be loaded.",
   "service.wynntils.lootrunPaths.lootrunStart": "Lootrun starts at [%s %s %s].",
+  "service.wynntils.secrets.wynncraftApiToken": "This token is used to access stats that are only visible to you in the Wynncraft API for features that use the API for information. You can generate a token on the Wynncraft website in your account dashboard.",
   "service.wynntils.updates.result.error": "Error applying Wynntils update.",
   "service.wynntils.updates.result.incorrect": "Incorrect Wynntils update received from Athena. Please try again later.",
   "service.wynntils.updates.result.latest": "Wynntils is already on latest version.",
