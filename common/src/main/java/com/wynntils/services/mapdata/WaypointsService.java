@@ -60,7 +60,6 @@ public class WaypointsService extends Service {
     @Override
     public void onStorageLoad(Storage<?> storage) {
         if (storage == waypoints) {
-            startPoiMigration();
             WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
         }
 
@@ -155,7 +154,7 @@ public class WaypointsService extends Service {
     }
 
     // region Poi Migration
-    private void startPoiMigration() {
+    public void startPoiMigration() {
         // The feature instance is not guaranteed to be present, so we have to check
         MainMapFeature featureInstance = Managers.Feature.getFeatureInstance(MainMapFeature.class);
         if (featureInstance == null) return;

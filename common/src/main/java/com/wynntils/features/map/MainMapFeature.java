@@ -4,6 +4,8 @@
  */
 package com.wynntils.features.map;
 
+import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -62,6 +64,19 @@ public class MainMapFeature extends Feature {
     @RegisterKeyBind
     public final KeyBind newWaypointKeybind =
             new KeyBind("New Waypoint", GLFW.GLFW_KEY_B, true, this::openWaypointSetup);
+
+    // Keep track of whether migration has already occurred this instance
+    private boolean customPoisMigrated = false;
+
+    @Override
+    protected void onConfigUpdate(Config<?> config) {
+        // Start poi migrations if customPois is loaded
+        if (config == customPois && !customPoisMigrated) {
+            Services.Waypoints.startPoiMigration();
+            Models.LootChest.startPoiMigration();
+            customPoisMigrated = true;
+        }
+    }
 
     private void openMainMap() {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind
