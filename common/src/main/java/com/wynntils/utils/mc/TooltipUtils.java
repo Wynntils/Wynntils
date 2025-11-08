@@ -17,6 +17,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.ArrayList;
@@ -99,8 +100,10 @@ public final class TooltipUtils {
 
         // Update name depending on overall percentage; this needs to be done every rendering
         // for rainbow/defective effects
+        boolean isShiny = (wynnItem instanceof ShinyItemProperty shinyItemProperty
+                && shinyItemProperty.getShinyStat().isPresent());
         if (feature.overallPercentageInName.get() && itemInfo.hasOverallValue()) {
-            updateItemName(itemInfo, tooltips);
+            updateItemName(itemInfo, isShiny, tooltips);
         }
         return tooltips;
     }
@@ -125,19 +128,23 @@ public final class TooltipUtils {
                 Models.Character.getClassType(), currentIdentificationStyle, null, isif.itemWeights.get(), null));
     }
 
-    private static void updateItemName(IdentifiableItemProperty itemInfo, Deque<Component> tooltips) {
-        MutableComponent name;
+    private static void updateItemName(IdentifiableItemProperty itemInfo, boolean isShiny, Deque<Component> tooltips) {
+        MutableComponent name = Component.empty();
+        String itemName = itemInfo.getName();
         ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
 
+        if (isShiny) {
+            name = Component.literal("⬡ ");
+            itemName = "Shiny " + itemName;
+        }
+
         if (isif.perfect.get() && itemInfo.isPerfect()) {
-            name = ComponentUtils.makeRainbowStyle("Perfect " + itemInfo.getName(), true);
+            name.append(ComponentUtils.makeRainbowStyle("Perfect " + itemName, true));
         } else if (isif.defective.get() && itemInfo.isDefective()) {
-            name = ComponentUtils.makeObfuscated(
-                    "Defective " + itemInfo.getName(),
-                    isif.obfuscationChanceStart.get(),
-                    isif.obfuscationChanceEnd.get());
+            name.append(ComponentUtils.makeObfuscated(
+                    "Defective " + itemName, isif.obfuscationChanceStart.get(), isif.obfuscationChanceEnd.get()));
         } else {
-            name = tooltips.getFirst().copy();
+            name.append(tooltips.getFirst().copy());
             name.append(ColorScaleUtils.getPercentageTextComponent(
                     isif.getColorMap(),
                     itemInfo.getOverallPercentage(),

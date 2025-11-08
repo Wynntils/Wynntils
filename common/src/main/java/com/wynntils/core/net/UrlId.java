@@ -30,6 +30,7 @@ public enum UrlId {
     DATA_ATHENA_ITEM_WEIGHTS("dataAthenaItemWeights"),
     DATA_ATHENA_LEADERBOARD("dataAthenaLeaderboard"),
     DATA_ATHENA_SERVER_LIST("dataAthenaServerList"),
+    DATA_ATHENA_TERRITORY_LIST_V2("dataAthenaTerritoryListV2"),
     DATA_STATIC_ABILITIES("dataStaticAbilities"),
     DATA_STATIC_ASPECTS("dataStaticAspects"),
     DATA_STATIC_CAVE_INFO("dataStaticCaveInfo"),

@@ -35,6 +35,7 @@ import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.gear.SetModel;
 import com.wynntils.models.guild.GuildModel;
 import com.wynntils.models.horse.HorseModel;
+import com.wynntils.models.housing.HousingModel;
 import com.wynntils.models.ingredients.IngredientModel;
 import com.wynntils.models.inventory.IngredientPouchModel;
 import com.wynntils.models.inventory.InventoryModel;
@@ -95,6 +96,7 @@ public final class Models {
     public static final GuildModel Guild = new GuildModel();
     public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
     public static final HorseModel Horse = new HorseModel();
+    public static final HousingModel Housing = new HousingModel();
     public static final IngredientModel Ingredient = new IngredientModel();
     public static final IngredientPouchModel IngredientPouch = new IngredientPouchModel();
     public static final InventoryModel Inventory = new InventoryModel();

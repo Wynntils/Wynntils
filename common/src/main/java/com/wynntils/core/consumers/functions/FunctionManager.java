@@ -486,6 +486,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
+        registerFunction(new CharacterFunctions.MomentumFunction());
+        registerFunction(new CharacterFunctions.MomentumPercentFunction());
         registerFunction(new CharacterFunctions.OphanimActive());
         registerFunction(new CharacterFunctions.OphanimHealingPercentFunction());
         registerFunction(new CharacterFunctions.OphanimOrb());

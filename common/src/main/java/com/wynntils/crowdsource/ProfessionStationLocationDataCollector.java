@@ -15,7 +15,7 @@ public class ProfessionStationLocationDataCollector
         extends CrowdSourcedDataCollector<ProfessionCraftingStationLabelInfo> {
     @SubscribeEvent
     public void onLabelIdentified(LabelIdentifiedEvent event) {
-        if (Models.WorldState.onHousing()) return;
+        if (Models.Housing.isOnHousing()) return;
 
         if (event.getLabelInfo() instanceof ProfessionCraftingStationLabelInfo labelInfo) {
             collect(labelInfo);

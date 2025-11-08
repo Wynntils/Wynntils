@@ -60,6 +60,7 @@ public class ItemLockFeature extends Feature {
 
         // Don't render lock on full screen containers
         if (Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
+        if (Models.Housing.isInEditMode()) return;
 
         for (Integer slotId : classSlotLockMap.get().getOrDefault(Models.Character.getId(), new TreeSet<>())) {
             Optional<Slot> lockedSlot = abstractContainerScreen.getMenu().slots.stream()
@@ -80,6 +81,7 @@ public class ItemLockFeature extends Feature {
         if (!(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
         if (!blockAllActionsOnLockedItems.get() && event.getClickType() != ClickType.THROW) return;
+        if (Models.Housing.isInEditMode()) return;
 
         // We have to match slot.index here, because the event slot number is an index as well
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()
@@ -121,6 +123,7 @@ public class ItemLockFeature extends Feature {
                 .filter(slot -> slot.getItem() == selected)
                 .findFirst();
         if (heldItemSlot.isEmpty()) return;
+        if (Models.Housing.isInEditMode()) return;
 
         if (classSlotLockMap
                 .get()

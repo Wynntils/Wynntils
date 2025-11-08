@@ -241,6 +241,27 @@ public class CharacterFunctions {
         }
     }
 
+    public static class MomentumPercentFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.momentumBar.isActive()
+                    ? Models.Ability.momentumBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("momentum_pct");
+        }
+    }
+
+    public static class MomentumFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ability.momentumBar.getMomentum();
+        }
+    }
+
     public static class IsRidingHorseFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {

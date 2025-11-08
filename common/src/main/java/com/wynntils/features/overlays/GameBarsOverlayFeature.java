@@ -20,6 +20,7 @@ import com.wynntils.overlays.gamebars.HealthBarOverlay;
 import com.wynntils.overlays.gamebars.HolyPowerBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBankBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBarOverlay;
+import com.wynntils.overlays.gamebars.MomentumBarOverlay;
 import com.wynntils.overlays.gamebars.OphanimBarOverlay;
 
 @ConfigCategory(Category.OVERLAYS)
@@ -56,4 +57,7 @@ public class GameBarsOverlayFeature extends Feature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final CommanderBarOverlay commanderBarOverlay = new CommanderBarOverlay();
+
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
+    private final MomentumBarOverlay momentumBarOverlay = new MomentumBarOverlay();
 }

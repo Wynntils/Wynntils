@@ -67,6 +67,11 @@ public final class TerritoryModel extends Model {
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
     private long lastGuildUpdate = 0;
 
+    // Use Athena by default for territories, but after 3 failures switch to the API
+    private static final int MAX_ERRORS = 3;
+    private int athenaCheckErrors = 0;
+    private UrlId lookupUrl = UrlId.DATA_ATHENA_TERRITORY_LIST_V2;
+
     public TerritoryModel() {
         super(List.of());
 
@@ -249,7 +254,7 @@ public final class TerritoryModel extends Model {
             return;
         }
 
-        Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_TERRITORY_LIST);
+        Download dl = Managers.Net.download(lookupUrl);
         dl.handleJsonObject(
                 json -> {
                     Map<String, TerritoryProfile> tempMap = new HashMap<>();
@@ -274,6 +279,15 @@ public final class TerritoryModel extends Model {
                 },
                 onError -> {
                     WynntilsMod.warn("Failed to update territory data.");
+
+                    if (lookupUrl == UrlId.DATA_ATHENA_TERRITORY_LIST_V2) {
+                        athenaCheckErrors++;
+                        if (athenaCheckErrors >= MAX_ERRORS) {
+                            WynntilsMod.warn(
+                                    "Reached maximum errors for Athena territory lookup, switching to Wynncraft API.");
+                            lookupUrl = UrlId.DATA_WYNNCRAFT_TERRITORY_LIST;
+                        }
+                    }
                 });
     }
 }

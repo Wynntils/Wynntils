@@ -47,6 +47,8 @@ public final class SpellModel extends Model {
     private int ticksSinceCastBurst = 0;
     private int ticksSinceCast = 0;
 
+    private boolean expireNextClear = false;
+
     public SpellModel() {
         super(List.of());
 
@@ -145,7 +147,10 @@ public final class SpellModel extends Model {
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
         SPELL_PACKET_QUEUE.clear();
+        // We need to reset lastSpell here as the actual inputs are now cleared, but they are still visible
+        // so we don't post the expired event until the action bar has actually updated with the cleared inputs
         lastSpell = SpellDirection.NO_SPELL;
+        expireNextClear = true;
     }
 
     public void addSpellToQueue(List<SpellDirection> spell) {
@@ -218,6 +223,9 @@ public final class SpellModel extends Model {
             if (lastSpell.length != 3) {
                 lastSpell = SpellDirection.NO_SPELL;
             }
+            WynntilsMod.postEvent(new SpellEvent.Expired());
+        } else if (expireNextClear) {
+            expireNextClear = false;
             WynntilsMod.postEvent(new SpellEvent.Expired());
         }
     }
