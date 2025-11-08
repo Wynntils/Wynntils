@@ -245,6 +245,12 @@ public class ChatItemFeature extends Feature {
         if (wynnItem instanceof NamedItemProperty namedItemProperty) {
             nameText = StyledText.fromString(namedItemProperty.getName());
 
+            if (wynnItem instanceof ShinyItemProperty shinyItemProperty
+                    && shinyItemProperty.getShinyStat().isPresent()) {
+                parts.add(new StyledTextPart("⬡ ", Style.EMPTY.withColor(ChatFormatting.WHITE), null, Style.EMPTY));
+                nameText = StyledText.fromString("Shiny ").append(nameText);
+            }
+
             if (showPerfectOrDefective.get()) {
                 if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty) {
                     if (identifiableItemProperty.isPerfect()) {
@@ -256,11 +262,6 @@ public class ChatItemFeature extends Feature {
                     }
                 }
             }
-        }
-
-        if (wynnItem instanceof ShinyItemProperty shinyItemProperty
-                && shinyItemProperty.getShinyStat().isPresent()) {
-            parts.add(new StyledTextPart("⬡ ", Style.EMPTY.withColor(ChatFormatting.WHITE), null, Style.EMPTY));
         }
 
         Style style = Style.EMPTY.applyFormat(ChatFormatting.UNDERLINE).withColor(ChatFormatting.GOLD);
