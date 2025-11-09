@@ -144,7 +144,8 @@ public final class TooltipUtils {
             name.append(ComponentUtils.makeObfuscated(
                     "Defective " + itemName, isif.obfuscationChanceStart.get(), isif.obfuscationChanceEnd.get()));
         } else {
-            name.append(tooltips.getFirst().copy());
+            // This already contains the ⬡ if it is a shiny item so we don't append the line
+            name = tooltips.getFirst().copy();
             name.append(ColorScaleUtils.getPercentageTextComponent(
                     isif.getColorMap(),
                     itemInfo.getOverallPercentage(),
