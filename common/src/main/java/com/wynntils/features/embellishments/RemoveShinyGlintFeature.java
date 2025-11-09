@@ -18,6 +18,7 @@ import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @StartDisabled
@@ -49,24 +50,37 @@ public class RemoveShinyGlintFeature extends Feature {
         if (shinyItemProperty.isPresent()
                 && shinyItemProperty.get().getShinyStat().isEmpty()) return;
 
+        // Weapons use the potion contents DataComponent, armor uses the dye color
         PotionContents itemStackPotionContents = itemStack.get(DataComponents.POTION_CONTENTS);
-        if (itemStackPotionContents == null) return;
+        if (itemStackPotionContents == null) {
+            DyedItemColor dyeColor = itemStack.get(DataComponents.DYED_COLOR);
 
-        Optional<Integer> potionColor = itemStackPotionContents.customColor();
+            if (dyeColor == null) return;
+            if (dyeColor.rgb() != SHINY_GLINT_COLOR) return;
 
-        if (potionColor.isEmpty()) return;
-        if (potionColor.get() != SHINY_GLINT_COLOR) return;
+            itemStack.remove(DataComponents.DYED_COLOR);
 
-        PotionContents removedContents = new PotionContents(
-                itemStackPotionContents.potion(),
-                Optional.empty(),
-                itemStackPotionContents.customEffects(),
-                itemStackPotionContents.customName());
-        itemStack.set(DataComponents.POTION_CONTENTS, removedContents);
+            // Give it the enchanted effect similar to how shinies were displayed prior to the introduction of glints
+            if (replaceGlint.get()) {
+                itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+            }
+        } else {
+            Optional<Integer> potionColor = itemStackPotionContents.customColor();
 
-        // Give it the enchanted effect similar to how shinies were displayed prior to the introduction of glints
-        if (replaceGlint.get()) {
-            itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+            if (potionColor.isEmpty()) return;
+            if (potionColor.get() != SHINY_GLINT_COLOR) return;
+
+            PotionContents removedContents = new PotionContents(
+                    itemStackPotionContents.potion(),
+                    Optional.empty(),
+                    itemStackPotionContents.customEffects(),
+                    itemStackPotionContents.customName());
+            itemStack.set(DataComponents.POTION_CONTENTS, removedContents);
+
+            // Give it the enchanted effect similar to how shinies were displayed prior to the introduction of glints
+            if (replaceGlint.get()) {
+                itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+            }
         }
     }
 }
