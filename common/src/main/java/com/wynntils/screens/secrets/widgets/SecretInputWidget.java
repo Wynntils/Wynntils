@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2025.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.secrets.widgets;
 
 import com.wynntils.core.components.Services;
@@ -24,13 +28,24 @@ public class SecretInputWidget extends AbstractWidget {
     public SecretInputWidget(int x, int y, int width, int height, TextboxScreen textboxScreen, SecretKey secretKey) {
         super(x, y, width, height, null);
 
-        this.maskedTextInputWidget = new MaskedTextInputWidget(x + 80, y, width - 80, height, (s) -> Services.Secrets.setSecret(secretKey, s), textboxScreen);
+        this.maskedTextInputWidget = new MaskedTextInputWidget(
+                x + 80, y, width - 80, height, (s) -> Services.Secrets.setSecret(secretKey, s), textboxScreen);
         this.secretKey = secretKey;
     }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        FontRenderer.getInstance().renderScrollingText(guiGraphics.pose(), StyledText.fromString(EnumUtils.toNiceString(secretKey)), getX(), getY() + getHeight() / 2f, 80, CommonColors.WHITE, HorizontalAlignment.LEFT, VerticalAlignment.MIDDLE, TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderScrollingText(
+                        guiGraphics.pose(),
+                        StyledText.fromString(EnumUtils.toNiceString(secretKey)),
+                        getX(),
+                        getY() + getHeight() / 2f,
+                        80,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
 
         maskedTextInputWidget.render(guiGraphics, mouseX, mouseY, partialTick);
 

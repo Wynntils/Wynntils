@@ -6,14 +6,13 @@ package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
+import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-
-import java.util.function.Consumer;
 
 public class MaskedTextInputWidget extends AbstractWidget {
     private boolean masked = true;
@@ -86,7 +85,10 @@ public class MaskedTextInputWidget extends AbstractWidget {
 
     private void toggleMask() {
         masked = !masked;
-        toggleMaskButton.setMessage(masked ? Component.translatable("screens.wynntils.widget.show") : Component.translatable("screens.wynntils.widget.hide"));
+        toggleMaskButton.setMessage(
+                masked
+                        ? Component.translatable("screens.wynntils.widget.show")
+                        : Component.translatable("screens.wynntils.widget.hide"));
     }
 
     private final class MaskedTextInputBoxWidget extends TextInputBoxWidget {
