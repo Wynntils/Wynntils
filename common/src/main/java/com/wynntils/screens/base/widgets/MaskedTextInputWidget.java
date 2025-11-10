@@ -20,11 +20,18 @@ public class MaskedTextInputWidget extends AbstractWidget {
     private final Button toggleMaskButton;
 
     public MaskedTextInputWidget(
-            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
+            int x,
+            int y,
+            int width,
+            int height,
+            Consumer<String> onUpdateConsumer,
+            TextboxScreen textboxScreen,
+            String initialText) {
         super(x, y, width, height, Component.literal("Masked Text Input"));
 
         this.maskedTextInputBoxWidget =
                 new MaskedTextInputBoxWidget(x, y, width - 42, height, onUpdateConsumer, textboxScreen);
+        this.maskedTextInputBoxWidget.setTextBoxInput(initialText);
 
         this.toggleMaskButton = new Button.Builder(
                         masked
@@ -34,6 +41,11 @@ public class MaskedTextInputWidget extends AbstractWidget {
                 .pos(x + width - 40, y)
                 .size(40, 20)
                 .build();
+    }
+
+    public MaskedTextInputWidget(
+            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
+        this(x, y, width, height, onUpdateConsumer, textboxScreen, "");
     }
 
     @Override

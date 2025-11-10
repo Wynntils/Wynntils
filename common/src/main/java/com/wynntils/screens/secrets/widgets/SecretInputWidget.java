@@ -29,7 +29,13 @@ public class SecretInputWidget extends AbstractWidget {
         super(x, y, width, height, null);
 
         this.maskedTextInputWidget = new MaskedTextInputWidget(
-                x + 80, y, width - 80, height, (s) -> Services.Secrets.setSecret(secretKey, s), textboxScreen);
+                x + 80,
+                y,
+                width - 80,
+                height,
+                (s) -> Services.Secrets.setSecret(secretKey, s),
+                textboxScreen,
+                Services.Secrets.getSecret(secretKey));
         this.secretKey = secretKey;
     }
 
