@@ -82,7 +82,7 @@ public class CharmInfoRegistry {
         Map<String, CharmInfo> lookupMap = registry.stream()
                 .collect(HashMap::new, (map, charmInfo) -> map.put(charmInfo.name(), charmInfo), HashMap::putAll);
 
-        // Make the result  to the world
+        // Make the result visible to the world
         charmInfoRegistry = registry;
         charmInfoLookup = lookupMap;
     }
