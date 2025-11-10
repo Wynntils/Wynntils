@@ -51,7 +51,7 @@ public class TowerEffectOverlayFeature extends Feature {
     @Persisted
     private final Config<Float> soundPitch = new Config<>(1.0f);
 
-    // Vigentte configs
+    // Vignette configs
     @Persisted
     private final Config<Boolean> vignetteOnAura = new Config<>(true);
 

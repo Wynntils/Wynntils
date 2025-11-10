@@ -106,7 +106,7 @@ public abstract class GuiMixin {
     private void onRenderVehicleHealth(GuiGraphics guiGraphics, CallbackInfo ci) {
         if (!MixinHelper.onWynncraft()) return;
 
-        // On Wynncraft we always cancel vehicle health; it has no purpose and it interfers
+        // On Wynncraft we always cancel vehicle health; it has no purpose and it interferes
         // with our foodbar event above
         ci.cancel();
     }

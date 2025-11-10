@@ -84,7 +84,7 @@ public class LocateCommand extends Command {
             }
 
             MutableComponent response = Component.literal("Found multiple services matching '" + searchedName
-                            + "'. Pleace specify with more detail. Matching: ")
+                            + "'. Please specify with more detail. Matching: ")
                     .withStyle(ChatFormatting.RED);
             response.append(Component.literal(String.join(
                     ", ", matchedKinds.stream().map(ServiceKind::getName).toList())));

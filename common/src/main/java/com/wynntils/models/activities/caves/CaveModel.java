@@ -40,7 +40,7 @@ public final class CaveModel extends Model {
 
         for (ActivityInfo activity : newActivities) {
             if (activity.type() != ActivityType.CAVE) {
-                WynntilsMod.warn("Incorrect cave activity type recieved: " + activity);
+                WynntilsMod.warn("Incorrect cave activity type received: " + activity);
                 continue;
             }
             CaveInfo caveInfo = getCaveInfoFromActivity(activity);

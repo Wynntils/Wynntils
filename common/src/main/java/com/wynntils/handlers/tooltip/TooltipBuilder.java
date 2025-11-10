@@ -28,7 +28,7 @@ public abstract class TooltipBuilder {
     private final List<Component> footer;
     private final String source;
 
-    // The identificationsCache is only valid if the cached dependencies matchs
+    // The identificationsCache is only valid if the cached dependencies match
     private ClassType cachedCurrentClass;
     private ItemWeightSource cachedWeightSource;
     private TooltipStyle cachedStyle;

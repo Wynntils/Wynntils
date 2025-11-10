@@ -73,7 +73,7 @@ public class WorldWaypointDistanceFeature extends Feature {
     public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
 
     @Persisted
-    private final Config<Boolean> showAdditonalTextAbove = new Config<>(false);
+    private final Config<Boolean> showAdditionalTextAbove = new Config<>(false);
 
     private final List<RenderedMarkerInfo> renderedMarkers = new ArrayList<>();
 
@@ -163,7 +163,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                         icon.height());
                 RenderSystem.setShaderColor(1, 1, 1, 1);
 
-                if (!showAdditonalTextAbove.get() && renderedMarker.additionalText != null) {
+                if (!showAdditionalTextAbove.get() && renderedMarker.additionalText != null) {
                     backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.additionalText);
                     RenderUtils.drawRect(
                             event.getPoseStack(),
@@ -215,7 +215,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                                 textShadow.get(),
                                 scale.get());
 
-                if (showAdditonalTextAbove.get() && renderedMarker.additionalText != null) {
+                if (showAdditionalTextAbove.get() && renderedMarker.additionalText != null) {
                     backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.additionalText);
                     RenderUtils.drawRect(
                             event.getPoseStack(),

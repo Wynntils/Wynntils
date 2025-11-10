@@ -100,8 +100,8 @@ public final class GuildModel extends Model {
     private static final Pattern MSG_NEW_OBJECTIVES =
             Pattern.compile("^§3\\[INFO\\]§b New Weekly Guild Objectives are being assigned\\.$");
 
-    // Test in GuildModel_MSG_TRIBUTE_SCEDULED
-    private static final Pattern MSG_TRIBUTE_SCEDULED = Pattern.compile(
+    // Test in GuildModel_MSG_TRIBUTE_SCHEDULED
+    private static final Pattern MSG_TRIBUTE_SCHEDULED = Pattern.compile(
             "^§3\\[INFO\\]§b (?<sender>[\\w\\s]+) scheduled (?<resource>[ⒿⓀⒸⒷ]?) ?(?<amount>\\d+) (Ore|Wood|Fish|Crops?|Emeralds?) per hour to (?<recipient>[a-zA-Z\\s]+)$");
 
     // Test in GuildModel_MSG_TRIBUTE_STOPPED
@@ -267,7 +267,7 @@ public final class GuildModel extends Model {
             return;
         }
 
-        Matcher tributeScheduledMatcher = message.getMatcher(MSG_TRIBUTE_SCEDULED);
+        Matcher tributeScheduledMatcher = message.getMatcher(MSG_TRIBUTE_SCHEDULED);
         if (tributeScheduledMatcher.matches()) {
             String recipient = tributeScheduledMatcher.group("recipient");
             GuildResource resource = GuildResource.fromSymbol(tributeScheduledMatcher.group("resource"));
@@ -292,11 +292,11 @@ public final class GuildModel extends Model {
             return;
         }
 
-        Matcher allienceFormedMatcher = message.getMatcher(MSG_ALLIANCE_FORMED);
-        if (allienceFormedMatcher.matches()) {
-            String guild = allienceFormedMatcher.group("guild");
+        Matcher allianceFormedMatcher = message.getMatcher(MSG_ALLIANCE_FORMED);
+        if (allianceFormedMatcher.matches()) {
+            String guild = allianceFormedMatcher.group("guild");
             if (guild.equals(guildName)) {
-                guild = allienceFormedMatcher.group("actor");
+                guild = allianceFormedMatcher.group("actor");
             }
             guildDiplomacyMap.put(guild, new DiplomacyInfo(guild));
             return;

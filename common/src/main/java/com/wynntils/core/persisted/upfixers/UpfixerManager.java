@@ -15,7 +15,7 @@ import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsBankNameU
 import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomCommandKeybindSlashStartUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiIconEnumBugUpfixer;
-import com.wynntils.core.persisted.upfixers.config.CustomPoiVisbilityUpfixer;
+import com.wynntils.core.persisted.upfixers.config.CustomPoiVisibilityUpfixer;
 import com.wynntils.core.persisted.upfixers.config.DurabilityArcToDurabilityOverlayUpfixer;
 import com.wynntils.core.persisted.upfixers.config.EnumNamingUpfixer;
 import com.wynntils.core.persisted.upfixers.config.GameBarOverlayMoveUpfixer;
@@ -55,7 +55,7 @@ public class UpfixerManager extends Manager {
         super(List.of());
 
         // Register config upfixers here, in order of run priority
-        registerConfigUpfixer(new CustomPoiVisbilityUpfixer());
+        registerConfigUpfixer(new CustomPoiVisibilityUpfixer());
         registerConfigUpfixer(new CustomCommandKeybindSlashStartUpfixer());
         registerConfigUpfixer(new GameBarOverlayMoveUpfixer());
         registerConfigUpfixer(new EnumNamingUpfixer());

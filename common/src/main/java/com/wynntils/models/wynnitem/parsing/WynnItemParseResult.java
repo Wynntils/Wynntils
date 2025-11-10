@@ -42,7 +42,7 @@ public record WynnItemParseResult(
         Optional<ShinyStat> shinyStat,
         boolean allRequirementsMet,
         Optional<SetInstance> setInstance) {
-    public static WynnItemParseResult fromInternallRoll(
+    public static WynnItemParseResult fromInternalRoll(
             List<StatActualValue> identifications, List<Powder> powders, int rerolls) {
         return new WynnItemParseResult(
                 null,

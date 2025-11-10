@@ -26,7 +26,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
     private final Set<Pair<MarkerInfo, WaypointPoi>> markerInfoSet = new CopyOnWriteArraySet<>();
 
     public void addLocation(
-            Location location, Texture texture, CustomColor beaconColor, CustomColor textColor, String additonalText) {
+            Location location, Texture texture, CustomColor beaconColor, CustomColor textColor, String additionalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 new StaticLocationSupplier(location),
@@ -38,11 +38,11 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
                                 .showAdditionalTextInWorld
                                 .get()
-                        ? additonalText
+                        ? additionalText
                         : null));
     }
 
-    public void addLocation(Location location, Texture texture, CustomColor beaconColor, String additonalText) {
+    public void addLocation(Location location, Texture texture, CustomColor beaconColor, String additionalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 new StaticLocationSupplier(location),
@@ -74,7 +74,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                         : null));
     }
 
-    public void addLocation(Location location, String additonalText) {
+    public void addLocation(Location location, String additionalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 new StaticLocationSupplier(location),
@@ -86,11 +86,11 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
                                 .showAdditionalTextInWorld
                                 .get()
-                        ? additonalText
+                        ? additionalText
                         : null));
     }
 
-    public void addLocation(LocationSupplier locationSupplier, String additonalText) {
+    public void addLocation(LocationSupplier locationSupplier, String additionalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 locationSupplier,
@@ -102,7 +102,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
                                 .showAdditionalTextInWorld
                                 .get()
-                        ? additonalText
+                        ? additionalText
                         : null));
     }
 

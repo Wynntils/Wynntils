@@ -40,7 +40,7 @@ public class NestOfTheGrootslangsRaid extends RaidKind {
 
     private static Map<String, Map<Integer, String>> buildMajorIdMap() {
         return Map.of(
-                "Beserk", Map.of(1, "Explosive Impact"),
+                "Berserk", Map.of(1, "Explosive Impact"),
                 "Lightbearer", Map.of(3, "Transcendence"),
                 "Pestilent", Map.of(3, "Plague"),
                 "Bedrock", Map.of(3, "Altruism"));

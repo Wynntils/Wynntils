@@ -33,7 +33,7 @@ public abstract class ChatMessageEvent extends Event {
     }
 
     /**
-     * This event is what models and features should use to listen to chat messsages.
+     * This event is what models and features should use to listen to chat messages.
      * Any listener can request to cancel the chat, but it will still be sent to all
      * other listeners for matching, even if it is going to be canceled.
      */
@@ -54,7 +54,7 @@ public abstract class ChatMessageEvent extends Event {
     }
 
     /**
-     * This event is what features should use if they want to rewrite chat messsages.
+     * This event is what features should use if they want to rewrite chat messages.
      */
     public static class Edit extends ChatMessageEvent {
         private StyledText editedMessage = null;

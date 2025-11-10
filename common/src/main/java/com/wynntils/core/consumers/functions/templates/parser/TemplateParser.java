@@ -22,7 +22,7 @@ public final class TemplateParser {
     private static List<TemplatePart> parseTemplate(String templateString) {
         List<TemplatePart> parts = new ArrayList<>();
 
-        final int lastIndexOfExpresionEnd = templateString.lastIndexOf('}');
+        final int lastIndexOfExpressionEnd = templateString.lastIndexOf('}');
 
         int expressionContextStart = -1;
         int expressionNestLevel = 0;
@@ -49,11 +49,11 @@ public final class TemplateParser {
 
             if (current == '}' && expressionContextStart != -1) {
                 if (expressionNestLevel != 0) {
-                    // Check if we have an asymmetric, but "complete" expresion
+                    // Check if we have an asymmetric, but "complete" expression
                     // While this is likely a mistake, we will try to parse it anyway
                     // ("{{expression} {expression2}")
 
-                    if (i != lastIndexOfExpresionEnd) {
+                    if (i != lastIndexOfExpressionEnd) {
                         expressionNestLevel--;
                         continue;
                     }

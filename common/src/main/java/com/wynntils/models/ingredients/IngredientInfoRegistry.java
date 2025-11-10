@@ -95,7 +95,7 @@ public class IngredientInfoRegistry {
             }
         }
 
-        // Make the result visisble to the world
+        // Make the result visible to the world
         ingredientInfoRegistry = registry;
         ingredientInfoLookup = lookupMap;
         ingredientInfoLookupApiName = altLookupMap;

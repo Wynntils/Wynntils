@@ -161,14 +161,14 @@ public final class BankModel extends Model {
                 Map<Integer, BankPageCustomization> nameMap =
                         customCharacterBankPagesCustomizations.get().get(Models.Character.getId());
 
-                var cusomization = nameMap.getOrDefault(pageIndex, new BankPageCustomization(pageIndex));
+                var customization = nameMap.getOrDefault(pageIndex, new BankPageCustomization(pageIndex));
 
-                updater.accept(cusomization);
+                updater.accept(customization);
 
-                if (cusomization.equals(new BankPageCustomization(pageIndex))) {
+                if (customization.equals(new BankPageCustomization(pageIndex))) {
                     nameMap.remove(pageIndex);
                 } else {
-                    nameMap.put(pageIndex, cusomization);
+                    nameMap.put(pageIndex, customization);
                 }
 
                 customCharacterBankPagesCustomizations.get().put(Models.Character.getId(), nameMap);
@@ -182,14 +182,14 @@ public final class BankModel extends Model {
             Integer pageIndex,
             Consumer<BankPageCustomization> updater,
             Storage<Map<Integer, BankPageCustomization>> storage) {
-        var cusomization = storage.get().getOrDefault(pageIndex, new BankPageCustomization(pageIndex));
+        var customization = storage.get().getOrDefault(pageIndex, new BankPageCustomization(pageIndex));
 
-        updater.accept(cusomization);
+        updater.accept(customization);
 
-        if (cusomization.equals(new BankPageCustomization(pageIndex))) {
+        if (customization.equals(new BankPageCustomization(pageIndex))) {
             storage.get().remove(pageIndex);
         } else {
-            storage.get().put(pageIndex, cusomization);
+            storage.get().put(pageIndex, customization);
         }
 
         storage.touched();

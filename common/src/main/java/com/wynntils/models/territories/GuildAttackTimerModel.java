@@ -76,8 +76,8 @@ public final class GuildAttackTimerModel extends Model {
     public void onMessage(ChatMessageEvent.Match event) {
         // TODO: Once RecipientType supports Wynncraft 2.1 messages, we can check for RecipientType.GUILD
 
-        StyledText cleanMessaage = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
-        Matcher matcher = cleanMessaage.getMatcher(WAR_MESSAGE_PATTERN);
+        StyledText cleanMessage = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        Matcher matcher = cleanMessage.getMatcher(WAR_MESSAGE_PATTERN);
         if (matcher.matches()) {
             long timerEnd = System.currentTimeMillis();
 
@@ -102,7 +102,7 @@ public final class GuildAttackTimerModel extends Model {
             return;
         }
 
-        matcher = cleanMessaage.getMatcher(CAPTURED_PATTERN);
+        matcher = cleanMessage.getMatcher(CAPTURED_PATTERN);
         if (matcher.matches()) {
             // Remove the attack timer for the territory, if it exists
             // (the captured message appears for both owned and attacked territories)
@@ -114,7 +114,7 @@ public final class GuildAttackTimerModel extends Model {
             return;
         }
 
-        matcher = cleanMessaage.getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
+        matcher = cleanMessage.getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
         if (matcher.matches()) {
             String territory = matcher.group(1);
             territoryDefenses.put(territory, GuildResourceValues.fromString(matcher.group(2)));

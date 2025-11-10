@@ -55,7 +55,7 @@ public final class GuildWarTowerModel extends Model {
     }
 
     @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent evente) {
+    public void onWorldStateChange(WorldStateEvent event) {
         resetTowerState();
     }
 

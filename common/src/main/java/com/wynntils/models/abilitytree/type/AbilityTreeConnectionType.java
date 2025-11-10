@@ -239,7 +239,7 @@ public enum AbilityTreeConnectionType {
         }
 
         WynntilsMod.error(
-                "Tried to merge two incompatbilty AbilityTreeConnectionTypes: " + first + " and " + second + ".");
+                "Tried to merge two incompatible AbilityTreeConnectionTypes: " + first + " and " + second + ".");
 
         return first;
     }

@@ -13,7 +13,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 
 public final class RenderedStringUtils {
-    private static final Pattern OPENING_PARANTHESIS_PATTERN = Pattern.compile(" \\(");
+    private static final Pattern OPENING_PARENTHESIS_PATTERN = Pattern.compile(" \\(");
     private static final Pattern OPENING_BRACKET_PATTERN = Pattern.compile(" \\[");
 
     public static StyledText[] wrapTextBySize(StyledText s, int maxPixels) {
@@ -91,7 +91,7 @@ public final class RenderedStringUtils {
             }
 
             return StyledText.fromString(
-                    OPENING_PARANTHESIS_PATTERN.matcher(line.getString()).replaceFirst("\n" + color + "("));
+                    OPENING_PARENTHESIS_PATTERN.matcher(line.getString()).replaceFirst("\n" + color + "("));
         } else { // Fits fine, give normal lines
             return line;
         }

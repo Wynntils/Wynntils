@@ -54,7 +54,7 @@ import java.util.function.Function;
  * <h3>Handling data hash conflicts between different data sources</h3>
  * <p>
  *     It's possible for the URL sources to point to different hashes, even when their version matches.
- *     As we can't gurantee that all 3 of the url lists load, and that they are up to date,
+ *     As we can't guarantee that all 3 of the url lists load, and that they are up to date,
  *     some rules have to be applied to make sure outdated hashes are not being used.
  * </p>
  * <p>
@@ -62,7 +62,7 @@ import java.util.function.Function;
  * </p>
  * <ol>
  *     <li>
- *         If the online sources are available, use all hashes avaiable in it. If an url was removed from the online list,
+ *         If the online sources are available, use all hashes available in it. If an url was removed from the online list,
  *         fall back to using the local cache, or the bundled list.
  *     </li>
  *     <li>

@@ -10,6 +10,6 @@ import java.util.List;
 public interface MapArea extends MapFeature {
     // The area is described by a polygon. This list is the sequence of
     // vertices of that polygon, ordered in a counterclockwise orientation.
-    // The last segment of the polygon connects from the last vertice to the first.
+    // The last segment of the polygon connects from the last vertex to the first.
     List<Location> getPolygonArea();
 }

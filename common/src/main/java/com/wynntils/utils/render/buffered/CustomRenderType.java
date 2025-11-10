@@ -121,7 +121,7 @@ public class CustomRenderType extends RenderType {
                                                 GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
                                     },
                                     () -> {
-                                        // Hack: We should reset our texture paraments here,
+                                        // Hack: We should reset our texture parameters here,
                                         // but doing so causes weirdness when using Sodium
                                     }))
                             .createCompositeState(false)));

@@ -213,7 +213,7 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
         previousScreen.setFilteredIcons(icons);
 
         // Only have the buttons active if they will do anything.
-        // Eg. Include all will set all to true, so deactive it if no falses
+        // Eg. Include all will set all to true, so deactivate it if no falses
         includeAllButton.active = icons.containsValue(false);
         excludeAllButton.active = icons.containsValue(true);
 

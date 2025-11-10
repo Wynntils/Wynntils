@@ -25,7 +25,7 @@ public class GuildEvent extends Event {
 
     /**
      * Fired upon the user leaving their guild
-     * @field guildName the name of the guiild left
+     * @field guildName the name of the guild left
      */
     public static class Left extends GuildEvent {
         private final String guildName;
