@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.upfixers.config;
@@ -9,8 +9,8 @@ import com.wynntils.utils.type.Pair;
 import java.util.List;
 
 public class MaxItensityToMaxIntensityUpfixer extends RenamedKeysUpfixer {
-    private static final List<Pair<String, String>> RENAMED_KEYS = List.of(Pair.of(
-            "spellCastVignetteFeature.maxItensityPercent", "spellCastVignetteFeature.maxIntensityPercent"));
+    private static final List<Pair<String, String>> RENAMED_KEYS = List.of(
+            Pair.of("spellCastVignetteFeature.maxItensityPercent", "spellCastVignetteFeature.maxIntensityPercent"));
 
     @Override
     protected List<Pair<String, String>> getRenamedKeys() {
