@@ -8,15 +8,16 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.territories.event.GuildWarQueuedEvent;
-import com.wynntils.models.territories.markers.GuildAttackMarkerProvider;
 import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.models.territories.providers.GuildAttackLocationProvider;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -58,18 +59,22 @@ public final class GuildAttackTimerModel extends Model {
             "§c(?:\uE006\uE002|\uE001) \\[(?<guild>.+)\\] (?:has )?captured the territory (?<territory>.+)\\.");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
 
-    private static final GuildAttackMarkerProvider GUILD_ATTACK_MARKER_PROVIDER = new GuildAttackMarkerProvider();
+    public static final GuildAttackLocationProvider GUILD_ATTACK_LOCATION_PROVIDER = new GuildAttackLocationProvider();
 
     private final Map<String, GuildResourceValues> territoryDefenses = new HashMap<>();
     private final Map<String, TerritoryAttackTimer> chatAttackTimers = new HashMap<>();
     private final Map<String, TerritoryAttackTimer> scoreboardAttackTimers = new HashMap<>();
     private final TimedSet<String> capturedTerritories = new TimedSet<>(10, TimeUnit.SECONDS, true);
 
-    public GuildAttackTimerModel(MarkerModel marker) {
-        super(List.of(marker));
+    public GuildAttackTimerModel() {
+        super(List.of());
 
         Handlers.Scoreboard.addPart(GUILD_ATTACK_SCOREBOARD_PART);
-        Models.Marker.registerMarkerProvider(GUILD_ATTACK_MARKER_PROVIDER);
+    }
+
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(GUILD_ATTACK_LOCATION_PROVIDER);
     }
 
     @SubscribeEvent

@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.upfixers.config.BeaconBeamToWorldMarkersUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CombatXpGainToXpGainUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsBankNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsUpfixer;
@@ -36,6 +37,9 @@ import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMo
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
 import com.wynntils.core.persisted.upfixers.config.UniversalBarOverlayColorToColorTemplateUpfixer;
+import com.wynntils.core.persisted.upfixers.config.WorldMarkersDistanceConfigRenameUpfixer;
+import com.wynntils.core.persisted.upfixers.config.WorldMarkersFeatureRenamesUpfixer;
+import com.wynntils.core.persisted.upfixers.config.WorldMarkersRenameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WynntilsContentBookReplaceToShiftBehaviourUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankPageNameToBankPagePropertyUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
@@ -82,6 +86,10 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new HideDamageLabelsToHideLabelsUpfixer());
         registerConfigUpfixer(new MythicFoundToValuableFoundUpfixer());
         registerConfigUpfixer(new MythicBlockerToChestBlockerUpfixer());
+        registerConfigUpfixer(new WorldMarkersRenameUpfixer());
+        registerConfigUpfixer(new WorldMarkersDistanceConfigRenameUpfixer());
+        registerConfigUpfixer(new BeaconBeamToWorldMarkersUpfixer());
+        registerConfigUpfixer(new WorldMarkersFeatureRenamesUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());

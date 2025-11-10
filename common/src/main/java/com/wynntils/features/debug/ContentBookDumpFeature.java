@@ -24,6 +24,7 @@ import com.wynntils.models.activities.type.ActivityRequirements;
 import com.wynntils.models.activities.type.ActivityRewardType;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -80,7 +81,14 @@ public class ContentBookDumpFeature extends Feature {
     public void onSetSpawn(SetSpawnEvent event) {
         if (currentlyTracking == null) return;
 
-        Optional<Location> spawnLocationOpt = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation();
+        Optional<Location> spawnLocationOpt = Models.Activity.ACTIVITY_PROVIDER
+                .getFeatures()
+                .filter(mapFeature -> mapFeature instanceof MapLocation)
+                .map(mapFeature -> (MapLocation) mapFeature)
+                .filter(mapLocation -> mapLocation.getLocation().equals(new Location(event.getSpawnPos())))
+                .findFirst()
+                .map(MapLocation::getLocation);
+
         if (spawnLocationOpt.isEmpty()) {
             WynntilsMod.error("Could not get spawn location for " + currentlyTracking.name());
             return;
@@ -161,8 +169,17 @@ public class ContentBookDumpFeature extends Feature {
 
         // Track the activity
         currentlyTracking = info;
-        lastTrackedLocation =
-                Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation().orElse(null);
+        lastTrackedLocation = Models.Activity.ACTIVITY_PROVIDER
+                .getFeatures()
+                .filter(mapFeature -> mapFeature instanceof MapLocation)
+                .map(mapFeature -> (MapLocation) mapFeature)
+                .filter(mapLocation -> mapLocation
+                        .getLocation()
+                        .equals(new Location(McUtils.mc().level.getSharedSpawnPos())))
+                .findFirst()
+                .map(MapLocation::getLocation)
+                .orElse(null);
+
         WynntilsMod.info("Tracking " + info.name());
         Models.Activity.startTracking(info.name(), info.type());
     }

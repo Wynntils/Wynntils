@@ -10,6 +10,8 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -22,7 +24,7 @@ import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
 import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.models.activities.event.DialogueHistoryReloadedEvent;
-import com.wynntils.models.activities.markers.ActivityMarkerProvider;
+import com.wynntils.models.activities.providers.ActivityProvider;
 import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityDistance;
@@ -34,13 +36,13 @@ import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.activities.type.WorldEventFastTravelStatus;
+import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.containers.containers.ContentBookContainer;
-import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.activities.ContentBookHolder;
@@ -97,7 +99,7 @@ public final class ActivityModel extends Model {
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
-    public static final ActivityMarkerProvider ACTIVITY_MARKER_PROVIDER = new ActivityMarkerProvider();
+    public static final ActivityProvider ACTIVITY_PROVIDER = new ActivityProvider();
 
     private TrackedActivity trackedActivity;
     private List<List<StyledText>> dialogueHistory = List.of();
@@ -105,11 +107,10 @@ public final class ActivityModel extends Model {
     private boolean overallProgressOutdated = true;
     private String currentProgressCharacter = "";
 
-    public ActivityModel(MarkerModel markerModel) {
-        super(List.of(markerModel));
+    public ActivityModel(BeaconModel beacon) {
+        super(List.of(beacon));
 
         Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
-        Models.Marker.registerMarkerProvider(ACTIVITY_MARKER_PROVIDER);
         Handlers.WrappedScreen.registerWrappedScreen(new ContentBookHolder());
 
         for (ActivityBeaconKind beaconKind : ActivityBeaconKind.values()) {
@@ -119,6 +120,11 @@ public final class ActivityModel extends Model {
         for (ActivityBeaconMarkerKind beaconMarkerKind : ActivityBeaconMarkerKind.values()) {
             Models.Beacon.registerBeaconMarker(beaconMarkerKind);
         }
+    }
+
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(ACTIVITY_PROVIDER);
     }
 
     @SubscribeEvent
@@ -150,17 +156,16 @@ public final class ActivityModel extends Model {
                 // but a change in the config will only have effect on newly placed beacons.
                 ((EntityExtension) event.getEntity()).setRendered(false);
             }
-            if (feature.autoTrackCoordinates.get()) {
-                Location spawn = new Location(McUtils.mc().level.getSharedSpawnPos());
-                ACTIVITY_MARKER_PROVIDER.setSpawnLocation(activityBeaconMarker.getActivityType(), spawn);
 
-                if (trackedActivity == null) return;
+            Location spawn = new Location(McUtils.mc().level.getSharedSpawnPos());
+            ACTIVITY_PROVIDER.setSpawnLocation(activityBeaconMarker.getActivityType(), spawn, getTrackedName());
 
-                Location trackedLocation = getTrackedLocation();
-                if (trackedLocation != null && !spawn.equals(trackedLocation)) {
-                    ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(
-                            activityBeaconMarker.getActivityType(), trackedLocation);
-                }
+            if (trackedActivity == null) return;
+
+            Location trackedLocation = getTrackedLocation();
+            if (trackedLocation != null && !spawn.equals(trackedLocation)) {
+                ACTIVITY_PROVIDER.setTrackedActivityLocation(
+                        activityBeaconMarker.getActivityType(), trackedLocation, getTrackedName());
             }
         }
     }
@@ -170,8 +175,8 @@ public final class ActivityModel extends Model {
         BeaconMarker beaconMarker = event.getBeaconMarker();
         if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind)) return;
 
-        ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null, null);
-        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(null, null);
+        ACTIVITY_PROVIDER.setSpawnLocation(null, null, "");
+        ACTIVITY_PROVIDER.setTrackedActivityLocation(null, null, "");
     }
 
     @SubscribeEvent
@@ -519,7 +524,7 @@ public final class ActivityModel extends Model {
                 });
             case COMPASS -> {
                 McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
-                Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z), activityInfo.name());
+                Services.UserMarker.addMarkerAtLocation(new Location(x, 0, z), activityInfo.name());
             }
         }
     }
@@ -572,7 +577,7 @@ public final class ActivityModel extends Model {
 
     void resetTracker() {
         trackedActivity = null;
-        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(null, null);
+        ACTIVITY_PROVIDER.setTrackedActivityLocation(null, null, "");
     }
 
     public void scanContentBook(

@@ -4,7 +4,7 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
-import com.wynntils.services.mapdata.attributes.type.MapIcon;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.stream.Stream;
@@ -16,10 +16,16 @@ public class MapIconsProvider extends BuiltInProvider {
     private static final List<MapIcon> PROVIDED_ICONS = List.of(
             new BuiltInIcon("wynntils:icon:content:boss-altar", Texture.BOSS_ALTAR),
             new BuiltInIcon("wynntils:icon:content:cave", Texture.CAVE),
+            new BuiltInIcon("wynntils:icon:content:discovery", Texture.DISCOVERY_ICON),
             new BuiltInIcon("wynntils:icon:content:dungeon", Texture.DUNGEON_ENTRANCE),
             new BuiltInIcon("wynntils:icon:content:grind-spot", Texture.GRIND_SPOT),
+            new BuiltInIcon("wynntils:icon:content:lootrun-camp", Texture.LOOTRUN_CAMP),
+            new BuiltInIcon("wynntils:icon:content:mini-quest", Texture.MINI_QUEST_ICON),
+            new BuiltInIcon("wynntils:icon:content:quest", Texture.QUEST_ICON),
             new BuiltInIcon("wynntils:icon:content:raid", Texture.RAID_ENTRANCE),
             new BuiltInIcon("wynntils:icon:content:shrine", Texture.SHRINE),
+            new BuiltInIcon("wynntils:icon:content:storyline-quest", Texture.STORYLINE_QUEST_ICON),
+            new BuiltInIcon("wynntils:icon:content:world-event", Texture.WORLD_EVENT_ICON),
             new BuiltInIcon("wynntils:icon:gathering:farming", Texture.FARMING),
             new BuiltInIcon("wynntils:icon:gathering:fishing", Texture.FISHING),
             new BuiltInIcon("wynntils:icon:gathering:mining", Texture.MINING),
@@ -28,6 +34,11 @@ public class MapIconsProvider extends BuiltInProvider {
             new BuiltInIcon("wynntils:icon:lootchest:tier-2", Texture.CHEST_T2),
             new BuiltInIcon("wynntils:icon:lootchest:tier-3", Texture.CHEST_T3),
             new BuiltInIcon("wynntils:icon:lootchest:tier-4", Texture.CHEST_T4),
+            new BuiltInIcon("wynntils:icon:lootrun:loot", Texture.SPELUNK),
+            new BuiltInIcon("wynntils:icon:lootrun:slay", Texture.SLAY),
+            new BuiltInIcon("wynntils:icon:lootrun:destroy", Texture.DESTROY),
+            new BuiltInIcon("wynntils:icon:lootrun:defend", Texture.DEFEND),
+            new BuiltInIcon("wynntils:icon:player:head", Texture.PLAYER_HEAD),
             new BuiltInIcon("wynntils:icon:service:blacksmith", Texture.BLACKSMITH),
             new BuiltInIcon("wynntils:icon:service:booth-shop", Texture.BOOTH_SHOP),
             new BuiltInIcon("wynntils:icon:service:fast-travel", Texture.FAST_TRAVEL),
@@ -72,6 +83,9 @@ public class MapIconsProvider extends BuiltInProvider {
     public Stream<MapIcon> getIcons() {
         return PROVIDED_ICONS.stream();
     }
+
+    @Override
+    public void reloadData() {}
 
     public static String getIconIdFromTexture(Texture texture) {
         for (MapIcon icon : PROVIDED_ICONS) {

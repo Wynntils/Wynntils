@@ -20,14 +20,15 @@ import com.wynntils.services.itemweight.ItemWeightService;
 import com.wynntils.services.leaderboard.LeaderboardService;
 import com.wynntils.services.lootrunpaths.LootrunPathsService;
 import com.wynntils.services.map.MapService;
-import com.wynntils.services.map.PoiService;
 import com.wynntils.services.mapdata.MapDataService;
+import com.wynntils.services.mapdata.WaypointsService;
 import com.wynntils.services.ping.PingService;
 import com.wynntils.services.resourcepack.ResourcePackService;
 import com.wynntils.services.splashes.SplashService;
 import com.wynntils.services.statistics.StatisticsService;
 import com.wynntils.services.stopwatch.StopwatchService;
 import com.wynntils.services.translation.TranslationService;
+import com.wynntils.services.usermarker.UserMarkerService;
 
 public final class Services {
     public static final ChatTabService ChatTab = new ChatTabService();
@@ -46,12 +47,13 @@ public final class Services {
     public static final MapDataService MapData = new MapDataService();
     public static final MapService Map = new MapService();
     public static final PingService Ping = new PingService();
-    public static final PoiService Poi = new PoiService();
     public static final ResourcePackService ResourcePack = new ResourcePackService();
     public static final SplashService Splash = new SplashService();
     public static final StatisticsService Statistics = new StatisticsService();
     public static final StopwatchService Stopwatch = new StopwatchService();
     public static final TranslationService Translation = new TranslationService();
     public static final UpdateService Update = new UpdateService();
+    public static final UserMarkerService UserMarker = new UserMarkerService();
+    public static final WaypointsService Waypoints = new WaypointsService();
     public static final WynntilsAccountService WynntilsAccount = new WynntilsAccountService();
 }

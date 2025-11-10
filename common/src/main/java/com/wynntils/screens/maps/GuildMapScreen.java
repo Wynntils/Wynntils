@@ -6,23 +6,31 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.GuildMapFeature;
+import com.wynntils.models.territories.TerritoryAttackTimer;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
-import com.wynntils.screens.base.widgets.BasicTexturedButton;
-import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.map.pois.TerritoryPoi;
-import com.wynntils.services.map.pois.WaypointPoi;
-import com.wynntils.services.map.type.TerritoryDefenseFilterType;
+import com.wynntils.screens.maps.widgets.MapButton;
+import com.wynntils.services.map.type.TerritoryFilterType;
+import com.wynntils.services.mapdata.attributes.impl.AbstractMapAreaAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
+import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
+import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.features.type.MapLocation;
+import com.wynntils.services.mapdata.providers.type.AbstractMapDataOverrideProvider;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -30,50 +38,200 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.BoundingPolygon;
 import com.wynntils.utils.type.CappedValue;
-import java.util.ArrayList;
+import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 public final class GuildMapScreen extends AbstractMapScreen {
+    private static final String TERRITORY_AREA_HQ_LABEL_REMOVER_OVERRIDE_PROVIDER_ID =
+            "override:territory_area_hq_label_remover";
+    private static final TerritoryAreaHqLabelRemoverOverrideProvider TERRITORY_AREA_HQ_LABEL_REMOVER_OVERRIDE_PROVIDER =
+            new TerritoryAreaHqLabelRemoverOverrideProvider();
+
+    private static final String TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER_ID = "override:territory_advancement_mode";
+    private static final TerritoryAreaAdvancementModeOverrideProvider TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER =
+            new TerritoryAreaAdvancementModeOverrideProvider();
+
+    private static final String TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER_ID =
+            "override:territory_resource_generation_colors";
+    private static final TerritoryAreaResourceGenerationColorsOverrideProvider
+            TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER =
+                    new TerritoryAreaResourceGenerationColorsOverrideProvider();
+
     private boolean resourceMode = false;
     private boolean territoryDefenseFilterEnabled = false;
+    private boolean territoryTreasuryFilterEnabled = false;
     private boolean hybridMode = true;
 
     private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VERY_HIGH;
-    private TerritoryDefenseFilterType territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
+    private GuildResourceValues territoryTreasuryFilterLevel = GuildResourceValues.VERY_HIGH;
+    private TerritoryFilterType territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
+    private TerritoryFilterType territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
 
-    private BasicTexturedButton territoryDefenseFilterButton;
-    private BasicTexturedButton hybridModeButton;
+    private MapButton territoryDefenseFilterButton;
+    private MapButton territoryTreasuryFilterButton;
+    private MapButton hybridModeButton;
 
-    private GuildMapScreen() {}
+    private GuildMapScreen() {
+        super();
+        centerMapAroundPlayer();
+    }
+
+    private GuildMapScreen(float mapCenterX, float mapCenterZ, float zoomLevel) {
+        super(mapCenterX, mapCenterZ, zoomLevel);
+    }
 
     public static Screen create() {
         return new GuildMapScreen();
+    }
+
+    public static Screen create(float mapCenterX, float mapCenterZ, float zoomLevel) {
+        return new GuildMapScreen(mapCenterX, mapCenterZ, zoomLevel);
     }
 
     @Override
     protected void doInit() {
         super.doInit();
 
-        // Buttons have to be added in reverse order (right to left) so they don't overlap
+        addMapButton(new MapButton(
+                Texture.ADD_ICON,
+                (b) -> {
+                    resourceMode = !resourceMode;
 
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 7 + 20 * 6,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 8),
-                10,
-                16,
+                    if (resourceMode) {
+                        Services.MapData.registerOverrideProvider(
+                                TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER_ID,
+                                TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER);
+                    } else {
+                        Services.MapData.unregisterOverrideProvider(TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER_ID);
+                    }
+                },
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.GOLD)
+                                .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
+                        Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        territoryDefenseFilterButton = new MapButton(
+                Texture.DEFENSE_FILTER_ICON,
+                (b) -> {
+                    // Left and right clicks cycle through the defense levels, middle click resets to OFF
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                        territoryDefenseFilterEnabled = false;
+                        territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
+                        territoryDefenseFilterButton.setTooltip(getCompleteDefenseFilterTooltip());
+                        return;
+                    }
+
+                    // Holding shift filters higher, ctrl filters lower
+                    if (KeyboardUtils.isShiftDown()) {
+                        territoryDefenseFilterType = TerritoryFilterType.HIGHER;
+                    } else if (KeyboardUtils.isControlDown()) {
+                        territoryDefenseFilterType = TerritoryFilterType.LOWER;
+                    } else {
+                        territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
+                    }
+
+                    territoryDefenseFilterEnabled = true;
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                        territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterNext(
+                                territoryDefenseFilterType != TerritoryFilterType.DEFAULT);
+                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                        territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterPrevious(
+                                territoryDefenseFilterType != TerritoryFilterType.DEFAULT);
+                    }
+
+                    territoryDefenseFilterButton.setTooltip(getCompleteDefenseFilterTooltip());
+                },
+                getCompleteDefenseFilterTooltip());
+        addMapButton(territoryDefenseFilterButton);
+
+        territoryTreasuryFilterButton = new MapButton(
+                Texture.TREASURY,
+                (b) -> {
+                    // Left and right clicks cycle through the treasury levels, middle click resets to OFF
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                        territoryTreasuryFilterEnabled = false;
+                        territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
+                        territoryTreasuryFilterButton.setTooltip(getCompleteTreasuryFilterTooltip());
+                        return;
+                    }
+
+                    // Holding shift filters higher, ctrl filters lower
+                    if (KeyboardUtils.isShiftDown()) {
+                        territoryTreasuryFilterType = TerritoryFilterType.HIGHER;
+                    } else if (KeyboardUtils.isControlDown()) {
+                        territoryTreasuryFilterType = TerritoryFilterType.LOWER;
+                    } else {
+                        territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
+                    }
+
+                    territoryTreasuryFilterEnabled = true;
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                        territoryTreasuryFilterLevel = territoryTreasuryFilterLevel.getFilterNext(
+                                territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
+                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                        territoryTreasuryFilterLevel = territoryTreasuryFilterLevel.getFilterPrevious(
+                                territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
+                    }
+
+                    territoryTreasuryFilterButton.setTooltip(getCompleteTreasuryFilterTooltip());
+                },
+                getCompleteTreasuryFilterTooltip());
+        addMapButton(territoryTreasuryFilterButton);
+
+        hybridModeButton = new MapButton(
+                Texture.OVERLAY_EXTRA_ICON,
+                (b) -> {
+                    hybridMode = !hybridMode;
+
+                    if (!hybridMode) {
+                        Services.MapData.registerOverrideProvider(
+                                TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER_ID,
+                                TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER);
+
+                        if (resourceMode) {
+                            // If resource mode is enabled, we need to re-register the resource generation provider
+                            // so it takes priority over the advancement mode provider
+                            Services.MapData.unregisterOverrideProvider(
+                                    TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER_ID);
+                            Services.MapData.registerOverrideProvider(
+                                    TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER_ID,
+                                    TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER);
+                        }
+                    } else {
+                        Services.MapData.unregisterOverrideProvider(TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER_ID);
+                    }
+
+                    hybridModeButton.setTooltip(getHybridModeTooltip());
+                },
+                getHybridModeTooltip());
+        addMapButton(hybridModeButton);
+
+        addMapButton(new MapButton(
+                Texture.MAP,
+                (b) -> McUtils.mc().setScreen(MainMapScreen.create(mapCenterX, mapCenterZ, zoomLevel)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.BLUE)
+                                .append(Component.translatable("screens.wynntils.guildMap.mainMap.name")),
+                        Component.translatable("screens.wynntils.guildMap.mainMap.description")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
                 Texture.HELP_ICON,
                 (b) -> {},
                 List.of(
@@ -90,87 +248,25 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(Component.translatable("screens.wynntils.guildMap.help.description3")))));
 
-        this.addRenderableWidget(
-                hybridModeButton = new BasicTexturedButton(
-                        width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
-                        (int) (this.renderHeight
-                                - this.renderedBorderYOffset
-                                - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                                - 8),
-                        16,
-                        16,
-                        Texture.OVERLAY_EXTRA_ICON,
-                        (b) -> {
-                            hybridMode = !hybridMode;
-                            hybridModeButton.setTooltip(getHybridModeTooltip());
-                        },
-                        getHybridModeTooltip()));
-
-        territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 8),
-                16,
-                16,
-                Texture.DEFENSE_FILTER_ICON,
-                (b) -> {
-                    // Left and right clicks cycle through the defense levels, middle click resets to OFF
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-                        territoryDefenseFilterEnabled = false;
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
-                        territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
-                        return;
-                    }
-
-                    // Holding shift filters higher, ctrl filters lower
-                    if (KeyboardUtils.isShiftDown()) {
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.HIGHER;
-                    } else if (KeyboardUtils.isControlDown()) {
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.LOWER;
-                    } else {
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
-                    }
-
-                    territoryDefenseFilterEnabled = true;
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                        territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterNext(
-                                territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
-                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                        territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterPrevious(
-                                territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
-                    }
-
-                    territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
-                },
-                getCompleteFilterTooltip()));
-
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 7),
-                14,
-                14,
-                Texture.ADD_ICON,
-                (b) -> resourceMode = !resourceMode,
-                List.of(
-                        Component.literal("[>] ")
-                                .withStyle(ChatFormatting.GOLD)
-                                .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
-                        Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
-                                .withStyle(ChatFormatting.GRAY))));
-
         if (firstInit) {
             // When outside of the main map, center to the middle of the map
             if (!isPlayerInsideMainArea()) {
                 centerMapOnWorld();
             }
 
+            Services.MapData.registerOverrideProvider(
+                    TERRITORY_AREA_HQ_LABEL_REMOVER_OVERRIDE_PROVIDER_ID,
+                    TERRITORY_AREA_HQ_LABEL_REMOVER_OVERRIDE_PROVIDER);
+
             firstInit = false;
         }
+    }
+
+    @Override
+    public void removed() {
+        Services.MapData.unregisterOverrideProvider(TERRITORY_AREA_HQ_LABEL_REMOVER_OVERRIDE_PROVIDER_ID);
+        Services.MapData.unregisterOverrideProvider(TERRITORY_ADVANCEMENT_MODE_OVERRIDE_PROVIDER_ID);
+        Services.MapData.unregisterOverrideProvider(TERRITORY_RESOURCE_GENERATION_OVERRIDE_PROVIDER_ID);
     }
 
     @Override
@@ -199,7 +295,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(poseStack, mouseX, mouseY);
+        renderTerritoryAreaPaths(poseStack);
+
+        renderMapFeatures(poseStack, mouseX, mouseY);
+
+        renderHeadquarterIcons(poseStack);
+
+        renderAttackTimers(poseStack);
 
         renderCursor(
                 poseStack,
@@ -219,74 +321,154 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
+        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+
         renderHoveredTerritoryInfo(poseStack);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    @Override
-    protected void renderPois(
-            List<Poi> pois,
-            PoseStack poseStack,
-            BoundingBox textureBoundingBox,
-            float poiScale,
-            int mouseX,
-            int mouseY) {
-        hovered = null;
+    private void renderTerritoryAreaPaths(PoseStack poseStack) {
+        List<TerritoryArea> territoryAreas = getRenderedMapFeatures()
+                .filter(f -> f instanceof TerritoryArea)
+                .map(f -> (TerritoryArea) f)
+                .toList();
 
-        List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
+        for (MapFeature feature : territoryAreas) {
+            if (feature instanceof TerritoryArea territoryArea) {
+                TerritoryInfo territoryInfo = Models.Territory.getTerritoryInfo(
+                        territoryArea.getTerritoryProfile().getName());
+                if (territoryInfo == null) continue;
 
-        // Render trading routes
-        // We render them in both directions because optimizing it is not cheap either
-        for (Poi poi : filteredPois) {
-            if (!(poi instanceof TerritoryPoi territoryPoi)) continue;
+                for (String tradingRoute : territoryInfo.getTradingRoutes()) {
+                    TerritoryArea destination = territoryAreas.stream()
+                            .filter(area -> area.getTerritoryProfile().getName().equals(tradingRoute))
+                            .findFirst()
+                            .orElse(null);
 
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
+                    if (destination == null) continue;
 
-            for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
-                Optional<Poi> routePoi = filteredPois.stream()
-                        .filter(filteredPoi -> filteredPoi.getName().equals(tradingRoute))
-                        .findFirst();
-
-                // Only render connection if the other poi is also in the filtered pois
-                if (routePoi.isPresent() && filteredPois.contains(routePoi.get())) {
-                    float x = MapRenderer.getRenderX(routePoi.get(), mapCenterX, centerX, zoomRenderScale);
-                    float z = MapRenderer.getRenderZ(routePoi.get(), mapCenterZ, centerZ, zoomRenderScale);
-
-                    RenderUtils.drawLine(poseStack, CommonColors.DARK_GRAY, poiRenderX, poiRenderZ, x, z, 0, 1);
+                    Vector2f firstCentroid = territoryArea.getBoundingPolygon().centroid();
+                    Vector2f secondCentroid = destination.getBoundingPolygon().centroid();
+                    float firstWorldX =
+                            MapRenderer.getRenderX((int) firstCentroid.x(), mapCenterX, centerX, zoomRenderScale);
+                    float firstWorldZ =
+                            MapRenderer.getRenderZ((int) firstCentroid.y(), mapCenterZ, centerZ, zoomRenderScale);
+                    float secondWorldX =
+                            MapRenderer.getRenderX((int) secondCentroid.x(), mapCenterX, centerX, zoomRenderScale);
+                    float secondWorldZ =
+                            MapRenderer.getRenderZ((int) secondCentroid.y(), mapCenterZ, centerZ, zoomRenderScale);
+                    RenderUtils.drawLine(
+                            poseStack,
+                            CommonColors.DARK_GRAY.withAlpha(0.5f),
+                            firstWorldX,
+                            firstWorldZ,
+                            secondWorldX,
+                            secondWorldZ,
+                            0,
+                            1);
                 }
             }
         }
+    }
 
-        MultiBufferSource.BufferSource bufferSource =
-                McUtils.mc().renderBuffers().bufferSource();
+    private void renderHeadquarterIcons(PoseStack poseStack) {
+        List<TerritoryArea> hqTerritoryAreas = getRenderedMapFeatures()
+                .filter(f -> f instanceof TerritoryArea)
+                .map(f -> (TerritoryArea) f)
+                .filter(territoryArea -> territoryArea
+                        .getTerritoryInfo()
+                        .map(TerritoryInfo::isHeadquarters)
+                        .orElse(false))
+                .toList();
 
-        // Reverse and Render
-        for (int i = filteredPois.size() - 1; i >= 0; i--) {
-            Poi poi = filteredPois.get(i);
+        for (TerritoryArea hqTerritoryArea : hqTerritoryAreas) {
+            Vector2f centroid = hqTerritoryArea.getBoundingPolygon().centroid();
+            float worldX = MapRenderer.getRenderX((int) centroid.x(), mapCenterX, centerX, zoomRenderScale);
+            float worldZ = MapRenderer.getRenderZ((int) centroid.y(), mapCenterZ, centerZ, zoomRenderScale);
 
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
-
-            poi.renderAt(
+            RenderUtils.drawTexturedRect(
                     poseStack,
-                    bufferSource,
-                    poiRenderX,
-                    poiRenderZ,
-                    hovered == poi,
-                    poiScale,
-                    zoomRenderScale,
-                    zoomLevel,
-                    true);
+                    Texture.GUILD_HEADQUARTERS,
+                    worldX - Texture.GUILD_HEADQUARTERS.width() / 2,
+                    worldZ - Texture.GUILD_HEADQUARTERS.height() / 2);
         }
+    }
 
-        bufferSource.endBatch();
+    private void renderAttackTimers(PoseStack poseStack) {
+        List<Pair<TerritoryArea, Optional<TerritoryAttackTimer>>> attackedTerritories = getRenderedMapFeatures()
+                .filter(f -> f instanceof TerritoryArea)
+                .map(f -> (TerritoryArea) f)
+                .map(territoryArea -> Pair.of(
+                        territoryArea,
+                        Models.GuildAttackTimer.getAttackTimerForTerritory(
+                                territoryArea.getTerritoryProfile().getName())))
+                .filter(pair -> pair.b().isPresent())
+                .toList();
+
+        for (Pair<TerritoryArea, Optional<TerritoryAttackTimer>> pair : attackedTerritories) {
+            TerritoryArea territoryArea = pair.a();
+            BoundingPolygon boundingPolygon = territoryArea.getBoundingPolygon();
+
+            if (boundingPolygon.axes().size() != 4) {
+                WynntilsMod.warn(
+                        "TerritoryArea %s has a non-quadrilateral bounding polygon. Skipping attack timer rendering."
+                                .formatted(territoryArea.getTerritoryProfile().getName()));
+                continue;
+            }
+
+            float inWorldX = MapRenderer.getRenderX(
+                    (int) boundingPolygon.vertices().get(1).x(), mapCenterX, centerX, zoomRenderScale);
+            float inWorldY = MapRenderer.getRenderZ(
+                    (int) boundingPolygon.vertices().get(1).y(), mapCenterZ, centerZ, zoomRenderScale);
+            float inWorldX2 = MapRenderer.getRenderX(
+                    (int) boundingPolygon.vertices().get(3).x(), mapCenterX, centerX, zoomRenderScale);
+            float inWorldY2 = MapRenderer.getRenderZ(
+                    (int) boundingPolygon.vertices().get(3).y(), mapCenterZ, centerZ, zoomRenderScale);
+
+            // Order the coordinates so that the first coordinate is the top left corner
+            if (inWorldX > inWorldX2) {
+                float temp = inWorldX;
+                inWorldX = inWorldX2;
+                inWorldX2 = temp;
+            }
+            if (inWorldY > inWorldY2) {
+                float temp = inWorldY;
+                inWorldY = inWorldY2;
+                inWorldY2 = temp;
+            }
+
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(pair.b().get().timerString()),
+                            inWorldX,
+                            inWorldX2,
+                            inWorldY,
+                            inWorldY2,
+                            0,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.OUTLINE);
+        }
+    }
+
+    @Override
+    protected Stream<MapFeature> getRenderedMapFeatures() {
+        return Stream.concat(
+                Services.MapData.getFeaturesForCategory("wynntils:territory")
+                        .filter(f -> f instanceof TerritoryArea)
+                        .map(f -> (TerritoryArea) f)
+                        .filter(this::filterDefense)
+                        .filter(this::filterTreasury),
+                Services.MapData.getFeaturesForCategory("wynntils:personal:user-marker"));
     }
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        for (GuiEventListener child : children()) {
+        for (GuiEventListener child :
+                Stream.concat(children().stream(), mapButtons.stream()).toList()) {
             if (child.isMouseOver(mouseX, mouseY)) {
                 child.mouseClicked(mouseX, mouseY, button);
                 return true;
@@ -294,18 +476,34 @@ public final class GuildMapScreen extends AbstractMapScreen {
         }
 
         // Manage on shift right click
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
-                && KeyboardUtils.isShiftDown()
-                && hovered instanceof TerritoryPoi territoryPoi) {
-            Handlers.Command.queueCommand("gu territory " + territoryPoi.getName());
+        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && hoveredFeature instanceof TerritoryArea territoryArea) {
+            Handlers.Command.queueCommand(
+                    "gu territory " + territoryArea.getTerritoryProfile().getName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            if (hovered instanceof WaypointPoi) {
-                Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
-                        hovered.getLocation().asLocation());
+            if (hoveredFeature instanceof MapLocation mapLocation
+                    && Services.UserMarker.isMarkerAtLocation(mapLocation.getLocation())) {
+                Services.UserMarker.removeMarkerAtLocation(mapLocation.getLocation());
                 return true;
             }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            setCompassToMouseCoords(mouseX, mouseY, !KeyboardUtils.isShiftDown());
+            if (hoveredFeature instanceof TerritoryArea territoryArea) {
+                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
+
+                // If shift is not held down, clear all waypoints to only have the new one
+                if (!KeyboardUtils.isShiftDown()) {
+                    Services.UserMarker.removeAllUserMarkedFeatures();
+                }
+
+                double gameX = (mouseX - centerX) / zoomRenderScale + mapCenterX;
+                double gameZ = (mouseY - centerZ) / zoomRenderScale + mapCenterZ;
+                Location location = Location.containing(gameX, 0, gameZ);
+
+                Services.UserMarker.addMarkerAtLocation(
+                        location, territoryArea.getTerritoryProfile().getName());
+                return true;
+            } else {
+                setCompassToMouseCoords(mouseX, mouseY, !KeyboardUtils.isShiftDown());
+            }
             return true;
         }
 
@@ -313,69 +511,75 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     private void renderHoveredTerritoryInfo(PoseStack poseStack) {
-        if (!(hovered instanceof TerritoryPoi territoryPoi)) return;
+        if (!(hoveredFeature instanceof TerritoryArea territoryArea)) return;
 
         poseStack.pushPose();
         poseStack.translate(0, 0, 101);
         int xOffset = (int) (width - SCREEN_SIDE_OFFSET - 250);
         int yOffset = (int) (SCREEN_SIDE_OFFSET + 40);
 
-        if (territoryPoi.isFakeTerritoryInfo()) {
-            renderTerritoryTooltipWithFakeInfo(poseStack, xOffset, yOffset, territoryPoi);
+        if (hybridMode && territoryArea.isTerritoryProfileOutdated()) {
+            renderTerritoryTooltipWithFakeInfo(poseStack, xOffset, yOffset, territoryArea);
         } else {
-            renderTerritoryTooltip(poseStack, xOffset, yOffset, territoryPoi);
+            renderTerritoryTooltip(poseStack, xOffset, yOffset, territoryArea);
         }
 
         poseStack.popPose();
-    }
-
-    private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        List<TerritoryPoi> advancementPois = territoryDefenseFilterEnabled
-                ? Models.Territory.getFilteredTerritoryPoisFromAdvancement(
-                        territoryDefenseFilterLevel.getLevel(), territoryDefenseFilterType)
-                : Models.Territory.getTerritoryPoisFromAdvancement();
-
-        List<Poi> renderedPois = new ArrayList<>();
-
-        if (hybridMode) {
-            // We base hybrid mode on the advancement pois, it should be more consistent
-
-            for (TerritoryPoi poi : advancementPois) {
-                TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(poi.getName());
-
-                // If the API and advamcement pois don't match, we use the API pois without advancement info
-                if (territoryProfile != null
-                        && territoryProfile
-                                .getGuild()
-                                .equals(poi.getTerritoryInfo().getGuildName())) {
-                    renderedPois.add(poi);
-                } else {
-                    renderedPois.add(new TerritoryPoi(territoryProfile, poi.getTerritoryInfo()));
-                }
-            }
-        } else {
-            renderedPois.addAll(advancementPois);
-        }
-
-        Models.Marker.USER_WAYPOINTS_PROVIDER.getPois().forEach(renderedPois::add);
-
-        renderPois(
-                renderedPois,
-                poseStack,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
-                1,
-                mouseX,
-                mouseY);
     }
 
     public boolean isResourceMode() {
         return resourceMode;
     }
 
+    private boolean filterDefense(TerritoryArea territoryArea) {
+        return !territoryDefenseFilterEnabled
+                || filterTerritory(
+                        territoryArea,
+                        territoryDefenseFilterType,
+                        territoryDefenseFilterLevel,
+                        area -> area.getTerritoryInfo()
+                                .map(TerritoryInfo::getDefences)
+                                .orElse(null));
+    }
+
+    private boolean filterTreasury(TerritoryArea territoryArea) {
+        return !territoryTreasuryFilterEnabled
+                || filterTerritory(
+                        territoryArea,
+                        territoryTreasuryFilterType,
+                        territoryTreasuryFilterLevel,
+                        area -> area.getTerritoryInfo()
+                                .map(TerritoryInfo::getTreasury)
+                                .orElse(null));
+    }
+
+    private boolean filterTerritory(
+            TerritoryArea territoryArea,
+            TerritoryFilterType filterType,
+            GuildResourceValues filterLevel,
+            Function<TerritoryArea, GuildResourceValues> getter) {
+        GuildResourceValues guildResourceValue = getter.apply(territoryArea);
+        if (guildResourceValue == null) return false;
+
+        return switch (filterType) {
+            case HIGHER -> guildResourceValue.getLevel() >= filterLevel.getLevel();
+            case LOWER -> guildResourceValue.getLevel() <= filterLevel.getLevel();
+            case DEFAULT -> guildResourceValue.getLevel() == filterLevel.getLevel();
+        };
+    }
+
     private static void renderTerritoryTooltip(
-            PoseStack poseStack, int xOffset, int yOffset, TerritoryPoi territoryPoi) {
-        final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
-        final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
+            PoseStack poseStack, int xOffset, int yOffset, TerritoryArea territoryArea) {
+        Optional<TerritoryInfo> territoryInfoOpt = territoryArea.getTerritoryInfo();
+
+        if (territoryInfoOpt.isEmpty()) {
+            WynntilsMod.warn("TerritoryInfo is empty for %s, when it should not be."
+                    .formatted(territoryArea.getTerritoryProfile().getName()));
+            return;
+        }
+
+        final TerritoryInfo territoryInfo = territoryInfoOpt.get();
+        final TerritoryProfile territoryProfile = territoryArea.getTerritoryProfile();
 
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
@@ -522,7 +726,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString(territoryPoi.getName()),
+                        StyledText.fromString(territoryProfile.getName()),
                         7 + xOffset,
                         textureWidth + xOffset,
                         Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset,
@@ -538,9 +742,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     private static void renderTerritoryTooltipWithFakeInfo(
-            PoseStack poseStack, int xOffset, int yOffset, TerritoryPoi territoryPoi) {
-        final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
-        final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
+            PoseStack poseStack, int xOffset, int yOffset, TerritoryArea territoryArea) {
+        final TerritoryProfile territoryProfile = territoryArea.getTerritoryProfile();
 
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
@@ -591,7 +794,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString(territoryPoi.getName()),
+                        StyledText.fromString(territoryProfile.getName()),
                         7 + xOffset,
                         textureWidth + xOffset,
                         Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset,
@@ -606,25 +809,48 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         TextShadow.OUTLINE);
     }
 
-    private List<Component> getCompleteFilterTooltip() {
+    private List<Component> getCompleteDefenseFilterTooltip() {
         Component lastLine = territoryDefenseFilterEnabled
-                ? Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
+                ? Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
                         .withStyle(ChatFormatting.GRAY)
                         .append(territoryDefenseFilterLevel.getDefenceColor()
                                 + territoryDefenseFilterLevel.getAsString())
                         .append(territoryDefenseFilterType.asComponent())
-                : Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
+                : Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
                         .withStyle(ChatFormatting.GRAY)
                         .append("Off");
         return List.of(
                 Component.literal("[>] ")
                         .withStyle(ChatFormatting.BLUE)
                         .append(Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.name")),
-                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description1")
+                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description")
                         .withStyle(ChatFormatting.GRAY),
-                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description2")
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description1")
                         .withStyle(ChatFormatting.GRAY),
-                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description3")
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description2")
+                        .withStyle(ChatFormatting.GRAY),
+                lastLine);
+    }
+
+    private List<Component> getCompleteTreasuryFilterTooltip() {
+        Component lastLine = territoryTreasuryFilterEnabled
+                ? Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(territoryTreasuryFilterLevel.getTreasuryColor()
+                                + territoryTreasuryFilterLevel.getAsString())
+                        .append(territoryTreasuryFilterType.asComponent())
+                : Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append("Off");
+        return List.of(
+                Component.literal("[>] ")
+                        .withStyle(ChatFormatting.YELLOW)
+                        .append(Component.translatable("screens.wynntils.guildMap.cycleTerritoryFilter.name")),
+                Component.translatable("screens.wynntils.guildMap.cycleTerritoryFilter.description")
+                        .withStyle(ChatFormatting.GRAY),
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description1")
+                        .withStyle(ChatFormatting.GRAY),
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description2")
                         .withStyle(ChatFormatting.GRAY),
                 lastLine);
     }
@@ -644,5 +870,132 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                                 .withStyle(ChatFormatting.GREEN)
                                         : Component.translatable("screens.wynntils.guildMap.hybridMode.advancement")
                                                 .withStyle(ChatFormatting.RED))));
+    }
+
+    private static final class TerritoryAreaHqLabelRemoverOverrideProvider extends AbstractMapDataOverrideProvider {
+        @Override
+        public MapAttributes getOverrideAttributes(MapFeature mapFeature) {
+            if (!(mapFeature instanceof TerritoryArea territoryArea)) return new AbstractMapAreaAttributes() {};
+            if (!territoryArea
+                    .getTerritoryInfo()
+                    .map(TerritoryInfo::isHeadquarters)
+                    .orElse(false)) {
+                return new AbstractMapAreaAttributes() {};
+            }
+
+            return new AbstractMapAreaAttributes() {
+                @Override
+                public Optional<String> getLabel() {
+                    return Optional.of("");
+                }
+            };
+        }
+
+        @Override
+        public Stream<String> getOverridenFeatureIds() {
+            return Stream.empty();
+        }
+
+        @Override
+        public Stream<String> getOverridenCategoryIds() {
+            return Stream.of("wynntils:territory:headquarters");
+        }
+    }
+
+    private static final class TerritoryAreaAdvancementModeOverrideProvider extends AbstractMapDataOverrideProvider {
+        @Override
+        public MapAttributes getOverrideAttributes(MapFeature mapFeature) {
+            // This should never happen, but just in case
+            if (!(mapFeature instanceof TerritoryArea territoryArea)) return new AbstractMapAreaAttributes() {};
+
+            // If there is no advancement data, just return the default attributes
+            // Also, we don't have to change anything if the owners are the same for advancement and api
+            if (!territoryArea.isTerritoryProfileOutdated()) return new AbstractMapAreaAttributes() {};
+
+            // Territory info should be present if the territory profile deemed to be outdated
+            TerritoryInfo territoryInfo = territoryArea.getTerritoryInfo().get();
+
+            return new AbstractMapAreaAttributes() {
+                private CustomColor guildColor = Models.Guild.getColor(territoryInfo.getGuildName());
+
+                @Override
+                public Optional<String> getLabel() {
+                    return Optional.of(territoryInfo.getGuildPrefix());
+                }
+
+                @Override
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(guildColor);
+                }
+
+                @Override
+                public Optional<CustomColor> getFillColor() {
+                    return Optional.of(guildColor.withAlpha(80));
+                }
+
+                @Override
+                public Optional<CustomColor> getBorderColor() {
+                    return Optional.of(guildColor);
+                }
+            };
+        }
+
+        @Override
+        public Stream<String> getOverridenFeatureIds() {
+            return Stream.empty();
+        }
+
+        @Override
+        public Stream<String> getOverridenCategoryIds() {
+            return Stream.of("wynntils:territory");
+        }
+    }
+
+    private static final class TerritoryAreaResourceGenerationColorsOverrideProvider
+            extends AbstractMapDataOverrideProvider {
+        @Override
+        public MapAttributes getOverrideAttributes(MapFeature mapFeature) {
+            // This should never happen, but just in case
+            if (!(mapFeature instanceof TerritoryArea territoryArea)) return new AbstractMapAreaAttributes() {};
+
+            return new AbstractMapAreaAttributes() {
+                @Override
+                public Optional<CustomColor> getFillColor() {
+                    return getResourceColor(territoryArea).map(color -> color.withAlpha(80));
+                }
+
+                @Override
+                public Optional<CustomColor> getBorderColor() {
+                    // FIXME: This should just be the resource color, but at the moment this serves as a replacement
+                    //        for multiple resource color support
+                    return Optional.ofNullable(Models.Territory.getTerritoryInfo(
+                                    territoryArea.getTerritoryProfile().getName()))
+                            .map(TerritoryInfo::getResourceColors)
+                            .map(colors -> colors.size() > 1 ? CommonColors.RED : colors.getFirst());
+                }
+
+                @Override
+                public Optional<CustomColor> getLabelColor() {
+                    return getResourceColor(territoryArea);
+                }
+            };
+        }
+
+        @Override
+        public Stream<String> getOverridenFeatureIds() {
+            return Stream.empty();
+        }
+
+        @Override
+        public Stream<String> getOverridenCategoryIds() {
+            return Stream.of("wynntils:territory");
+        }
+
+        private static Optional<CustomColor> getResourceColor(TerritoryArea territoryArea) {
+            return Optional.ofNullable(Models.Territory.getTerritoryInfo(
+                            territoryArea.getTerritoryProfile().getName()))
+                    .map(TerritoryInfo::getResourceColors)
+                    .map(List::getFirst);
+        }
     }
 }

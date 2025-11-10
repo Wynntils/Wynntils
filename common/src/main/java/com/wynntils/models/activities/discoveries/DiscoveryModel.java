@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -217,7 +218,7 @@ public final class DiscoveryModel extends Model {
                 // We can't run this is on request thread
                 case MAP ->
                     Managers.TickScheduler.scheduleNextTick(() -> McUtils.setScreen(MainMapScreen.create(x, z)));
-                case COMPASS -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z), name);
+                case COMPASS -> Services.UserMarker.addMarkerAtLocation(new Location(x, 0, z), name);
             }
         });
     }

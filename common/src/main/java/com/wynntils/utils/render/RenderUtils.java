@@ -347,6 +347,34 @@ public final class RenderUtils {
                 poseStack, tex, x, y, z, width, height, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
     }
 
+    public static void drawScalingTexturedRectWithColor(
+            PoseStack poseStack,
+            ResourceLocation tex,
+            CustomColor color,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            int textureWidth,
+            int textureHeight) {
+        drawTexturedRectWithColor(
+                poseStack,
+                tex,
+                color,
+                x,
+                y,
+                z,
+                width,
+                height,
+                0,
+                0,
+                textureWidth,
+                textureHeight,
+                textureWidth,
+                textureHeight);
+    }
+
     public static void drawTexturedRectWithColor(
             PoseStack poseStack,
             ResourceLocation tex,

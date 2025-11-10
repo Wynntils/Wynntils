@@ -5,13 +5,19 @@
 package com.wynntils.models.containers;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
@@ -19,6 +25,7 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.event.ValuableFoundEvent;
+import com.wynntils.models.containers.providers.LootChestsProvider;
 import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.gear.type.GearTier;
@@ -27,26 +34,38 @@ import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.mapdata.features.builtin.FoundChestLocation;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class LootChestModel extends Model {
+    private static final LootChestsProvider LOOT_CHESTS_PROVIDER = new LootChestsProvider();
+
     public static final int LOOT_CHEST_ITEM_COUNT = 27;
     private static final int[] HIGH_TIER_EMERALD_POUCHES = {7, 8, 9, 10};
+
+    @Persisted
+    private final Storage<List<FoundChestLocation>> foundChestLocations = new Storage<>(new ArrayList<>());
 
     @Persisted
     private final Storage<List<MythicFind>> mythicFinds = new Storage<>(new ArrayList<>());
@@ -77,24 +96,16 @@ public final class LootChestModel extends Model {
         super(List.of());
     }
 
-    public int getDryCount() {
-        return dryCount.get();
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(LOOT_CHESTS_PROVIDER);
     }
 
-    public int getDryBoxes() {
-        return dryBoxes.get();
-    }
-
-    public int getDryPouchCount(int tier) {
-        return dryEmeraldPouchCount.get().getOrDefault(tier, 0);
-    }
-
-    public int getOpenedChestCount() {
-        return openedChestCount.get();
-    }
-
-    public List<MythicFind> getMythicFinds() {
-        return Collections.unmodifiableList(mythicFinds.get());
+    @Override
+    public void onStorageLoad(Storage<?> storage) {
+        if (storage == foundChestLocations) {
+            LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
+        }
     }
 
     @SubscribeEvent
@@ -105,12 +116,13 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
+    public void onLeftClick(PlayerAttackEvent event) {
+        handleEntity(event.getTarget());
+    }
+
+    @SubscribeEvent
     public void onRightClick(PlayerInteractEvent.InteractAt event) {
-        Entity entity = event.getEntityHitResult().getEntity();
-        if (entity != null && entity.getType() == EntityType.SLIME) {
-            // We don't actually know if this is a chest, but it's a good enough guess.
-            lastChestPos = entity.blockPosition();
-        }
+        handleEntity(event.getEntityHitResult().getEntity());
     }
 
     @SubscribeEvent
@@ -178,17 +190,71 @@ public final class LootChestModel extends Model {
 
     @SubscribeEvent
     public void onScreenOpened(ScreenOpenedEvent.Post event) {
-        if (Models.Container.getCurrentContainer() instanceof LootChestContainer) {
-            LootChestTier tier = getChestType(event.getScreen());
-            if (tier != null) {
-                WynntilsMod.info("Found Loot Chest with tier: " + tier.getWaypointTier());
-                sessionChests.add(tier);
-            }
+        if (lastChestPos == null) return;
+        if (!(event.getScreen() instanceof ContainerScreen)) return;
+
+        if (!(Models.Container.getCurrentContainer() instanceof LootChestContainer)) {
+            lastChestPos = null;
+            return;
         }
+
+        LootChestTier chestType = Models.LootChest.getChestType(event.getScreen());
+        if (chestType == null) return;
+
+        WynntilsMod.info("Found Loot Chest with tier: " + chestType.getWaypointTier());
+        sessionChests.add(chestType);
+
+        Location location = new Location(lastChestPos);
+
+        if (foundChestLocations.get().stream()
+                .noneMatch(foundLocation -> foundLocation.getLocation().equals(location))) {
+            addFoundChestLocation(new FoundChestLocation(location, chestType));
+
+            // TODO: Replace this notification with a popup
+            Managers.Notification.queueMessage(
+                    Component.literal("Added new waypoint for " + chestType.getWaypointName())
+                            .withStyle(ChatFormatting.AQUA));
+        }
+    }
+
+    public int getDryCount() {
+        return dryCount.get();
+    }
+
+    public int getDryBoxes() {
+        return dryBoxes.get();
+    }
+
+    public int getDryPouchCount(int tier) {
+        return dryEmeraldPouchCount.get().getOrDefault(tier, 0);
+    }
+
+    public int getOpenedChestCount() {
+        return openedChestCount.get();
+    }
+
+    public List<MythicFind> getMythicFinds() {
+        return Collections.unmodifiableList(mythicFinds.get());
     }
 
     public LootChestTier getChestType(Screen screen) {
         return LootChestTier.fromTitle(screen);
+    }
+
+    public List<FoundChestLocation> getFoundChestLocations() {
+        return Collections.unmodifiableList(foundChestLocations.get());
+    }
+
+    public void addFoundChestLocation(FoundChestLocation location) {
+        foundChestLocations.get().add(location);
+        foundChestLocations.touched();
+        LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
+    }
+
+    public void removeFoundChestLocation(FoundChestLocation location) {
+        foundChestLocations.get().remove(location);
+        foundChestLocations.touched();
+        LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
     }
 
     public int getLootChestOpenedThisSession(int tier, boolean exact) {
@@ -255,4 +321,74 @@ public final class LootChestModel extends Model {
         dryEmeralds.store(0);
         dryItemTiers.store(new EnumMap<>(GearTier.class));
     }
+
+    private void handleEntity(Entity entity) {
+        if (entity != null && entity.getType() == EntityType.INTERACTION) {
+            // We don't actually know if this is a chest, but it's a good enough guess.
+            lastChestPos = entity.blockPosition();
+        }
+    }
+
+    // region Poi Migration
+    public static boolean isCustomPoiLootChest(CustomPoi customPoi) {
+        boolean nameIsLootChest = Arrays.stream(LootChestTier.values())
+                .anyMatch(tier -> tier.getWaypointName().equals(customPoi.getName()));
+        boolean colorIsLootChest = customPoi.getColor().equals(CommonColors.WHITE);
+        boolean iconIsLootChest = Arrays.stream(LootChestTier.values())
+                .anyMatch(tier -> tier.getWaypointTexture().equals(customPoi.getIcon()));
+        boolean visibilityIsLootChest = customPoi.getVisibility() == CustomPoi.Visibility.DEFAULT;
+
+        return nameIsLootChest && colorIsLootChest && iconIsLootChest && visibilityIsLootChest;
+    }
+
+    public void startPoiMigration() {
+        // The feature instance is not guaranteed to be present, so we have to check
+        MainMapFeature featureInstance = Managers.Feature.getFeatureInstance(MainMapFeature.class);
+        if (featureInstance == null) return;
+
+        Config<List<CustomPoi>> customPois = featureInstance.customPois;
+        if (customPois.get().isEmpty()) return;
+
+        // Try to migrate custom pois to the new mapdata system
+        // This is done on storage load, as configs are loaded before storages
+        List<CustomPoi> migratedPois = new ArrayList<>();
+        for (CustomPoi customPoi : customPois.get()) {
+            if (migrateToMapdata(customPoi)) {
+                migratedPois.add(customPoi);
+            }
+        }
+
+        WynntilsMod.info("MapData Migration: Custom Pois: " + customPois.get().size());
+        WynntilsMod.info("MapData Migration: Found Loot Chests: " + migratedPois.size());
+
+        customPois.get().removeAll(migratedPois);
+        customPois.touched();
+    }
+
+    // This feature ports old custom poi data to the new mapdata system
+    // This is a one-time migration, but can't be removed in the foreseeable future,
+    // so we can keep upfixing old configs
+    private boolean migrateToMapdata(CustomPoi customPoi) {
+        boolean isLootChest = isCustomPoiLootChest(customPoi);
+        if (!isLootChest) return false;
+
+        // Very likely a loot chest, let's migrate it
+        LootChestTier tier = Arrays.stream(LootChestTier.values())
+                .filter(t -> t.getWaypointName().equals(customPoi.getName()))
+                .findFirst()
+                .orElse(null);
+
+        // This should never happen, but just in case
+        if (tier == null) {
+            WynntilsMod.error("Failed to migrate custom poi to loot chest: " + customPoi.getName());
+            return false;
+        }
+
+        FoundChestLocation foundChest = new FoundChestLocation(new Location(customPoi.getLocation()), tier);
+        Models.LootChest.addFoundChestLocation(foundChest);
+
+        return true;
+    }
+
+    // endregion
 }

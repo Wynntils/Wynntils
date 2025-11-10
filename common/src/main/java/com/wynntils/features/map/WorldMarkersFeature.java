@@ -1,0 +1,519 @@
+/*
+ * Copyright © Wynntils 2022-2025.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.features.map;
+
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.RenderTileLevelLastEvent;
+import com.wynntils.mc.event.TickEvent;
+import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
+import com.wynntils.services.mapdata.attributes.resolving.ResolvedMarkerOptions;
+import com.wynntils.services.mapdata.features.type.MapLocation;
+import com.wynntils.services.mapdata.type.MapIcon;
+import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.Pair;
+import java.util.ArrayList;
+import java.util.List;
+import net.minecraft.client.Camera;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BeaconRenderer;
+import net.minecraft.core.Position;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
+@ConfigCategory(Category.MAP)
+public class WorldMarkersFeature extends Feature {
+    private static final float MINIMUM_RENDER_VISIBILITY = 0.1f;
+    private static final int RAINBOW_CHANGE_RATE = 10;
+
+    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
+
+    @Persisted
+    public final Config<Float> textBackgroundOpacity = new Config<>(0.2f);
+
+    @Persisted
+    public final Config<Float> textRenderScale = new Config<>(1.0f);
+
+    @Persisted
+    public final Config<Float> iconRenderScale = new Config<>(1.0f);
+
+    @Persisted
+    public final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
+
+    @Persisted
+    public final Config<Float> screenMarginTop = new Config<>(40f);
+
+    @Persisted
+    public final Config<Float> screenMarginBottom = new Config<>(100f);
+
+    @Persisted
+    public final Config<Float> screenMarginSides = new Config<>(30f);
+
+    @Persisted
+    public final Config<Integer> maxMarkerDistance = new Config<>(5000);
+
+    private final List<RenderedMapLocation> renderedMapLocations = new ArrayList<>();
+    private CustomColor currentRainbowColor = CommonColors.RED;
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        int r = currentRainbowColor.r();
+        int g = currentRainbowColor.g();
+        int b = currentRainbowColor.b();
+
+        if (r > 0 && b == 0) {
+            r -= RAINBOW_CHANGE_RATE;
+            g += RAINBOW_CHANGE_RATE;
+        }
+        if (g > 0 && r == 0) {
+            g -= RAINBOW_CHANGE_RATE;
+            b += RAINBOW_CHANGE_RATE;
+        }
+        if (b > 0 && g == 0) {
+            r += RAINBOW_CHANGE_RATE;
+            b -= RAINBOW_CHANGE_RATE;
+        }
+
+        r = MathUtils.clamp(r, 0, 255);
+        g = MathUtils.clamp(g, 0, 255);
+        b = MathUtils.clamp(b, 0, 255);
+        currentRainbowColor = new CustomColor(r, g, b, 255);
+    }
+
+    // Rendered map location calculation happens here
+    // Beacon beam rendering happens here
+    @SubscribeEvent
+    public void onRenderLevelLast(RenderTileLevelLastEvent event) {
+        // We update the rendered map locations here so that we can render the beacon beams in the same event
+        // and also use it below to render the icons and labels
+        updateRenderedMapLocations(event.getProjectionMatrix(), event.getCamera());
+        if (renderedMapLocations.isEmpty()) return;
+
+        PoseStack poseStack = event.getPoseStack();
+
+        // render beacon beams
+        for (RenderedMapLocation mapLocationPair : renderedMapLocations) {
+            double alpha = mapLocationPair.visibility();
+            MapLocation mapLocation = mapLocationPair.mapLocation();
+
+            ResolvedMapAttributes resolvedMapAttributes = Services.MapData.resolveMapAttributes(mapLocation);
+            ResolvedMarkerOptions resolvedMarkerOptions = resolvedMapAttributes.markerOptions();
+
+            Position camera = event.getCamera().getPosition();
+            Location location = mapLocation.getLocation();
+
+            double dx = location.x - camera.x();
+            double dy = location.y - camera.y();
+            double dz = location.z - camera.z();
+
+            double distance = MathUtils.magnitude(dx, dz);
+            int maxDistance = McUtils.options().renderDistance().get() * 16;
+
+            if (distance > maxDistance) {
+                double scale = maxDistance / distance;
+
+                dx *= scale;
+                dz *= scale;
+            }
+
+            poseStack.pushPose();
+            poseStack.translate(dx, dy, dz);
+
+            CustomColor color = resolvedMarkerOptions.beaconColor();
+
+            if (color == CustomColor.NONE) {
+                // If the color is set to NONE, we skip rendering the beacon beam
+                // This is not logged as render time logging is heavy
+                continue;
+            }
+
+            int colorInt;
+            if (color == CommonColors.RAINBOW) {
+                colorInt = currentRainbowColor.withAlpha((float) alpha).asInt();
+            } else {
+                colorInt = color.withAlpha((float) alpha).asInt();
+            }
+
+            BeaconRenderer.renderBeaconBeam(
+                    poseStack,
+                    BUFFER_SOURCE,
+                    BeaconRenderer.BEAM_LOCATION,
+                    event.getDeltaTracker().getGameTimeDeltaPartialTick(false),
+                    1f,
+                    McUtils.player().level().getGameTime(),
+                    0,
+                    BeaconRenderer.MAX_RENDER_Y,
+                    colorInt,
+                    0.166f,
+                    0.33f);
+
+            poseStack.popPose();
+        }
+
+        BUFFER_SOURCE.endBatch();
+    }
+
+    private void updateRenderedMapLocations(Matrix4f projectionMatrix, Camera camera) {
+        this.renderedMapLocations.clear();
+
+        List<Pair<Double, MapLocation>> mapLocations = Services.MapData.getFeatures()
+                .filter(mapFeature -> mapFeature instanceof MapLocation)
+                .map(mapFeature -> (MapLocation) mapFeature)
+                .map(mapFeature -> {
+                    ResolvedMapAttributes resolvedMapAttributes = Services.MapData.resolveMapAttributes(mapFeature);
+                    return Pair.of(mapFeature, resolvedMapAttributes);
+                })
+                // If the marker is disabled, skip rendering
+                .filter(pair -> pair.b().hasMarker())
+                // If the marker has no icon, distance, or label, skip rendering
+                // This avoids rendering "empty" beacons around the world
+                .filter(pair -> pair.b().markerOptions().hasIcon()
+                        || pair.b().markerOptions().hasDistance()
+                        || pair.b().markerOptions().hasLabel())
+                .map(pair -> Pair.of(
+                        Services.MapData.calculateMarkerVisibility(
+                                pair.a().getLocation(), pair.b().markerOptions()),
+                        pair.a()))
+                .filter(pair -> pair.a() >= MINIMUM_RENDER_VISIBILITY)
+                .toList();
+
+        if (mapLocations.isEmpty()) return;
+
+        for (Pair<Double, MapLocation> mapLocationPair : mapLocations) {
+            double visibility = mapLocationPair.a();
+            MapLocation mapLocation = mapLocationPair.b();
+
+            Location location = mapLocation.getLocation();
+
+            Matrix4f projection = new Matrix4f(projectionMatrix);
+            Position cameraPos = camera.getPosition();
+
+            // apply camera rotation
+            Vector3f xp = new Vector3f(1, 0, 0);
+            Vector3f yp = new Vector3f(0, 1, 0);
+            Quaternionf xRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getXRot()), xp);
+            Quaternionf yRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getYRot() + 180f), yp);
+            projection.mul(new Matrix4f().rotation(xRotation));
+            projection.mul(new Matrix4f().rotation(yRotation));
+
+            // offset to put text to the center of the block
+            float dx = (float) (location.x + 0.5 - cameraPos.x());
+            float dy = (float) (location.y + 0.5 - cameraPos.y());
+            float dz = (float) (location.z + 0.5 - cameraPos.z());
+
+            if (location.y <= 0 || location.y > 255) {
+                dy = 0;
+            }
+
+            double squaredDistance = dx * dx + dy * dy + dz * dz;
+
+            double distance = Math.sqrt(squaredDistance);
+            int maxDistance = McUtils.options().renderDistance().get() * 16;
+
+            // move the position to avoid ndc z leak past 1
+            if (distance > maxDistance) {
+                double posScale = maxDistance / distance;
+                dx *= (float) posScale;
+                dz *= (float) posScale;
+            }
+
+            this.renderedMapLocations.add(new RenderedMapLocation(
+                    mapLocation, distance, visibility, worldToScreen(new Vector3f(dx, dy, dz), projection)));
+        }
+    }
+
+    // Rendering the icons and labels/distance happens here
+    @SubscribeEvent
+    public void onRenderGuiPost(RenderEvent.Post event) {
+        for (RenderedMapLocation renderedMapLocation : renderedMapLocations) {
+            if (maxMarkerDistance.get() != 0 && maxMarkerDistance.get() < renderedMapLocation.distance) {
+                continue;
+            }
+
+            ResolvedMapAttributes resolvedMapAttributes =
+                    Services.MapData.resolveMapAttributes(renderedMapLocation.mapLocation);
+            ResolvedMarkerOptions resolvedMarkerOptions = resolvedMapAttributes.markerOptions();
+
+            String renderedDistanceText = Math.round((float) renderedMapLocation.distance) + "m";
+            float backgroundWidth = Math.max(
+                    resolvedMarkerOptions.hasDistance()
+                            ? FontRenderer.getInstance().getFont().width(renderedDistanceText)
+                            : 0,
+                    resolvedMarkerOptions.hasLabel()
+                            ? FontRenderer.getInstance().getFont().width(resolvedMapAttributes.label())
+                            : 0);
+            float backgroundHeight =
+                    ((resolvedMarkerOptions.hasDistance() ? 1 : 0) + (resolvedMarkerOptions.hasLabel() ? 1 : 0))
+                            * FontRenderer.getInstance().getFont().lineHeight;
+
+            float displayPositionX;
+            float displayPositionY;
+
+            Vec2 intersectPoint = getBoundingIntersectPoint(renderedMapLocation.screenCoordinates, event.getWindow());
+
+            MapIcon icon = Services.MapData.getIconOrFallback(resolvedMapAttributes.iconId());
+            float[] iconColor = resolvedMapAttributes.iconColor().asFloatArray();
+
+            RenderSystem.enableBlend();
+            RenderSystem.setShaderColor(
+                    iconColor[0], iconColor[1], iconColor[2], (float) renderedMapLocation.visibility);
+
+            // The set waypoint is visible on the screen, so we render the icon + distance
+            if (intersectPoint == null) {
+                displayPositionX = (float) renderedMapLocation.screenCoordinates.x;
+                displayPositionY = (float) renderedMapLocation.screenCoordinates.y;
+
+                if (resolvedMarkerOptions.hasIcon()) {
+                    RenderUtils.drawScalingTexturedRect(
+                            event.getPoseStack(),
+                            icon.getResourceLocation(),
+                            displayPositionX - iconRenderScale.get() * icon.getWidth() / 2f,
+                            displayPositionY
+                                    - iconRenderScale.get() * icon.getHeight()
+                                    - textRenderScale.get() * (backgroundHeight / 2f + 2f),
+                            0,
+                            iconRenderScale.get() * icon.getWidth(),
+                            iconRenderScale.get() * icon.getHeight(),
+                            icon.getWidth(),
+                            icon.getHeight());
+                }
+
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+                RenderSystem.disableBlend();
+
+                if (resolvedMarkerOptions.hasDistance() || resolvedMarkerOptions.hasLabel()) {
+                    RenderUtils.drawRect(
+                            event.getPoseStack(),
+                            CommonColors.BLACK.withAlpha(textBackgroundOpacity.get()),
+                            displayPositionX - textRenderScale.get() * (backgroundWidth / 2f + 2f),
+                            displayPositionY - textRenderScale.get() * (backgroundHeight / 2f + 2f),
+                            0,
+                            textRenderScale.get() * (backgroundWidth + 3f),
+                            textRenderScale.get() * (backgroundHeight + 2f));
+                }
+
+                if (resolvedMarkerOptions.hasDistance()) {
+                    FontRenderer.getInstance()
+                            .renderAlignedTextInBox(
+                                    event.getPoseStack(),
+                                    StyledText.fromString(renderedDistanceText),
+                                    displayPositionX - textRenderScale.get() * (backgroundWidth / 2f),
+                                    displayPositionX + textRenderScale.get() * (backgroundWidth / 2f),
+                                    displayPositionY - textRenderScale.get() * (backgroundHeight / 2f),
+                                    displayPositionY + textRenderScale.get() * (backgroundHeight / 2f),
+                                    0,
+                                    resolvedMapAttributes.labelColor().withAlpha((float)
+                                            renderedMapLocation.visibility),
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.TOP,
+                                    textShadow.get(),
+                                    textRenderScale.get());
+                }
+
+                if (resolvedMarkerOptions.hasLabel()) {
+                    FontRenderer.getInstance()
+                            .renderAlignedTextInBox(
+                                    event.getPoseStack(),
+                                    StyledText.fromString(resolvedMapAttributes.label()),
+                                    displayPositionX - textRenderScale.get() * (backgroundWidth / 2f),
+                                    displayPositionX + textRenderScale.get() * (backgroundWidth / 2f),
+                                    displayPositionY - textRenderScale.get() * (backgroundHeight / 2f),
+                                    displayPositionY + textRenderScale.get() * (backgroundHeight / 2f),
+                                    0,
+                                    resolvedMapAttributes.labelColor().withAlpha((float)
+                                            renderedMapLocation.visibility),
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.BOTTOM,
+                                    textShadow.get(),
+                                    textRenderScale.get());
+                }
+            } else if (resolvedMarkerOptions.hasIcon()) {
+                displayPositionX = intersectPoint.x;
+                displayPositionY = intersectPoint.y;
+
+                // pointer position is determined by finding the point on circle centered around displayPosition
+                double angle = Math.toDegrees(StrictMath.atan2(
+                                displayPositionY - event.getWindow().getGuiScaledHeight() / 2f,
+                                displayPositionX - event.getWindow().getGuiScaledWidth() / 2f))
+                        + 90f;
+                float radius = icon.getWidth() / 2f + 8f;
+
+                float pointerOffsetX = radius * (float) StrictMath.cos((angle - 90) * 3 / 180);
+                float pointerOffsetY = radius * (float) StrictMath.sin((angle - 90) * 3 / 180);
+
+                float pointerDisplayPositionX = displayPositionX + pointerOffsetX;
+                float pointerDisplayPositionY = displayPositionY + pointerOffsetY;
+
+                RenderUtils.drawScalingTexturedRect(
+                        event.getPoseStack(),
+                        icon.getResourceLocation(),
+                        displayPositionX
+                                - iconRenderScale.get() * icon.getWidth() / 2
+                                + pointerOffsetX * (1 - iconRenderScale.get()),
+                        displayPositionY
+                                - iconRenderScale.get() * icon.getHeight() / 2
+                                + pointerOffsetY * (1 - iconRenderScale.get()),
+                        0,
+                        iconRenderScale.get() * icon.getWidth(),
+                        iconRenderScale.get() * icon.getHeight(),
+                        icon.getWidth(),
+                        icon.getHeight());
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+                RenderSystem.disableBlend();
+
+                // apply rotation
+                PoseStack poseStack = event.getPoseStack();
+                poseStack.pushPose();
+                poseStack.translate(pointerDisplayPositionX, pointerDisplayPositionY, 0);
+                poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
+                poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
+
+                Texture pointerTexture = Texture.POINTER;
+                BufferedRenderUtils.drawScalingTexturedRect(
+                        poseStack,
+                        BUFFER_SOURCE,
+                        pointerTexture.resource(),
+                        pointerDisplayPositionX - pointerTexture.width() / 2f,
+                        pointerDisplayPositionY - pointerTexture.height() / 2f,
+                        0,
+                        iconRenderScale.get() * pointerTexture.width(),
+                        iconRenderScale.get() * pointerTexture.height(),
+                        pointerTexture.width(),
+                        pointerTexture.height());
+
+                BUFFER_SOURCE.endBatch();
+                poseStack.popPose();
+            }
+        }
+    }
+
+    private Vec3 worldToScreen(Vector3f delta, Matrix4f projection) {
+        Vector4f clipCoords = new Vector4f(delta.x(), delta.y(), delta.z(), 1.0f);
+        projection.transform(clipCoords);
+
+        // stands for Normalized Device Coordinates
+        Vector3d ndc = new Vector3d(
+                clipCoords.x() / clipCoords.w(), clipCoords.y() / clipCoords.w(), clipCoords.z() / clipCoords.w());
+
+        Window window = McUtils.window();
+
+        return new Vec3(
+                (float) ((ndc.x + 1.0f) / 2.0f) * window.getGuiScaledWidth(),
+                (float) ((1.0f - ndc.y) / 2.0f) * window.getGuiScaledHeight(),
+                (float) ndc.z);
+    }
+
+    // draw a line from screen center to the target's screenspace coordinate
+    // and find the intersect point on one of the screen's bounding
+    private Vec2 getBoundingIntersectPoint(Vec3 position, Window window) {
+        if (isInBound(position, window)) return null;
+        Vec3 centerPoint = new Vec3(window.getGuiScaledWidth() / 2f, window.getGuiScaledHeight() / 2f, 0);
+
+        float pointerScaleCorrection = (float) Texture.POINTER.height() / 2 * (1 - iconRenderScale.get());
+
+        // minecraft's origin point is top left corner
+        // so positive Y is at the screen bottom
+        float minX = (float) -(centerPoint.x - screenMarginSides.get() + pointerScaleCorrection);
+        float maxX = (float) centerPoint.x - screenMarginSides.get() + pointerScaleCorrection;
+        float minY = (float) -(centerPoint.y - screenMarginTop.get() + pointerScaleCorrection);
+        float maxY = (float) centerPoint.y - screenMarginBottom.get() + pointerScaleCorrection;
+
+        // drag the origin point to center since indicator's screenspace position / rotation is in relation to it
+        Vec3 centerRelativePosition = position.subtract(centerPoint);
+
+        // invert xy axis if target is behind camera
+        if (centerRelativePosition.z > 1) {
+            centerRelativePosition = centerRelativePosition.multiply(-1, -1, 1);
+        }
+
+        // since center point is now the origin point, atan2 is used to get the angle, and angle is used to get the
+        // line's slope
+        double angle = StrictMath.atan2(centerRelativePosition.y, centerRelativePosition.x);
+        double m = StrictMath.tan(angle);
+
+        // trying to solve (y2 - y1) = m (x2 - x1) + c here
+        // starting from origin point/screen center (x1, y1), end at one of the screen bounding
+        // (y2 - y1) is the equivalent of the y position
+        // (x2 - x1) is the equivalent of the x position
+        // c is the line's y-intercept, but line pass through origin, so this will be 0
+        // finalize to y = mx, or x = y/m
+
+        if (centerRelativePosition.x > 0) {
+            centerRelativePosition = new Vec3(maxX, maxX * m, 0);
+        } else {
+            centerRelativePosition = new Vec3(minX, minX * m, 0);
+        }
+
+        if (centerRelativePosition.y > maxY) {
+            centerRelativePosition = new Vec3(maxY / m, maxY, 0);
+        } else if (centerRelativePosition.y < minY) {
+            centerRelativePosition = new Vec3(minY / m, minY, 0);
+        }
+
+        // bring the position back to normal screen space (top left origin point)
+        return new Vec2(
+                (float) (centerRelativePosition.x + centerPoint.x), (float) (centerRelativePosition.y + centerPoint.y));
+    }
+
+    private boolean isInBound(Position position, Window window) {
+        return position.x() > 0
+                && position.x() < window.getGuiScaledWidth()
+                && position.y() > 0
+                && position.y() < window.getGuiScaledHeight()
+                && position.z() < 1;
+    }
+
+    // limit the bounding distance to prevent divided by zero in getBoundingIntersectPoint
+    @Override
+    protected void onConfigUpdate(Config<?> unknownConfig) {
+        Window window = McUtils.window();
+
+        switch (unknownConfig.getFieldName()) {
+            case "topBoundingDistance", "bottomBoundingDistance" -> {
+                Config<Float> config = (Config<Float>) unknownConfig;
+                if (config.get() > window.getGuiScaledHeight() * 0.4f) {
+                    config.setValue(window.getGuiScaledHeight() * 0.4f);
+                }
+            }
+            case "horizontalBoundingDistance" -> {
+                Config<Float> config = (Config<Float>) unknownConfig;
+                if (config.get() > window.getGuiScaledWidth() * 0.4f) {
+                    config.setValue(window.getGuiScaledWidth() * 0.4f);
+                }
+            }
+        }
+    }
+
+    private record RenderedMapLocation(
+            MapLocation mapLocation, double distance, double visibility, Vec3 screenCoordinates) {}
+}

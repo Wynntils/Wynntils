@@ -9,6 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.features.players.HadesFeature;
@@ -35,6 +36,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.athena.event.AthenaLoginEvent;
 import com.wynntils.services.hades.event.HadesEvent;
+import com.wynntils.services.hades.providers.PlayerProvider;
 import com.wynntils.services.hades.type.GearShareOptions;
 import com.wynntils.services.hades.type.PlayerStatus;
 import com.wynntils.utils.EncodedByteBuffer;
@@ -67,6 +69,7 @@ public final class HadesService extends Service {
     private static final int TICKS_PER_UPDATE = 2;
     private static final int MS_PER_PING = 1000;
 
+    private static final PlayerProvider PLAYER_PROVIDER = new PlayerProvider();
     private static final EncodingSettings HADES_ENCODING_SETTINGS = new EncodingSettings(false, false);
 
     private final HadesUserRegistry userRegistry = new HadesUserRegistry();
@@ -91,6 +94,11 @@ public final class HadesService extends Service {
 
     public HadesService() {
         super(List.of());
+    }
+
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(PLAYER_PROVIDER);
     }
 
     public Stream<HadesUser> getHadesUsers() {
