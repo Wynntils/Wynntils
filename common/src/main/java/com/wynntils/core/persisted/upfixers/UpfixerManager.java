@@ -64,7 +64,6 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new CustomPoiIconEnumBugUpfixer());
         registerConfigUpfixer(new QuestBookToContentRenamedConfigsUpfixer());
         registerConfigUpfixer(new MapToMainMapRenamedConfigsUpfixer());
-        registerConfigUpfixer(new MaxItensityToMaxIntensityUpfixer());
         registerConfigUpfixer(new OverlayRestructuringUpfixer());
         registerConfigUpfixer(new OverlayConfigsIntegrationUpfixer());
         registerConfigUpfixer(new CustomBankQuickJumpsUpfixer());
@@ -77,7 +76,6 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new ProfessionBadgesToLeaderboardBadgesUpfixer());
         registerConfigUpfixer(new TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer());
         registerConfigUpfixer(new SacredSurgeToHolyPowerUpfixer());
-        registerConfigUpfixer(new ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer());
         registerConfigUpfixer(new UniversalBarOverlayColorToColorTemplateUpfixer());
         registerConfigUpfixer(new WynntilsContentBookReplaceToShiftBehaviourUpfixer());
         registerConfigUpfixer(new DurabilityArcToDurabilityOverlayUpfixer());
@@ -86,6 +84,8 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new HideDamageLabelsToHideLabelsUpfixer());
         registerConfigUpfixer(new MythicFoundToValuableFoundUpfixer());
         registerConfigUpfixer(new MythicBlockerToChestBlockerUpfixer());
+        registerConfigUpfixer(new MaxItensityToMaxIntensityUpfixer());
+        registerConfigUpfixer(new ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
