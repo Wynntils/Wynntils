@@ -12,7 +12,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +33,25 @@ public class SecretsService extends Service {
     }
 
     public void setSecret(SecretKey key, String value) {
-        secrets.put(key, value);
+        String base64Secret = Base64.getEncoder().encodeToString(value.getBytes(Charset.defaultCharset()));
+
+        secrets.put(key, base64Secret);
 
         saveSecrets();
     }
 
     public String getSecret(SecretKey key) {
-        return secrets.getOrDefault(key, "");
+        String secret = secrets.getOrDefault(key, "");
+
+        if (secret.isEmpty()) return "";
+
+        try {
+            byte[] decoded = Base64.getDecoder().decode(secret);
+            return new String(decoded, StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            WynntilsMod.warn("Failed to decode secret for key " + key + ": " + e.getMessage());
+            return "";
+        }
     }
 
     private static void loadSecrets() {
