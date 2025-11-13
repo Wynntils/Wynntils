@@ -98,7 +98,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         String renderedText = renderedTextDetails.a();
         int renderedTextStart = renderedTextDetails.b();
 
-        Pair<Integer, Integer> highlightedVisibleInterval = getRenderedHighlighedInterval(renderedText);
+        Pair<Integer, Integer> highlightedVisibleInterval = getRenderedHighlightedInterval(renderedText);
 
         int startIndex = highlightedVisibleInterval.a();
         int endIndex = highlightedVisibleInterval.b();
@@ -257,7 +257,7 @@ public class TextInputBoxWidget extends AbstractWidget {
      * This interval is zero indexed.
      * This does NOT represent the *entire* highlighted portion, just the VISIBLE part!
      */
-    private Pair<Integer, Integer> getRenderedHighlighedInterval(String renderedText) {
+    private Pair<Integer, Integer> getRenderedHighlightedInterval(String renderedText) {
         if (renderedText.isEmpty()) {
             return Pair.of(0, 0);
         }

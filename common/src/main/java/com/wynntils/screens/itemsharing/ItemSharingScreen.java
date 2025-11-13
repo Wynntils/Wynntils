@@ -181,7 +181,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
         tooltipX = this.width - sideGap - tooltipWidth - 20;
         backgroundX = Math.max(0, sideGap - 10);
 
-        // Widgets need to be remade in case backgroundX has changed and the options will be misalligned
+        // Widgets need to be remade in case backgroundX has changed and the options will be misaligned
         for (AbstractWidget widget : options) {
             this.removeWidget(widget);
         }

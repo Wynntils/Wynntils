@@ -154,12 +154,12 @@ public final class FunctionManager extends Manager {
                     Component.literal(errorOrArgumentExpressions.getError()).withStyle(ChatFormatting.RED));
         }
 
-        List<ErrorOr<Object>> errorsOrargumentObjects = errorOrArgumentExpressions.getValue().stream()
+        List<ErrorOr<Object>> errorsOrArgumentObjects = errorOrArgumentExpressions.getValue().stream()
                 .map(Expression::calculate)
                 .toList();
 
         Optional<ErrorOr<Object>> argumentError =
-                errorsOrargumentObjects.stream().filter(ErrorOr::hasError).findFirst();
+                errorsOrArgumentObjects.stream().filter(ErrorOr::hasError).findFirst();
         if (argumentError.isPresent()) {
             return header.append(
                     Component.literal(argumentError.get().getError()).withStyle(ChatFormatting.RED));
@@ -167,7 +167,7 @@ public final class FunctionManager extends Manager {
 
         ErrorOr<FunctionArguments> errorOrArgument = function.getArgumentsBuilder()
                 .buildWithValues(
-                        errorsOrargumentObjects.stream().map(ErrorOr::getValue).toList());
+                        errorsOrArgumentObjects.stream().map(ErrorOr::getValue).toList());
         if (errorOrArgument.hasError()) {
             return header.append(Component.literal(errorOrArgument.getError()).withStyle(ChatFormatting.RED));
         }

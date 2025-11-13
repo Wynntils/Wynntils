@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem.parsing;
@@ -42,7 +42,7 @@ public record WynnItemParseResult(
         Optional<ShinyStat> shinyStat,
         boolean allRequirementsMet,
         Optional<SetInstance> setInstance) {
-    public static WynnItemParseResult fromInternallRoll(
+    public static WynnItemParseResult fromInternalRoll(
             List<StatActualValue> identifications, List<Powder> powders, int rerolls) {
         return new WynnItemParseResult(
                 null,

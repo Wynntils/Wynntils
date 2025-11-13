@@ -48,7 +48,7 @@ public enum Texture {
     ACTIVITY_CANNOT_START("icons/activities/activity_cannot_start_icon.png", 7, 7),
     ACTIVITY_FINISHED("icons/activities/activity_finished_icon.png", 11, 7),
     ACTIVITY_STARTED("icons/activities/activity_started_icon.png", 7, 7),
-    CAVE_AVALIABLE_ICON("icons/activities/cave_avaliable_icon.png", 7, 7),
+    CAVE_AVAILABLE_ICON("icons/activities/cave_available_icon.png", 7, 7),
     DISCOVERY_ICON("icons/activities/discovery_icon.png", 22, 22),
     MINI_QUEST_ICON("icons/activities/mini_quest_icon.png", 22, 22),
     QUEST_ICON("icons/activities/quest_icon.png", 20, 19),
@@ -340,7 +340,7 @@ public enum Texture {
     TRAVEL_BUTTON("seaskipper/travel_button.png", 151, 60),
     // endregion
 
-    // region Territory Magagement Background
+    // region Territory Management Background
     TERRITORY_MANAGEMENT_BACKGROUND("territory_management/territory_management_background.png", 256, 136),
     TERRITORY_ITEM("territory_management/territory.png", 16, 16),
     TERRITORY_ITEM_HQ("territory_management/territory_hq.png", 16, 16),

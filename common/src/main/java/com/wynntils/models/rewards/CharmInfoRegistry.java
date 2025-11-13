@@ -39,7 +39,7 @@ import java.util.stream.Stream;
 
 public class CharmInfoRegistry {
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(CharmInfo.class, new CharmInfoDeserizalier())
+            .registerTypeHierarchyAdapter(CharmInfo.class, new CharmInfoDeserializer())
             .create();
 
     private List<CharmInfo> charmInfoRegistry = List.of();
@@ -82,12 +82,12 @@ public class CharmInfoRegistry {
         Map<String, CharmInfo> lookupMap = registry.stream()
                 .collect(HashMap::new, (map, charmInfo) -> map.put(charmInfo.name(), charmInfo), HashMap::putAll);
 
-        // Make the result visisble to the world
+        // Make the result visible to the world
         charmInfoRegistry = registry;
         charmInfoLookup = lookupMap;
     }
 
-    private static final class CharmInfoDeserizalier extends AbstractItemInfoDeserializer<CharmInfo> {
+    private static final class CharmInfoDeserializer extends AbstractItemInfoDeserializer<CharmInfo> {
         @Override
         public CharmInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {

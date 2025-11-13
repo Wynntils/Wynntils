@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -31,7 +31,7 @@ import net.neoforged.bus.api.SubscribeEvent;
  * <p><b>This manager should not be used for spontaneous downloads. Use one {@link NetManager}'s download methods
  * if you want to download files during running, and not in a pre-planned fashion.</b></p>
  * <p>This component provides multiple tools to ease the development of other components:</p>
- * - The manager can handle dependency resoltion, allowing components to depend on other component's data files, without
+ * - The manager can handle dependency resolution, allowing components to depend on other component's data files, without
  * having to natively code the dependency resolution. As the manager is responsible for every components' downloads,
  * it can also ensure that all dependencies are valid, meaning they are not circular or missing.
  * <br>

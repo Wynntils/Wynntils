@@ -76,7 +76,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private Integer parsedYInput;
     private Integer parsedZInput;
     private Texture selectedIcon;
-    private CustomPoi.Visibility selectedVisiblity = CustomPoi.Visibility.DEFAULT;
+    private CustomPoi.Visibility selectedVisibility = CustomPoi.Visibility.DEFAULT;
 
     private PoiCreationScreen(MainMapScreen oldMapScreen) {
         super();
@@ -346,23 +346,23 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         // region Visibility
         this.addRenderableWidget(new Button.Builder(
                         Component.literal("<"),
-                        (button) -> selectedVisiblity = CustomPoi.Visibility.values()[
-                                (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
+                        (button) -> selectedVisibility = CustomPoi.Visibility.values()[
+                                (selectedVisibility.ordinal() - 1 + CustomPoi.Visibility.values().length)
                                         % CustomPoi.Visibility.values().length])
                 .pos((int) (dividedWidth * 8), (int) (dividedHeight * 47))
                 .size(20, 20)
                 .build());
         this.addRenderableWidget(new Button.Builder(
                         Component.literal(">"),
-                        (button) -> selectedVisiblity = CustomPoi.Visibility.values()[
-                                (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
+                        (button) -> selectedVisibility = CustomPoi.Visibility.values()[
+                                (selectedVisibility.ordinal() + 1 + CustomPoi.Visibility.values().length)
                                         % CustomPoi.Visibility.values().length])
                 .pos((int) (dividedWidth * 22) - 19, (int) (dividedHeight * 47))
                 .size(20, 20)
                 .build());
 
         if (oldPoi != null && firstSetup) {
-            selectedVisiblity = oldPoi.getVisibility();
+            selectedVisibility = oldPoi.getVisibility();
         }
         // endregion
 
@@ -413,7 +413,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                             ? CommonColors.WHITE
                             : CustomColor.fromHexString(colorInput.getTextBoxInput()),
                     selectedIcon,
-                    selectedVisiblity);
+                    selectedVisibility);
 
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();
@@ -515,7 +515,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString(I18n.get(selectedVisiblity.getTranslationKey())),
+                        StyledText.fromString(I18n.get(selectedVisibility.getTranslationKey())),
                         dividedWidth * 15.0f,
                         dividedWidth * 15.0f,
                         dividedHeight * 47.0f,
@@ -630,7 +630,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                 nameInput.getTextBoxInput(),
                 CustomColor.fromHexString(colorInput.getTextBoxInput()),
                 selectedIcon,
-                selectedVisiblity);
+                selectedVisibility);
 
         HiddenConfig<List<CustomPoi>> customPoiConfig =
                 Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;

@@ -409,7 +409,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
             String statApiName = entry.getKey();
 
             if (statApiName.equals("elementalDefense")) {
-                // The API is inconsistent, and rarely usese "elementalDefense" instead of "elementalDefence"
+                // The API is inconsistent, and rarely uses "elementalDefense" instead of "elementalDefence"
                 statApiName = "elementalDefence";
             }
 

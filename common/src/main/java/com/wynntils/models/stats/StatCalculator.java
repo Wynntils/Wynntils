@@ -208,7 +208,7 @@ public final class StatCalculator {
         int allCases =
                 statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
 
-        // Internal roll range for maxiumum value
+        // Internal roll range for maximum value
         // Do not confuse this with a "3 star" roll, aka perfect internal roll
         RangedValue perfectInternalRollRange = calculateInternalRollRange(
                 possibleValues,

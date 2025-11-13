@@ -16,11 +16,11 @@ import com.wynntils.utils.type.UnsignedByte;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DurablityDataTransformer extends DataTransformer<DurabilityData> {
+public class DurabilityDataTransformer extends DataTransformer<DurabilityData> {
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, DurabilityData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2 -> encodeDurablityData(data);
+            case VERSION_1, VERSION_2 -> encodeDurabilityData(data);
         };
     }
 
@@ -36,7 +36,7 @@ public class DurablityDataTransformer extends DataTransformer<DurabilityData> {
         return DataTransformerType.DURABILITY_DATA_TRANSFORMER.getId();
     }
 
-    private ErrorOr<UnsignedByte[]> encodeDurablityData(DurabilityData data) {
+    private ErrorOr<UnsignedByte[]> encodeDurabilityData(DurabilityData data) {
         List<UnsignedByte> bytes = new ArrayList<>();
 
         // The first byte is the overall effectiveness of the identifications (the percentage next to the name for

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 /**
  * This will create a special type of MapAttributes that are a record with fixed values,
- * which are guarenteed to exist. It does this by extending the lookup for the
+ * which are guaranteed to exist. It does this by extending the lookup for the
  * attribute first to the category hierarchy for the given feature, and
  * finally by going to the default value for each attribute.
  */
@@ -127,7 +127,7 @@ public final class MapAttributesResolver {
                 .filter(Optional::isPresent)
                 .map(Optional::get);
 
-        // Mulitple providers might provide MapAttributes to the same category, but not
+        // Multiple providers might provide MapAttributes to the same category, but not
         // all of them might provide the attribute we're actually looking for, so
         // check all (in the arbitrary order that Services.MapData gave them to us).
         return allAttributes.map(attributeGetter).filter(Optional::isPresent).map(Optional::get);

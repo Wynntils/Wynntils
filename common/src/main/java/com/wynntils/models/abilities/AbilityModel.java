@@ -25,9 +25,9 @@ import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class AbilityModel extends Model {
-    private static final Pattern HUMMINGBUIRD_SENT_PATTERN =
+    private static final Pattern HUMMINGBIRD_SENT_PATTERN =
             Pattern.compile("§e((\uE008\uE002)|\uE001) You sent your hummingbirds to attack!$");
-    private static final Pattern HUMMINGBUIRD_RETURN_PATTERN =
+    private static final Pattern HUMMINGBIRD_RETURN_PATTERN =
             Pattern.compile("§e((\uE008\uE002)|\uE001) Your hummingbirds have returned to you!$");
     public static final TrackedBar manaBankBar = new ManaBankBar();
 
@@ -69,9 +69,9 @@ public final class AbilityModel extends Model {
     @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match event) {
         StyledText message = StyledTextUtils.unwrap(event.getMessage().stripAlignment());
-        if (message.matches(HUMMINGBUIRD_RETURN_PATTERN)) {
+        if (message.matches(HUMMINGBIRD_RETURN_PATTERN)) {
             hummingBirdsState = false;
-        } else if (message.matches(HUMMINGBUIRD_SENT_PATTERN)) {
+        } else if (message.matches(HUMMINGBIRD_SENT_PATTERN)) {
             hummingBirdsState = true;
         }
     }

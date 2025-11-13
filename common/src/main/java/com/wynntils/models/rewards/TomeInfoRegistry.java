@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 
 public class TomeInfoRegistry {
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(TomeInfo.class, new TomeInfoDeserizalier())
+            .registerTypeHierarchyAdapter(TomeInfo.class, new TomeInfoDeserializer())
             .create();
 
     private List<TomeInfo> tomeInfoRegistry = List.of();
@@ -81,12 +81,12 @@ public class TomeInfoRegistry {
         Map<String, TomeInfo> lookupMap = registry.stream()
                 .collect(HashMap::new, (map, tomeInfo) -> map.put(tomeInfo.name(), tomeInfo), HashMap::putAll);
 
-        // Make the result visisble to the world
+        // Make the result visible to the world
         tomeInfoRegistry = registry;
         tomeInfoLookup = lookupMap;
     }
 
-    private static final class TomeInfoDeserizalier extends AbstractItemInfoDeserializer<TomeInfo> {
+    private static final class TomeInfoDeserializer extends AbstractItemInfoDeserializer<TomeInfo> {
         @Override
         public TomeInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {

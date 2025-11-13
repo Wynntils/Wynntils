@@ -276,9 +276,9 @@ public class ChatItemFeature extends Feature {
         style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent));
 
         // Add the item name
-        StyledText appenedNameText =
+        StyledText appendedNameText =
                 StyledText.fromComponent(Component.empty().withStyle(style).append(nameText.getComponent()));
-        parts.addAll(Arrays.stream(appenedNameText.getPartsAsTextArray())
+        parts.addAll(Arrays.stream(appendedNameText.getPartsAsTextArray())
                 .map(StyledText::getFirstPart)
                 .map(part -> part.withStyle(part.getPartStyle().withUnderlined(true)))
                 .toList());

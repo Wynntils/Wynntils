@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
@@ -51,7 +51,7 @@ public class TowerEffectOverlayFeature extends Feature {
     @Persisted
     private final Config<Float> soundPitch = new Config<>(1.0f);
 
-    // Vigentte configs
+    // Vignette configs
     @Persisted
     private final Config<Boolean> vignetteOnAura = new Config<>(true);
 

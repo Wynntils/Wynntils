@@ -26,7 +26,7 @@ import com.wynntils.models.items.encoding.impl.block.CustomGearTypeTransformer;
 import com.wynntils.models.items.encoding.impl.block.CustomIdentificationDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.DamageDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.DefenseDataTransformer;
-import com.wynntils.models.items.encoding.impl.block.DurablityDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.DurabilityDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.EffectsDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.EndDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.IdentificationDataTransformer;
@@ -157,7 +157,7 @@ public final class DataTransformerRegistry {
         registerDataTransformer(RerollData.class, new RerollDataTransformer());
         registerDataTransformer(ShinyData.class, new ShinyDataTransformer());
         registerDataTransformer(CustomGearTypeData.class, new CustomGearTypeTransformer());
-        registerDataTransformer(DurabilityData.class, new DurablityDataTransformer());
+        registerDataTransformer(DurabilityData.class, new DurabilityDataTransformer());
         registerDataTransformer(RequirementsData.class, new RequirementsDataTransformer());
         registerDataTransformer(DamageData.class, new DamageDataTransformer());
         registerDataTransformer(DefenseData.class, new DefenseDataTransformer());

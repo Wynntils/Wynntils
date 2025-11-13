@@ -51,7 +51,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-// Note: To run this sucessfully, you have to have a class with all content trackable in the content book
+// Note: To run this successfully, you have to have a class with all content trackable in the content book
 @StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class ContentBookDumpFeature extends Feature {

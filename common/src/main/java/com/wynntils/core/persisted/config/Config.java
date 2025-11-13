@@ -35,7 +35,7 @@ public class Config<T> extends PersistedValue<T> {
     }
 
     // FIXME: Old ways of setting the value. These should be unified, but since
-    // they have slightly different semantics, let's do it carfeully step by step.
+    // they have slightly different semantics, let's do it carefully step by step.
 
     public void setValue(T value) {
         if (value == null && !getMetadata().allowNull()) {

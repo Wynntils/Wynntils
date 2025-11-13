@@ -95,7 +95,7 @@ public class GearInfoRegistry {
             }
         }
 
-        // Make the result visisble to the world
+        // Make the result visible to the world
         gearInfoRegistry = gearRegistry;
         gearInfoLookup = lookupMap;
         gearInfoLookupApiName = altLookupMap;

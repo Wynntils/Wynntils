@@ -15,13 +15,14 @@ import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsBankNameU
 import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomCommandKeybindSlashStartUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiIconEnumBugUpfixer;
-import com.wynntils.core.persisted.upfixers.config.CustomPoiVisbilityUpfixer;
+import com.wynntils.core.persisted.upfixers.config.CustomPoiVisibilityUpfixer;
 import com.wynntils.core.persisted.upfixers.config.DurabilityArcToDurabilityOverlayUpfixer;
 import com.wynntils.core.persisted.upfixers.config.EnumNamingUpfixer;
 import com.wynntils.core.persisted.upfixers.config.GameBarOverlayMoveUpfixer;
 import com.wynntils.core.persisted.upfixers.config.HideDamageLabelsToHideLabelsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ItemHighlightFeatureCosmeticToStoreUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
+import com.wynntils.core.persisted.upfixers.config.MaxItensityToMaxIntensityUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MobTotemTimerOverlayFeatureToBonusTotemTimerOverlayFeature;
 import com.wynntils.core.persisted.upfixers.config.MythicBlockerToChestBlockerUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MythicFoundToValuableFoundUpfixer;
@@ -32,6 +33,7 @@ import com.wynntils.core.persisted.upfixers.config.OverlayRestructuringUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ProfessionBadgesToLeaderboardBadgesUpfixer;
 import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.SacredSurgeToHolyPowerUpfixer;
+import com.wynntils.core.persisted.upfixers.config.ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
@@ -55,7 +57,7 @@ public class UpfixerManager extends Manager {
         super(List.of());
 
         // Register config upfixers here, in order of run priority
-        registerConfigUpfixer(new CustomPoiVisbilityUpfixer());
+        registerConfigUpfixer(new CustomPoiVisibilityUpfixer());
         registerConfigUpfixer(new CustomCommandKeybindSlashStartUpfixer());
         registerConfigUpfixer(new GameBarOverlayMoveUpfixer());
         registerConfigUpfixer(new EnumNamingUpfixer());
@@ -82,6 +84,8 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new HideDamageLabelsToHideLabelsUpfixer());
         registerConfigUpfixer(new MythicFoundToValuableFoundUpfixer());
         registerConfigUpfixer(new MythicBlockerToChestBlockerUpfixer());
+        registerConfigUpfixer(new MaxItensityToMaxIntensityUpfixer());
+        registerConfigUpfixer(new ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());

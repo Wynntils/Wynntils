@@ -88,7 +88,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private TextInputBoxWidget focusedTextInput;
     private UnsavedChangesWidget unsavedChangesWidget;
 
-    // UI size, postions, etc
+    // UI size, positions, etc
     private boolean draggingConfigurableScroll = false;
     private boolean draggingConfigScroll = false;
     private int categoriesScrollOffset = 0;
@@ -269,7 +269,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
                 Texture.TAG_RED.width(),
                 Texture.TAG_RED.height(),
-                (b) -> scrollCategorories(-1),
+                (b) -> scrollCategories(-1),
                 List.of(Component.translatable("screens.wynntils.settingsScreen.previous")),
                 false,
                 offsetX,
@@ -283,7 +283,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
                 Texture.TAG_RED.width(),
                 Texture.TAG_RED.height(),
-                (b) -> scrollCategorories(1),
+                (b) -> scrollCategories(1),
                 List.of(Component.translatable("screens.wynntils.settingsScreen.next")),
                 true,
                 offsetX,
@@ -575,7 +575,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         // When below top of book and left side scroll configurables
         // Otherwise scroll configs
         if (mouseY <= offsetY) {
-            scrollCategorories((int) -Math.signum(deltaY));
+            scrollCategories((int) -Math.signum(deltaY));
         } else if (mouseX <= Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + offsetX) {
             int newOffset =
                     Math.max(0, Math.min(configurablesScrollOffset + scrollAmount, getMaxConfigurableScrollOffset()));
@@ -925,7 +925,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         return (configs.size() - CONFIGS_PER_PAGE) * 46;
     }
 
-    private void scrollCategorories(int direction) {
+    private void scrollCategories(int direction) {
         if (Math.abs(categoriesScrollOffset + direction) == sortedCategories.size()) {
             categoriesScrollOffset = 0;
         } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.arguments.parser;
@@ -53,14 +53,14 @@ public final class ArgumentParser {
 
     // This method handles splitting arguments in a "context-aware" way:
     //      This means that we need to handle nested expressions, indicated by parentheses
-    //      The catch is that we need to handle strings with parantheses, which should not count as nesting
+    //      The catch is that we need to handle strings with parentheses, which should not count as nesting
     //      Escaped string characters should also be handled
     // For example, the following string: "(test;test2;other_function(test4;test5))" should be parsed as ->
     // ["test;test2;other_function(test4;test5)"]
     private static List<String> splitArguments(String rawArgs) {
         List<String> arguments = new ArrayList<>();
 
-        int paranthesesDepth = 0;
+        int parenthesesDepth = 0;
         int processedIndex = 0;
         boolean inString = false;
 
@@ -75,10 +75,10 @@ public final class ArgumentParser {
                 if (inString) continue;
 
                 if (current == '(') {
-                    paranthesesDepth++;
+                    parenthesesDepth++;
                 } else if (current == ')') {
-                    paranthesesDepth--;
-                } else if (current == ';' && paranthesesDepth == 0) {
+                    parenthesesDepth--;
+                } else if (current == ';' && parenthesesDepth == 0) {
                     arguments.add(rawArgs.substring(processedIndex, i));
                     processedIndex = i + 1;
                 }

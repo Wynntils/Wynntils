@@ -95,7 +95,7 @@ public class AspectInfoRegistry {
             lookupMap.put(classType, classLookupMap);
         }
 
-        // Make the result visisble to the world
+        // Make the result visible to the world
         aspectInfoRegistry = registry;
         aspectInfoLookup = lookupMap;
     }

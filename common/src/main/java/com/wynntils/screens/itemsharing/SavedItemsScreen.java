@@ -527,10 +527,10 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         }
     }
 
-    private void scrollItems(int scollDirection) {
+    private void scrollItems(int scrollDirection) {
         int maxValue = getMaxScrollOffset();
 
-        itemScrollOffset = MathUtils.clamp(itemScrollOffset + scollDirection, 0, maxValue);
+        itemScrollOffset = MathUtils.clamp(itemScrollOffset + scrollDirection, 0, maxValue);
 
         populateItems();
     }

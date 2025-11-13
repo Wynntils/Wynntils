@@ -347,7 +347,7 @@ public class ItemFilterService extends Service {
 
     /**
      * Returns a string representation of the filters and sort order in the given filter map.
-     * The resulting string is not guranateed to be the same as the input string to create the filter map,
+     * The resulting string is not guaranteed to be the same as the input string to create the filter map,
      * but a string generated from this method, passed to {@link #createSearchQuery(String, boolean)} then passed back,
      * is guaranteed to be the same as the previous resulting string.
      *
