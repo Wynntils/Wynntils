@@ -32,8 +32,10 @@ public final class ComponentUtils {
             new FontDescription.Resource(Identifier.withDefaultNamespace("banner/pill"));
     private static final Style BACKGROUND_STYLE =
             Style.EMPTY.withFont(PILL_FONT).withColor(ChatFormatting.AQUA);
-    private static final Style FOREGROUND_STYLE =
-            Style.EMPTY.withFont(PILL_FONT).withColor(ChatFormatting.BLACK);
+    private static final Style FOREGROUND_STYLE = Style.EMPTY
+            .withFont(PILL_FONT)
+            .withColor(ChatFormatting.BLACK)
+            .withShadowColor(CommonColors.WHITE.withAlpha(0).asInt());
     private static final Component WYNNTILS_BACKGROUND_PILL = Component.literal(
                     "\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE062\uDAFF\uDFD0")
             .withStyle(BACKGROUND_STYLE);
