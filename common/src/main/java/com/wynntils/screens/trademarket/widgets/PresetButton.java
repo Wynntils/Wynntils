@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -34,21 +36,21 @@ public class PresetButton extends WynntilsButton implements TooltipProvider {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         Texture itemTexture = isSavedPreset() ? Texture.SAVED_PRESET : Texture.PRESET;
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), itemTexture, this.getX(), this.getY());
+        RenderUtils.drawTexturedRect(guiGraphics, itemTexture, this.getX(), this.getY());
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             String lastSearchFilter =
                     tradeMarketSearchResultScreen.getSearchQuery().queryString();
             if (lastSearchFilter.isEmpty()) return true;
 
             Models.TradeMarket.setPresetFilter(presetId, lastSearchFilter);
             return true;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             Optional<String> presetFilterOpt = Models.TradeMarket.getPresetFilter(presetId);
             if (presetFilterOpt.isEmpty()) return true;
 
@@ -61,7 +63,7 @@ public class PresetButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     @Override
     public List<Component> getTooltipLines() {

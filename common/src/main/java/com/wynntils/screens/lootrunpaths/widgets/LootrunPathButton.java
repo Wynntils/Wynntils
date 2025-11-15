@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.lootrunpaths.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -25,6 +24,8 @@ import java.io.File;
 import java.util.Objects;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -47,14 +48,12 @@ public class LootrunPathButton extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         CustomColor backgroundColor = getButtonBackgroundColor();
-        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
+        RenderUtils.drawRect(guiGraphics, backgroundColor, this.getX(), this.getY(), this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(lootrun.name()),
                         this.getX() + 2,
                         this.getY() + 1,
@@ -75,8 +74,8 @@ public class LootrunPathButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (isLoaded()) {
                 Services.LootrunPaths.clearCurrentLootrun();
             } else {
@@ -85,12 +84,12 @@ public class LootrunPathButton extends WynntilsButton {
             return true;
         }
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             Util.getPlatform().openFile(Services.LootrunPaths.LOOTRUNS);
             return true;
         }
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if ((KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)
                             || KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT))
                     && !isLoaded()) {
@@ -110,7 +109,7 @@ public class LootrunPathButton extends WynntilsButton {
 
     // Not called
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     private void tryDeleteLootrun() {
         File file = new File(Services.LootrunPaths.LOOTRUNS, lootrun.name() + ".json");

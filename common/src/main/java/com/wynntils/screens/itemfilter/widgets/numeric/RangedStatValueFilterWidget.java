@@ -15,6 +15,7 @@ import com.wynntils.services.itemfilter.type.StatValue;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class RangedStatValueFilterWidget extends RangedNumericFilterWidget<StatValue> {
@@ -62,12 +63,12 @@ public class RangedStatValueFilterWidget extends RangedNumericFilterWidget<StatV
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (percentageCheckbox.isMouseOver(mouseX, mouseY)) {
-            return percentageCheckbox.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (percentageCheckbox.isMouseOver(event.x(), event.y())) {
+            return percentageCheckbox.mouseClicked(event, isDoubleClick);
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override

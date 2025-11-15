@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map;
@@ -16,6 +16,8 @@ public class MapTexture {
 
     private boolean registered = false;
 
+    private final String name;
+
     private final int x1;
     private final int z1;
     private final int x2;
@@ -25,6 +27,7 @@ public class MapTexture {
     private final int textureHeight;
 
     public MapTexture(String name, NativeImage texture, int x1, int z1, int x2, int z2) {
+        this.name = name;
         this.texture = texture;
         this.x1 = x1;
         this.z1 = z1;
@@ -42,7 +45,10 @@ public class MapTexture {
     public ResourceLocation resource() {
         if (!registered) {
             registered = true;
-            McUtils.mc().getTextureManager().register(mapResource, new DynamicTexture(texture));
+            DynamicTexture tex = new DynamicTexture(() -> name, texture);
+            tex.setFilter(false, false);
+            tex.setClamp(true);
+            McUtils.mc().getTextureManager().register(mapResource, tex);
         }
 
         return mapResource;

@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.activities.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
@@ -17,6 +16,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class WynntilsMenuTag extends WynntilsButton {
@@ -32,8 +33,6 @@ public class WynntilsMenuTag extends WynntilsButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         if (isHovered) {
             offset = Math.min(2, offset + 1);
         } else {
@@ -41,22 +40,17 @@ public class WynntilsMenuTag extends WynntilsButton {
         }
 
         RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.CONTENT_BOOK_TAG.resource(),
+                guiGraphics,
+                Texture.CONTENT_BOOK_TAG,
                 getX(),
                 getY(),
-                0,
                 Texture.CONTENT_BOOK_TAG.width(),
                 height,
                 0,
-                height * offset,
-                Texture.CONTENT_BOOK_TAG.width(),
-                height,
-                Texture.CONTENT_BOOK_TAG.width(),
-                Texture.CONTENT_BOOK_TAG.height());
+                height * offset);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.wynntilsMenu.name")),
                         getX() + width / 2f + offset,
                         getY() + height / 2f - 2,
@@ -67,15 +61,15 @@ public class WynntilsMenuTag extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
-        onClick.accept(button);
+        onClick.accept(event.button());
 
         return true;
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 }

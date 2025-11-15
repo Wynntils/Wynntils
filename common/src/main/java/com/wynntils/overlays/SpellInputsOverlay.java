@@ -17,7 +17,7 @@ import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -27,6 +27,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -35,8 +36,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class SpellInputsOverlay extends Overlay {
     // Upon reaching level 11, the spell inputs are displayed using the smaller icon
     private static final int SMALL_CHARACTERS_LEVEL = 11;
-    private static final ResourceLocation SPELL_INPUTS_FONT =
-            ResourceLocation.withDefaultNamespace("hud/gameplay/default/bottom_middle");
+    private static final FontDescription SPELL_INPUTS_FONT =
+            new FontDescription.Resource(ResourceLocation.withDefaultNamespace("hud/gameplay/default/bottom_middle"));
 
     private static final String FULL_NO_CLICK_CHARACTER = "\uE102";
     private static final String SMALL_NO_CLICK_CHARACTER = "\uE105";
@@ -102,10 +103,9 @@ public class SpellInputsOverlay extends Overlay {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         if (spellText.isEmpty()) return;
 
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         spellText,
                         this.getRenderX(),
                         this.getRenderX() + this.getWidth(),
@@ -122,10 +122,9 @@ public class SpellInputsOverlay extends Overlay {
     @Override
     public void renderPreview(
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         buildUnicodeInputs(new SpellDirection[] {SpellDirection.LEFT, SpellDirection.RIGHT}, true),
                         this.getRenderX(),
                         this.getRenderX() + this.getWidth(),

@@ -4,27 +4,28 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class PlayerRenderLayerEvent extends Event implements ICancellableEvent {
-    private final PlayerRenderState playerRenderState;
+    private final HumanoidRenderState humanoidRenderState;
 
-    protected PlayerRenderLayerEvent(PlayerRenderState playerRenderState) {
-        this.playerRenderState = playerRenderState;
+    protected PlayerRenderLayerEvent(HumanoidRenderState humanoidRenderState) {
+        this.humanoidRenderState = humanoidRenderState;
     }
 
-    public PlayerRenderState getPlayerRenderState() {
-        return playerRenderState;
+    public HumanoidRenderState getHumanoidRenderState() {
+        return humanoidRenderState;
     }
 
     public static class Armor extends PlayerRenderLayerEvent {
         private final EquipmentSlot slot;
 
-        public Armor(PlayerRenderState playerRenderState, EquipmentSlot slot) {
-            super(playerRenderState);
+        public Armor(HumanoidRenderState humanoidRenderState, EquipmentSlot slot) {
+            super(humanoidRenderState);
             this.slot = slot;
         }
 
@@ -34,14 +35,14 @@ public abstract class PlayerRenderLayerEvent extends Event implements ICancellab
     }
 
     public static class Cape extends PlayerRenderLayerEvent {
-        public Cape(PlayerRenderState playerRenderState) {
-            super(playerRenderState);
+        public Cape(HumanoidRenderState humanoidRenderState) {
+            super(humanoidRenderState);
         }
     }
 
     public static class Elytra extends PlayerRenderLayerEvent {
-        public Elytra(PlayerRenderState playerRenderState) {
-            super(playerRenderState);
+        public Elytra(HumanoidRenderState humanoidRenderState) {
+            super(humanoidRenderState);
         }
     }
 }

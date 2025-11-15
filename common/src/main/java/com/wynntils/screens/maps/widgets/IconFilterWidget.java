@@ -5,25 +5,24 @@
 package com.wynntils.screens.maps.widgets;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.maps.IconFilterScreen;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class IconFilterWidget extends AbstractWidget {
     private final boolean included;
-    private final float iconHeight;
-    private final float iconRenderX;
-    private final float iconRenderY;
-    private final float iconWidth;
+    private final int iconHeight;
+    private final int iconRenderX;
+    private final int iconRenderY;
+    private final int iconWidth;
     private final List<Component> tooltip;
     private final IconFilterScreen filterScreen;
     private final Texture icon;
@@ -37,12 +36,12 @@ public class IconFilterWidget extends AbstractWidget {
 
         // Scale the icon to fill half of the widget
         float scaleFactor = 0.5f * Math.min(width, height) / Math.max(icon.width(), icon.height());
-        iconWidth = icon.width() * scaleFactor;
-        iconHeight = icon.height() * scaleFactor;
+        iconWidth = (int) (icon.width() * scaleFactor);
+        iconHeight = (int) (icon.height() * scaleFactor);
 
         // Calculate x/y position of the icon to keep it centered
-        iconRenderX = (x + width / 2f) - iconWidth / 2f;
-        iconRenderY = (y + height / 2f) - iconHeight / 2f;
+        iconRenderX = (int) ((x + width / 2f) - iconWidth / 2f);
+        iconRenderY = (int) ((y + height / 2f) - iconHeight / 2f);
 
         tooltip = included
                 ? List.of(Component.translatable(
@@ -53,35 +52,32 @@ public class IconFilterWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         RenderUtils.drawRect(
-                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
+                guiGraphics, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), width, height);
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
+                guiGraphics,
                 icon.resource(),
                 iconRenderX,
                 iconRenderY,
-                1,
                 iconWidth,
                 iconHeight,
                 icon.width(),
                 icon.height());
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
 
         // Highlight to show inclusion
         if (included) {
-            RenderUtils.drawRect(poseStack, CommonColors.RED.withAlpha(35), getX(), getY(), 1, width, height);
+            RenderUtils.drawRect(guiGraphics, CommonColors.RED.withAlpha(35), getX(), getY(), width, height);
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
         // Toggle if the icon is now included or excluded
         filterScreen.toggleIcon(icon);
 

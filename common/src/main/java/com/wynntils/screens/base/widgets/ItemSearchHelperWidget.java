@@ -13,13 +13,13 @@ import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -47,25 +47,18 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRectWithColor(
-                guiGraphics.pose(),
-                Texture.INFO.resource(),
+        RenderUtils.drawScalingTexturedRect(
+                guiGraphics,
+                Texture.INFO,
                 isHovered ? CommonColors.AQUA : CommonColors.WHITE,
-                this.getX(),
-                this.getY(),
-                0,
+                getX(),
+                getY(),
                 getWidth(),
-                getHeight(),
-                0,
-                0,
-                Texture.INFO.width(),
-                Texture.INFO.height(),
-                Texture.INFO.width(),
-                Texture.INFO.height());
+                getHeight());
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(getTooltipLines(), Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 
@@ -75,15 +68,15 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             page = MathUtils.overflowInRange(page, -1, 0, tooltipPages.size() - 1);
             return true;
         }
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             page = MathUtils.overflowInRange(page, +1, 0, tooltipPages.size() - 1);
             return true;
         }

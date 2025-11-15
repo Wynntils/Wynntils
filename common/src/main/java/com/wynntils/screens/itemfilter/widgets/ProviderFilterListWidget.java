@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.itemfilter.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
 import com.wynntils.screens.itemfilter.type.NumericFilterWidgetFactory;
@@ -27,6 +26,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -135,7 +135,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         if (widgets.isEmpty()) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.noFilters")),
                             getX(),
                             getX() + getWidth(),
@@ -159,21 +159,21 @@ public class ProviderFilterListWidget extends AbstractWidget {
         RenderUtils.disableScissor(guiGraphics);
 
         if (isScrollable()) {
-            renderScrollBar(guiGraphics.pose());
+            renderScrollBar(guiGraphics);
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (addStringFilterButton != null && addStringFilterButton.isMouseOver(mouseX, mouseY)) {
-            return addStringFilterButton.mouseClicked(mouseX, mouseY, button);
-        } else if (addNumericFilterButton != null && addNumericFilterButton.isMouseOver(mouseX, mouseY)) {
-            return addNumericFilterButton.mouseClicked(mouseX, mouseY, button);
-        } else if (numericChoiceButton != null && numericChoiceButton.isMouseOver(mouseX, mouseY)) {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (addStringFilterButton != null && addStringFilterButton.isMouseOver(event.x(), event.y())) {
+            return addStringFilterButton.mouseClicked(event, isDoubleClick);
+        } else if (addNumericFilterButton != null && addNumericFilterButton.isMouseOver(event.x(), event.y())) {
+            return addNumericFilterButton.mouseClicked(event, isDoubleClick);
+        } else if (numericChoiceButton != null && numericChoiceButton.isMouseOver(event.x(), event.y())) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 cycleNumericChoice(1);
                 return true;
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 cycleNumericChoice(-1);
                 return true;
             }
@@ -182,18 +182,18 @@ public class ProviderFilterListWidget extends AbstractWidget {
         }
 
         // Don't want to call mouse events for ones outside of the mask area
-        if (mouseY > getY() + 2 && mouseY < getY() + 2 + getScrollbarHeight()) {
+        if (event.y() > getY() + 2 && event.y() < getY() + 2 + getScrollbarHeight()) {
             for (GeneralFilterWidget widget : widgets) {
-                if (widget.isMouseOver(mouseX, mouseY)) {
-                    return widget.mouseClicked(mouseX, mouseY, button);
+                if (widget.isMouseOver(event.x(), event.y())) {
+                    return widget.mouseClicked(event, isDoubleClick);
                 }
             }
         }
 
         if (!draggingScroll && isScrollable()) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     getX() + SCROLLBAR_RENDER_X,
                     getX() + SCROLLBAR_RENDER_X + SCROLLBAR_WIDTH,
                     scrollRenderY,
@@ -208,12 +208,12 @@ public class ProviderFilterListWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             int scrollAreaStartY = getY();
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY,
+                    (float) event.y(),
                     scrollAreaStartY,
                     scrollAreaStartY + getScrollbarHeight(),
                     0,
@@ -230,18 +230,18 @@ public class ProviderFilterListWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
-        if (mouseY > getY() + 2 && mouseY < getY() + 2 + getScrollbarHeight()) {
+        if (event.y() > getY() + 2 && event.y() < getY() + 2 + getScrollbarHeight()) {
             for (GeneralFilterWidget widget : widgets) {
-                if (widget.isMouseOver(mouseX, mouseY)) {
-                    return widget.mouseReleased(mouseX, mouseY, button);
+                if (widget.isMouseOver(event.x(), event.y())) {
+                    return widget.mouseReleased(event);
                 }
             }
         }
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -405,7 +405,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         }
     }
 
-    private float getScrollbarHeight() {
+    private int getScrollbarHeight() {
         if (provider.getValidInputs().isEmpty() && !anyFilterActive()) {
             return MAX_WIDGETS_PER_PAGE * 24;
         } else {
@@ -431,13 +431,12 @@ public class ProviderFilterListWidget extends AbstractWidget {
         numericChoiceButton.setMessage(Component.literal(EnumUtils.toNiceString(numericChoice)));
     }
 
-    private void renderScrollBar(PoseStack poseStack) {
+    private void renderScrollBar(GuiGraphics guiGraphics) {
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.LIGHT_GRAY,
                 getX() + SCROLLBAR_RENDER_X,
                 getY(),
-                0,
                 SCROLLBAR_WIDTH,
                 getScrollbarHeight());
 
@@ -445,11 +444,10 @@ public class ProviderFilterListWidget extends AbstractWidget {
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, getScrollbarHeight() - SCROLLBAR_HEIGHT));
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 draggingScroll ? CommonColors.BLACK : CommonColors.GRAY,
                 getX() + SCROLLBAR_RENDER_X,
                 scrollRenderY,
-                0,
                 SCROLLBAR_WIDTH,
                 SCROLLBAR_HEIGHT);
     }

@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.combat;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -29,7 +28,7 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.buffered.CustomRenderType;
+import com.wynntils.utils.render.pipelines.CustomRenderType;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,7 +72,7 @@ public class RangeVisualizerFeature extends Feature {
     // Handles rendering for other players and ourselves in third person
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
-        Entity entity = ((EntityRenderStateExtension) e.getPlayerRenderState()).getEntity();
+        Entity entity = ((EntityRenderStateExtension) e.getAvatarRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         // We render the circle for ourselves in onRenderLevelLast if first person rendering is enabled
         if (player.equals(McUtils.player()) && renderInFirstPerson.get()) return;
@@ -264,10 +263,6 @@ public class RangeVisualizerFeature extends Feature {
      * @param color
      */
     private void renderCircle(PoseStack poseStack, Position position, float radius, int color) {
-        // Circle must be rendered on both sides, otherwise it will be invisible when looking at
-        // it from the outside
-        RenderSystem.disableCull();
-
         poseStack.pushPose();
         poseStack.translate(-position.x(), -position.y(), -position.z());
         VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
@@ -294,6 +289,5 @@ public class RangeVisualizerFeature extends Feature {
 
         BUFFER_SOURCE.endBatch();
         poseStack.popPose();
-        RenderSystem.enableCull();
     }
 }

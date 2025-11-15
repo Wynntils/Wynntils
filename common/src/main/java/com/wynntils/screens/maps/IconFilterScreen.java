@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
 import com.wynntils.screens.maps.widgets.IconFilterWidget;
 import com.wynntils.utils.MathUtils;
@@ -18,6 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public final class IconFilterScreen extends WynntilsGridLayoutScreen {
@@ -79,13 +79,14 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
         backgroundHeight = dividedHeight * 50;
 
         // Height of the scroll button relative to the scaled width
-        scrollButtonHeight = ((dividedWidth / 2) / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
+        scrollButtonHeight =
+                (int) (((dividedWidth / 2) / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height());
 
         // How far the scrollbar should be able to go
         scrollAreaHeight = (int) (backgroundHeight - scrollButtonHeight) - (int) (dividedHeight * 4);
 
         // X position of the scroll button
-        scrollButtonRenderX = (int) (dividedWidth * 52) + (dividedWidth / 4);
+        scrollButtonRenderX = (int) ((dividedWidth * 52) + (dividedWidth / 4));
 
         int filterButtonWidth = (int) (dividedWidth * 10);
 
@@ -139,7 +140,7 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        renderScrollButton(guiGraphics.pose());
+        renderScrollButton(guiGraphics);
     }
 
     @Override
@@ -147,11 +148,10 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(),
+                guiGraphics,
                 Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
                 backgroundX,
                 backgroundY,
-                0,
                 backgroundWidth,
                 backgroundHeight,
                 Texture.WAYPOINT_MANAGER_BACKGROUND.width(),
@@ -159,11 +159,11 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll && (usedIcons.size() > MAX_ICONS_TO_DISPLAY)) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     (int) scrollButtonRenderX,
                     (int) (scrollButtonRenderX + (dividedWidth / 2)),
                     (int) scrollButtonRenderY,
@@ -174,26 +174,26 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (!draggingScroll) return false;
 
         int renderY = (int) ((this.height - backgroundHeight) / 2 + (int) (dividedHeight * 3));
         int scrollAreaStartY = renderY + 7;
 
         int newValue = Math.round(MathUtils.map(
-                (float) mouseY, scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
+                (float) event.y(), scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
 
         scroll(newValue - scrollOffset);
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
         return true;
     }
@@ -220,22 +220,21 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
         populateIcons();
     }
 
-    private void renderScrollButton(PoseStack poseStack) {
+    private void renderScrollButton(GuiGraphics guiGraphics) {
         // Don't render the scroll button if it will not be useable
         if (usedIcons.size() <= MAX_ICONS_TO_DISPLAY) return;
 
         // Calculate where the scroll button should be on the Y axis
-        scrollButtonRenderY = (this.height - backgroundHeight) / 2
+        scrollButtonRenderY = (int) ((this.height - backgroundHeight) / 2
                 + (int) (dividedHeight * 3)
-                + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, scrollAreaHeight);
+                + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, scrollAreaHeight));
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.SCROLL_BUTTON.resource(),
                 scrollButtonRenderX,
                 scrollButtonRenderY,
-                1,
-                (dividedWidth / 2),
+                dividedWidth / 2,
                 scrollButtonHeight,
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());

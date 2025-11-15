@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -27,11 +28,12 @@ public final class ComponentUtils {
     private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
 
-    private static final ResourceLocation PILL_FONT = ResourceLocation.withDefaultNamespace("banner/pill");
+    private static final FontDescription PILL_FONT =
+            new FontDescription.Resource(ResourceLocation.withDefaultNamespace("banner/pill"));
     private static final Style BACKGROUND_STYLE =
             Style.EMPTY.withFont(PILL_FONT).withColor(ChatFormatting.AQUA);
     private static final Style FOREGROUND_STYLE =
-            Style.EMPTY.withFont(PILL_FONT).withColor(ChatFormatting.BLACK);
+            Style.EMPTY.withFont(PILL_FONT).withColor(ChatFormatting.BLACK).withShadowColor(16777215);
     private static final Component WYNNTILS_BACKGROUND_PILL = Component.literal(
                     "\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE062\uDAFF\uDFD0")
             .withStyle(BACKGROUND_STYLE);

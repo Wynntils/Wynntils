@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.lootrunpaths;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -17,7 +16,7 @@ import com.wynntils.services.lootrunpaths.type.ColoredPosition;
 import com.wynntils.services.lootrunpaths.type.LootrunNote;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
-import com.wynntils.utils.render.buffered.CustomRenderType;
+import com.wynntils.utils.render.pipelines.CustomRenderType;
 import com.wynntils.utils.type.Pair;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import java.util.ArrayList;
@@ -148,7 +147,7 @@ public final class LootrunRenderer {
             BlockState block = McUtils.mc().level.getBlockState(chest);
             if (block.is(Blocks.BARRIER) || block.is(Blocks.AIR)) continue;
 
-            ShapeRenderer.renderLineBox(poseStack, consumer, new AABB(chest), red, green, blue, 1f);
+            ShapeRenderer.renderLineBox(poseStack.last(), consumer, new AABB(chest), red, green, blue, 1f);
         }
 
         BUFFER_SOURCE.endBatch();
@@ -229,7 +228,6 @@ public final class LootrunRenderer {
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
         poseStack.pushPose();
         poseStack.translate(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         for (ColoredPath locationsInRoute : locations) {
             VertexConsumer consumer = BUFFER_SOURCE.getBuffer(renderType);

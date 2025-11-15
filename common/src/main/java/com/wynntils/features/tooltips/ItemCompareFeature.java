@@ -125,12 +125,12 @@ public class ItemCompareFeature extends Feature {
     @SubscribeEvent
     public void onSlotRenderEvent(SlotRenderEvent.Pre event) {
         Slot slot = event.getSlot();
-        drawSelectionArc(event.getPoseStack(), slot.getItem(), slot.x, slot.y, false);
+        drawSelectionArc(event.getGuiGraphics(), slot.getItem(), slot.x, slot.y);
     }
 
     @SubscribeEvent
     public void onHotbarSlotRenderEvent(HotbarSlotRenderEvent.Pre event) {
-        drawSelectionArc(event.getPoseStack(), event.getItemStack(), event.getX(), event.getY(), true);
+        drawSelectionArc(event.getGuiGraphics(), event.getItemStack(), event.getX(), event.getY());
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -157,7 +157,8 @@ public class ItemCompareFeature extends Feature {
         if (!isItemStackSelected(hoveredItemStack)) {
             switch (hoveredGearItemProperty.getGearType()) {
                 case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> {
-                    List<ItemStack> armors = McUtils.inventory().armor;
+                    List<ItemStack> armors =
+                            new ArrayList<>(McUtils.inventory().equipment.items.values());
 
                     Optional<ItemStack> matchingArmorOpt = armors.stream()
                             .filter(itemStack -> isMatchingType(itemStack, hoveredGearItemProperty))
@@ -219,14 +220,10 @@ public class ItemCompareFeature extends Feature {
         Window window = McUtils.mc().getWindow();
         GuiGraphics guiGraphics = event.getGuiGraphics();
         Font font = FontRenderer.getInstance().getFont();
-        final PoseStack poseStack = guiGraphics.pose();
         float universalScale = Managers.Feature.getFeatureInstance(TooltipFittingFeature.class)
                 .universalScale
                 .get();
         int twoPad = COMPARE_ITEM_PAD * 2;
-
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 300);
 
         List<Component> hoveredLines = new ArrayList<>(event.getTooltips());
         if (removeFlavourText.get()) {
@@ -343,28 +340,27 @@ public class ItemCompareFeature extends Feature {
         event.setCanceled(true);
 
         changePositioner = true;
-        poseStack.pushPose();
-        poseStack.scale(hoveredScaleFactor, hoveredScaleFactor, 1);
-        guiGraphics.renderTooltip(
-                font, hoveredLines, hoveredItemStack.getTooltipImage(), (int) (hoveredX / hoveredScaleFactor), (int)
-                        (hoveredY / hoveredScaleFactor));
-        poseStack.popPose();
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().scale(hoveredScaleFactor, hoveredScaleFactor);
+        //        guiGraphics.renderTooltip(
+        //                font, hoveredLines, hoveredItemStack.getTooltipImage(), (int) (hoveredX / hoveredScaleFactor),
+        // (int)
+        //                        (hoveredY / hoveredScaleFactor));
+        guiGraphics.pose().popMatrix();
 
         for (Tooltip tooltip : tooltips) {
-            poseStack.pushPose();
+            guiGraphics.pose().pushMatrix();
             float scaleFactor = tooltip.getScaleFactor();
-            poseStack.scale(scaleFactor, scaleFactor, 1);
-            guiGraphics.renderTooltip(
-                    font,
-                    tooltip.getLines(),
-                    tooltip.getVisualTooltipComponent(),
-                    (int) (tooltip.getX() / scaleFactor),
-                    (int) (tooltip.getY() / scaleFactor));
-            poseStack.popPose();
+            guiGraphics.pose().scale(scaleFactor, scaleFactor);
+            //            guiGraphics.renderTooltip(
+            //                    font,
+            //                    tooltip.getLines(),
+            //                    tooltip.getVisualTooltipComponent(),
+            //                    (int) (tooltip.getX() / scaleFactor),
+            //                    (int) (tooltip.getY() / scaleFactor));
+            guiGraphics.pose().popMatrix();
         }
         changePositioner = false;
-
-        poseStack.popPose();
     }
 
     private boolean isMatchingType(WynnItem wynnItem, GearTypeItemProperty gearItemReference) {
@@ -426,11 +422,11 @@ public class ItemCompareFeature extends Feature {
         return I18n.get(key);
     }
 
-    private void drawSelectionArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+    private void drawSelectionArc(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
         if (isItemStackSelected(itemStack)) {
-            RenderUtils.drawArc(poseStack, CommonColors.LIGHT_BLUE, slotX, slotY, hotbar ? 0 : 200, 1, 6, 8);
+            RenderUtils.drawArc(guiGraphics, CommonColors.LIGHT_BLUE, slotX, slotY, 1, 6, 8);
         }
     }
 
