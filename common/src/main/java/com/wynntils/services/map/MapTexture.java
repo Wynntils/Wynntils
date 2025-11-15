@@ -45,7 +45,10 @@ public class MapTexture {
     public ResourceLocation resource() {
         if (!registered) {
             registered = true;
-            McUtils.mc().getTextureManager().register(mapResource, new DynamicTexture(() -> name, texture));
+            DynamicTexture tex = new DynamicTexture(() -> name, texture);
+            tex.setFilter(false, false);
+            tex.setClamp(true);
+            McUtils.mc().getTextureManager().register(mapResource, tex);
         }
 
         return mapResource;

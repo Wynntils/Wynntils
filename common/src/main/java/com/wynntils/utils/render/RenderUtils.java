@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils.render;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -203,6 +204,40 @@ public final class RenderUtils {
 
     public static void drawTexturedRect(
             GuiGraphics guiGraphics,
+            RenderPipeline pipeline,
+            ResourceLocation resourceLocation,
+            CustomColor color,
+            float x,
+            float y,
+            float width,
+            float height,
+            float uOffset,
+            float vOffset,
+            float u,
+            float v,
+            int textureWidth,
+            int textureHeight) {
+        guiGraphics.guiRenderState.submitGuiElement(new FloatBlitRenderState(
+                pipeline,
+                TextureSetup.singleTexture(McUtils.mc()
+                        .getTextureManager()
+                        .getTexture(resourceLocation)
+                        .getTextureView()),
+                new Matrix3x2f(guiGraphics.pose()),
+                x,
+                y,
+                x + width,
+                y + height,
+                uOffset / textureWidth,
+                (uOffset + u) / textureWidth,
+                vOffset / textureHeight,
+                (vOffset + v) / textureHeight,
+                color,
+                guiGraphics.scissorStack.peek()));
+    }
+
+    public static void drawTexturedRect(
+            GuiGraphics guiGraphics,
             ResourceLocation resourceLocation,
             CustomColor color,
             float x,
@@ -215,23 +250,21 @@ public final class RenderUtils {
             int v,
             int textureWidth,
             int textureHeight) {
-        guiGraphics.guiRenderState.submitGuiElement(new FloatBlitRenderState(
+        drawTexturedRect(
+                guiGraphics,
                 RenderPipelines.GUI_TEXTURED,
-                TextureSetup.singleTexture(McUtils.mc()
-                        .getTextureManager()
-                        .getTexture(resourceLocation)
-                        .getTextureView()),
-                new Matrix3x2f(guiGraphics.pose()),
+                resourceLocation,
+                color,
                 x,
                 y,
-                x + width,
-                y + height,
-                (float) (uOffset) / textureWidth,
-                (float) (uOffset + u) / textureWidth,
-                (float) (vOffset) / textureHeight,
-                (float) (vOffset + v) / textureHeight,
-                color,
-                guiGraphics.scissorStack.peek()));
+                width,
+                height,
+                uOffset,
+                vOffset,
+                u,
+                v,
+                textureWidth,
+                textureHeight);
     }
 
     public static void drawTexturedRect(

@@ -49,4 +49,16 @@ public class CustomRenderPipelines extends RenderPipelines {
     public static final RenderPipeline GUI_ARC = register(RenderPipeline.builder(GUI_ARC_SNIPPET)
             .withLocation("pipeline/wynntils_arc")
             .build());
+
+    public static final RenderPipeline MAP_TEXTURED =
+            register(RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+                    .withLocation("pipeline/wynntils_map_textured")
+                    .withVertexShader("core/position_tex_color")
+                    .withFragmentShader("core/position_tex_color")
+                    .withSampler("Sampler0")
+                    .withBlend(BlendFunction.TRANSLUCENT)
+                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
+                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                    .withCull(false)
+                    .build());
 }
