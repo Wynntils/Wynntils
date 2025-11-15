@@ -10,7 +10,6 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.MapTexture;
@@ -20,7 +19,6 @@ import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.pipelines.CustomRenderTypes;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
@@ -28,14 +26,10 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.CoreShaders;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
-import org.joml.Matrix4f;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 public final class MapRenderer {
     // The possible zoom levels range between [1, ZOOM_LEVELS] (inclusive).
@@ -80,81 +74,51 @@ public final class MapRenderer {
                 logMinZoomGuiScale + (logMaxZoomGuiScale - logMinZoomGuiScale) * (zoomLevel - 1) / (ZOOM_LEVELS - 1));
     }
 
-    public static void renderMapQuad(
+    public static void renderMapTile(
+            GuiGraphics guiGraphics,
             MapTexture map,
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
+            float mapCenterX,
+            float mapCenterZ,
             float centerX,
             float centerZ,
-            float textureX,
-            float textureZ,
-            float width,
-            float height,
-            float scale) {
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderTypes.getMapPositionTextureQuad(map.identifier()));
+            float zoomRenderScale,
+            BoundingBox view) {
+        float x1 = map.getX1();
+        float z1 = map.getZ1();
+        float x2 = map.getX2() + 1f;
+        float z2 = map.getZ2() + 1f;
 
-        renderMap(map, poseStack, buffer, centerX, centerZ, textureX, textureZ, width, height, scale);
-    }
+        float vx1 = Math.max(view.x1(), x1);
+        float vz1 = Math.max(view.z1(), z1);
+        float vx2 = Math.min(view.x2(), x2);
+        float vz2 = Math.min(view.z2(), z2);
 
-    public static void renderMapQuad(
-            MapTexture map,
-            PoseStack poseStack,
-            float centerX,
-            float centerZ,
-            float textureX,
-            float textureZ,
-            float width,
-            float height,
-            float scale) {
-        RenderSystem.disableBlend();
+        if (vx1 >= vx2 || vz1 >= vz2) return;
 
-        RenderSystem.setShader(CoreShaders.POSITION_TEX);
-        RenderSystem.setShaderTexture(0, map.identifier());
+        float sx1 = centerX + (vx1 - mapCenterX) * zoomRenderScale;
+        float sy1 = centerZ + (vz1 - mapCenterZ) * zoomRenderScale;
+        float sx2 = centerX + (vx2 - mapCenterX) * zoomRenderScale;
+        float sy2 = centerZ + (vz2 - mapCenterZ) * zoomRenderScale;
 
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+        float u1 = (vx1 - x1);
+        float v1 = (vz1 - z1);
+        float u2 = (vx2 - x1);
+        float v2 = (vz2 - z1);
 
-        // clamp map rendering
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
-
-        BufferBuilder builder =
-                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-
-        renderMap(map, poseStack, builder, centerX, centerZ, textureX, textureZ, width, height, scale);
-
-        BufferUploader.drawWithShader(builder.build());
-    }
-
-    private static void renderMap(
-            MapTexture map,
-            PoseStack poseStack,
-            VertexConsumer buffer,
-            float centerX,
-            float centerZ,
-            float textureX,
-            float textureZ,
-            float width,
-            float height,
-            float scale) {
-        float uScale = 1f / map.getTextureWidth();
-        float vScale = 1f / map.getTextureHeight();
-
-        float halfRenderedWidth = width / 2f;
-        float halfRenderedHeight = height / 2f;
-        float halfTextureWidth = halfRenderedWidth * scale;
-        float halfTextureHeight = halfRenderedHeight * scale;
-
-        Matrix4f matrix = poseStack.last().pose();
-
-        buffer.addVertex(matrix, (centerX - halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
-                .setUv((textureX - halfTextureWidth) * uScale, (textureZ + halfTextureHeight) * vScale);
-        buffer.addVertex(matrix, (centerX + halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
-                .setUv((textureX + halfTextureWidth) * uScale, (textureZ + halfTextureHeight) * vScale);
-        buffer.addVertex(matrix, (centerX + halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
-                .setUv((textureX + halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale);
-        buffer.addVertex(matrix, (centerX - halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
-                .setUv((textureX - halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale);
+        RenderUtils.drawTexturedRect(
+                guiGraphics,
+                map.identifier(),
+                CommonColors.WHITE,
+                sx1,
+                sy1,
+                sx2 - sx1,
+                sy2 - sy1,
+                u1,
+                v1,
+                u2 - u1,
+                v2 - v1,
+                map.getTextureWidth(),
+                map.getTextureHeight());
     }
 
     public static void renderCursor(
