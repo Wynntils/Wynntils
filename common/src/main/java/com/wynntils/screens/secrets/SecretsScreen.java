@@ -7,7 +7,7 @@ package com.wynntils.screens.secrets;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.secrets.widgets.SecretInputWidget;
-import com.wynntils.services.secrets.type.SecretKey;
+import com.wynntils.services.secrets.type.WynntilsSecret;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -161,8 +161,9 @@ public class SecretsScreen extends WynntilsScreen {
         int renderX = offsetX + 9;
         int renderY = offsetY + 10;
 
-        for (SecretKey secretKey : SecretKey.values()) {
-            SecretInputWidget secretInputWidget = new SecretInputWidget(renderX, renderY, 222, 20, this, secretKey);
+        for (WynntilsSecret wynntilsSecret : WynntilsSecret.values()) {
+            SecretInputWidget secretInputWidget =
+                    new SecretInputWidget(renderX, renderY, 222, 20, this, wynntilsSecret);
 
             secretInputs.add(secretInputWidget);
             renderY += 22;

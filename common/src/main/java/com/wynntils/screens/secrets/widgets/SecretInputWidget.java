@@ -8,7 +8,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.MaskedTextInputWidget;
-import com.wynntils.services.secrets.type.SecretKey;
+import com.wynntils.services.secrets.type.WynntilsSecret;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -23,9 +23,10 @@ import net.minecraft.network.chat.Component;
 
 public class SecretInputWidget extends AbstractWidget {
     private final MaskedTextInputWidget maskedTextInputWidget;
-    private final SecretKey secretKey;
+    private final WynntilsSecret wynntilsSecret;
 
-    public SecretInputWidget(int x, int y, int width, int height, TextboxScreen textboxScreen, SecretKey secretKey) {
+    public SecretInputWidget(
+            int x, int y, int width, int height, TextboxScreen textboxScreen, WynntilsSecret wynntilsSecret) {
         super(x, y, width, height, null);
 
         this.maskedTextInputWidget = new MaskedTextInputWidget(
@@ -33,10 +34,10 @@ public class SecretInputWidget extends AbstractWidget {
                 y,
                 width - 80,
                 height,
-                (s) -> Services.Secrets.setSecret(secretKey, s),
+                (s) -> Services.Secrets.setSecret(wynntilsSecret, s),
                 textboxScreen,
-                Services.Secrets.getSecret(secretKey));
-        this.secretKey = secretKey;
+                Services.Secrets.getSecret(wynntilsSecret));
+        this.wynntilsSecret = wynntilsSecret;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class SecretInputWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics.pose(),
-                        StyledText.fromString(EnumUtils.toNiceString(secretKey)),
+                        StyledText.fromString(EnumUtils.toNiceString(wynntilsSecret)),
                         getX(),
                         getY() + getHeight() / 2f,
                         80,
@@ -56,7 +57,7 @@ public class SecretInputWidget extends AbstractWidget {
         maskedTextInputWidget.render(guiGraphics, mouseX, mouseY, partialTick);
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Component.translatable(secretKey.getDescriptionKey()));
+            McUtils.screen().setTooltipForNextRenderPass(Component.translatable(wynntilsSecret.getDescriptionKey()));
         }
     }
 

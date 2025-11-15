@@ -4,12 +4,12 @@
  */
 package com.wynntils.services.secrets.type;
 
-public enum SecretKey {
+public enum WynntilsSecret {
     WYNNCRAFT_API_TOKEN("service.wynntils.secrets.wynncraftApiToken");
 
     private final String descriptionKey;
 
-    SecretKey(String descriptionKey) {
+    WynntilsSecret(String descriptionKey) {
         this.descriptionKey = descriptionKey;
     }
 
