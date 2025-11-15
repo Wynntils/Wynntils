@@ -37,8 +37,6 @@ import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
-import com.wynntils.utils.type.BoundingCircle;
-import com.wynntils.utils.type.BoundingShape;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
@@ -134,10 +132,26 @@ public class MinimapOverlay extends Overlay {
 
         final float zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(zoomLevel.get());
 
-        BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(BoundingBox.centered(
-                (float) playerX, (float) playerZ, width * zoomRenderScale, height * zoomRenderScale));
+        // avoid rotational overpass - This is a rather loose oversizing, if possible later
+        // use trigonometry, etc. to find a better one
+        float extraFactor = 1f;
+        if (followPlayerRotation.get()) {
+            // 1.5 > sqrt(2);
+            extraFactor = 1.5F;
 
-        List<MapTexture> maps = Services.Map.getMapsForBoundingCircle(textureBoundingCircle);
+            if (width > height) {
+                extraFactor *= width / height;
+            } else {
+                extraFactor *= height / width;
+            }
+        }
+
+        float worldWidth = width * (1f / zoomRenderScale) * extraFactor;
+        float worldHeight = height * (1f / zoomRenderScale) * extraFactor;
+
+        BoundingBox visibleWorldBox = BoundingBox.centered((float) playerX, (float) playerZ, worldWidth, worldHeight);
+
+        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(visibleWorldBox);
 
         if (hideWhenUnmapped.get() != UnmappedOption.NEITHER && maps.isEmpty()) return;
 
@@ -161,36 +175,19 @@ public class MinimapOverlay extends Overlay {
                     guiGraphics.pose(),
                     centerX,
                     centerZ,
-                    180 - McUtils.mc().gameRenderer.getMainCamera().getYRot());
-        }
-
-        // avoid rotational overpass - This is a rather loose oversizing, if possible later
-        // use trigonometry, etc. to find a better one
-        float extraFactor = 1f;
-        if (followPlayerRotation.get()) {
-            // 1.5 > sqrt(2);
-            extraFactor = 1.5F;
-
-            if (width > height) {
-                extraFactor *= width / height;
-            } else {
-                extraFactor *= height / width;
-            }
+                    180 - McUtils.mc().gameRenderer.getMainCamera().yRot());
         }
 
         for (MapTexture map : maps) {
-            float textureX = map.getTextureXPosition(playerX);
-            float textureZ = map.getTextureZPosition(playerZ);
-            //            MapRenderer.renderMapQuad(
-            //                    map,
-            //                    poseStack,
-            //                    x,
-            //                    centerZ,
-            //                    textureX,
-            //                    textureZ,
-            //                    width * extraFactor,
-            //                    height * extraFactor,
-            //                    zoomRenderScale);
+            MapRenderer.renderMapTile(
+                    guiGraphics,
+                    map,
+                    (float) playerX,
+                    (float) playerZ,
+                    centerX,
+                    centerZ,
+                    zoomRenderScale,
+                    visibleWorldBox);
         }
 
         // disable rotation if necessary
@@ -208,7 +205,7 @@ public class MinimapOverlay extends Overlay {
                 playerZ,
                 zoomRenderScale,
                 zoomLevel.get(),
-                textureBoundingCircle);
+                visibleWorldBox);
 
         // cursor
         MapRenderer.renderCursor(
@@ -243,13 +240,13 @@ public class MinimapOverlay extends Overlay {
             double playerZ,
             float zoomRenderScale,
             float zoomLevel,
-            BoundingCircle textureBoundingCircle) {
+            BoundingBox visibleWorldBox) {
         float sinRotationRadians;
         float cosRotationRadians;
 
         if (followPlayerRotation.get()) {
             double rotationRadians =
-                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
+                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().yRot());
             sinRotationRadians = (float) StrictMath.sin(rotationRadians);
             cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
         } else {
@@ -274,28 +271,34 @@ public class MinimapOverlay extends Overlay {
 
         Poi[] pois = poisToRender.toArray(Poi[]::new);
         for (Poi poi : pois) {
-            float dX = (poi.getLocation().getX() - (float) playerX) / zoomRenderScale;
-            float dZ = (poi.getLocation().getZ() - (float) playerZ) / zoomRenderScale;
+            float poiWorldX = poi.getLocation().getX();
+            float poiWorldZ = poi.getLocation().getZ();
+
+            if (!visibleWorldBox.contains(poiWorldX, poiWorldZ)) continue;
+
+            float poiRenderX = MapRenderer.getRenderX(poi, (float) playerX, centerX, zoomRenderScale);
+
+            float poiRenderZ = MapRenderer.getRenderZ(poi, (float) playerZ, centerZ, zoomRenderScale);
 
             if (followPlayerRotation.get()) {
-                float tempdX = dX * cosRotationRadians - dZ * sinRotationRadians;
+                float dx = poiRenderX - centerX;
+                float dz = poiRenderZ - centerZ;
 
-                dZ = dX * sinRotationRadians + dZ * cosRotationRadians;
-                dX = tempdX;
+                float yaw = McUtils.mc().gameRenderer.getMainCamera().yRot();
+                float rot = (float) Math.toRadians(180 - yaw);
+
+                float sin = (float) Math.sin(rot);
+                float cos = (float) Math.cos(rot);
+
+                float rdX = dx * cos - dz * sin;
+                float rdZ = dx * sin + dz * cos;
+
+                poiRenderX = centerX + rdX;
+                poiRenderZ = centerZ + rdZ;
             }
 
-            float poiRenderX = centerX + dX;
-            float poiRenderZ = centerZ + dZ;
-
-            float poiWidth = poi.getWidth(currentZoom, poiScale.get());
-            float poiHeight = poi.getHeight(currentZoom, poiScale.get());
-
-            BoundingBox box = BoundingBox.centered(
-                    poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
-
-            if (BoundingShape.intersects(box, textureBoundingCircle)) {
-                poi.renderAt(guiGraphics, poiRenderX, poiRenderZ, false, poiScale.get(), currentZoom, zoomLevel, false);
-            }
+            poi.renderAt(
+                    guiGraphics, poiRenderX, poiRenderZ, false, poiScale.get(), 1f / zoomRenderScale, zoomLevel, false);
         }
 
         // Compass icon
@@ -428,7 +431,7 @@ public class MinimapOverlay extends Overlay {
 
         if (followPlayerRotation.get()) {
             float yawRadians = (float)
-                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
+                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().yRot());
             northDX = (float) StrictMath.sin(yawRadians);
             northDY = (float) StrictMath.cos(yawRadians);
 
