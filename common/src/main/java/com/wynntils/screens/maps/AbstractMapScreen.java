@@ -6,7 +6,6 @@ package com.wynntils.screens.maps;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -43,15 +42,11 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class AbstractMapScreen extends WynntilsScreen {
-    protected static final MultiBufferSource.BufferSource BUFFER_SOURCE =
-            MultiBufferSource.immediate(new ByteBufferBuilder(256));
-
     protected static final float SCREEN_SIDE_OFFSET = 10;
     protected static final int MAP_CENTER_X = -360;
     protected static final int MAP_CENTER_Z = -3000;
@@ -354,29 +349,13 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        BoundingBox textureBoundingBox =
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
+        BoundingBox view =
+                BoundingBox.centered(mapCenterX, mapCenterZ, mapWidth / zoomRenderScale, mapHeight / zoomRenderScale);
 
-        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
-
-        for (MapTexture map : maps) {
-            float textureX = map.getTextureXPosition(mapCenterX);
-            float textureZ = map.getTextureZPosition(mapCenterZ);
-
-            MapRenderer.renderMapQuad(
-                    map,
-                    poseStack,
-                    BUFFER_SOURCE,
-                    centerX,
-                    centerZ,
-                    textureX,
-                    textureZ,
-                    mapWidth,
-                    mapHeight,
-                    1f / zoomRenderScale);
+        for (MapTexture map : Services.Map.getMapsForBoundingBox(view)) {
+            MapRenderer.renderMapTile(
+                    guiGraphics, map, mapCenterX, mapCenterZ, centerX, centerZ, zoomRenderScale, view);
         }
-
-        BUFFER_SOURCE.endBatch();
 
         RenderUtils.disableScissor(guiGraphics);
     }

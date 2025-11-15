@@ -5,6 +5,9 @@
 package com.wynntils.services.map;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.AddressMode;
+import com.mojang.blaze3d.textures.FilterMode;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.BoundingBox;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -45,7 +48,15 @@ public class MapTexture {
     public Identifier identifier() {
         if (!registered) {
             registered = true;
-            McUtils.mc().getTextureManager().register(mapIdentifier, new DynamicTexture(() -> name, texture));
+            DynamicTexture tex = new DynamicTexture(() -> name, texture);
+            tex.sampler = RenderSystem.getSamplerCache()
+                    .getSampler(
+                            AddressMode.CLAMP_TO_EDGE,
+                            AddressMode.CLAMP_TO_EDGE,
+                            FilterMode.NEAREST,
+                            FilterMode.NEAREST,
+                            false);
+            McUtils.mc().getTextureManager().register(mapIdentifier, tex);
         }
 
         return mapIdentifier;
