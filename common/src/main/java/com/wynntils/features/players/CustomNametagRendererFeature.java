@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.GetCameraEntityEvent;
+import com.wynntils.mc.event.NametagBackgroundOpacityEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
@@ -30,7 +31,6 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.services.leaderboard.type.LeaderboardBadge;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ColorScaleUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.ArrayList;
@@ -93,6 +93,8 @@ public class CustomNametagRendererFeature extends Feature {
 
     @SubscribeEvent
     public void onPlayerNameTagRender(PlayerNametagRenderEvent event) {
+        if (event.getEntityRenderState().nameTagAttachment == null) return;
+
         Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (Models.Player.isNpc(player)) return;
@@ -129,11 +131,13 @@ public class CustomNametagRendererFeature extends Feature {
     public void onEntityNameTagRender(EntityNameTagRenderEvent event) {
         if (hideAllNametags.get()) {
             event.setCanceled(true);
-            return;
         }
+    }
 
+    @SubscribeEvent
+    public void onNametagBackgroundOpacityCheck(NametagBackgroundOpacityEvent event) {
         if (hideNametagBackground.get()) {
-            event.setBackgroundOpacity(0f);
+            event.setOpacity(0f);
         }
     }
 
@@ -228,7 +232,7 @@ public class CustomNametagRendererFeature extends Feature {
         if (user == null) {
             if (!nametags.isEmpty()) {
                 // We will cancel vanilla rendering, so we must add back the normal vanilla base nametag
-                Component realName = event.getDisplayName();
+                Component realName = event.getEntityRenderState().nameTag;
                 nametags.add(new CustomNametag(realName, 1f));
             }
             return;
@@ -242,7 +246,7 @@ public class CustomNametagRendererFeature extends Feature {
 
         if (!showWynntilsMarker.get()) {
             // We will cancel vanilla rendering, so we must add back the normal vanilla base nametag
-            Component realName = event.getDisplayName();
+            Component realName = event.getEntityRenderState().nameTag;
             nametags.add(new CustomNametag(realName, 1f));
             return;
         }
@@ -260,14 +264,11 @@ public class CustomNametagRendererFeature extends Feature {
                                 .withFont(new FontDescription.Resource(WYNNTILS_NAMETAG_LOGO_FONT))
                                 .withColor(logoColor)))
                 .append(" ")
-                .append(event.getDisplayName());
+                .append(event.getEntityRenderState().nameTag);
         nametags.add(new CustomNametag(prefixedName, 1f));
     }
 
     private void drawNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
-        Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
-        if (!(entity instanceof AbstractClientPlayer player)) return;
-
         // calculate color of nametag box
         int backgroundColor =
                 hideNametagBackground.get() ? 0 : ((int) (McUtils.options().getBackgroundOpacity(0.25F) * 255f) << 24);
@@ -279,15 +280,13 @@ public class CustomNametagRendererFeature extends Feature {
 
             RenderUtils.renderCustomNametag(
                     event.getPoseStack(),
-                    event.getBuffer(),
-                    event.getPackedLight(),
-                    backgroundColor,
-                    event.getEntityRenderDispatcher(),
-                    player,
                     nametag.nametagComponent(),
-                    event.getFont(),
                     nametag.nametagScale(),
-                    yOffset);
+                    yOffset,
+                    backgroundColor,
+                    event.getEntityRenderState(),
+                    event.getCameraRenderState(),
+                    event.getSubmitNodeCollector());
         }
 
         drawBadges(event, yOffset);

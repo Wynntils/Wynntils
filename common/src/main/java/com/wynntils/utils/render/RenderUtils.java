@@ -29,12 +29,17 @@ import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.SubmitNodeCollection;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -48,7 +53,7 @@ import org.lwjgl.opengl.GL11;
 
 public final class RenderUtils {
     // used to render player nametags as semi-transparent
-    private static final int NAMETAG_COLOR = 0x20FFFFFF;
+    private static final int NAMETAG_COLOR = 0x80FFFFFF;
 
     public static void drawLine(
             GuiGraphics guiGraphics, CustomColor color, float x1, float y1, float x2, float y2, float width) {
@@ -940,46 +945,60 @@ public final class RenderUtils {
     }
 
     public static void renderCustomNametag(
-            PoseStack matrixStack,
-            MultiBufferSource buffer,
-            int packedLight,
-            int backgroundColor,
-            EntityRenderDispatcher dispatcher,
-            Entity entity,
+            PoseStack poseStack,
             Component nametag,
-            Font font,
             float nametagScale,
-            float customOffset) {
-        double d = dispatcher.distanceToSqr(entity);
-        if (d <= 4096.0) {
-            float yOffset = entity.getBbHeight() + 0.25F + customOffset;
-            float xOffset = -(font.width(nametag) / 2f);
-            boolean sneaking = entity.isDiscrete();
+            float customOffset,
+            int backgroundColor,
+            EntityRenderState entityRenderState,
+            CameraRenderState cameraRenderState,
+            SubmitNodeCollector collector) {
+        poseStack.pushPose();
+        poseStack.translate(
+                entityRenderState.nameTagAttachment.x,
+                entityRenderState.nameTagAttachment.y + 0.3F + customOffset,
+                entityRenderState.nameTagAttachment.z);
+        poseStack.mulPose(cameraRenderState.orientation);
+        poseStack.scale(0.025F * nametagScale, -0.025F * nametagScale, 0.025F * nametagScale);
+        Matrix4f matrix4f = new Matrix4f(poseStack.last().pose());
+        float xOffset = -McUtils.mc().font.width(nametag) / 2.0F;
 
-            matrixStack.pushPose();
-            matrixStack.translate(0.0F, yOffset, 0.0F);
-            matrixStack.mulPose(dispatcher.cameraOrientation());
-            matrixStack.scale(0.025F * nametagScale, -0.025F * nametagScale, 0.025F * nametagScale);
-            Matrix4f matrix4f = matrixStack.last().pose();
+        SubmitNodeStorage nodeStorage = (SubmitNodeStorage) collector;
+        SubmitNodeCollection nodeCollection = nodeStorage.order(0);
+        NameTagFeatureRenderer.Storage rendererStorage = nodeCollection.getNameTagSubmits();
 
-            font.drawInBatch(
-                    nametag,
-                    xOffset,
-                    0f,
-                    NAMETAG_COLOR,
-                    false,
+        if (!entityRenderState.isDiscrete) {
+            rendererStorage.nameTagSubmitsNormal.add(new SubmitNodeStorage.NameTagSubmit(
                     matrix4f,
-                    buffer,
-                    sneaking ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL,
+                    xOffset,
+                    0,
+                    nametag,
+                    LightTexture.lightCoordsWithEmission(entityRenderState.lightCoords, 2),
+                    -1,
+                    0,
+                    entityRenderState.distanceToCameraSq));
+            rendererStorage.nameTagSubmitsSeethrough.add(new SubmitNodeStorage.NameTagSubmit(
+                    matrix4f,
+                    xOffset,
+                    0,
+                    nametag,
+                    entityRenderState.lightCoords,
+                    NAMETAG_COLOR,
                     backgroundColor,
-                    packedLight);
-            if (!sneaking) {
-                font.drawInBatch(
-                        nametag, xOffset, 0f, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
-            }
-
-            matrixStack.popPose();
+                    entityRenderState.distanceToCameraSq));
+        } else {
+            rendererStorage.nameTagSubmitsNormal.add(new SubmitNodeStorage.NameTagSubmit(
+                    matrix4f,
+                    xOffset,
+                    0,
+                    nametag,
+                    entityRenderState.lightCoords,
+                    NAMETAG_COLOR,
+                    backgroundColor,
+                    entityRenderState.distanceToCameraSq));
         }
+
+        poseStack.popPose();
     }
 
     public static void renderProfessionBadge(

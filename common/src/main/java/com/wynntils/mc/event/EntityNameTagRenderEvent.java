@@ -5,77 +5,42 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public class EntityNameTagRenderEvent extends Event implements ICancellableEvent {
-    private final EntityRenderState renderState;
-    private final Component displayName;
+    private final EntityRenderState entityRenderState;
     private final PoseStack poseStack;
-    private final MultiBufferSource buffer;
-    private final int packedLight;
-    private final EntityRenderDispatcher entityRenderDispatcher;
-    private final Font font;
-
-    private float backgroundOpacity;
+    private final SubmitNodeCollector submitNodeCollector;
+    private final CameraRenderState cameraRenderState;
 
     public EntityNameTagRenderEvent(
-            EntityRenderState renderState,
-            Component displayName,
+            EntityRenderState entityRenderState,
             PoseStack poseStack,
-            MultiBufferSource buffer,
-            int packedLight,
-            EntityRenderDispatcher entityRenderDispatcher,
-            Font font,
-            float backgroundOpacity) {
-        this.renderState = renderState;
-        this.displayName = displayName;
+            SubmitNodeCollector submitNodeCollector,
+            CameraRenderState cameraRenderState) {
+        this.entityRenderState = entityRenderState;
         this.poseStack = poseStack;
-        this.buffer = buffer;
-        this.packedLight = packedLight;
-        this.entityRenderDispatcher = entityRenderDispatcher;
-        this.font = font;
-        this.backgroundOpacity = backgroundOpacity;
+        this.submitNodeCollector = submitNodeCollector;
+        this.cameraRenderState = cameraRenderState;
     }
 
     public EntityRenderState getEntityRenderState() {
-        return renderState;
-    }
-
-    public Component getDisplayName() {
-        return displayName;
+        return entityRenderState;
     }
 
     public PoseStack getPoseStack() {
         return poseStack;
     }
 
-    public MultiBufferSource getBuffer() {
-        return buffer;
+    public SubmitNodeCollector getSubmitNodeCollector() {
+        return submitNodeCollector;
     }
 
-    public int getPackedLight() {
-        return packedLight;
-    }
-
-    public EntityRenderDispatcher getEntityRenderDispatcher() {
-        return entityRenderDispatcher;
-    }
-
-    public Font getFont() {
-        return font;
-    }
-
-    public float getBackgroundOpacity() {
-        return backgroundOpacity;
-    }
-
-    public void setBackgroundOpacity(float backgroundOpacity) {
-        this.backgroundOpacity = backgroundOpacity;
+    public CameraRenderState getCameraRenderState() {
+        return cameraRenderState;
     }
 }
