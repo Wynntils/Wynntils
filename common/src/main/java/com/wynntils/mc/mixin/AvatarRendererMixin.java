@@ -10,13 +10,13 @@ import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.services.cosmetics.CosmeticsService;
 import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -41,18 +41,17 @@ public abstract class AvatarRendererMixin
 
     @Inject(
             method =
-                    "renderNameTag(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+                    "submitNameTag(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void onNameTagRenderPre(
-            AvatarRenderState renderState,
-            Component displayName,
+    private void onNameTagSubmitPre(
+            AvatarRenderState avatarRenderState,
             PoseStack poseStack,
-            MultiBufferSource buffer,
-            int packedLight,
+            SubmitNodeCollector submitNodeCollector,
+            CameraRenderState cameraRenderState,
             CallbackInfo ci) {
-        PlayerNametagRenderEvent event = new PlayerNametagRenderEvent(
-                renderState, displayName, poseStack, buffer, packedLight, this.entityRenderDispatcher, this.getFont());
+        PlayerNametagRenderEvent event =
+                new PlayerNametagRenderEvent(avatarRenderState, poseStack, submitNodeCollector, cameraRenderState);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();

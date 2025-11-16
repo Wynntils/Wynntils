@@ -43,6 +43,7 @@
     "MinecraftMixin",
     "MouseHandlerMixin",
     "MultiPlayerGameModeMixin",
+    "NameTagFeatureRendererStorageMixin",
     "PackRepositoryMixin",
     "PlayerTabOverlayMixin",
     "ProgressScreenMixin",
