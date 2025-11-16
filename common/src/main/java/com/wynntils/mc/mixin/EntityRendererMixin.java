@@ -10,7 +10,9 @@ import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
+import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
+import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -42,6 +44,18 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
     private void onExtractRenderState(T entity, S entityRenderState, float f, CallbackInfo ci) {
         if (entityRenderState instanceof EntityRenderStateExtension) {
             ((EntityRenderStateExtension) entityRenderState).setEntity(entity);
+        }
+    }
+
+    @Inject(
+            method =
+                    "extractRenderState(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+            at = @At("TAIL"))
+    private void onExtractRenderStatePost(Entity entity, EntityRenderState state, float partialTick, CallbackInfo ci) {
+        EntityExtension entityExt = (EntityExtension) entity;
+
+        if (entityExt.getGlowColor() != CustomColor.NONE) {
+            state.outlineColor = entityExt.getGlowColorInt();
         }
     }
 
