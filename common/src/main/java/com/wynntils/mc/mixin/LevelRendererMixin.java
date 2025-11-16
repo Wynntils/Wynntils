@@ -14,12 +14,16 @@ import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.extension.EntityExtension;
+import com.wynntils.mc.extension.EntityRenderStateExtension;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.SubmitNodeStorage;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.state.LevelRenderState;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
@@ -31,6 +35,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelRenderer.class)
@@ -138,22 +143,29 @@ public abstract class LevelRendererMixin {
                 this.levelRenderState.cameraRenderState));
     }
 
-    @Inject(
-            at = @At("HEAD"),
+    @Redirect(
             method =
-                    "renderEntity(Lnet/minecraft/world/entity/Entity;DDDFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;)V",
-            cancellable = true)
-    private void renderEntity(
-            Entity entity,
+                    "submitEntities(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/state/LevelRenderState;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;submit(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lnet/minecraft/client/renderer/state/CameraRenderState;DDDLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V"))
+    private void onSubmitEntity(
+            EntityRenderDispatcher entityRenderDispatcher,
+            EntityRenderState renderState,
+            CameraRenderState cameraRenderState,
             double camX,
             double camY,
             double camZ,
-            float partialTick,
             PoseStack poseStack,
-            MultiBufferSource bufferSource,
-            CallbackInfo ci) {
+            SubmitNodeCollector nodeCollector) {
+        Entity entity = ((EntityRenderStateExtension) renderState).getEntity();
+
         if (!((EntityExtension) entity).isRendered()) {
-            ci.cancel();
+            return;
         }
+
+        entityRenderDispatcher.submit(renderState, cameraRenderState, camX, camY, camZ, poseStack, nodeCollector);
     }
 }
