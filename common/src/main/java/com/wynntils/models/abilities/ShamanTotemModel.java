@@ -89,12 +89,11 @@ public final class ShamanTotemModel extends Model {
                     // Checks to verify this is a totem
                     // These must be ran with a delay,
                     // inventory contents are set a couple ticks after the totem actually spawns
-                    List<ItemStack> inv = new ArrayList<>();
-                    totemAS.equipment.items.values().forEach(inv::add);
+                    List<ItemStack> inv = new ArrayList<>(totemAS.equipment.items.values());
 
-                    if (inv.size() < 4) return;
+                    if (inv.isEmpty()) return;
 
-                    ItemStack data = inv.get(3);
+                    ItemStack data = inv.getFirst();
                     if (data.getItem() != Items.STONE_SHOVEL) return;
 
                     // This relies on the fact that damage values 28 (Shaman) and 29 (Skyseer) on the stone shovel set
