@@ -58,6 +58,8 @@ accessible field net/minecraft/world/entity/LivingEntity equipment Lnet/minecraf
 accessible field net/minecraft/world/entity/player/Inventory equipment Lnet/minecraft/world/entity/EntityEquipment;
 accessible field net/minecraft/world/entity/player/Inventory items Lnet/minecraft/core/NonNullList;
 accessible field net/minecraft/world/entity/player/Inventory selected I
+accessible field net/minecraft/client/renderer/feature/NameTagFeatureRenderer$Storage nameTagSubmitsNormal Ljava/util/List;
+accessible field net/minecraft/client/renderer/feature/NameTagFeatureRenderer$Storage nameTagSubmitsSeethrough Ljava/util/List;
 accessible field net/minecraft/world/item/ItemCooldowns cooldowns Ljava/util/Map;
 accessible field net/minecraft/world/item/ItemCooldowns tickCount I
 accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance endTime I
