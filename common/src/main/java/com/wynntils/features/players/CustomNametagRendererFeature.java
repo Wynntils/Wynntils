@@ -31,6 +31,7 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.services.leaderboard.type.LeaderboardBadge;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ColorScaleUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.ArrayList;
@@ -321,10 +322,11 @@ public class CustomNametagRendererFeature extends Feature {
         }
 
         for (LeaderboardBadge badge : badgesToRender) {
-            RenderUtils.renderProfessionBadge(
+            RenderUtils.renderLeaderboardBadge(
                     event.getPoseStack(),
-                    event.getEntityRenderDispatcher(),
-                    player,
+                    event.getSubmitNodeCollector(),
+                    event.getEntityRenderState(),
+                    event.getCameraRenderState(),
                     Texture.LEADERBOARD_BADGES.identifier(),
                     LeaderboardBadge.WIDTH,
                     LeaderboardBadge.HEIGHT,
