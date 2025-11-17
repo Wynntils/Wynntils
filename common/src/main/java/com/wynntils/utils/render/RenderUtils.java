@@ -7,11 +7,7 @@ package com.wynntils.utils.render;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -36,15 +32,14 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollection;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
@@ -1001,63 +996,76 @@ public final class RenderUtils {
         poseStack.popPose();
     }
 
-    public static void renderProfessionBadge(
+    public static void renderLeaderboardBadge(
             PoseStack poseStack,
-            EntityRenderDispatcher dispatcher,
-            Entity entity,
-            Identifier tex,
+            SubmitNodeCollector collector,
+            EntityRenderState entityState,
+            CameraRenderState cameraState,
+            Identifier texture,
             float width,
             float height,
-            int uOffset,
-            int vOffset,
-            int u,
-            int v,
-            int textureWidth,
-            int textureHeight,
+            float uOffset,
+            float vOffset,
+            float u,
+            float v,
+            float textureWidth,
+            float textureHeight,
             float customOffset,
             float horizontalShift,
             float verticalShift) {
-        double d = dispatcher.distanceToSqr(entity);
-        if (d <= 4096.0) {
-            poseStack.pushPose();
+        poseStack.pushPose();
 
-            poseStack.translate(0, entity.getBbHeight() + 0.25F + customOffset, 0);
-            poseStack.mulPose(dispatcher.cameraOrientation());
-            poseStack.scale(0.025F, -0.025F, 0.025F);
+        poseStack.translate(
+                entityState.nameTagAttachment.x,
+                entityState.nameTagAttachment.y + 0.35f + customOffset,
+                entityState.nameTagAttachment.z);
+        poseStack.mulPose(cameraState.orientation);
+        poseStack.scale(0.025f, -0.025f, 0.025f);
 
-            Matrix4f matrix = poseStack.last().pose();
+        float halfWidth = width / 2f;
+        float halfHeight = height / 2f;
 
-            float halfWidth = width / 2;
-            float halfHeight = height / 2;
-            float uScale = 1F / textureWidth;
-            float vScale = 1F / textureHeight;
+        float u1 = uOffset / textureWidth;
+        float v1 = vOffset / textureHeight;
+        float u2 = (uOffset + u) / textureWidth;
+        float v2 = (vOffset + v) / textureHeight;
 
-            RenderSystem.enableDepthTest();
-            RenderSystem.setShader(CoreShaders.POSITION_TEX);
-            RenderSystem.setShaderTexture(0, tex);
-
-            BufferBuilder bufferBuilder =
-                    Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-
-            bufferBuilder
-                    .addVertex(matrix, -halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
-                    .setUv(uOffset * uScale, vOffset * vScale);
-            bufferBuilder
-                    .addVertex(matrix, -halfWidth + horizontalShift, halfHeight - verticalShift, 0)
-                    .setUv(uOffset * uScale, (v + vOffset) * vScale);
-            bufferBuilder
-                    .addVertex(matrix, halfWidth + horizontalShift, halfHeight - verticalShift, 0)
-                    .setUv((u + uOffset) * uScale, (v + vOffset) * vScale);
-            bufferBuilder
-                    .addVertex(matrix, halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
-                    .setUv((u + uOffset) * uScale, vOffset * vScale);
-
-            BufferUploader.drawWithShader(bufferBuilder.build());
-
-            RenderSystem.disableDepthTest();
-
-            poseStack.popPose();
+        CustomColor badgeColor;
+        if (entityState.isDiscrete) {
+            badgeColor = CommonColors.WHITE.brightnessShift(-0.4f);
+        } else {
+            badgeColor = CommonColors.WHITE;
         }
+
+        ((SubmitNodeStorage) collector)
+                .order(0)
+                .submitCustomGeometry(poseStack, RenderTypes.text(texture), (pose, vertexConsumer) -> {
+                    vertexConsumer
+                            .addVertex(pose, -halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
+                            .setUv(u1, v1)
+                            .setLight(entityState.lightCoords)
+                            .setColor(badgeColor.asInt());
+
+                    vertexConsumer
+                            .addVertex(pose, -halfWidth + horizontalShift, halfHeight - verticalShift, 0)
+                            .setUv(u1, v2)
+                            .setLight(entityState.lightCoords)
+                            .setColor(badgeColor.asInt());
+
+                    vertexConsumer
+                            .addVertex(pose, halfWidth + horizontalShift, halfHeight - verticalShift, 0)
+                            .setUv(u2, v2)
+                            .setLight(entityState.lightCoords)
+                            .setColor(badgeColor.asInt());
+
+                    vertexConsumer
+                            .addVertex(pose, halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
+                            .setUv(u2, v1)
+                            .setLight(entityState.lightCoords)
+                            .setColor(badgeColor.asInt());
+                });
+
+        poseStack.popPose();
     }
 
     public static void drawMulticoloredRectBorders(
