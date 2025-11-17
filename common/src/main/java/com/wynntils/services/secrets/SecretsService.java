@@ -32,7 +32,7 @@ public class SecretsService extends Service {
     private static final String MASTER_KEY_FILE_NAME = "master_key.json";
 
     private static final String CIPHER_TRANSFORMATION = "AES/GCM/NoPadding";
-    private static final String KEY_ALGORITHIM = "AES";
+    private static final String KEY_ALGORITHM = "AES";
     private static final int AES_KEY_SIZE = 256;
     private static final int GCM_NONCE_LENGTH = 12;
     private static final int GCM_TAG_LENGTH = 128;
@@ -80,7 +80,7 @@ public class SecretsService extends Service {
                         .trim();
                 byte[] keyBytes = Base64.getDecoder().decode(base64);
 
-                masterKey = new SecretKeySpec(keyBytes, KEY_ALGORITHIM);
+                masterKey = new SecretKeySpec(keyBytes, KEY_ALGORITHM);
                 return;
             }
 
@@ -99,11 +99,18 @@ public class SecretsService extends Service {
         keyFile.delete();
         secretsFile.delete();
         secrets.clear();
+
+        // Regenerate master key
+        try {
+            createMasterKey();
+        } catch (Exception e) {
+            WynntilsMod.error("Failed to regenerate master key", e);
+        }
     }
 
     private static void createMasterKey() throws Exception {
         File keyFile = new File(SECRETS_DIR, MASTER_KEY_FILE_NAME);
-        KeyGenerator keyGen = KeyGenerator.getInstance(KEY_ALGORITHIM);
+        KeyGenerator keyGen = KeyGenerator.getInstance(KEY_ALGORITHM);
         keyGen.init(AES_KEY_SIZE);
         masterKey = keyGen.generateKey();
 
@@ -118,6 +125,9 @@ public class SecretsService extends Service {
         try (FileReader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             Type type = new TypeToken<Map<WynntilsSecret, String>>() {}.getType();
             secrets = WynntilsMod.GSON.fromJson(reader, type);
+            if (secrets == null) {
+                secrets = new HashMap<>();
+            }
         } catch (IOException e) {
             WynntilsMod.warn("Could not parse secrets file.", e);
         }

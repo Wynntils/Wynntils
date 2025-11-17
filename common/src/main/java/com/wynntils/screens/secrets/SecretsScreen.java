@@ -183,7 +183,7 @@ public class SecretsScreen extends WynntilsScreen {
     }
 
     private int getMaxScrollOffset() {
-        return (secretInputs.size() - WIDGETS_PER_PAGE) * 22;
+        return Math.max(0, (secretInputs.size() - WIDGETS_PER_PAGE) * 22);
     }
 
     private void renderSecrets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
