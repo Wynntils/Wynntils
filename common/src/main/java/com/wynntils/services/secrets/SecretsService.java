@@ -37,6 +37,7 @@ public class SecretsService extends Service {
     private static final int GCM_NONCE_LENGTH = 12;
     private static final int GCM_TAG_LENGTH = 128;
 
+    private SecureRandom secureRandom = new SecureRandom();
     private SecretKey masterKey;
     private Map<WynntilsSecret, String> secrets = new HashMap<>();
 
@@ -146,7 +147,7 @@ public class SecretsService extends Service {
         Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
 
         byte[] nonce = new byte[GCM_NONCE_LENGTH];
-        new SecureRandom().nextBytes(nonce);
+        secureRandom.nextBytes(nonce);
 
         AlgorithmParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH, nonce);
         cipher.init(Cipher.ENCRYPT_MODE, masterKey, spec);
