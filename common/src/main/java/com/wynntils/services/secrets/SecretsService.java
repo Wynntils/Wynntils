@@ -37,8 +37,8 @@ public class SecretsService extends Service {
     private static final int GCM_NONCE_LENGTH = 12;
     private static final int GCM_TAG_LENGTH = 128;
 
-    private static SecretKey masterKey;
-    private static Map<WynntilsSecret, String> secrets = new HashMap<>();
+    private SecretKey masterKey;
+    private Map<WynntilsSecret, String> secrets = new HashMap<>();
 
     public SecretsService() {
         super(List.of());
@@ -71,7 +71,7 @@ public class SecretsService extends Service {
         }
     }
 
-    private static void loadOrCreateMasterKey() {
+    private void loadOrCreateMasterKey() {
         File keyFile = new File(SECRETS_DIR, MASTER_KEY_FILE_NAME);
 
         try {
@@ -101,7 +101,7 @@ public class SecretsService extends Service {
         secrets.clear();
     }
 
-    private static void createMasterKey() throws Exception {
+    private void createMasterKey() throws Exception {
         File keyFile = new File(SECRETS_DIR, MASTER_KEY_FILE_NAME);
         KeyGenerator keyGen = KeyGenerator.getInstance(KEY_ALGORITHM);
         keyGen.init(AES_KEY_SIZE);
@@ -111,13 +111,16 @@ public class SecretsService extends Service {
         FileUtils.writeStringToFile(keyFile, base64, StandardCharsets.UTF_8);
     }
 
-    private static void loadSecrets() {
+    private void loadSecrets() {
         File file = new File(SECRETS_DIR, SECRETS_FILE_NAME);
         if (!file.exists()) return;
 
         try (FileReader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             Type type = new TypeToken<Map<WynntilsSecret, String>>() {}.getType();
             secrets = WynntilsMod.GSON.fromJson(reader, type);
+            if (secrets == null) {
+                secrets = new HashMap<>();
+            }
         } catch (IOException e) {
             WynntilsMod.warn("Could not parse secrets file.", e);
         }
