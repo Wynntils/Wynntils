@@ -3086,6 +3086,7 @@
   "screens.wynntils.savedItems.unableToShare": "Unable to share item",
   "screens.wynntils.searchWidget.defaultSearchText": "Search...",
   "screens.wynntils.secrets.close": "Close",
+  "screens.wynntils.secrets.openLink": "Click to open the link to where you can generate this secret",
   "screens.wynntils.secrets.warning": "Keep the items you enter here to yourself. Do not share them with anyone, even with the Wynncraft or Wynntils teams",
   "screens.wynntils.settingsScreen.all": "All",
   "screens.wynntils.settingsScreen.apply": "Apply",

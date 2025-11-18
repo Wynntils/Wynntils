@@ -52,7 +52,7 @@ public class SecretsScreen extends WynntilsScreen {
         this.addRenderableWidget(
                 new Button.Builder(Component.translatable("screens.wynntils.secrets.close"), (b) -> onClose())
                         .pos(offsetX + 50, offsetY - 21)
-                        .size(150, 20)
+                        .size(250, 20)
                         .build());
 
         populateSecrets();
@@ -68,8 +68,8 @@ public class SecretsScreen extends WynntilsScreen {
                 .renderAlignedTextInBox(
                         guiGraphics.pose(),
                         StyledText.fromComponent(Component.translatable("screens.wynntils.secrets.warning")),
-                        offsetX + 25,
-                        offsetX + 225,
+                        offsetX + 75,
+                        offsetX + 275,
                         offsetY - 42,
                         offsetY - 22,
                         200,
@@ -89,8 +89,8 @@ public class SecretsScreen extends WynntilsScreen {
             if (MathUtils.isInside(
                     (int) mouseX,
                     (int) mouseY,
-                    offsetX + 236,
-                    offsetX + 236 + Texture.SCROLL_BUTTON.width(),
+                    offsetX + 336,
+                    offsetX + 336 + Texture.SCROLL_BUTTON.width(),
                     (int) scrollY,
                     (int) (scrollY + Texture.SCROLL_BUTTON.height()))) {
                 draggingScroll = true;
@@ -163,7 +163,7 @@ public class SecretsScreen extends WynntilsScreen {
 
         for (WynntilsSecret wynntilsSecret : WynntilsSecret.values()) {
             SecretInputWidget secretInputWidget =
-                    new SecretInputWidget(renderX, renderY, 222, 20, this, wynntilsSecret);
+                    new SecretInputWidget(renderX, renderY, 322, 20, this, wynntilsSecret);
 
             secretInputs.add(secretInputWidget);
             renderY += 22;
@@ -187,7 +187,7 @@ public class SecretsScreen extends WynntilsScreen {
     }
 
     private void renderSecrets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.enableScissor(guiGraphics, offsetX + 9, offsetY + 8, 222, 134);
+        RenderUtils.enableScissor(guiGraphics, offsetX + 9, offsetY + 8, 322, 134);
         secretInputs.forEach(secretInput -> secretInput.render(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
     }
@@ -197,6 +197,6 @@ public class SecretsScreen extends WynntilsScreen {
                 + 7
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, 135 - Texture.SCROLL_BUTTON.height());
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SCROLL_BUTTON, offsetX + 236, scrollY);
+        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SCROLL_BUTTON, offsetX + 336, scrollY);
     }
 }

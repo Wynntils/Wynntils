@@ -369,7 +369,7 @@ public enum Texture {
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
     PLAYER_VIEWER_BACKGROUND("ui_components/player_viewer_background.png", 126, 88),
     QUICK_JUMP_BUTTON("ui_components/quick_jump_button.png", 16, 32),
-    SECRETS_BACKGROUND("ui_components/secrets_background.png", 250, 150),
+    SECRETS_BACKGROUND("ui_components/secrets_background.png", 350, 150),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),
     SETTINGS_WARNING_BACKGROUND("ui_components/settings_warning_background.png", 153, 106),

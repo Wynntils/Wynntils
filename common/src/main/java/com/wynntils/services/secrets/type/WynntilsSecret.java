@@ -4,16 +4,26 @@
  */
 package com.wynntils.services.secrets.type;
 
+import java.net.URI;
+
 public enum WynntilsSecret {
-    WYNNCRAFT_API_TOKEN("service.wynntils.secrets.wynncraftApiToken");
+    WYNNCRAFT_API_TOKEN(
+            "service.wynntils.secrets.wynncraftApiToken",
+            URI.create("https://wynncraft.com/account/dashboard?section=dev"));
 
     private final String descriptionKey;
+    private final URI url;
 
-    WynntilsSecret(String descriptionKey) {
+    WynntilsSecret(String descriptionKey, URI url) {
         this.descriptionKey = descriptionKey;
+        this.url = url;
     }
 
     public String getDescriptionKey() {
         return descriptionKey;
+    }
+
+    public URI getUrl() {
+        return url;
     }
 }

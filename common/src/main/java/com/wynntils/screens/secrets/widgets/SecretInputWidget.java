@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.secrets.widgets;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
@@ -18,11 +19,14 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public class SecretInputWidget extends AbstractWidget {
     private final MaskedTextInputWidget maskedTextInputWidget;
+    private final Button openLinkButton;
     private final WynntilsSecret wynntilsSecret;
 
     public SecretInputWidget(
@@ -30,13 +34,20 @@ public class SecretInputWidget extends AbstractWidget {
         super(x, y, width, height, null);
 
         this.maskedTextInputWidget = new MaskedTextInputWidget(
-                x + 80,
+                x + 120,
                 y,
-                width - 80,
+                width - 140,
                 height,
                 (s) -> Services.Secrets.setSecret(wynntilsSecret, s),
                 textboxScreen,
                 Services.Secrets.getSecret(wynntilsSecret));
+        this.openLinkButton = new Button.Builder(Component.literal("🌐"), (b) -> {
+                    Managers.Net.openLink(wynntilsSecret.getUrl());
+                })
+                .size(20, 20)
+                .pos(x + width - 20, y)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.secrets.openLink")))
+                .build();
         this.wynntilsSecret = wynntilsSecret;
     }
 
@@ -48,15 +59,16 @@ public class SecretInputWidget extends AbstractWidget {
                         StyledText.fromString(EnumUtils.toNiceString(wynntilsSecret)),
                         getX(),
                         getY() + getHeight() / 2f,
-                        80,
+                        120,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         maskedTextInputWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+        openLinkButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        if (isHovered) {
+        if (isHovered && !openLinkButton.isHovered()) {
             McUtils.screen().setTooltipForNextRenderPass(Component.translatable(wynntilsSecret.getDescriptionKey()));
         }
     }
@@ -71,6 +83,8 @@ public class SecretInputWidget extends AbstractWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (maskedTextInputWidget.isMouseOver(mouseX, mouseY)) {
             return maskedTextInputWidget.mouseClicked(mouseX, mouseY, button);
+        } else if (openLinkButton.isMouseOver(mouseX, mouseY)) {
+            return openLinkButton.mouseClicked(mouseX, mouseY, button);
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
