@@ -29,7 +29,7 @@ import org.apache.commons.io.FileUtils;
 public class SecretsService extends Service {
     private static final File SECRETS_DIR = WynntilsMod.getModStorageDir("secrets");
     private static final String SECRETS_FILE_NAME = "secrets.json";
-    private static final String MASTER_KEY_FILE_NAME = "master_key.json";
+    private static final String MASTER_KEY_FILE_NAME = "master_key";
 
     private static final String CIPHER_TRANSFORMATION = "AES/GCM/NoPadding";
     private static final String KEY_ALGORITHM = "AES";
