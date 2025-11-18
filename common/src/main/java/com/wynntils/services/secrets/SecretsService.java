@@ -99,6 +99,12 @@ public class SecretsService extends Service {
         keyFile.delete();
         secretsFile.delete();
         secrets.clear();
+
+        try {
+            createMasterKey();
+        } catch (Exception e) {
+            WynntilsMod.error("Failed to regenerate master key", e);
+        }
     }
 
     private void createMasterKey() throws Exception {
