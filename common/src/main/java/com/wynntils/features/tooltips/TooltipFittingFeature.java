@@ -80,6 +80,8 @@ public class TooltipFittingFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onTooltipRenderPre(TooltipRenderEvent.Pre e) {
+        if (lastScaleFactor == 1f) return;
+
         // push pose before scaling, so we can pop it afterwards
         GuiGraphics guiGraphics = e.getGuiGraphics();
         guiGraphics.pose().pushMatrix();

@@ -25,8 +25,12 @@ import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import java.util.Optional;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollection;
@@ -40,6 +44,8 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
@@ -937,6 +943,22 @@ public final class RenderUtils {
 
     public static void renderItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
         guiGraphics.renderItem(itemStack, x, y);
+    }
+
+    public static void renderTooltip(
+            GuiGraphics guiGraphics,
+            Font font,
+            List<Component> tooltipLines,
+            Optional<TooltipComponent> tooltipImage,
+            int mouseX,
+            int mouseY) {
+        List<ClientTooltipComponent> list = tooltipLines.stream()
+                .map(Component::getVisualOrderText)
+                .map(ClientTooltipComponent::create)
+                .collect(Util.toMutableList());
+        tooltipImage.ifPresent(
+                tooltipComponent -> list.add(list.isEmpty() ? 0 : 1, ClientTooltipComponent.create(tooltipComponent)));
+        guiGraphics.renderTooltip(font, list, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
     }
 
     public static void renderCustomNametag(

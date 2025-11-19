@@ -198,7 +198,7 @@ public class ItemCompareFeature extends Feature {
                         });
                     }
                 }
-                    // TODO: allow comparing with equipped/selected tomes and selected charms
+                // TODO: allow comparing with equipped/selected tomes and selected charms
             }
         }
 
@@ -341,16 +341,21 @@ public class ItemCompareFeature extends Feature {
         changePositioner = true;
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().scale(hoveredScaleFactor, hoveredScaleFactor);
-        guiGraphics.renderTooltip(
-                font, hoveredLines, hoveredItemStack.getTooltipImage(), (int) (hoveredX / hoveredScaleFactor), (int)
-                        (hoveredY / hoveredScaleFactor));
+        RenderUtils.renderTooltip(
+                guiGraphics,
+                font,
+                hoveredLines,
+                hoveredItemStack.getTooltipImage(),
+                (int) (hoveredX / hoveredScaleFactor),
+                (int) (hoveredY / hoveredScaleFactor));
         guiGraphics.pose().popMatrix();
 
         for (Tooltip tooltip : tooltips) {
             guiGraphics.pose().pushMatrix();
             float scaleFactor = tooltip.getScaleFactor();
             guiGraphics.pose().scale(scaleFactor, scaleFactor);
-            guiGraphics.renderTooltip(
+            RenderUtils.renderTooltip(
+                    guiGraphics,
                     font,
                     tooltip.getLines(),
                     tooltip.getVisualTooltipComponent(),
