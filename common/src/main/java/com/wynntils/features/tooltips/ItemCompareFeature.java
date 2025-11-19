@@ -5,7 +5,6 @@
 package com.wynntils.features.tooltips;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -116,7 +115,7 @@ public class ItemCompareFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onTooltipRenderEvent(TooltipRenderEvent event) {
+    public void onTooltipRenderEvent(TooltipRenderEvent.Position event) {
         if (!changePositioner) return;
 
         event.setPositioner(PassiveTooltipPositioner.INSTANCE);
