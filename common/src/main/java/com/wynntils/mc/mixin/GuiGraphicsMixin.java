@@ -13,19 +13,16 @@ import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ItemCooldownRenderEvent;
 import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.event.TooltipRenderEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import org.joml.Vector2ic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -71,41 +68,6 @@ public abstract class GuiGraphicsMixin {
                 event.getMouseX(),
                 event.getMouseY(),
                 backgroundTexture);
-    }
-
-    @Inject(
-            method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V",
-            at = @At("RETURN"))
-    private void setTooltipForNextFramePost(Font font, ItemStack itemStack, int mouseX, int mouseY, CallbackInfo ci) {
-        MixinHelper.post(new ItemTooltipRenderEvent.Post((GuiGraphics) (Object) this, itemStack, mouseX, mouseY));
-    }
-
-    @WrapOperation(
-            method =
-                    "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;positionTooltip(IIIIII)Lorg/joml/Vector2ic;"))
-    private Vector2ic renderTooltipInternalPositioning(
-            ClientTooltipPositioner instance,
-            int screenWidth,
-            int screenHeight,
-            int mouseX,
-            int mouseY,
-            int tooltipWidth,
-            int tooltipHeight,
-            Operation<Vector2ic> operation) {
-        TooltipRenderEvent event = new TooltipRenderEvent();
-        MixinHelper.post(event);
-
-        if (event.getPositioner() != null) {
-            return event.getPositioner()
-                    .positionTooltip(screenWidth, screenHeight, mouseX, mouseY, tooltipWidth, tooltipHeight);
-        }
-
-        return operation.call(instance, screenWidth, screenHeight, mouseX, mouseY, tooltipWidth, tooltipHeight);
     }
 
     @ModifyVariable(
