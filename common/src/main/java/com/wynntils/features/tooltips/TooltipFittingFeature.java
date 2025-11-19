@@ -76,29 +76,33 @@ public class TooltipFittingFeature extends Feature {
         }
 
         lastScaleFactor = scaleFactor;
+    }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onTooltipRenderPre(TooltipRenderEvent.Pre e) {
         // push pose before scaling, so we can pop it afterwards
         GuiGraphics guiGraphics = e.getGuiGraphics();
         guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().scale(scaleFactor, scaleFactor);
+        guiGraphics.pose().scale(lastScaleFactor, lastScaleFactor);
 
         scaledLast = true;
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onTooltipRenderPosition(TooltipRenderEvent.Position event) {
+        if (!scaledLast) return;
+
+        event.setPositioner(new ScaledTooltipPositioner(lastScaleFactor));
+    }
+
     // highest priority to reset pose before other features start rendering
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onTooltipPost(ItemTooltipRenderEvent.Post e) {
+    public void onTooltipRenderPost(TooltipRenderEvent.Post e) {
         if (!scaledLast) return;
 
         e.getGuiGraphics().pose().popMatrix();
         scaledLast = false;
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onTooltipRendering(TooltipRenderEvent event) {
-        if (!scaledLast) return;
-
-        event.setPositioner(new ScaledTooltipPositioner(lastScaleFactor));
+        lastScaleFactor = 1f;
     }
 
     /**

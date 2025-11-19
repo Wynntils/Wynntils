@@ -62,19 +62,6 @@ public abstract class FabricAbstractContainerScreenMixin {
                 backgroundTexture);
     }
 
-    // See ForgeGuiGraphics#renderTooltipPost for the Forge mixin.
-    @Inject(
-            method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V",
-                            shift = At.Shift.AFTER))
-    private void renderTooltipPost(GuiGraphics guiGraphics, int x, int y, CallbackInfo ci, @Local ItemStack itemStack) {
-        MixinHelper.post(new ItemTooltipRenderEvent.Post(guiGraphics, itemStack, x, y));
-    }
-
     // See the ForgeAbstractContainerScreenMixin#renderSlotPreCount for the Forge mixin.
     @Inject(
             method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;)V",
