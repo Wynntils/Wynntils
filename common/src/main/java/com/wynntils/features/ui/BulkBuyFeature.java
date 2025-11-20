@@ -38,7 +38,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
@@ -190,7 +190,7 @@ public class BulkBuyFeature extends Feature {
 
         MutableComponent component = Component.empty()
                 .append(Component.literal("\uE004\uDB00\uDC02\uE014\uDB00\uDC02\uE000")
-                        .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("keybind"))))
+                        .withStyle(Style.EMPTY.withFont(Identifier.withDefaultNamespace("keybind"))))
                 .append(Component.literal(" ")
                         .append(Component.translatable("feature.wynntils.bulkBuy.bulkBuyActive", bulkBuyAmount.get()))
                         .withStyle(BULK_BUY_ACTIVE_COLOR));

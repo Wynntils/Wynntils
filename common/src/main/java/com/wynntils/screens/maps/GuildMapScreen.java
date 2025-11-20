@@ -388,7 +388,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
+                Texture.MAP_INFO_TOOLTIP_CENTER.identifier(),
                 xOffset,
                 Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
                 textureWidth,
@@ -549,7 +549,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
+                Texture.MAP_INFO_TOOLTIP_CENTER.identifier(),
                 xOffset,
                 Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
                 textureWidth,

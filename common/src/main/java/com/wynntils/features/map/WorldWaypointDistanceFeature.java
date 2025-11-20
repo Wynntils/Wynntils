@@ -153,7 +153,7 @@ public class WorldWaypointDistanceFeature extends Feature {
 
                 RenderUtils.drawScalingTexturedRect(
                         event.getPoseStack(),
-                        icon.resource(),
+                        icon.identifier(),
                         displayPositionX - scale.get() * icon.width() / 2,
                         displayPositionY - scale.get() * (icon.height() + backgroundHeight / 2 + 3f),
                         0,
@@ -259,7 +259,7 @@ public class WorldWaypointDistanceFeature extends Feature {
 
                 RenderUtils.drawScalingTexturedRect(
                         event.getPoseStack(),
-                        icon.resource(),
+                        icon.identifier(),
                         displayPositionX - scale.get() * icon.width() / 2 + pointerOffsetX * (1 - scale.get()),
                         displayPositionY - scale.get() * icon.height() / 2 + pointerOffsetY * (1 - scale.get()),
                         0,

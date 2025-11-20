@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.territorymanagement.widgets;
@@ -100,7 +100,7 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
         // Render at the center of the widget
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics.pose(),
-                texture.resource(),
+                texture.identifier(),
                 itemRenderX,
                 itemRenderY,
                 0,

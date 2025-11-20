@@ -36,7 +36,7 @@ public class ReloadButton extends WynntilsButton implements TooltipProvider {
         if (this.isHovered) {
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    reloadButton.resource(),
+                    reloadButton.identifier(),
                     this.getX(),
                     this.getY(),
                     0,
@@ -51,7 +51,7 @@ public class ReloadButton extends WynntilsButton implements TooltipProvider {
         } else {
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    reloadButton.resource(),
+                    reloadButton.identifier(),
                     this.getX(),
                     this.getY(),
                     0,

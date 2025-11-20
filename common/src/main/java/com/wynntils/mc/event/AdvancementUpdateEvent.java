@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -9,20 +9,20 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.Event;
 
 public class AdvancementUpdateEvent extends Event {
     private final boolean reset;
     private final List<AdvancementHolder> added;
-    private final Set<ResourceLocation> removed;
-    private final Map<ResourceLocation, AdvancementProgress> progress;
+    private final Set<Identifier> removed;
+    private final Map<Identifier, AdvancementProgress> progress;
 
     public AdvancementUpdateEvent(
             boolean reset,
             List<AdvancementHolder> added,
-            Set<ResourceLocation> removed,
-            Map<ResourceLocation, AdvancementProgress> progress) {
+            Set<Identifier> removed,
+            Map<Identifier, AdvancementProgress> progress) {
         this.reset = reset;
         this.added = added;
         this.removed = removed;
@@ -37,11 +37,11 @@ public class AdvancementUpdateEvent extends Event {
         return added;
     }
 
-    public Set<ResourceLocation> getRemoved() {
+    public Set<Identifier> getRemoved() {
         return removed;
     }
 
-    public Map<ResourceLocation, AdvancementProgress> getProgress() {
+    public Map<Identifier, AdvancementProgress> getProgress() {
         return progress;
     }
 }

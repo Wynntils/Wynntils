@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class StyledTextPart {
     private final String text;
@@ -165,7 +165,7 @@ public final class StyledTextPart {
                         }
 
                         String fontCode = special.substring(2);
-                        ResourceLocation font = FontLookup.getFontFromFromFontCode(fontCode);
+                        Identifier font = FontLookup.getFontFromFromFontCode(fontCode);
                         if (font != null) {
                             currentStyle = currentStyle.withFont(font);
                         }
@@ -331,7 +331,7 @@ public final class StyledTextPart {
                     style = style.withStrikethrough(true);
                 }
                 if (jsonObject.has("font")) {
-                    style = style.withFont(ResourceLocation.withDefaultNamespace(
+                    style = style.withFont(Identifier.withDefaultNamespace(
                             jsonObject.get("font").getAsString()));
                 }
                 if (jsonObject.has("color")) {

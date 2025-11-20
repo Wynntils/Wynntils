@@ -20,17 +20,17 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class WynntilsCheckbox extends AbstractButton {
-    private static final ResourceLocation CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE =
-            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected_highlighted.png");
-    private static final ResourceLocation CHECKBOX_SELECTED_SPRITE =
-            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected.png");
-    private static final ResourceLocation CHECKBOX_HIGHLIGHTED_SPRITE =
-            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_highlighted.png");
-    private static final ResourceLocation CHECKBOX_SPRITE =
-            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox.png");
+    private static final Identifier CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE =
+            Identifier.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected_highlighted.png");
+    private static final Identifier CHECKBOX_SELECTED_SPRITE =
+            Identifier.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected.png");
+    private static final Identifier CHECKBOX_HIGHLIGHTED_SPRITE =
+            Identifier.withDefaultNamespace("textures/gui/sprites/widget/checkbox_highlighted.png");
+    private static final Identifier CHECKBOX_SPRITE =
+            Identifier.withDefaultNamespace("textures/gui/sprites/widget/checkbox.png");
 
     public boolean selected;
     private final int maxTextWidth;
@@ -96,17 +96,17 @@ public class WynntilsCheckbox extends AbstractButton {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        ResourceLocation resourceLocation;
+        Identifier identifier;
         if (this.selected) {
-            resourceLocation = this.isFocused() || this.isHovered()
+            identifier = this.isFocused() || this.isHovered()
                     ? CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE
                     : CHECKBOX_SELECTED_SPRITE;
         } else {
-            resourceLocation = this.isFocused() || this.isHovered() ? CHECKBOX_HIGHLIGHTED_SPRITE : CHECKBOX_SPRITE;
+            identifier = this.isFocused() || this.isHovered() ? CHECKBOX_HIGHLIGHTED_SPRITE : CHECKBOX_SPRITE;
         }
 
         RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(), resourceLocation, this.getX(), this.getY(), 0, this.width, this.height, 20, 20);
+                guiGraphics.pose(), identifier, this.getX(), this.getY(), 0, this.width, this.height, 20, 20);
 
         FontRenderer.getInstance()
                 .renderScrollingText(

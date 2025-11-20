@@ -140,7 +140,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.FULLSCREEN_MAP_BORDER.resource(),
+                Texture.FULLSCREEN_MAP_BORDER.identifier(),
                 renderX,
                 renderY,
                 100,

@@ -60,7 +60,7 @@ public class IconFilterWidget extends AbstractWidget {
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                icon.resource(),
+                icon.identifier(),
                 iconRenderX,
                 iconRenderY,
                 1,

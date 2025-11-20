@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.partymanagement.widgets;
@@ -13,7 +13,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public abstract class AbstractPlayerListEntryWidget extends AbstractWidget {
     protected final String playerName;
@@ -34,7 +34,7 @@ public abstract class AbstractPlayerListEntryWidget extends AbstractWidget {
 
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be Steves
-        ResourceLocation skin = (playerInfo == null)
+        Identifier skin = (playerInfo == null)
                 ? DefaultPlayerSkin.getDefaultTexture()
                 : playerInfo.getSkin().texture();
         // head rendering
