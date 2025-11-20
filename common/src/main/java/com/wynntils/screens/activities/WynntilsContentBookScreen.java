@@ -50,7 +50,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 
@@ -62,7 +62,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     private static final StyledText VARIOUS_EMERALDS = StyledText.fromString("Various Emeralds");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("(\\d+) (?:.*)");
 
-    private static final ResourceLocation BUTTON_CLICK_ID = ResourceLocation.withDefaultNamespace("wynn.ui.click");
+    private static final Identifier BUTTON_CLICK_ID = Identifier.withDefaultNamespace("wynn.ui.click");
     private static final SoundEvent BUTTON_CLICK_SOUND = SoundEvent.createVariableRangeEvent(BUTTON_CLICK_ID);
 
     private List<List<ContentBookWidget>> contentBookWidgets = new ArrayList<>();

@@ -120,7 +120,7 @@ public class UnidentifiedItemIconFeature extends Feature {
                 Pair<Integer, Integer> textureCoords = TEXTURE_COORDS.get(gearType);
                 RenderUtils.drawTexturedRect(
                         poseStack,
-                        texture.resource(),
+                        texture.identifier(),
                         x + padding,
                         y + padding,
                         z,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -14,7 +14,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ResolvableProfile;
 
@@ -45,7 +45,7 @@ public final class SkinUtils {
         itemStack.set(DataComponents.PROFILE, new ResolvableProfile(gameProfile));
     }
 
-    public static ResourceLocation getSkin(UUID uuid) {
+    public static Identifier getSkin(UUID uuid) {
         ClientPacketListener connection = McUtils.mc().getConnection();
 
         if (connection == null) {

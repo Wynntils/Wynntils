@@ -40,7 +40,7 @@ public class GuideGearItemStackButton extends WynntilsButton {
 
         RenderUtils.drawTexturedRectWithColor(
                 poseStack,
-                Texture.HIGHLIGHT.resource(),
+                Texture.HIGHLIGHT.identifier(),
                 color.withAlpha(1f),
                 getX() - 1,
                 getY() - 1,
@@ -55,7 +55,7 @@ public class GuideGearItemStackButton extends WynntilsButton {
         if (Services.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
-                    Texture.FAVORITE_ICON.resource(),
+                    Texture.FAVORITE_ICON.identifier(),
                     getX() + 12,
                     getY() - 4,
                     200,

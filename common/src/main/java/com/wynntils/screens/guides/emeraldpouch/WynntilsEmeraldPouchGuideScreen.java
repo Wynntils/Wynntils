@@ -105,7 +105,7 @@ public final class WynntilsEmeraldPouchGuideScreen
         int txHeight = Texture.CONTENT_BOOK_TITLE.height();
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.CONTENT_BOOK_TITLE.resource(),
+                Texture.CONTENT_BOOK_TITLE.identifier(),
                 offsetX,
                 30 + offsetY,
                 0,

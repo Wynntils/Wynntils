@@ -351,7 +351,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         int txHeight = Texture.CONTENT_BOOK_TITLE.height();
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.CONTENT_BOOK_TITLE.resource(),
+                Texture.CONTENT_BOOK_TITLE.identifier(),
                 offsetX,
                 15 + offsetY,
                 0,

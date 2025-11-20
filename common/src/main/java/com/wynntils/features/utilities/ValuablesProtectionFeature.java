@@ -50,7 +50,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -77,8 +77,7 @@ public class ValuablesProtectionFeature extends Feature {
     @Persisted
     private final Config<Boolean> requireCtrlToSell = new Config<>(false);
 
-    private static final ResourceLocation CIRCLE_TEXTURE =
-            ResourceLocation.withDefaultNamespace("textures/wynn/gui/tutorial.png");
+    private static final Identifier CIRCLE_TEXTURE = Identifier.withDefaultNamespace("textures/wynn/gui/tutorial.png");
 
     private static final int BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT = 17;
     private static final int TM_ITEM_SLOT = 22;

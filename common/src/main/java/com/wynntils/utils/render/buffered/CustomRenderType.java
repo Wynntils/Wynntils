@@ -15,7 +15,7 @@ import net.minecraft.Util;
 import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.TriState;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -50,7 +50,7 @@ public class CustomRenderType extends RenderType {
             CompositeState.builder()
                     .setShaderState(new ShaderStateShard(CoreShaders.POSITION_TEX_COLOR))
                     .setCullState(NO_CULL)
-                    .setTextureState(new TextureStateShard(Texture.LOOTRUN_LINE.resource(), TriState.FALSE, false))
+                    .setTextureState(new TextureStateShard(Texture.LOOTRUN_LINE.identifier(), TriState.FALSE, false))
                     .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
                     .setWriteMaskState(COLOR_DEPTH_WRITE)
                     .createCompositeState(false));
@@ -81,7 +81,7 @@ public class CustomRenderType extends RenderType {
                     .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false));
 
-    private static final Function<ResourceLocation, RenderType> POSITION_TEXTURE_QUAD =
+    private static final Function<Identifier, RenderType> POSITION_TEXTURE_QUAD =
             Util.memoize(resource -> RenderType.create(
                     "wynntils_position_texture_quad",
                     DefaultVertexFormat.POSITION_TEX,
@@ -95,7 +95,7 @@ public class CustomRenderType extends RenderType {
                             .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
                             .createCompositeState(false)));
 
-    private static final Function<ResourceLocation, RenderType> MAP_POSITION_TEXTURE_QUAD =
+    private static final Function<Identifier, RenderType> MAP_POSITION_TEXTURE_QUAD =
             Util.memoize(resource -> RenderType.create(
                     "wynntils_map_position_texture_quad",
                     DefaultVertexFormat.POSITION_TEX,
@@ -126,7 +126,7 @@ public class CustomRenderType extends RenderType {
                                     }))
                             .createCompositeState(false)));
 
-    private static final Function<ResourceLocation, RenderType> POSITION_COLOR_TEXTURE_QUAD =
+    private static final Function<Identifier, RenderType> POSITION_COLOR_TEXTURE_QUAD =
             Util.memoize(resource -> RenderType.create(
                     "wynntils_position_color_texture_quad",
                     DefaultVertexFormat.POSITION_TEX_COLOR,
@@ -141,15 +141,15 @@ public class CustomRenderType extends RenderType {
                             .setWriteMaskState(COLOR_WRITE)
                             .createCompositeState(false)));
 
-    public static RenderType getPositionColorTextureQuad(ResourceLocation resource) {
+    public static RenderType getPositionColorTextureQuad(Identifier resource) {
         return POSITION_COLOR_TEXTURE_QUAD.apply(resource);
     }
 
-    public static RenderType getPositionTextureQuad(ResourceLocation resource) {
+    public static RenderType getPositionTextureQuad(Identifier resource) {
         return POSITION_TEXTURE_QUAD.apply(resource);
     }
 
-    public static RenderType getMapPositionTextureQuad(ResourceLocation resource) {
+    public static RenderType getMapPositionTextureQuad(Identifier resource) {
         return MAP_POSITION_TEXTURE_QUAD.apply(resource);
     }
 

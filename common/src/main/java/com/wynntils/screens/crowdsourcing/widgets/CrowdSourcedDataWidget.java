@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.crowdsourcing.widgets;
@@ -82,7 +82,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
 
         RenderUtils.drawTexturedRect(
                 poseStack,
-                stateTexture.resource(),
+                stateTexture.identifier(),
                 this.getX() + 1,
                 this.getY() + 1,
                 stateTexture.width(),

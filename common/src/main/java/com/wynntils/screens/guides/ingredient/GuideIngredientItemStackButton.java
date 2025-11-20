@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.ingredient;
@@ -42,7 +42,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
 
         RenderUtils.drawTexturedRectWithColor(
                 poseStack,
-                Texture.HIGHLIGHT.resource(),
+                Texture.HIGHLIGHT.identifier(),
                 color.withAlpha(1f),
                 getX() - 1,
                 getY() - 1,
@@ -58,7 +58,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
         if (Services.Favorites.isFavorite(unformattedName)) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
-                    Texture.FAVORITE_ICON.resource(),
+                    Texture.FAVORITE_ICON.identifier(),
                     getX() + 12,
                     getY() - 4,
                     200,
