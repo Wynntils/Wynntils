@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -87,7 +87,7 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
         if (!this.dynamicTexture) {
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    texture.resource(),
+                    texture.identifier(),
                     getX() + (width - texture.width()) / 2f,
                     getY() + (height - texture.height()) / 2f,
                     1,
@@ -103,7 +103,7 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
             if (this.isHovered) {
                 RenderUtils.drawTexturedRect(
                         poseStack,
-                        texture.resource(),
+                        texture.identifier(),
                         getX() + (width - texture.width()) / 2f,
                         getY() + (height - texture.height() / 2f) / 2f,
                         1,
@@ -118,7 +118,7 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
             } else {
                 RenderUtils.drawTexturedRect(
                         poseStack,
-                        texture.resource(),
+                        texture.identifier(),
                         getX() + (width - texture.width()) / 2f,
                         getY() + (height - texture.height() / 2f) / 2f,
                         1,

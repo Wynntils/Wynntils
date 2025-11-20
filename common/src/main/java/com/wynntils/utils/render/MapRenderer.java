@@ -91,7 +91,7 @@ public final class MapRenderer {
             float width,
             float height,
             float scale) {
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getMapPositionTextureQuad(map.resource()));
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getMapPositionTextureQuad(map.identifier()));
 
         renderMap(map, poseStack, buffer, centerX, centerZ, textureX, textureZ, width, height, scale);
     }
@@ -109,7 +109,7 @@ public final class MapRenderer {
         RenderSystem.disableBlend();
 
         RenderSystem.setShader(CoreShaders.POSITION_TEX);
-        RenderSystem.setShaderTexture(0, map.resource());
+        RenderSystem.setShaderTexture(0, map.identifier());
 
         RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
         RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
@@ -181,7 +181,7 @@ public final class MapRenderer {
 
         RenderUtils.drawTexturedRectWithColor(
                 poseStack,
-                Texture.MAP_POINTERS.resource(),
+                Texture.MAP_POINTERS.identifier(),
                 pointerColor,
                 renderX - renderedWidth / 2f,
                 renderY - renderedHeight / 2f,

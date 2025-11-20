@@ -35,7 +35,7 @@ public class ExportButton extends WynntilsButton implements TooltipProvider {
         Texture shareButton = Texture.SHARE_ICON_OFFSET;
         RenderUtils.drawTexturedRect(
                 poseStack,
-                shareButton.resource(),
+                shareButton.identifier(),
                 this.getX(),
                 this.getY(),
                 0,

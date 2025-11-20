@@ -43,7 +43,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -55,8 +55,7 @@ public class CustomNametagRendererFeature extends Feature {
     private static final float NAMETAG_HEIGHT = 0.25875f;
     private static final float BADGE_MARGIN = 2;
     private static final int BADGE_SCROLL_SPEED = 40;
-    private static final ResourceLocation WYNNTILS_NAMETAG_LOGO_FONT =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "nametag");
+    private static final Identifier WYNNTILS_NAMETAG_LOGO_FONT = Identifier.fromNamespaceAndPath("wynntils", "nametag");
     private static final String WYNNTILS_NAMETAG_LOGO = "\uE100";
 
     @Persisted
@@ -325,7 +324,7 @@ public class CustomNametagRendererFeature extends Feature {
                     event.getPoseStack(),
                     event.getEntityRenderDispatcher(),
                     player,
-                    Texture.LEADERBOARD_BADGES.resource(),
+                    Texture.LEADERBOARD_BADGES.identifier(),
                     LeaderboardBadge.WIDTH,
                     LeaderboardBadge.HEIGHT,
                     badge.uOffset(),

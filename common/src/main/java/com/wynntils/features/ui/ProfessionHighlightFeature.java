@@ -107,7 +107,7 @@ public class ProfessionHighlightFeature extends Feature {
 
         RenderUtils.drawTexturedRectWithColor(
                 event.getPoseStack(),
-                Texture.HIGHLIGHT.resource(),
+                Texture.HIGHLIGHT.identifier(),
                 highlightColor.get(),
                 slot.x - 1,
                 slot.y - 1,

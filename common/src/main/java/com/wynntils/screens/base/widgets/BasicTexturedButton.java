@@ -53,7 +53,7 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
         if (scaleTexture) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
-                    texture.resource(),
+                    texture.identifier(),
                     this.getX(),
                     this.getY(),
                     0,

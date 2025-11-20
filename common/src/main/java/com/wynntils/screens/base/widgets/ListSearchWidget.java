@@ -21,7 +21,7 @@ public class ListSearchWidget extends SearchWidget {
     protected void renderBackground(PoseStack poseStack) {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.LIST_SEARCH.resource(),
+                Texture.LIST_SEARCH.identifier(),
                 this.getX(),
                 this.getY(),
                 0,

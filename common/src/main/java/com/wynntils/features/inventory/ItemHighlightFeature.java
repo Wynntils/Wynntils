@@ -171,7 +171,7 @@ public class ItemHighlightFeature extends Feature {
             RenderSystem.enableDepthTest();
             RenderUtils.drawTexturedRectWithColor(
                     e.getPoseStack(),
-                    Texture.HOTBAR_SELECTED_HIGHLIGHT.resource(),
+                    Texture.HOTBAR_SELECTED_HIGHLIGHT.identifier(),
                     color,
                     e.getSlot().x,
                     e.getSlot().y,
@@ -187,7 +187,7 @@ public class ItemHighlightFeature extends Feature {
         RenderSystem.enableDepthTest();
         RenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
-                Texture.HIGHLIGHT.resource(),
+                Texture.HIGHLIGHT.identifier(),
                 color,
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
@@ -225,7 +225,7 @@ public class ItemHighlightFeature extends Feature {
         BufferedRenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
                 e.getGuiGraphics().bufferSource,
-                Texture.HIGHLIGHT.resource(),
+                Texture.HIGHLIGHT.identifier(),
                 color,
                 e.getX() - 1,
                 e.getY() - 1,

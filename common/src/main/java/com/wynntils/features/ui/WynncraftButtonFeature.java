@@ -48,7 +48,7 @@ import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.Validate;
 
@@ -206,7 +206,7 @@ public class WynncraftButtonFeature extends Feature {
             this.titleScreen = titleScreen;
 
             this.serverIcon = new ServerIcon(serverData);
-            this.serverIcon.loadResource(false);
+            this.serverIcon.loadIdentifier(false);
             this.warningType = warningType;
             this.ignoreFailedDownloads = ignoreFailedDownloads;
 
@@ -272,17 +272,17 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     /**
-     * Provides the icon for a server in the form of a {@link ResourceLocation} with utility methods
+     * Provides the icon for a server in the form of a {@link Identifier} with utility methods
      */
     private static final class ServerIcon {
-        private static final ResourceLocation FALLBACK;
+        private static final Identifier FALLBACK;
 
         private final ServerData server;
-        private ResourceLocation serverIconLocation;
+        private Identifier serverIconLocation;
         private final Consumer<ServerIcon> onDone;
 
         static {
-            FALLBACK = Texture.WYNNCRAFT_ICON.resource();
+            FALLBACK = Texture.WYNNCRAFT_ICON.identifier();
         }
 
         /**
@@ -295,10 +295,10 @@ public class WynncraftButtonFeature extends Feature {
             this.serverIconLocation = FALLBACK;
         }
 
-        private void loadResource(boolean allowStale) {
+        private void loadIdentifier(boolean allowStale) {
             // Try default
             @SuppressWarnings("deprecation")
-            ResourceLocation destination = ResourceLocation.withDefaultNamespace(
+            Identifier destination = Identifier.withDefaultNamespace(
                     "servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
 
             // If someone converts this to get the actual ServerData used by the gui, check
@@ -340,9 +340,9 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         /**
-         * Returns the icon as a {@link ResourceLocation} if found, else unknown server texture
+         * Returns the icon as a {@link Identifier} if found, else unknown server texture
          */
-        private synchronized ResourceLocation getServerIconLocation() {
+        private synchronized Identifier getServerIconLocation() {
             return serverIconLocation;
         }
 
@@ -352,7 +352,7 @@ public class WynncraftButtonFeature extends Feature {
 
         // Modified from
         // net.minecraft.client.gui.screens.multiplayer.ServerSelectionList#uploadServerIcon
-        private synchronized void loadServerIcon(ResourceLocation destination) {
+        private synchronized void loadServerIcon(Identifier destination) {
             byte[] iconBytes = server.getIconBytes();
             if (iconBytes == null) {
                 // failed to ping server or icon wasn't sent

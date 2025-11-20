@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
@@ -131,8 +131,8 @@ public final class CharacterStatsModel extends Model {
 
     public CappedValue getItemCooldownTicks(ItemStack itemStack) {
         ItemCooldowns cooldowns = McUtils.player().getCooldowns();
-        ResourceLocation resourceLocation = cooldowns.getCooldownGroup(itemStack);
-        ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(resourceLocation);
+        Identifier identifier = cooldowns.getCooldownGroup(itemStack);
+        ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(identifier);
         if (cooldown == null || cooldown.startTime >= cooldown.endTime) return CappedValue.EMPTY; // Sanity check
 
         int remaining = cooldown.endTime - cooldowns.tickCount;

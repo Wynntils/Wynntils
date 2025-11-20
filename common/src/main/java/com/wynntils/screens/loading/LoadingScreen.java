@@ -21,12 +21,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class LoadingScreen extends WynntilsScreen {
     private static final String LOGO_STRING = "\uE005\uDAFF\uDFFF\uE006";
     private static final String TEXT_LOGO_STRING = "Wynncraft";
-    private static final ResourceLocation LOGO_FONT_LOCATION = ResourceLocation.withDefaultNamespace("screen/static");
+    private static final Identifier LOGO_FONT_LOCATION = Identifier.withDefaultNamespace("screen/static");
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
     private static final int SPINNER_SPEED = 1200;
     private final Runnable onClose;
@@ -94,7 +94,7 @@ public final class LoadingScreen extends WynntilsScreen {
         // Draw background
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.BACKGROUND_SPLASH.resource(),
+                Texture.BACKGROUND_SPLASH.identifier(),
                 (this.width - scaledWidth) / 2f,
                 (this.height - scaledHeight) / 2f,
                 0,
@@ -162,7 +162,7 @@ public final class LoadingScreen extends WynntilsScreen {
     }
 
     private void drawSpinner(PoseStack poseStack, float x, float y, boolean state) {
-        ResourceLocation resource = Texture.RELOAD_ICON_OFFSET.resource();
+        Identifier resource = Texture.RELOAD_ICON_OFFSET.identifier();
 
         int fullWidth = Texture.RELOAD_ICON_OFFSET.width();
         int spinnerWidth = fullWidth / 2;

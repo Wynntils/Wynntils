@@ -18,12 +18,11 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
-    private static final ResourceLocation BOOK_OPEN_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "ui.book.open");
+    private static final Identifier BOOK_OPEN_ID = Identifier.fromNamespaceAndPath("wynntils", "ui.book.open");
     private static final SoundEvent BOOK_OPEN_SOUND = SoundEvent.createVariableRangeEvent(BOOK_OPEN_ID);
 
     protected int offsetX;

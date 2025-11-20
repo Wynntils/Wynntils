@@ -28,7 +28,7 @@ public class BackButton extends WynntilsButton {
         if (this.isHovered) {
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    backArrow.resource(),
+                    backArrow.identifier(),
                     this.getX(),
                     this.getY(),
                     0,
@@ -43,7 +43,7 @@ public class BackButton extends WynntilsButton {
         } else {
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    backArrow.resource(),
+                    backArrow.identifier(),
                     this.getX(),
                     this.getY(),
                     0,

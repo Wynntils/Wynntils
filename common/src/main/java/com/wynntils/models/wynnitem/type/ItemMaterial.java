@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.datafix.fixes.ItemIdFix;
 import net.minecraft.util.datafix.fixes.ItemStackTheFlatteningFix;
 import net.minecraft.world.item.Item;
@@ -78,6 +78,6 @@ public record ItemMaterial(ItemStack itemStack) {
     }
 
     private static Item getItem(String itemId) {
-        return BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(itemId));
+        return BuiltInRegistries.ITEM.getValue(Identifier.parse(itemId));
     }
 }
