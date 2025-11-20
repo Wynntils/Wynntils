@@ -49,7 +49,7 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRectWithColor(
                 guiGraphics.pose(),
-                Texture.INFO.resource(),
+                Texture.INFO.identifier(),
                 isHovered ? CommonColors.AQUA : CommonColors.WHITE,
                 this.getX(),
                 this.getY(),

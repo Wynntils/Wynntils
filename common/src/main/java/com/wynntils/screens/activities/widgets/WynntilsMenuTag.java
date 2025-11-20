@@ -42,7 +42,7 @@ public class WynntilsMenuTag extends WynntilsButton {
 
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.CONTENT_BOOK_TAG.resource(),
+                Texture.CONTENT_BOOK_TAG.identifier(),
                 getX(),
                 getY(),
                 0,

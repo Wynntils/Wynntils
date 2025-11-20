@@ -11,12 +11,12 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 public class PageSelectorButton extends WynntilsButton {
-    private static final ResourceLocation BOOK_TURN_PAGE_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "ui.book.turn-page");
+    private static final Identifier BOOK_TURN_PAGE_ID =
+            Identifier.fromNamespaceAndPath("wynntils", "ui.book.turn-page");
     private static final SoundEvent BOOK_TURN_PAGE_SOUND = SoundEvent.createVariableRangeEvent(BOOK_TURN_PAGE_ID);
 
     private final boolean forward;
@@ -57,7 +57,7 @@ public class PageSelectorButton extends WynntilsButton {
     private void drawTexture(PoseStack poseStack, Texture texture, int uOffset) {
         RenderUtils.drawTexturedRect(
                 poseStack,
-                texture.resource(),
+                texture.identifier(),
                 this.getX(),
                 this.getY(),
                 0,

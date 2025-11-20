@@ -138,7 +138,7 @@ public class ItemLockFeature extends Feature {
         BufferedRenderUtils.drawTexturedRect(
                 guiGraphics.pose(),
                 guiGraphics.bufferSource,
-                Texture.ITEM_LOCK.resource(),
+                Texture.ITEM_LOCK.identifier(),
                 ((containerScreen.leftPos + lockedSlot.x)) + 12,
                 ((containerScreen.topPos + lockedSlot.y)) - 4,
                 399,

@@ -84,7 +84,7 @@ public abstract class IconPoi implements Poi {
         BufferedRenderUtils.drawColoredTexturedRect(
                 poseStack,
                 bufferSource,
-                icon.resource(),
+                icon.identifier(),
                 this.getIconColor(),
                 this.getIconAlpha(zoomRenderScale),
                 renderX - width / 2,

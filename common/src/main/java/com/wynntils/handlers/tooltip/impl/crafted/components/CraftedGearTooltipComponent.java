@@ -26,7 +26,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class CraftedGearTooltipComponent extends CraftedTooltipComponent<CraftedGearItem> {
     @Override
@@ -56,7 +56,7 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
                 MutableComponent damage = Component.empty()
                         .withStyle(type.getColorCode())
                         .append(Component.literal(elementSymbol)
-                                .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))))
+                                .withStyle(Style.EMPTY.withFont(Identifier.withDefaultNamespace("common"))))
                         .append(Component.literal(" " + type.getDisplayName()));
                 damage.append(Component.literal("Damage: " + damageStat.value().asString())
                         .withStyle(
@@ -85,7 +85,7 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
                 MutableComponent defense = Component.empty()
                         .withStyle(element.getColorCode())
                         .append(Component.literal(element.getSymbol())
-                                .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))))
+                                .withStyle(Style.EMPTY.withFont(Identifier.withDefaultNamespace("common"))))
                         .append(Component.literal(" " + element.getDisplayName()));
                 defense.append(Component.literal(" Defence: " + StringUtils.toSignedString(defenceStat.value()))
                         .withStyle(ChatFormatting.GRAY));
@@ -154,13 +154,12 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
                                 .withStyle(Style.EMPTY.withColor(p.getLightColor()))
                                 .append(Component.literal(" "))
                                 .append(Component.literal(symbol)
-                                        .withStyle(Style.EMPTY.withFont(
-                                                ResourceLocation.withDefaultNamespace("common")))));
+                                        .withStyle(Style.EMPTY.withFont(Identifier.withDefaultNamespace("common")))));
                         continue;
                     }
                     powderList.append(Component.literal(symbol)
                             .withStyle(Style.EMPTY
-                                    .withFont(ResourceLocation.withDefaultNamespace("common"))
+                                    .withFont(Identifier.withDefaultNamespace("common"))
                                     .withColor(p.getLightColor())));
                 }
                 powderList.append(Component.literal("]"));

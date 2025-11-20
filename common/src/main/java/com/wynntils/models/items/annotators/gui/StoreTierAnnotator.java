@@ -11,11 +11,11 @@ import com.wynntils.models.items.items.gui.StoreItem;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public final class StoreTierAnnotator implements GuiItemAnnotator {
-    private static final ResourceLocation RARITY_FONT = ResourceLocation.withDefaultNamespace("banner/box");
+    private static final Identifier RARITY_FONT = Identifier.withDefaultNamespace("banner/box");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {

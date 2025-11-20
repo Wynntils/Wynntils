@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.trademarket;
@@ -31,15 +31,15 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 
 public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<ChestMenu> implements WrappedScreen {
     // Constants
     private static final int FAKE_CONTAINER_ID = 454545;
-    private static final ResourceLocation CONTAINER_BACKGROUND =
-            ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
+    private static final Identifier CONTAINER_BACKGROUND =
+            Identifier.withDefaultNamespace("textures/gui/container/generic_54.png");
     private static final int SCROLL_AREA_HEIGHT = 110;
     private static final int ITEMS_PER_PAGE = 54;
 

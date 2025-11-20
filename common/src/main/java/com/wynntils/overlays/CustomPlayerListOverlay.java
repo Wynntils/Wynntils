@@ -147,7 +147,7 @@ public class CustomPlayerListOverlay extends Overlay {
     private void renderRoll(PoseStack poseStack, float xPos, int uOffset) {
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.PLAYER_LIST_OVERLAY.resource(),
+                Texture.PLAYER_LIST_OVERLAY.identifier(),
                 xPos,
                 getRenderY(),
                 0,
@@ -191,7 +191,7 @@ public class CustomPlayerListOverlay extends Overlay {
     private void renderBackground(PoseStack poseStack) {
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.PLAYER_LIST_OVERLAY.resource(),
+                Texture.PLAYER_LIST_OVERLAY.identifier(),
                 getRenderX() + ROLL_WIDTH,
                 getRenderY(),
                 0,

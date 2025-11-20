@@ -233,7 +233,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.DESTINATION_LIST.resource(),
+                Texture.DESTINATION_LIST.identifier(),
                 5,
                 departureBoardY,
                 0,
@@ -506,7 +506,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
+                Texture.MAP_INFO_TOOLTIP_CENTER.identifier(),
                 xOffset,
                 Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
                 textureWidth,
@@ -639,7 +639,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.SCROLL_BUTTON.resource(),
+                Texture.SCROLL_BUTTON.identifier(),
                 scrollButtonRenderX,
                 scrollButtonRenderY,
                 0,

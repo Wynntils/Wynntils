@@ -39,7 +39,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
@@ -209,7 +209,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             StyledText.fromComponent(Component.literal(Skill.values()[i].getSymbol())
                                     .withStyle(Style.EMPTY
                                             .withColor(Skill.values()[i].getColorCode())
-                                            .withFont(ResourceLocation.withDefaultNamespace("common")))),
+                                            .withFont(Identifier.withDefaultNamespace("common")))),
                             dividedWidth * (21 + i * 2),
                             dividedHeight * 8,
                             CommonColors.WHITE,
@@ -246,7 +246,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             StyledText.fromComponent(Component.literal(Skill.values()[i].getSymbol())
                                     .withStyle(Style.EMPTY
                                             .withColor(Skill.values()[i].getColorCode())
-                                            .withFont(ResourceLocation.withDefaultNamespace("common")))),
+                                            .withFont(Identifier.withDefaultNamespace("common")))),
                             dividedWidth * (51 + i * 2),
                             dividedHeight * 8,
                             CommonColors.WHITE,
@@ -325,7 +325,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 StyledText.fromComponent(Component.literal(Skill.values()[i].getSymbol())
                                         .withStyle(Style.EMPTY
                                                 .withColor(Skill.values()[i].getColorCode())
-                                                .withFont(ResourceLocation.withDefaultNamespace("common")))),
+                                                .withFont(Identifier.withDefaultNamespace("common")))),
                                 dividedWidth * (51 + i * 2),
                                 dividedHeight * 34,
                                 CommonColors.WHITE,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -11,7 +11,7 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class PlayerMiniMapPoi extends PlayerPoiBase {
     public PlayerMiniMapPoi(HadesUser user) {
@@ -50,7 +50,7 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
                 2);
 
         // head
-        ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
+        Identifier skin = SkinUtils.getSkin(user.getUuid());
         BufferedRenderUtils.drawTexturedRect(
                 poseStack,
                 bufferSource,

@@ -11,7 +11,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
@@ -225,7 +225,7 @@ public final class BufferedRenderUtils {
     public static void drawColoredTexturedRect(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            ResourceLocation tex,
+            Identifier tex,
             CustomColor color,
             float alpha,
             float x,
@@ -254,7 +254,7 @@ public final class BufferedRenderUtils {
     public static void drawScalingTexturedRect(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            ResourceLocation tex,
+            Identifier tex,
             float x,
             float y,
             float z,
@@ -284,7 +284,7 @@ public final class BufferedRenderUtils {
         drawTexturedRect(
                 poseStack,
                 bufferSource,
-                texture.resource(),
+                texture.identifier(),
                 x,
                 y,
                 texture.width(),
@@ -298,7 +298,7 @@ public final class BufferedRenderUtils {
         drawTexturedRect(
                 poseStack,
                 bufferSource,
-                texture.resource(),
+                texture.identifier(),
                 x,
                 y,
                 0,
@@ -315,7 +315,7 @@ public final class BufferedRenderUtils {
     public static void drawTexturedRect(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            ResourceLocation tex,
+            Identifier tex,
             float x,
             float y,
             float z,
@@ -343,7 +343,7 @@ public final class BufferedRenderUtils {
     private static void drawTexturedRect(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            ResourceLocation tex,
+            Identifier tex,
             float x,
             float y,
             float width,
@@ -370,7 +370,7 @@ public final class BufferedRenderUtils {
     public static void drawTexturedRect(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            ResourceLocation tex,
+            Identifier tex,
             float x,
             float y,
             float z,
@@ -400,7 +400,7 @@ public final class BufferedRenderUtils {
         drawTexturedRectWithColor(
                 poseStack,
                 bufferSource,
-                tex.resource(),
+                tex.identifier(),
                 color,
                 x,
                 y,
@@ -418,7 +418,7 @@ public final class BufferedRenderUtils {
     public static void drawTexturedRectWithColor(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            ResourceLocation tex,
+            Identifier tex,
             CustomColor color,
             float x,
             float y,
@@ -525,7 +525,7 @@ public final class BufferedRenderUtils {
         Matrix4f matrix = poseStack.last().pose();
 
         VertexConsumer buffer =
-                bufferSource.getBuffer(CustomRenderType.getPositionColorTextureQuad(texture.resource()));
+                bufferSource.getBuffer(CustomRenderType.getPositionColorTextureQuad(texture.identifier()));
 
         float xMin = Math.min(x1, x2),
                 xMax = Math.max(x1, x2),
@@ -619,7 +619,7 @@ public final class BufferedRenderUtils {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionTextureQuad(texture.resource()));
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionTextureQuad(texture.identifier()));
 
         float xMin = Math.min(x1, x2),
                 xMax = Math.max(x1, x2),
@@ -660,7 +660,7 @@ public final class BufferedRenderUtils {
             int textureY2) {
         Matrix4f matrix = poseStack.last().pose();
 
-        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionTextureQuad(texture.resource()));
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionTextureQuad(texture.identifier()));
 
         float xMin = Math.min(x1, x2),
                 xMax = Math.max(x1, x2),
@@ -727,7 +727,7 @@ public final class BufferedRenderUtils {
         drawTexturedRect(
                 poseStack,
                 bufferSource,
-                texture.resource(),
+                texture.identifier(),
                 x1,
                 y1,
                 0f,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.tome;
@@ -37,7 +37,7 @@ public class GuideTomeItemStackButton extends WynntilsButton {
 
         RenderUtils.drawTexturedRectWithColor(
                 poseStack,
-                Texture.HIGHLIGHT.resource(),
+                Texture.HIGHLIGHT.identifier(),
                 color.withAlpha(1f),
                 getX() - 1,
                 getY() - 1,
@@ -52,7 +52,7 @@ public class GuideTomeItemStackButton extends WynntilsButton {
         if (Services.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
-                    Texture.FAVORITE_ICON.resource(),
+                    Texture.FAVORITE_ICON.identifier(),
                     getX() + 12,
                     getY() - 4,
                     200,

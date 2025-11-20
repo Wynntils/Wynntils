@@ -35,7 +35,7 @@ public class ImportButton extends WynntilsButton implements TooltipProvider {
         Texture addButton = Texture.ADD_ICON_OFFSET;
         RenderUtils.drawTexturedRect(
                 poseStack,
-                addButton.resource(),
+                addButton.identifier(),
                 this.getX(),
                 this.getY(),
                 0,

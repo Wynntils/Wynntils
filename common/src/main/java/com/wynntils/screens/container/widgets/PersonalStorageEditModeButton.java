@@ -42,7 +42,7 @@ public class PersonalStorageEditModeButton extends WynntilsButton {
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.EDIT_NAME_ICON.resource(),
+                Texture.EDIT_NAME_ICON.identifier(),
                 this.getX(),
                 this.getY(),
                 0,

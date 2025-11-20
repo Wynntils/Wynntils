@@ -28,7 +28,7 @@ import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -250,7 +250,7 @@ public final class RenderUtils {
             PoseStack poseStack, Texture texture, float x, float y, boolean hovered) {
         drawTexturedRect(
                 poseStack,
-                texture.resource(),
+                texture.identifier(),
                 x,
                 y,
                 0,
@@ -267,7 +267,7 @@ public final class RenderUtils {
     public static void drawTexturedRect(PoseStack poseStack, Texture texture, float x, float y) {
         drawTexturedRect(
                 poseStack,
-                texture.resource(),
+                texture.identifier(),
                 x,
                 y,
                 texture.width(),
@@ -278,7 +278,7 @@ public final class RenderUtils {
 
     public static void drawTexturedRect(
             PoseStack poseStack,
-            ResourceLocation tex,
+            Identifier tex,
             float x,
             float y,
             float width,
@@ -291,7 +291,7 @@ public final class RenderUtils {
 
     public static void drawTexturedRect(
             PoseStack poseStack,
-            ResourceLocation tex,
+            Identifier tex,
             float x,
             float y,
             float z,
@@ -305,7 +305,7 @@ public final class RenderUtils {
 
     public static void drawTexturedRect(
             PoseStack poseStack,
-            ResourceLocation tex,
+            Identifier tex,
             float x,
             float y,
             float z,
@@ -335,7 +335,7 @@ public final class RenderUtils {
 
     public static void drawScalingTexturedRect(
             PoseStack poseStack,
-            ResourceLocation tex,
+            Identifier tex,
             float x,
             float y,
             float z,
@@ -349,7 +349,7 @@ public final class RenderUtils {
 
     public static void drawTexturedRectWithColor(
             PoseStack poseStack,
-            ResourceLocation tex,
+            Identifier tex,
             CustomColor color,
             float x,
             float y,
@@ -377,7 +377,7 @@ public final class RenderUtils {
 
     public static void drawTexturedRectWithColor(
             PoseStack poseStack,
-            ResourceLocation tex,
+            Identifier tex,
             CustomColor color,
             float x,
             float y,
@@ -646,7 +646,7 @@ public final class RenderUtils {
         Matrix4f matrix = poseStack.last().pose();
 
         RenderSystem.setShader(CoreShaders.POSITION_TEX);
-        RenderSystem.setShaderTexture(0, texture.resource());
+        RenderSystem.setShaderTexture(0, texture.identifier());
         BufferBuilder bufferBuilder =
                 Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         float xMin = Math.min(x1, x2),
@@ -697,7 +697,7 @@ public final class RenderUtils {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(CoreShaders.POSITION_TEX_COLOR);
-        RenderSystem.setShaderTexture(0, texture.resource());
+        RenderSystem.setShaderTexture(0, texture.identifier());
         BufferBuilder bufferBuilder =
                 Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         float xMin = Math.min(x1, x2),
@@ -740,7 +740,7 @@ public final class RenderUtils {
         Matrix4f matrix = poseStack.last().pose();
 
         RenderSystem.setShader(CoreShaders.POSITION_TEX);
-        RenderSystem.setShaderTexture(0, texture.resource());
+        RenderSystem.setShaderTexture(0, texture.identifier());
         BufferBuilder bufferBuilder =
                 Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         float xMin = Math.min(x1, x2),
@@ -853,7 +853,7 @@ public final class RenderUtils {
 
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.VIGNETTE.resource(),
+                Texture.VIGNETTE.identifier(),
                 0,
                 0,
                 0,
@@ -919,7 +919,7 @@ public final class RenderUtils {
             PoseStack poseStack,
             EntityRenderDispatcher dispatcher,
             Entity entity,
-            ResourceLocation tex,
+            Identifier tex,
             float width,
             float height,
             int uOffset,
@@ -1063,7 +1063,7 @@ public final class RenderUtils {
         int height = texture.height();
         drawTexturedRect(
                 poseStack,
-                texture.resource(),
+                texture.identifier(),
                 x1,
                 y1,
                 0f,

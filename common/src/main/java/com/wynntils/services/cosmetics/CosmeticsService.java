@@ -30,7 +30,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 
@@ -55,7 +55,7 @@ public class CosmeticsService extends Service {
                             WynntilsLayer>>
             REGISTERED_LAYERS = List.of(CAPE_LAYER, ELYTRA_LAYER);
 
-    private final Map<UUID, ResourceLocation[]> cosmeticTextures = new ConcurrentHashMap<>();
+    private final Map<UUID, Identifier[]> cosmeticTextures = new ConcurrentHashMap<>();
 
     public CosmeticsService() {
         super(List.of());
@@ -89,8 +89,8 @@ public class CosmeticsService extends Service {
         return (elytra ? cosmetics.hasElytra() : cosmetics.hasCape());
     }
 
-    public ResourceLocation getCapeTexture(Player player) {
-        ResourceLocation[] textures = getUserCosmeticTexture(player);
+    public Identifier getCapeTexture(Player player) {
+        Identifier[] textures = getUserCosmeticTexture(player);
         if (textures == null) return null;
 
         int frames = textures.length;
@@ -115,18 +115,18 @@ public class CosmeticsService extends Service {
             int frames = (image.getHeight() * 2) / image.getWidth();
             int frameHeight = image.getHeight() / frames;
 
-            ResourceLocation[] locations = new ResourceLocation[frames];
+            Identifier[] locations = new Identifier[frames];
             String baseLocation = "wynntils:capes/" + uuid.toString().replace("-", "");
 
             if (frames == 1) { // not animated
-                locations[0] = ResourceLocation.parse(baseLocation);
+                locations[0] = Identifier.parse(baseLocation);
                 McUtils.mc().getTextureManager().register(locations[0], new DynamicTexture(image));
             } else { // animated
                 for (int i = 0; i < frames; i++) {
                     NativeImage frame = new NativeImage(frameHeight * 2, frameHeight, false);
                     image.copyRect(frame, 0, frameHeight * i, 0, 0, frameHeight * 2, frameHeight, false, false);
 
-                    locations[i] = ResourceLocation.parse(baseLocation + "/" + i);
+                    locations[i] = Identifier.parse(baseLocation + "/" + i);
                     McUtils.mc().getTextureManager().register(locations[i], new DynamicTexture(frame));
                 }
             }
@@ -137,7 +137,7 @@ public class CosmeticsService extends Service {
         }
     }
 
-    private ResourceLocation[] getUserCosmeticTexture(Player player) {
+    private Identifier[] getUserCosmeticTexture(Player player) {
         return cosmeticTextures.getOrDefault(Models.Player.getUserUUID(player), null);
     }
 }

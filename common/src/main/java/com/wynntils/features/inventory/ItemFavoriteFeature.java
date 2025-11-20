@@ -128,7 +128,7 @@ public class ItemFavoriteFeature extends Feature {
         BufferedRenderUtils.drawScalingTexturedRect(
                 event.getPoseStack(),
                 event.getGuiGraphics().bufferSource,
-                Texture.FAVORITE_ICON.resource(),
+                Texture.FAVORITE_ICON.identifier(),
                 event.getSlot().x + 10,
                 event.getSlot().y,
                 200,

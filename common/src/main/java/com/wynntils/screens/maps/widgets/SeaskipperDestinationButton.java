@@ -47,7 +47,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
 
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.DESTINATION_BUTTON.resource(),
+                Texture.DESTINATION_BUTTON.identifier(),
                 this.getX(),
                 this.getY(),
                 0,

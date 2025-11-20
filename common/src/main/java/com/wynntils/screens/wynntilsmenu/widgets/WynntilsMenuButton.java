@@ -62,7 +62,7 @@ public class WynntilsMenuButton extends AbstractWidget {
         if (!dynamicTexture) {
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    buttonTexture.resource(),
+                    buttonTexture.identifier(),
                     getX() + (width - buttonTexture.width()) / 2f,
                     getY() + (height - buttonTexture.height()) / 2f,
                     1,
@@ -80,7 +80,7 @@ public class WynntilsMenuButton extends AbstractWidget {
         if (isHovered) {
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    buttonTexture.resource(),
+                    buttonTexture.identifier(),
                     getX() + (width - buttonTexture.width()) / 2f,
                     getY() + (height - buttonTexture.height() / 2f) / 2f,
                     1,
@@ -95,7 +95,7 @@ public class WynntilsMenuButton extends AbstractWidget {
         } else {
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    buttonTexture.resource(),
+                    buttonTexture.identifier(),
                     getX() + (width - buttonTexture.width()) / 2f,
                     getY() + (height - buttonTexture.height() / 2f) / 2f,
                     1,

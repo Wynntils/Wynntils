@@ -187,7 +187,7 @@ public class InventoryEmeraldCountFeature extends Feature {
             final int renderY = renderedCount * TEXTURE_SIZE;
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    Texture.EMERALD_COUNT_BACKGROUND.resource(),
+                    Texture.EMERALD_COUNT_BACKGROUND.identifier(),
                     renderX,
                     renderY,
                     0,

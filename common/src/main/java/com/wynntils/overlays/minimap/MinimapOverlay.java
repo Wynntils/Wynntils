@@ -542,7 +542,7 @@ public class MinimapOverlay extends Overlay {
 
         RenderUtils.drawTexturedRect(
                 poseStack,
-                texture.resource(),
+                texture.identifier(),
                 renderX - groovesWidth,
                 renderY - groovesHeight,
                 0,

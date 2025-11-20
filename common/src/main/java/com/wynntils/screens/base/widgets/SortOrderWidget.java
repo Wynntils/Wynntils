@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -50,7 +50,7 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
         if (this.isHovered) {
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    sortTexture.resource(),
+                    sortTexture.identifier(),
                     renderX,
                     renderY,
                     0,
@@ -65,7 +65,7 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
         } else {
             RenderUtils.drawTexturedRect(
                     poseStack,
-                    sortTexture.resource(),
+                    sortTexture.identifier(),
                     renderX,
                     renderY,
                     0,

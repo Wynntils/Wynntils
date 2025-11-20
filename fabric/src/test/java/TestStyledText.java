@@ -17,7 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class TestStyledText {
 
     @Test
     public void fontStyle() {
-        ResourceLocation bannerPillFont = ResourceLocation.fromNamespaceAndPath("minecraft", "banner/pill");
+        Identifier bannerPillFont = Identifier.fromNamespaceAndPath("minecraft", "banner/pill");
         final Component component = Component.empty()
                 .withStyle(ChatFormatting.RED)
                 .withStyle(Style.EMPTY.withFont(bannerPillFont))
@@ -70,8 +70,7 @@ public class TestStyledText {
     public void fontStyleInvalidFonts() {
         final Component component = Component.empty()
                 .withStyle(ChatFormatting.RED)
-                .withStyle(
-                        Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "banner/nosuchfont")))
+                .withStyle(Style.EMPTY.withFont(Identifier.fromNamespaceAndPath("minecraft", "banner/nosuchfont")))
                 .append(Component.literal("inherited font"));
         final String expected = "§c§{f:minecraft:banner/nosuchfont}inherited font";
 

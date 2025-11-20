@@ -29,14 +29,14 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class SpellInputsOverlay extends Overlay {
     // Upon reaching level 11, the spell inputs are displayed using the smaller icon
     private static final int SMALL_CHARACTERS_LEVEL = 11;
-    private static final ResourceLocation SPELL_INPUTS_FONT =
-            ResourceLocation.withDefaultNamespace("hud/gameplay/default/bottom_middle");
+    private static final Identifier SPELL_INPUTS_FONT =
+            Identifier.withDefaultNamespace("hud/gameplay/default/bottom_middle");
 
     private static final String FULL_NO_CLICK_CHARACTER = "\uE102";
     private static final String SMALL_NO_CLICK_CHARACTER = "\uE105";

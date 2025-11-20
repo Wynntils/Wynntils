@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 
 public final class WynntilsElytraLayer extends WynntilsLayer {
@@ -48,7 +48,7 @@ public final class WynntilsElytraLayer extends WynntilsLayer {
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (!Services.Cosmetics.shouldRenderCape(player, true)) return;
 
-        ResourceLocation texture = Services.Cosmetics.getCapeTexture(player);
+        Identifier texture = Services.Cosmetics.getCapeTexture(player);
         if (texture == null) return;
 
         poseStack.pushPose();

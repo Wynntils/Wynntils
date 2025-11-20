@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -195,7 +195,7 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
             poseStack.translate(renderX, renderY, 0);
 
             if (showHeads.get()) {
-                ResourceLocation skin = SkinUtils.getSkin(hadesUser.getUuid());
+                Identifier skin = SkinUtils.getSkin(hadesUser.getUuid());
 
                 // head
                 BufferedRenderUtils.drawTexturedRect(

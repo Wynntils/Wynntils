@@ -48,7 +48,7 @@ public class IconButton extends AbstractWidget {
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                mapIcon.resource(),
+                mapIcon.identifier(),
                 iconRenderX,
                 iconRenderY,
                 1,

@@ -43,7 +43,7 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
         // +3 to center icon with 1px border in 16x16 button
         RenderUtils.drawTexturedRect(
                 guiGraphics.pose(),
-                icon.resource(),
+                icon.identifier(),
                 this.getX() + 3,
                 this.getY() + 3,
                 2,

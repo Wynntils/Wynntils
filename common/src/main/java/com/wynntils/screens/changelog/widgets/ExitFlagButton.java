@@ -26,7 +26,7 @@ public class ExitFlagButton extends WynntilsButton {
         Texture texture = Texture.EXIT_FLAG;
         RenderUtils.drawTexturedRect(
                 poseStack,
-                texture.resource(),
+                texture.identifier(),
                 this.getX(),
                 this.getY(),
                 0,

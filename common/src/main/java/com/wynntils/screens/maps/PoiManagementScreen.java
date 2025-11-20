@@ -449,7 +449,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics.pose(),
-                Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
+                Texture.WAYPOINT_MANAGER_BACKGROUND.identifier(),
                 backgroundX,
                 backgroundY,
                 0,
@@ -640,7 +640,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.SCROLL_BUTTON.resource(),
+                Texture.SCROLL_BUTTON.identifier(),
                 scrollButtonRenderX,
                 scrollButtonRenderY,
                 1,

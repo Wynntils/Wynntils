@@ -30,10 +30,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ItemWeightService extends Service {
-    private static final ResourceLocation PILL_FONT = ResourceLocation.withDefaultNamespace("banner/pill");
+    private static final Identifier PILL_FONT = Identifier.withDefaultNamespace("banner/pill");
     private static final CustomColor NORI_COLOR = CustomColor.fromInt(0x1cb5fc);
     private static final CustomColor WYNNPOOL_COLOR = CustomColor.fromInt(0xfc9700);
     private static final Style NORI_STYLE = Style.EMPTY.withFont(PILL_FONT).withColor(NORI_COLOR.asInt());

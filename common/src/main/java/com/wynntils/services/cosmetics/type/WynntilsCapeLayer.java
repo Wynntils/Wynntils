@@ -27,7 +27,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.EquipmentAssetManager;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.Equippable;
@@ -58,7 +58,7 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (!Services.Cosmetics.shouldRenderCape(player, false)) return;
 
-        ResourceLocation texture = Services.Cosmetics.getCapeTexture(player);
+        Identifier texture = Services.Cosmetics.getCapeTexture(player);
         if (texture == null) return;
 
         poseStack.pushPose();

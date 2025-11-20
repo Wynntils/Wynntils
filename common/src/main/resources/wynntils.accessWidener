@@ -12,7 +12,7 @@ accessible class net/minecraft/world/scores/PlayerScores
 accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platform/InputConstants$Key;
 accessible field net/minecraft/client/Minecraft gui Lnet/minecraft/client/gui/Gui;
 accessible field net/minecraft/client/OptionInstance value Ljava/lang/Object;
-accessible field net/minecraft/client/gui/Gui CROSSHAIR_SPRITE Lnet/minecraft/resources/ResourceLocation;
+accessible field net/minecraft/client/gui/Gui CROSSHAIR_SPRITE Lnet/minecraft/resources/Identifier;
 accessible field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/components/ChatComponent;
 accessible field net/minecraft/client/gui/GuiGraphics bufferSource Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;
 accessible field net/minecraft/client/gui/GuiGraphics scissorStack Lnet/minecraft/client/gui/GuiGraphics$ScissorStack;

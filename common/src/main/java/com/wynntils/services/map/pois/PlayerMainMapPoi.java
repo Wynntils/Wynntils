@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -19,7 +19,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class PlayerMainMapPoi extends PlayerPoiBase {
     public PlayerMainMapPoi(HadesUser user) {
@@ -40,7 +40,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
         poseStack.pushPose();
         poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
 
-        ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
+        Identifier skin = SkinUtils.getSkin(user.getUuid());
 
         // head
         BufferedRenderUtils.drawTexturedRect(
