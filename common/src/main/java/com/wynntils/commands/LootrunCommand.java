@@ -24,7 +24,6 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -36,6 +35,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 
 public class LootrunCommand extends Command {

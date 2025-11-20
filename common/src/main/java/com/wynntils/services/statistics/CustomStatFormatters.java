@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 
 public final class CustomStatFormatters {
     private static final DecimalFormat DECIMAL_FORMAT = Util.make(
