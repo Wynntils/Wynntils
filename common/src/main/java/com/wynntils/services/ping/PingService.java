@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import net.minecraft.Util;
 import net.minecraft.network.protocol.ping.ServerboundPingRequestPacket;
+import net.minecraft.util.Util;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class PingService extends Service {
