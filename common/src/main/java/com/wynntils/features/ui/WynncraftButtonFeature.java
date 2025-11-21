@@ -48,6 +48,7 @@ import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.network.EventLoopGroupHolder;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.Validate;
 
@@ -312,7 +313,11 @@ public class WynncraftButtonFeature extends Feature {
                 ServerStatusPinger pinger = new ServerStatusPinger();
                 // FIXME: DynamicTexture issues in loadServerIcon
                 //        loadServerIcon(destination);
-                pinger.pingServer(server, () -> {}, this::onDone);
+                pinger.pingServer(
+                        server,
+                        () -> {},
+                        this::onDone,
+                        EventLoopGroupHolder.remote(McUtils.mc().options.useNativeTransport()));
             } catch (Exception e) {
                 WynntilsMod.warn("Failed to ping server", e);
                 onDone();
