@@ -64,13 +64,13 @@ public abstract class FabricAbstractContainerScreenMixin {
 
     // See the ForgeAbstractContainerScreenMixin#renderSlotPreCount for the Forge mixin.
     @Inject(
-            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;)V",
+            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;II)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/gui/GuiGraphics;renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
-    private void renderSlotPreCount(GuiGraphics guiGraphics, Slot slot, CallbackInfo info) {
+    private void renderSlotPreCount(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
         MixinHelper.post(new SlotRenderEvent.CountPre(guiGraphics, (Screen) (Object) this, slot));
     }
 }
