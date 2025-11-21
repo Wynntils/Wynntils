@@ -248,8 +248,8 @@ public final class PlayerModel extends Model {
             authHeader.put("Authorization", "Bearer " + apiToken);
         }
 
-        ApiResponse apiResponse = Managers.Net.callApi(
-                UrlId.DATA_WYNNCRAFT_PLAYER, Map.of("username", username), authHeader);
+        ApiResponse apiResponse =
+                Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_PLAYER, Map.of("username", username), authHeader);
         apiResponse.handleJsonObject(
                 json -> {
                     Type type = new TypeToken<WynnPlayerInfo>() {}.getType();
