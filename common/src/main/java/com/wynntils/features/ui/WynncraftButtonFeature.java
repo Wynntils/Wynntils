@@ -219,9 +219,7 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-            super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
-
+        public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
             if (serverIcon == null || serverIcon.getServerIconLocation() == null) {
                 return;
             }

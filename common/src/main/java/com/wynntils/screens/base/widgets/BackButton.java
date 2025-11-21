@@ -22,7 +22,7 @@ public class BackButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics, Texture.BACK_ARROW_OFFSET, getX(), getY(), isHovered, RenderDirection.HORIZONTAL);
     }
