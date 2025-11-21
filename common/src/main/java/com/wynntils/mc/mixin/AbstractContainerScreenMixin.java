@@ -102,16 +102,16 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @Inject(
-            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;)V",
+            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;II)V",
             at = @At("HEAD"))
-    private void renderSlotPre(GuiGraphics guiGraphics, Slot slot, CallbackInfo info) {
+    private void renderSlotPre(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
         MixinHelper.post(new SlotRenderEvent.Pre(guiGraphics, (Screen) (Object) this, slot));
     }
 
     @Inject(
-            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;)V",
+            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;II)V",
             at = @At("RETURN"))
-    private void renderSlotPost(GuiGraphics guiGraphics, Slot slot, CallbackInfo info) {
+    private void renderSlotPost(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
         MixinHelper.post(new SlotRenderEvent.Post(guiGraphics, (Screen) (Object) this, slot));
     }
 
