@@ -15,6 +15,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.level.Level;
 
 public class ClientCommandSourceStack extends CommandSourceStack {
@@ -24,7 +25,7 @@ public class ClientCommandSourceStack extends CommandSourceStack {
                 player.position(),
                 player.getRotationVector(),
                 null,
-                0,
+                PermissionSet.NO_PERMISSIONS,
                 player.getDisplayName().toString(),
                 player.getName(),
                 null,
