@@ -88,13 +88,13 @@ public class WorldWaypointDistanceFeature extends Feature {
             Location location = marker.location();
             Matrix4f projection = new Matrix4f(event.getProjectionMatrix());
             Camera camera = event.getCamera();
-            Position cameraPos = camera.getPosition();
+            Position cameraPos = camera.position();
 
             // apply camera rotation
             Vector3f xp = new Vector3f(1, 0, 0);
             Vector3f yp = new Vector3f(0, 1, 0);
-            Quaternionf xRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getXRot()), xp);
-            Quaternionf yRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getYRot() + 180f), yp);
+            Quaternionf xRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.xRot()), xp);
+            Quaternionf yRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.yRot() + 180f), yp);
             projection.mul(new Matrix4f().rotation(xRotation));
             projection.mul(new Matrix4f().rotation(yRotation));
 
