@@ -127,7 +127,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
         // Make the screen think it is showing, but really don't let it show
         replacedScreen = screen;
-        screen.init(McUtils.mc(), 1, 1);
+        screen.init(1, 1);
         event.setCanceled(true);
     }
 
