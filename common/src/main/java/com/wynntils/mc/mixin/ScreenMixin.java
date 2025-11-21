@@ -27,16 +27,16 @@ public abstract class ScreenMixin implements ScreenExtension {
     @Unique
     private TextInputBoxWidget wynntilsFocusedTextInput;
 
-    @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("HEAD"))
-    private void initPre(Minecraft client, int width, int height, CallbackInfo info) {
+    @Inject(method = "init(II)V", at = @At("HEAD"))
+    private void initPre(int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
         if (!(screen instanceof TitleScreen titleScreen)) return;
 
         MixinHelper.postAlways(new TitleScreenInitEvent.Pre(titleScreen));
     }
 
-    @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
-    private void initPost(Minecraft client, int width, int height, CallbackInfo info) {
+    @Inject(method = "init(II)V", at = @At("RETURN"))
+    private void initPost(int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
 
         if (screen instanceof TitleScreen titleScreen) {
@@ -60,7 +60,7 @@ public abstract class ScreenMixin implements ScreenExtension {
     }
 
     @Inject(
-            method = "init(Lnet/minecraft/client/Minecraft;II)V",
+            method = "init(II)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
     private void onFirstScreenInitPre(CallbackInfo ci) {
         // This is called only once, when the screen is first initialized
@@ -68,7 +68,7 @@ public abstract class ScreenMixin implements ScreenExtension {
     }
 
     @Inject(
-            method = "init(Lnet/minecraft/client/Minecraft;II)V",
+            method = "init(II)V",
             at =
                     @At(
                             value = "INVOKE",
