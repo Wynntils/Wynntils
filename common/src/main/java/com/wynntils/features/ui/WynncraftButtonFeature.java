@@ -177,7 +177,7 @@ public class WynncraftButtonFeature extends Feature {
         }
     }
 
-    private static class WynncraftButton extends Button {
+    private static class WynncraftButton extends Button.Plain {
         private static final List<Component> CONNECT_TOOLTIP =
                 List.of(Component.translatable("feature.wynntils.wynncraftButton.connect"));
         private static final List<Component> DOWNLOAD_TOOLTIP = List.of(
@@ -219,9 +219,8 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-            super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
-
+        public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+            super.renderContents(guiGraphics, mouseX, mouseY, partialTicks);
             if (serverIcon == null || serverIcon.getServerIconLocation() == null) {
                 return;
             }

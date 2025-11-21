@@ -21,7 +21,7 @@ public class ExitFlagButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics, Texture.EXIT_FLAG, this.getX(), this.getY(), isHovered, RenderDirection.VERTICAL);
     }
