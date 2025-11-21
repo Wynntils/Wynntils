@@ -43,7 +43,7 @@ public class PoiSortButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
                 guiGraphics, CommonColors.BLACK.withAlpha(isHovered ? 0.5f : 0.3f), getX(), getY(), width, height);
 

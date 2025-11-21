@@ -72,7 +72,7 @@ public class ConfigTile extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         resetButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
         renderDisplayName(guiGraphics);
