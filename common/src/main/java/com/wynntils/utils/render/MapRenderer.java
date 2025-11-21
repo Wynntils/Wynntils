@@ -168,7 +168,7 @@ public final class MapRenderer {
         float rotationAngle;
         if (followPlayerRotation) {
             rotationAngle = McUtils.player().getYRot()
-                    - McUtils.mc().gameRenderer.getMainCamera().getYRot();
+                    - McUtils.mc().gameRenderer.getMainCamera().yRot();
         } else {
             rotationAngle = 180 + McUtils.player().getYRot();
         }

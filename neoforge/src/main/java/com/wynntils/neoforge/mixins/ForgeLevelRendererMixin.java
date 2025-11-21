@@ -66,7 +66,7 @@ public abstract class ForgeLevelRendererMixin {
     private boolean removePlayerFromVisibleEntities(
             List<Entity> list, Object obj, Camera camera, Frustum frustum, List<Entity> output) {
         Entity entity = (Entity) obj;
-        if (entity instanceof LocalPlayer local && camera.getEntity() != local) {
+        if (entity instanceof LocalPlayer local && camera.entity() != local) {
             return false;
         }
 

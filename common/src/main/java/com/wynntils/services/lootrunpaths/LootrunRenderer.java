@@ -61,14 +61,14 @@ public final class LootrunRenderer {
 
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
 
-        poseStack.mulPose(Axis.XP.rotationDegrees(camera.getXRot()));
-        poseStack.mulPose(Axis.YP.rotationDegrees(camera.getYRot() + 180.0F));
+        poseStack.mulPose(Axis.XP.rotationDegrees(camera.xRot()));
+        poseStack.mulPose(Axis.YP.rotationDegrees(camera.yRot() + 180.0F));
 
-        poseStack.translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
+        poseStack.translate(-camera.position().x, -camera.position().y, -camera.position().z);
 
         Long2ObjectMap<List<ColoredPath>> points = lootrun.points();
         int renderDistance = McUtils.options().renderDistance().get();
-        BlockPos pos = camera.getBlockPosition();
+        BlockPos pos = camera.blockPosition();
         ChunkPos origin = new ChunkPos(pos);
 
         for (int i = 0; i <= renderDistance; i++) {
@@ -228,7 +228,7 @@ public final class LootrunRenderer {
             PoseStack poseStack, List<ColoredPath> locations, Level level, RenderType renderType) {
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
         poseStack.pushPose();
-        poseStack.translate(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
+        poseStack.translate(camera.position().x, camera.position().y, camera.position().z);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         for (ColoredPath locationsInRoute : locations) {
@@ -320,8 +320,7 @@ public final class LootrunRenderer {
 
     private static void renderTexturedPoint(
             ColoredPosition start, ColoredPosition end, PoseStack poseStack, VertexConsumer vertexConsumer) {
-        Vector3f camPos =
-                McUtils.mc().gameRenderer.getMainCamera().getPosition().toVector3f();
+        Vector3f camPos = McUtils.mc().gameRenderer.getMainCamera().position().toVector3f();
         Vector3f startVec = start.position().toVector3f();
         Vector3f endVec = end.position().toVector3f();
         int color = start.color();
