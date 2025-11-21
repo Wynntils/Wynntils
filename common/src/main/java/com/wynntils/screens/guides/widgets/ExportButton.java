@@ -30,7 +30,7 @@ public class ExportButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics, Texture.SHARE_ICON_OFFSET, getX(), getY(), isHovered, RenderDirection.VERTICAL);
     }

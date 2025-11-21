@@ -36,9 +36,7 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
-
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // +3 to center icon with 1px border in 16x16 button
         RenderUtils.drawTexturedRect(guiGraphics, icon, this.getX() + 3, this.getY() + 3);
 

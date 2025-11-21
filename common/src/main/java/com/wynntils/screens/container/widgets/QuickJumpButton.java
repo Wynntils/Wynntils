@@ -49,7 +49,7 @@ public class QuickJumpButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics, Texture.QUICK_JUMP_BUTTON, getX(), getY(), isHovered, RenderDirection.VERTICAL);
 

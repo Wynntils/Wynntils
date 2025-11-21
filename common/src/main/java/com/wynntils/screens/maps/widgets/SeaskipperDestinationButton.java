@@ -42,7 +42,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingHoverableTexturedRect(
                 guiGraphics,
                 Texture.DESTINATION_BUTTON,

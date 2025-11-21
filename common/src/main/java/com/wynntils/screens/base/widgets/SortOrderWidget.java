@@ -35,7 +35,7 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         Texture sortTexture =
                 switch (sortableActivityScreen.getActivitySortOrder()) {
                     case LEVEL -> Texture.SORT_LEVEL_OFFSET;
