@@ -42,8 +42,8 @@ public class TheCanyonColossusRaid extends RaidKind {
         return Map.of(
                 "Intrepid",
                 Map.of(
-                        1, "Altruism",
-                        2, "Greed",
+                        1, "Greed",
+                        2, "Altruism",
                         3, "Guardian"),
                 "Stonewalker",
                 Map.of(3, "Explosive Impact"));
