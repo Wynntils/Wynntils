@@ -26,7 +26,7 @@ configurations {
 
 dependencies {
     neoForge "net.neoforged:neoforge:${neoforge_version}"
-    modRuntimeOnly "me.djtheredstoner:DevAuth-neoforge:${devauth_version}"
+    //    modRuntimeOnly "me.djtheredstoner:DevAuth-neoforge:${devauth_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
