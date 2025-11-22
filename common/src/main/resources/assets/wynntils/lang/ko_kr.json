@@ -2978,7 +2978,6 @@
   "service.wynntils.itemFilter.stat.uses.name": "남은 사용 횟수",
   "service.wynntils.itemFilter.unknownStat": "%s: 알 수 없는 특성",
   "service.wynntils.itemRecord.cleanupComplete": "아이템 레코드 정리 완료. %d 개의 잘못된 레코드가 제거되었습니다. 이제 디코딩할 수 있는 %d 개의 레코드가 다시 추가되었습니다.",
-  "service.wynntils.lootrunPaths.fabulousWarning": "기막히게! 그래픽이 감지되었습니다 - 이 설정에서는 루트런 경로가 보이지 않을 수 있습니다. 이를 보려면 화려하게 또는 빠르게 그래픽으로 전환하십시오.",
   "service.wynntils.lootrunPaths.lootrunCouldNotBeLoaded": "루트런 \"%s\" 를 로드할 수 없었음.",
   "service.wynntils.lootrunPaths.lootrunStart": "루트런 시작 위치: %s %s %s",
   "service.wynntils.updates.result.error": "Wynntils 업데이트 중 오류 발생.",
