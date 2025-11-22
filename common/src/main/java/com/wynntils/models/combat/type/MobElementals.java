@@ -8,9 +8,10 @@ import com.wynntils.models.elements.type.Element;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public record MobElementals(List<Element> weaknesses, List<Element> damages, List<Element> defenses) {
     public static final MobElementals EMPTY = new MobElementals(List.of(), List.of(), List.of());
@@ -31,7 +32,7 @@ public record MobElementals(List<Element> weaknesses, List<Element> damages, Lis
         for (Element element : elements) {
             text.append(Component.literal(element.getSymbol())
                     .withStyle(Style.EMPTY
-                            .withFont(ResourceLocation.withDefaultNamespace("common"))
+                            .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("common")))
                             .withColor(element.getColorCode())));
         }
 

@@ -20,6 +20,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.function.Supplier;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -118,7 +119,7 @@ public class TradeMarketBulkSellFeature extends Feature {
         }
 
         @Override
-        public void onPress() {
+        public void onPress(InputWithModifiers input) {
             amountToSend = amountSupplier.get();
             sendAmountMessage = true;
 

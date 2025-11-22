@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -33,6 +32,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -73,22 +73,24 @@ public class UnidentifiedItemIconFeature extends Feature {
     private static final StyledText QUESTION_MARK_TEXT = StyledText.fromComponent(Component.literal("?"));
 
     @SubscribeEvent
-    public void onSlotRender(SlotRenderEvent.CountPre e) {
-        drawIcon(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, 200);
+    public void onSlotRender(SlotRenderEvent.Post e) {
+        drawIcon(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, 200);
     }
 
     @SubscribeEvent
-    public void onHotbarSlotRender(HotbarSlotRenderEvent.CountPre e) {
-        drawIcon(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), 200);
+    public void onHotbarSlotRender(HotbarSlotRenderEvent.Post e) {
+        drawIcon(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY(), 200);
     }
 
-    private void drawIcon(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, int z) {
+    private void drawIcon(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY, int z) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
         WynnItem wynnItem = wynnItemOpt.get();
         if (wynnItem instanceof GearBoxItem box) {
-            texture.get().getIconRenderer().renderIcon(poseStack, slotX, slotY, z, box.getGearType(), Optional.empty());
+            texture.get()
+                    .getIconRenderer()
+                    .renderIcon(guiGraphics, slotX, slotY, z, box.getGearType(), Optional.empty());
             return;
         }
 
@@ -101,7 +103,7 @@ public class UnidentifiedItemIconFeature extends Feature {
                     .get()
                     .getIconRenderer()
                     .renderIcon(
-                            poseStack,
+                            guiGraphics,
                             slotX,
                             slotY,
                             z,
@@ -112,18 +114,18 @@ public class UnidentifiedItemIconFeature extends Feature {
 
     @FunctionalInterface
     private interface IconRenderer {
-        void renderIcon(PoseStack poseStack, int x, int y, int z, GearType gearType, Optional<CustomColor> textColor);
+        void renderIcon(
+                GuiGraphics guiGraphics, int x, int y, int z, GearType gearType, Optional<CustomColor> textColor);
 
         static IconRenderer forSpriteSheet(Texture texture, int yOffset, int padding) {
             int paddedDims = 16 - padding - padding;
-            return (poseStack, x, y, z, gearType, textColor) -> {
+            return (guiGraphics, x, y, z, gearType, textColor) -> {
                 Pair<Integer, Integer> textureCoords = TEXTURE_COORDS.get(gearType);
                 RenderUtils.drawTexturedRect(
-                        poseStack,
-                        texture.resource(),
+                        guiGraphics,
+                        texture,
                         x + padding,
                         y + padding,
-                        z,
                         paddedDims,
                         paddedDims,
                         textureCoords.a(),
@@ -141,13 +143,11 @@ public class UnidentifiedItemIconFeature extends Feature {
                 VerticalAlignment verticalAlignment) {
             int padding = 0;
             int paddedDims = 16 - padding - padding;
-            return (poseStack, x, y, z, gearType, textColor) -> {
-                poseStack.pushPose();
-                poseStack.translate(0, 0, z);
+            return (guiGraphics, x, y, z, gearType, textColor) -> {
                 StyledText text = textMap.apply(gearType);
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                poseStack,
+                                guiGraphics,
                                 text,
                                 x + padding + 1,
                                 x + paddedDims + 1,
@@ -158,7 +158,6 @@ public class UnidentifiedItemIconFeature extends Feature {
                                 horizontalAlignment,
                                 verticalAlignment,
                                 TextShadow.OUTLINE);
-                poseStack.popPose();
             };
         }
     }

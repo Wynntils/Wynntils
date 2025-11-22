@@ -4,7 +4,6 @@
  */
 package com.wynntils.overlays.gamebars;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -16,11 +15,12 @@ import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.models.abilities.bossbars.CommanderBar;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class CommanderBarOverlay extends BaseBarOverlay {
@@ -60,13 +60,11 @@ public class CommanderBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderBar(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
+    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
         Texture universalBarTexture = Texture.UNIVERSAL_BAR;
 
-        BufferedRenderUtils.drawColoredProgressBar(
-                poseStack,
-                bufferSource,
+        RenderUtils.drawColoredProgressBar(
+                guiGraphics,
                 universalBarTexture,
                 Models.Ability.commanderBar.isActivated() ? this.activatedColor.get() : this.textColor.get(),
                 this.getRenderX(),
@@ -81,11 +79,10 @@ public class CommanderBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, String text) {
-        BufferedFontRenderer.getInstance()
+    protected void renderText(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderY, String text) {
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         StyledText.fromString(text),
                         this.getRenderX(),
                         this.getRenderX() + this.getWidth(),

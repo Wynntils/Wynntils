@@ -19,8 +19,8 @@ import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.models.items.items.game.MultiHealthPotionItem;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -118,7 +118,7 @@ public class ItemLockFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onDrop(DropHeldItemEvent event) {
-        ItemStack selected = McUtils.inventory().getSelected();
+        ItemStack selected = McUtils.inventory().getSelectedItem();
         Optional<Slot> heldItemSlot = McUtils.inventoryMenu().slots.stream()
                 .filter(slot -> slot.getItem() == selected)
                 .findFirst();
@@ -135,17 +135,15 @@ public class ItemLockFeature extends Feature {
 
     private void renderLockedSlot(
             GuiGraphics guiGraphics, AbstractContainerScreen<?> containerScreen, Slot lockedSlot) {
-        BufferedRenderUtils.drawTexturedRect(
-                guiGraphics.pose(),
-                guiGraphics.bufferSource,
-                Texture.ITEM_LOCK.resource(),
+        RenderUtils.drawScalingTexturedRect(
+                guiGraphics,
+                Texture.ITEM_LOCK.identifier(),
                 ((containerScreen.leftPos + lockedSlot.x)) + 12,
                 ((containerScreen.topPos + lockedSlot.y)) - 4,
-                399,
                 8,
                 8,
-                Texture.ITEM_LOCK.width() / 2,
-                Texture.ITEM_LOCK.height() / 2);
+                8,
+                8);
     }
 
     private void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {

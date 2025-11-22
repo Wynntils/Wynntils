@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.Unbreakable;
 
 public enum AbilityTreeConnectionType {
     VERTICAL(
@@ -249,7 +249,7 @@ public enum AbilityTreeConnectionType {
 
         itemStack.setDamageValue(damage);
 
-        itemStack.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
+        itemStack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
 
         return itemStack;
     }

@@ -43,6 +43,7 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -219,7 +220,7 @@ public final class HadesService extends Service {
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.AQUA)
                                 .withUnderlined(true)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
+                                .withClickEvent(new ClickEvent.RunCommand("/wynntils reauth"))));
                 failed.append(Component.translatable("service.wynntils.hades.clickToConnect3")
                         .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
@@ -413,8 +414,8 @@ public final class HadesService extends Service {
     }
 
     private void updateArmorCache(InventoryArmor inventoryArmor) {
-        Optional<WynnItem> armorItemOpt =
-                Models.Item.getWynnItem(McUtils.inventory().armor.get(inventoryArmor.getArmorSlot()));
+        Optional<WynnItem> armorItemOpt = Models.Item.getWynnItem(
+                new ArrayList<>(McUtils.inventory().equipment.items.values()).get(inventoryArmor.getArmorSlot()));
 
         if (armorItemOpt.isEmpty()
                 || (armorItemOpt.get() instanceof CraftedGearItem

@@ -4,7 +4,6 @@
  */
 package com.wynntils.overlays;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.BarOverlay;
 import com.wynntils.core.consumers.overlays.ContainerOverlay;
@@ -15,13 +14,13 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.UniversalTexture;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBarOverlay> {
@@ -83,15 +82,9 @@ public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBar
         }
 
         @Override
-        protected void renderBar(
-                PoseStack poseStack,
-                MultiBufferSource bufferSource,
-                float renderY,
-                float renderHeight,
-                float progress) {
-            BufferedRenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    bufferSource,
+        protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+            RenderUtils.drawColoredProgressBar(
+                    guiGraphics,
                     Texture.UNIVERSAL_BAR,
                     getRenderColor(),
                     getRenderX(),

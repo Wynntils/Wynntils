@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
@@ -35,9 +34,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import javax.imageio.ImageIO;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
@@ -45,6 +42,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
@@ -115,33 +113,33 @@ public class ItemScreenshotFeature extends Feature {
         float scalew = (float) screen.width / width;
 
         // Create tooltip renderer
-        Screen.DeferredTooltipRendering deferredTooltipRendering = new Screen.DeferredTooltipRendering(
-                Lists.transform(tooltip, Component::getVisualOrderText), NO_POSITIONER);
+        //        Screen.DeferredTooltipRendering deferredTooltipRendering = new Screen.DeferredTooltipRendering(
+        //                Lists.transform(tooltip, Component::getVisualOrderText), NO_POSITIONER);
 
         // draw tooltip to framebuffer, create image
-        McUtils.mc().getMainRenderTarget().unbindWrite();
+        //        McUtils.mc().getMainRenderTarget().unbindWrite();
 
         ByteBufferBuilder byteBuffer = new ByteBufferBuilder(256);
         MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(byteBuffer);
-        GuiGraphics guiGraphics = new GuiGraphics(McUtils.mc(), bufferSource);
+        //        GuiGraphics guiGraphics = new GuiGraphics(McUtils.mc(), bufferSource);
         RenderTarget fb = new MainTarget(width * 2, height * 2);
-        fb.setClearColor(1f, 1f, 1f, 0f);
+        //        fb.setClearColor(1f, 1f, 1f, 0f);
         fb.createBuffers(width * 2, height * 2);
-        fb.bindWrite(false);
+        //        fb.bindWrite(false);
         ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(fb);
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().scale(scalew, scaleh, 1);
-        guiGraphics.renderTooltip(
-                FontRenderer.getInstance().getFont(),
-                deferredTooltipRendering.tooltip(),
-                deferredTooltipRendering.positioner(),
-                0,
-                0);
-        guiGraphics.pose().popPose();
-        guiGraphics.flush();
-        fb.unbindWrite();
+        //        guiGraphics.pose().pushPose();
+        //        guiGraphics.pose().scale(scalew, scaleh, 1);
+        //        guiGraphics.renderTooltip(
+        //                FontRenderer.getInstance().getFont(),
+        //                deferredTooltipRendering.tooltip(),
+        //                deferredTooltipRendering.positioner(),
+        //                0,
+        //                0);
+        //        guiGraphics.pose().popPose();
+        //        guiGraphics.flush();
+        //        fb.unbindWrite();
         ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(null);
-        McUtils.mc().getMainRenderTarget().bindWrite(true);
+        //        McUtils.mc().getMainRenderTarget().bindWrite(true);
 
         BufferedImage bi = SystemUtils.createScreenshot(fb);
 
@@ -169,8 +167,8 @@ public class ItemScreenshotFeature extends Feature {
                                 itemStack.getHoverName(),
                                 Component.literal(outputfile.getName())
                                         .withStyle(ChatFormatting.UNDERLINE)
-                                        .withStyle(style -> style.withClickEvent(new ClickEvent(
-                                                ClickEvent.Action.OPEN_FILE, outputfile.getAbsolutePath()))))
+                                        .withStyle(style -> style.withClickEvent(
+                                                new ClickEvent.OpenFile(outputfile.getAbsolutePath()))))
                         .withStyle(ChatFormatting.GREEN));
             } catch (IOException e) {
                 WynntilsMod.error("Failed to save image to disk", e);
@@ -189,8 +187,7 @@ public class ItemScreenshotFeature extends Feature {
                     .append(Component.translatable("feature.wynntils.itemScreenshot.copy.mac.clickHere")
                             .withStyle(ChatFormatting.GRAY)
                             .withStyle(ChatFormatting.UNDERLINE)
-                            .withStyle(style -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND,
+                            .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand(
                                     "/wynntils config set ItemScreenshot saveToDisk true")))));
             return;
         }
