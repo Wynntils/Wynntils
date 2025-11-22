@@ -106,7 +106,7 @@
   },
   {
     "id": "dataStaticAspects",
-    "md5": "b0776a3854203fcafd85c4ea4c4a7b00",
+    "md5": "b75319080621ac9a15db44c6b0f3683d",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/aspects.json"
   },
   {
@@ -136,7 +136,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "8f6664c2f5eae98bd6e67549c3d93fcd",
+    "md5": "ab8853199ccedb9dff606f90b3a00272",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
   },
   {
@@ -216,7 +216,7 @@
   },
   {
     "id": "dataStaticModelData",
-    "md5": "c86a2609838c118c750a03762e2be2fc",
+    "md5": "1f46b77665e11fbfebc5eb3e247cfe59",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/model_data.json"
   },
   {
@@ -293,6 +293,13 @@
     ],
     "id": "dataWynncraftPlayer",
     "url": "https://api.wynncraft.com/v3/player/%{username}"
+  },
+  {
+    "arguments": [
+      "identifier"
+    ],
+    "id": "dataWynncraftPlayerFullResults",
+    "url": "https://api.wynncraft.com/v3/player/%{identifier}?fullResult"
   },
   {
     "id": "dataWynncraftTerritoryListV3",
