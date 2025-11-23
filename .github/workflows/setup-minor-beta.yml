@@ -1,0 +1,77 @@
+name: Setup Minor Beta
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-minor-beta:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main to create development
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: main
+
+      - name: Create development branch
+        run: |
+          git checkout -B development
+          git push -f origin development
+
+      - name: Checkout release
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: release
+
+      - name: Calculate next minor beta version
+        id: version
+        run: |
+          CURR=$(grep "^version" build.gradle | sed 's/version = "\(.*\)"/\1/')
+          IFS='.' read MAJOR MINOR PATCH <<< "$CURR"
+          MINOR=$((MINOR+1))
+          PATCH=0
+          NEXT="${MAJOR}.${MINOR}.${PATCH}-beta.0"
+          echo "next=$NEXT" >> $GITHUB_OUTPUT
+
+      - name: Checkout main again to rewrite beta
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: main
+
+      - name: Reset beta branch from main
+        run: |
+          git checkout -B beta
+
+      - name: Restore metadata files from previous beta
+        run: |
+          git fetch origin beta || true
+          git checkout origin/beta -- CHANGELOG.md version.json || true
+
+          OLD_VERSION=$(git show origin/beta:build.gradle 2>/dev/null | grep "^version" | sed 's/version = "\(.*\)"/\1/')
+          if [ -n "$OLD_VERSION" ]; then
+            sed -i "s/^version = .*/version = \"$OLD_VERSION\"/" build.gradle
+          fi
+
+      - name: Update files to new beta version
+        run: |
+          sed -i "s/^version = .*/version = \"${{ steps.version.outputs.next }}\"/" build.gradle
+          echo "{version:v${{ steps.version.outputs.next }}}" > version.json
+
+      - name: Commit and push beta
+        run: |
+          git config user.name "WynntilsBot"
+          git config user.email "admin@wynntils.com"
+          git add build.gradle version.json CHANGELOG.md || true
+          git commit -m "chore: Setup minor beta ${{ steps.version.outputs.next }} [skip ci]"
+          git push -f origin beta
+
+      - name: Seed initial beta tag
+        run: |
+          git tag v${{ steps.version.outputs.next }}
+          git push origin v${{ steps.version.outputs.next }}
