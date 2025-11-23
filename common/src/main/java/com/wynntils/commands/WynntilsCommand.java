@@ -14,6 +14,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -76,6 +77,7 @@ public class WynntilsCommand extends Command {
         return base.then(Commands.literal("clearcaches")
                         .then(Commands.literal("run").executes(this::doClearCaches))
                         .executes(this::clearCaches))
+                .then(Commands.literal("crowdsourcing").executes(this::openCrowdsourceMenu))
                 .then(Commands.literal("debug")
                         .then(Commands.literal("profile")
                                 .then(Commands.literal("reset").executes(this::profileReset))
@@ -392,6 +394,10 @@ public class WynntilsCommand extends Command {
 
     private int secrets(CommandContext<CommandSourceStack> context) {
         return openScreen(SecretsScreen.create());
+    }
+
+    private int openCrowdsourceMenu(CommandContext<CommandSourceStack> context) {
+        return openScreen(WynntilsCrowdSourcingSettingsScreen.create());
     }
 
     private int openGuildMap(CommandContext<CommandSourceStack> context) {
