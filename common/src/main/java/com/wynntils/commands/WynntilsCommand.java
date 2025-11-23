@@ -90,6 +90,7 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("map").executes(this::openMap))
                 .then(Commands.literal("menu").executes(this::openMenu))
                 .then(Commands.literal("reauth").executes(this::reauth))
+                .then(Commands.literal("refetch").executes(this::refetch))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("rescan").executes(this::rescan))
                 .then(Commands.literal("secrets").executes(this::secrets))
@@ -177,6 +178,17 @@ public class WynntilsCommand extends Command {
         Models.Player.reset();
         // No need to try to re-connect to Hades, we will do that automatically when we get the new token
 
+        return 1;
+    }
+
+    private int refetch(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.translatable("command.wynntils.refetching")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+
+        Models.Player.loadSelf();
         return 1;
     }
 
