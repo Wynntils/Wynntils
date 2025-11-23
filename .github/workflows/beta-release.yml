@@ -12,48 +12,35 @@ jobs:
     name: Set Version
     runs-on: ubuntu-latest
     outputs:
-      tag: ${{ steps.version.outputs.tag }}
-      skipped: ${{ steps.version.outputs.skipped }}
-      changelog: ${{ steps.version.outputs.changelog }}
+      tag: ${{ steps.next.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 16
-      - run: |
-          npm install conventional-changelog-conventionalcommits@7.0.2
-          npm install conventional-recommended-bump@9.0.0
+      - name: Determine next beta version
+        id: next
+        run: |
+          PREV=$(git describe --tags --abbrev=0)
 
-      - name: Set up version.json
-        run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
+          # Strip leading v
+          BASE="${PREV#v}"
 
-      - name: Generate version tag
-        id: version
-        uses: TriPSs/conventional-changelog-action@v6
-        with:
-          github-token: ${{ secrets.PRIVATE_TOKEN }}
-          git-user-name: 'WynntilsBot'
-          git-user-email: 'admin@wynntils.com'
-          pre-commit: ./.github/.pre-commit.js
-          config-file-path: ./.github/.config.js
-          version-file: ./version.json
-          skip-version-file: true
-          skip-git-pull: true
-          pre-release: true
-          pre-release-identifier: beta
-          release-count: 5
-          output-file: false
+          # Remove existing -beta.N
+          BASE_NO_BETA=$(echo "$BASE" | sed 's/-beta\..*//')
 
-      - name: Upload version information
-        uses: actions/upload-artifact@v4
-        with:
-          name: build
-          path: build.gradle
-          overwrite: true
+          # Determine next beta number
+          if [[ "$BASE" =~ -beta\.([0-9]+) ]]; then
+            CURRENT_NUM="${BASH_REMATCH[1]}"
+          else
+            CURRENT_NUM=-1
+          fi
+
+          NEXT_NUM=$((CURRENT_NUM + 1))
+          NEXT="${BASE_NO_BETA}-beta.${NEXT_NUM}"
+
+          echo "tag=$NEXT" >> $GITHUB_OUTPUT
 
   build:
     name: Build
@@ -68,10 +55,6 @@ jobs:
           path: .gradle
           key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
 
-      - uses: actions/download-artifact@v4 # Download version information from changelog
-        with:
-          name: build
-
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -81,6 +64,10 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
+
+      - name: Update build.gradle version
+        run: |
+          sed -i "s/^version = .*/version = \"${{ needs.set-version.outputs.tag }}\"/" build.gradle
 
       - name: Build with Gradle
         run: ./gradlew buildDependents -x spotlessCheck -x test
@@ -97,7 +84,6 @@ jobs:
 
   release-github:
     name: Release to Github
-    if: ${{ needs.changelog.outputs.skipped != 'true' }}
     runs-on: ubuntu-latest
     needs: [ build, set-version ]
     steps:
@@ -108,17 +94,34 @@ jobs:
           token: ${{ secrets.PRIVATE_TOKEN }}
           ref: beta
 
-      - name: Download build artifacts
+      - name: Configure Git User
+        run: |
+          git config user.name "WynntilsBot"
+          git config user.email "admin@wynntils.com"
+
+      - name: Determine previous version for comparison
+        id: prev
+        run: |
+          # Find previous tag on HEAD^
+          PREV=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)
+
+          # If that didn't work (first beta), fallback to latest stable release
+          if [[ -z "$PREV" || "$PREV" =~ -beta ]]; then
+            PREV=$(git tag --sort=-v:refname | grep -v "beta" | head -n 1)
+          fi
+          echo "previous=$PREV" >> $GITHUB_OUTPUT
+
+      - name: Tag release manually
+        run: |
+          TAG="v${{ needs.set-version.outputs.tag }}"
+          echo "Tagging $TAG"
+          git tag -a "$TAG" -m "$TAG"
+          git push origin "$TAG"
+
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           name: build
-
-      - name: Get previous and current versions
-        id: versions
-        run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^)
-          echo "previous=$PREV_TAG" >> $GITHUB_OUTPUT
-          echo "current=${{ needs.set-version.outputs.tag }}" >> $GITHUB_OUTPUT
 
       - name: Get current date
         id: date
@@ -129,18 +132,26 @@ jobs:
       - name: Build GitHub release body
         id: build_release_body
         run: |
-          echo "content<<EOF" >> $GITHUB_OUTPUT
-          echo "## [${{ steps.versions.outputs.current }}](https://github.com/Wynntils/Wynntils/compare/${{ steps.versions.outputs.previous }}...${{ steps.versions.outputs.current }}) (${{ steps.date.outputs.today }})" >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
-          cat CHANGELOG.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          NEW="v${{ needs.set-version.outputs.tag }}"
+          PREV="${{ steps.prev.outputs.previous }}"
+          
+          echo "Generating comparison: $PREV -> $NEW"
 
-      - name: Create GitHub release
+          {
+            echo "content<<EOF"
+            echo "## [$NEW](https://github.com/Wynntils/Wynntils/compare/$PREV...$NEW) (${{ steps.date.outputs.today }})"
+            echo ""
+            cat CHANGELOG.md
+            echo ""
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
         id: release
         uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.PRIVATE_TOKEN }}
-          tag_name: ${{ needs.set-version.outputs.tag }}
+          tag_name: v${{ needs.set-version.outputs.tag }}
           body: ${{ steps.build_release_body.outputs.content }}
           draft: false
           prerelease: true
@@ -151,7 +162,7 @@ jobs:
       - name: Generate artifact links
         id: artifact_links
         run: |
-          TAG=${{ needs.set-version.outputs.tag }}
+          TAG="v${{ needs.set-version.outputs.tag }}"
           BASE_URL="https://github.com/Wynntils/Wynntils/releases/download/$TAG"
 
           FILES=$(find . -path "*/build/libs/*-fabric+MC-*.jar" -or -path "*/build/libs/*-neoforge+MC-*.jar")
@@ -172,10 +183,10 @@ jobs:
           webhook-url: ${{ secrets.DISCORD_RELEASE_WEBHOOK_URL }}
           embed-color: "9498256"
           embed-title: ${{ format('Wynntils {0}', needs.set-version.outputs.tag) }}
-          embed-url: https://github.com/Wynntils/Wynntils/releases/tag/${{ needs.set-version.outputs.tag }}
+          embed-url: https://github.com/Wynntils/Wynntils/releases/tag/v${{ needs.set-version.outputs.tag }}
           embed-description: |
-            ## [${{ steps.versions.outputs.current }}](https://github.com/Wynntils/Wynntils/compare/${{ steps.versions.outputs.previous }}...${{ steps.versions.outputs.current }}) (${{ steps.date.outputs.today }})
-            
+            # Wynntils v${{ needs.set-version.outputs.tag }}
+
             **Download Links**
             ${{ steps.artifact_links.outputs.links }}
           embed-timestamp: ${{ steps.date.outputs.long }}
@@ -184,7 +195,7 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_RELEASE_NOTES_WEBHOOK_URL }}
         run: |
-          VERSION="${{ needs.set-version.outputs.tag }}"
+          VERSION="v${{ needs.set-version.outputs.tag }}"
           TITLE="# Wynntils ${VERSION} Changelog"
 
           # Combine title and changelog with proper newlines
