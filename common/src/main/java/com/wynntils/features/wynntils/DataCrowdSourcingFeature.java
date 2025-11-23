@@ -33,7 +33,7 @@ public class DataCrowdSourcingFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
-        if (event.getNewState() != WorldState.WORLD) return;
+        if (!event.isFirstJoinWorld()) return;
 
         Map<CrowdSourcedDataType, ConfirmedBoolean> enabledMap = crowdSourcedDataTypeEnabledMap.get();
         List<CrowdSourcedDataType> nonConfirmedDataTypes = Arrays.stream(CrowdSourcedDataType.values())
