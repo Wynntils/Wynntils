@@ -3,7 +3,6 @@ accessWidener v2 named
 accessible class net/minecraft/client/gui/components/ChatComponent$DrawingBackgroundGraphicsAccess
 accessible class net/minecraft/client/gui/components/ChatComponent$DrawingFocusedGraphicsAccess
 accessible class net/minecraft/client/gui/GuiGraphics$ScissorStack
-accessible class net/minecraft/client/gui/screens/Screen$DeferredTooltipRendering
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$Operation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$OperationType
@@ -31,7 +30,6 @@ accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraf
 accessible field net/minecraft/client/gui/screens/ConnectScreen status Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/screens/DisconnectedScreen details Lnet/minecraft/network/DisconnectionDetails;
 accessible field net/minecraft/client/gui/screens/Screen children Ljava/util/List;
-accessible field net/minecraft/client/gui/screens/Screen deferredTooltipRendering Lnet/minecraft/client/gui/screens/Screen$DeferredTooltipRendering;
 accessible field net/minecraft/client/gui/screens/Screen narratables Ljava/util/List;
 accessible field net/minecraft/client/gui/screens/Screen renderables Ljava/util/List;
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen hoveredSlot Lnet/minecraft/world/inventory/Slot;
@@ -43,6 +41,7 @@ accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScr
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen titleLabelX I
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen titleLabelY I
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen topPos I
+accessible field net/minecraft/client/renderer/GameRenderer fogRenderer Lnet/minecraft/client/renderer/fog/FogRenderer;
 accessible field net/minecraft/client/renderer/RenderPipelines MATRICES_PROJECTION_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 accessible field net/minecraft/client/renderer/item/ItemStackRenderState displayContext Lnet/minecraft/world/item/ItemDisplayContext;
 accessible field net/minecraft/client/renderer/texture/AbstractTexture sampler Lcom/mojang/blaze3d/textures/GpuSampler;
@@ -75,7 +74,6 @@ accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (L
 accessible method net/minecraft/client/gui/screens/Screen clearWidgets ()V
 accessible method net/minecraft/client/gui/screens/Screen init ()V
 accessible method net/minecraft/client/gui/screens/Screen removeWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)V
-accessible method net/minecraft/client/gui/screens/Screen$DeferredTooltipRendering <init> (Ljava/util/List;Lnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V
 accessible method net/minecraft/client/gui/screens/inventory/AbstractContainerScreen getHoveredSlot (DD)Lnet/minecraft/world/inventory/Slot;
 accessible method net/minecraft/client/gui/screens/inventory/AbstractContainerScreen renderTooltip (Lnet/minecraft/client/gui/GuiGraphics;II)V
 accessible method net/minecraft/client/multiplayer/MultiPlayerGameMode startPrediction (Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/multiplayer/prediction/PredictiveAction;)V
