@@ -4,10 +4,13 @@
  */
 package com.wynntils.features.inventory;
 
-import com.google.common.collect.Lists;
-import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.GpuDevice;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.GpuTexture;
+import com.mojang.blaze3d.textures.TextureFormat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -32,15 +35,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import javax.imageio.ImageIO;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.render.GuiRenderer;
+import net.minecraft.client.gui.render.state.GuiRenderState;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.fog.FogRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -72,7 +81,7 @@ public class ItemScreenshotFeature extends Feature {
         screenshotSlot = hoveredSlot;
     }
 
-    // All other features (besides scaling) must be able to update the tooltip first
+    // All other features must be able to update the tooltip first
     @SubscribeEvent(priority = EventPriority.LOW)
     public void render(ItemTooltipRenderEvent.Pre e) {
         if (!Models.WorldState.onWorld()) return;
@@ -81,7 +90,6 @@ public class ItemScreenshotFeature extends Feature {
         Screen screen = McUtils.screen();
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
 
-        // has to be called during a render period
         takeScreenshot(screen, screenshotSlot, e.getTooltips());
         screenshotSlot = null;
     }
@@ -110,44 +118,77 @@ public class ItemScreenshotFeature extends Feature {
             height += 2 + (tooltip.size() - 1) * 10;
         }
 
+        List<ClientTooltipComponent> tooltipToRender = tooltip.stream()
+                .map(Component::getVisualOrderText)
+                .map(ClientTooltipComponent::create)
+                .toList();
+
+        screenshotTooltip(screen, tooltipToRender, width, height).whenComplete((nativeImage, err) -> {
+            if (err != null || nativeImage == null) {
+                WynntilsMod.error("Tooltip screenshot failed", err);
+                McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.copy.error"));
+                return;
+            }
+
+            BufferedImage bi = SystemUtils.createScreenshot(nativeImage);
+            handleScreenshotOutput(itemStack, bi);
+        });
+    }
+
+    /**
+     * Based on Isometric Renders <a href="https://github.com/gliscowo/isometric-renders"> code</a>.
+     */
+    private static CompletableFuture<NativeImage> screenshotTooltip(
+            Screen screen, List<ClientTooltipComponent> tooltip, int width, int height) {
+        TextureTarget framebuffer = new TextureTarget("Wynntils Item Screenshot", width * 2, height * 2, true);
+        RenderSystem.getDevice()
+                .createCommandEncoder()
+                .clearColorAndDepthTextures(framebuffer.getColorTexture(), 0, framebuffer.getDepthTexture(), 1.0);
+
+        ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(framebuffer);
+        RenderSystem.outputColorTextureOverride = framebuffer.getColorTextureView();
+        RenderSystem.outputDepthTextureOverride = framebuffer.getDepthTextureView();
+
+        Minecraft mc = McUtils.mc();
+
+        MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
+        GuiRenderState guiRenderState = new GuiRenderState();
+
+        GuiRenderer guiRenderer = new GuiRenderer(
+                guiRenderState,
+                bufferSource,
+                mc.gameRenderer.getSubmitNodeStorage(),
+                mc.gameRenderer.getFeatureRenderDispatcher(),
+                List.of());
+
+        GuiGraphics guiGraphics = new GuiGraphics(mc, guiRenderState, 0, 0);
+
         // calculate tooltip size to fit to framebuffer
         float scaleh = (float) screen.height / height;
         float scalew = (float) screen.width / width;
 
-        // Create tooltip renderer
-        Screen.DeferredTooltipRendering deferredTooltipRendering = new Screen.DeferredTooltipRendering(
-                Lists.transform(tooltip, Component::getVisualOrderText), NO_POSITIONER);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().scale(scalew, scaleh);
+        guiGraphics.renderTooltip(mc.font, tooltip, 0, 0, NO_POSITIONER, null);
+        guiGraphics.pose().popMatrix();
 
-        // draw tooltip to framebuffer, create image
-        McUtils.mc().getMainRenderTarget().unbindWrite();
+        bufferSource.endBatch();
 
-        ByteBufferBuilder byteBuffer = new ByteBufferBuilder(256);
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(byteBuffer);
-        GuiGraphics guiGraphics = new GuiGraphics(McUtils.mc(), bufferSource);
-        RenderTarget fb = new MainTarget(width * 2, height * 2);
-        fb.setClearColor(1f, 1f, 1f, 0f);
-        fb.createBuffers(width * 2, height * 2);
-        fb.bindWrite(false);
-        ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(fb);
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().scale(scalew, scaleh, 1);
-        guiGraphics.renderTooltip(
-                FontRenderer.getInstance().getFont(),
-                deferredTooltipRendering.tooltip(),
-                deferredTooltipRendering.positioner(),
-                0,
-                0);
-        guiGraphics.pose().popPose();
-        guiGraphics.flush();
-        fb.unbindWrite();
+        guiRenderer.render(mc.gameRenderer.fogRenderer.getBuffer(FogRenderer.FogMode.NONE));
+        guiRenderer.close();
+
+        RenderSystem.outputColorTextureOverride = null;
+        RenderSystem.outputDepthTextureOverride = null;
         ((MinecraftExtension) McUtils.mc()).setOverridenRenderTarget(null);
-        McUtils.mc().getMainRenderTarget().bindWrite(true);
+        GpuTexture texture = cloneColorAttachment(framebuffer);
 
-        BufferedImage bi = SystemUtils.createScreenshot(fb);
+        framebuffer.destroyBuffers();
 
-        // Free the buffer source to prevent memory leaks
-        byteBuffer.close();
-        bufferSource = null;
+        return SystemUtils.createImage(texture);
+    }
+
+    private void handleScreenshotOutput(ItemStack itemStack, BufferedImage bi) {
+        if (bi == null) return;
 
         if (saveToDisk.get()) {
             // First try to save it to disk
@@ -202,6 +243,28 @@ public class ItemScreenshotFeature extends Feature {
             WynntilsMod.error("Failed to copy image to clipboard", ex);
             McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.copy.error"));
         }
+    }
+
+    private static GpuTexture cloneColorAttachment(RenderTarget framebuffer) {
+        GpuTexture original = framebuffer.getColorTexture();
+        GpuDevice gpuDevice = RenderSystem.getDevice();
+        GpuTexture copy = gpuDevice.createTexture(
+                () -> "Copy of: " + original.getLabel(),
+                GpuTexture.USAGE_COPY_DST
+                        | GpuTexture.USAGE_COPY_SRC
+                        | GpuTexture.USAGE_TEXTURE_BINDING
+                        | GpuTexture.USAGE_RENDER_ATTACHMENT,
+                TextureFormat.RGBA8,
+                framebuffer.width,
+                framebuffer.height,
+                1,
+                1);
+
+        gpuDevice
+                .createCommandEncoder()
+                .copyTextureToTexture(original, copy, 0, 0, 0, 0, 0, framebuffer.width, framebuffer.height);
+
+        return copy;
     }
 
     /**
