@@ -21,9 +21,11 @@ import com.wynntils.services.map.pois.PlayerMainMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.BoundingBox;
@@ -270,18 +272,18 @@ public final class MainMapScreen extends AbstractMapScreen {
         LootrunPathInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
 
         if (currentLootrun != null) {
-            //            MapRenderer.renderLootrunLine(
-            //                    currentLootrun,
-            //                    2f,
-            //                    3f,
-            //                    poseStack,
-            //                    x,
-            //                    centerZ,
-            //                    mapCenterX,
-            //                    mapCenterZ,
-            //                    zoomRenderScale,
-            //                    CommonColors.LIGHT_BLUE.asInt(),
-            //                    CommonColors.BLACK.asInt());
+            MapRenderer.renderLootrunLine(
+                    guiGraphics,
+                    currentLootrun,
+                    2f,
+                    3f,
+                    centerX,
+                    centerZ,
+                    mapCenterX,
+                    mapCenterZ,
+                    zoomRenderScale,
+                    CommonColors.LIGHT_BLUE,
+                    CommonColors.BLACK);
         }
 
         RenderUtils.disableScissor(guiGraphics);
