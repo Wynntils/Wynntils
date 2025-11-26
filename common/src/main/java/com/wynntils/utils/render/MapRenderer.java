@@ -4,13 +4,6 @@
  */
 package com.wynntils.utils.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.Poi;
@@ -19,15 +12,19 @@ import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.pipelines.CustomRenderPipelines;
+import com.wynntils.utils.render.state.ColoredTrianglesRenderState;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.CoreShaders;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
+import org.joml.Matrix3x2f;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
 
@@ -224,24 +221,18 @@ public final class MapRenderer {
     }
 
     public static void renderLootrunLine(
+            GuiGraphics guiGraphics,
             LootrunPathInstance lootrun,
             float lootrunWidth,
             float outlineWidth,
-            PoseStack poseStack,
             float centerX,
             float centerZ,
             float mapTextureX,
             float mapTextureZ,
             float currentZoom,
-            int lootrunColor,
-            int outlineColor) {
+            CustomColor lootrunColor,
+            CustomColor outlineColor) {
         if (lootrun.simplifiedPath().size() < 3) return;
-
-        BufferBuilder bufferBuilder =
-                Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
-        RenderSystem.setShader(CoreShaders.POSITION_COLOR);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.disableCull();
 
         List<Vector2f> points = new ArrayList<>();
 
@@ -276,37 +267,38 @@ public final class MapRenderer {
             }
         }
 
+        List<Vector2f> outlineVertices = new ArrayList<>();
+        List<Vector2f> lootrunVertices = new ArrayList<>();
+        Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
+        ScreenRectangle scissor = guiGraphics.scissorStack.peek();
+
         for (int i = 1; i < middlePoints.size(); i++) {
-            drawTriangles(
-                    bufferBuilder,
-                    poseStack,
-                    middlePoints.get(i - 1),
-                    points.get(i),
-                    middlePoints.get(i),
-                    outlineColor,
-                    outlineWidth);
-            drawTriangles(
-                    bufferBuilder,
-                    poseStack,
-                    middlePoints.get(i - 1),
-                    points.get(i),
-                    middlePoints.get(i),
-                    lootrunColor,
-                    lootrunWidth);
+            drawTriangles(outlineVertices, middlePoints.get(i - 1), points.get(i), middlePoints.get(i), outlineWidth);
+            drawTriangles(lootrunVertices, middlePoints.get(i - 1), points.get(i), middlePoints.get(i), lootrunWidth);
         }
 
-        BufferUploader.drawWithShader(bufferBuilder.build());
-        RenderSystem.enableCull();
+        if (!outlineVertices.isEmpty()) {
+            guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
+                    CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+                    TextureSetup.noTexture(),
+                    pose,
+                    outlineVertices,
+                    outlineColor,
+                    scissor));
+        }
+
+        if (!lootrunVertices.isEmpty()) {
+            guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
+                    CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+                    TextureSetup.noTexture(),
+                    pose,
+                    lootrunVertices,
+                    lootrunColor,
+                    scissor));
+        }
     }
 
-    private static void drawTriangles(
-            BufferBuilder bufferBuilder,
-            PoseStack poseStack,
-            Vector2f p0,
-            Vector2f p1,
-            Vector2f p2,
-            int color,
-            float lineWidth) {
+    private static void drawTriangles(List<Vector2f> vertices, Vector2f p0, Vector2f p1, Vector2f p2, float lineWidth) {
         Vector2f t0 = new Vector2f();
         Vector2f t2 = new Vector2f();
 
@@ -341,64 +333,58 @@ public final class MapRenderer {
         Vector2f p1p2 = new Vector2f(p1).sub(p2);
 
         if (anchorLength > p0p1.length() || anchorLength > p1p2.length()) {
-            addVertex(bufferBuilder, new Vector2f(p0).add(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p0).sub(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).add(t0), color, poseStack);
+            addVertex(vertices, new Vector2f(p0).add(t0));
+            addVertex(vertices, new Vector2f(p0).sub(t0));
+            addVertex(vertices, new Vector2f(p1).add(t0));
 
-            addVertex(bufferBuilder, new Vector2f(p0).sub(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).add(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).sub(t0), color, poseStack);
+            addVertex(vertices, new Vector2f(p0).sub(t0));
+            addVertex(vertices, new Vector2f(p1).add(t0));
+            addVertex(vertices, new Vector2f(p1).sub(t0));
 
-            drawRoundJoint(p1, new Vector2f(p1).add(t0), new Vector2f(p1).add(t2), p2, bufferBuilder, color, poseStack);
+            drawRoundJoint(p1, new Vector2f(p1).add(t0), new Vector2f(p1).add(t2), p2, vertices);
 
-            addVertex(bufferBuilder, new Vector2f(p2).add(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).sub(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).add(t2), color, poseStack);
+            addVertex(vertices, new Vector2f(p2).add(t2));
+            addVertex(vertices, new Vector2f(p1).sub(t2));
+            addVertex(vertices, new Vector2f(p1).add(t2));
 
-            addVertex(bufferBuilder, new Vector2f(p2).add(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).sub(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p2).sub(t2), color, poseStack);
+            addVertex(vertices, new Vector2f(p2).add(t2));
+            addVertex(vertices, new Vector2f(p1).sub(t2));
+            addVertex(vertices, new Vector2f(p2).sub(t2));
         } else {
-            addVertex(bufferBuilder, new Vector2f(p0).add(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p0).sub(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).sub(anchor), color, poseStack);
+            addVertex(vertices, new Vector2f(p0).add(t0));
+            addVertex(vertices, new Vector2f(p0).sub(t0));
+            addVertex(vertices, new Vector2f(p1).sub(anchor));
 
-            addVertex(bufferBuilder, new Vector2f(p0).add(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).sub(anchor), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).add(t0), color, poseStack);
+            addVertex(vertices, new Vector2f(p0).add(t0));
+            addVertex(vertices, new Vector2f(p1).sub(anchor));
+            addVertex(vertices, new Vector2f(p1).add(t0));
 
             Vector2f rP0 = new Vector2f(p1).add(t0);
             Vector2f rP1 = new Vector2f(p1).add(t2);
             Vector2f rP2 = new Vector2f(p1).sub(anchor);
 
-            addVertex(bufferBuilder, rP0, color, poseStack);
-            addVertex(bufferBuilder, p1, color, poseStack);
-            addVertex(bufferBuilder, rP2, color, poseStack);
+            addVertex(vertices, rP0);
+            addVertex(vertices, p1);
+            addVertex(vertices, rP2);
 
-            drawRoundJoint(p1, rP0, rP1, rP2, bufferBuilder, color, poseStack);
+            drawRoundJoint(p1, rP0, rP1, rP2, vertices);
 
-            addVertex(bufferBuilder, p1, color, poseStack);
-            addVertex(bufferBuilder, rP1, color, poseStack);
-            addVertex(bufferBuilder, rP2, color, poseStack);
+            addVertex(vertices, p1);
+            addVertex(vertices, rP1);
+            addVertex(vertices, rP2);
 
-            addVertex(bufferBuilder, new Vector2f(p2).add(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).sub(anchor), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).add(t2), color, poseStack);
+            addVertex(vertices, new Vector2f(p2).add(t2));
+            addVertex(vertices, new Vector2f(p1).sub(anchor));
+            addVertex(vertices, new Vector2f(p1).add(t2));
 
-            addVertex(bufferBuilder, new Vector2f(p2).add(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p1).sub(anchor), color, poseStack);
-            addVertex(bufferBuilder, new Vector2f(p2).sub(t2), color, poseStack);
+            addVertex(vertices, new Vector2f(p2).add(t2));
+            addVertex(vertices, new Vector2f(p1).sub(anchor));
+            addVertex(vertices, new Vector2f(p2).sub(t2));
         }
     }
 
     private static void drawRoundJoint(
-            Vector2f center,
-            Vector2f p0,
-            Vector2f p1,
-            Vector2f nextPointInLine,
-            BufferBuilder bufferBuilder,
-            int color,
-            PoseStack poseStack) {
+            Vector2f center, Vector2f p0, Vector2f p1, Vector2f nextPointInLine, List<Vector2f> vertices) {
         float radius = new Vector2f(center).sub(p0).length();
 
         float angle0 = (float) Math.atan2((p1.y() - center.y()), (p1.x() - center.x()));
@@ -435,24 +421,18 @@ public final class MapRenderer {
         float angleInc = angleDiff / nSegments;
 
         for (int i = 0; i < nSegments; i++) {
-            addVertex(bufferBuilder, center, color, poseStack);
+            addVertex(vertices, center);
+            addVertex(vertices, new Vector2f((float) (center.x() + radius * Math.cos(orgAngle0 + angleInc * i)), (float)
+                    (center.y() + radius * Math.sin(orgAngle0 + angleInc * i))));
             addVertex(
-                    bufferBuilder,
-                    new Vector2f((float) (center.x() + radius * Math.cos(orgAngle0 + angleInc * i)), (float)
-                            (center.y() + radius * Math.sin(orgAngle0 + angleInc * i))),
-                    color,
-                    poseStack);
-            addVertex(
-                    bufferBuilder,
+                    vertices,
                     new Vector2f((float) (center.x() + radius * Math.cos(orgAngle0 + angleInc * (1 + i))), (float)
-                            (center.y() + radius * Math.sin(orgAngle0 + angleInc * (1 + i)))),
-                    color,
-                    poseStack);
+                            (center.y() + radius * Math.sin(orgAngle0 + angleInc * (1 + i)))));
         }
     }
 
-    private static void addVertex(BufferBuilder bufferBuilder, Vector2f pos, int color, PoseStack poseStack) {
-        bufferBuilder.addVertex(poseStack.last().pose(), pos.x(), pos.y(), 0).setColor(color);
+    private static void addVertex(List<Vector2f> vertices, Vector2f pos) {
+        vertices.add(new Vector2f(pos));
     }
 
     /**
