@@ -62,7 +62,7 @@ import org.lwjgl.glfw.GLFW;
 public class ChatItemFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind shareItemKeybind =
-            new KeyBind("Share Item", GLFW.GLFW_KEY_F3, true, null, slot -> shareItem(slot, true));
+            new KeyBind("Share Item", GLFW.GLFW_KEY_F4, true, null, slot -> shareItem(slot, true));
 
     @RegisterKeyBind
     private final KeyBind saveItemKeybind =
