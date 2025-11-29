@@ -10,21 +10,19 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.models.worlds.type.BombInfo;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class BombBellRelayFeature extends Feature {
     @RegisterKeyBind
-    private final KeyBind relayPartyKeybind =
-            new KeyBind("Relay Bomb to Party", GLFW.GLFW_KEY_UNKNOWN, true, () -> relayTo("p"));
+    private final KeyBind relayPartyKeybind = KeyBindDefinition.BOMB_RELAY_PARTY.create(() -> relayTo("p"));
 
     @RegisterKeyBind
-    private final KeyBind relayGuildKeybind =
-            new KeyBind("Relay Bomb to Guild", GLFW.GLFW_KEY_UNKNOWN, true, () -> relayTo("g"));
+    private final KeyBind relayGuildKeybind = KeyBindDefinition.BOMB_RELAY_GUILD.create(() -> relayTo("g"));
 
     @Persisted
     private final Config<Boolean> showTime = new Config<>(true);

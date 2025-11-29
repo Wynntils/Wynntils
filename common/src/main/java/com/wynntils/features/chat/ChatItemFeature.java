@@ -10,6 +10,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -61,16 +62,15 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.CHAT)
 public class ChatItemFeature extends Feature {
     @RegisterKeyBind
-    private final KeyBind shareItemKeybind =
-            new KeyBind("Share Item", GLFW.GLFW_KEY_F4, true, null, slot -> shareItem(slot, true));
+    private final KeyBind shareItemKeybind = KeyBindDefinition.SHARE_ITEM.create(slot -> shareItem(slot, true));
 
     @RegisterKeyBind
     private final KeyBind saveItemKeybind =
-            new KeyBind("Save Item to Item Record", GLFW.GLFW_KEY_F6, true, null, slot -> shareItem(slot, false));
+            KeyBindDefinition.SAVE_ITEM_TO_RECORD.create(slot -> shareItem(slot, false));
 
     @RegisterKeyBind
-    private final KeyBind itemRecordKeybind = new KeyBind(
-            "Open Item Record", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.setScreen(SavedItemsScreen.create()));
+    private final KeyBind itemRecordKeybind =
+            KeyBindDefinition.OPEN_ITEM_RECORD.create(() -> McUtils.setScreen(SavedItemsScreen.create()));
 
     @Persisted
     private final Config<Boolean> showSharingScreen = new Config<>(true);

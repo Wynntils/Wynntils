@@ -9,6 +9,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -36,19 +37,17 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemFavoriteFeature extends Feature {
-    // This should really move to FavoritesModel, but for now, models cannot have configs
-
     @RegisterKeyBind
-    private final KeyBind itemFavoriteKeyBind = new KeyBind(
-            "Favorite/Unfavorite Item", GLFW.GLFW_KEY_UNKNOWN, true, null, this::tryChangeFavoriteStateOnHoveredSlot);
+    private final KeyBind itemFavoriteKeyBind =
+            KeyBindDefinition.TOGGLE_FAVORITE.create(this::tryChangeFavoriteStateOnHoveredSlot);
 
     @Persisted
     private final Config<Boolean> allowFavoritingAllItems = new Config<>(false);
 
+    // This should really move to FavoritesModel, but for now, models cannot have configs
     @Persisted
     public final HiddenConfig<Set<String>> favoriteItems = new HiddenConfig<>(new TreeSet<>());
 

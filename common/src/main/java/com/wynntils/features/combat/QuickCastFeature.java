@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -34,23 +35,20 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMBAT)
 public class QuickCastFeature extends Feature {
     @RegisterKeyBind
-    private final KeyBind castFirstSpell = new KeyBind("Cast 1st Spell", GLFW.GLFW_KEY_Z, false, this::castFirstSpell);
+    private final KeyBind castFirstSpell = KeyBindDefinition.CAST_FIRST_SPELL.create(this::castFirstSpell);
 
     @RegisterKeyBind
-    private final KeyBind castSecondSpell =
-            new KeyBind("Cast 2nd Spell", GLFW.GLFW_KEY_X, false, this::castSecondSpell);
+    private final KeyBind castSecondSpell = KeyBindDefinition.CAST_SECOND_SPELL.create(this::castSecondSpell);
 
     @RegisterKeyBind
-    private final KeyBind castThirdSpell = new KeyBind("Cast 3rd Spell", GLFW.GLFW_KEY_C, false, this::castThirdSpell);
+    private final KeyBind castThirdSpell = KeyBindDefinition.CAST_THIRD_SPELL.create(this::castThirdSpell);
 
     @RegisterKeyBind
-    private final KeyBind castFourthSpell =
-            new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, false, this::castFourthSpell);
+    private final KeyBind castFourthSpell = KeyBindDefinition.CAST_FOURTH_SPELL.create(this::castFourthSpell);
 
     @Persisted
     private final Config<Integer> leftClickTickDelay = new Config<>(3);

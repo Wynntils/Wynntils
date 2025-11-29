@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
@@ -10,13 +10,13 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.minimap.CoordinateOverlay;
 import com.wynntils.overlays.minimap.MinimapOverlay;
 import com.wynntils.overlays.minimap.TerritoryOverlay;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
 public class MinimapFeature extends Feature {
@@ -30,10 +30,8 @@ public class MinimapFeature extends Feature {
     private final Overlay territoryOverlay = new TerritoryOverlay();
 
     @RegisterKeyBind
-    public final KeyBind zoomIn =
-            new KeyBind("Increase Minimap Zoom", GLFW.GLFW_KEY_EQUAL, false, () -> minimapOverlay.adjustZoomLevel(2));
+    public final KeyBind zoomIn = KeyBindDefinition.MINIMAP_ZOOM_IN.create(() -> minimapOverlay.adjustZoomLevel(2));
 
     @RegisterKeyBind
-    public final KeyBind zoomOut =
-            new KeyBind("Decrease Minimap Zoom", GLFW.GLFW_KEY_MINUS, false, () -> minimapOverlay.adjustZoomLevel(-2));
+    public final KeyBind zoomOut = KeyBindDefinition.MINIMAP_ZOOM_OUT.create(() -> minimapOverlay.adjustZoomLevel(-2));
 }

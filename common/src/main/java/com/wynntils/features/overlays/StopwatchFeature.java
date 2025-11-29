@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
@@ -13,23 +13,21 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.stopwatch.StopwatchOverlay;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.OVERLAYS)
 public class StopwatchFeature extends Feature {
     @RegisterKeyBind
-    private final KeyBind toggleStopwatchKeybind =
-            new KeyBind("Toggle Stopwatch", GLFW.GLFW_KEY_KP_0, true, this::toggleStopwatch);
+    private final KeyBind toggleStopwatchKeybind = KeyBindDefinition.TOGGLE_STOPWATCH.create(this::toggleStopwatch);
 
     @RegisterKeyBind
-    private final KeyBind resetStopwatchKeybind =
-            new KeyBind("Reset Stopwatch", GLFW.GLFW_KEY_KP_DECIMAL, true, Services.Stopwatch::reset);
+    private final KeyBind resetStopwatchKeybind = KeyBindDefinition.RESET_STOPWATCH.create(Services.Stopwatch::reset);
 
     @RegisterCommand
     private final LiteralCommandNode<CommandSourceStack> startCommand = Commands.literal("start")

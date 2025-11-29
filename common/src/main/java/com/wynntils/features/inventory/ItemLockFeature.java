@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -39,8 +40,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.INVENTORY)
 public class ItemLockFeature extends Feature {
     @RegisterKeyBind
-    private final KeyBind lockSlotKeyBind =
-            new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, this::tryChangeLockStateOnHoveredSlot);
+    private final KeyBind lockSlotKeyBind = KeyBindDefinition.LOCK_SLOT.create(this::tryChangeLockStateOnHoveredSlot);
 
     @Persisted
     private final HiddenConfig<Map<String, Set<Integer>>> classSlotLockMap = new HiddenConfig<>(new TreeMap<>());

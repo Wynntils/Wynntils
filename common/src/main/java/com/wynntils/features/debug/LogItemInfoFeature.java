@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
@@ -13,6 +13,7 @@ import com.wynntils.core.consumers.features.properties.RegisterCommand;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
@@ -27,14 +28,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 
 @StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class LogItemInfoFeature extends Feature {
     @RegisterKeyBind
-    private final KeyBind logItemInfoKeyBind = new KeyBind(
-            "Log Item Info", GLFW.GLFW_KEY_INSERT, true, this::onLogItemInfoPress, this::onLogItemInfoInventoryPress);
+    private final KeyBind logItemInfoKeyBind =
+            KeyBindDefinition.LOG_ITEM_INFO.create(this::onLogItemInfoPress, this::onLogItemInfoInventoryPress);
 
     @RegisterCommand
     private final LiteralCommandNode<CommandSourceStack> commandNode =

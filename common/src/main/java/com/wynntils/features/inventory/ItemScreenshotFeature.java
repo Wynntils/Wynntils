@@ -16,6 +16,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -59,7 +60,6 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector2i;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemScreenshotFeature extends Feature {
@@ -69,8 +69,7 @@ public class ItemScreenshotFeature extends Feature {
                     new Vector2i(4, 4);
 
     @RegisterKeyBind
-    private final KeyBind itemScreenshotKeyBind =
-            new KeyBind("Screenshot Item", GLFW.GLFW_KEY_F4, true, null, this::onInventoryPress);
+    private final KeyBind itemScreenshotKeyBind = KeyBindDefinition.SCREENSHOT_ITEM.create(this::onInventoryPress);
 
     @Persisted
     private final Config<Boolean> saveToDisk = new Config<>(false);
