@@ -13,6 +13,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
@@ -49,7 +50,6 @@ import java.util.stream.Collectors;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 // Note: To run this successfully, you have to have a class with all content trackable in the content book
 @StartDisabled
@@ -67,8 +67,7 @@ public class ContentBookDumpFeature extends Feature {
     private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
 
     @RegisterKeyBind
-    private final KeyBind dumpContentBook =
-            new KeyBind("Dump Content Book", GLFW.GLFW_KEY_UNKNOWN, true, this::dumpContentBook);
+    private final KeyBind dumpContentBook = KeyBindDefinition.DUMP_CONTENT_BOOK.create(this::dumpContentBook);
 
     private List<DumpableActivityInfo> currentDump = List.of();
 

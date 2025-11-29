@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -38,7 +39,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundPlayerInputPacket;
 import net.minecraft.world.entity.player.Input;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * Feature for handling NPC dialogues.
@@ -61,11 +61,11 @@ public class NpcDialogueFeature extends Feature {
 
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
-            new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
+            KeyBindDefinition.CANCEL_NPC_AUTO_PROGRESS.create(this::cancelAutoProgress);
 
     @RegisterKeyBind
     public final KeyBind npcDialogKeyOverrideKeybind =
-            new KeyBind("Progress NPC Dialogue", GLFW.GLFW_KEY_UNKNOWN, true, this::progressNPCDialogue);
+            KeyBindDefinition.PROGRESS_NPC_DIALOGUE.create(this::progressNPCDialogue);
 
     @Persisted
     private final Config<NpcDialogueChatDisplayType> chatDisplayType = new Config<>(NpcDialogueChatDisplayType.NORMAL);

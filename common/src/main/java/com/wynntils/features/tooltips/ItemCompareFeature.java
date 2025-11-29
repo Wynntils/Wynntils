@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -61,7 +62,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemCompareFeature extends Feature {
@@ -81,12 +81,10 @@ public class ItemCompareFeature extends Feature {
     private final Config<Boolean> centerItemName = new Config<>(false);
 
     @RegisterKeyBind
-    private final KeyBind holdToCompareKeyBind =
-            new KeyBind("Hold to compare", GLFW.GLFW_KEY_KP_ENTER, false, null, null);
+    private final KeyBind holdToCompareKeyBind = KeyBindDefinition.HOLD_TO_COMPARE.create(null, null);
 
     @RegisterKeyBind
-    private final KeyBind selectCompareKeyBind =
-            new KeyBind("Select for comparing", GLFW.GLFW_KEY_KP_ADD, true, null, this::onSelectKeyPress);
+    private final KeyBind selectCompareKeyBind = KeyBindDefinition.SELECT_FOR_COMPARING.create(this::onSelectKeyPress);
 
     private final List<Pair<WynnItem, ItemStack>> selectedItems = new ArrayList<>();
     private static final int COMPARE_ITEM_PAD = 6;
