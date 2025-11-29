@@ -4,11 +4,11 @@
  */
 package com.wynntils.features.players;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.players.event.FriendsEvent;
@@ -19,17 +19,11 @@ import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.Optional;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.PLAYERS)
 public class PlayerViewerFeature extends Feature {
     @RegisterKeyBind
-    private final KeyBind playerViewerKeybind = new KeyBind(
-            "View player's gear",
-            GLFW.GLFW_MOUSE_BUTTON_MIDDLE,
-            InputConstants.Type.MOUSE,
-            true,
-            this::tryOpenPlayerViewer);
+    private final KeyBind playerViewerKeybind = KeyBindDefinition.VIEW_PLAYER.create(this::tryOpenPlayerViewer);
 
     private PlayerViewerScreen playerViewerScreen = null;
 

@@ -44,6 +44,7 @@
     "MouseHandlerMixin",
     "MultiPlayerGameModeMixin",
     "NameTagFeatureRendererStorageMixin",
+    "OptionsMixin",
     "PackRepositoryMixin",
     "PlayerTabOverlayMixin",
     "ProgressScreenMixin",
