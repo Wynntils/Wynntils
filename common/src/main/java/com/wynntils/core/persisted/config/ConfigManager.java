@@ -21,6 +21,7 @@ import com.wynntils.core.json.JsonTypeWrapper;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.PersistedOwner;
 import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.persisted.upfixers.UpfixerType;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -45,6 +46,9 @@ public final class ConfigManager extends Manager {
     private static final File DEFAULT_CONFIG = new File(CONFIG_DIR, "default" + FILE_SUFFIX);
     private static final String OVERLAY_GROUPS_JSON_KEY = "overlayGroups";
     private static final Set<Config<?>> CONFIGS = new TreeSet<>();
+
+    @Persisted
+    private final Storage<ConfigProfile> selectedProfile = new Storage<>(ConfigProfile.DEFAULT);
 
     private final File userConfigFile;
     private JsonObject configObject;
@@ -244,6 +248,26 @@ public final class ConfigManager extends Manager {
 
         WynntilsMod.info("Creating default config file with " + configJson.size() + " config values.");
         Managers.Json.savePreciousJson(DEFAULT_CONFIG, configJson);
+    }
+
+    public ConfigProfile getSelectedProfile() {
+        return selectedProfile.get();
+    }
+
+    public void setSelectedProfile(ConfigProfile profile) {
+        if (profile == null || profile == selectedProfile.get()) return;
+
+        selectedProfile.store(profile);
+        applyProfileDefaults();
+        saveConfig();
+    }
+
+    private void applyProfileDefaults() {
+        for (Config<?> config : getConfigList()) {
+            if (!config.wasUserEdited()) {
+                config.reset();
+            }
+        }
     }
 
     private List<Config<?>> getConfigOptions(PersistedOwner owner) {

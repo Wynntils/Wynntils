@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
 import com.wynntils.features.LootrunFeature;
@@ -177,6 +178,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
@@ -472,7 +474,7 @@ public final class FeatureManager extends Manager {
         Managers.KeyBind.discoverKeyBinds(feature);
 
         // Determine if feature should be enabled & set default enabled value for user features
-        boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
+        boolean startDisabled = checkStartDisabled(feature);
         feature.userEnabled.store(!startDisabled);
 
         Managers.Overlay.discoverOverlays(feature);
@@ -489,6 +491,23 @@ public final class FeatureManager extends Manager {
         if (!feature.userEnabled.get()) return; // not enabled by user
 
         doEnableFeature(feature);
+    }
+
+    private boolean checkStartDisabled(Feature feature) {
+        StartDisabled startDisabledAnnotation = feature.getClass().getAnnotation(StartDisabled.class);
+        if (startDisabledAnnotation == null) return false;
+
+        ConfigProfile[] disabledProfiles = startDisabledAnnotation.disabledProfiles();
+        boolean disableAll = disabledProfiles.length == 0;
+        Set<ConfigProfile> disabledProfileSet = Set.of(disabledProfiles);
+
+        for (ConfigProfile profile : ConfigProfile.values()) {
+            boolean enabledByDefault = !(disableAll || disabledProfileSet.contains(profile));
+            feature.userEnabled.withDefault(profile, enabledByDefault);
+        }
+
+        ConfigProfile selectedProfile = Managers.Config.getSelectedProfile();
+        return disableAll || disabledProfileSet.contains(selectedProfile);
     }
 
     public void enableFeature(Feature feature) {
