@@ -289,6 +289,24 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 offsetX,
                 offsetY));
 
+        this.addRenderableWidget(new SettingsSideTabButton(
+                (int) -(Texture.TAG_BLUE.width() * 0.75f) + offsetX,
+                offsetY + Texture.CONFIG_BOOK_BACKGROUND.height() - Texture.TAG_GREEN.height() - 20,
+                Texture.TAG_GREEN.width(),
+                Texture.TAG_GREEN.height(),
+                (b) -> McUtils.setScreen(ConfigProfileScreen.create(this)),
+                ComponentUtils.wrapTooltips(
+                        List.of(
+                                Component.translatable("screens.wynntils.settingsScreen.profiles")
+                                        .withStyle(ChatFormatting.WHITE),
+                                Component.translatable("screens.wynntils.settingsScreen.profiles.description")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        150),
+                Texture.TAG_GREEN,
+                Texture.SETTINGS_PROFILES_ICON,
+                offsetX,
+                offsetY));
+
         this.addRenderableWidget(searchWidget);
 
         unsavedChangesWidget = new UnsavedChangesWidget(

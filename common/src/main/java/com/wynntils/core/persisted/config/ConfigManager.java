@@ -23,6 +23,9 @@ import com.wynntils.core.persisted.PersistedOwner;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.persisted.upfixers.UpfixerType;
+import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
+import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
+import com.wynntils.screens.settings.ConfigProfileScreen;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
@@ -37,6 +40,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -49,6 +53,9 @@ public final class ConfigManager extends Manager {
 
     @Persisted
     private final Storage<ConfigProfile> selectedProfile = new Storage<>(ConfigProfile.DEFAULT);
+
+    @Persisted
+    private final Storage<Boolean> hasPromptedProfile = new Storage<>(false);
 
     private final File userConfigFile;
     private JsonObject configObject;
@@ -181,6 +188,11 @@ public final class ConfigManager extends Manager {
         for (OverlayGroupHolder holder : Managers.Overlay.getOverlayGroups()) {
             Managers.Overlay.enableOverlays(holder.getParent());
         }
+    }
+
+    @SubscribeEvent
+    public void onActionBarUpdate(ActionBarUpdatedEvent event) {
+        event.runIfPresent(CharacterCreationSegment.class, this::checkForNewPlayer);
     }
 
     private static List<Config<?>> getConfigList() {
@@ -372,5 +384,13 @@ public final class ConfigManager extends Manager {
         if (typedValue != null) {
             config.setValue(typedValue);
         }
+    }
+
+    private void checkForNewPlayer(CharacterCreationSegment segment) {
+        if (!segment.isFirstCharacter()) return;
+        if (hasPromptedProfile.get()) return;
+
+        hasPromptedProfile.store(true);
+        McUtils.setScreen(ConfigProfileScreen.create(null));
     }
 }

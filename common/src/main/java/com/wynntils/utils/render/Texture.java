@@ -19,6 +19,7 @@ public enum Texture {
     CUSTOM_CONTENT_BOOK_BACKGROUND("content_book/custom_content_book.png", 432, 263),
     CONTENT_BOOK_SEARCH("content_book/content_book_search.png", 250, 20),
     TAG_BLUE("content_book/tag_blue.png", 44, 22),
+    TAG_GREEN("content_book/tag_green.png", 44, 22),
     TAG_RED("content_book/tag_red.png", 22, 44),
     TAG_RED_SELECTED("content_book/tag_red_selected.png", 22, 44),
     TAG_SEARCH("content_book/tag_search.png", 140, 30),
@@ -77,6 +78,7 @@ public enum Texture {
     DISCARD_SETTINGS_ICON("icons/config_categories/discard_settings_icon.png", 16, 16),
     EXPORT_SETTINGS_ICON("icons/config_categories/export_settings_icon.png", 16, 16),
     IMPORT_SETTINGS_ICON("icons/config_categories/import_settings_icon.png", 16, 16),
+    SETTINGS_PROFILES_ICON("icons/config_categories/settings_profiles_icon.png", 16, 16),
 
     // Content Book
     ACCESS_REWARD("icons/content_book/access_reward.png", 10, 10),

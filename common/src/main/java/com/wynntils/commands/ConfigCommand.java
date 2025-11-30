@@ -18,6 +18,8 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
+import com.wynntils.screens.settings.ConfigProfileScreen;
+import com.wynntils.utils.mc.McUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
@@ -292,13 +294,12 @@ public class ConfigCommand extends Command {
     }
 
     private LiteralCommandNode<CommandSourceStack> buildProfileNode() {
-        LiteralArgumentBuilder<CommandSourceStack> profileArgBuilder = Commands.literal("profile");
-
-        profileArgBuilder.then(Commands.argument("profileName", StringArgumentType.word())
-                .suggests(CONFIG_PROFILES_SUGGESTION_PROVIDER)
-                .executes(this::setConfigProfile));
-
-        return profileArgBuilder.build();
+        return Commands.literal("profile")
+                .then(Commands.argument("profileName", StringArgumentType.word())
+                        .suggests(CONFIG_PROFILES_SUGGESTION_PROVIDER)
+                        .executes(this::setConfigProfile))
+                .executes(this::openProfilesScreen)
+                .build();
     }
 
     private int addOverlayGroup(CommandContext<CommandSourceStack> context) {
@@ -655,6 +656,12 @@ public class ConfigCommand extends Command {
                                 .append(Component.literal(featureName).withStyle(ChatFormatting.YELLOW))
                                 .append(Component.literal("'s config options.").withStyle(ChatFormatting.GREEN)),
                         false);
+        return 1;
+    }
+
+    private int openProfilesScreen(CommandContext<CommandSourceStack> context) {
+        // Delay is needed to prevent chat screen overwriting the new screen
+        Managers.TickScheduler.scheduleLater(() -> McUtils.setScreen(ConfigProfileScreen.create(null)), 2);
         return 1;
     }
 
