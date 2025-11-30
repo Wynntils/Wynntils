@@ -16,6 +16,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.DynamicOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import java.util.Arrays;
 import java.util.Collections;
@@ -162,6 +163,15 @@ public class ConfigCommand extends Command {
                     },
                     builder);
 
+    private static final SuggestionProvider<CommandSourceStack> CONFIG_PROFILES_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    () -> {
+                        return Arrays.stream(ConfigProfile.values())
+                                .map(Enum::name)
+                                .iterator();
+                    },
+                    builder);
+
     @Override
     public String getCommandName() {
         return "config";
@@ -175,6 +185,7 @@ public class ConfigCommand extends Command {
                 .then(this.buildResetConfigNode())
                 .then(this.buildReloadConfigNode())
                 .then(this.buildOverlayGroupNode())
+                .then(this.buildProfileNode())
                 .executes(this::syntaxError);
     }
 
@@ -278,6 +289,16 @@ public class ConfigCommand extends Command {
                                         .executes(this::removeOverlayGroup)))));
 
         return overlayGroupArgBuilder.build();
+    }
+
+    private LiteralCommandNode<CommandSourceStack> buildProfileNode() {
+        LiteralArgumentBuilder<CommandSourceStack> profileArgBuilder = Commands.literal("profile");
+
+        profileArgBuilder.then(Commands.argument("profileName", StringArgumentType.word())
+                .suggests(CONFIG_PROFILES_SUGGESTION_PROVIDER)
+                .executes(this::setConfigProfile));
+
+        return profileArgBuilder.build();
     }
 
     private int addOverlayGroup(CommandContext<CommandSourceStack> context) {
@@ -633,6 +654,31 @@ public class ConfigCommand extends Command {
                                 .withStyle(ChatFormatting.GREEN)
                                 .append(Component.literal(featureName).withStyle(ChatFormatting.YELLOW))
                                 .append(Component.literal("'s config options.").withStyle(ChatFormatting.GREEN)),
+                        false);
+        return 1;
+    }
+
+    private int setConfigProfile(CommandContext<CommandSourceStack> context) {
+        String profileName = context.getArgument("profileName", String.class);
+        ConfigProfile configProfile;
+        try {
+            configProfile = ConfigProfile.valueOf(profileName);
+        } catch (IllegalArgumentException e) {
+            context.getSource()
+                    .sendFailure(Component.literal(profileName)
+                            .append(Component.literal(" is not a valid profile."))
+                            .withStyle(ChatFormatting.DARK_RED));
+            return 0;
+        }
+
+        Managers.Config.setSelectedProfile(configProfile);
+
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.literal("Successfully set config profile to ")
+                                .withStyle(ChatFormatting.GREEN)
+                                .append(Component.literal(configProfile.name()).withStyle(ChatFormatting.YELLOW))
+                                .append(Component.literal(".").withStyle(ChatFormatting.GREEN)),
                         false);
         return 1;
     }
