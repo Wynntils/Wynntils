@@ -87,8 +87,7 @@ public final class GearModel extends Model {
         // If an item is pre-identified, it cannot be in a gear box
         // Also check that the item has a source that can drop boxed items
         return !gear.metaInfo().preIdentified()
-                && gear.metaInfo().obtainInfo().stream()
-                        .anyMatch(x -> ItemObtainType.BOXED_ITEMS.contains(x.sourceType()));
+                && getObtainInfo(gear).stream().anyMatch(x -> ItemObtainType.BOXED_ITEMS.contains(x.sourceType()));
     }
 
     // For "real" gear items eg. from the inventory
