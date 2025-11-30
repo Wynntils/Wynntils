@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public record NameData(Optional<String> name) implements ItemData {
     private static final NameData EMPTY = new NameData(Optional.empty());
 
-    private static final int MAX_NAME_LENGTH = 48;
+    private static final int MAX_NAME_LENGTH = 50;
     private static final Pattern SANITIZE_PATTERN = Pattern.compile("[^a-zA-Z0-9'\\-.,!?\\s]");
 
     /**
