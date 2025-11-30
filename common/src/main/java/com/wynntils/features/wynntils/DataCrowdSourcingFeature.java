@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -11,7 +11,6 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ConfirmedBoolean;
 import java.util.Arrays;
@@ -19,8 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
@@ -31,7 +32,7 @@ public class DataCrowdSourcingFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
-        if (event.getNewState() != WorldState.WORLD) return;
+        if (!event.isFirstJoinWorld()) return;
 
         Map<CrowdSourcedDataType, ConfirmedBoolean> enabledMap = crowdSourcedDataTypeEnabledMap.get();
         List<CrowdSourcedDataType> nonConfirmedDataTypes = Arrays.stream(CrowdSourcedDataType.values())
@@ -61,9 +62,15 @@ public class DataCrowdSourcingFeature extends Feature {
             component.append(Component.literal("\n"));
         }
 
-        component.append(
-                Component.literal(
-                        "\nYou can confirm or deny the collection of each data type in the Wynntils Crowd Sourcing Screen, which you can access from the Wynntils Menu."));
+        component
+                .append(
+                        Component.literal(
+                                "\nYou can confirm or deny the collection of each data type in the Wynntils Crowd Sourcing Screen, which you can access from the Wynntils Menu or by clicking "))
+                .append(Component.literal("here.")
+                        .withStyle(ChatFormatting.GREEN)
+                        .withStyle(ChatFormatting.UNDERLINE)
+                        .withStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils crowdsourcing"))));
 
         McUtils.sendMessageToClient(component);
     }
