@@ -44,6 +44,9 @@ public class OrphionsNexusOfLightRaid extends RaidKind {
                 "Seraphim", Map.of(3, "Sorcery"),
                 "Ophanim", Map.of(3, "Guardian"),
                 "Throne", Map.of(3, "Transcendence"),
-                "Anti", Map.of(3, "Explosive Impact"));
+                "Anti",
+                        Map.of(
+                                1, "Explosive Impact",
+                                3, "Fission"));
     }
 }
