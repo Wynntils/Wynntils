@@ -417,10 +417,8 @@ public class ConfigCommand extends Command {
         for (Config<?> config : overlay.getVisibleConfigOptions()) {
             MutableComponent current = getComponentForConfig(config);
 
-            current.withStyle(style -> style.withClickEvent(new ClickEvent(
-                    ClickEvent.Action.SUGGEST_COMMAND,
-                    "/wynntils config set " + featureName + " overlay " + overlayName + " " + config.getFieldName()
-                            + " ")));
+            current.withStyle(style -> style.withClickEvent(new ClickEvent.SuggestCommand("/wynntils config set "
+                    + featureName + " overlay " + overlayName + " " + config.getFieldName() + " ")));
 
             response.append(current);
         }
@@ -504,8 +502,7 @@ public class ConfigCommand extends Command {
         for (Config<?> config : feature.getVisibleConfigOptions()) {
             MutableComponent current = getComponentForConfig(config);
 
-            current.withStyle(style -> style.withClickEvent(new ClickEvent(
-                    ClickEvent.Action.SUGGEST_COMMAND,
+            current.withStyle(style -> style.withClickEvent(new ClickEvent.SuggestCommand(
                     "/wynntils config set " + featureName + " " + config.getFieldName() + " ")));
 
             response.append(current);
@@ -520,8 +517,7 @@ public class ConfigCommand extends Command {
         for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature)) {
             MutableComponent current = getComponentForOverlay(overlay);
 
-            current.withStyle(style -> style.withClickEvent(new ClickEvent(
-                    ClickEvent.Action.SUGGEST_COMMAND,
+            current.withStyle(style -> style.withClickEvent(new ClickEvent.SuggestCommand(
                     "/wynntils config set " + featureName + " overlay " + overlay.getShortName() + " ")));
 
             response.append(current);
@@ -732,17 +728,15 @@ public class ConfigCommand extends Command {
         return Component.literal("\n - ")
                 .withStyle(ChatFormatting.GRAY)
                 .append(Component.literal(configNameString)
-                        .withStyle(style -> style.withHoverEvent(new HoverEvent(
-                                HoverEvent.Action.SHOW_TEXT,
-                                Component.literal("Description: " + config.getDescription())
+                        .withStyle(style -> style.withHoverEvent(
+                                new HoverEvent.ShowText(Component.literal("Description: " + config.getDescription())
                                         .withStyle(ChatFormatting.LIGHT_PURPLE))))
                         .withStyle(ChatFormatting.YELLOW)
                         .append(Component.literal(configTypeString).withStyle(ChatFormatting.WHITE))
                         .append(Component.literal(": "))
                         .append(Component.literal(valueString)
                                 .withStyle(ChatFormatting.GREEN)
-                                .withStyle(style -> style.withHoverEvent(new HoverEvent(
-                                        HoverEvent.Action.SHOW_TEXT,
+                                .withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(
                                         Component.literal("Click here to change this setting."))))));
     }
 

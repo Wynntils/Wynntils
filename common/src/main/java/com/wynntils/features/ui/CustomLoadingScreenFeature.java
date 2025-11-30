@@ -25,8 +25,8 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.DisconnectedScreen;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.ProgressScreen;
-import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -108,7 +108,7 @@ public class CustomLoadingScreenFeature extends Feature {
                 messageUpdate = "feature.wynntils.customLoadingScreen.transferRequest";
             }
         }
-        if (screen instanceof ReceivingLevelScreen) {
+        if (screen instanceof LevelLoadingScreen) {
             messageUpdate = "feature.wynntils.customLoadingScreen.receivingTerrain";
         }
 
@@ -127,7 +127,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
         // Make the screen think it is showing, but really don't let it show
         replacedScreen = screen;
-        screen.init(McUtils.mc(), 1, 1);
+        screen.init(1, 1);
         event.setCanceled(true);
     }
 

@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsListScreen;
@@ -124,19 +123,17 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        renderBackgroundTexture(guiGraphics);
 
-        renderBackgroundTexture(poseStack);
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.name"));
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.name"));
-
-        renderVersion(poseStack);
+        renderVersion(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsGuides.screenDescription"), "");
+        renderDescription(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.screenDescription"), "");
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
@@ -22,7 +23,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class EmeraldPouchHotkeyFeature extends Feature {
@@ -30,8 +30,7 @@ public class EmeraldPouchHotkeyFeature extends Feature {
     private static final int MULTIPLE_POUCHES = -2;
 
     @RegisterKeyBind
-    private final KeyBind emeraldPouchKeyBind =
-            new KeyBind("Open Emerald Pouch", GLFW.GLFW_KEY_UNKNOWN, true, this::onOpenPouchKeyPress);
+    private final KeyBind emeraldPouchKeyBind = KeyBindDefinition.OPEN_EMERALD_POUCH.create(this::onOpenPouchKeyPress);
 
     private void onOpenPouchKeyPress() {
         if (!Models.WorldState.onWorld()) return;

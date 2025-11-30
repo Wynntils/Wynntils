@@ -24,18 +24,17 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class ValuableFoundFeature extends Feature {
-    private static final ResourceLocation MYTHIC_FOUND_CLASSIC_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found-classic");
-    private static final ResourceLocation MYTHIC_FOUND_MODERN_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found-modern");
-    private static final ResourceLocation CACHE_FOUND_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "misc.cache-found");
+    private static final Identifier MYTHIC_FOUND_CLASSIC_ID =
+            Identifier.fromNamespaceAndPath("wynntils", "misc.mythic-found-classic");
+    private static final Identifier MYTHIC_FOUND_MODERN_ID =
+            Identifier.fromNamespaceAndPath("wynntils", "misc.mythic-found-modern");
+    private static final Identifier CACHE_FOUND_ID = Identifier.fromNamespaceAndPath("wynntils", "misc.cache-found");
 
     @Persisted
     private final Config<ValuableFoundSound> chestSound = new Config<>(ValuableFoundSound.MODERN);

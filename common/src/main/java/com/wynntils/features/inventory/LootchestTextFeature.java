@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -22,6 +21,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import net.minecraft.client.gui.GuiGraphics;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
@@ -36,33 +36,24 @@ public class LootchestTextFeature extends Feature {
     public void onRenderLootChest(ContainerRenderEvent event) {
         if (!(Models.Container.getCurrentContainer() instanceof LootChestContainer)) return;
 
-        int startX = event.getScreen().leftPos;
-        int startY = event.getScreen().topPos;
         int width = event.getScreen().imageWidth;
         int titleLabelX = event.getScreen().titleLabelX;
         int titleLabelY = event.getScreen().titleLabelY;
         int inventoryLabelX = event.getScreen().inventoryLabelX;
         int inventoryLabelY = event.getScreen().inventoryLabelY;
 
-        PoseStack poseStack = event.getPoseStack();
-
-        poseStack.pushPose();
-        poseStack.translate(startX, startY, 200);
-
-        renderTitleTemplate(event.getPoseStack(), width - titleLabelX, titleLabelY);
-        renderInventoryTemplate(event.getPoseStack(), width - inventoryLabelX, inventoryLabelY);
-
-        poseStack.popPose();
+        renderTitleTemplate(event.getGuiGraphics(), width - titleLabelX, titleLabelY);
+        renderInventoryTemplate(event.getGuiGraphics(), width - inventoryLabelX, inventoryLabelY);
     }
 
-    private void renderTitleTemplate(PoseStack poseStack, int x, int y) {
+    private void renderTitleTemplate(GuiGraphics guiGraphics, int x, int y) {
         String titleTemplateResult = Arrays.stream(Managers.Function.doFormatLines(titleTextTemplate.get()))
                 .map(StyledText::getString)
                 .collect(Collectors.joining(" "));
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(titleTemplateResult),
                         x,
                         y,
@@ -73,14 +64,14 @@ public class LootchestTextFeature extends Feature {
                         TextShadow.NONE);
     }
 
-    private void renderInventoryTemplate(PoseStack poseStack, int x, int y) {
+    private void renderInventoryTemplate(GuiGraphics guiGraphics, int x, int y) {
         String inventoryTemplateResult = Arrays.stream(Managers.Function.doFormatLines(inventoryTextTemplate.get()))
                 .map(StyledText::getString)
                 .collect(Collectors.joining(" "));
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(inventoryTemplateResult),
                         x,
                         y,

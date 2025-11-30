@@ -9,7 +9,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.guild.type.GuildLogType;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -31,14 +30,12 @@ public class LogButton extends BasicTexturedButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
-
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), logType.getIcon(), getX() + 3, getY() + 3);
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawTexturedRect(guiGraphics, logType.getIcon(), getX() + 3, getY() + 3);
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromString(logType.getDisplayName()),
                         getX() + width - 2,
                         getY() + height / 2f,
@@ -48,8 +45,8 @@ public class LogButton extends BasicTexturedButton {
                         TextShadow.NORMAL);
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(getTooltipLines(), Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 }

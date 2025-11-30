@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -31,7 +32,6 @@ import java.util.regex.Pattern;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
 public class CustomTerritoryManagementScreenFeature extends Feature {
@@ -43,8 +43,7 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     private static final int TERRITORY_MANAGEMENT_SLOT = 14;
 
     @RegisterKeyBind
-    private final KeyBind openTerritoryMenu =
-            new KeyBind("Open Territory Menu", GLFW.GLFW_KEY_U, true, this::updateTerritoryMenu);
+    private final KeyBind openTerritoryMenu = KeyBindDefinition.OPEN_TERRITORY_MENU.create(this::updateTerritoryMenu);
 
     @Persisted
     private final Config<ShiftBehavior> shiftBehaviorConfig = new Config<>(ShiftBehavior.DISABLED_IF_SHIFT_HELD);

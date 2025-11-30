@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -11,6 +11,7 @@ import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.HashedStack;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.inventory.ClickType;
@@ -49,8 +50,16 @@ public final class ContainerUtils {
      * same container!
      */
     public static void clickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
-        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
+        Int2ObjectMap<HashedStack> changedSlots = new Int2ObjectOpenHashMap<>();
+        changedSlots.put(
+                clickedSlot,
+                HashedStack.create(
+                        new ItemStack(Items.AIR), McUtils.mc().getConnection().decoratedHashOpsGenenerator()));
+
+        List<HashedStack> hashedItems = items.stream()
+                .map(itemStack -> HashedStack.create(
+                        itemStack, McUtils.mc().getConnection().decoratedHashOpsGenenerator()))
+                .toList();
 
         // FIXME: To expand usage of this function, the following variables needs to
         // be properly handled
@@ -59,43 +68,59 @@ public final class ContainerUtils {
         McUtils.sendPacket(new ServerboundContainerClickPacket(
                 containerId,
                 transactionId,
-                clickedSlot,
-                mouseButton,
+                (short) clickedSlot,
+                (byte) mouseButton,
                 ClickType.PICKUP,
-                items.get(clickedSlot),
-                changedSlots));
+                changedSlots,
+                hashedItems.get(clickedSlot)));
     }
 
     public static void shiftClickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
-        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
+        Int2ObjectMap<HashedStack> changedSlots = new Int2ObjectOpenHashMap<>();
+        changedSlots.put(
+                clickedSlot,
+                HashedStack.create(
+                        new ItemStack(Items.AIR), McUtils.mc().getConnection().decoratedHashOpsGenenerator()));
+
+        List<HashedStack> hashedItems = items.stream()
+                .map(itemStack -> HashedStack.create(
+                        itemStack, McUtils.mc().getConnection().decoratedHashOpsGenenerator()))
+                .toList();
 
         int transactionId = 0;
 
         McUtils.sendPacket(new ServerboundContainerClickPacket(
                 containerId,
                 transactionId,
-                clickedSlot,
-                mouseButton,
+                (short) clickedSlot,
+                (byte) mouseButton,
                 ClickType.QUICK_MOVE,
-                items.get(clickedSlot),
-                changedSlots));
+                changedSlots,
+                hashedItems.get(clickedSlot)));
     }
 
     public static void pressKeyOnSlot(int clickedSlot, int containerId, int buttonNum, List<ItemStack> items) {
-        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
+        Int2ObjectMap<HashedStack> changedSlots = new Int2ObjectOpenHashMap<>();
+        changedSlots.put(
+                clickedSlot,
+                HashedStack.create(
+                        new ItemStack(Items.AIR), McUtils.mc().getConnection().decoratedHashOpsGenenerator()));
+
+        List<HashedStack> hashedItems = items.stream()
+                .map(itemStack -> HashedStack.create(
+                        itemStack, McUtils.mc().getConnection().decoratedHashOpsGenenerator()))
+                .toList();
 
         int transactionId = 0;
 
         McUtils.sendPacket(new ServerboundContainerClickPacket(
                 containerId,
                 transactionId,
-                clickedSlot,
-                buttonNum,
+                (short) clickedSlot,
+                (byte) buttonNum,
                 ClickType.SWAP,
-                items.get(clickedSlot),
-                changedSlots));
+                changedSlots,
+                hashedItems.get(clickedSlot)));
     }
 
     public static void closeContainer(int containerId) {
