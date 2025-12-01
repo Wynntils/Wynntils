@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.upfixers.config;
@@ -12,7 +12,7 @@ import com.wynntils.core.persisted.upfixers.Upfixer;
 import com.wynntils.services.map.pois.CustomPoi;
 import java.util.Set;
 
-public class CustomPoiVisbilityUpfixer implements Upfixer {
+public class CustomPoiVisibilityUpfixer implements Upfixer {
     private static final String CUSTOM_POIS_ARRAY = "mapFeature.customPois";
     private static final String CUSTOM_POIS_VISIBILITY = "visibility";
     private static final String CUSTOM_POIS_MINZOOM = "minZoom";

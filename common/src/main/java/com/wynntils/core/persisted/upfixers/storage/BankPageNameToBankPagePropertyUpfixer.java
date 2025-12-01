@@ -17,7 +17,7 @@ public class BankPageNameToBankPagePropertyUpfixer implements Upfixer {
         "model.bank.customMiscBucketPage%s"
     };
 
-    private static final String CHARACTER_BANK_KEY_TEMPALTE = "model.bank.customCharacterBankPages%s";
+    private static final String CHARACTER_BANK_KEY_TEMPLATE = "model.bank.customCharacterBankPages%s";
 
     @Override
     public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
@@ -43,7 +43,7 @@ public class BankPageNameToBankPagePropertyUpfixer implements Upfixer {
     }
 
     private static void migrateCharacterBank(JsonObject configObject) {
-        String nameKey = String.format(CHARACTER_BANK_KEY_TEMPALTE, "Names");
+        String nameKey = String.format(CHARACTER_BANK_KEY_TEMPLATE, "Names");
 
         if (configObject.has(nameKey)) {
             JsonObject oldCharacters = configObject.get(nameKey).getAsJsonObject();
@@ -54,7 +54,7 @@ public class BankPageNameToBankPagePropertyUpfixer implements Upfixer {
                 newCharacters.add(characterId, createCustomizationsFromNames(names));
             }
 
-            String customizationKey = String.format(CHARACTER_BANK_KEY_TEMPALTE, "Customizations");
+            String customizationKey = String.format(CHARACTER_BANK_KEY_TEMPLATE, "Customizations");
 
             configObject.add(customizationKey, newCharacters);
             configObject.remove(nameKey);

@@ -107,7 +107,7 @@ public final class CombatXpModel extends Model {
     }
 
     private void updateCombatExperience(CombatExperienceSegment combatExperienceSegment) {
-        // We calculate prograss from the segment, as we can get a somewhat precise value from it.
+        // We calculate progress from the segment, as we can get a somewhat precise value from it.
         float progress = (float) combatExperienceSegment.getProgress().getProgress();
 
         // Note: There used to be progress correction here.

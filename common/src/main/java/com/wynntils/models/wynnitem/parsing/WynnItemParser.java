@@ -500,7 +500,7 @@ public final class WynnItemParser {
                 : 0;
 
         // Shiny stats are not available from internal roll lore (on other players)
-        return WynnItemParseResult.fromInternallRoll(identifications, powders, rerolls);
+        return WynnItemParseResult.fromInternalRoll(identifications, powders, rerolls);
     }
 
     public static CraftedItemParseResults parseCraftedItem(ItemStack itemStack) {

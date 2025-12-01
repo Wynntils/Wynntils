@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -28,10 +28,10 @@ public final class DownloadDependencyGraph {
     }
 
     public static DownloadDependencyGraph build(List<QueuedDownload> downloads) {
-        // Short circut on no downloads, to handle the edge-case one and for all in all sanity checks
+        // Short circuit on no downloads, to handle the edge-case one and for all in all sanity checks
         if (downloads.isEmpty()) return new DownloadDependencyGraph(List.of());
 
-        // Firsly, run sanity checks on the queued downloads to determine if a valid graph can be built
+        // Firstly, run sanity checks on the queued downloads to determine if a valid graph can be built
         // 1. Check for duplicate downloads
         checkDuplicateDownloads(downloads);
 
@@ -193,15 +193,15 @@ public final class DownloadDependencyGraph {
 
         // Downloading the same resource in different core components is not a direct confirmation of a schematic issue,
         // but is likely to be a mistake. Mark it as a warning and continue with the graph building
-        List<QueuedDownload> duplicatedDownloadsInSeparateComponenets = downloads.stream()
+        List<QueuedDownload> duplicatedDownloadsInSeparateComponents = downloads.stream()
                 .filter(download ->
                         downloads.stream().anyMatch(other -> download != other && download.urlId() == other.urlId()))
                 .toList();
 
-        if (!duplicatedDownloadsInSeparateComponenets.isEmpty()) {
+        if (!duplicatedDownloadsInSeparateComponents.isEmpty()) {
             WynntilsMod.warn("Multiple components downloaded the same data: "
-                    + duplicatedDownloadsInSeparateComponenets.getFirst().urlId() + ". Componenets: "
-                    + StringUtils.join(duplicatedDownloadsInSeparateComponenets.stream()
+                    + duplicatedDownloadsInSeparateComponents.getFirst().urlId() + ". Components: "
+                    + StringUtils.join(duplicatedDownloadsInSeparateComponents.stream()
                             .map(QueuedDownload::callerComponent)
                             .toList()));
         }

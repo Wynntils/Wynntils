@@ -75,8 +75,8 @@ public abstract class StatType {
     }
 
     public StatCalculationInfo getStatCalculationInfo(int baseValue) {
-        boolean usePostiveRange = baseValue > 0;
-        return usePostiveRange
+        boolean usePositiveRange = baseValue > 0;
+        return usePositiveRange
                 ? new StatCalculationInfo(
                         RangedValue.of(30, 130),
                         calculateAsInverted() ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
@@ -261,7 +261,7 @@ public final class StatListOrderer {
         List<StatType> allStats = new ArrayList<>();
         // We add skill stats in a special way
         // The legacy order is defined by Athena, and is missing all skill stats
-        // We can add them here, since they are guranteed to be fixed stats,
+        // We can add them here, since they are guaranteed to be fixed stats,
         // so it doesn't break the encoding order
         allStats.addAll(miscStats);
         allStats.addAll(defenceStats);

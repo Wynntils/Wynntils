@@ -10,7 +10,7 @@ import com.wynntils.models.worlds.actionbar.segments.CharacterWardrobeSegment;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CharacterWardrobeSegmentMacher implements ActionBarSegmentMatcher {
+public class CharacterWardrobeSegmentMatcher implements ActionBarSegmentMatcher {
     private static final Pattern CHARACTER_WARDROBE_PATTERN = Pattern.compile(
             "C\uDAFF\uDFFEh\uDAFF\uDFFEa\uDAFF\uDFFEr\uDAFF\uDFFEa\uDAFF\uDFFEc\uDAFF\uDFFEt\uDAFF\uDFFEe\uDAFF\uDFFEr W\uDAFF\uDFFEa\uDAFF\uDFFEr\uDAFF\uDFFEd\uDAFF\uDFFEr\uDAFF\uDFFEo\uDAFF\uDFFEb\uDAFF\uDFFEe");
 

@@ -34,7 +34,7 @@ public abstract class PlayerRendererMixin
             at = @At("RETURN"))
     private void onCtor(EntityRendererProvider.Context context, boolean bl, CallbackInfo ci) {
         // Note: This is needed because constructor is called in a static context, where class loading is unpredictable.
-        //       This makes it so events can't be used here, since this might happen before initalizing features.
+        //       This makes it so events can't be used here, since this might happen before initializing features.
         CosmeticsService.getRegisteredLayers()
                 .forEach(layerProvider -> this.addLayer(layerProvider.apply(this, context)));
     }

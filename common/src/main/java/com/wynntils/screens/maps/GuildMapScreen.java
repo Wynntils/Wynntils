@@ -343,7 +343,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             for (TerritoryPoi poi : advancementPois) {
                 TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(poi.getName());
 
-                // If the API and advamcement pois don't match, we use the API pois without advancement info
+                // If the API and advancement pois don't match, we use the API pois without advancement info
                 if (territoryProfile != null
                         && territoryProfile
                                 .getGuild()

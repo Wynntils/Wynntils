@@ -156,7 +156,7 @@ public class ConfigTile extends WynntilsButton {
     }
 
     private <E extends Enum<E>> AbstractWidget getWidgetFromConfig(Config<?> configOption) {
-        // Prioritise overlay configs so that the allignment enum configs use the screen instead
+        // Prioritise overlay configs so that the alignment enum configs use the screen instead
         // of the normal enum widget
         if (overlay != null && screen != null) {
             if (configOption.getType().equals(OverlayPosition.class)

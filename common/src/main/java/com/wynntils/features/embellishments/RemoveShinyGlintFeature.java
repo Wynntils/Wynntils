@@ -11,11 +11,9 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.mc.event.DataComponentGetEvent;
 import com.wynntils.models.items.properties.ShinyItemProperty;
-import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.DyedItemColor;
@@ -30,57 +28,53 @@ public class RemoveShinyGlintFeature extends Feature {
     @Persisted
     private final Config<Boolean> replaceGlint = new Config<>(true);
 
+    // Weapons use potion color
     @SubscribeEvent
-    public void onSetSlot(SetSlotEvent.Pre event) {
-        removeOrReplaceGlint(event.getItemStack());
+    public void onGetPotionContents(DataComponentGetEvent.PotionContents event) {
+        if (!hasShinyStat(event.getItemStack())) return;
+
+        PotionContents itemStackPotionContents = event.getOriginalValue();
+
+        Optional<Integer> potionColor = itemStackPotionContents.customColor();
+
+        if (potionColor.isEmpty()) return;
+        if (potionColor.get() != SHINY_GLINT_COLOR) return;
+
+        event.setValue(new PotionContents(
+                itemStackPotionContents.potion(),
+                Optional.empty(),
+                itemStackPotionContents.customEffects(),
+                itemStackPotionContents.customName()));
     }
 
-    @Override
-    public void onEnable() {
-        if (McUtils.player() == null) return;
+    // Armor uses dye color
+    @SubscribeEvent
+    public void onGetDyeColor(DataComponentGetEvent.DyedItemColor event) {
+        if (!hasShinyStat(event.getItemStack())) return;
 
-        McUtils.inventory().items.forEach(this::removeOrReplaceGlint);
+        DyedItemColor dyeColor = event.getOriginalValue();
+
+        if (dyeColor == null) return;
+        if (dyeColor.rgb() != SHINY_GLINT_COLOR) return;
+
+        event.setValue(null);
     }
 
-    private void removeOrReplaceGlint(ItemStack itemStack) {
+    @SubscribeEvent
+    public void onGetEnchantmentOverride(DataComponentGetEvent.EnchantmentGlintOverride event) {
+        if (!hasShinyStat(event.getItemStack())) return;
+
+        // Give it the enchanted effect similar to how shinies were displayed prior to the introduction of glints
+        if (replaceGlint.get()) {
+            event.setValue(true);
+        }
+    }
+
+    private boolean hasShinyStat(ItemStack itemStack) {
         Optional<ShinyItemProperty> shinyItemProperty =
                 Models.Item.asWynnItemProperty(itemStack, ShinyItemProperty.class);
 
-        if (shinyItemProperty.isEmpty()) return;
-        if (shinyItemProperty.isPresent()
-                && shinyItemProperty.get().getShinyStat().isEmpty()) return;
-
-        // Weapons use the potion contents DataComponent, armor uses the dye color
-        PotionContents itemStackPotionContents = itemStack.get(DataComponents.POTION_CONTENTS);
-        if (itemStackPotionContents == null) {
-            DyedItemColor dyeColor = itemStack.get(DataComponents.DYED_COLOR);
-
-            if (dyeColor == null) return;
-            if (dyeColor.rgb() != SHINY_GLINT_COLOR) return;
-
-            itemStack.remove(DataComponents.DYED_COLOR);
-
-            // Give it the enchanted effect similar to how shinies were displayed prior to the introduction of glints
-            if (replaceGlint.get()) {
-                itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
-            }
-        } else {
-            Optional<Integer> potionColor = itemStackPotionContents.customColor();
-
-            if (potionColor.isEmpty()) return;
-            if (potionColor.get() != SHINY_GLINT_COLOR) return;
-
-            PotionContents removedContents = new PotionContents(
-                    itemStackPotionContents.potion(),
-                    Optional.empty(),
-                    itemStackPotionContents.customEffects(),
-                    itemStackPotionContents.customName());
-            itemStack.set(DataComponents.POTION_CONTENTS, removedContents);
-
-            // Give it the enchanted effect similar to how shinies were displayed prior to the introduction of glints
-            if (replaceGlint.get()) {
-                itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
-            }
-        }
+        return shinyItemProperty.isPresent()
+                && shinyItemProperty.get().getShinyStat().isPresent();
     }
 }

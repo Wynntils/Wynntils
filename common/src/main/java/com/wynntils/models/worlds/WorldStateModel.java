@@ -16,7 +16,7 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionSegment;
-import com.wynntils.models.worlds.actionbar.matchers.CharacterWardrobeSegmentMacher;
+import com.wynntils.models.worlds.actionbar.matchers.CharacterWardrobeSegmentMatcher;
 import com.wynntils.models.worlds.actionbar.matchers.WynncraftVersionSegmentMatcher;
 import com.wynntils.models.worlds.actionbar.segments.CharacterWardrobeSegment;
 import com.wynntils.models.worlds.actionbar.segments.WynncraftVersionSegment;
@@ -66,7 +66,7 @@ public final class WorldStateModel extends Model {
         super(List.of());
 
         Handlers.ActionBar.registerSegment(new WynncraftVersionSegmentMatcher());
-        Handlers.ActionBar.registerSegment(new CharacterWardrobeSegmentMacher());
+        Handlers.ActionBar.registerSegment(new CharacterWardrobeSegmentMatcher());
         Handlers.BossBar.registerBar(skipCutsceneBar);
         Handlers.BossBar.registerBar(streamerModeBar);
     }

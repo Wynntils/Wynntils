@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.guild.event;
@@ -25,7 +25,7 @@ public class GuildEvent extends Event {
 
     /**
      * Fired upon the user leaving their guild
-     * @field guildName the name of the guiild left
+     * @field guildName the name of the guild left
      */
     public static class Left extends GuildEvent {
         private final String guildName;

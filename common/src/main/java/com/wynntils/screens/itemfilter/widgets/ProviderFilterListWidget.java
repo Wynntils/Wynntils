@@ -356,7 +356,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         filterPairs =
                 new ArrayList<>(newFilterpairs.stream().filter(Objects::nonNull).toList());
 
-        // Deactive the add buttons if there were empty widgets present (from filtering out null)
+        // Deactivate the add buttons if there were empty widgets present (from filtering out null)
         if (addStringFilterButton != null) {
             addStringFilterButton.active = filterPairs.size() == newFilterpairs.size();
         } else if (addNumericFilterButton != null) {

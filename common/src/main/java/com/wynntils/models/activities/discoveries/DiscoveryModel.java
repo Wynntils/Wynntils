@@ -60,7 +60,7 @@ public final class DiscoveryModel extends Model {
         List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
         for (ActivityInfo activity : newActivities) {
             if (activity.type() != ActivityType.TERRITORIAL_DISCOVERY) {
-                WynntilsMod.warn("Incorrect territory discovery activity type recieved: " + activity);
+                WynntilsMod.warn("Incorrect territory discovery activity type received: " + activity);
                 continue;
             }
             DiscoveryInfo discoveryInfo = getDiscoveryInfoFromActivity(activity);
@@ -79,7 +79,7 @@ public final class DiscoveryModel extends Model {
         List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
         for (ActivityInfo activity : newActivities) {
             if (activity.type() != ActivityType.WORLD_DISCOVERY) {
-                WynntilsMod.warn("Incorrect discovery activity type recieved: " + activity);
+                WynntilsMod.warn("Incorrect discovery activity type received: " + activity);
                 continue;
             }
             DiscoveryInfo discoveryInfo = getDiscoveryInfoFromActivity(activity);
@@ -98,7 +98,7 @@ public final class DiscoveryModel extends Model {
         List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
         for (ActivityInfo activity : newActivities) {
             if (activity.type() != ActivityType.SECRET_DISCOVERY) {
-                WynntilsMod.warn("Incorrect secret discovery activity type recieved: " + activity);
+                WynntilsMod.warn("Incorrect secret discovery activity type received: " + activity);
                 continue;
             }
             DiscoveryInfo discoveryInfo = getDiscoveryInfoFromActivity(activity);

@@ -171,7 +171,7 @@ public class MinimapOverlay extends Overlay {
         }
 
         // avoid rotational overpass - This is a rather loose oversizing, if possible later
-        // use trignometry, etc. to find a better one
+        // use trigonometry, etc. to find a better one
         float extraFactor = 1f;
         if (followPlayerRotation.get()) {
             // 1.5 > sqrt(2);

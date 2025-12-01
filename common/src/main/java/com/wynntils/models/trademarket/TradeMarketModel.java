@@ -83,8 +83,8 @@ public final class TradeMarketModel extends Model {
 
     private static final int PRICE_CHECK_SLOT = 51;
     private static final Set<String> MISSING_PRICE_DATA = Set.of(
-            " §7Price data is only availableafter an item is added",
-            " §7There is no price informationabout this item at the moment");
+            " §7Price data is only available after an item is added",
+            " §7There is no price information about this item at the moment");
     // Tests at TradeMarketModel_PRICE_CHECK_BID_PATTERN/TradeMarketModel_PRICE_CHECK_ASK_PATTERN
     private static final Pattern PRICE_CHECK_BID_PATTERN =
             Pattern.compile("§7Highest Buy Offer: §f([\\d,]+) §8\\(.+\\)");

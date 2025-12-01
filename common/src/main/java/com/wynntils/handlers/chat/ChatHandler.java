@@ -26,7 +26,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 /**
  * The responsibility of this class is to act as the first gateway for incoming
  * chat messages from Wynncraft. We need to solve two problems here. First,
- * Wyncraft will resend the entire chat history with new lines added at the end
+ * Wynncraft will resend the entire chat history with new lines added at the end
  * at certain situations, most notably when the user is in a NPC dialog. These
  * are called "pages" in this context. We need to detect these pages, and split
  * out the actual content, so it can be sent out as a NPC dialogue event.

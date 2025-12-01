@@ -34,7 +34,7 @@ public class SpellCastVignetteFeature extends Feature {
     private final Config<Float> vignetteIntensity = new Config<>(0.75f);
 
     @Persisted
-    private final Config<Float> maxItensityPercent = new Config<>(100f);
+    private final Config<Float> maxIntensityPercent = new Config<>(100f);
 
     @Persisted
     private final Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
@@ -57,7 +57,7 @@ public class SpellCastVignetteFeature extends Feature {
         int currentMana = Math.max(1, manaOpt.get().current());
 
         // An relativeCost of 1.0 means we just used all mana we have left
-        float relativeCost = Math.min((float) event.getManaCost() / currentMana, maxItensityPercent.get() / 100);
+        float relativeCost = Math.min((float) event.getManaCost() / currentMana, maxIntensityPercent.get() / 100);
         intensity = vignetteIntensity.get() * relativeCost;
         vignetteTimer = SHOW_VIGNETTE_TICKS;
     }

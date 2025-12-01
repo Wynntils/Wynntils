@@ -145,9 +145,7 @@ public final class PlayerModel extends Model {
             clearGhostCache();
 
             // Lookup self info here as PlayerJoinedWorldEvent will only be posted for self when off world
-            Player player = McUtils.player();
-            if (player == null || player.getUUID() == null) return;
-            loadUser(player.getUUID(), player.getScoreboardName());
+            loadSelf();
         }
     }
 
@@ -182,6 +180,21 @@ public final class PlayerModel extends Model {
 
         int world = Integer.parseInt(matcher.group(2));
         ghosts.put(uuid, world);
+    }
+
+    public void loadSelf() {
+        Player player = McUtils.player();
+        if (player == null) return;
+
+        UUID uuid = player.getUUID();
+        if (uuid == null) return;
+
+        // Remove old user data
+        users.remove(uuid);
+        usersWithoutWynntilsAccount.remove(uuid);
+        userFailures.remove(uuid);
+
+        loadUser(uuid, player.getScoreboardName());
     }
 
     private void loadUser(UUID uuid, String userName) {

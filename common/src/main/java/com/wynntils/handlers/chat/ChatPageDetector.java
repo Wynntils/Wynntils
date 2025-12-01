@@ -135,7 +135,7 @@ public final class ChatPageDetector {
     }
 
     private boolean isPartialPage(Deque<Component> collectedMessages) {
-        // We deeem it to be a partial page if there are less than 4 messages, and none of them are single-line,
+        // We deem it to be a partial page if there are less than 4 messages, and none of them are single-line,
         // and they all match the beginning of the page background. This is not perfect, but it is an
         // acceptable heuristic that will catch most of these odd cases.
         if (collectedMessages.size() >= PAGE_BACKGROUND_MESSAGES) return false;
