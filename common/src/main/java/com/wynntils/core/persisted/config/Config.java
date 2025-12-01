@@ -145,7 +145,7 @@ public class Config<T> extends PersistedValue<T> {
         return get().toString();
     }
 
-    public boolean wasUserEdited() {
+    public boolean userEdited() {
         return userEdited;
     }
 

@@ -264,7 +264,7 @@ public final class ConfigManager extends Manager {
 
     private void applyProfileDefaults() {
         for (Config<?> config : getConfigList()) {
-            if (!config.wasUserEdited()) {
+            if (!config.userEdited()) {
                 config.reset();
             }
         }
