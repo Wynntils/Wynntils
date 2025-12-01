@@ -46,6 +46,6 @@ public interface DataComponentHolderMixin {
         if (event == null) return;
 
         MixinHelper.post(event);
-        cir.setReturnValue(event.getNewValue());
+        cir.setReturnValue(event.getValue());
     }
 }

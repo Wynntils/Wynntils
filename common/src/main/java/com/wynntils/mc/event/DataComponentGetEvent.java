@@ -13,13 +13,13 @@ public abstract class DataComponentGetEvent<T> extends Event {
     private final ItemStack itemStack;
     private final DataComponentType<T> dataComponentType;
     private final T originalValue;
-    private T newValue;
+    private T value;
 
     protected DataComponentGetEvent(ItemStack itemStack, DataComponentType<T> dataComponentType, T originalValue) {
         this.itemStack = itemStack;
         this.dataComponentType = dataComponentType;
         this.originalValue = originalValue;
-        this.newValue = originalValue;
+        this.value = originalValue;
     }
 
     public ItemStack getItemStack() {
@@ -34,12 +34,12 @@ public abstract class DataComponentGetEvent<T> extends Event {
         return originalValue;
     }
 
-    public T getNewValue() {
-        return newValue;
+    public T getValue() {
+        return value;
     }
 
-    public void setNewValue(T newValue) {
-        this.newValue = newValue;
+    public void setValue(T newValue) {
+        this.value = newValue;
     }
 
     public static final class CustomModelData

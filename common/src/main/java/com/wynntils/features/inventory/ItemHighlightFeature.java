@@ -249,7 +249,7 @@ public class ItemHighlightFeature extends Feature {
                 .toList();
 
         if (!newStrings.equals(itemStackModelData.strings())) {
-            event.setNewValue(new CustomModelData(
+            event.setValue(new CustomModelData(
                     itemStackModelData.floats(), itemStackModelData.flags(), newStrings, itemStackModelData.colors()));
         }
     }

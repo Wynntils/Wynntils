@@ -44,7 +44,7 @@ public class RemoveShinyGlintFeature extends Feature {
         if (potionColor.isEmpty()) return;
         if (potionColor.get() != SHINY_GLINT_COLOR) return;
 
-        event.setNewValue(new PotionContents(
+        event.setValue(new PotionContents(
                 itemStackPotionContents.potion(),
                 Optional.empty(),
                 itemStackPotionContents.customEffects(),
@@ -66,7 +66,7 @@ public class RemoveShinyGlintFeature extends Feature {
         if (dyeColor == null) return;
         if (dyeColor.rgb() != SHINY_GLINT_COLOR) return;
 
-        event.setNewValue(null);
+        event.setValue(null);
     }
 
     @SubscribeEvent
@@ -80,7 +80,7 @@ public class RemoveShinyGlintFeature extends Feature {
 
         // Give it the enchanted effect similar to how shinies were displayed prior to the introduction of glints
         if (replaceGlint.get()) {
-            event.setNewValue(true);
+            event.setValue(true);
         }
     }
 }
