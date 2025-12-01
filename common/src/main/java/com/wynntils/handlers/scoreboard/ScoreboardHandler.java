@@ -10,6 +10,7 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.handlers.scoreboard.event.ScoreboardUpdatedEvent;
 import com.wynntils.handlers.scoreboard.type.ScoreboardLine;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.mc.event.ScoreboardEvent;
@@ -390,6 +391,8 @@ public final class ScoreboardHandler extends Handler {
                 separatorCount++;
             }
         }
+
+        WynntilsMod.postEvent(new ScoreboardUpdatedEvent(scoreboardSegments));
     }
 
     private ScoreboardPart getScoreboardPartForHeader(ScoreboardLine scoreboardLine) {
