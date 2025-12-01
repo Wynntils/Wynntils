@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.DataComponentGetEvent;
 import com.wynntils.models.items.properties.ShinyItemProperty;
 import java.util.Optional;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -30,12 +31,7 @@ public class RemoveShinyGlintFeature extends Feature {
     // Weapons use potion color
     @SubscribeEvent
     public void onGetPotionContents(DataComponentGetEvent.PotionContents event) {
-        Optional<ShinyItemProperty> shinyItemProperty =
-                Models.Item.asWynnItemProperty(event.getItemStack(), ShinyItemProperty.class);
-
-        if (shinyItemProperty.isEmpty()) return;
-        if (shinyItemProperty.isPresent()
-                && shinyItemProperty.get().getShinyStat().isEmpty()) return;
+        if (!hasShinyStat(event.getItemStack())) return;
 
         PotionContents itemStackPotionContents = event.getOriginalValue();
 
@@ -54,12 +50,7 @@ public class RemoveShinyGlintFeature extends Feature {
     // Armor uses dye color
     @SubscribeEvent
     public void onGetDyeColor(DataComponentGetEvent.DyedItemColor event) {
-        Optional<ShinyItemProperty> shinyItemProperty =
-                Models.Item.asWynnItemProperty(event.getItemStack(), ShinyItemProperty.class);
-
-        if (shinyItemProperty.isEmpty()) return;
-        if (shinyItemProperty.isPresent()
-                && shinyItemProperty.get().getShinyStat().isEmpty()) return;
+        if (!hasShinyStat(event.getItemStack())) return;
 
         DyedItemColor dyeColor = event.getOriginalValue();
 
@@ -71,16 +62,19 @@ public class RemoveShinyGlintFeature extends Feature {
 
     @SubscribeEvent
     public void onGetEnchantmentOverride(DataComponentGetEvent.EnchantmentGlintOverride event) {
-        Optional<ShinyItemProperty> shinyItemProperty =
-                Models.Item.asWynnItemProperty(event.getItemStack(), ShinyItemProperty.class);
-
-        if (shinyItemProperty.isEmpty()) return;
-        if (shinyItemProperty.isPresent()
-                && shinyItemProperty.get().getShinyStat().isEmpty()) return;
+        if (!hasShinyStat(event.getItemStack())) return;
 
         // Give it the enchanted effect similar to how shinies were displayed prior to the introduction of glints
         if (replaceGlint.get()) {
             event.setValue(true);
         }
+    }
+
+    private boolean hasShinyStat(ItemStack itemStack) {
+        Optional<ShinyItemProperty> shinyItemProperty =
+                Models.Item.asWynnItemProperty(itemStack, ShinyItemProperty.class);
+
+        return shinyItemProperty.isPresent()
+                && shinyItemProperty.get().getShinyStat().isPresent();
     }
 }
