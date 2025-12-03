@@ -17,6 +17,7 @@ import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -75,6 +76,9 @@ public final class ChatHandler extends Handler {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
+        // We don't want to reset on a new world join, only after leaving a world
+        if (event.getNewState() == WorldState.WORLD) return;
+
         pageDetector.reset();
         pageProcessor.reset();
     }
