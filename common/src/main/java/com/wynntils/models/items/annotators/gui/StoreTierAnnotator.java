@@ -5,6 +5,7 @@
 package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.gui.StoreItem;
@@ -23,7 +24,10 @@ public final class StoreTierAnnotator implements GuiItemAnnotator {
         if (lore.isEmpty()) return null;
 
         StyledText firstLine = lore.getFirst();
-        if (!firstLine.getFirstPart().getPartStyle().getFont().equals(RARITY_FONT)) return null;
+        StyledTextPart firstPart = firstLine.getFirstPart();
+
+        if (firstPart == null) return null;
+        if (!firstPart.getPartStyle().getFont().equals(RARITY_FONT)) return null;
 
         StoreTier tier = StoreTier.parseTier(firstLine.getStringWithoutFormatting());
         if (tier == null) return null;
