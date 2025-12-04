@@ -391,6 +391,6 @@ public final class ConfigManager extends Manager {
         if (hasPromptedProfile.get()) return;
 
         hasPromptedProfile.store(true);
-        McUtils.setScreen(ConfigProfileScreen.create(null));
+        McUtils.setScreen(ConfigProfileScreen.create(null, ConfigProfile.NEW_PLAYER));
     }
 }

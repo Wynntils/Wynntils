@@ -294,7 +294,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 offsetY + Texture.CONFIG_BOOK_BACKGROUND.height() - Texture.TAG_GREEN.height() - 20,
                 Texture.TAG_GREEN.width(),
                 Texture.TAG_GREEN.height(),
-                (b) -> McUtils.setScreen(ConfigProfileScreen.create(this)),
+                (b) -> McUtils.setScreen(ConfigProfileScreen.create(this, Managers.Config.getSelectedProfile())),
                 ComponentUtils.wrapTooltips(
                         List.of(
                                 Component.translatable("screens.wynntils.settingsScreen.profiles")

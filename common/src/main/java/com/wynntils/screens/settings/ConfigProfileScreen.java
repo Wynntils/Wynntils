@@ -4,24 +4,207 @@
  */
 package com.wynntils.screens.settings;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
+import com.wynntils.core.persisted.config.ConfigProfile;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.settings.widgets.ConfigProfileReturnButton;
+import com.wynntils.screens.settings.widgets.ConfigProfileWidget;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
+import org.joml.Vector2i;
+import org.lwjgl.glfw.GLFW;
 
 public class ConfigProfileScreen extends WynntilsScreen {
+    private static final ResourceLocation RIBBON_FONT = ResourceLocation.withDefaultNamespace("banner/ribbon");
+    private static final Component CONFIG_PROFILE_BANNER_BACKGROUND = Component.literal(
+                    "\uDAFF\uDFF9\uE060\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE035\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE062\uDAFF\uDF9E")
+            .withStyle(Style.EMPTY.withFont(RIBBON_FONT).withColor(ChatFormatting.AQUA));
+    private static final Component CONFIG_PROFILE_BANNER_FOREGROUND = Component.literal(
+                    "\uE012\uE004\uE00B\uE004\uE002\uE013 \uE000 \uE00F\uE011\uE00E\uE005\uE008\uE00B\uE004")
+            .withStyle(Style.EMPTY.withFont(RIBBON_FONT).withColor(ChatFormatting.BLACK));
+
+    private static final int SCROLL_SPEED = 10;
+    private static final int WIDGET_SPACING = 180;
+    private static final int BANNER_TARGET_Y = 10;
+
     private final Screen previousScreen;
 
-    private ConfigProfileScreen(Screen previousScreen) {
+    private boolean firstInit = true;
+    private ConfigProfile focusedProfile;
+    private int bannerY = -10;
+
+    private List<ConfigProfileWidget> configProfileWidgets = new ArrayList<>();
+    private final Map<ConfigProfile, Vector2i> targetPositions = new HashMap<>();
+
+    private ConfigProfileScreen(Screen previousScreen, ConfigProfile focusedProfile) {
         super(Component.translatable("screens.wynntils.configProfilesScreen.name"));
 
         this.previousScreen = previousScreen;
+        this.focusedProfile = focusedProfile;
     }
 
-    public static Screen create(Screen previousScreen) {
-        return new ConfigProfileScreen(previousScreen);
+    public static Screen create(Screen previousScreen, ConfigProfile focusedProfile) {
+        return new ConfigProfileScreen(previousScreen, focusedProfile);
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {}
+    protected void doInit() {
+        super.doInit();
+
+        this.addRenderableWidget(new ConfigProfileReturnButton(this.width / 2 - 40, this.height - 22, 80, 20, this));
+
+        if (firstInit) {
+            populateProfiles();
+            firstInit = false;
+        } else {
+            updateTargetPositions();
+            snapToTargets();
+        }
+    }
+
+    @Override
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+
+        if (bannerY < BANNER_TARGET_Y) {
+            bannerY = Math.min(bannerY + 1, BANNER_TARGET_Y);
+        }
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics.pose(),
+                        StyledText.fromComponent(CONFIG_PROFILE_BANNER_BACKGROUND)
+                                .append(StyledText.fromComponent(CONFIG_PROFILE_BANNER_FOREGROUND)),
+                        this.width / 2f,
+                        bannerY,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
+                        TextShadow.OUTLINE,
+                        2f);
+
+        for (ConfigProfileWidget widget : configProfileWidgets) {
+            int targetX = targetPositions.get(widget.getProfile()).x();
+            int currentX = widget.getX();
+
+            if (currentX < targetX) {
+                widget.setX(Math.min(currentX + SCROLL_SPEED, targetX));
+            } else if (currentX > targetX) {
+                widget.setX(Math.max(currentX - SCROLL_SPEED, targetX));
+            }
+
+            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
+    }
+
+    @Override
+    public void onClose() {
+        McUtils.setScreen(previousScreen);
+    }
+
+    @Override
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        for (ConfigProfileWidget widget : configProfileWidgets) {
+            if (widget.isMouseOver(mouseX, mouseY)) {
+                return widget.mouseClicked(mouseX, mouseY, button);
+            }
+        }
+
+        for (GuiEventListener listener : this.children()) {
+            if (listener.isMouseOver(mouseX, mouseY)) {
+                return listener.mouseClicked(mouseX, mouseY, button);
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        updateFocusedProfile((int) -Math.signum(deltaY));
+
+        return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (McUtils.options().keyLeft.matches(keyCode, scanCode) || keyCode == GLFW.GLFW_KEY_LEFT) {
+            updateFocusedProfile(-1);
+        } else if (McUtils.options().keyRight.matches(keyCode, scanCode) || keyCode == GLFW.GLFW_KEY_RIGHT) {
+            updateFocusedProfile(1);
+        } else if (keyCode == GLFW.GLFW_KEY_SPACE || keyCode == GLFW.GLFW_KEY_ENTER) {
+            Managers.Config.setSelectedProfile(focusedProfile);
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    private void updateFocusedProfile(int direction) {
+        int index = focusedProfile.ordinal();
+
+        if (direction < 0 && index == 0) return;
+        if (direction > 0 && index == ConfigProfile.values().length - 1) return;
+
+        focusedProfile = ConfigProfile.values()[index + direction];
+        updateTargetPositions();
+    }
+
+    private void updateTargetPositions() {
+        targetPositions.clear();
+
+        ConfigProfile[] profiles = ConfigProfile.values();
+        int focusedIndex = focusedProfile.ordinal();
+
+        int centerX = this.width / 2;
+        int focusedX = (int) (centerX - Texture.CONFIG_PROFILE_BACKGROUND.width() / 2f);
+        int centerY = this.height / 2 - 105 + 10;
+
+        targetPositions.put(focusedProfile, new Vector2i(focusedX, centerY));
+
+        int leftX = focusedX - WIDGET_SPACING;
+        for (int i = focusedIndex - 1; i >= 0; i--) {
+            targetPositions.put(profiles[i], new Vector2i(leftX, centerY));
+            leftX -= WIDGET_SPACING;
+        }
+
+        int rightX = focusedX + WIDGET_SPACING;
+        for (int i = focusedIndex + 1; i < profiles.length; i++) {
+            targetPositions.put(profiles[i], new Vector2i(rightX, centerY));
+            rightX += WIDGET_SPACING;
+        }
+    }
+
+    private void snapToTargets() {
+        for (ConfigProfileWidget widget : configProfileWidgets) {
+            widget.setX(targetPositions.get(widget.getProfile()).x());
+            widget.setY(targetPositions.get(widget.getProfile()).y());
+        }
+    }
+
+    private void populateProfiles() {
+        configProfileWidgets.clear();
+
+        for (ConfigProfile profile : ConfigProfile.values()) {
+            configProfileWidgets.add(new ConfigProfileWidget(0, this.height / 2 - 105 + 10, profile));
+        }
+
+        updateTargetPositions();
+    }
 }

@@ -661,7 +661,8 @@ public class ConfigCommand extends Command {
 
     private int openProfilesScreen(CommandContext<CommandSourceStack> context) {
         // Delay is needed to prevent chat screen overwriting the new screen
-        Managers.TickScheduler.scheduleLater(() -> McUtils.setScreen(ConfigProfileScreen.create(null)), 2);
+        Managers.TickScheduler.scheduleLater(
+                () -> McUtils.setScreen(ConfigProfileScreen.create(null, Managers.Config.getSelectedProfile())), 2);
         return 1;
     }
 
