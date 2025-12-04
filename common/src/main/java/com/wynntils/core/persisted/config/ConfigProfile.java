@@ -10,8 +10,8 @@ import net.minecraft.client.resources.language.I18n;
 public enum ConfigProfile {
     DEFAULT,
     NEW_PLAYER,
-    LITE,
-    LITE_FULL;
+    MINIMAL,
+    LITE;
 
     public String getShortDescription() {
         return I18n.get("core.wynntils.profile." + this.name().toLowerCase(Locale.ROOT) + ".shortDescription");
