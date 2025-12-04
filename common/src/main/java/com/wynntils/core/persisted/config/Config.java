@@ -10,6 +10,8 @@ import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.type.PersistedMetadata;
 import com.wynntils.utils.EnumUtils;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 import net.minecraft.client.resources.language.I18n;
@@ -18,9 +20,15 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 
 public class Config<T> extends PersistedValue<T> {
     private boolean userEdited = false;
+    private final Map<ConfigProfile, T> profileDefaults = new EnumMap<>(ConfigProfile.class);
 
     public Config(T value) {
         super(value);
+    }
+
+    public Config<T> withDefault(ConfigProfile profile, T value) {
+        profileDefaults.put(profile, value);
+        return this;
     }
 
     @Override
@@ -54,11 +62,7 @@ public class Config<T> extends PersistedValue<T> {
     }
 
     public void reset() {
-        T defaultValue = getMetadata().defaultValue();
-
-        // deep copy because writeField set's the field to be our default value instance when resetting, making default
-        // value change with the field's actual value
-        setValue(Managers.Json.deepCopy(defaultValue, getMetadata().valueType()));
+        setValue(getDefaultValue());
         // reset this flag so option is no longer saved to file
         this.userEdited = false;
     }
@@ -74,7 +78,7 @@ public class Config<T> extends PersistedValue<T> {
 
         // FIXME: I guess at this point the userEdited change would suffice,
         // but check this carefully before removing the old logic below.
-        T defaultValue = getMetadata().defaultValue();
+        T defaultValue = getDefaultValue();
         boolean deepEquals = Objects.deepEquals(get(), defaultValue);
 
         if (deepEquals) {
@@ -99,7 +103,18 @@ public class Config<T> extends PersistedValue<T> {
     }
 
     public T getDefaultValue() {
-        return getMetadata().defaultValue();
+        PersistedMetadata<T> metadata = getMetadata();
+        T defaultValue = metadata.defaultValue();
+
+        Map<ConfigProfile, T> defaultsForProfiles = metadata.profileDefaultValues();
+        if (!defaultsForProfiles.isEmpty()) {
+            T profileDefault = defaultsForProfiles.get(Managers.Config.getSelectedProfile());
+            if (profileDefault != null) {
+                defaultValue = profileDefault;
+            }
+        }
+
+        return Managers.Json.deepCopy(defaultValue, metadata.valueType());
     }
 
     public String getDisplayName() {
@@ -130,6 +145,10 @@ public class Config<T> extends PersistedValue<T> {
         return get().toString();
     }
 
+    public boolean userEdited() {
+        return userEdited;
+    }
+
     public <E extends Enum<E>> T tryParseStringValue(String value) {
         if (isEnum()) {
             return (T) EnumUtils.fromJsonFormat((Class<E>) getType(), value);
@@ -155,5 +174,9 @@ public class Config<T> extends PersistedValue<T> {
 
     private PersistedMetadata<T> getMetadata() {
         return Managers.Persisted.getMetadata(this);
+    }
+
+    public Map<ConfigProfile, T> getProfileDefaultValues() {
+        return profileDefaults;
     }
 }
