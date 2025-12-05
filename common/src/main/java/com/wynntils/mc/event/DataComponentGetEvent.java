@@ -57,7 +57,7 @@ public abstract class DataComponentGetEvent<T> extends Event {
     }
 
     public static final class EnchantmentGlintOverride extends DataComponentGetEvent<Boolean> {
-        public EnchantmentGlintOverride(ItemStack itemStack, boolean original) {
+        public EnchantmentGlintOverride(ItemStack itemStack, Boolean original) {
             super(itemStack, DataComponents.ENCHANTMENT_GLINT_OVERRIDE, original);
         }
     }

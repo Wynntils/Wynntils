@@ -38,7 +38,8 @@ public interface DataComponentHolderMixin {
             event = new DataComponentGetEvent.DyedItemColor(stack, dye);
         } else if (type == DataComponents.ENCHANTMENT_GLINT_OVERRIDE) {
             // Original will always be null for items that do not have an override
-            event = new DataComponentGetEvent.EnchantmentGlintOverride(stack, original != null);
+            event = new DataComponentGetEvent.EnchantmentGlintOverride(
+                    stack, original == null ? null : (Boolean) original);
         } else if (type == DataComponents.POTION_CONTENTS && original instanceof PotionContents pc) {
             event = new DataComponentGetEvent.PotionContents(stack, pc);
         }
