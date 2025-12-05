@@ -10,6 +10,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -21,7 +22,6 @@ import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
-import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -62,16 +62,15 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.CHAT)
 public class ChatItemFeature extends Feature {
     @RegisterKeyBind
-    private final KeyBind shareItemKeybind =
-            new KeyBind("Share Item", GLFW.GLFW_KEY_F3, true, null, slot -> shareItem(slot, true));
+    private final KeyBind shareItemKeybind = KeyBindDefinition.SHARE_ITEM.create(slot -> shareItem(slot, true));
 
     @RegisterKeyBind
     private final KeyBind saveItemKeybind =
-            new KeyBind("Save Item to Item Record", GLFW.GLFW_KEY_F6, true, null, slot -> shareItem(slot, false));
+            KeyBindDefinition.SAVE_ITEM_TO_RECORD.create(slot -> shareItem(slot, false));
 
     @RegisterKeyBind
-    private final KeyBind itemRecordKeybind = new KeyBind(
-            "Open Item Record", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.setScreen(SavedItemsScreen.create()));
+    private final KeyBind itemRecordKeybind =
+            KeyBindDefinition.OPEN_ITEM_RECORD.create(() -> McUtils.setScreen(SavedItemsScreen.create()));
 
     @Persisted
     private final Config<Boolean> showSharingScreen = new Config<>(true);
@@ -230,9 +229,8 @@ public class ChatItemFeature extends Feature {
         // Display the original string with a red underline and a tooltip with the error message
         Style style = Style.EMPTY.applyFormat(ChatFormatting.UNDERLINE).withColor(ChatFormatting.RED);
 
-        HoverEvent hoverEvent = new HoverEvent(
-                HoverEvent.Action.SHOW_TEXT, Component.literal(error).withStyle(ChatFormatting.RED));
-        style = style.withHoverEvent(hoverEvent);
+        style = style.withHoverEvent(
+                new HoverEvent.ShowText(Component.literal(error).withStyle(ChatFormatting.RED)));
 
         return new StyledTextPart(originalString, style, null, Style.EMPTY);
     }
@@ -271,9 +269,7 @@ public class ChatItemFeature extends Feature {
         }
 
         ItemStack itemStack = new FakeItemStack(wynnItem, "From chat");
-        HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(itemStack);
-        ((ItemStackInfoAccessor) itemHoverEvent).setItemStack(itemStack);
-        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent));
+        style = style.withHoverEvent(new HoverEvent.ShowItem(itemStack));
 
         // Add the item name
         StyledText appendedNameText =
@@ -308,12 +304,10 @@ public class ChatItemFeature extends Feature {
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chatItem.chatItemMessage")
                 .withStyle(ChatFormatting.DARK_GREEN)
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(s -> s.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.COPY_TO_CLIPBOARD,
+                .withStyle(s -> s.withClickEvent(new ClickEvent.CopyToClipboard(
                         Models.ItemEncoding.makeItemString(wynnItem, errorOrEncodedByteBuffer.getValue()))))
-                .withStyle(s -> s.withHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT,
-                        Component.translatable("feature.wynntils.chatItem.chatItemTooltip")
+                .withStyle(s -> s.withHoverEvent(
+                        new HoverEvent.ShowText(Component.translatable("feature.wynntils.chatItem.chatItemTooltip")
                                 .withStyle(ChatFormatting.DARK_AQUA)))));
     }
 }

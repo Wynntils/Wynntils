@@ -69,8 +69,7 @@ public class DataCrowdSourcingFeature extends Feature {
                 .append(Component.literal("here.")
                         .withStyle(ChatFormatting.GREEN)
                         .withStyle(ChatFormatting.UNDERLINE)
-                        .withStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils crowdsourcing"))));
+                        .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/wynntils crowdsourcing"))));
 
         McUtils.sendMessageToClient(component);
     }

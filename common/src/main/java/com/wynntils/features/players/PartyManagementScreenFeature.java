@@ -8,6 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -16,18 +17,16 @@ import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.screens.partymanagement.PartyManagementScreen;
 import com.wynntils.utils.mc.McUtils;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.PLAYERS)
 public class PartyManagementScreenFeature extends Feature {
     private PartyManagementScreen partyManagementScreen;
 
     @RegisterKeyBind
-    private final KeyBind openPartyManagementScreen =
-            new KeyBind("Open Party Management Screen", GLFW.GLFW_KEY_O, true, () -> {
-                partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
-                McUtils.setScreen(partyManagementScreen);
-            });
+    private final KeyBind openPartyManagementScreen = KeyBindDefinition.OPEN_PARTY_MANAGEMENT.create(() -> {
+        partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
+        McUtils.setScreen(partyManagementScreen);
+    });
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent.Post e) {

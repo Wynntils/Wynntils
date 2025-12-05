@@ -5,7 +5,6 @@
 package com.wynntils.overlays.objectives;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -18,9 +17,8 @@ import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
@@ -69,8 +67,6 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
             GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         List<WynnObjective> objectives = Models.Objectives.getPersonalObjectives();
 
-        PoseStack poseStack = guiGraphics.pose();
-
         final int barHeight = this.enableProgressBar.get() ? 5 : 0;
         final int barWidth = 182;
         final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
@@ -102,10 +98,9 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
             float renderY = offsetY + this.getRenderY();
 
             final String text = objective.asObjectiveString();
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(text),
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
@@ -122,9 +117,8 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
             }
 
             if (this.enableProgressBar.get()) {
-                BufferedRenderUtils.drawProgressBar(
-                        poseStack,
-                        bufferSource,
+                RenderUtils.drawProgressBar(
+                        guiGraphics,
                         Texture.EXPERIENCE_BAR,
                         this.getRenderX(),
                         renderY + SPACE_BETWEEN,
