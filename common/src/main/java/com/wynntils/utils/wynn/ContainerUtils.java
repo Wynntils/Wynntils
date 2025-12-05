@@ -51,15 +51,10 @@ public final class ContainerUtils {
      */
     public static void clickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
         Int2ObjectMap<HashedStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(
-                clickedSlot,
-                HashedStack.create(
-                        new ItemStack(Items.AIR), McUtils.mc().getConnection().decoratedHashOpsGenenerator()));
+        changedSlots.put(clickedSlot, ItemUtils.createHashedItem(new ItemStack(Items.AIR)));
 
-        List<HashedStack> hashedItems = items.stream()
-                .map(itemStack -> HashedStack.create(
-                        itemStack, McUtils.mc().getConnection().decoratedHashOpsGenenerator()))
-                .toList();
+        List<HashedStack> hashedItems =
+                items.stream().map(ItemUtils::createHashedItem).toList();
 
         // FIXME: To expand usage of this function, the following variables needs to
         // be properly handled
@@ -77,15 +72,10 @@ public final class ContainerUtils {
 
     public static void shiftClickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
         Int2ObjectMap<HashedStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(
-                clickedSlot,
-                HashedStack.create(
-                        new ItemStack(Items.AIR), McUtils.mc().getConnection().decoratedHashOpsGenenerator()));
+        changedSlots.put(clickedSlot, ItemUtils.createHashedItem(new ItemStack(Items.AIR)));
 
-        List<HashedStack> hashedItems = items.stream()
-                .map(itemStack -> HashedStack.create(
-                        itemStack, McUtils.mc().getConnection().decoratedHashOpsGenenerator()))
-                .toList();
+        List<HashedStack> hashedItems =
+                items.stream().map(ItemUtils::createHashedItem).toList();
 
         int transactionId = 0;
 
@@ -101,15 +91,10 @@ public final class ContainerUtils {
 
     public static void pressKeyOnSlot(int clickedSlot, int containerId, int buttonNum, List<ItemStack> items) {
         Int2ObjectMap<HashedStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(
-                clickedSlot,
-                HashedStack.create(
-                        new ItemStack(Items.AIR), McUtils.mc().getConnection().decoratedHashOpsGenenerator()));
+        changedSlots.put(clickedSlot, ItemUtils.createHashedItem(new ItemStack(Items.AIR)));
 
-        List<HashedStack> hashedItems = items.stream()
-                .map(itemStack -> HashedStack.create(
-                        itemStack, McUtils.mc().getConnection().decoratedHashOpsGenenerator()))
-                .toList();
+        List<HashedStack> hashedItems =
+                items.stream().map(ItemUtils::createHashedItem).toList();
 
         int transactionId = 0;
 

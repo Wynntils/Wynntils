@@ -31,9 +31,7 @@ public final class InventoryUtils {
     public static void sendInventorySlotMouseClick(int slotNumber, MouseClickType mouseButton) {
         Int2ObjectMap<HashedStack> changedSlots = new Int2ObjectOpenHashMap<>();
         ItemStack itemStack = McUtils.inventory().getItem(slotNumber);
-        changedSlots.put(
-                slotNumber,
-                HashedStack.create(itemStack, McUtils.mc().getConnection().decoratedHashOpsGenenerator()));
+        changedSlots.put(slotNumber, ItemUtils.createHashedItem(itemStack));
 
         McUtils.sendPacket(new ServerboundContainerClickPacket(
                 McUtils.inventoryMenu().containerId,
