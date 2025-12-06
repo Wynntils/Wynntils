@@ -68,11 +68,11 @@ public record CharacterData(
             int xpPercent = jsonObject.get("xpPercent").getAsInt();
             int totalLevel = jsonObject.get("totalLevel").getAsInt();
 
-            JsonArray gamemodesArray = jsonObject.getAsJsonArray("gamemodes");
+            JsonArray gamemodesArray = jsonObject.getAsJsonArray("gamemode");
 
             Set<CharacterGamemode> gamemodes = new HashSet<>();
             for (JsonElement gamemodeElement : gamemodesArray) {
-                gamemodes.add(CharacterGamemode.valueOf(gamemodeElement.getAsString()));
+                gamemodes.add(CharacterGamemode.fromApiName(gamemodeElement.getAsString()));
             }
 
             Optional<Integer> contentCompletion =
@@ -111,8 +111,12 @@ public record CharacterData(
             Optional<PvpData> pvpData = Optional.empty();
             if (jsonObject.has("pvp")) {
                 JsonObject pvpObj = jsonObject.getAsJsonObject("pvp");
-                int pvpKills = pvpObj.get("kills").getAsInt();
-                int pvpDeaths = pvpObj.get("deaths").getAsInt();
+                int pvpKills = pvpObj.get("kills").isJsonNull()
+                        ? 0
+                        : pvpObj.get("kills").getAsInt();
+                int pvpDeaths = pvpObj.get("deaths").isJsonNull()
+                        ? 0
+                        : pvpObj.get("deaths").getAsInt();
                 pvpData = Optional.of(new PvpData(pvpKills, pvpDeaths));
             }
 
