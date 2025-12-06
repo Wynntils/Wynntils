@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -11,7 +11,8 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.commands.Command;
-import com.wynntils.models.players.type.WynnPlayerInfo;
+import com.wynntils.models.players.type.wynnplayer.PlayerGuildInfo;
+import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.utils.DateFormatter;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
@@ -21,7 +22,9 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 
 public class PlayerCommand extends Command {
@@ -81,21 +84,24 @@ public class PlayerCommand extends Command {
 
                 MutableComponent response = Component.literal(player.username()).withStyle(ChatFormatting.DARK_AQUA);
 
-                if (player.guildName() != null) {
+                if (player.guildInfo().isPresent()) {
+                    PlayerGuildInfo playerGuildInfo = player.guildInfo().get();
+
                     response.append(Component.literal(" is a ")
                             .withStyle(ChatFormatting.GRAY)
-                            .append(Component.literal(player.guildRank().getGuildDescription())
+                            .append(Component.literal(
+                                            playerGuildInfo.guildRank().getGuildDescription())
                                     .withStyle(ChatFormatting.AQUA)
                                     .append(Component.literal(" of ")
                                             .withStyle(ChatFormatting.GRAY)
-                                            .append(Component.literal(
-                                                            player.guildName() + " [" + player.guildPrefix() + "]")
+                                            .append(Component.literal(playerGuildInfo.guildName() + " ["
+                                                            + playerGuildInfo.guildPrefix() + "]")
                                                     .withStyle(ChatFormatting.AQUA)))));
 
                     // Should only be null if the player lookup succeeded but the guild lookup did not
-                    if (player.guildJoinTimestamp() != null) {
+                    if (playerGuildInfo.guildJoinTimestamp().isPresent()) {
                         long differenceInMillis = System.currentTimeMillis()
-                                - player.guildJoinTimestamp().toEpochMilli();
+                                - playerGuildInfo.guildJoinTimestamp().get().toEpochMilli();
 
                         response.append(Component.literal("\nThey have been in the guild for ")
                                 .withStyle(ChatFormatting.GRAY)
@@ -143,14 +149,27 @@ public class PlayerCommand extends Command {
                     response.append(Component.literal(" is online on ")
                             .withStyle(ChatFormatting.GRAY)
                             .append(Component.literal(player.server()).withStyle(ChatFormatting.GOLD)));
-                } else {
+                } else if (player.lastJoinTimestamp().isPresent()) {
                     long differenceInMillis = System.currentTimeMillis()
-                            - player.lastJoinTimestamp().toEpochMilli();
+                            - player.lastJoinTimestamp().get().toEpochMilli();
 
                     response.append(Component.literal(" was last seen ").withStyle(ChatFormatting.GRAY))
                             .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
                                     .withStyle(ChatFormatting.GOLD)
                                     .append(Component.literal("ago").withStyle(ChatFormatting.GRAY)));
+                } else {
+                    response.append(Component.literal(" has made their last login private.")
+                                    .withStyle(ChatFormatting.GRAY))
+                            .append(Component.literal(
+                                            "\nIf you think you should be able to see this, add your Wynncraft API Token to ")
+                                    .withStyle(ChatFormatting.RED))
+                            .append(Component.literal("Wynntils Secrets").withStyle(style -> style.withHoverEvent(
+                                            new HoverEvent(
+                                                    HoverEvent.Action.SHOW_TEXT,
+                                                    Component.literal("Click to open secrets menu.")))
+                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils secrets"))
+                                    .withColor(ChatFormatting.GOLD)
+                                    .withUnderlined(true)));
                 }
 
                 McUtils.sendMessageToClient(response);
