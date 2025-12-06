@@ -261,6 +261,28 @@ public final class PlayerModel extends Model {
         return future;
     }
 
+    public CompletableFuture<WynnPlayerInfo> getPlayerFullInfo(String identifier) {
+        CompletableFuture<WynnPlayerInfo> future = new CompletableFuture<>();
+
+        Map<String, String> authHeader = new HashMap<>();
+        String apiToken = Services.Secrets.getSecret(WynntilsSecret.WYNNCRAFT_API_TOKEN);
+        if (!apiToken.isEmpty()) {
+            authHeader.put("Authorization", "Bearer " + apiToken);
+        }
+
+        ApiResponse apiResponse = Managers.Net.callApi(
+                UrlId.DATA_WYNNCRAFT_PLAYER_FULL_RESULTS, Map.of("identifier", identifier), authHeader);
+        apiResponse.handleJsonObject(
+                json -> {
+                    Type type = new TypeToken<WynnPlayerInfo>() {}.getType();
+
+                    future.complete(PLAYER_GSON.fromJson(json, type));
+                },
+                onError -> future.complete(null));
+
+        return future;
+    }
+
     private void saveUserFailures(UUID uuid, String userName) {
         userFailures.putIfAbsent(uuid, 0);
         userFailures.compute(uuid, (k, v) -> v + 1);
