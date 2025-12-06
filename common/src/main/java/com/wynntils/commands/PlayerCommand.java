@@ -11,6 +11,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.models.players.type.wynnplayer.PlayerGuildInfo;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.utils.DateFormatter;
 import com.wynntils.utils.mc.McUtils;
@@ -83,23 +84,24 @@ public class PlayerCommand extends Command {
 
                 MutableComponent response = Component.literal(player.username()).withStyle(ChatFormatting.DARK_AQUA);
 
-                if (player.guildInfo().guildName() != null) {
+                if (player.guildInfo().isPresent()) {
+                    PlayerGuildInfo playerGuildInfo = player.guildInfo().get();
+
                     response.append(Component.literal(" is a ")
                             .withStyle(ChatFormatting.GRAY)
                             .append(Component.literal(
-                                            player.guildInfo().guildRank().getGuildDescription())
+                                            playerGuildInfo.guildRank().getGuildDescription())
                                     .withStyle(ChatFormatting.AQUA)
                                     .append(Component.literal(" of ")
                                             .withStyle(ChatFormatting.GRAY)
-                                            .append(Component.literal(player.guildInfo()
-                                                                    .guildName() + " ["
-                                                            + player.guildInfo().guildPrefix() + "]")
+                                            .append(Component.literal(playerGuildInfo.guildName() + " ["
+                                                            + playerGuildInfo.guildPrefix() + "]")
                                                     .withStyle(ChatFormatting.AQUA)))));
 
                     // Should only be null if the player lookup succeeded but the guild lookup did not
-                    if (player.guildInfo().guildJoinTimestamp().isPresent()) {
+                    if (playerGuildInfo.guildJoinTimestamp().isPresent()) {
                         long differenceInMillis = System.currentTimeMillis()
-                                - player.guildInfo().guildJoinTimestamp().get().toEpochMilli();
+                                - playerGuildInfo.guildJoinTimestamp().get().toEpochMilli();
 
                         response.append(Component.literal("\nThey have been in the guild for ")
                                 .withStyle(ChatFormatting.GRAY)

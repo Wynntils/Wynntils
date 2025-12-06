@@ -41,7 +41,7 @@ public record WynnPlayerInfo(
         String supportRank,
         boolean veteran,
         Optional<Instant> lastJoinTimestamp,
-        PlayerGuildInfo guildInfo,
+        Optional<PlayerGuildInfo> guildInfo,
         Map<LeaderboardType, Integer> leaderboardPlacements,
         Optional<Instant> firstJoinTimestamp,
         Optional<Double> playtime,
@@ -92,7 +92,7 @@ public record WynnPlayerInfo(
                         ? Optional.empty()
                         : Optional.of(Instant.parse(jsonObject.get("lastJoin").getAsString()));
 
-                PlayerGuildInfo guildInfo = null;
+                Optional<PlayerGuildInfo> guildInfo = Optional.empty();
 
                 if (!jsonObject.get("guild").isJsonNull()) {
                     JsonObject guildInfoObj = jsonObject.getAsJsonObject("guild");
@@ -125,7 +125,8 @@ public record WynnPlayerInfo(
                         guildJoinTimestamp = Optional.of(Instant.parse(guildJoinedTimestampOpt.orElse(null)));
                     }
 
-                    guildInfo = new PlayerGuildInfo(guildUuid, guildName, guildPrefix, guildRank, guildJoinTimestamp);
+                    guildInfo = Optional.of(
+                            new PlayerGuildInfo(guildUuid, guildName, guildPrefix, guildRank, guildJoinTimestamp));
                 }
 
                 JsonObject leaderboardRankingsObj = jsonObject.getAsJsonObject("ranking");
