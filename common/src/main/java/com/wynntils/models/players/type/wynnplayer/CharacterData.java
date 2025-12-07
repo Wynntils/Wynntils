@@ -28,7 +28,7 @@ public record CharacterData(
         boolean reskin,
         String nickname,
         int level,
-        int xp,
+        long xp,
         int xpPercent,
         int totalLevel,
         Set<CharacterGamemode> gamemodes,
@@ -64,7 +64,7 @@ public record CharacterData(
                     ? null
                     : jsonObject.get("nickname").getAsString();
             int level = jsonObject.get("level").getAsInt();
-            int xp = jsonObject.get("xp").getAsInt();
+            long xp = jsonObject.get("xp").getAsLong();
             int xpPercent = jsonObject.get("xpPercent").getAsInt();
             int totalLevel = jsonObject.get("totalLevel").getAsInt();
 
