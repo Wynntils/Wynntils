@@ -78,6 +78,8 @@
   "core.wynntils.profile.minimal.shortDescription": "Play with the primary QOL features.",
   "core.wynntils.profile.new_player.description": "This profile focuses on providing QOL features for new players, many of the features that are more tuned for experienced players are disabled by default.",
   "core.wynntils.profile.new_player.shortDescription": "Recommended for players just starting their Wynncraft adventure.",
+  "core.wynntils.profiles.toastMessage": "Run /wynntils config profile to see available config profiles.",
+  "core.wynntils.profiles.toastTitle": "Wynntils Config Profiles",
   "crowdSourcedDataType.wynntils.fastTravelLocations.description": "Collects the locations of fast travels. A fast travel location is collected when a fast travel nametag is loaded.",
   "crowdSourcedDataType.wynntils.fastTravelLocations.name": "Fast Travel Locations",
   "crowdSourcedDataType.wynntils.lootrunTaskLocations.description": "Collects the location of lootrun tasks. Used for predicting lootrun locations. A lootrun location is collected when a player selects a task during a lootrun.",
