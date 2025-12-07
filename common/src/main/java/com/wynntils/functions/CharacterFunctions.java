@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.objectives.WynnObjective;
+import com.wynntils.services.leaderboard.type.LeaderboardType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
@@ -384,6 +385,24 @@ public class CharacterFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new Argument<>("aspectName", String.class, null)));
+        }
+    }
+
+    public static class LeaderboardPositionFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String leaderboardKey = arguments.getArgument("leaderboardKey").getStringValue();
+            LeaderboardType leaderboardType = LeaderboardType.fromKey(leaderboardKey);
+
+            if (leaderboardType == null) return 0;
+
+            return Models.Account.getPlayerInfo().leaderboardPlacements().getOrDefault(leaderboardType, 0);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("leaderboardKey", String.class, null)));
         }
     }
 }
