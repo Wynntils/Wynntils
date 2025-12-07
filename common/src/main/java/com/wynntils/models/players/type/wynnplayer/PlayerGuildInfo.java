@@ -14,4 +14,6 @@ public record PlayerGuildInfo(
         String guildName,
         String guildPrefix,
         GuildRank guildRank,
+        Optional<Integer> contributionRank,
+        Optional<Long> contributionXp,
         Optional<Instant> guildJoinTimestamp) {}

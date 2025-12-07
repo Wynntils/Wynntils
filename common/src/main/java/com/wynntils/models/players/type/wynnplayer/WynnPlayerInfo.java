@@ -102,6 +102,8 @@ public record WynnPlayerInfo(
                     String guildPrefix = guildInfoObj.get("prefix").getAsString();
                     GuildRank guildRank =
                             GuildRank.fromName(guildInfoObj.get("rank").getAsString());
+                    Optional<Integer> guildContributionRank = Optional.empty();
+                    Optional<Long> guildContributedXp = Optional.empty();
                     Optional<Instant> guildJoinTimestamp = Optional.empty();
 
                     CompletableFuture<GuildInfo> completableFuture = Models.Guild.getGuild(guildName);
@@ -117,16 +119,30 @@ public record WynnPlayerInfo(
                     }
 
                     if (guild != null) {
-                        Optional<String> guildJoinedTimestampOpt = guild.guildMembers().stream()
+                        Optional<GuildMemberInfo> guildMemberInfo = guild.guildMembers().stream()
                                 .filter(guildMember -> guildMember.uuid().equals(playerUuid))
-                                .map(GuildMemberInfo::joinTimestamp)
                                 .findFirst();
 
-                        guildJoinTimestamp = Optional.of(Instant.parse(guildJoinedTimestampOpt.orElse(null)));
+                        if (guildMemberInfo.isPresent()) {
+                            guildContributionRank =
+                                    Optional.of(guildMemberInfo.get().contributionRank());
+                            guildContributedXp =
+                                    Optional.of(guildMemberInfo.get().contributedXp());
+                            guildJoinTimestamp = Optional.of(
+                                    Instant.parse(guildMemberInfo.get().joinTimestamp()));
+                        } else {
+                            WynntilsMod.warn("Could not find player " + playerUsername + " in guild " + guildName);
+                        }
                     }
 
-                    guildInfo = Optional.of(
-                            new PlayerGuildInfo(guildUuid, guildName, guildPrefix, guildRank, guildJoinTimestamp));
+                    guildInfo = Optional.of(new PlayerGuildInfo(
+                            guildUuid,
+                            guildName,
+                            guildPrefix,
+                            guildRank,
+                            guildContributionRank,
+                            guildContributedXp,
+                            guildJoinTimestamp));
                 }
 
                 JsonObject leaderboardRankingsObj = jsonObject.getAsJsonObject("ranking");
