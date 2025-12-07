@@ -123,8 +123,8 @@ public record CharacterData(
             JsonObject skillPointsObj = jsonObject.getAsJsonObject("skillPoints");
             Map<Skill, Integer> skillPoints = new HashMap<>();
 
-            if (skillPointsObj.has("error")) {
-                // When skill points are hidden, there is an error message
+            // When skill points are hidden, there is either an error message or they are not present at all
+            if (skillPointsObj == null || skillPointsObj.isJsonNull() || skillPointsObj.has("error")) {
                 skillPoints = Map.of();
             } else {
                 for (Map.Entry<String, JsonElement> entry : skillPointsObj.entrySet()) {
