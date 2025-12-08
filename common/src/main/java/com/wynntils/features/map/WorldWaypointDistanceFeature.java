@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -76,6 +77,10 @@ public class WorldWaypointDistanceFeature extends Feature {
     private final Config<Boolean> showAdditionalTextAbove = new Config<>(false);
 
     private final List<RenderedMarkerInfo> renderedMarkers = new ArrayList<>();
+
+    public WorldWaypointDistanceFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onRenderLevelPost(RenderLevelEvent.Post event) {

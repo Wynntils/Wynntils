@@ -7,6 +7,7 @@ package com.wynntils.features.utilities;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -44,6 +45,10 @@ public class XpGainMessageFeature extends Feature {
 
     private final Map<ProfessionType, MessageContainer> lastProfessionMessages = new EnumMap<>(ProfessionType.class);
     private final Map<ProfessionType, Float> lastRawProfessionXpGains = new EnumMap<>(ProfessionType.class);
+
+    public XpGainMessageFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {

@@ -6,6 +6,7 @@ package com.wynntils.features.trademarket;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ChatSentEvent;
@@ -15,6 +16,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketPriceConversionFeature extends Feature {
+    public TradeMarketPriceConversionFeature() {
+        super(ProfileDefault.ENABLED);
+    }
+
     @SubscribeEvent
     public void onChatSent(ChatSentEvent event) {
         if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.PRICE_CHAT_INPUT) return;

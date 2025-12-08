@@ -8,6 +8,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
@@ -28,6 +29,10 @@ public class BombBellRelayFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> showTime = new Config<>(true);
+
+    public BombBellRelayFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     private String getAndFormatLastBomb() {
         BombInfo lastBomb = Models.Bomb.getLastBomb();

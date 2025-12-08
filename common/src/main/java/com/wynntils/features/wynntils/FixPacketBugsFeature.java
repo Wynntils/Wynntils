@@ -5,6 +5,7 @@
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.AddEntityLookupEvent;
@@ -24,6 +25,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.WYNNTILS)
 public class FixPacketBugsFeature extends Feature {
     private static final int METHOD_ADD = 0;
+
+    public FixPacketBugsFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetPlayerTeamPacket(SetPlayerTeamEvent event) {

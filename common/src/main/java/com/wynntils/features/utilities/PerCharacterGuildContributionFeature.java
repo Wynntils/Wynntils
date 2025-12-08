@@ -7,6 +7,7 @@ package com.wynntils.features.utilities;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -38,6 +39,10 @@ public class PerCharacterGuildContributionFeature extends Feature {
     private final Config<Boolean> hideContributionMessage = new Config<>(true);
 
     private boolean waitingForCommandResponse = false;
+
+    public PerCharacterGuildContributionFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onCharacterChange(CharacterUpdateEvent e) {

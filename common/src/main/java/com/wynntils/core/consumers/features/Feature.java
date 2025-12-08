@@ -24,10 +24,6 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     @Persisted(i18nKey = "feature.wynntils.userFeature.userEnabled")
     public final Config<Boolean> userEnabled = new Config<>(true);
 
-    protected Feature() {
-        this(ProfileDefault.ENABLED);
-    }
-
     protected Feature(ProfileDefault profileDefault) {
         for (ConfigProfile profile : ConfigProfile.values()) {
             boolean enabled = profileDefault.getDefault(profile);

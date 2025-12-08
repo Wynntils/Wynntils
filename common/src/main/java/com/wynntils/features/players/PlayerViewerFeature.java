@@ -7,6 +7,7 @@ package com.wynntils.features.players;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.config.Category;
@@ -32,6 +33,10 @@ public class PlayerViewerFeature extends Feature {
             this::tryOpenPlayerViewer);
 
     private PlayerViewerScreen playerViewerScreen = null;
+
+    public PlayerViewerFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     private void tryOpenPlayerViewer() {
         Optional<Player> hitPlayer = RaycastUtils.getHoveredPlayer();

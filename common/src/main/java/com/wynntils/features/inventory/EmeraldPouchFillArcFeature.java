@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -30,6 +31,10 @@ public class EmeraldPouchFillArcFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> renderFillArcInventory = new Config<>(true);
+
+    public EmeraldPouchFillArcFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.CountPre e) {

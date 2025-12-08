@@ -9,6 +9,7 @@ import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -32,6 +33,10 @@ public class CommandAliasesFeature extends Feature {
             new CommandAlias("guild manage", List.of("gu m", "gu man", "guild m", "guild man")),
             new CommandAlias("guild territory", List.of("gu t", "gu terr", "guild t", "guild terr")),
             new CommandAlias("partyfinder", List.of("pf")))));
+
+    public CommandAliasesFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onCommandSent(CommandSentEvent e) {

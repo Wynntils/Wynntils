@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.embellishments;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -25,6 +26,10 @@ public class WarHornFeature extends Feature {
 
     @Persisted
     private final Config<Float> soundPitch = new Config<>(1.0f);
+
+    public WarHornFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onWarQueued(GuildWarQueuedEvent event) {

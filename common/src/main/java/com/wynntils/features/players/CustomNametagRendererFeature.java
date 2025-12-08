@@ -8,6 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -90,6 +91,10 @@ public class CustomNametagRendererFeature extends Feature {
     private final Config<Float> customNametagScale = new Config<>(0.5f);
 
     private Player hitPlayerCache = null;
+
+    public CustomNametagRendererFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onPlayerNameTagRender(PlayerNametagRenderEvent event) {

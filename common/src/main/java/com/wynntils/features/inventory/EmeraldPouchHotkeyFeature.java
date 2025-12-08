@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -7,6 +7,7 @@ package com.wynntils.features.inventory;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.config.Category;
@@ -32,6 +33,10 @@ public class EmeraldPouchHotkeyFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind emeraldPouchKeyBind =
             new KeyBind("Open Emerald Pouch", GLFW.GLFW_KEY_UNKNOWN, true, this::onOpenPouchKeyPress);
+
+    public EmeraldPouchHotkeyFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     private void onOpenPouchKeyPress() {
         if (!Models.WorldState.onWorld()) return;

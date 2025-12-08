@@ -5,6 +5,7 @@
 package com.wynntils.features.overlays;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
@@ -28,4 +29,8 @@ public class LootrunOverlaysFeature extends Feature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay lootrunTrialOverlay = new LootrunTrialsOverlay();
+
+    public LootrunOverlaysFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 }

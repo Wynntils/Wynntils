@@ -7,6 +7,7 @@ package com.wynntils.features.map;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
@@ -124,6 +125,10 @@ public class MainMapFeature extends Feature {
     @RegisterKeyBind
     public final KeyBind newWaypointKeybind =
             new KeyBind("New Waypoint", GLFW.GLFW_KEY_B, true, this::openWaypointSetup);
+
+    public MainMapFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     private void openMainMap() {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind

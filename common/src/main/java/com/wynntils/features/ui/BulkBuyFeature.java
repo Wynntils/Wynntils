@@ -7,6 +7,7 @@ package com.wynntils.features.ui;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -71,6 +72,10 @@ public class BulkBuyFeature extends Feature {
     private ItemStack bulkBoughtItemStack = null; // Item we're buying
     private int bulkBoughtAmount = 0; // Amount remaining that we need to buy
     private int bulkBoughtPrice = 0; // Price of a single item
+
+    public BulkBuyFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onShopOpened(SetSlotEvent.Post e) {

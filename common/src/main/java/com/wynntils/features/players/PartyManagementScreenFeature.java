@@ -6,6 +6,7 @@ package com.wynntils.features.players;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.config.Category;
@@ -28,6 +29,10 @@ public class PartyManagementScreenFeature extends Feature {
                 partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
                 McUtils.setScreen(partyManagementScreen);
             });
+
+    public PartyManagementScreenFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent.Post e) {

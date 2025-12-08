@@ -5,6 +5,7 @@
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.net.event.DownloadEvent;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -15,6 +16,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
 public class DownloadProgressFeature extends Feature {
+    public DownloadProgressFeature() {
+        super(ProfileDefault.ENABLED);
+    }
+
     @SubscribeEvent
     public void onDownloadStarted(DownloadEvent.Started event) {
         displayToast(

@@ -6,6 +6,7 @@ package com.wynntils.features.commands;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
@@ -94,6 +95,10 @@ public class CustomCommandKeybindsFeature extends Feature {
             GLFW.GLFW_KEY_UNKNOWN,
             true,
             () -> this.executeKeybind(keybindCommand6.get(), commandType6.get()));
+
+    public CustomCommandKeybindsFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
         switch (commandType) {

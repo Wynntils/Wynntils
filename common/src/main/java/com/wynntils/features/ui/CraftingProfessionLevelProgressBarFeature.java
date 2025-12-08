@@ -7,6 +7,7 @@ package com.wynntils.features.ui;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -30,6 +31,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class CraftingProfessionLevelProgressBarFeature extends Feature {
     @Persisted
     private final Config<ObjectivesTextures> texture = new Config<>(ObjectivesTextures.WYNN);
+
+    public CraftingProfessionLevelProgressBarFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {

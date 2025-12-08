@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -69,6 +70,10 @@ public class RangeVisualizerFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> showMajorIDCircles = new Config<>(true);
+
+    public RangeVisualizerFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     // Handles rendering for other players and ourselves in third person
     @SubscribeEvent
