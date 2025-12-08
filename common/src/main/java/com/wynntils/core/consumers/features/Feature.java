@@ -25,12 +25,12 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     public final Config<Boolean> userEnabled = new Config<>(true);
 
     protected Feature() {
-        this(ProfileDefaultBuilder.enabledForAll());
+        this(ProfileDefault.ENABLED);
     }
 
-    protected Feature(ProfileDefaultBuilder builder) {
+    protected Feature(ProfileDefault profileDefault) {
         for (ConfigProfile profile : ConfigProfile.values()) {
-            boolean enabled = builder.getDefault(profile);
+            boolean enabled = profileDefault.getDefault(profile);
             this.userEnabled.withDefault(profile, enabled);
         }
     }

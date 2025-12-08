@@ -6,7 +6,7 @@ package com.wynntils.features.debug;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -126,7 +126,7 @@ public class PacketDebuggerFeature extends Feature {
     private final Config<PacketFilterType> packetFilterType = new Config<>(PacketFilterType.FILTERED);
 
     public PacketDebuggerFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 
     private String describePacket(Packet<?> packet) {

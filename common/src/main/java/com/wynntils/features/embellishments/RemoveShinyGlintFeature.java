@@ -6,7 +6,7 @@ package com.wynntils.features.embellishments;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -28,7 +28,7 @@ public class RemoveShinyGlintFeature extends Feature {
     private final Config<Boolean> replaceGlint = new Config<>(true);
 
     public RemoveShinyGlintFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 
     // Weapons use potion color

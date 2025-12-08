@@ -9,7 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -33,7 +33,7 @@ public class AbilityTreeDataDumpFeature extends Feature {
     private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
 
     public AbilityTreeDataDumpFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

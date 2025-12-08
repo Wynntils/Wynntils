@@ -7,7 +7,7 @@ package com.wynntils.features.debug;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -34,7 +34,7 @@ public class MappingProgressFeature extends Feature {
     private final Storage<Set<Long>> mappedChunks = new Storage<>(new TreeSet<>());
 
     public MappingProgressFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 
     @SubscribeEvent

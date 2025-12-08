@@ -5,7 +5,7 @@
 package com.wynntils.features.chat;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -34,7 +34,7 @@ public class ChatTimestampFeature extends Feature {
     private int timestampWidth = 0;
 
     public ChatTimestampFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 
     @Override

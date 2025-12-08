@@ -5,7 +5,7 @@
 package com.wynntils.features.combat;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -25,7 +25,7 @@ public class HideLabelsFeature extends Feature {
     private final Config<Boolean> hideKillLabels = new Config<>(false);
 
     public HideLabelsFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 
     @SubscribeEvent

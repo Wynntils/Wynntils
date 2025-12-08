@@ -5,7 +5,7 @@
 package com.wynntils.features.overlays;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -18,6 +18,6 @@ public class StreamerModeOverlayFeature extends Feature {
     private final StreamerModeOverlay streamerModeOverlay = new StreamerModeOverlay();
 
     public StreamerModeOverlayFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 }

@@ -7,7 +7,7 @@ package com.wynntils.features.combat;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -43,7 +43,7 @@ public class InvertAttackKeybindsFeature extends Feature {
     private final Map<InputConstants.Key, InputConstants.Key> activeRemappings = new HashMap<>();
 
     public InvertAttackKeybindsFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 
     @SubscribeEvent

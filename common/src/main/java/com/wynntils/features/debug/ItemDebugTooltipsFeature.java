@@ -6,7 +6,7 @@ package com.wynntils.features.debug;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
@@ -27,7 +27,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.DEBUG)
 public class ItemDebugTooltipsFeature extends Feature {
     public ItemDebugTooltipsFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 
     @SubscribeEvent

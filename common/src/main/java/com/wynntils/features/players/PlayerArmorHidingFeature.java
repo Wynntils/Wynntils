@@ -5,7 +5,7 @@
 package com.wynntils.features.players;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -36,7 +36,7 @@ public class PlayerArmorHidingFeature extends Feature {
     private final Config<Boolean> showCosmetics = new Config<>(true);
 
     public PlayerArmorHidingFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 
     @SubscribeEvent

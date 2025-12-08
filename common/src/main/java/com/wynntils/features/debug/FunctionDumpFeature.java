@@ -7,7 +7,7 @@ package com.wynntils.features.debug;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
@@ -64,7 +64,7 @@ public class FunctionDumpFeature extends Feature {
             .build();
 
     public FunctionDumpFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 
     private void dumpFunctionsToCSV() {

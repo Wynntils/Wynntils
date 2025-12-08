@@ -5,7 +5,7 @@
 package com.wynntils.features.chat;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.ProfileDefaultBuilder;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
@@ -16,7 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.CHAT)
 public class RemoveWynncraftChatWrapFeature extends Feature {
     public RemoveWynncraftChatWrapFeature() {
-        super(ProfileDefaultBuilder.disabledForAll());
+        super(ProfileDefault.DISABLED);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
