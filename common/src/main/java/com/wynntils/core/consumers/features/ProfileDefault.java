@@ -26,7 +26,7 @@ public record ProfileDefault(Map<ConfigProfile, Boolean> defaults) {
             return this;
         }
 
-        public Builder disable(ConfigProfile... profiles) {
+        public Builder disableFor(ConfigProfile... profiles) {
             for (ConfigProfile profile : profiles) {
                 defaults.put(profile, false);
             }
