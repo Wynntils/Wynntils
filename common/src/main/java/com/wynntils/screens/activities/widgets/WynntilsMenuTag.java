@@ -47,7 +47,11 @@ public class WynntilsMenuTag extends WynntilsButton {
                 Texture.CONTENT_BOOK_TAG.width(),
                 height,
                 0,
-                height * offset);
+                height * offset,
+                Texture.CONTENT_BOOK_TAG.width(),
+                height,
+                Texture.CONTENT_BOOK_TAG.width(),
+                Texture.CONTENT_BOOK_TAG.height());
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
