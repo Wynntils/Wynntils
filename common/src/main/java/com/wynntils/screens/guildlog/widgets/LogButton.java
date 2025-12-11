@@ -31,6 +31,8 @@ public class LogButton extends BasicTexturedButton {
 
     @Override
     public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderContents(guiGraphics, mouseX, mouseY, partialTick);
+
         RenderUtils.drawTexturedRect(guiGraphics, logType.getIcon(), getX() + 3, getY() + 3);
 
         FontRenderer.getInstance()
