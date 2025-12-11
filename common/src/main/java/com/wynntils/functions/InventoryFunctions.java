@@ -19,7 +19,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,8 +65,7 @@ public class InventoryFunctions {
             if (inventoryArmor == null) return CappedValue.EMPTY;
 
             Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(
-                    new ArrayList<>(McUtils.inventory().equipment.items.values()).get(inventoryArmor.getArmorSlot()),
-                    DurableItemProperty.class);
+                    McUtils.inventory().getItem(inventoryArmor.getInventorySlot()), DurableItemProperty.class);
 
             if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
 
