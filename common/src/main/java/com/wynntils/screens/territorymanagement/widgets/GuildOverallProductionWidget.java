@@ -122,7 +122,8 @@ public class GuildOverallProductionWidget extends AbstractWidget {
                     .withStyle(ChatFormatting.YELLOW));
         }
 
-        guiGraphics.setTooltipForNextFrame(Lists.transform(lines, Component::getVisualOrderText), mouseX, mouseY);
+        guiGraphics.setTooltipForNextFrame(
+                Lists.transform(lines, Component::getVisualOrderText), this.getX(), this.getY());
     }
 
     @Override
