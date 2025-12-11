@@ -289,8 +289,6 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
         // Screen background
         RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
         RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_SIDEBAR, getRenderX() - 22, getRenderY());
