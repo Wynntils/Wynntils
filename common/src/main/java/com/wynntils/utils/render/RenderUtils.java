@@ -28,6 +28,7 @@ import java.util.Optional;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.LightTexture;
@@ -40,6 +41,7 @@ import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -944,6 +946,22 @@ public final class RenderUtils {
         guiGraphics.renderItem(itemStack, x, y);
     }
 
+    public static void renderTooltip(GuiGraphics guiGraphics, List<Component> tooltipLines, int mouseX, int mouseY) {
+        renderTooltip(
+                guiGraphics, FontRenderer.getInstance().getFont(), tooltipLines, Optional.empty(), mouseX, mouseY);
+    }
+
+    public static void renderTooltip(GuiGraphics guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {
+        renderTooltip(
+                guiGraphics,
+                FontRenderer.getInstance().getFont(),
+                Screen.getTooltipFromItem(McUtils.mc(), itemStack),
+                itemStack.getTooltipImage(),
+                mouseX,
+                mouseY,
+                itemStack.get(DataComponents.TOOLTIP_STYLE));
+    }
+
     public static void renderTooltip(
             GuiGraphics guiGraphics,
             Font font,
@@ -951,13 +969,24 @@ public final class RenderUtils {
             Optional<TooltipComponent> tooltipImage,
             int mouseX,
             int mouseY) {
+        renderTooltip(guiGraphics, font, tooltipLines, tooltipImage, mouseX, mouseY, null);
+    }
+
+    public static void renderTooltip(
+            GuiGraphics guiGraphics,
+            Font font,
+            List<Component> tooltipLines,
+            Optional<TooltipComponent> tooltipImage,
+            int mouseX,
+            int mouseY,
+            Identifier background) {
         List<ClientTooltipComponent> list = tooltipLines.stream()
                 .map(Component::getVisualOrderText)
                 .map(ClientTooltipComponent::create)
                 .collect(Util.toMutableList());
         tooltipImage.ifPresent(
                 tooltipComponent -> list.add(list.isEmpty() ? 0 : 1, ClientTooltipComponent.create(tooltipComponent)));
-        guiGraphics.renderTooltip(font, list, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
+        guiGraphics.renderTooltip(font, list, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, background);
     }
 
     public static void renderCustomNametag(

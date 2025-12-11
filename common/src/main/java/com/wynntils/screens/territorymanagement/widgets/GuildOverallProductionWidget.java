@@ -4,13 +4,13 @@
  */
 package com.wynntils.screens.territorymanagement.widgets;
 
-import com.google.common.collect.Lists;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.utils.mc.KeyboardUtils;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,8 +122,7 @@ public class GuildOverallProductionWidget extends AbstractWidget {
                     .withStyle(ChatFormatting.YELLOW));
         }
 
-        guiGraphics.setTooltipForNextFrame(
-                Lists.transform(lines, Component::getVisualOrderText), this.getX(), this.getY());
+        RenderUtils.renderTooltip(guiGraphics, lines, this.getX(), this.getY());
     }
 
     @Override
