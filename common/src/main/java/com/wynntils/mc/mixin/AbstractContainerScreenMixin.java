@@ -35,11 +35,8 @@ public abstract class AbstractContainerScreenMixin {
     @Shadow
     public Slot hoveredSlot;
 
-    @Shadow
-    public abstract void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick);
-
-    @Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", at = @At("RETURN"))
-    private void renderPost(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
+    @Inject(method = "renderContents(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", at = @At("RETURN"))
+    private void renderContentsPost(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
         MixinHelper.post(new ContainerRenderEvent(
                 (AbstractContainerScreen<?>) (Object) this,
                 guiGraphics,
