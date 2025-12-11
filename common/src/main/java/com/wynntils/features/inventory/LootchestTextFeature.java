@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import net.minecraft.client.gui.GuiGraphics;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.joml.Matrix3x2fStack;
 
 @ConfigCategory(Category.INVENTORY)
 public class LootchestTextFeature extends Feature {
@@ -36,14 +37,23 @@ public class LootchestTextFeature extends Feature {
     public void onRenderLootChest(ContainerRenderEvent event) {
         if (!(Models.Container.getCurrentContainer() instanceof LootChestContainer)) return;
 
+        int startX = event.getScreen().leftPos;
+        int startY = event.getScreen().topPos;
         int width = event.getScreen().imageWidth;
         int titleLabelX = event.getScreen().titleLabelX;
         int titleLabelY = event.getScreen().titleLabelY;
         int inventoryLabelX = event.getScreen().inventoryLabelX;
         int inventoryLabelY = event.getScreen().inventoryLabelY;
 
+        Matrix3x2fStack matrixStack = event.getGuiGraphics().pose();
+
+        matrixStack.pushMatrix();
+        matrixStack.translate(startX, startY);
+
         renderTitleTemplate(event.getGuiGraphics(), width - titleLabelX, titleLabelY);
         renderInventoryTemplate(event.getGuiGraphics(), width - inventoryLabelX, inventoryLabelY);
+
+        matrixStack.popMatrix();
     }
 
     private void renderTitleTemplate(GuiGraphics guiGraphics, int x, int y) {
