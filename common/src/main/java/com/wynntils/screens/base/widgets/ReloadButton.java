@@ -31,8 +31,15 @@ public class ReloadButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawHoverableTexturedRect(
-                guiGraphics, Texture.RELOAD_ICON_OFFSET, getX(), getY(), this.isHovered, RenderDirection.HORIZONTAL);
+        RenderUtils.drawScalingHoverableTexturedRect(
+                guiGraphics,
+                Texture.RELOAD_ICON_OFFSET,
+                getX(),
+                getY(),
+                this.width,
+                this.height,
+                this.isHovered,
+                RenderDirection.HORIZONTAL);
     }
 
     @Override
