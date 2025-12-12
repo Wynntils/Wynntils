@@ -42,7 +42,6 @@ import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
@@ -114,11 +113,8 @@ public class MinimapOverlay extends Overlay {
         setZoomLevel(zoomLevel.get() + delta);
     }
 
-    // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`
-    // currently not working with buffer sources.
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         float width = getWidth();
         float height = getHeight();
         float renderX = getRenderX();

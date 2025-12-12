@@ -21,7 +21,6 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 public class CommanderBarOverlay extends BaseBarOverlay {
     @Persisted
@@ -79,7 +78,7 @@ public class CommanderBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderText(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderY, String text) {
+    protected void renderText(GuiGraphics guiGraphics, float renderY, String text) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,

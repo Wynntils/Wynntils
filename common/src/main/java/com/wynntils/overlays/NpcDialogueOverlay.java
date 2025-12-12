@@ -36,7 +36,6 @@ import java.util.concurrent.TimeUnit;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -109,8 +108,7 @@ public class NpcDialogueOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         NpcDialogue currentDialogue = Models.NpcDialogue.getCurrentDialogue();
         List<NpcDialogue> confirmationlessDialogues = Models.NpcDialogue.getConfirmationlessDialogues();
 
@@ -136,13 +134,11 @@ public class NpcDialogueOverlay extends Overlay {
         // Remove the last empty line
         allDialogues.removeLast();
 
-        renderDialogue(
-                guiGraphics, bufferSource, allDialogues, currentDialogue.dialogueType(), currentDialogue.isProtected());
+        renderDialogue(guiGraphics, allDialogues, currentDialogue.dialogueType(), currentDialogue.isProtected());
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         List<StyledText> fakeDialogue = List.of(
                 StyledText.fromComponent(
                         Component.translatable("feature.wynntils.npcDialogue.overlay.npcDialogue.fakeDialogue.1")),
@@ -152,7 +148,7 @@ public class NpcDialogueOverlay extends Overlay {
         // we have to force update every time
         updateTextRenderSettings();
 
-        renderDialogue(guiGraphics, bufferSource, fakeDialogue, NpcDialogueType.NORMAL, true);
+        renderDialogue(guiGraphics, fakeDialogue, NpcDialogueType.NORMAL, true);
     }
 
     @Override
@@ -169,7 +165,6 @@ public class NpcDialogueOverlay extends Overlay {
 
     private void renderDialogue(
             GuiGraphics guiGraphics,
-            MultiBufferSource bufferSource,
             List<StyledText> currentDialogue,
             NpcDialogueType dialogueType,
             boolean isProtected) {

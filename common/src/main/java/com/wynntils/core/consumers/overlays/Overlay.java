@@ -24,7 +24,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
@@ -109,24 +108,21 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         return "Overlay";
     }
 
-    public abstract void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window);
+    public abstract void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window);
 
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        this.render(guiGraphics, bufferSource, deltaTracker, window);
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        this.render(guiGraphics, deltaTracker, window);
     }
 
-    protected void renderOrErrorMessage(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (this.enabledTemplateCache != null && this.enabledTemplateCache.hasError()) {
-            renderEnabledTemplateErrorMessage(guiGraphics, bufferSource);
+            renderEnabledTemplateErrorMessage(guiGraphics);
         } else {
-            render(guiGraphics, bufferSource, deltaTracker, window);
+            render(guiGraphics, deltaTracker, window);
         }
     }
 
-    private void renderEnabledTemplateErrorMessage(GuiGraphics guiGraphics, MultiBufferSource bufferSource) {
+    private void renderEnabledTemplateErrorMessage(GuiGraphics guiGraphics) {
         StyledText[] errorMessage = {
             StyledText.fromString(
                     "§c§l" + I18n.get("overlay.wynntils.overlay.enabledTemplate.error") + " " + getTranslatedName()),

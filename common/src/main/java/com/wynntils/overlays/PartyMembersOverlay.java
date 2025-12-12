@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -183,8 +182,7 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
         }
 
         @Override
-        public void render(
-                GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
             guiGraphics.pose().pushMatrix();
 
             float renderX = getRenderX();

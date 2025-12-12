@@ -25,7 +25,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 public abstract class BaseBarOverlay extends Overlay {
     @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.textShadow")
@@ -87,28 +86,26 @@ public abstract class BaseBarOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         float renderedProgress = Math.round((flip.get() ? -1 : 1) * currentProgress * 100) / 100f;
-        renderAll(guiGraphics, bufferSource, renderedProgress);
+        renderAll(guiGraphics, renderedProgress);
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (progress() == null) {
-            renderAll(guiGraphics, bufferSource, 50);
+            renderAll(guiGraphics, 50);
             return;
         }
         float renderedProgress = Math.round((flip.get() ? -1 : 1) * currentProgress * 100) / 100f;
-        renderAll(guiGraphics, bufferSource, renderedProgress);
+        renderAll(guiGraphics, renderedProgress);
     }
 
-    private void renderAll(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderedProgress) {
+    private void renderAll(GuiGraphics guiGraphics, float renderedProgress) {
         float barHeight = textureHeight() * (this.getWidth() / 81);
         float renderY = getModifiedRenderY(barHeight + 10);
 
-        renderText(guiGraphics, bufferSource, renderY, text());
+        renderText(guiGraphics, renderY, text());
 
         renderBar(guiGraphics, renderY + 10, barHeight, renderedProgress);
     }
@@ -151,7 +148,7 @@ public abstract class BaseBarOverlay extends Overlay {
                 progress);
     }
 
-    protected void renderText(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderY, String text) {
+    protected void renderText(GuiGraphics guiGraphics, float renderY, String text) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,

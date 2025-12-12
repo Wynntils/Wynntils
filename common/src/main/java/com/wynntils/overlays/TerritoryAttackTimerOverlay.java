@@ -24,7 +24,6 @@ import java.util.Comparator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -61,8 +60,7 @@ public class TerritoryAttackTimerOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         FontRenderer.getInstance()
                 .renderTextsWithAlignment(
                         guiGraphics,
@@ -80,8 +78,7 @@ public class TerritoryAttackTimerOverlay extends Overlay {
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         FontRenderer.getInstance()
                 .renderTextWithAlignment(
                         guiGraphics,

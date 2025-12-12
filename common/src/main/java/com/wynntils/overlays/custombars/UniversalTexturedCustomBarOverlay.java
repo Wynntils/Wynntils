@@ -22,7 +22,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 
 public class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
@@ -54,8 +53,7 @@ public class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
     }
 
     @Override
-    protected void renderOrErrorMessage(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (colorCache.hasError()) {
             StyledText[] errorMessage = {
                 StyledText.fromString("§c§l"
@@ -80,7 +78,7 @@ public class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
                             1);
 
         } else {
-            super.renderOrErrorMessage(guiGraphics, bufferSource, deltaTracker, window);
+            super.renderOrErrorMessage(guiGraphics, deltaTracker, window);
         }
     }
 

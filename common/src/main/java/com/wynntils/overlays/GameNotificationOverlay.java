@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.ListIterator;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class GameNotificationOverlay extends Overlay {
@@ -100,8 +99,7 @@ public class GameNotificationOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         List<TimedMessageContainer> toRender = new ArrayList<>();
 
         ListIterator<TimedMessageContainer> messages = messageQueue.listIterator(messageQueue.size());
@@ -172,8 +170,7 @@ public class GameNotificationOverlay extends Overlay {
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         FontRenderer.getInstance()
                 .renderTextWithAlignment(
                         guiGraphics,

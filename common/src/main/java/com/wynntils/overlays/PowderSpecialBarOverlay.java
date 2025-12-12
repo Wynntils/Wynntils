@@ -29,7 +29,6 @@ import com.wynntils.utils.wynn.ItemUtils;
 import java.util.Optional;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
@@ -66,8 +65,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
         if (this.hideIfNoCharge.get() && powderSpecialInfoOpt.isEmpty()) return;
 
@@ -77,14 +75,12 @@ public class PowderSpecialBarOverlay extends Overlay {
         }
 
         PowderSpecialInfo powderSpecialInfo = powderSpecialInfoOpt.orElse(PowderSpecialInfo.EMPTY);
-        renderWithSpecificSpecial(
-                guiGraphics, bufferSource, powderSpecialInfo.charge() * 100f, powderSpecialInfo.powder());
+        renderWithSpecificSpecial(guiGraphics, powderSpecialInfo.charge() * 100f, powderSpecialInfo.powder());
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        renderWithSpecificSpecial(guiGraphics, bufferSource, 40, Powder.THUNDER);
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        renderWithSpecificSpecial(guiGraphics, 40, Powder.THUNDER);
     }
 
     @Override
@@ -93,10 +89,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     private void renderWithSpecificSpecial(
-            GuiGraphics guiGraphics,
-            MultiBufferSource bufferSource,
-            float powderSpecialCharge,
-            Powder powderSpecialType) {
+            GuiGraphics guiGraphics, float powderSpecialCharge, Powder powderSpecialType) {
         Texture universalBarTexture = Texture.UNIVERSAL_BAR;
 
         final float renderedHeight = barTexture.get().getHeight() * (this.getWidth() / 81);

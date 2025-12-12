@@ -22,7 +22,6 @@ import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 
 public abstract class BarOverlay extends DynamicOverlay {
@@ -53,38 +52,34 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         BarOverlayTemplatePair template = getTemplate();
 
         if (templateCache == null) {
             templateCache = calculateTemplate(template);
         }
-        render(guiGraphics, bufferSource, currentProgress, templateCache.key());
+        render(guiGraphics, currentProgress, templateCache.key());
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         BarOverlayTemplatePair previewTemplate = getPreviewTemplate();
         Pair<StyledText, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
 
         ErrorOr<CappedValue> valueOrError = calculatedTemplate.value();
         if (valueOrError.hasError()) {
-            renderText(
-                    guiGraphics, bufferSource, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
+            renderText(guiGraphics, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
             return;
         }
 
         // Do not render bars that has no value
         if (valueOrError.getValue().equals(CappedValue.EMPTY)) return;
 
-        render(guiGraphics, bufferSource, (float) valueOrError.getValue().getProgress(), calculatedTemplate.key());
+        render(guiGraphics, (float) valueOrError.getValue().getProgress(), calculatedTemplate.key());
     }
 
     @Override
-    protected void renderOrErrorMessage(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (templateCache == null) return;
         if (templateCache.b().hasError()) {
             StyledText[] errorMessage = {
@@ -108,16 +103,15 @@ public abstract class BarOverlay extends DynamicOverlay {
                             1);
 
         } else {
-            super.renderOrErrorMessage(guiGraphics, bufferSource, deltaTracker, window);
+            super.renderOrErrorMessage(guiGraphics, deltaTracker, window);
         }
     }
 
-    private void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderedProgress, StyledText textValue) {
+    private void render(GuiGraphics guiGraphics, float renderedProgress, StyledText textValue) {
         float barHeight = getTextureHeight() * heightModifier.get();
         float renderY = getModifiedRenderY(barHeight + 10);
 
-        renderText(guiGraphics, bufferSource, renderY, textValue);
+        renderText(guiGraphics, renderY, textValue);
 
         float progress = (flip.get() ? -1 : 1) * renderedProgress;
         renderBar(guiGraphics, renderY + 10, barHeight, progress);
@@ -186,7 +180,7 @@ public abstract class BarOverlay extends DynamicOverlay {
         }
     }
 
-    private void renderText(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderY, StyledText text) {
+    private void renderText(GuiGraphics guiGraphics, float renderY, StyledText text) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,
