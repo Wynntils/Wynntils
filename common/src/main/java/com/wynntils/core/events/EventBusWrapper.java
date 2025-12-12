@@ -66,8 +66,7 @@ public class EventBusWrapper extends EventBus {
                             case RENDER -> threadName.equals("Render thread");
                             case IO ->
                                 threadName.startsWith("Netty Epoll Client IO #")
-                                        || threadName.startsWith("Netty Client IO #")
-                                        || threadName.startsWith("Netty NIO IO #");
+                                        || threadName.startsWith("Netty Client IO #");
                             case WORKER -> threadName.toLowerCase(Locale.ROOT).contains("pool");
                             case ANY -> true;
                         };
