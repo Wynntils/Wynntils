@@ -5,6 +5,7 @@
 package com.wynntils.screens.settings;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
@@ -404,6 +405,27 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             renderSelectedConfigs(guiGraphics, mouseX, mouseY, partialTick);
         } else {
             renderHoveredConfigs(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        if (draggingConfigScroll || draggingConfigurableScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
+                mouseX,
+                mouseY,
+                CONFIGURABLE_SCROLL_X + offsetX,
+                CONFIGURABLE_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
+                configurableScrollRenderY,
+                (int) (configurableScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        } else if ((configs.size() > CONFIGS_PER_PAGE)
+                && MathUtils.isInside(
+                mouseX,
+                mouseY,
+                CONFIG_SCROLL_X + offsetX,
+                CONFIG_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
+                (int) configScrollRenderY,
+                (int) (configScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
         renderTooltips(guiGraphics, mouseX, mouseY);

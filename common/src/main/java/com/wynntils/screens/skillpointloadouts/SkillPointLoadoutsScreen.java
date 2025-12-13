@@ -478,6 +478,11 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 return true;
             }
         }
+
+        if (scrollBar.isMouseOver(event.x(), event.y())) {
+            scrollBar.mouseClicked(event, isDoubleClick);
+        }
+
         return super.doMouseClicked(event, isDoubleClick);
     }
 

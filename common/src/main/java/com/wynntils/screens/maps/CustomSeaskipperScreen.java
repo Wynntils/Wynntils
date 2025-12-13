@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
@@ -238,6 +239,21 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         for (SeaskipperDestinationButton destinationButton : destinationButtons) {
             destinationButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        if (isPanning) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        } else if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (this.hoveredPoi != null
+                || MathUtils.isInside(
+                        mouseX,
+                        mouseY,
+                        scrollButtonRenderX,
+                        (int) (scrollButtonRenderX + Texture.SCROLL_BUTTON.width() * currentTextureScale),
+                        scrollButtonRenderY,
+                        (int) (scrollButtonRenderY + Texture.SCROLL_BUTTON.height() * currentTextureScale))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
 

@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.colorpicker.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.screens.colorpicker.ColorPickerScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -42,10 +43,15 @@ public class HueSlider extends AbstractSliderButton {
                 (float) (handleX + 1.0),
                 (float) (getY() + getHeight()),
                 1);
+
+        if (this.isHovered) {
+            guiGraphics.requestCursor(this.dragging ? CursorTypes.RESIZE_EW : CursorTypes.POINTING_HAND);
+        }
     }
 
     @Override
     public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
+        this.dragging = this.active;
         updateValue(event.x());
     }
 

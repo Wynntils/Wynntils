@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.downloads;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.DownloadDependencyGraph;
 import com.wynntils.core.net.QueuedDownload;
@@ -182,6 +183,18 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL,
                         0.8f);
+
+        if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
+                mouseX,
+                mouseY,
+                (int) (dividedWidth * 48),
+                (int) ((dividedWidth * 48) + 6),
+                scrollY,
+                scrollY + 20)) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     @Override

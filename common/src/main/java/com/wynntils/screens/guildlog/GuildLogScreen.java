@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guildlog;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
@@ -115,6 +116,18 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
 
         renderLogs(guiGraphics, mouseX, mouseY, partialTick);
 
+        if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
+                mouseX,
+                mouseY,
+                offsetX + 393,
+                offsetX + 393 + Texture.SCROLL_BUTTON.width(),
+                scrollY,
+                scrollY + Texture.SCROLL_BUTTON.height())) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
+
         renderScroll(guiGraphics);
 
         renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
@@ -128,8 +141,8 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
                     (int) event.y(),
                     offsetX + 393,
                     offsetX + 393 + Texture.SCROLL_BUTTON.width(),
-                    (int) scrollY,
-                    (int) (scrollY + Texture.SCROLL_BUTTON.height()))) {
+                    scrollY,
+                    scrollY + Texture.SCROLL_BUTTON.height())) {
                 draggingScroll = true;
 
                 return true;

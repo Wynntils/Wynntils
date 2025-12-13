@@ -5,6 +5,7 @@
 package com.wynntils.screens.base.widgets;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.MathUtils;
@@ -140,6 +141,10 @@ public class TextInputBoxWidget extends AbstractWidget {
             int lastWidth,
             int mouseX,
             int mouseY) {
+        if (this.isHovered) {
+            guiGraphics.requestCursor(CursorTypes.IBEAM);
+        }
+
         guiGraphics.pose().pushMatrix();
 
         guiGraphics.pose().translate(this.getX(), this.getY());

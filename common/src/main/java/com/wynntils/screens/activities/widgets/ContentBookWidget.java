@@ -126,6 +126,8 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                     guiGraphics, CommonColors.RED, getX(), getY(), getX() + width, getY() + height, 2, 0.25f);
         }
 
+        handleCursor(guiGraphics);
+
         if (searchMatch) return;
 
         RenderUtils.drawRect(guiGraphics, CommonColors.BLACK.withAlpha(100), getX(), getY(), width, height);

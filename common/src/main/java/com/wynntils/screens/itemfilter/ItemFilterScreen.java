@@ -5,6 +5,7 @@
 package com.wynntils.screens.itemfilter;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -447,6 +448,18 @@ public final class ItemFilterScreen extends WynntilsScreen {
             renderSortScroll(guiGraphics);
         }
 
+        if (draggingProviderScroll || draggingSortScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
+                mouseX,
+                mouseY,
+                133 + offsetX,
+                133 + Texture.SCROLL_BUTTON.width() + offsetX,
+                providerScrollY,
+                (providerScrollY + Texture.SCROLL_BUTTON.height()))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
+
         renderTooltips(guiGraphics, mouseX, mouseY);
     }
 
@@ -471,8 +484,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
                     (int) event.y(),
                     133 + offsetX,
                     133 + Texture.SCROLL_BUTTON.width() + offsetX,
-                    (int) providerScrollY,
-                    (int) (providerScrollY + Texture.SCROLL_BUTTON.height()))) {
+                    providerScrollY,
+                    (providerScrollY + Texture.SCROLL_BUTTON.height()))) {
                 draggingProviderScroll = true;
 
                 return true;
@@ -481,7 +494,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         if (sortMode && !draggingSortScroll && sorts.size() > MAX_SORTS_PER_PAGE) {
             if (MathUtils.isInside(
-                    (int) event.x(), (int) event.y(), 330, 336, (int) sortScrollY, (int) (sortScrollY + 20))) {
+                    (int) event.x(), (int) event.y(), 330 + offsetX, 336 + offsetX, sortScrollY, (sortScrollY + 20))) {
                 draggingSortScroll = true;
 
                 return true;
@@ -535,7 +548,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
             return super.mouseDragged(event, dragX, dragY);
         } else if (draggingSortScroll) {
-            int scrollAreaStartY = 30 + 10;
+            int scrollAreaStartY = 30 + 10 + offsetY;
             int scrollAreaHeight = MAX_SORTS_PER_PAGE * 21 - 20;
 
             int newOffset = Math.round(MathUtils.map(

@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.skillpointloadouts.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.SavableSkillPointSet;
@@ -125,6 +126,10 @@ public class LoadoutWidget extends AbstractWidget {
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
+        }
+
+        if (this.isHovered) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
 

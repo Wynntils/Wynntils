@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
 import com.wynntils.screens.maps.widgets.IconFilterWidget;
 import com.wynntils.utils.MathUtils;
@@ -141,6 +142,18 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         renderScrollButton(guiGraphics);
+
+        if (MathUtils.isInside(
+                mouseX,
+                mouseY,
+                (int) scrollButtonRenderX,
+                (int) (scrollButtonRenderX + (dividedWidth / 2)),
+                (int) scrollButtonRenderY,
+                (int) (scrollButtonRenderY + scrollButtonHeight))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        } else if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        }
     }
 
     @Override

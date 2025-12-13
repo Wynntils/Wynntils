@@ -80,6 +80,8 @@ public class GuideSortButton extends AbstractWidget {
                             TextShadow.OUTLINE);
         }
 
+        handleCursor(guiGraphics);
+
         if (isHovered) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(

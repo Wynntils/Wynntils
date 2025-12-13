@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -211,6 +212,12 @@ public final class GuildMapScreen extends AbstractMapScreen {
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
         renderHoveredTerritoryInfo(guiGraphics);
+
+        if (isPanning) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        } else if (this.hovered != null && !(this.hovered instanceof TerritoryPoi)) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }

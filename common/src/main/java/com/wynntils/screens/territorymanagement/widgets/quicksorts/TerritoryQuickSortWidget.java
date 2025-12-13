@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.territorymanagement.widgets.quicksorts;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.territorymanagement.TerritoryManagementScreen;
@@ -56,6 +57,10 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
+
+        if (isHovered) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     @Override

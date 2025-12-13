@@ -44,6 +44,8 @@ public abstract class GuideFilterButton<T extends ItemStatProvider<?>> extends A
                 getWidth(),
                 getHeight());
 
+        handleCursor(guiGraphics);
+
         if (isHovered) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(

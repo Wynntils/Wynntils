@@ -19,6 +19,7 @@ accessible field net/minecraft/client/gui/GuiGraphics guiRenderState Lnet/minecr
 accessible field net/minecraft/client/gui/GuiGraphics scissorStack Lnet/minecraft/client/gui/GuiGraphics$ScissorStack;
 accessible field net/minecraft/client/gui/GuiGraphics$ScissorStack stack Ljava/util/Deque;
 accessible field net/minecraft/client/gui/components/AbstractSelectionList hovered Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;
+accessible field net/minecraft/client/gui/components/AbstractSliderButton dragging Z
 accessible field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
 accessible field net/minecraft/client/gui/components/ChatComponent allMessages Ljava/util/List;
 accessible field net/minecraft/client/gui/components/ChatComponent trimmedMessages Ljava/util/List;

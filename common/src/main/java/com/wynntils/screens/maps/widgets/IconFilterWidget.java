@@ -5,6 +5,7 @@
 package com.wynntils.screens.maps.widgets;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.screens.maps.IconFilterScreen;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -67,6 +68,7 @@ public class IconFilterWidget extends AbstractWidget {
 
         if (isHovered) {
             guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
         // Highlight to show inclusion

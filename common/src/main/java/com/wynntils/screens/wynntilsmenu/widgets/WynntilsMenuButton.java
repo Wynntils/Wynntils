@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.wynntilsmenu.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -56,6 +57,10 @@ public class WynntilsMenuButton extends AbstractWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
                 guiGraphics, isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR, getX(), getY(), width, height);
+
+        if (isHovered) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
 
         if (!dynamicTexture) {
             RenderUtils.drawTexturedRect(

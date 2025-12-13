@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.base.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -49,6 +50,10 @@ public class SearchWidget extends TextInputBoxWidget {
             int mouseX,
             int mouseY) {
         boolean defaultText = Objects.equals(textBoxInput, "");
+
+        if (this.isHovered) {
+            guiGraphics.requestCursor(CursorTypes.IBEAM);
+        }
 
         renderBackground(guiGraphics);
 

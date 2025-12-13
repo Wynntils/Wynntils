@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.itemfilter.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
 import com.wynntils.screens.itemfilter.type.NumericFilterWidgetFactory;
@@ -15,6 +16,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -160,6 +162,18 @@ public class ProviderFilterListWidget extends AbstractWidget {
 
         if (isScrollable()) {
             renderScrollBar(guiGraphics);
+        }
+
+        if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
+                mouseX,
+                mouseY,
+                getX() + SCROLLBAR_RENDER_X,
+                getX() + SCROLLBAR_RENDER_X + SCROLLBAR_WIDTH,
+                scrollRenderY,
+                scrollRenderY + SCROLLBAR_HEIGHT)) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
 

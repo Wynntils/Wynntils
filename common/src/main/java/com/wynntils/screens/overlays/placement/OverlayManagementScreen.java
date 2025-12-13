@@ -5,6 +5,7 @@
 package com.wynntils.screens.overlays.placement;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Corner;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
@@ -154,6 +155,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             }
         }
 
+        if (selectionMode == SelectionMode.EDGE) {
+            guiGraphics.requestCursor(selectedEdge.isVerticalLine() ? CursorTypes.RESIZE_EW : CursorTypes.RESIZE_NS);
+        } else if (selectionMode != SelectionMode.NONE) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        }
+
         for (Overlay overlay : overlays) {
             if (!renderAllOverlays && overlay != selectedOverlay) continue;
 
@@ -220,19 +227,25 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                                 TextShadow.OUTLINE);
             }
 
+            boolean hovering = isMouseHoveringOverlay(overlay, mouseX, mouseY);
+
+            if (hovering && selectionMode == SelectionMode.NONE) {
+                guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+            }
+
             // If tooltip has yet been rendered then we need to check
             // if an overlay is hovered and display the tooltip for that.
             if (!renderedTooltip
                     && !fixedSelection
                     && showPreview
                     && overlay != selectedOverlay
-                    && isMouseHoveringOverlay(overlay, mouseX, mouseY)
+                    && hovering
                     && selectionMode == SelectionMode.NONE) {
                 guiGraphics.setTooltipForNextFrame(Component.literal(overlayName), mouseX, mouseY);
                 renderedTooltip = true;
             } else if (!renderedTooltip
                     && overlay == selectedOverlay
-                    && isMouseHoveringOverlay(overlay, mouseX, mouseY)
+                    && hovering
                     && selectionMode == SelectionMode.NONE) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(HELP_TOOLTIP_LINES, Component::getVisualOrderText), mouseX, mouseY);

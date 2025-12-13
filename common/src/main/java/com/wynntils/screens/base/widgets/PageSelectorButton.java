@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.base.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.screens.base.WynntilsPagedScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -48,6 +49,13 @@ public class PageSelectorButton extends WynntilsButton {
 
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics, arrowTexture, getX(), getY(), isValid() && !isHovered, RenderDirection.HORIZONTAL);
+    }
+
+    @Override
+    protected void handleCursor(GuiGraphics guiGraphics) {
+        if (this.isHovered()) {
+            guiGraphics.requestCursor(this.isActive() && isValid() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
+        }
     }
 
     private boolean isValid() {

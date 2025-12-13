@@ -5,6 +5,7 @@
 package com.wynntils.screens.territorymanagement;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -399,6 +400,28 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
 
         for (TerritoryQuickSortWidget quickSort : quickSorts) {
             quickSort.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else {
+            float scrollX = getRenderX()
+                    + RENDER_AREA_POSITION.a()
+                    + RENDER_AREA_SIZE.a()
+                    + 10f
+                    - Texture.SCROLL_BUTTON.width() / 2f;
+            float scrollY = MathUtils.map(
+                    scrollOffset,
+                    0,
+                    getMaxScrollOffset(),
+                    getRenderY() + RENDER_AREA_POSITION.b(),
+                    getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b());
+            if (mouseX >= scrollX
+                    && mouseX <= scrollX + Texture.SCROLL_BUTTON.width()
+                    && mouseY >= scrollY - Texture.SCROLL_BUTTON.height() / 2f
+                    && mouseY <= scrollY + Texture.SCROLL_BUTTON.height() / 2f) {
+                guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+            }
         }
     }
 

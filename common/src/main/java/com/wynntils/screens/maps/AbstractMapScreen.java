@@ -59,6 +59,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected boolean holdingMapKey = false;
     protected boolean firstInit = true;
+    protected boolean isPanning = false;
 
     protected float renderWidth;
     protected float renderHeight;
@@ -269,10 +270,18 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 && event.x() <= renderX + renderWidth
                 && event.y() >= renderY
                 && event.y() <= renderY + renderHeight) {
+            isPanning = event.button() == 0;
             updateMapCenter(
                     (float) (mapCenterX - dragX / zoomRenderScale), (float) (mapCenterZ - dragY / zoomRenderScale));
         }
+
         return super.mouseDragged(event, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        isPanning = false;
+        return super.mouseReleased(event);
     }
 
     protected void renderCoordinates(GuiGraphics guiGraphics, int mouseX, int mouseY) {

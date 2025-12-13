@@ -60,6 +60,8 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
 
+        handleCursor(guiGraphics);
+
         if (isHovered) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(

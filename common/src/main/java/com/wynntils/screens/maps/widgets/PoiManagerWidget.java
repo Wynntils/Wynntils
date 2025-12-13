@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.PoiCreationScreen;
@@ -178,6 +179,10 @@ public class PoiManagerWidget extends AbstractWidget {
             deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
             upButton.render(guiGraphics, mouseX, mouseY, partialTick);
             downButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        if (this.isHovered) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
 

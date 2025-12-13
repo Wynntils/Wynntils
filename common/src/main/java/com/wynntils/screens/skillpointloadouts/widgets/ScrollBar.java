@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.skillpointloadouts.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -21,6 +22,8 @@ public class ScrollBar extends AbstractWidget {
     private final SkillPointLoadoutsScreen parent;
     private final float dividedHeight;
 
+    private boolean scrolling = false;
+
     public ScrollBar(
             float x, float y, float width, float height, SkillPointLoadoutsScreen parent, float dividedHeight) {
         super((int) x, (int) y, (int) width, (int) height, Component.empty());
@@ -37,6 +40,21 @@ public class ScrollBar extends AbstractWidget {
                 getY(),
                 getWidth(),
                 getHeight());
+
+        if (this.isHovered) {
+            guiGraphics.requestCursor(scrolling ? CursorTypes.RESIZE_NS : CursorTypes.POINTING_HAND);
+        }
+    }
+
+    @Override
+    public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
+        scrolling = true;
+        super.onClick(event, isDoubleClick);
+    }
+
+    public void onRelease(MouseButtonEvent event) {
+        scrolling = false;
+        super.onRelease(event);
     }
 
     // dragY = dividedHeight * 8 + dividedHeight * 48 * (-scrollY / 50)

@@ -123,6 +123,8 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             RenderUtils.drawTexturedRect(guiGraphics, texture, getX(), getY());
 
+            handleCursor(guiGraphics);
+
             if (!isHovered && state == ConfirmedBoolean.UNCONFIRMED) return;
 
             CustomColor color = CommonColors.WHITE;

@@ -5,6 +5,7 @@
 package com.wynntils.screens.overlays.selection;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
@@ -209,6 +210,26 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             if (selectedOverlay != null
                     && selectedOverlay.getVisibleConfigOptions().size() > CONFIGS_PER_PAGE) {
                 renderConfigScroll(guiGraphics);
+            }
+
+            if (draggingOverlayScroll || draggingConfigScroll) {
+                guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+            } else if (MathUtils.isInside(
+                    mouseX,
+                    mouseY,
+                    offsetX + 133,
+                    offsetX + 133 + Texture.SCROLL_BUTTON.width(),
+                    overlayScrollY,
+                    overlayScrollY + Texture.SCROLL_BUTTON.height())) {
+                guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+            } else if (MathUtils.isInside(
+                    mouseX,
+                    mouseY,
+                    offsetX + 344,
+                    offsetX + 344 + Texture.SCROLL_BUTTON.width(),
+                    configScrollY,
+                    configScrollY + Texture.SCROLL_BUTTON.height())) {
+                guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
             }
 
             renderTooltips(guiGraphics, mouseX, mouseY);

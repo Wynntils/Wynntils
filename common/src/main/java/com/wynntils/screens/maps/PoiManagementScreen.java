@@ -5,6 +5,7 @@
 package com.wynntils.screens.maps;
 
 import com.google.gson.JsonSyntaxException;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.config.HiddenConfig;
@@ -439,6 +440,18 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
                     (int) (dividedWidth * 50),
                     (int) (dividedHeight * HEADER_HEIGHT),
                     1);
+        }
+
+        if (MathUtils.isInside(
+                mouseX,
+                mouseY,
+                (int) scrollButtonRenderX,
+                (int) (scrollButtonRenderX + (dividedWidth / 2)),
+                (int) scrollButtonRenderY,
+                (int) (scrollButtonRenderY + scrollButtonHeight))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        } else if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         }
     }
 

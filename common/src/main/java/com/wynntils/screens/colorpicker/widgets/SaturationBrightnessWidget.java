@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.colorpicker.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.screens.colorpicker.ColorPickerScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -67,6 +68,10 @@ public class SaturationBrightnessWidget extends AbstractWidget {
                 getX() + cursorX + 2,
                 getY() + cursorY + 2,
                 1);
+
+        if (this.isHovered) {
+            guiGraphics.requestCursor(cursorHeld ? CursorTypes.RESIZE_ALL : CursorTypes.POINTING_HAND);
+        }
     }
 
     @Override

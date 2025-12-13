@@ -62,6 +62,8 @@ public class DownloadWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
+        handleCursor(guiGraphics);
+
         if (downloadState == DownloadDependencyGraph.NodeState.WAITING_ON_DEPENDENCY
                 || downloadState == DownloadDependencyGraph.NodeState.IN_PROGRESS
                 || downloadState == DownloadDependencyGraph.NodeState.QUEUED) {

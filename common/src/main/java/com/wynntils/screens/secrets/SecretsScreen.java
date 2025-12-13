@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.secrets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.secrets.widgets.SecretInputWidget;
@@ -82,6 +83,18 @@ public class SecretsScreen extends WynntilsScreen {
         renderSecrets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderScroll(guiGraphics);
+
+        if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
+                mouseX,
+                mouseY,
+                offsetX + 336,
+                offsetX + 336 + Texture.SCROLL_BUTTON.width(),
+                (int) scrollY,
+                (int) (scrollY + Texture.SCROLL_BUTTON.height()))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     @Override
