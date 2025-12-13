@@ -95,11 +95,14 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
             RenderUtils.drawTexturedRect(
                     guiGraphics,
                     iconTexture,
-                    (int) (getX() + (getWidth() - iconTexture.width()) / 2f + xOffset),
+                    getX() + (getWidth() - iconTexture.width()) / 2f + xOffset,
                     getY() + 14 + yOffset);
         } else {
-            RenderUtils.drawTexturedRect(guiGraphics, iconTexture, getX() + 14 + xOffset, (int)
-                    (getY() + (getHeight() - iconTexture.height()) / 2f + yOffset));
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
+                    iconTexture,
+                    getX() + 14 + xOffset,
+                    getY() + (getHeight() - iconTexture.height()) / 2f + yOffset);
         }
     }
 

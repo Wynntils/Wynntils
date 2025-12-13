@@ -17,10 +17,10 @@ import net.minecraft.network.chat.Component;
 
 public class IconButton extends AbstractWidget {
     private final boolean selected;
-    private final int iconRenderX;
-    private final int iconRenderY;
-    private final int iconWidth;
-    private final int iconHeight;
+    private final float iconRenderX;
+    private final float iconRenderY;
+    private final float iconWidth;
+    private final float iconHeight;
     private final Texture mapIcon;
 
     public IconButton(int x, int y, int width, Texture mapIcon, boolean selected) {
@@ -31,12 +31,12 @@ public class IconButton extends AbstractWidget {
 
         // Scale the icon to fill 80% of the button
         float scaleFactor = 0.8f * Math.min(width, height) / Math.max(mapIcon.width(), mapIcon.height());
-        iconWidth = (int) (mapIcon.width() * scaleFactor);
-        iconHeight = (int) (mapIcon.height() * scaleFactor);
+        iconWidth = mapIcon.width() * scaleFactor;
+        iconHeight = mapIcon.height() * scaleFactor;
 
         // Calculate x/y position of the icon to keep it centered
-        iconRenderX = (int) ((x + width / 2f) - iconWidth / 2f);
-        iconRenderY = (int) ((y + height / 2f) - iconHeight / 2f);
+        iconRenderX = (x + width / 2f) - iconWidth / 2f;
+        iconRenderY = (y + height / 2f) - iconHeight / 2f;
     }
 
     @Override

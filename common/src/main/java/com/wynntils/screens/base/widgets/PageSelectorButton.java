@@ -54,7 +54,8 @@ public class PageSelectorButton extends WynntilsButton {
     @Override
     protected void handleCursor(GuiGraphics guiGraphics) {
         if (this.isHovered()) {
-            guiGraphics.requestCursor(this.isActive() && isValid() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
+            guiGraphics.requestCursor(
+                    this.isActive() && isValid() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
         }
     }
 

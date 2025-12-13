@@ -49,11 +49,11 @@ public class HeldItemCooldownOverlay extends Overlay {
     }
 
     private void renderOverlay(GuiGraphics guiGraphics, float cooldownPercent) {
-        int width = (int) getWidth();
-        int x1 = (int) getRenderX();
-        int x2 = x1 + width;
-        int height = (int) getHeight();
-        int y = (int) getRenderY();
+        float width = getWidth();
+        float x1 = getRenderX();
+        float x2 = x1 + width;
+        float height = getHeight();
+        float y = getRenderY();
         CustomColor color = CommonColors.WHITE;
 
         // Draw guidelines
@@ -62,8 +62,8 @@ public class HeldItemCooldownOverlay extends Overlay {
         RenderUtils.drawLine(guiGraphics, color, x2 - width * 0.4f, ym, x2, ym, 1f);
 
         // Draw bars
-        int barWidth = 3;
-        int offset = (int) ((1f - cooldownPercent) * (width - barWidth) / 2f);
+        float barWidth = 3f;
+        float offset = (1f - cooldownPercent) * (width - barWidth) / 2f;
         RenderUtils.drawRect(guiGraphics, color, x1 + offset, y, barWidth, height);
         RenderUtils.drawRect(guiGraphics, color, x2 - barWidth - offset, y, barWidth, height);
     }

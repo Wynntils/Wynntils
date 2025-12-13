@@ -99,8 +99,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
     // UI size, positions, etc
     private boolean draggingProviderScroll = false;
     private boolean draggingSortScroll = false;
-    private int providerScrollY;
-    private int sortScrollY;
+    private float providerScrollY;
+    private float sortScrollY;
     private int presetsScrollOffset = 0;
     private int providersScrollOffset = 0;
     private int sortScrollOffset = 0;
@@ -455,8 +455,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 mouseY,
                 133 + offsetX,
                 133 + Texture.SCROLL_BUTTON.width() + offsetX,
-                providerScrollY,
-                (providerScrollY + Texture.SCROLL_BUTTON.height()))) {
+                (int) providerScrollY,
+                (int) (providerScrollY + Texture.SCROLL_BUTTON.height()))) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
@@ -484,8 +484,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
                     (int) event.y(),
                     133 + offsetX,
                     133 + Texture.SCROLL_BUTTON.width() + offsetX,
-                    providerScrollY,
-                    (providerScrollY + Texture.SCROLL_BUTTON.height()))) {
+                    (int) providerScrollY,
+                    (int) (providerScrollY + Texture.SCROLL_BUTTON.height()))) {
                 draggingProviderScroll = true;
 
                 return true;
@@ -494,7 +494,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         if (sortMode && !draggingSortScroll && sorts.size() > MAX_SORTS_PER_PAGE) {
             if (MathUtils.isInside(
-                    (int) event.x(), (int) event.y(), 330 + offsetX, 336 + offsetX, sortScrollY, (sortScrollY + 20))) {
+                    (int) event.x(), (int) event.y(), 330 + offsetX, 336 + offsetX, (int) sortScrollY, (int)
+                            (sortScrollY + 20))) {
                 draggingSortScroll = true;
 
                 return true;
@@ -1082,14 +1083,14 @@ public final class ItemFilterScreen extends WynntilsScreen {
     }
 
     private void renderProvidersScroll(GuiGraphics guiGraphics) {
-        providerScrollY = (int) (24
+        providerScrollY = 24
                 + offsetY
                 + MathUtils.map(
                         providersScrollOffset,
                         0,
                         getMaxProviderScrollOffset(),
                         0,
-                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height()));
+                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 133 + offsetX, providerScrollY);
     }
@@ -1098,9 +1099,9 @@ public final class ItemFilterScreen extends WynntilsScreen {
         RenderUtils.drawRect(
                 guiGraphics, CommonColors.LIGHT_GRAY, 330 + offsetX, 30 + offsetY, 6, MAX_SORTS_PER_PAGE * 21);
 
-        sortScrollY = (int) (30
+        sortScrollY = 30
                 + offsetY
-                + MathUtils.map(sortScrollOffset, 0, getMaxSortsScrollOffset(), 0, MAX_SORTS_PER_PAGE * 21 - 20));
+                + MathUtils.map(sortScrollOffset, 0, getMaxSortsScrollOffset(), 0, MAX_SORTS_PER_PAGE * 21 - 20);
 
         RenderUtils.drawRect(
                 guiGraphics,

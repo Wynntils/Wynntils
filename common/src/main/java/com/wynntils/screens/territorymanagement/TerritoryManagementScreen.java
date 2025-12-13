@@ -340,7 +340,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
     }
 
     private void renderScrollButton(GuiGraphics guiGraphics) {
-        int renderY = (int) MathUtils.map(
+        float renderY = MathUtils.map(
                 scrollOffset,
                 0,
                 getMaxScrollOffset(),
@@ -349,12 +349,12 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 Texture.SCROLLBAR_BUTTON,
-                (int) (getRenderX()
+                getRenderX()
                         + RENDER_AREA_POSITION.a()
                         + RENDER_AREA_SIZE.a()
                         + 10f
-                        - Texture.SCROLL_BUTTON.width() / 2f),
-                (int) (renderY - Texture.SCROLLBAR_BUTTON.height() / 2f));
+                        - Texture.SCROLL_BUTTON.width() / 2f,
+                renderY - Texture.SCROLLBAR_BUTTON.height() / 2f);
     }
 
     private void renderQuickFiltersAndSorts(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {

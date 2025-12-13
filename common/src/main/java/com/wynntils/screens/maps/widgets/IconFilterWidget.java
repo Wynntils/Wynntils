@@ -20,10 +20,10 @@ import net.minecraft.network.chat.Component;
 
 public class IconFilterWidget extends AbstractWidget {
     private final boolean included;
-    private final int iconHeight;
-    private final int iconRenderX;
-    private final int iconRenderY;
-    private final int iconWidth;
+    private final float iconHeight;
+    private final float iconRenderX;
+    private final float iconRenderY;
+    private final float iconWidth;
     private final List<Component> tooltip;
     private final IconFilterScreen filterScreen;
     private final Texture icon;
@@ -37,12 +37,12 @@ public class IconFilterWidget extends AbstractWidget {
 
         // Scale the icon to fill half of the widget
         float scaleFactor = 0.5f * Math.min(width, height) / Math.max(icon.width(), icon.height());
-        iconWidth = (int) (icon.width() * scaleFactor);
-        iconHeight = (int) (icon.height() * scaleFactor);
+        iconWidth = icon.width() * scaleFactor;
+        iconHeight = icon.height() * scaleFactor;
 
         // Calculate x/y position of the icon to keep it centered
-        iconRenderX = (int) ((x + width / 2f) - iconWidth / 2f);
-        iconRenderY = (int) ((y + height / 2f) - iconHeight / 2f);
+        iconRenderX = (x + width / 2f) - iconWidth / 2f;
+        iconRenderY = (y + height / 2f) - iconHeight / 2f;
 
         tooltip = included
                 ? List.of(Component.translatable(

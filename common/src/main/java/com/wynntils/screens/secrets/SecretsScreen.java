@@ -87,12 +87,8 @@ public class SecretsScreen extends WynntilsScreen {
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (MathUtils.isInside(
-                mouseX,
-                mouseY,
-                offsetX + 336,
-                offsetX + 336 + Texture.SCROLL_BUTTON.width(),
-                (int) scrollY,
-                (int) (scrollY + Texture.SCROLL_BUTTON.height()))) {
+                mouseX, mouseY, offsetX + 336, offsetX + 336 + Texture.SCROLL_BUTTON.width(), (int) scrollY, (int)
+                        (scrollY + Texture.SCROLL_BUTTON.height()))) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }

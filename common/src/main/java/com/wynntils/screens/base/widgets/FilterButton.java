@@ -84,16 +84,19 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
         RenderUtils.drawRect(guiGraphics, getButtonColor(), getX(), getY(), width, height);
 
         if (!this.dynamicTexture) {
-            RenderUtils.drawTexturedRect(guiGraphics, texture, (int) (getX() + (width - texture.width()) / 2f), (int)
-                    (getY() + (height - texture.height()) / 2f));
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
+                    texture,
+                    getX() + (width - texture.width()) / 2f,
+                    getY() + (height - texture.height()) / 2f);
             return;
         }
 
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics,
                 texture,
-                (int) (getX() + (width - texture.width()) / 2f),
-                (int) (getY() + (height - texture.height() / 2f) / 2f),
+                getX() + (width - texture.width()) / 2f,
+                getY() + (height - texture.height() / 2f) / 2f,
                 isHovered,
                 RenderDirection.VERTICAL);
     }

@@ -46,7 +46,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
 
     // UI size, positions, etc
     private boolean draggingScroll = false;
-    private int scrollY;
+    private float scrollY;
     private int scrollOffset = 0;
     private int maxScrollOffset = 0;
     private int offsetX;
@@ -119,12 +119,8 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (MathUtils.isInside(
-                mouseX,
-                mouseY,
-                offsetX + 393,
-                offsetX + 393 + Texture.SCROLL_BUTTON.width(),
-                scrollY,
-                scrollY + Texture.SCROLL_BUTTON.height())) {
+                mouseX, mouseY, offsetX + 393, offsetX + 393 + Texture.SCROLL_BUTTON.width(), (int) scrollY, (int)
+                        (scrollY + Texture.SCROLL_BUTTON.height()))) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
@@ -141,8 +137,8 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
                     (int) event.y(),
                     offsetX + 393,
                     offsetX + 393 + Texture.SCROLL_BUTTON.width(),
-                    scrollY,
-                    scrollY + Texture.SCROLL_BUTTON.height())) {
+                    (int) scrollY,
+                    (int) (scrollY + Texture.SCROLL_BUTTON.height()))) {
                 draggingScroll = true;
 
                 return true;
@@ -247,9 +243,8 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
     }
 
     private void renderScroll(GuiGraphics guiGraphics) {
-        scrollY = (int) (offsetY
-                + 15
-                + MathUtils.map(scrollOffset, 0, maxScrollOffset, 0, 141 - Texture.SCROLL_BUTTON.height()));
+        scrollY =
+                offsetY + 15 + MathUtils.map(scrollOffset, 0, maxScrollOffset, 0, 141 - Texture.SCROLL_BUTTON.height());
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, offsetX + 393, scrollY);
     }

@@ -179,10 +179,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             RenderUtils.drawRect(
                     guiGraphics,
                     color.withAlpha(colorAlphaRect),
-                    (int) overlay.getRenderX(),
-                    (int) overlay.getRenderY(),
-                    (int) overlay.getWidth(),
-                    (int) overlay.getHeight());
+                    overlay.getRenderX(),
+                    overlay.getRenderY(),
+                    overlay.getWidth(),
+                    overlay.getHeight());
 
             String overlayName = overlay.getTranslatedName();
 

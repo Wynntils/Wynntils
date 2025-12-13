@@ -95,10 +95,10 @@ public final class LoadingScreen extends WynntilsScreen {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.BACKGROUND_SPLASH.identifier(),
-                (int) ((this.width - scaledWidth) / 2f),
-                (int) ((this.height - scaledHeight) / 2f),
-                (int) scaledWidth,
-                (int) scaledHeight,
+                (this.width - scaledWidth) / 2f,
+                (this.height - scaledHeight) / 2f,
+                scaledWidth,
+                scaledHeight,
                 textureWidth,
                 textureHeight);
 
@@ -160,11 +160,11 @@ public final class LoadingScreen extends WynntilsScreen {
         drawSpinner(guiGraphics, centerX, 150 + offsetY, state);
     }
 
-    private void drawSpinner(GuiGraphics guiGraphics, int x, int y, boolean state) {
+    private void drawSpinner(GuiGraphics guiGraphics, float x, float y, boolean state) {
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics,
                 Texture.RELOAD_ICON_OFFSET,
-                (int) (x - (Texture.RELOAD_ICON_OFFSET.width() / 2f) / 2f),
+                x - (Texture.RELOAD_ICON_OFFSET.width() / 2f) / 2f,
                 y,
                 state,
                 RenderDirection.HORIZONTAL);

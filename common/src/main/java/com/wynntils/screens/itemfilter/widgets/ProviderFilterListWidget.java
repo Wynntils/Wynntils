@@ -16,7 +16,6 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -419,7 +418,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         }
     }
 
-    private int getScrollbarHeight() {
+    private float getScrollbarHeight() {
         if (provider.getValidInputs().isEmpty() && !anyFilterActive()) {
             return MAX_WIDGETS_PER_PAGE * 24;
         } else {

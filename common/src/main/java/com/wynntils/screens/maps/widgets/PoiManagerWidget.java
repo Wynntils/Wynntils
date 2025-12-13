@@ -227,8 +227,8 @@ public class PoiManagerWidget extends AbstractWidget {
                 guiGraphics,
                 poi.getIcon(),
                 poi.getColor(),
-                (int) (getX() + dividedWidth - (poi.getIcon().width() / 2f)),
-                (int) (getY() + 10 - (poi.getIcon().height() / 2f)));
+                getX() + dividedWidth - (poi.getIcon().width() / 2f),
+                getY() + 10 - (poi.getIcon().height() / 2f));
     }
 
     @Override

@@ -12,7 +12,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.List;
-
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.sounds.SoundManager;

@@ -438,7 +438,7 @@ public final class MapRenderer {
     /**
      * {@param poi} POI that we get the render coordinate for
      * {@param mapCenterX} center coordinates of map (in-game coordinates)
-     * {@param x} center coordinates of map (screen render coordinates)
+     * {@param centerX} center coordinates of map (screen render coordinates)
      * {@param currentZoom} the bigger, the more detailed the map is
      */
     public static float getRenderX(Poi poi, float mapCenterX, float centerX, float currentZoom) {

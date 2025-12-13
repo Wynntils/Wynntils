@@ -187,9 +187,9 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         RenderUtils.drawRect(
                 guiGraphics,
                 CommonColors.WHITE,
-                (int) (dividedWidth * 4),
-                (int) (dividedHeight * 8),
-                (int) (dividedWidth * 30 - dividedWidth * 4),
+                dividedWidth * 4,
+                dividedHeight * 8,
+                dividedWidth * 30 - dividedWidth * 4,
                 1);
         FontRenderer.getInstance()
                 .renderText(

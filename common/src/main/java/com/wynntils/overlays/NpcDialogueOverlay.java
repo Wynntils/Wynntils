@@ -197,10 +197,10 @@ public class NpcDialogueOverlay extends Overlay {
         RenderUtils.drawRect(
                 guiGraphics,
                 CommonColors.BLACK.withAlpha(colorAlphaRect),
-                (int) this.getRenderX(),
-                (int) rectRenderY,
-                (int) this.getWidth(),
-                (int) rectHeight);
+                this.getRenderX(),
+                rectRenderY,
+                this.getWidth(),
+                rectHeight);
 
         // Render the message
         FontRenderer.getInstance()

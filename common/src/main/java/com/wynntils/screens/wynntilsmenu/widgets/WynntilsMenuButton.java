@@ -64,16 +64,18 @@ public class WynntilsMenuButton extends AbstractWidget {
 
         if (!dynamicTexture) {
             RenderUtils.drawTexturedRect(
-                    guiGraphics, buttonTexture, (int) (getX() + (width - buttonTexture.width()) / 2f), (int)
-                            (getY() + (height - buttonTexture.height()) / 2f));
+                    guiGraphics,
+                    buttonTexture,
+                    getX() + (width - buttonTexture.width()) / 2f,
+                    getY() + (height - buttonTexture.height()) / 2f);
             return;
         }
 
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics,
                 buttonTexture,
-                (int) (getX() + (width - buttonTexture.width()) / 2f),
-                (int) (getY() + (height - buttonTexture.height() / 2f) / 2f),
+                getX() + (width - buttonTexture.width()) / 2f,
+                getY() + (height - buttonTexture.height() / 2f) / 2f,
                 isHovered,
                 RenderDirection.VERTICAL);
     }

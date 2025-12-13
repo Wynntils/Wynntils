@@ -360,7 +360,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
-        final int centerHeight = 75
+        final float centerHeight = 75
                 + (territoryInfo.getStorage().size()
                                 + territoryInfo.getGenerators().size())
                         * 10

@@ -80,14 +80,13 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
         backgroundHeight = dividedHeight * 50;
 
         // Height of the scroll button relative to the scaled width
-        scrollButtonHeight =
-                (int) (((dividedWidth / 2) / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height());
+        scrollButtonHeight = ((dividedWidth / 2) / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
 
         // How far the scrollbar should be able to go
         scrollAreaHeight = (int) (backgroundHeight - scrollButtonHeight) - (int) (dividedHeight * 4);
 
         // X position of the scroll button
-        scrollButtonRenderX = (int) ((dividedWidth * 52) + (dividedWidth / 4));
+        scrollButtonRenderX = (int) (dividedWidth * 52) + (dividedWidth / 4);
 
         int filterButtonWidth = (int) (dividedWidth * 10);
 
@@ -238,16 +237,16 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
         if (usedIcons.size() <= MAX_ICONS_TO_DISPLAY) return;
 
         // Calculate where the scroll button should be on the Y axis
-        scrollButtonRenderY = (int) ((this.height - backgroundHeight) / 2
+        scrollButtonRenderY = (this.height - backgroundHeight) / 2
                 + (int) (dividedHeight * 3)
-                + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, scrollAreaHeight));
+                + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, scrollAreaHeight);
 
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.SCROLL_BUTTON.identifier(),
                 scrollButtonRenderX,
                 scrollButtonRenderY,
-                dividedWidth / 2,
+                (dividedWidth / 2),
                 scrollButtonHeight,
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());

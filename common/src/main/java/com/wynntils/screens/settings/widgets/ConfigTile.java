@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -91,9 +90,7 @@ public class ConfigTile extends WynntilsButton {
     }
 
     @Override
-    protected void handleCursor(GuiGraphics guiGraphics) {
-
-    }
+    protected void handleCursor(GuiGraphics guiGraphics) {}
 
     private void renderDisplayName(GuiGraphics guiGraphics) {
         FontRenderer.getInstance()

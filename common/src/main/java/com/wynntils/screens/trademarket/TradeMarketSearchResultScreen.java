@@ -226,11 +226,11 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     private void renderScrollButton(GuiGraphics guiGraphics) {
-        int renderX =
+        float renderX =
                 (this.width - this.imageWidth) / 2 + this.imageWidth + Texture.SCROLLBAR_BACKGROUND.width() / 2 - 14;
-        int renderY = (int) ((this.height - this.imageHeight) / 2
+        float renderY = (this.height - this.imageHeight) / 2
                 + Texture.SCROLLBAR_BUTTON.height() / 2
-                + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT));
+                + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLLBAR_BUTTON, renderX, renderY);
     }

@@ -645,16 +645,16 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         if (pois.size() <= maxPoisToDisplay) return;
 
         // Calculate where the scroll button should be on the Y axis
-        scrollButtonRenderY = (int) ((this.height - backgroundHeight) / 2
+        scrollButtonRenderY = (this.height - backgroundHeight) / 2
                 + (int) (dividedHeight * 3)
-                + MathUtils.map(scrollOffset, 0, pois.size() - maxPoisToDisplay, 0, scrollAreaHeight));
+                + MathUtils.map(scrollOffset, 0, pois.size() - maxPoisToDisplay, 0, scrollAreaHeight);
 
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.SCROLL_BUTTON.identifier(),
                 scrollButtonRenderX,
                 scrollButtonRenderY,
-                dividedWidth / 2,
+                (dividedWidth / 2),
                 scrollButtonHeight,
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());

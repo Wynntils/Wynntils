@@ -182,9 +182,9 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
             RenderUtils.drawRect(
                     guiGraphics,
                     CommonColors.WHITE,
-                    (int) (dividedWidth * 4),
-                    (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT),
-                    (int) (dividedWidth * 30 - dividedWidth * 2),
+                    dividedWidth * 4,
+                    dividedHeight * PARTY_LIST_DIV_HEIGHT,
+                    dividedWidth * 30 - dividedWidth * 2,
                     1);
             FontRenderer.getInstance()
                     .renderText(
@@ -260,9 +260,9 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         RenderUtils.drawRect(
                 guiGraphics,
                 CommonColors.WHITE,
-                (int) (dividedWidth * 36),
-                (int) (dividedHeight * SUGGESTION_LIST_DIV_HEIGHT),
-                (int) (dividedWidth * 60 - dividedWidth * 36),
+                dividedWidth * 36,
+                dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
+                dividedWidth * 60 - dividedWidth * 36,
                 1);
         FontRenderer.getInstance()
                 .renderText(

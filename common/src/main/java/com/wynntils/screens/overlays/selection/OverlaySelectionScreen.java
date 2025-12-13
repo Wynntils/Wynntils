@@ -85,8 +85,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     // UI size, positions, etc
     private boolean draggingOverlayScroll = false;
     private boolean draggingConfigScroll = false;
-    private int configScrollY;
-    private int overlayScrollY;
+    private float configScrollY;
+    private float overlayScrollY;
     private int offsetX;
     private int offsetY;
     private int configScrollOffset = 0;
@@ -219,16 +219,16 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                     mouseY,
                     offsetX + 133,
                     offsetX + 133 + Texture.SCROLL_BUTTON.width(),
-                    overlayScrollY,
-                    overlayScrollY + Texture.SCROLL_BUTTON.height())) {
+                    (int) overlayScrollY,
+                    (int) (overlayScrollY + Texture.SCROLL_BUTTON.height()))) {
                 guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
             } else if (MathUtils.isInside(
                     mouseX,
                     mouseY,
                     offsetX + 344,
                     offsetX + 344 + Texture.SCROLL_BUTTON.width(),
-                    configScrollY,
-                    configScrollY + Texture.SCROLL_BUTTON.height())) {
+                    (int) configScrollY,
+                    (int) (configScrollY + Texture.SCROLL_BUTTON.height()))) {
                 guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
             }
 
@@ -289,8 +289,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                         (int) event.y(),
                         offsetX + 133,
                         offsetX + 133 + Texture.SCROLL_BUTTON.width(),
-                        overlayScrollY,
-                        overlayScrollY + Texture.SCROLL_BUTTON.height())) {
+                        (int) overlayScrollY,
+                        (int) (overlayScrollY + Texture.SCROLL_BUTTON.height()))) {
                     draggingOverlayScroll = true;
 
                     return true;
@@ -305,8 +305,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                         (int) event.y(),
                         offsetX + 344,
                         offsetX + 344 + Texture.SCROLL_BUTTON.width(),
-                        configScrollY,
-                        configScrollY + Texture.SCROLL_BUTTON.height())) {
+                        (int) configScrollY,
+                        (int) (configScrollY + Texture.SCROLL_BUTTON.height()))) {
                     draggingConfigScroll = true;
 
                     return true;
@@ -965,27 +965,27 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     private void renderOverlayScroll(GuiGraphics guiGraphics) {
-        overlayScrollY = (int) (24
+        overlayScrollY = 24
                 + offsetY
                 + MathUtils.map(
                         overlayScrollOffset,
                         0,
                         getMaxOverlayScrollOffset(),
                         0,
-                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height()));
+                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 133 + offsetX, overlayScrollY);
     }
 
     private void renderConfigScroll(GuiGraphics guiGraphics) {
-        configScrollY = (int) (24
+        configScrollY = 24
                 + offsetY
                 + MathUtils.map(
                         configScrollOffset,
                         0,
                         getMaxConfigScrollOffset(),
                         0,
-                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height()));
+                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 344 + offsetX, configScrollY);
     }

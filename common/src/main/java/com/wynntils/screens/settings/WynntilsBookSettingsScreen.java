@@ -101,8 +101,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private int configScrollOffset = 0;
     private int offsetX;
     private int offsetY;
-    private int configurableScrollRenderY;
-    private int configScrollRenderY;
+    private float configurableScrollRenderY;
+    private float configScrollRenderY;
 
     // Settings display
     private boolean unsavedChanges = false;
@@ -414,17 +414,17 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 mouseY,
                 CONFIGURABLE_SCROLL_X + offsetX,
                 CONFIGURABLE_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
-                configurableScrollRenderY,
+                (int) configurableScrollRenderY,
                 (int) (configurableScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         } else if ((configs.size() > CONFIGS_PER_PAGE)
                 && MathUtils.isInside(
-                mouseX,
-                mouseY,
-                CONFIG_SCROLL_X + offsetX,
-                CONFIG_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
-                (int) configScrollRenderY,
-                (int) (configScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
+                        mouseX,
+                        mouseY,
+                        CONFIG_SCROLL_X + offsetX,
+                        CONFIG_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
+                        (int) configScrollRenderY,
+                        (int) (configScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
@@ -485,7 +485,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         (int) event.y(),
                         CONFIGURABLE_SCROLL_X + offsetX,
                         CONFIGURABLE_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
-                        configurableScrollRenderY,
+                        (int) configurableScrollRenderY,
                         (int) (configurableScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
             draggingConfigurableScroll = true;
             return true;
@@ -1071,14 +1071,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
                 SCROLL_AREA_HEIGHT);
 
-        configurableScrollRenderY = (int) (SCROLL_START_Y
+        configurableScrollRenderY = SCROLL_START_Y
                 + offsetY
                 + MathUtils.map(
                         configurablesScrollOffset,
                         0,
                         getMaxConfigurableScrollOffset(),
                         0,
-                        SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f));
+                        SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f);
 
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics,
@@ -1130,14 +1130,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
                 SCROLL_AREA_HEIGHT);
 
-        configScrollRenderY = (int) (SCROLL_START_Y
+        configScrollRenderY = SCROLL_START_Y
                 + offsetY
                 + MathUtils.map(
                         configScrollOffset,
                         0,
                         getMaxConfigScrollOffset(),
                         0,
-                        SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f));
+                        SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f);
 
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics,

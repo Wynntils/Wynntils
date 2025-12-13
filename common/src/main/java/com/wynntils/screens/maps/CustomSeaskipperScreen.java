@@ -64,10 +64,10 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     private boolean firstInit = true;
     private double currentUnusedScroll = 0;
     private float currentTextureScale;
-    private int departureBoardY;
-    private int destinationButtonsRenderX;
-    private int scrollButtonRenderX;
-    private int scrollButtonRenderY;
+    private float departureBoardY;
+    private float destinationButtonsRenderX;
+    private float scrollButtonRenderX;
+    private float scrollButtonRenderY;
     private int scrollAreaHeight;
     private int scrollOffset = 0;
 
@@ -90,12 +90,12 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         centerX += (departureListWidth) / 2f;
         renderedBorderXOffset -= 1;
         mapWidth -= (departureListWidth) - 5;
-        departureBoardY = (int) ((this.height
+        departureBoardY = (this.height
                         - (Texture.DESTINATION_LIST.height() * currentTextureScale
                                 + (Texture.TRAVEL_BUTTON.height() / 2) * currentTextureScale))
-                / 2);
-        scrollButtonRenderX = (int) (5 + departureListWidth * 0.933f);
-        destinationButtonsRenderX = (int) (5 + departureListWidth * 0.027f);
+                / 2;
+        scrollButtonRenderX = 5 + departureListWidth * 0.933f;
+        destinationButtonsRenderX = 5 + departureListWidth * 0.027f;
         scrollAreaHeight = (int) (SCROLL_HEIGHT * currentTextureScale);
 
         // region Map buttons
@@ -249,9 +249,9 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                 || MathUtils.isInside(
                         mouseX,
                         mouseY,
-                        scrollButtonRenderX,
+                        (int) scrollButtonRenderX,
                         (int) (scrollButtonRenderX + Texture.SCROLL_BUTTON.width() * currentTextureScale),
-                        scrollButtonRenderY,
+                        (int) scrollButtonRenderY,
                         (int) (scrollButtonRenderY + Texture.SCROLL_BUTTON.height() * currentTextureScale))) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
@@ -627,21 +627,21 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     private void renderScrollButton(GuiGraphics guiGraphics) {
         if (availablePois.size() <= MAX_DESTINATIONS) return;
 
-        scrollButtonRenderY = (int) ((int) (departureBoardY + 4 * currentTextureScale * 0.933f)
+        scrollButtonRenderY = (int) (departureBoardY + 4 * currentTextureScale * 0.933f)
                 + MathUtils.map(
                         scrollOffset,
                         0,
                         availablePois.size() - MAX_DESTINATIONS,
                         0,
-                        scrollAreaHeight - Texture.SCROLL_BUTTON.height() * currentTextureScale));
+                        scrollAreaHeight - Texture.SCROLL_BUTTON.height() * currentTextureScale);
 
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.SCROLL_BUTTON.identifier(),
                 scrollButtonRenderX,
                 scrollButtonRenderY,
-                (int) (Texture.SCROLL_BUTTON.width() * currentTextureScale),
-                (int) (Texture.SCROLL_BUTTON.height() * currentTextureScale),
+                Texture.SCROLL_BUTTON.width() * currentTextureScale,
+                Texture.SCROLL_BUTTON.height() * currentTextureScale,
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());
     }

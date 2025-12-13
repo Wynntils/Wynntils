@@ -140,7 +140,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         RenderUtils.drawRect(
                 guiGraphics,
                 CommonColors.LIGHT_GRAY,
-                (int) (dividedWidth * 48),
+                (dividedWidth * 48),
                 (int) (dividedHeight * WIDGET_TOP_Y),
                 6,
                 WIDGETS_PER_PAGE * widgetHeight);
@@ -151,7 +151,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         RenderUtils.drawRect(
                 guiGraphics,
                 draggingScroll ? CommonColors.BLACK : CommonColors.GRAY,
-                (int) (dividedWidth * 48),
+                (dividedWidth * 48),
                 scrollY,
                 6,
                 20);
@@ -187,12 +187,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (MathUtils.isInside(
-                mouseX,
-                mouseY,
-                (int) (dividedWidth * 48),
-                (int) ((dividedWidth * 48) + 6),
-                scrollY,
-                scrollY + 20)) {
+                mouseX, mouseY, (int) (dividedWidth * 48), (int) ((dividedWidth * 48) + 6), scrollY, scrollY + 20)) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }

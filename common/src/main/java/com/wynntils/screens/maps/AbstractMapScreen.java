@@ -319,8 +319,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 Texture.MAP_BUTTONS_BACKGROUND,
-                (int) (this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f),
-                (int) (this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height()));
+                this.centerX - Texture.MAP_BUTTONS_BACKGROUND.width() / 2f,
+                this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
 
         for (Renderable renderable : this.renderables) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
@@ -353,10 +353,10 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         RenderUtils.drawRect(
                 guiGraphics,
                 CommonColors.BLACK,
-                (int) (renderX + renderedBorderXOffset),
-                (int) (renderY + renderedBorderYOffset),
-                (int) mapWidth,
-                (int) mapHeight);
+                renderX + renderedBorderXOffset,
+                renderY + renderedBorderYOffset,
+                mapWidth,
+                mapHeight);
 
         BoundingBox view =
                 BoundingBox.centered(mapCenterX, mapCenterZ, mapWidth / zoomRenderScale, mapHeight / zoomRenderScale);

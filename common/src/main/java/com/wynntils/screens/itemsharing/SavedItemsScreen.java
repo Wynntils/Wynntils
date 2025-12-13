@@ -378,9 +378,9 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     private void renderScrollButton(GuiGraphics guiGraphics) {
-        int renderX = this.leftPos + 155;
-        int renderY = (int)
-                (this.topPos + 18 + MathUtils.map(itemScrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT));
+        float renderX = this.leftPos + 155;
+        float renderY =
+                this.topPos + 18 + MathUtils.map(itemScrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_RECORD_SCROLL, renderX, renderY);
     }
