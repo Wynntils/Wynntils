@@ -308,6 +308,15 @@ public class CharacterFunctions {
         }
     }
 
+    public static class GuildObjectiveEventBonusFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            WynnObjective weekly = Models.Objectives.getGuildObjective();
+            if (weekly == null) return false;
+            return weekly.hasEventBonus();
+        }
+    }
+
     public static class PersonalObjectiveScoreFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
@@ -332,6 +341,23 @@ public class CharacterFunctions {
             return !daily.isEmpty() && index >= 0 && daily.size() > index
                     ? daily.get(index).getGoal()
                     : "";
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("index", Integer.class, 0)));
+        }
+    }
+
+    public static class PersonalObjectiveEventBonusFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
+            return !daily.isEmpty()
+                    && index >= 0
+                    && daily.size() > index
+                    && daily.get(index).hasEventBonus();
         }
 
         @Override
