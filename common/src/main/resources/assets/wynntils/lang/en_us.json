@@ -3107,6 +3107,7 @@
   "screens.wynntils.settingsScreen.booleanConfig.enabled": "Enabled",
   "screens.wynntils.settingsScreen.close": "Discard",
   "screens.wynntils.settingsScreen.close.description": "Close without saving changes",
+  "screens.wynntils.settingsScreen.cycleEnabled": "Click to cycle through only showing features that are enabled, disabled or either.",
   "screens.wynntils.settingsScreen.export": "Export Settings",
   "screens.wynntils.settingsScreen.export.all": "- Left click to export settings to your clipboard for all settings.",
   "screens.wynntils.settingsScreen.export.selected": "- Right click to export settings to your clipboard for the currently selected setting.",

@@ -23,6 +23,7 @@ import com.wynntils.screens.settings.widgets.CategoryButton;
 import com.wynntils.screens.settings.widgets.ConfigTile;
 import com.wynntils.screens.settings.widgets.ConfigurableButton;
 import com.wynntils.screens.settings.widgets.SettingsCategoryTabButton;
+import com.wynntils.screens.settings.widgets.SettingsEnabledStateTabButton;
 import com.wynntils.screens.settings.widgets.SettingsPageTabButton;
 import com.wynntils.screens.settings.widgets.SettingsSearchWidget;
 import com.wynntils.screens.settings.widgets.SettingsSideTabButton;
@@ -69,7 +70,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private static final int CONFIGS_PER_PAGE = 4;
     private static final int CONFIGURABLE_SCROLL_X = (int) (Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 12);
     private static final int CONFIG_SCROLL_X = Texture.CONFIG_BOOK_BACKGROUND.width() - 23;
-    private static final int MAX_DISPLAYED_CATEGORIES = 10;
+    private static final int MAX_DISPLAYED_CATEGORIES = 9;
     private static final int SCROLL_AREA_HEIGHT = 186;
     private static final int SCROLL_START_Y = 21;
 
@@ -85,6 +86,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private final SearchWidget searchWidget;
     private SettingsCategoryTabButton allCategoriesButton;
     private SettingsCategoryTabButton selectedCategoryButton;
+    private SettingsEnabledStateTabButton enabledStateTabButton;
     private TextInputBoxWidget focusedTextInput;
     private UnsavedChangesWidget unsavedChangesWidget;
 
@@ -105,6 +107,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private Category selectedCategory;
     private Configurable selectedConfigurable = null;
     private Configurable hoveredConfigurable = null;
+    private EnabledFilterType enabledFilterType = EnabledFilterType.ENABLED;
 
     private final Screen previousScreen;
 
@@ -261,6 +264,19 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         if (selectedCategory == null) {
             selectedCategoryButton = allCategoriesButton;
         }
+
+        xPos += Texture.TAG_RED.width() + 1;
+
+        enabledStateTabButton = this.addRenderableWidget(new SettingsEnabledStateTabButton(
+                xPos,
+                (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
+                Texture.TAG_RED.width(),
+                Texture.TAG_RED.height(),
+                this::cycleEnabledState,
+                List.of(Component.translatable("screens.wynntils.settingsScreen.cycleEnabled")),
+                enabledFilterType.getIcon(),
+                offsetX,
+                offsetY));
 
         xPos += Texture.TAG_RED.width() * 2 + 1;
 
@@ -674,6 +690,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
             if (configurable instanceof Feature feature) {
                 for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
+                        .filter(this::isOverlayFiltered)
                         .sorted()
                         .toList()) {
                     matchingConfigs = 0;
@@ -792,7 +809,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             this.removeWidget(widget);
         }
 
-        int xPos = (int) (Texture.TAG_RED.width() * 2.85 + 1) + offsetX;
+        int xPos = (int) (Texture.TAG_RED.width() * 3.85 + 1) + offsetX;
 
         categoryButtons = new ArrayList<>();
 
@@ -828,61 +845,30 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private void getFilteredConfigurables() {
         configurableList = new ArrayList<>();
 
-        List<Configurable> filteredConfigurables;
+        boolean hasSearch = !searchWidget.getTextBoxInput().isEmpty();
 
         // Add all configurables for selected category
         if (selectedCategory != null) {
-            filteredConfigurables = Managers.Feature.getFeatures().stream()
-                    .filter(feature -> searchMatches(feature)
-                            || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
-                    .map(feature -> (Configurable) feature)
+            configurableList.addAll(Managers.Feature.getFeatures().stream()
+                    .filter(this::isFeatureFiltered)
+                    .filter(feature -> isCategoryMatching(feature, selectedCategory))
                     .sorted()
-                    .filter(configurable -> isCategoryMatching(configurable, selectedCategory))
-                    .collect(Collectors.toList());
-
-            filteredConfigurables.addAll(Managers.Overlay.getOverlays().stream()
-                    .filter(overlay -> !filteredConfigurables.contains(Managers.Overlay.getOverlayParent(overlay)))
-                    .filter(overlay -> searchMatches(overlay)
-                            || overlay.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
-                    .sorted()
-                    .filter(configurable -> isCategoryMatching(configurable, selectedCategory))
                     .toList());
 
             // If there is a search query, add all matches from every other category
-            if (!searchWidget.getTextBoxInput().isEmpty()) {
-                filteredConfigurables.addAll(Managers.Feature.getFeatures().stream()
-                        .filter(feature -> searchMatches(feature)
-                                || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
-                        .map(feature -> (Configurable) feature)
+            if (hasSearch) {
+                configurableList.addAll(Managers.Feature.getFeatures().stream()
+                        .filter(this::isFeatureFiltered)
+                        .filter(feature -> !isCategoryMatching(feature, selectedCategory))
                         .sorted()
-                        .filter(configurable -> !isCategoryMatching(configurable, selectedCategory))
-                        .toList());
-
-                filteredConfigurables.addAll(Managers.Overlay.getOverlays().stream()
-                        .filter(overlay -> !filteredConfigurables.contains(Managers.Overlay.getOverlayParent(overlay)))
-                        .filter(overlay -> searchMatches(overlay)
-                                || overlay.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
-                        .sorted()
-                        .filter(configurable -> !isCategoryMatching(configurable, selectedCategory))
                         .toList());
             }
         } else { // All tab, add all configurables
-            filteredConfigurables = Managers.Feature.getFeatures().stream()
-                    .filter(feature -> searchMatches(feature)
-                            || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
-                    .map(feature -> (Configurable) feature)
-                    .sorted()
-                    .collect(Collectors.toList());
-
-            filteredConfigurables.addAll(Managers.Overlay.getOverlays().stream()
-                    .filter(overlay -> !filteredConfigurables.contains(Managers.Overlay.getOverlayParent(overlay)))
-                    .filter(overlay -> searchMatches(overlay)
-                            || overlay.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
+            configurableList.addAll(Managers.Feature.getFeatures().stream()
+                    .filter(this::isFeatureFiltered)
                     .sorted()
                     .toList());
         }
-
-        configurableList.addAll(filteredConfigurables);
     }
 
     private List<ConfigTile> buildConfigTiles(Configurable configurable) {
@@ -954,8 +940,50 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         populateCategories();
     }
 
+    private void cycleEnabledState(int button) {
+        int direction = button == GLFW.GLFW_MOUSE_BUTTON_LEFT ? 1 : -1;
+        EnabledFilterType[] values = EnabledFilterType.values();
+        int currentIndex = enabledFilterType.ordinal();
+        int newIndex = (currentIndex + direction + values.length) % values.length;
+
+        enabledFilterType = values[newIndex];
+        enabledStateTabButton.updateIcon(enabledFilterType.getIcon());
+
+        configurablesScrollOffset = 0;
+        getFilteredConfigurables();
+        populateConfigurables();
+    }
+
     private boolean isCategoryMatching(Configurable configurable, Category selectedCategory) {
         return getCategory(configurable) == selectedCategory;
+    }
+
+    private boolean isFeatureFiltered(Feature feature) {
+        boolean hasSearch = !searchWidget.getTextBoxInput().isEmpty();
+
+        boolean searchMatch = searchMatches(feature)
+                || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains);
+
+        boolean enabledMatch =
+                switch (enabledFilterType) {
+                    case NEUTRAL -> true;
+                    case ENABLED -> feature.isEnabled();
+                    case DISABLED -> !feature.isEnabled();
+                };
+
+        return hasSearch ? searchMatch : enabledMatch;
+    }
+
+    private boolean isOverlayFiltered(Overlay overlay) {
+        boolean parentEnabled = Managers.Overlay.getOverlayParent(overlay).isEnabled();
+
+        if (enabledFilterType == EnabledFilterType.ENABLED) {
+            return parentEnabled;
+        } else if (enabledFilterType == EnabledFilterType.DISABLED) {
+            return !parentEnabled;
+        }
+
+        return true;
     }
 
     private void scrollToMatchingConfig() {
@@ -1255,5 +1283,21 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         // Save to clipboard
         McUtils.mc().keyboardHandler.setClipboard(exportedSettings);
+    }
+
+    public enum EnabledFilterType {
+        ENABLED(Texture.ENABLED_SETTINGS_ICON),
+        DISABLED(Texture.DISABLED_SETTINGS_ICON),
+        NEUTRAL(Texture.NEUTRAL_SETTINGS_ICON);
+
+        private final Texture icon;
+
+        EnabledFilterType(Texture icon) {
+            this.icon = icon;
+        }
+
+        public Texture getIcon() {
+            return icon;
+        }
     }
 }

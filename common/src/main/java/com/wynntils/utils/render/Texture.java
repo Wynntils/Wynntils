@@ -79,6 +79,9 @@ public enum Texture {
     EXPORT_SETTINGS_ICON("icons/config_categories/export_settings_icon.png", 16, 16),
     IMPORT_SETTINGS_ICON("icons/config_categories/import_settings_icon.png", 16, 16),
     SETTINGS_PROFILES_ICON("icons/config_categories/settings_profiles_icon.png", 16, 16),
+    ENABLED_SETTINGS_ICON("icons/config_categories/enabled_icon.png", 16, 16),
+    DISABLED_SETTINGS_ICON("icons/config_categories/disabled_icon.png", 16, 16),
+    NEUTRAL_SETTINGS_ICON("icons/config_categories/neutral_icon.png", 16, 16),
 
     // Content Book
     ACCESS_REWARD("icons/content_book/access_reward.png", 10, 10),
