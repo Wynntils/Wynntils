@@ -385,10 +385,10 @@ public class MinimapOverlay extends Overlay {
             RenderUtils.drawRect(
                     guiGraphics,
                     new CustomColor(0f, 0f, 0f, 0.7f),
-                    (int) (compassRenderX - w - 3f),
-                    (int) (compassRenderZ - h - 1f),
-                    (int) (2 * w + 6),
-                    (int) (2 * h + 1));
+                    compassRenderX - w - 3f,
+                    compassRenderZ - h - 1f,
+                    2 * w + 6,
+                    2 * h + 1);
             fontRenderer.renderText(
                     guiGraphics,
                     StyledText.fromString(text),
