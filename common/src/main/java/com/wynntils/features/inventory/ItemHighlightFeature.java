@@ -11,8 +11,8 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.mc.event.DataComponentGetEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
-import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
@@ -30,7 +30,6 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
@@ -242,27 +241,17 @@ public class ItemHighlightFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onSetSlot(SetSlotEvent.Pre event) {
-        removeVanillaHighlight(event.getItemStack());
-    }
-
-    @Override
-    public void onEnable() {
-        if (McUtils.player() == null) return;
-
-        McUtils.inventory().items.forEach(this::removeVanillaHighlight);
-    }
-
-    private void removeVanillaHighlight(ItemStack itemStack) {
-        CustomModelData itemStackModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
-        if (itemStackModelData == null) return;
+    public void onGetModelData(DataComponentGetEvent.CustomModelData event) {
+        CustomModelData itemStackModelData = event.getOriginalValue();
 
         List<String> newStrings = itemStackModelData.strings().stream()
                 .filter(s -> DEFAULT_HIGHLIGHT_KEYS.stream().noneMatch(s::startsWith))
                 .toList();
-        CustomModelData newModelData = new CustomModelData(
-                itemStackModelData.floats(), itemStackModelData.flags(), newStrings, itemStackModelData.colors());
-        itemStack.set(DataComponents.CUSTOM_MODEL_DATA, newModelData);
+
+        if (!newStrings.equals(itemStackModelData.strings())) {
+            event.setValue(new CustomModelData(
+                    itemStackModelData.floats(), itemStackModelData.flags(), newStrings, itemStackModelData.colors()));
+        }
     }
 
     private CustomColor getHighlightColor(ItemStack itemStack, boolean hotbarHighlight) {

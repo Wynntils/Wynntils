@@ -15,6 +15,7 @@
     "ConnectionMixin",
     "CrashReportMixin",
     "CustomHeadLayerMixin",
+    "DataComponentHolderMixin",
     "DimensionTypeMixin",
     "EditBoxMixin",
     "EntityLookupMixin",

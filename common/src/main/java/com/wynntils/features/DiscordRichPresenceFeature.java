@@ -104,6 +104,11 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onConnect(ConnectionEvent.ConnectedEvent e) {
+        enableRichPresence();
+    }
+
+    @SubscribeEvent
     public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
         disableRichPresence();
     }

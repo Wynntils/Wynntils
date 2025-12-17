@@ -46,6 +46,7 @@
   "command.wynntils.player.lookingUp": "Looking up player stats...",
   "command.wynntils.quest.description": "List, show and track quests",
   "command.wynntils.reauth.tryReauth": "Disconnecting from Hades, and trying to reauthenticate...",
+  "command.wynntils.refetching": "Removing current data and fetching new data....",
   "command.wynntils.reloadCaches.reloading": "Reloading caches...",
   "command.wynntils.servers.description": "Show information about Wynncraft servers",
   "command.wynntils.statistics.clickHere": "Click here to confirm",
