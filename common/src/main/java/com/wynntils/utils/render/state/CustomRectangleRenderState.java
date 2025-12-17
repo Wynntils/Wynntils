@@ -58,22 +58,54 @@ public record CustomRectangleRenderState(
     public void buildVertices(VertexConsumer consumer) {
         if (this.renderDirection == RenderDirection.HORIZONTAL) {
             consumer.addVertexWith2DPose(this.pose(), this.x1(), this.y1())
-                    .setColor(this.color1().asInt());
+                    .setColor(
+                            this.color1().r(),
+                            this.color1().g(),
+                            this.color1().b(),
+                            this.color1().a());
             consumer.addVertexWith2DPose(this.pose(), this.x1(), this.y2())
-                    .setColor(this.color1().asInt());
+                    .setColor(
+                            this.color1().r(),
+                            this.color1().g(),
+                            this.color1().b(),
+                            this.color1().a());
             consumer.addVertexWith2DPose(this.pose(), this.x2(), this.y2())
-                    .setColor(this.color2().asInt());
+                    .setColor(
+                            this.color2().r(),
+                            this.color2().g(),
+                            this.color2().b(),
+                            this.color2().a());
             consumer.addVertexWith2DPose(this.pose(), this.x2(), this.y1())
-                    .setColor(this.color2().asInt());
+                    .setColor(
+                            this.color2().r(),
+                            this.color2().g(),
+                            this.color2().b(),
+                            this.color2().a());
         } else {
             consumer.addVertexWith2DPose(this.pose(), this.x1(), this.y1())
-                    .setColor(this.color1().asInt());
+                    .setColor(
+                            this.color1().r(),
+                            this.color1().g(),
+                            this.color1().b(),
+                            this.color1().a());
             consumer.addVertexWith2DPose(this.pose(), this.x1(), this.y2())
-                    .setColor(this.color2().asInt());
+                    .setColor(
+                            this.color2().r(),
+                            this.color2().g(),
+                            this.color2().b(),
+                            this.color2().a());
             consumer.addVertexWith2DPose(this.pose(), this.x2(), this.y2())
-                    .setColor(this.color2().asInt());
+                    .setColor(
+                            this.color2().r(),
+                            this.color2().g(),
+                            this.color2().b(),
+                            this.color2().a());
             consumer.addVertexWith2DPose(this.pose(), this.x2(), this.y1())
-                    .setColor(this.color1().asInt());
+                    .setColor(
+                            this.color1().r(),
+                            this.color1().g(),
+                            this.color1().b(),
+                            this.color1().a());
         }
     }
 

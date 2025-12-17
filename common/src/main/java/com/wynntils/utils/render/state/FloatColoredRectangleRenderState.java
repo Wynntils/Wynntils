@@ -53,13 +53,13 @@ public record FloatColoredRectangleRenderState(
 
     public void buildVertices(VertexConsumer consumer) {
         consumer.addVertexWith2DPose(this.pose(), this.x1(), this.y1())
-                .setColor(this.color1().asInt());
+                .setColor(color1().r(), color1().g(), color1().b(), color1().a());
         consumer.addVertexWith2DPose(this.pose(), this.x1(), this.y2())
-                .setColor(this.color2().asInt());
+                .setColor(color2().r(), color2().g(), color2().b(), color2().a());
         consumer.addVertexWith2DPose(this.pose(), this.x2(), this.y2())
-                .setColor(this.color2().asInt());
+                .setColor(color2().r(), color2().g(), color2().b(), color2().a());
         consumer.addVertexWith2DPose(this.pose(), this.x2(), this.y1())
-                .setColor(this.color1().asInt());
+                .setColor(color1().r(), color1().g(), color1().b(), color1().a());
     }
 
     private static ScreenRectangle getBounds(

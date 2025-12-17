@@ -40,11 +40,11 @@ public record ColoredTrianglesRenderState(
             Vector2f v1 = vertices.get(i + 1);
             Vector2f v2 = vertices.get(i + 2);
 
-            consumer.addVertexWith2DPose(pose, v0.x(), v0.y()).setColor(color.asInt());
-            consumer.addVertexWith2DPose(pose, v1.x(), v1.y()).setColor(color.asInt());
-            consumer.addVertexWith2DPose(pose, v2.x(), v2.y()).setColor(color.asInt());
+            consumer.addVertexWith2DPose(pose, v0.x(), v0.y()).setColor(color.r(), color.g(), color.b(), color.a());
+            consumer.addVertexWith2DPose(pose, v1.x(), v1.y()).setColor(color.r(), color.g(), color.b(), color.a());
+            consumer.addVertexWith2DPose(pose, v2.x(), v2.y()).setColor(color.r(), color.g(), color.b(), color.a());
             // needed as we are rendering as a quad
-            consumer.addVertexWith2DPose(pose, v0.x(), v0.y()).setColor(color.asInt());
+            consumer.addVertexWith2DPose(pose, v0.x(), v0.y()).setColor(color.r(), color.g(), color.b(), color.a());
         }
     }
 

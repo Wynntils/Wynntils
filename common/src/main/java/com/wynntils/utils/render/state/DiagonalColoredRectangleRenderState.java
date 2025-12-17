@@ -75,10 +75,10 @@ public record DiagonalColoredRectangleRenderState(
         float x2Left = x2 - perpX;
         float y2Left = y2 - perpY;
 
-        consumer.addVertexWith2DPose(pose, x1Left, y1Left).setColor(color.asInt());
-        consumer.addVertexWith2DPose(pose, x1Right, y1Right).setColor(color.asInt());
-        consumer.addVertexWith2DPose(pose, x2Right, y2Right).setColor(color.asInt());
-        consumer.addVertexWith2DPose(pose, x2Left, y2Left).setColor(color.asInt());
+        consumer.addVertexWith2DPose(pose, x1Left, y1Left).setColor(color.r(), color.g(), color.b(), color.a());
+        consumer.addVertexWith2DPose(pose, x1Right, y1Right).setColor(color.r(), color.g(), color.b(), color.a());
+        consumer.addVertexWith2DPose(pose, x2Right, y2Right).setColor(color.r(), color.g(), color.b(), color.a());
+        consumer.addVertexWith2DPose(pose, x2Left, y2Left).setColor(color.r(), color.g(), color.b(), color.a());
     }
 
     private static ScreenRectangle getBounds(

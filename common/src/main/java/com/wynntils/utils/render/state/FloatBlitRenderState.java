@@ -63,16 +63,32 @@ public record FloatBlitRenderState(
     public void buildVertices(VertexConsumer consumer) {
         consumer.addVertexWith2DPose(this.pose(), this.x1(), this.y1())
                 .setUv(this.u1(), this.v1())
-                .setColor(this.color().asInt());
+                .setColor(
+                        this.color().r(),
+                        this.color().g(),
+                        this.color().b(),
+                        this.color().a());
         consumer.addVertexWith2DPose(this.pose(), this.x1(), this.y2())
                 .setUv(this.u1(), this.v2())
-                .setColor(this.color().asInt());
+                .setColor(
+                        this.color().r(),
+                        this.color().g(),
+                        this.color().b(),
+                        this.color().a());
         consumer.addVertexWith2DPose(this.pose(), this.x2(), this.y2())
                 .setUv(this.u2(), this.v2())
-                .setColor(this.color().asInt());
+                .setColor(
+                        this.color().r(),
+                        this.color().g(),
+                        this.color().b(),
+                        this.color().a());
         consumer.addVertexWith2DPose(this.pose(), this.x2(), this.y1())
                 .setUv(this.u2(), this.v1())
-                .setColor(this.color().asInt());
+                .setColor(
+                        this.color().r(),
+                        this.color().g(),
+                        this.color().b(),
+                        this.color().a());
     }
 
     private static ScreenRectangle getBounds(

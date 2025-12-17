@@ -82,10 +82,12 @@ public record ArcRenderState(
             float innerY = midY - cosAngle * innerRadius;
 
             if (i > 0) {
-                consumer.addVertexWith2DPose(pose, prevOuterX, prevOuterY).setColor(color.asInt());
-                consumer.addVertexWith2DPose(pose, prevInnerX, prevInnerY).setColor(color.asInt());
-                consumer.addVertexWith2DPose(pose, innerX, innerY).setColor(color.asInt());
-                consumer.addVertexWith2DPose(pose, outerX, outerY).setColor(color.asInt());
+                consumer.addVertexWith2DPose(pose, prevOuterX, prevOuterY)
+                        .setColor(color.r(), color.g(), color.b(), color.a());
+                consumer.addVertexWith2DPose(pose, prevInnerX, prevInnerY)
+                        .setColor(color.r(), color.g(), color.b(), color.a());
+                consumer.addVertexWith2DPose(pose, innerX, innerY).setColor(color.r(), color.g(), color.b(), color.a());
+                consumer.addVertexWith2DPose(pose, outerX, outerY).setColor(color.r(), color.g(), color.b(), color.a());
             }
 
             prevOuterX = outerX;
