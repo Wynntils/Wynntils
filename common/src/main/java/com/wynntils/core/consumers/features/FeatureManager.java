@@ -104,6 +104,7 @@ import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.overlays.RaidProgressFeature;
+import com.wynntils.features.overlays.ScoreboardOverlayFeature;
 import com.wynntils.features.overlays.ServerUptimeInfoOverlayFeature;
 import com.wynntils.features.overlays.ShamanMaskOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTimerOverlayFeature;
@@ -314,6 +315,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new PartyMembersOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
         registerFeature(new RaidProgressFeature());
+        registerFeature(new ScoreboardOverlayFeature());
         registerFeature(new ServerUptimeInfoOverlayFeature());
         registerFeature(new ShamanMaskOverlayFeature());
         registerFeature(new ShamanTotemTimerOverlayFeature());

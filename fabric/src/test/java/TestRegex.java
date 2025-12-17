@@ -157,6 +157,8 @@ public class TestRegex {
                 "§#fddd5cff\uE01E\uE002 Wanytails has thrown a §#f3e6b2ffProfession Speed Bomb§#fddd5cff on §#f3e6b2ff§nNA3");
         p.shouldMatch(
                 "§#fddd5cff\uE001 Wanytails has thrown a §#f3e6b2ffCombat Experience Bomb§#fddd5cff on §#f3e6b2ff§nNA3");
+        p.shouldMatch(
+                "§#fddd5cff\uE001 xX_NoScope_Xx has thrown a §#f3e6b2ffProfession Experience Bomb§#fddd5cff  on §#f3e6b2ff§nEU5");
     }
 
     @Test
