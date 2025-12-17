@@ -33,25 +33,26 @@ public class CommandAliasesFeature extends Feature {
         String message = e.getCommand();
         String[] parts = message.split(" ");
 
-        if (parts.length < 2) return;
-
         boolean changed = false;
-
-        for (ArgumentAlias argumentAlias : argumentAliases.get()) {
-            if (!argumentAlias.roots().contains(parts[0])) continue;
-
-            for (int i = 1; i < parts.length; i++) {
-                if (argumentAlias.aliases().contains(parts[i])) {
-                    parts[i] = argumentAlias.original();
-                    changed = true;
-                }
-            }
-        }
 
         for (RootAlias rootAlias : rootAliases.get()) {
             if (rootAlias.aliases().contains(parts[0])) {
                 parts[0] = rootAlias.original();
                 changed = true;
+                break;
+            }
+        }
+
+        if (parts.length > 1) {
+            for (ArgumentAlias argumentAlias : argumentAliases.get()) {
+                if (!argumentAlias.roots().contains(parts[0])) continue;
+
+                for (int i = 1; i < parts.length; i++) {
+                    if (argumentAlias.aliases().contains(parts[i])) {
+                        parts[i] = argumentAlias.original();
+                        changed = true;
+                    }
+                }
             }
         }
 
