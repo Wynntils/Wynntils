@@ -13,7 +13,6 @@ import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandSuggestionEvent;
 import java.util.List;
-import java.util.Objects;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
