@@ -132,12 +132,9 @@ public class CombatXpFunctions {
                     .filter(uuid -> uuid.toString().startsWith(Models.Character.getId()))
                     .findFirst();
 
-            if (activeCharacterUuid.isPresent()) {
-                characterData = playerInfo.characters().get(activeCharacterUuid.get());
-            } else {
-                return 0L;
-            }
-
+            if (activeCharacterUuid.isEmpty()) return 0L;
+      
+            characterData = playerInfo.characters().get(activeCharacterUuid.get());
             if (characterData == null) return 0L;
 
             return characterData.xp();
