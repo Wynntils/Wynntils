@@ -16,6 +16,7 @@ import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.mc.event.ScoreboardEvent;
 import com.wynntils.mc.event.ScoreboardSetDisplayObjectiveEvent;
 import com.wynntils.mc.event.ScoreboardSetObjectiveEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -52,6 +53,9 @@ public final class ScoreboardHandler extends Handler {
 
     private final List<ScoreboardPart> scoreboardParts = new ArrayList<>();
 
+    private boolean scoreboardOutdated = false;
+    private long lastScoreboardUpdateTick = -1;
+
     public void addPart(ScoreboardPart scoreboardPart) {
         scoreboardParts.add(scoreboardPart);
     }
@@ -68,21 +72,21 @@ public final class ScoreboardHandler extends Handler {
     public void onSetScore(ScoreboardEvent.Set event) {
         if (!currentScoreboardName.equals(event.getObjectiveName())) return;
 
-        handleUpdate();
+        updateNextTick();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetScore(ScoreboardEvent.Reset event) {
         if (!currentScoreboardName.equals(event.getObjectiveName())) return;
 
-        handleUpdate();
+        updateNextTick();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetObjective(ScoreboardSetObjectiveEvent event) {
         if (!currentScoreboardName.equals(event.getObjectiveName())) return;
 
-        handleUpdate();
+        updateNextTick();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -90,9 +94,23 @@ public final class ScoreboardHandler extends Handler {
         if (!isValidScoreboardName(event.getObjectiveName())) return;
 
         currentScoreboardName = event.getObjectiveName();
-        handleUpdate();
+        updateNextTick();
 
         event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (!scoreboardOutdated) return;
+        if (McUtils.mc().level == null) return;
+
+        // Wait until packets have stopped arriving
+        if (McUtils.mc().level.getGameTime() - lastScoreboardUpdateTick < 1) {
+            return;
+        }
+
+        scoreboardOutdated = false;
+        handleUpdate();
     }
 
     @SubscribeEvent
@@ -103,6 +121,14 @@ public final class ScoreboardHandler extends Handler {
 
         scoreboardSegments = new ArrayList<>();
         currentScoreboardName = "";
+
+        scoreboardOutdated = false;
+        lastScoreboardUpdateTick = -1;
+    }
+
+    private void updateNextTick() {
+        scoreboardOutdated = true;
+        lastScoreboardUpdateTick = McUtils.mc().level.getGameTime();
     }
 
     private void handleUpdate() {
