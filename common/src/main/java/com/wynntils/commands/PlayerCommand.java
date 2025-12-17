@@ -164,10 +164,8 @@ public class PlayerCommand extends Command {
                                             "\nIf you think you should be able to see this, add your Wynncraft API Token to ")
                                     .withStyle(ChatFormatting.RED))
                             .append(Component.literal("Wynntils Secrets").withStyle(style -> style.withHoverEvent(
-                                            new HoverEvent(
-                                                    HoverEvent.Action.SHOW_TEXT,
-                                                    Component.literal("Click to open secrets menu.")))
-                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils secrets"))
+                                            new HoverEvent.ShowText(Component.literal("Click to open secrets menu.")))
+                                    .withClickEvent(new ClickEvent.RunCommand("/wynntils secrets"))
                                     .withColor(ChatFormatting.GOLD)
                                     .withUnderlined(true)));
                 }
