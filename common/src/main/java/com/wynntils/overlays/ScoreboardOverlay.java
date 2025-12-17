@@ -163,6 +163,11 @@ public class ScoreboardOverlay extends Overlay {
     public void onScoreboardContentSet(ScoreboardUpdatedEvent event) {
         scoreboardLines = new ArrayList<>();
 
+        if (event.getScoreboardSegments().isEmpty()) {
+            linesToRender = scoreboardLines;
+            return;
+        }
+
         if (renderHeader.get()) {
             scoreboardLines.add(StyledText.fromString("À"));
         }

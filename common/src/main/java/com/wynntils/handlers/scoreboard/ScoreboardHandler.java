@@ -371,7 +371,10 @@ public final class ScoreboardHandler extends Handler {
                 true,
                 BlankFormat.INSTANCE);
 
-        if (scoreboardSegments.stream().map(Pair::value).noneMatch(ScoreboardSegment::isVisible)) return;
+        if (scoreboardSegments.stream().map(Pair::value).noneMatch(ScoreboardSegment::isVisible)) {
+            WynntilsMod.postEvent(new ScoreboardUpdatedEvent(new ArrayList<>()));
+            return;
+        }
 
         // Only display the scoreboard if there is at least one visible segment
         scoreboard.setDisplayObjective(DisplaySlot.SIDEBAR, wynntilsObjective);
