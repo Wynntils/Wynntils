@@ -474,6 +474,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.CommanderDurationFunction());
         registerFunction(new CharacterFunctions.EquippedAspectFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
+        registerFunction(new CharacterFunctions.GuildObjectiveEventBonusFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.HasNoGuiFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
@@ -492,6 +493,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.OphanimHealingPercentFunction());
         registerFunction(new CharacterFunctions.OphanimOrb());
         registerFunction(new CharacterFunctions.PersonalObjectiveGoalFunction());
+        registerFunction(new CharacterFunctions.PersonalObjectiveEventBonusFunction());
         registerFunction(new CharacterFunctions.PersonalObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
 
