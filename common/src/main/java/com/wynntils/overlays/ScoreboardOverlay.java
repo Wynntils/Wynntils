@@ -39,6 +39,7 @@ public class ScoreboardOverlay extends Overlay {
     private static final MutableComponent SCOREBOARD_TITLE_COMPONENT = Component.literal("play.wynncraft.com")
             .withStyle(ChatFormatting.BOLD)
             .withStyle(ChatFormatting.GOLD);
+    private static final String EMPTY_LINE = "À";
 
     @Persisted
     private final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
@@ -209,7 +210,7 @@ public class ScoreboardOverlay extends Overlay {
 
         if (!renderHeader.get() && !linesToRender.isEmpty()) {
             String firstLine = linesToRender.getFirst().getString();
-            if (firstLine.equals("À")) {
+            if (firstLine.equals(EMPTY_LINE)) {
                 linesToRender.removeFirst();
             }
         }
