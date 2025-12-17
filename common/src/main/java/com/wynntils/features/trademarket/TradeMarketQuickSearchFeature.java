@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
@@ -83,6 +84,10 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private boolean quickSearching = false;
     private boolean instantSearchingSendChat = false;
     private boolean instantSearchingCloseMenu = false;
+
+    public TradeMarketQuickSearchFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onScreenClosed(ScreenClosedEvent.Post event) {

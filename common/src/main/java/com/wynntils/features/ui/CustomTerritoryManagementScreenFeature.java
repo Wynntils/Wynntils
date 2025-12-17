@@ -7,6 +7,7 @@ package com.wynntils.features.ui;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
@@ -59,6 +60,10 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
 
     private boolean customScreenOpened = false;
     private boolean openTerritoryManagement = false;
+
+    public CustomTerritoryManagementScreenFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onWrappedScreenOpen(WrappedScreenOpenEvent event) {

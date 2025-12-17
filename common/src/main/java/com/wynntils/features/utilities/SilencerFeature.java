@@ -7,6 +7,7 @@ package com.wynntils.features.utilities;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
@@ -47,6 +48,10 @@ public class SilencerFeature extends Feature {
     private boolean isSilencerEnabled = false;
 
     private boolean firstTitleScreenInit = true;
+
+    public SilencerFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onDisconnect(WynncraftConnectionEvent.Disconnected event) {

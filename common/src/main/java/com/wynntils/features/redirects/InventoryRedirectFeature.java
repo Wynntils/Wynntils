@@ -6,6 +6,7 @@ package com.wynntils.features.redirects;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -36,6 +37,10 @@ public class InventoryRedirectFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> redirectPotionStack = new Config<>(true);
+
+    public InventoryRedirectFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {

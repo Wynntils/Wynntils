@@ -6,6 +6,7 @@ package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -52,6 +53,10 @@ public class TranscribeMessagesFeature extends Feature {
     private final Config<ColorChatFormatting> wynnicColor = new Config<>(ColorChatFormatting.DARK_GREEN);
 
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
+
+    public TranscribeMessagesFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageEvent.Edit event) {

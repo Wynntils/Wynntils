@@ -5,6 +5,7 @@
 package com.wynntils.features.utilities;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
@@ -23,6 +24,10 @@ public class GammabrightFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind gammabrightKeyBind =
             new KeyBind("Gammabright", GLFW.GLFW_KEY_G, true, this::toggleGammaBright);
+
+    public GammabrightFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onGetDimensionAmbientLight(DimensionAmbientLightEvent event) {

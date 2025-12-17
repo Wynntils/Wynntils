@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.SectionCoordinates;
 import com.wynntils.core.persisted.config.Category;
@@ -22,6 +23,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
 public class FixCrosshairPositionFeature extends Feature {
+    public FixCrosshairPositionFeature() {
+        super(ProfileDefault.ENABLED);
+    }
+
     private static boolean shouldOverrideCrosshair() {
         Minecraft mc = McUtils.mc();
         if (!mc.options.getCameraType().isFirstPerson()) return false;

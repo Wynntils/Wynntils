@@ -7,6 +7,7 @@ package com.wynntils.features.combat;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -32,6 +33,10 @@ public class PreventTradesDuelsFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> whenHoldingGatheringTool = new Config<>(false);
+
+    public PreventTradesDuelsFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onPlayerRightClick(PlayerInteractEvent.Interact event) {

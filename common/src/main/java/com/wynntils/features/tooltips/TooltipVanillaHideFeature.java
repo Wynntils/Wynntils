@@ -5,6 +5,7 @@
 package com.wynntils.features.tooltips;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -17,6 +18,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class TooltipVanillaHideFeature extends Feature {
     @Persisted
     private final Config<Boolean> hideAdvanced = new Config<>(true);
+
+    public TooltipVanillaHideFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onTooltipFlagsAdvanced(ItemTooltipFlagsEvent event) {

@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.colors.CommonColors;
@@ -29,6 +30,10 @@ public class LootrunFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> showNotes = new Config<>(true);
+
+    public LootrunFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @Override
     protected void onConfigUpdate(Config<?> config) {

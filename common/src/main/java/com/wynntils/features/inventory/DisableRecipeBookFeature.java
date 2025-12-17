@@ -5,6 +5,7 @@
 package com.wynntils.features.inventory;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.RecipeBookButtonCreateEvent;
@@ -15,6 +16,10 @@ import net.neoforged.bus.api.SubscribeEvent;
  */
 @ConfigCategory(Category.INVENTORY)
 public class DisableRecipeBookFeature extends Feature {
+    public DisableRecipeBookFeature() {
+        super(ProfileDefault.ENABLED);
+    }
+
     @SubscribeEvent
     public void onRecipeBookOpen(RecipeBookButtonCreateEvent event) {
         event.setCanceled(true);

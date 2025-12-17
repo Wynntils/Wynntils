@@ -7,6 +7,7 @@ package com.wynntils.features.wynntils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -25,6 +26,10 @@ public class WeeklyConfigBackupFeature extends Feature {
 
     @Persisted
     private final Storage<Long> lastBackup = new Storage<>(0L);
+
+    public WeeklyConfigBackupFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post event) {

@@ -6,6 +6,7 @@ package com.wynntils.features.overlays;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -36,6 +37,10 @@ public class RaidProgressFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> playSoundOnBest = new Config<>(true);
+
+    public RaidProgressFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onRaidCompleted(RaidEndedEvent.Completed event) {

@@ -6,6 +6,7 @@ package com.wynntils.features.ui;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -28,6 +29,10 @@ public class CustomGuildLogScreenFeature extends Feature {
     private final Config<ShiftBehavior> shiftBehaviorConfig = new Config<>(ShiftBehavior.DISABLED_IF_SHIFT_HELD);
 
     private boolean shiftClickedLogItem = false;
+
+    public CustomGuildLogScreenFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onWrappedScreenOpen(WrappedScreenOpenEvent event) {

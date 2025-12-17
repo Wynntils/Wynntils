@@ -6,6 +6,7 @@ package com.wynntils.features;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
@@ -78,6 +79,10 @@ public class ValuableFoundFeature extends Feature {
 
     @Persisted
     private final Config<Float> soundPitch = new Config<>(1.0f);
+
+    public ValuableFoundFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onValuableFound(ValuableFoundEvent event) {
