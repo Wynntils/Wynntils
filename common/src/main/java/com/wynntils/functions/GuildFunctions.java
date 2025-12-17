@@ -9,8 +9,11 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.guild.type.GuildRank;
+import com.wynntils.models.players.type.wynnplayer.PlayerGuildInfo;
+import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Optional;
 
 public class GuildFunctions {
     public static class CappedGuildLevelProgressFunction extends Function<CappedValue> {
@@ -83,6 +86,36 @@ public class GuildFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("member", String.class, null)));
+        }
+    }
+
+    public static class ContributedGuildXpFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            WynnPlayerInfo playerInfo = Models.Account.getPlayerInfo();
+
+            if (playerInfo == null) return 0L;
+
+            Optional<PlayerGuildInfo> guildInfoOpt = playerInfo.guildInfo();
+
+            return guildInfoOpt
+                    .map(playerGuildInfo -> playerGuildInfo.contributionXp().orElse(0L))
+                    .orElse(0L);
+        }
+    }
+
+    public static class ContributionRankFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            WynnPlayerInfo playerInfo = Models.Account.getPlayerInfo();
+
+            if (playerInfo == null) return 0;
+
+            Optional<PlayerGuildInfo> guildInfoOpt = playerInfo.guildInfo();
+
+            return guildInfoOpt
+                    .map(playerGuildInfo -> playerGuildInfo.contributionRank().orElse(0))
+                    .orElse(0);
         }
     }
 }

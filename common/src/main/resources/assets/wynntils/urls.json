@@ -106,7 +106,7 @@
   },
   {
     "id": "dataStaticAspects",
-    "md5": "b0776a3854203fcafd85c4ea4c4a7b00",
+    "md5": "7dd551a438b5163e30076c62ad74c7a1",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/aspects.json"
   },
   {
@@ -116,7 +116,7 @@
   },
   {
     "id": "dataStaticCharms",
-    "md5": "b22d45b4298148d0852a8b9885a25c54",
+    "md5": "83cfddfd721d9c2d9e14cfcc09977867",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/charms.json"
   },
   {
@@ -136,7 +136,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "8f6664c2f5eae98bd6e67549c3d93fcd",
+    "md5": "82aaffcc64c589c7a9993341268611d4",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
   },
   {
@@ -161,7 +161,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "916b9ca367fefc0d3bed73b975216739",
+    "md5": "38ab896484bb1700cbcd1152c7091fdb",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/ingredients.json"
   },
   {
@@ -211,12 +211,12 @@
   },
   {
     "id": "dataStaticMaterials",
-    "md5": "0f1db0b421ba88ab1db37e333644cb3b",
+    "md5": "095127a4d248c399e83f5d063181a969",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/materials.json"
   },
   {
     "id": "dataStaticModelData",
-    "md5": "c86a2609838c118c750a03762e2be2fc",
+    "md5": "05e6ddb47b88e0cb98c4908f4ce7b1f4",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/model_data.json"
   },
   {
@@ -261,7 +261,7 @@
   },
   {
     "id": "dataStaticTomes",
-    "md5": "8e80179778f53ba55ffefee9820b6476",
+    "md5": "d7f2b89aa9c908aac1093202102ae5dc",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/tomes.json"
   },
   {
@@ -293,6 +293,13 @@
     ],
     "id": "dataWynncraftPlayer",
     "url": "https://api.wynncraft.com/v3/player/%{username}"
+  },
+  {
+    "arguments": [
+      "identifier"
+    ],
+    "id": "dataWynncraftPlayerFullResults",
+    "url": "https://api.wynncraft.com/v3/player/%{identifier}?fullResult"
   },
   {
     "id": "dataWynncraftTerritoryListV3",

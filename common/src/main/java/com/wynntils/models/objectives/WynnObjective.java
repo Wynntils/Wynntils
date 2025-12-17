@@ -106,6 +106,10 @@ public final class WynnObjective {
         return score;
     }
 
+    public boolean hasEventBonus() {
+        return hasEventBonus;
+    }
+
     public boolean isGuildObjective() {
         return isGuildObjective;
     }
