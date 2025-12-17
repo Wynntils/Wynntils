@@ -133,7 +133,7 @@ public class CombatXpFunctions {
                     .findFirst();
 
             if (activeCharacterUuid.isEmpty()) return 0L;
-      
+
             characterData = playerInfo.characters().get(activeCharacterUuid.get());
             if (characterData == null) return 0L;
 
