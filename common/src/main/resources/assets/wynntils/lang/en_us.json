@@ -3159,6 +3159,7 @@
   "screens.wynntils.settingsScreen.name": "Wynntils Settings",
   "screens.wynntils.settingsScreen.needToSelect": "You need to select a setting to perform this action!",
   "screens.wynntils.settingsScreen.next": "Next",
+  "screens.wynntils.settingsScreen.noFeaturesFound": "No features found matching your current filters, try changing the enable state filter or refining your search query.",
   "screens.wynntils.settingsScreen.previous": "Previous",
   "screens.wynntils.settingsScreen.profiles": "Profiles",
   "screens.wynntils.settingsScreen.profiles.description": "Choose a default config profile from the available options.",

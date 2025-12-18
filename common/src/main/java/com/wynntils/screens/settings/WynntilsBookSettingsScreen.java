@@ -433,7 +433,25 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             renderHoveredConfigScroll(poseStack);
         }
 
-        renderConfigurables(guiGraphics, mouseX, mouseY, partialTick);
+        if (configurables.isEmpty()) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromComponent(
+                                    Component.translatable("screens.wynntils.settingsScreen.noFeaturesFound")),
+                            offsetX,
+                            Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONFIG_BOOK_BACKGROUND.height() * 0.25f + offsetY,
+                            Texture.CONFIG_BOOK_BACKGROUND.height() * 0.75f + offsetY,
+                            Texture.CONFIG_BOOK_BACKGROUND.width() / 3f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.TOP,
+                            TextShadow.NORMAL,
+                            1.25f);
+        } else {
+            renderConfigurables(guiGraphics, mouseX, mouseY, partialTick);
+        }
 
         if (hoveredConfigurable == null) {
             renderSelectedConfigs(guiGraphics, mouseX, mouseY, partialTick);
@@ -1096,8 +1114,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             configurable.render(guiGraphics, mouseX, mouseY, partialTick);
 
             if (configurable.isHovered() && configurable instanceof ConfigurableButton configurableButton) {
-                Configurable hovered = configurableButton.getConfigurable();
-
                 if (selectedConfigurable != null) continue;
 
                 hoveredConfigurable = configurableButton.getConfigurable();
