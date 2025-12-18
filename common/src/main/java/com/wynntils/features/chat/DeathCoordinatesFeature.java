@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
@@ -17,6 +18,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class DeathCoordinatesFeature extends Feature {
+    public DeathCoordinatesFeature() {
+        super(ProfileDefault.ENABLED);
+    }
+
     @SubscribeEvent
     public void onCharacterDeath(CharacterDeathEvent e) {
         StyledText deathMessage =

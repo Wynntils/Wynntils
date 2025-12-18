@@ -7,6 +7,7 @@ package com.wynntils.features.inventory;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
@@ -56,6 +57,10 @@ public class ItemFavoriteFeature extends Feature {
     private final Config<Integer> lootChestCloseOverride = new Config<>(3);
 
     private int lootChestCloseOverrideCounter = 0;
+
+    public ItemFavoriteFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {

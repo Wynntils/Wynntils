@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -21,6 +22,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class LobbyUptimeFeature extends Feature {
+    public LobbyUptimeFeature() {
+        super(ProfileDefault.ENABLED);
+    }
+
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<ServerItem> serverItemOpt = Models.Item.asWynnItem(event.getItemStack(), ServerItem.class);

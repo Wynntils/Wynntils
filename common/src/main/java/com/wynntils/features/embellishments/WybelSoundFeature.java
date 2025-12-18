@@ -5,6 +5,7 @@
 package com.wynntils.features.embellishments;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -29,6 +30,10 @@ public class WybelSoundFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> hideText = new Config<>(false);
+
+    public WybelSoundFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onChat(ChatMessageEvent.Match event) {

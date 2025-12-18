@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -36,6 +37,10 @@ public class BeaconBeamFeature extends Feature {
 
     private static final int RAINBOW_CHANGE_RATE = 10;
     private CustomColor currentRainbowColor = CommonColors.RED;
+
+    public BeaconBeamFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onTick(TickEvent event) {

@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -50,6 +51,10 @@ public class ProfessionHighlightFeature extends Feature {
 
     @Persisted
     private final Storage<Map<String, ProfessionType>> selectionPerContainer = new Storage<>(new TreeMap<>());
+
+    public ProfessionHighlightFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent.Pre event) {

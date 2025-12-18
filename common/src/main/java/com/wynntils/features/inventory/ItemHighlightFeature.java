@@ -7,6 +7,7 @@ package com.wynntils.features.inventory;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -157,6 +158,10 @@ public class ItemHighlightFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> selectedItemHighlight = new Config<>(true);
+
+    public ItemHighlightFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRenderSlot(SlotRenderEvent.CountPre e) {

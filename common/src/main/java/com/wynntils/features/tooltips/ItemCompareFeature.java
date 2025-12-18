@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
@@ -99,6 +100,10 @@ public class ItemCompareFeature extends Feature {
     // First equippedCount items in itemsToCompare will have "Equipped" tag, others will have "Selected" tag
     private int equippedCount = 0;
     private boolean changePositioner = false;
+
+    public ItemCompareFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onWorldStateChangeEvent(WorldStateEvent event) {

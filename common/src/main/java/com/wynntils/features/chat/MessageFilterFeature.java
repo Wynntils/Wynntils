@@ -5,6 +5,7 @@
 package com.wynntils.features.chat;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -71,6 +72,10 @@ public class MessageFilterFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> hidePartyFinder = new Config<>(false);
+
+    public MessageFilterFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onMessage(ChatMessageEvent.Match e) {

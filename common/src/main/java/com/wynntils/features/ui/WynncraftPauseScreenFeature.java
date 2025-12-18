@@ -6,6 +6,7 @@ package com.wynntils.features.ui;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PauseMenuInitEvent;
@@ -31,6 +32,10 @@ public class WynncraftPauseScreenFeature extends Feature {
     private static final String STATS = "gui.stats";
     private static final String SEND_FEEDBACK = "menu.sendFeedback";
     private static final String REPORT_BUGS = "menu.reportBugs";
+
+    public WynncraftPauseScreenFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onPauseScreenInitEvent(PauseMenuInitEvent event) {

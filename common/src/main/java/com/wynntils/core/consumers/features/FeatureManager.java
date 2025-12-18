@@ -7,11 +7,9 @@ package com.wynntils.core.consumers.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
 import com.wynntils.features.LootrunFeature;
@@ -105,6 +103,7 @@ import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.overlays.RaidProgressFeature;
+import com.wynntils.features.overlays.ScoreboardOverlayFeature;
 import com.wynntils.features.overlays.ServerUptimeInfoOverlayFeature;
 import com.wynntils.features.overlays.ShamanMaskOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTimerOverlayFeature;
@@ -178,7 +177,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
@@ -318,6 +316,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new PartyMembersOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
         registerFeature(new RaidProgressFeature());
+        registerFeature(new ScoreboardOverlayFeature());
         registerFeature(new ServerUptimeInfoOverlayFeature());
         registerFeature(new ShamanMaskOverlayFeature());
         registerFeature(new ShamanTotemTimerOverlayFeature());
@@ -462,8 +461,6 @@ public final class FeatureManager extends Manager {
     }
 
     private void initializeFeature(Feature feature) {
-        Class<? extends Feature> featureClass = feature.getClass();
-
         // Set feature category
         ConfigCategory configCategory = feature.getClass().getAnnotation(ConfigCategory.class);
         Category category = configCategory != null ? configCategory.value() : Category.UNCATEGORIZED;
@@ -472,10 +469,6 @@ public final class FeatureManager extends Manager {
         // Register commands and key binds
         commands.discoverCommands(feature);
         Managers.KeyBind.discoverKeyBinds(feature);
-
-        // Determine if feature should be enabled & set default enabled value for user features
-        boolean startDisabled = checkStartDisabled(feature);
-        feature.userEnabled.store(!startDisabled);
 
         Managers.Overlay.discoverOverlays(feature);
         Managers.Overlay.discoverOverlayGroups(feature);
@@ -491,23 +484,6 @@ public final class FeatureManager extends Manager {
         if (!feature.userEnabled.get()) return; // not enabled by user
 
         doEnableFeature(feature);
-    }
-
-    private boolean checkStartDisabled(Feature feature) {
-        StartDisabled startDisabledAnnotation = feature.getClass().getAnnotation(StartDisabled.class);
-        if (startDisabledAnnotation == null) return false;
-
-        ConfigProfile[] disabledProfiles = startDisabledAnnotation.disabledProfiles();
-        boolean disableAll = disabledProfiles.length == 0;
-        Set<ConfigProfile> disabledProfileSet = Set.of(disabledProfiles);
-
-        for (ConfigProfile profile : ConfigProfile.values()) {
-            boolean enabledByDefault = !(disableAll || disabledProfileSet.contains(profile));
-            feature.userEnabled.withDefault(profile, enabledByDefault);
-        }
-
-        ConfigProfile selectedProfile = Managers.Config.getSelectedProfile();
-        return disableAll || disabledProfileSet.contains(selectedProfile);
     }
 
     public void enableFeature(Feature feature) {

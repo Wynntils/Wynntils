@@ -8,6 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
@@ -42,6 +43,10 @@ public class DiscordRichPresenceFeature extends Feature {
 
     private boolean territoryChecking = false;
     private TerritoryProfile lastTerritoryProfile = null;
+
+    public DiscordRichPresenceFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onCharacterUpdate(CharacterUpdateEvent event) {

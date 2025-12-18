@@ -7,6 +7,7 @@ package com.wynntils.features.overlays;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.Persisted;
@@ -69,6 +70,10 @@ public class TowerEffectOverlayFeature extends Feature {
 
     @Persisted
     private final Config<Float> volleyVignetteIntensity = new Config<>(0.4f);
+
+    public TowerEffectOverlayFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onTowerAura(GuildWarTowerEffectEvent.AuraSpawned event) {

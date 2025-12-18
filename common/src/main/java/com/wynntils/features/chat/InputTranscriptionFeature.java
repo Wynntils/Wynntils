@@ -8,6 +8,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -39,6 +40,10 @@ public class InputTranscriptionFeature extends Feature {
     // Numbers higher than this will be replaced with "∞"
     private static final int MAX_TRANSCRIPTABLE_NUMBER = 5000;
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
+
+    public InputTranscriptionFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent.Pre event) {

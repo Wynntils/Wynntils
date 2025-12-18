@@ -6,6 +6,7 @@ package com.wynntils.features.ui;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -26,6 +27,10 @@ public class CustomSeaskipperScreenFeature extends Feature {
 
     @Persisted
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
+
+    public CustomSeaskipperScreenFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onScreenOpen(ScreenOpenedEvent.Post event) {

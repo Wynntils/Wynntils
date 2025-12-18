@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.config.Category;
@@ -29,6 +30,10 @@ public class GuildBankHotkeyFeature extends Feature {
             new KeyBind("Open Guild Bank", GLFW.GLFW_KEY_P, true, this::onOpenGuildBankKeyPress);
 
     private boolean openGuildBank = false;
+
+    public GuildBankHotkeyFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onMenuOpenPre(MenuEvent.MenuOpenedEvent.Pre event) {

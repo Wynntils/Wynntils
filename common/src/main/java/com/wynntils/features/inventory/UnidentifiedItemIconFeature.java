@@ -7,6 +7,7 @@ package com.wynntils.features.inventory;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -71,6 +72,10 @@ public class UnidentifiedItemIconFeature extends Feature {
     private final Config<CustomColor> markRevealedItemsIconColor = new Config<>(DEFAULT_UNID_ICON_COLOR);
 
     private static final StyledText QUESTION_MARK_TEXT = StyledText.fromComponent(Component.literal("?"));
+
+    public UnidentifiedItemIconFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.CountPre e) {

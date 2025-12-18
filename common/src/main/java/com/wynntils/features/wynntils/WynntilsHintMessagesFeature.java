@@ -6,6 +6,7 @@ package com.wynntils.features.wynntils;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -18,6 +19,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class WynntilsHintMessagesFeature extends Feature {
     @Persisted
     private final Config<Boolean> firstJoinOnly = new Config<>(true);
+
+    public WynntilsHintMessagesFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {

@@ -7,6 +7,7 @@ package com.wynntils.features.overlays;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
@@ -103,6 +104,8 @@ public class NpcDialogueFeature extends Feature {
     private StyledText displayedHelperMessage = null;
 
     public NpcDialogueFeature() {
+        super(ProfileDefault.ENABLED);
+
         // Add this feature as a dependent of the NpcDialogueModel
         Models.NpcDialogue.addNpcDialogExtractionDependent(this);
     }

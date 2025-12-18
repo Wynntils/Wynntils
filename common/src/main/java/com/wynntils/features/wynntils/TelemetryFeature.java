@@ -7,6 +7,7 @@ package com.wynntils.features.wynntils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
@@ -32,6 +33,10 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 public class TelemetryFeature extends Feature {
     @Persisted
     private final Config<ConfirmedBoolean> crashReports = new Config<>(ConfirmedBoolean.UNCONFIRMED);
+
+    public TelemetryFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {

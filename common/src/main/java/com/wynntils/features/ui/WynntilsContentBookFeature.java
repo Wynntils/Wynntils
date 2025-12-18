@@ -5,6 +5,7 @@
 package com.wynntils.features.ui;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
@@ -133,6 +134,10 @@ public class WynntilsContentBookFeature extends Feature {
     public final Config<Boolean> displayOverallProgress = new Config<>(true);
 
     private boolean shiftClickedBookItem = false;
+
+    public WynntilsContentBookFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onSwing(ArmSwingEvent event) {

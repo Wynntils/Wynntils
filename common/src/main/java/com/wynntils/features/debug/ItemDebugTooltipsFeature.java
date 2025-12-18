@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
@@ -24,9 +24,12 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class ItemDebugTooltipsFeature extends Feature {
+    public ItemDebugTooltipsFeature() {
+        super(ProfileDefault.DISABLED);
+    }
+
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());

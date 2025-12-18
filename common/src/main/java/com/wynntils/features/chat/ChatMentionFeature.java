@@ -5,6 +5,7 @@
 package com.wynntils.features.chat;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -52,6 +53,8 @@ public class ChatMentionFeature extends Feature {
     private List<Pattern> mentionPatterns;
 
     public ChatMentionFeature() {
+        super(ProfileDefault.ENABLED);
+
         mentionPatterns = buildPattern();
     }
 

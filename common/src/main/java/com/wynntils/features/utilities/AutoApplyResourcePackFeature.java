@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -7,6 +7,7 @@ package com.wynntils.features.utilities;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ServerResourcePackEvent;
@@ -15,6 +16,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
 public class AutoApplyResourcePackFeature extends Feature {
+    public AutoApplyResourcePackFeature() {
+        super(ProfileDefault.ENABLED);
+    }
+
     @Override
     public void onDisable() {
         Services.ResourcePack.setRequestedPreloadHash(null, "");

@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
@@ -17,4 +18,8 @@ import com.wynntils.overlays.ServerUptimeInfoOverlay;
 public class ServerUptimeInfoOverlayFeature extends Feature {
     @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
     private final Overlay ServerUptimeInfoOverlay = new ServerUptimeInfoOverlay();
+
+    public ServerUptimeInfoOverlayFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 }

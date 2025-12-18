@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.guild.type;
@@ -13,6 +13,7 @@ import java.lang.reflect.Type;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public record GuildInfo(
@@ -62,6 +63,7 @@ public record GuildInfo(
 
                 for (String username : roleMembers.keySet()) {
                     JsonObject memberInfo = roleMembers.getAsJsonObject(username);
+                    UUID uuid = UUID.fromString(memberInfo.get("uuid").getAsString());
                     boolean isOnline = memberInfo.get("online").getAsBoolean();
                     String onlineServer = memberInfo.get("server").isJsonNull()
                             ? null
@@ -71,6 +73,7 @@ public record GuildInfo(
                     String joinedTimestamp = memberInfo.get("joined").getAsString();
 
                     guildMembers.add(new GuildMemberInfo(
+                            uuid,
                             username,
                             currentGuildRank,
                             isOnline,

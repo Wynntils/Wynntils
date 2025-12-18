@@ -6,6 +6,7 @@ package com.wynntils.features.redirects;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
@@ -19,6 +20,10 @@ import org.apache.commons.lang3.StringUtils;
 @ConfigCategory(Category.REDIRECTS)
 public class TerritoryMessageRedirectFeature extends Feature {
     private static final Pattern TERRITORY_MESSAGE_PATTERN = Pattern.compile("§7\\[You are now (\\S+) (.+)\\]");
+
+    public TerritoryMessageRedirectFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     // Handles the subtitle text event.
     @SubscribeEvent

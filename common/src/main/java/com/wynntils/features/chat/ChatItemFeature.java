@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
@@ -80,6 +81,10 @@ public class ChatItemFeature extends Feature {
     private final Config<Boolean> showPerfectOrDefective = new Config<>(true);
 
     private final Map<String, String> chatItems = new HashMap<>();
+
+    public ChatItemFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onKeyTyped(KeyInputEvent e) {

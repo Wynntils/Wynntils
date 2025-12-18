@@ -5,7 +5,7 @@
 package com.wynntils.features.combat;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -16,7 +16,6 @@ import com.wynntils.models.combat.label.DamageLabelInfo;
 import com.wynntils.models.combat.label.KillLabelInfo;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.COMBAT)
 public class HideLabelsFeature extends Feature {
     @Persisted
@@ -24,6 +23,10 @@ public class HideLabelsFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> hideKillLabels = new Config<>(false);
+
+    public HideLabelsFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     @SubscribeEvent
     public void onLabelIdentified(LabelIdentifiedEvent event) {

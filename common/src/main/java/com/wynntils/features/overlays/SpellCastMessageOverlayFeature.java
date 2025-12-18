@@ -5,6 +5,7 @@
 package com.wynntils.features.overlays;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
@@ -20,4 +21,8 @@ public class SpellCastMessageOverlayFeature extends Feature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay spellInputsOverlay = new SpellInputsOverlay();
+
+    public SpellCastMessageOverlayFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 }
