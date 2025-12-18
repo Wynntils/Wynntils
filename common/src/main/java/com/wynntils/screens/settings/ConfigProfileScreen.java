@@ -14,9 +14,12 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.AnimationPercentage;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,17 +43,22 @@ public class ConfigProfileScreen extends WynntilsScreen {
                     "\uE012\uE004\uE00B\uE004\uE002\uE013 \uE000 \uE00F\uE011\uE00E\uE005\uE008\uE00B\uE004")
             .withStyle(Style.EMPTY.withFont(RIBBON_FONT).withColor(ChatFormatting.BLACK));
 
-    private static final int SCROLL_SPEED = 10;
     private static final int WIDGET_SPACING = 180;
+    private static final int BANNER_START_Y = -10;
     private static final int BANNER_TARGET_Y = 10;
+
+    private final AnimationPercentage bannerAnimationPercentage =
+            new AnimationPercentage(() -> true, Duration.of(100, ChronoUnit.MILLIS));
+    private final AnimationPercentage cardAnimationPercentage =
+            new AnimationPercentage(() -> true, Duration.of(150, ChronoUnit.MILLIS));
 
     private final Screen previousScreen;
 
     private boolean firstInit = true;
     private ConfigProfile focusedProfile;
-    private int bannerY = -10;
 
     private List<ConfigProfileWidget> configProfileWidgets = new ArrayList<>();
+    private final Map<ConfigProfile, Integer> startXPositions = new HashMap<>();
     private final Map<ConfigProfile, Vector2i> targetPositions = new HashMap<>();
 
     private ConfigProfileScreen(Screen previousScreen, ConfigProfile focusedProfile) {
@@ -83,9 +91,8 @@ public class ConfigProfileScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        if (bannerY < BANNER_TARGET_Y) {
-            bannerY = Math.min(bannerY + 1, BANNER_TARGET_Y);
-        }
+        int bannerY =
+                (int) (BANNER_START_Y + (BANNER_TARGET_Y - BANNER_START_Y) * bannerAnimationPercentage.getAnimation());
 
         FontRenderer.getInstance()
                 .renderText(
@@ -101,14 +108,14 @@ public class ConfigProfileScreen extends WynntilsScreen {
                         2f);
 
         for (ConfigProfileWidget widget : configProfileWidgets) {
-            int targetX = targetPositions.get(widget.getProfile()).x();
-            int currentX = widget.getX();
+            int startX = startXPositions.getOrDefault(
+                    widget.getProfile(),
+                    targetPositions.get(widget.getProfile()).x());
 
-            if (currentX < targetX) {
-                widget.setX(Math.min(currentX + SCROLL_SPEED, targetX));
-            } else if (currentX > targetX) {
-                widget.setX(Math.max(currentX - SCROLL_SPEED, targetX));
-            }
+            int targetX = targetPositions.get(widget.getProfile()).x();
+
+            int newX = (int) (startX + (targetX - startX) * cardAnimationPercentage.getAnimation());
+            widget.setX(newX);
 
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
         }
@@ -164,9 +171,16 @@ public class ConfigProfileScreen extends WynntilsScreen {
 
         focusedProfile = ConfigProfile.values()[index + direction];
         updateTargetPositions();
+        cardAnimationPercentage.restart();
     }
 
     private void updateTargetPositions() {
+        startXPositions.clear();
+
+        for (ConfigProfileWidget widget : configProfileWidgets) {
+            startXPositions.put(widget.getProfile(), widget.getX());
+        }
+
         targetPositions.clear();
 
         ConfigProfile[] profiles = ConfigProfile.values();
