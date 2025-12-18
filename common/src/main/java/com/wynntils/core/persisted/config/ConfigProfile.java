@@ -11,7 +11,8 @@ public enum ConfigProfile {
     DEFAULT,
     NEW_PLAYER,
     LITE,
-    MINIMAL;
+    MINIMAL,
+    BLANK_SLATE;
 
     public String getShortDescription() {
         return I18n.get("core.wynntils.profile." + this.name().toLowerCase(Locale.ROOT) + ".shortDescription");

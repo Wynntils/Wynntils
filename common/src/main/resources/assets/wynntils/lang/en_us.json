@@ -70,6 +70,8 @@
   "core.wynntils.category.uncategorized": "Uncategorized",
   "core.wynntils.category.utilities": "Utilities",
   "core.wynntils.category.wynntils": "Wynntils",
+  "core.wynntils.profile.blank_slate.description": "Every single feature is disabled by default, the only enabled features are those that provide access to the Wynntils menu to allow for further customisation.",
+  "core.wynntils.profile.blank_slate.shortDescription": "All features disabled by default, except those used to access the Wynntils menu.",
   "core.wynntils.profile.default.description": "The default settings for Wynntils. Recommended for players well versed in Wynncraft and wanting to enhance their experience.",
   "core.wynntils.profile.default.shortDescription": "Play with the majority of what Wynntils has to offer.",
   "core.wynntils.profile.lite.description": "The majority of features are disabled with this profile, only the most commonly used features and features that provide invisible benefits are enabled.",
