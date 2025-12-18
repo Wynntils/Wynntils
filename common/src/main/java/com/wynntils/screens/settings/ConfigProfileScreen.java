@@ -13,6 +13,7 @@ import com.wynntils.screens.settings.widgets.ConfigProfileWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.AnimationPercentage;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -43,19 +44,35 @@ public class ConfigProfileScreen extends WynntilsScreen {
                     "\uE012\uE004\uE00B\uE004\uE002\uE013 \uE000 \uE00F\uE011\uE00E\uE005\uE008\uE00B\uE004")
             .withStyle(Style.EMPTY.withFont(RIBBON_FONT).withColor(ChatFormatting.BLACK));
 
+    private static final StyledText WYNNCRAFT_LOGO =
+            StyledText.fromComponent(Component.literal("\uE005\uDAFF\uDFFF\uE006")
+                    .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("screen/static"))));
+    private static final StyledText AMPERSAND_WYNNCRAFT_FONT = StyledText.fromComponent(Component.literal("&")
+            .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("language/wynncraft"))));
+    private static final ResourceLocation WYNNTILS_LOGO_LOCATION =
+            ResourceLocation.fromNamespaceAndPath("wynntils", "logo.png");
+
     private static final int WIDGET_SPACING = 180;
     private static final int BANNER_START_Y = -10;
     private static final int BANNER_TARGET_Y = 10;
+    private static final int WELCOME_DELAY_MS = 500;
+    private static final int WYNNTILS_FADE_TIME_MS = 2000;
 
     private final AnimationPercentage bannerAnimationPercentage =
             new AnimationPercentage(() -> true, Duration.of(100, ChronoUnit.MILLIS));
     private final AnimationPercentage cardAnimationPercentage =
             new AnimationPercentage(() -> true, Duration.of(150, ChronoUnit.MILLIS));
+    private final AnimationPercentage welcomePromptAnimationPercentage =
+            new AnimationPercentage(() -> true, Duration.of(WELCOME_DELAY_MS, ChronoUnit.MILLIS));
+    private final AnimationPercentage wynntilsFadeAnimationPercentage =
+            new AnimationPercentage(() -> true, Duration.of(WYNNTILS_FADE_TIME_MS, ChronoUnit.MILLIS));
 
     private final Screen previousScreen;
 
     private boolean firstInit = true;
+    private boolean showWelcomePrompt;
     private ConfigProfile focusedProfile;
+    private long welcomeAnimationStartTime;
 
     private List<ConfigProfileWidget> configProfileWidgets = new ArrayList<>();
     private final Map<ConfigProfile, Integer> startXPositions = new HashMap<>();
@@ -66,6 +83,8 @@ public class ConfigProfileScreen extends WynntilsScreen {
 
         this.previousScreen = previousScreen;
         this.focusedProfile = focusedProfile;
+
+        this.showWelcomePrompt = Managers.Config.showWelcomeScreen.get();
     }
 
     public static Screen create(Screen previousScreen, ConfigProfile focusedProfile) {
@@ -76,11 +95,15 @@ public class ConfigProfileScreen extends WynntilsScreen {
     protected void doInit() {
         super.doInit();
 
-        this.addRenderableWidget(new ConfigProfileReturnButton(this.width / 2 - 40, this.height - 22, 80, 20, this));
+        if (!showWelcomePrompt) {
+            this.addRenderableWidget(
+                    new ConfigProfileReturnButton(this.width / 2 - 40, this.height - 22, 80, 20, this));
+        }
 
         if (firstInit) {
             populateProfiles();
             firstInit = false;
+            welcomeAnimationStartTime = System.currentTimeMillis() + WELCOME_DELAY_MS;
         } else {
             updateTargetPositions();
             snapToTargets();
@@ -90,6 +113,91 @@ public class ConfigProfileScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+
+        if (showWelcomePrompt) {
+            int logoX = (int) (this.width / 2f);
+
+            if (System.currentTimeMillis() >= welcomeAnimationStartTime) {
+                logoX = (int) (this.width / 2f
+                        + ((this.width / 2f - 40) - this.width / 2f) * welcomePromptAnimationPercentage.getAnimation());
+            }
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics.pose(),
+                            WYNNCRAFT_LOGO,
+                            logoX,
+                            90,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.TOP,
+                            TextShadow.NONE,
+                            2f);
+
+            if (System.currentTimeMillis() < welcomeAnimationStartTime + WELCOME_DELAY_MS) return;
+
+            // Need a minimum value as otherwise the text renders with max alpha
+            float wynntilsFadeAnimation = (float) Math.max(0.1f, wynntilsFadeAnimationPercentage.getAnimation());
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics.pose(),
+                            AMPERSAND_WYNNCRAFT_FONT,
+                            this.width / 2f + 92,
+                            45,
+                            CommonColors.GREEN.withAlpha(wynntilsFadeAnimation),
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.TOP,
+                            TextShadow.OUTLINE,
+                            3f);
+
+            RenderUtils.drawTexturedRectWithColor(
+                    guiGraphics.pose(),
+                    WYNNTILS_LOGO_LOCATION,
+                    CommonColors.WHITE.withAlpha(wynntilsFadeAnimation),
+                    this.width / 2f + 90,
+                    20,
+                    0,
+                    90,
+                    90,
+                    0,
+                    0,
+                    1183,
+                    1183,
+                    1183,
+                    1183);
+
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            guiGraphics.pose(),
+                            List.of(
+                                            StyledText.fromComponent(Component.translatable(
+                                                            "screens.wynntils.configProfilesScreen.welcome1")
+                                                    .withStyle(ChatFormatting.BOLD)),
+                                            StyledText.fromString(""),
+                                            StyledText.fromComponent(Component.translatable(
+                                                    "screens.wynntils.configProfilesScreen.welcome2")),
+                                            StyledText.fromString(""),
+                                            StyledText.fromComponent(Component.translatable(
+                                                    "screens.wynntils.configProfilesScreen.welcome3")),
+                                            StyledText.fromString(""),
+                                            StyledText.fromComponent(Component.translatable(
+                                                            "screens.wynntils.configProfilesScreen.welcome4")
+                                                    .withStyle(ChatFormatting.UNDERLINE)))
+                                    .toArray(StyledText[]::new),
+                            20,
+                            this.width - 20,
+                            120,
+                            this.height - 20,
+                            this.width - 40,
+                            CommonColors.AQUA.withAlpha(wynntilsFadeAnimation),
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.OUTLINE,
+                            1.5f);
+
+            return;
+        }
 
         int bannerY =
                 (int) (BANNER_START_Y + (BANNER_TARGET_Y - BANNER_START_Y) * bannerAnimationPercentage.getAnimation());
@@ -128,6 +236,18 @@ public class ConfigProfileScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        if (showWelcomePrompt) {
+            if (System.currentTimeMillis() < welcomeAnimationStartTime + WELCOME_DELAY_MS + WYNNTILS_FADE_TIME_MS) {
+                return false;
+            } else {
+                showWelcomePrompt = false;
+                Managers.Config.showWelcomeScreen.store(false);
+                this.addRenderableWidget(
+                        new ConfigProfileReturnButton(this.width / 2 - 40, this.height - 22, 80, 20, this));
+                return true;
+            }
+        }
+
         for (ConfigProfileWidget widget : configProfileWidgets) {
             if (widget.isMouseOver(mouseX, mouseY)) {
                 return widget.mouseClicked(mouseX, mouseY, button);

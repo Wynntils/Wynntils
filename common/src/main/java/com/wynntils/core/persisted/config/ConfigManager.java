@@ -57,8 +57,13 @@ public final class ConfigManager extends Manager {
     @Persisted
     private final Storage<ConfigProfile> selectedProfile = new Storage<>(ConfigProfile.DEFAULT);
 
+    // This is for whether the toast has been sent for existing users or if the user was detected as a new player
     @Persisted
     private final Storage<Boolean> hasPromptedProfile = new Storage<>(false);
+
+    // This is for ConfigProfileScreen to know whether to display the 1 time welcome prompt or not
+    @Persisted
+    public final Storage<Boolean> showWelcomeScreen = new Storage<>(true);
 
     private final File userConfigFile;
     private JsonObject configObject;
