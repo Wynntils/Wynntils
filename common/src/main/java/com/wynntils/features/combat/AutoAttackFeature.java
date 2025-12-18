@@ -7,7 +7,9 @@ package com.wynntils.features.combat;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
@@ -28,7 +30,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class AutoAttackFeature extends Feature {
-    private static final int TICKS_PER_ATTACK = 2;
+    @Persisted
+    private final Config<Integer> attackTickDelay = new Config<>(2);
 
     private long lastSpellInput = -1L;
     private int spellInputs = 0;
@@ -92,7 +95,7 @@ public class AutoAttackFeature extends Feature {
         }
 
         if (Models.Raid.isParasiteOvertaken()) return;
-        if (tickCount % TICKS_PER_ATTACK != 0) return;
+        if (tickCount % Math.max(attackTickDelay.get(), 1) != 0) return;
         if (lastSpellInput + Models.Spell.SPELL_COST_RESET_TICKS > McUtils.player().tickCount) return;
 
         if (weaponStatus == WeaponStatus.UNKNOWN) {

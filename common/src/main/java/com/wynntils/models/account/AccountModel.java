@@ -6,6 +6,8 @@ package com.wynntils.models.account;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
+import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
@@ -15,12 +17,17 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ConfirmedBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,6 +55,11 @@ public final class AccountModel extends Model {
     @Persisted
     private final Storage<ConfirmedBoolean> silverbullSubscriber = new Storage<>(ConfirmedBoolean.UNCONFIRMED);
 
+    private static final int PLAYER_INFO_UPDATE_MS = 60000;
+    private ScheduledFuture<?> scheduledFuture;
+    private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private WynnPlayerInfo playerInfo;
+
     public AccountModel() {
         super(List.of());
     }
@@ -67,8 +79,25 @@ public final class AccountModel extends Model {
         scanRankInfo(e.isFirstJoinWorld());
     }
 
+    @SubscribeEvent
+    public void onConnect(WynncraftConnectionEvent.Connected e) {
+        scheduledFuture = timerExecutor.scheduleWithFixedDelay(
+                this::updatePlayerInfo, 0, PLAYER_INFO_UPDATE_MS, TimeUnit.MILLISECONDS);
+    }
+
+    @SubscribeEvent
+    public void onDisconnect(WynncraftConnectionEvent.Disconnected e) {
+        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
+            scheduledFuture.cancel(false);
+        }
+    }
+
     public boolean isSilverbullSubscriber() {
         return silverbullSubscriber.get() == ConfirmedBoolean.TRUE;
+    }
+
+    public WynnPlayerInfo getPlayerInfo() {
+        return playerInfo;
     }
 
     public void scanRankInfo(boolean forceParseUnexpired) {
@@ -126,5 +155,15 @@ public final class AccountModel extends Model {
         silverbullExpiresAt.store(expiryTime);
 
         WynntilsMod.info("Parsed Silverbull expiry: " + expiryTime);
+    }
+
+    private void updatePlayerInfo() {
+        Models.Player.getPlayerFullInfo(McUtils.player().getStringUUID()).whenComplete((wynnPlayerInfo, throwable) -> {
+            if (throwable != null) {
+                WynntilsMod.warn("Failed to update player info", throwable);
+            } else {
+                this.playerInfo = wynnPlayerInfo;
+            }
+        });
     }
 }

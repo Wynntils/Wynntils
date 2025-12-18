@@ -36,7 +36,7 @@ public final class BombModel extends Model {
 
     // Test in BombModel_BOMB_BELL_PATTERN
     private static final Pattern BOMB_BELL_PATTERN = Pattern.compile(
-            "^§#fddd5cff(?:\uE01E\uE002|\uE001) (?<user>.+) has thrown an? §#f3e6b2ff(?<bomb>.+) Bomb§#fddd5cff on §#f3e6b2ff§n(?<server>.+)$");
+            "^§#fddd5cff(?:\uE01E\uE002|\uE001) (?<user>.+) has thrown an? §#f3e6b2ff(?<bomb>.+) Bomb§#fddd5cff ( ?)on §#f3e6b2ff§n(?<server>.+)$");
 
     // Test in BombModel_BOMB_EXPIRED_PATTERN
     private static final Pattern BOMB_EXPIRED_PATTERN = Pattern.compile(
