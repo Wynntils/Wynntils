@@ -961,9 +961,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private boolean isFeatureFiltered(Feature feature) {
         boolean hasSearch = !searchWidget.getTextBoxInput().isEmpty();
 
-        boolean searchMatch = searchMatches(feature)
-                || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains);
-
         boolean enabledMatch =
                 switch (enabledFilterType) {
                     case NEUTRAL -> true;
@@ -971,19 +968,37 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                     case DISABLED -> !feature.isEnabled();
                 };
 
-        return hasSearch ? searchMatch : enabledMatch;
+        if (!hasSearch) {
+            return enabledMatch;
+        }
+
+        boolean featureSearchMatch = searchMatches(feature)
+                || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains);
+
+        boolean anyOverlayMatches =
+                Managers.Overlay.getFeatureOverlays(feature).stream().anyMatch(this::overlaySearchMatches);
+
+        return enabledMatch && (featureSearchMatch || anyOverlayMatches);
     }
 
     private boolean isOverlayFiltered(Overlay overlay) {
-        boolean parentEnabled = Managers.Overlay.getOverlayParent(overlay).isEnabled();
+        boolean hasSearch = !searchWidget.getTextBoxInput().isEmpty();
 
-        if (enabledFilterType == EnabledFilterType.ENABLED) {
-            return parentEnabled;
-        } else if (enabledFilterType == EnabledFilterType.DISABLED) {
-            return !parentEnabled;
+        Feature parent = Managers.Overlay.getOverlayParent(overlay);
+        boolean parentEnabled = parent.isEnabled();
+
+        boolean enabledMatch =
+                switch (enabledFilterType) {
+                    case ENABLED -> parentEnabled;
+                    case DISABLED -> !parentEnabled;
+                    case NEUTRAL -> true;
+                };
+
+        if (!hasSearch) {
+            return enabledMatch;
         }
 
-        return true;
+        return enabledMatch && overlaySearchMatches(overlay);
     }
 
     private void scrollToMatchingConfig() {
@@ -1043,6 +1058,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         } else {
             throw new IllegalStateException("Unknown configurable type: " + configurable.getClass());
         }
+    }
+
+    private boolean overlaySearchMatches(Overlay overlay) {
+        return searchMatches(overlay)
+                || overlay.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains);
     }
 
     private boolean searchMatches(Translatable translatable) {
