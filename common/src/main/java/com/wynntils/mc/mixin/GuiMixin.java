@@ -169,4 +169,20 @@ public abstract class GuiMixin {
             ci.cancel();
         }
     }
+
+    @Inject(
+            method = "renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void onRenderSelectedItemNamePre(GuiGraphics guiGraphics, CallbackInfo ci) {
+        if (!MixinHelper.onWynncraft()) return;
+
+        RenderEvent.Pre event = new RenderEvent.Pre(
+                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.SELECTED_ITEM);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+    }
 }
