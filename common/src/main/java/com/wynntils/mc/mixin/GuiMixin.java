@@ -12,6 +12,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
@@ -83,7 +84,7 @@ public abstract class GuiMixin {
             method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("HEAD"))
     private void onRenderGuiPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        // FIXME: This is a temporary fix. We should integrate overlays into Gui's LayeredDraw order
+        if (this.minecraft.screen instanceof LevelLoadingScreen) return;
         if (McUtils.options().hideGui) return;
         MixinHelper.post(new RenderEvent.Pre(
                 guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
@@ -93,7 +94,7 @@ public abstract class GuiMixin {
             method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("RETURN"))
     private void onRenderGuiPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        // FIXME: This is a temporary fix. We should integrate overlays into Gui's LayeredDraw order
+        if (this.minecraft.screen instanceof LevelLoadingScreen) return;
         if (McUtils.options().hideGui) return;
         MixinHelper.post(new RenderEvent.Post(
                 guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
