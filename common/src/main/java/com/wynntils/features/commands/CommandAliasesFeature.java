@@ -31,6 +31,8 @@ public class CommandAliasesFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onCommandSent(CommandSentEvent e) {
         String message = e.getCommand();
+        if (message.isEmpty()) return;
+
         String[] parts = message.split(" ");
 
         boolean changed = false;
