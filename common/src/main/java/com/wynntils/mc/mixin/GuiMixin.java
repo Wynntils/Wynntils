@@ -83,7 +83,6 @@ public abstract class GuiMixin {
             method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("HEAD"))
     private void onRenderGuiPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        // FIXME: This is a temporary fix. We should integrate overlays into Gui's LayeredDraw order
         if (McUtils.options().hideGui) return;
         MixinHelper.post(new RenderEvent.Pre(
                 guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
@@ -93,7 +92,6 @@ public abstract class GuiMixin {
             method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("RETURN"))
     private void onRenderGuiPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        // FIXME: This is a temporary fix. We should integrate overlays into Gui's LayeredDraw order
         if (McUtils.options().hideGui) return;
         MixinHelper.post(new RenderEvent.Post(
                 guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
