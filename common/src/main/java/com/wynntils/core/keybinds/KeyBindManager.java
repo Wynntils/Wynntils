@@ -14,6 +14,7 @@ import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -135,12 +136,47 @@ public final class KeyBindManager extends Manager {
 
     public void enableFeatureKeyBinds(Feature feature) {
         List<KeyBind> list = keyBinds.getOrDefault(feature, new ArrayList<>());
+        if (list.isEmpty()) return;
+
         enabledKeyBinds.addAll(list);
+
+        Options options = McUtils.options();
+        List<KeyMapping> current = new ArrayList<>(Arrays.asList(options.keyMappings));
+        boolean addedAny = false;
+
+        for (KeyBind keybind : list) {
+            if (!current.contains(keybind.getKeyMapping())) {
+                current.add(keybind.getKeyMapping());
+                addedAny = true;
+            }
+        }
+
+        if (addedAny) {
+            ((OptionsAccessor) options).setKeyBindMixins(current.toArray(KeyMapping[]::new));
+            KeyMapping.resetMapping();
+        }
     }
 
     public void disableFeatureKeyBinds(Feature feature) {
         List<KeyBind> list = keyBinds.getOrDefault(feature, new ArrayList<>());
+        if (list.isEmpty()) return;
+
         list.forEach(enabledKeyBinds::remove);
+
+        Options options = McUtils.options();
+        List<KeyMapping> current = new ArrayList<>(Arrays.asList(options.keyMappings));
+        boolean removedAny = false;
+
+        for (KeyBind keybind : list) {
+            if (current.remove(keybind.getKeyMapping())) {
+                removedAny = true;
+            }
+        }
+
+        if (removedAny) {
+            ((OptionsAccessor) options).setKeyBindMixins(current.toArray(KeyMapping[]::new));
+            KeyMapping.resetMapping();
+        }
     }
 
     private void triggerKeybinds() {
