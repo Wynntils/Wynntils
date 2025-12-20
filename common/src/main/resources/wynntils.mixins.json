@@ -11,6 +11,8 @@
     "ClientCommonPacketListenerImplMixin",
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
+    "ClientSuggestionProviderMixin",
+    "CommandSuggestionsMixin",
     "ConnectScreenMixin",
     "ConnectionMixin",
     "CrashReportMixin",

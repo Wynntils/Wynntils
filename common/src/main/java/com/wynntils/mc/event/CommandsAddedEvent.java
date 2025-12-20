@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -11,8 +11,7 @@ import net.neoforged.bus.api.Event;
 
 public class CommandsAddedEvent extends Event {
     private final CommandBuildContext context;
-
-    private RootCommandNode<SharedSuggestionProvider> root;
+    private final RootCommandNode<SharedSuggestionProvider> root;
 
     public CommandsAddedEvent(RootCommandNode<SharedSuggestionProvider> root, CommandBuildContext context) {
         this.root = root;
@@ -25,9 +24,5 @@ public class CommandsAddedEvent extends Event {
 
     public CommandBuildContext getContext() {
         return context;
-    }
-
-    public void setRoot(RootCommandNode<SharedSuggestionProvider> root) {
-        this.root = root;
     }
 }
