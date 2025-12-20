@@ -12,13 +12,13 @@ import java.util.regex.Pattern;
 
 public class CharacterCreationSegmentMatcher implements ActionBarSegmentMatcher {
     private static final Pattern CHARACTER_CREATION_PATTERN = Pattern.compile(
-            "\uE000 Left-Click to select          \uE002 Scroll up/down to browse(          \uE001 Right-Click to return)?");
+            "\uE000 Left-Click to select          \uE002 Scroll up/down to browse(?<returnText>          \uE001 Right-Click to return)?");
 
     @Override
     public ActionBarSegment parse(String actionBar) {
         Matcher matcher = CHARACTER_CREATION_PATTERN.matcher(actionBar);
         if (!matcher.find()) return null;
 
-        return new CharacterCreationSegment(actionBar);
+        return new CharacterCreationSegment(actionBar, matcher.group("returnText") == null);
     }
 }

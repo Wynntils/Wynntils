@@ -23,6 +23,10 @@ import com.wynntils.core.persisted.PersistedOwner;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.persisted.upfixers.UpfixerType;
+import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
+import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.screens.settings.ConfigProfileScreen;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
@@ -37,6 +41,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.network.chat.Component;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -49,6 +56,14 @@ public final class ConfigManager extends Manager {
 
     @Persisted
     private final Storage<ConfigProfile> selectedProfile = new Storage<>(ConfigProfile.DEFAULT);
+
+    // This is for whether the toast has been sent for existing users or if the user was detected as a new player
+    @Persisted
+    private final Storage<Boolean> hasPromptedProfile = new Storage<>(false);
+
+    // This is for ConfigProfileScreen to know whether to display the 1 time welcome prompt or not
+    @Persisted
+    public final Storage<Boolean> showWelcomeScreen = new Storage<>(true);
 
     private final File userConfigFile;
     private JsonObject configObject;
@@ -181,6 +196,25 @@ public final class ConfigManager extends Manager {
         for (OverlayGroupHolder holder : Managers.Overlay.getOverlayGroups()) {
             Managers.Overlay.enableOverlays(holder.getParent());
         }
+    }
+
+    @SubscribeEvent
+    public void onActionBarUpdate(ActionBarUpdatedEvent event) {
+        event.runIfPresent(CharacterCreationSegment.class, this::checkForNewPlayer);
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        if (hasPromptedProfile.get()) return;
+        if (!event.isFirstJoinWorld()) return;
+
+        McUtils.mc()
+                .getToastManager()
+                .addToast(new SystemToast(
+                        new SystemToast.SystemToastId(10000L),
+                        Component.translatable("core.wynntils.profiles.toastTitle"),
+                        Component.translatable("core.wynntils.profiles.toastMessage")));
+        hasPromptedProfile.store(true);
     }
 
     private static List<Config<?>> getConfigList() {
@@ -372,5 +406,13 @@ public final class ConfigManager extends Manager {
         if (typedValue != null) {
             config.setValue(typedValue);
         }
+    }
+
+    private void checkForNewPlayer(CharacterCreationSegment segment) {
+        if (!segment.isFirstCharacter()) return;
+        if (hasPromptedProfile.get()) return;
+
+        hasPromptedProfile.store(true);
+        McUtils.setScreen(ConfigProfileScreen.create(null, ConfigProfile.NEW_PLAYER));
     }
 }
