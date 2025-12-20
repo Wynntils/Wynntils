@@ -45,7 +45,8 @@ public abstract class RenderEvent extends Event {
         HEALTH_BAR,
         FOOD_BAR,
         PLAYER_TAB_LIST,
-        SCOREBOARD
+        SCOREBOARD,
+        SELECTED_ITEM
     }
 
     public static class Pre extends RenderEvent implements ICancellableEvent {

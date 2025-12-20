@@ -10,10 +10,16 @@ import java.util.List;
 import net.neoforged.bus.api.Event;
 
 public abstract class CommandSuggestionEvent extends Event {
+    private final String input;
     private final List<String> suggestions;
 
-    protected CommandSuggestionEvent(List<String> suggestions) {
+    protected CommandSuggestionEvent(String input, List<String> suggestions) {
+        this.input = input;
         this.suggestions = suggestions;
+    }
+
+    public String getInput() {
+        return input;
     }
 
     public void addSuggestion(String suggestion) {
@@ -28,23 +34,15 @@ public abstract class CommandSuggestionEvent extends Event {
         return Collections.unmodifiableList(suggestions);
     }
 
-    public static final class Add extends CommandSuggestionEvent {
-        private final String input;
-
+    public static class Add extends CommandSuggestionEvent {
         public Add(String input) {
-            super(new ArrayList<>());
-
-            this.input = input;
-        }
-
-        public String getInput() {
-            return input;
+            super(input, new ArrayList<>());
         }
     }
 
-    public static final class Modify extends CommandSuggestionEvent {
-        public Modify(List<String> suggestions) {
-            super(suggestions);
+    public static class Modify extends CommandSuggestionEvent {
+        public Modify(String input, List<String> suggestions) {
+            super(input, suggestions);
         }
     }
 }

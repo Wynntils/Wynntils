@@ -44,23 +44,26 @@ public class CommandSuggestionsMixin {
     private void onUpdateCommandInfo(CallbackInfo ci) {
         if (pendingSuggestions == null) return;
 
-        pendingSuggestions = pendingSuggestions.thenApply(originalSuggestions -> {
-            List<String> list = originalSuggestions.getList().stream()
-                    .map(Suggestion::getText)
-                    .collect(Collectors.toCollection(ArrayList::new));
+        String fullInput = input.getValue();
 
-            CommandSuggestionEvent.Modify event = new CommandSuggestionEvent.Modify(list);
-            MixinHelper.post(event);
+        if (fullInput.startsWith("/")) {
+            pendingSuggestions = pendingSuggestions.thenApply(originalSuggestions -> {
+                List<String> list = originalSuggestions.getList().stream()
+                        .map(Suggestion::getText)
+                        .collect(Collectors.toCollection(ArrayList::new));
 
-            String fullInput = input.getValue();
-            int start = originalSuggestions.getRange().getStart();
+                CommandSuggestionEvent event = new CommandSuggestionEvent.Modify(fullInput.substring(1), list);
+                MixinHelper.post(event);
 
-            SuggestionsBuilder suggestionsBuilder = new SuggestionsBuilder(fullInput, start);
-            for (String suggestion : event.getSuggestions()) {
-                suggestionsBuilder.suggest(suggestion);
-            }
+                int start = originalSuggestions.getRange().getStart();
 
-            return suggestionsBuilder.build();
-        });
+                SuggestionsBuilder suggestionsBuilder = new SuggestionsBuilder(fullInput, start);
+                for (String suggestion : event.getSuggestions()) {
+                    suggestionsBuilder.suggest(suggestion);
+                }
+
+                return suggestionsBuilder.build();
+            });
+        }
     }
 }
