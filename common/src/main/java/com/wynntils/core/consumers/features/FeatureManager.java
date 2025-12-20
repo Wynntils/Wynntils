@@ -95,6 +95,7 @@ import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.GuardianAngelsTrackerOverlayFeature;
 import com.wynntils.features.overlays.HeldItemCooldownOverlayFeature;
+import com.wynntils.features.overlays.HeldItemNameOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.LootrunOverlaysFeature;
 import com.wynntils.features.overlays.MantleShieldTrackerOverlayFeature;
@@ -308,6 +309,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GuardianAngelsTrackerOverlayFeature());
         registerFeature(new HeldItemCooldownOverlayFeature());
+        registerFeature(new HeldItemNameOverlayFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new LootrunOverlaysFeature());
         registerFeature(new MantleShieldTrackerOverlayFeature());

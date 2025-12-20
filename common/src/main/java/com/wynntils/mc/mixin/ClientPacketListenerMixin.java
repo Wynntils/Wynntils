@@ -163,11 +163,6 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         CommandsAddedEvent event =
                 new CommandsAddedEvent(root, CommandBuildContext.simple(this.registryAccess, this.enabledFeatures));
         MixinHelper.post(event);
-
-        if (event.getRoot() != root) {
-            // If we changed the root, replace the CommandDispatcher
-            this.commands = new CommandDispatcher<>(event.getRoot());
-        }
     }
 
     @Inject(
