@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.CombatExperienceOverlay;
 
@@ -20,6 +21,8 @@ public class CombatExperienceOverlayFeature extends Feature {
     private final Overlay combatExperienceOverlay = new CombatExperienceOverlay();
 
     public CombatExperienceOverlayFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 }

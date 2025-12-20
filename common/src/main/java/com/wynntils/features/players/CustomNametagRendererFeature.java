@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.GetCameraEntityEvent;
@@ -93,7 +94,9 @@ public class CustomNametagRendererFeature extends Feature {
     private Player hitPlayerCache = null;
 
     public CustomNametagRendererFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

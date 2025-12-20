@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.MathUtils;
@@ -42,7 +43,9 @@ public class LowHealthVignetteFeature extends Feature {
     private boolean shouldRender = false;
 
     public LowHealthVignetteFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)

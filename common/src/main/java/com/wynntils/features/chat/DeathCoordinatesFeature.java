@@ -8,6 +8,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -19,7 +20,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.CHAT)
 public class DeathCoordinatesFeature extends Feature {
     public DeathCoordinatesFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

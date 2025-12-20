@@ -16,6 +16,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -72,7 +73,9 @@ public class RangeVisualizerFeature extends Feature {
     private final Config<Boolean> showMajorIDCircles = new Config<>(true);
 
     public RangeVisualizerFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     // Handles rendering for other players and ourselves in third person

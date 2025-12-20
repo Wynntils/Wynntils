@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.utils.mc.McUtils;
@@ -25,7 +26,7 @@ public class WynntilsCosmeticsFeature extends Feature {
     public final Config<Boolean> renderOwnCape = new Config<>(true);
 
     public WynntilsCosmeticsFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
     }
 
     @SubscribeEvent

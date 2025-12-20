@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.McUtils;
@@ -17,7 +18,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketPriceConversionFeature extends Feature {
     public TradeMarketPriceConversionFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

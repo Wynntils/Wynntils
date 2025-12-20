@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ServerResourcePackEvent;
 import java.util.UUID;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -17,7 +18,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class AutoApplyResourcePackFeature extends Feature {
     public AutoApplyResourcePackFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
     }
 
     @Override

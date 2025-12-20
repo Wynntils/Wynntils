@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.items.gui.ServerItem;
 import com.wynntils.models.worlds.profile.ServerProfile;
@@ -23,7 +24,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UI)
 public class LobbyUptimeFeature extends Feature {
     public LobbyUptimeFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

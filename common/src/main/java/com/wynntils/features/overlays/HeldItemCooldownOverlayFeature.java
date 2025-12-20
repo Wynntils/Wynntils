@@ -19,6 +19,6 @@ public class HeldItemCooldownOverlayFeature extends Feature {
     private final Overlay heldItemCooldownOverlay = new HeldItemCooldownOverlay();
 
     public HeldItemCooldownOverlayFeature() {
-        super(ProfileDefault.ENABLED);
+        super(ProfileDefault.DISABLED);
     }
 }

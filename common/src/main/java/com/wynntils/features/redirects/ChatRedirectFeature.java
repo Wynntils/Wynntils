@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.MessageType;
@@ -101,7 +102,9 @@ public class ChatRedirectFeature extends Feature {
     private final List<Redirector> redirectors = new ArrayList<>();
 
     public ChatRedirectFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
 
         register(new BlacksmithRedirector());
         register(new BloodPactHealthDeficitRedirector());

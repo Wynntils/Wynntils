@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.screens.changelog.ChangelogScreen;
@@ -20,7 +21,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.WYNNTILS)
 public class ChangelogFeature extends Feature {
     public ChangelogFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
     }
 
     @SubscribeEvent

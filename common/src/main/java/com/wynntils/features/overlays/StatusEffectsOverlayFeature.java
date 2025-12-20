@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.StatusEffectsOverlay;
 
@@ -18,6 +19,9 @@ public class StatusEffectsOverlayFeature extends Feature {
     public final StatusEffectsOverlay statusEffectsOverlay = new StatusEffectsOverlay();
 
     public StatusEffectsOverlayFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 }

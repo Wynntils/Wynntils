@@ -10,6 +10,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.territories.event.GuildWarQueuedEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +29,10 @@ public class WarHornFeature extends Feature {
     private final Config<Float> soundPitch = new Config<>(1.0f);
 
     public WarHornFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

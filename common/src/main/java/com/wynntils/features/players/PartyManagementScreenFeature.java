@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.models.players.event.FriendsEvent;
 import com.wynntils.models.players.event.PartyEvent;
@@ -31,7 +32,9 @@ public class PartyManagementScreenFeature extends Feature {
             });
 
     public PartyManagementScreenFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

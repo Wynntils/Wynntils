@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
@@ -56,7 +57,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
     private PersonalStorageUtilitiesWidget widget;
 
     public PersonalStorageUtilitiesFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
     }
 
     @SubscribeEvent

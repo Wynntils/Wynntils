@@ -10,6 +10,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.utils.colors.CommonColors;
@@ -37,7 +38,7 @@ public class ShamanTotemTrackingFeature extends Feature {
     private final Config<CustomColor> fourthTotemColor = new Config<>(CommonColors.GREEN);
 
     public ShamanTotemTrackingFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
     }
 
     @SubscribeEvent

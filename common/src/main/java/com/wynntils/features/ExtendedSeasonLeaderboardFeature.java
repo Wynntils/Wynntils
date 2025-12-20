@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.labels.event.TextDisplayChangedEvent;
@@ -39,7 +40,9 @@ public class ExtendedSeasonLeaderboardFeature extends Feature {
     private final Config<ColorChatFormatting> guildHighlightColor = new Config<>(ColorChatFormatting.GREEN);
 
     public ExtendedSeasonLeaderboardFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

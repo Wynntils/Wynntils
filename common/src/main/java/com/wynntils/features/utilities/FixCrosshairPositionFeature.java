@@ -13,6 +13,7 @@ import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.SectionCoordinates;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.Minecraft;
@@ -24,7 +25,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class FixCrosshairPositionFeature extends Feature {
     public FixCrosshairPositionFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     private static boolean shouldOverrideCrosshair() {

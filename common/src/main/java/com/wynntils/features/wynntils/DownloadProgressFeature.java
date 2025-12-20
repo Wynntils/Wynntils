@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.net.event.DownloadEvent;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
@@ -17,7 +18,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.WYNNTILS)
 public class DownloadProgressFeature extends Feature {
     public DownloadProgressFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
     }
 
     @SubscribeEvent
