@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.utils.mc.McUtils;
 import org.lwjgl.glfw.GLFW;
 
@@ -97,7 +98,9 @@ public class CustomCommandKeybindsFeature extends Feature {
             () -> this.executeKeybind(keybindCommand6.get(), commandType6.get()));
 
     public CustomCommandKeybindsFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {

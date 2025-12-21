@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.hades.protocol.enums.SocialType;
 
 @ConfigCategory(Category.PLAYERS)
@@ -29,7 +30,9 @@ public class HadesFeature extends Feature {
     public final Config<Boolean> shareWithGuild = new Config<>(true);
 
     public HadesFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @Override

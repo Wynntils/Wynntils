@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 
@@ -32,7 +33,10 @@ public class LootrunFeature extends Feature {
     public final Config<Boolean> showNotes = new Config<>(true);
 
     public LootrunFeature() {
-        super(ProfileDefault.ENABLED);
+        // Enabled status for this doesn't really matter, but just for settings filters we disable it
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -20,7 +21,9 @@ public class TooltipVanillaHideFeature extends Feature {
     private final Config<Boolean> hideAdvanced = new Config<>(true);
 
     public TooltipVanillaHideFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

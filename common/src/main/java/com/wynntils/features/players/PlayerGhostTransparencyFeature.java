@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.event.RenderTranslucentCheckEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
@@ -27,7 +28,9 @@ public class PlayerGhostTransparencyFeature extends Feature {
     private final Config<Boolean> transparentPlayerGhostArmor = new Config<>(true);
 
     public PlayerGhostTransparencyFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

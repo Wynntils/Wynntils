@@ -12,6 +12,7 @@ import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.PlayerInfoEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.function.Supplier;
@@ -23,7 +24,7 @@ public class BetaWarningFeature extends Feature {
     private WarnType warnType = WarnType.NONE;
 
     public BetaWarningFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
     }
 
     @SubscribeEvent

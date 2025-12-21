@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatScreenSendEvent;
 import com.wynntils.mc.event.CommandSentEvent;
@@ -42,7 +43,10 @@ public class InputTranscriptionFeature extends Feature {
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
 
     public InputTranscriptionFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

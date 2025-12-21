@@ -12,12 +12,16 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.worlds.type.BombInfo;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
+@ConfigCategory(Category.CHAT)
 public class BombBellRelayFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind relayPartyKeybind =
@@ -31,7 +35,9 @@ public class BombBellRelayFeature extends Feature {
     private final Config<Boolean> showTime = new Config<>(true);
 
     public BombBellRelayFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     private String getAndFormatLastBomb() {

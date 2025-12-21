@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -31,7 +32,9 @@ public class GuildMapFeature extends Feature {
             new KeyBind("Open Guild Map", GLFW.GLFW_KEY_J, false, this::openGuildMap);
 
     public GuildMapFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     private void openGuildMap() {

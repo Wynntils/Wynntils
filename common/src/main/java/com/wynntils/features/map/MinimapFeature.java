@@ -13,6 +13,7 @@ import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.minimap.CoordinateOverlay;
 import com.wynntils.overlays.minimap.MinimapOverlay;
@@ -39,6 +40,8 @@ public class MinimapFeature extends Feature {
             new KeyBind("Decrease Minimap Zoom", GLFW.GLFW_KEY_MINUS, false, () -> minimapOverlay.adjustZoomLevel(-2));
 
     public MinimapFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 }

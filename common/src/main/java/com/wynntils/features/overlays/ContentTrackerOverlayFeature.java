@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.ContentTrackerOverlay;
 
@@ -19,6 +20,8 @@ public class ContentTrackerOverlayFeature extends Feature {
     private final Overlay trackerOverlay = new ContentTrackerOverlay();
 
     public ContentTrackerOverlayFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 }

@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
@@ -34,7 +35,10 @@ public class LootchestTextFeature extends Feature {
     private final Config<String> inventoryTextTemplate = new Config<>("§8Dry: {dry_streak}");
 
     public LootchestTextFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent
