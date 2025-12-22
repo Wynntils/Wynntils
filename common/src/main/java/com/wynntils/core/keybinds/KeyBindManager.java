@@ -200,6 +200,8 @@ public final class KeyBindManager extends Manager {
 
         for (Feature parent : keyBinds.keySet()) {
             for (KeyBind keyBind : keyBinds.get(parent)) {
+                if (!enabledKeyBinds.contains(keyBind)) continue;
+
                 try {
                     checkKeybind.accept(keyBind);
                 } catch (Throwable t) {
