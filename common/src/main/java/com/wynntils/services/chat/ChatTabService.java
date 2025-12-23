@@ -54,6 +54,9 @@ public final class ChatTabService extends Service {
     }
 
     public ChatTab getTab(int index) {
+        if (index < 0 || index >= getChatTabs().size()) {
+            return null;
+        }
         return getChatTabs().get(index);
     }
 
@@ -111,7 +114,11 @@ public final class ChatTabService extends Service {
     }
 
     public void setFocusedTab(int index) {
-        setFocusedTab(getTab(index));
+        ChatTab tab = getTab(index);
+        if (tab == null) {
+            return;
+        }
+        setFocusedTab(tab);
     }
 
     public void setFocusedTab(ChatTab focused) {
