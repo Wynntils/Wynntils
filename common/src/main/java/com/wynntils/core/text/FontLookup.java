@@ -11,19 +11,20 @@ import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.Identifier;
 
 public class FontLookup {
-    private static final Map<FontDescription, String> FONT_TO_CODE_MAP = new HashMap<>();
-    private static final Map<String, FontDescription> CODE_TO_FONT_MAP = new HashMap<>();
+    private static final Map<FontDescription.Resource, String> FONT_TO_CODE_MAP = new HashMap<>();
+    private static final Map<String, FontDescription.Resource> CODE_TO_FONT_MAP = new HashMap<>();
 
-    public static void registerFontCode(FontDescription font, String code) {
+    public static void registerFontCode(FontDescription.Resource font, String code) {
         FONT_TO_CODE_MAP.put(font, code);
         CODE_TO_FONT_MAP.put(code, font);
     }
 
-    public static String getFontCodeFromFont(FontDescription font) {
-        return FONT_TO_CODE_MAP.computeIfAbsent(font, FontDescription::toString);
+    public static String getFontCodeFromFont(FontDescription.Resource font) {
+        return FONT_TO_CODE_MAP.computeIfAbsent(
+                font, (resource) -> resource.id().toString());
     }
 
-    public static FontDescription getFontFromFromFontCode(String fontCode) {
+    public static FontDescription.Resource getFontFromFromFontCode(String fontCode) {
         return CODE_TO_FONT_MAP.computeIfAbsent(
                 fontCode,
                 // If we did not find a code, assume we have the full font name

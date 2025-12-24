@@ -7,12 +7,14 @@ package com.wynntils.core.text;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.authlib.GameProfile;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Function;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -22,6 +24,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.component.ResolvableProfile;
 
 public final class StyledTextPart {
     private final String text;
@@ -146,7 +149,7 @@ public final class StyledTextPart {
                     specialPrefix = false;
                     String special = specialString.toString();
                     specialString = new StringBuilder();
-                    if (special.startsWith("f:")) {
+                    if (special.startsWith("fr:") || special.startsWith("fas:") || special.startsWith("fps:")) {
                         // If we already had some text with the current style
                         // Append it before modifying the style
                         if (!currentString.isEmpty()) {
@@ -165,10 +168,33 @@ public final class StyledTextPart {
                             currentString = new StringBuilder();
                         }
 
-                        String fontCode = special.substring(2);
-                        FontDescription font = FontLookup.getFontFromFromFontCode(fontCode);
-                        if (font != null) {
-                            currentStyle = currentStyle.withFont(font);
+                        FontDescription fontDescription = null;
+
+                        if (special.startsWith("fr:")) {
+                            String fontCode = special.substring(3);
+                            fontDescription = FontLookup.getFontFromFromFontCode(fontCode);
+                        } else if (special.startsWith("fas:")) {
+                            String identifiers = special.substring(4);
+                            String[] split = identifiers.split(":");
+
+                            if (split.length != 2) continue;
+
+                            fontDescription = new FontDescription.AtlasSprite(
+                                    Identifier.parse(split[0]), Identifier.parse(split[1]));
+                        } else if (special.startsWith("fps:")) {
+                            String profileDetails = special.substring(4);
+                            String[] split = profileDetails.split(":");
+
+                            if (split.length != 3) continue;
+
+                            GameProfile profile = new GameProfile(UUID.fromString(split[0]), split[1]);
+
+                            fontDescription = new FontDescription.PlayerSprite(
+                                    ResolvableProfile.createResolved(profile), Boolean.parseBoolean(split[2]));
+                        }
+
+                        if (fontDescription != null) {
+                            currentStyle = currentStyle.withFont(fontDescription);
                         }
                     } else {
                         // Unknown special code, just ignore it for now

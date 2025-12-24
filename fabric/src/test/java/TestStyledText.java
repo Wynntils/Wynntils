@@ -37,7 +37,7 @@ public class TestStyledText {
                 .withStyle(ChatFormatting.RED)
                 .withStyle(Style.EMPTY.withFont(bannerPillFont))
                 .append(Component.literal("inherited font"));
-        final String expected = "§c§{f:bp}inherited font";
+        final String expected = "§c§{fr:bp}inherited font";
 
         StyledText styledText = StyledText.fromComponent(component);
 
@@ -75,7 +75,7 @@ public class TestStyledText {
                 .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
                         Identifier.fromNamespaceAndPath("minecraft", "banner/nosuchfont"))))
                 .append(Component.literal("inherited font"));
-        final String expected = "§c§{f:minecraft:banner/nosuchfont}inherited font";
+        final String expected = "§c§{fr:minecraft:banner/nosuchfont}inherited font";
 
         StyledText styledText = StyledText.fromComponent(component);
 

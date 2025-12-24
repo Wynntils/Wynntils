@@ -16,6 +16,8 @@ import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.component.ResolvableProfile;
 
 public final class PartStyle {
     private static final String STYLE_PREFIX = "§";
@@ -123,9 +125,11 @@ public final class PartStyle {
         //    The parent of this style's owner is responsible for keeping track of hover events.
         //    Example: §<1> -> (1st hover event)
         // 5. Additional formatting support is expressed with §{...}. The currently only supported such
-        //    formatting is font style, which is represented as §{f:X}, where X is a short code given to the
-        //    font, if such is present, or the full resource location if not.
-        //    Example: §{f:d} or §{f:minecraft:default}
+        //    formattings are for FontDecoration's, which are represented as §{fr:X} for Resource, where X is a
+        //    short code given to the font, if such is present, or the full identifier if not.
+        //    §{fas:X:Y} for AltasSprite where X is the Atlas identifier and Y is the Sprite Identifier.
+        //    §{fps:X:Y:Z} for PlayerSprite where X is the profile UUID, Y is the profile name and Z is if the
+        //    hate layer is included or not.
 
         if (!type.includeBasicFormatting()) return "";
 
@@ -177,13 +181,35 @@ public final class PartStyle {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
             }
             if (type.includeFonts()) {
-                if (font != null && !font.toString().equals("minecraft:default")) {
-                    String fontCode = FontLookup.getFontCodeFromFont(font);
-                    styleString
-                            .append(STYLE_PREFIX)
-                            .append("{f:")
-                            .append(fontCode)
-                            .append("}");
+                if (font != null) {
+                    if (font instanceof FontDescription.Resource resource
+                            && resource.id() != null
+                            && !resource.id().toString().equals("minecraft:default")) {
+                        String fontCode = FontLookup.getFontCodeFromFont(resource);
+                        styleString
+                                .append(STYLE_PREFIX)
+                                .append("{fr:")
+                                .append(fontCode)
+                                .append("}");
+                    } else if (font instanceof FontDescription.AtlasSprite(Identifier atlasId, Identifier spriteId)) {
+                        styleString
+                                .append(STYLE_PREFIX)
+                                .append("{fas:")
+                                .append(atlasId)
+                                .append(":")
+                                .append(spriteId)
+                                .append("}");
+                    } else if (font instanceof FontDescription.PlayerSprite(ResolvableProfile profile, boolean hat)) {
+                        styleString
+                                .append(STYLE_PREFIX)
+                                .append("{fps:")
+                                .append(profile.partialProfile().id())
+                                .append(":")
+                                .append(profile.partialProfile().name())
+                                .append(":")
+                                .append(hat)
+                                .append("}");
+                    }
                 }
             }
 
@@ -476,8 +502,24 @@ public final class PartStyle {
         if (type.includeFonts()) {
             if (oldStyle.font != null && this.font == null) return null;
             if (this.font != null) {
-                String fontCode = FontLookup.getFontCodeFromFont(font);
-                add.append(STYLE_PREFIX).append("{f:").append(fontCode).append("}");
+                if (this.font instanceof FontDescription.Resource resource) {
+                    String fontCode = FontLookup.getFontCodeFromFont(resource);
+                    add.append(STYLE_PREFIX).append("{fr:").append(fontCode).append("}");
+                } else if (this.font instanceof FontDescription.AtlasSprite(Identifier atlasId, Identifier spriteId)) {
+                    add.append(STYLE_PREFIX)
+                            .append("{fas:")
+                            .append(atlasId)
+                            .append(":")
+                            .append(spriteId)
+                            .append("}");
+                } else if (this.font instanceof FontDescription.PlayerSprite(ResolvableProfile profile, boolean hat)) {
+                    add.append(STYLE_PREFIX)
+                            .append("{fps:")
+                            .append(profile.partialProfile().id())
+                            .append(":")
+                            .append(hat)
+                            .append("}");
+                }
             }
         }
 
