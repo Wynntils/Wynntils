@@ -82,7 +82,7 @@ public record ItemMaterial(ItemStack itemStack) {
         ItemStack itemStack = new ItemStack(item);
 
         itemStack.set(DataComponents.DAMAGE, damageValue);
-        itemStack.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
+        itemStack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
         return itemStack;
     }
 
