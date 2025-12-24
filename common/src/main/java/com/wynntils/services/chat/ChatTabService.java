@@ -113,9 +113,7 @@ public final class ChatTabService extends Service {
 
     public void setFocusedTab(int index) {
         ChatTab tab = getTab(index);
-        if (tab == null) {
-            return;
-        }
+        if (tab == null) return;
         setFocusedTab(tab);
     }
 
