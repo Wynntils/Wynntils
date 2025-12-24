@@ -79,7 +79,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
 
     protected GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type) {
         GearRestrictions restrictions = parseRestrictions(json);
-        ItemMaterial material = parseMaterial(json);
+        ItemMaterial material = parseMaterial(json, type);
 
         if (material == null || material.itemStack().isEmpty()) {
             WynntilsMod.warn("Failed to parse material for " + json.get("name").getAsString());
@@ -206,6 +206,42 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
 
         // Return an immutable list
         return List.copyOf(types);
+    }
+
+    private ItemMaterial parseMaterial(JsonObject json, GearType type) {
+        if (type == GearType.HELMET && json.has("armourMaterial")) {
+            // Helmets that use vanilla blocks/items use the armourMaterial field instead of icon
+            switch (json.get("armourMaterial").getAsString()) {
+                case "creeper" -> {
+                    return ItemMaterial.fromItemId("minecraft:creeper_head", 0);
+                }
+                case "zombie" -> {
+                    return ItemMaterial.fromItemId("minecraft:zombie_head", 0);
+                }
+                case "pumpkin" -> {
+                    return ItemMaterial.fromItemId("minecraft:carved_pumpkin", 0);
+                }
+                case "jackolantern" -> {
+                    return ItemMaterial.fromItemId("minecraft:jack_o_lantern", 0);
+                }
+                // These are not currently used so they are just guesses at the moment
+                case "skeleton" -> {
+                    return ItemMaterial.fromItemId("minecraft:skeleton_skull", 0);
+                }
+                case "witherskeleton" -> {
+                    return ItemMaterial.fromItemId("minecraft:wither_skeleton_skull", 0);
+                }
+                case "piglin" -> {
+                    return ItemMaterial.fromItemId("minecraft:piglin_head", 0);
+                }
+                default -> {
+                    // Unknown material, try parsing normally
+                    return parseMaterial(json);
+                }
+            }
+        } else {
+            return parseMaterial(json);
+        }
     }
 
     protected ItemMaterial parseMaterial(JsonObject json) {

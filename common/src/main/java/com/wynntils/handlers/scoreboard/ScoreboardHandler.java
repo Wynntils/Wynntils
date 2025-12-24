@@ -77,8 +77,6 @@ public final class ScoreboardHandler extends Handler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetScore(ScoreboardEvent.Reset event) {
-        if (!currentScoreboardName.equals(event.getObjectiveName())) return;
-
         updateNextTick();
     }
 
