@@ -54,9 +54,7 @@ public final class ChatTabService extends Service {
     }
 
     public ChatTab getTab(int index) {
-        if (index < 0 || index >= getChatTabs().size()) {
-            return null;
-        }
+        if (index < 0 || index >= getChatTabs().size()) return null;
         return getChatTabs().get(index);
     }
 
