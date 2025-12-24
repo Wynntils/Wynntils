@@ -2867,6 +2867,8 @@
   "screens.wynntils.downloads.name": "Downloads",
   "screens.wynntils.downloads.tryRedownload": "Click to try and redownload data",
   "screens.wynntils.gearSharingSettings.back": "Back",
+  "screens.wynntils.gearSharingSettings.globalOrCharacter": "Use global or per character sharing settings for this character?",
+  "screens.wynntils.gearSharingSettings.globalShareSettings": "Global Share Settings",
   "screens.wynntils.gearSharingSettings.shareCraftedGear": "Share Crafted Gear",
   "screens.wynntils.gearSharingSettings.shareCraftedGearTooltip": "Should gear be sent if it is crafted?",
   "screens.wynntils.gearSharingSettings.shareHeldItem": "Share Held Item",

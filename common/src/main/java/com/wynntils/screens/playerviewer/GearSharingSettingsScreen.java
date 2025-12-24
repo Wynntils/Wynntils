@@ -10,6 +10,7 @@ import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.utils.EnumUtils;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -41,11 +42,57 @@ public class GearSharingSettingsScreen extends WynntilsScreen {
         offsetX = (this.width - Texture.PLAYER_VIEWER_BACKGROUND.width()) / 2;
         offsetY = (this.height - Texture.PLAYER_VIEWER_BACKGROUND.height()) / 2;
 
+        buildWidgets();
+    }
+
+    @Override
+    public void onClose() {
+        Services.Hades.saveGearShareOptions();
+        McUtils.setScreen(previousScreen);
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+
+        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.PLAYER_VIEWER_BACKGROUND, offsetX, offsetY);
+
+        InventoryScreen.renderEntityInInventoryFollowsMouse(
+                guiGraphics,
+                offsetX + 13,
+                offsetY - 4,
+                offsetX + 13 + Texture.PLAYER_VIEWER_BACKGROUND.width(),
+                offsetY - 4 + Texture.PLAYER_VIEWER_BACKGROUND.height(),
+                30,
+                0.2f,
+                mouseX,
+                mouseY,
+                McUtils.player());
+    }
+
+    private void buildWidgets() {
+        this.clearWidgets();
+
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.gearSharingSettings.back"), (button -> onClose()))
                 .pos(offsetX + 1, offsetY - 21)
                 .size(Texture.PLAYER_VIEWER_BACKGROUND.width() - 2, 20)
                 .build());
+
+        this.addRenderableWidget(new WynntilsCheckbox(
+                offsetX,
+                offsetY + Texture.PLAYER_VIEWER_BACKGROUND.height() + 2,
+                16,
+                Component.translatable("screens.wynntils.gearSharingSettings.globalShareSettings"),
+                !Services.Hades.isCharacterGearShareEnabled(),
+                Texture.PLAYER_VIEWER_BACKGROUND.width() - 16,
+                (checkbox, bl) -> {
+                    Services.Hades.toggleCharacterGearShareEnabled();
+                    buildWidgets();
+                },
+                ComponentUtils.wrapTooltips(
+                        List.of(Component.translatable("screens.wynntils.gearSharingSettings.globalOrCharacter")),
+                        150)));
 
         this.addRenderableWidget(new WynntilsCheckbox(
                 offsetX + 100,
@@ -122,30 +169,5 @@ public class GearSharingSettingsScreen extends WynntilsScreen {
                     Services.Hades.getGearShareOptions().setShareCraftedNames(bl);
                 },
                 List.of(Component.translatable("screens.wynntils.gearSharingSettings.shareItemNamesTooltip"))));
-    }
-
-    @Override
-    public void onClose() {
-        Services.Hades.saveGearShareOptions();
-        McUtils.setScreen(previousScreen);
-    }
-
-    @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.PLAYER_VIEWER_BACKGROUND, offsetX, offsetY);
-
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
-                guiGraphics,
-                offsetX + 13,
-                offsetY - 4,
-                offsetX + 13 + Texture.PLAYER_VIEWER_BACKGROUND.width(),
-                offsetY - 4 + Texture.PLAYER_VIEWER_BACKGROUND.height(),
-                30,
-                0.2f,
-                mouseX,
-                mouseY,
-                McUtils.player());
     }
 }
