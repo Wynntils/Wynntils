@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public final class StatModel extends Model {
@@ -136,6 +137,15 @@ public final class StatModel extends Model {
         List<StatType> orderingList = orderingLists.get(ordering);
 
         List<StatType> sortedStats = new ArrayList<>(gearInfo.getVariableStats());
+        sortedStats.sort(Comparator.comparingInt(orderingList::indexOf));
+
+        return sortedStats;
+    }
+
+    public List<StatType> getSortedStats(Set<StatType> stats, StatListOrdering ordering) {
+        List<StatType> orderingList = orderingLists.get(ordering);
+
+        List<StatType> sortedStats = new ArrayList<>(stats);
         sortedStats.sort(Comparator.comparingInt(orderingList::indexOf));
 
         return sortedStats;

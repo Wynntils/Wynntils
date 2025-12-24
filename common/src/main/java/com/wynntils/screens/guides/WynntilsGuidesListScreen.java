@@ -16,6 +16,7 @@ import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
 import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
+import com.wynntils.screens.guides.sets.WynntilsSetsGuideScreen;
 import com.wynntils.screens.guides.tome.WynntilsTomeGuideScreen;
 import com.wynntils.screens.guides.widgets.ExportButton;
 import com.wynntils.screens.guides.widgets.GuidesButton;
@@ -41,7 +42,8 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
             WynntilsCharmGuideScreen.create(),
             WynntilsAspectGuideScreen.create(),
             WynntilsEmeraldPouchGuideScreen.create(),
-            WynntilsPowderGuideScreen.create());
+            WynntilsPowderGuideScreen.create(),
+            WynntilsSetsGuideScreen.create());
 
     private WynntilsGuidesListScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.name"));

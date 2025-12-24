@@ -17,8 +17,10 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.SetItemProperty;
 import com.wynntils.models.stats.type.StatType;
 import java.io.Reader;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +29,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class SetModel extends Model {
     // Stored as a map for quick lookup <name, SetInfo>
-    private final Map<String, SetInfo> setData = new HashMap<>();
+    private final Map<String, SetInfo> setData = new LinkedHashMap<>();
 
     public SetModel() {
         super(List.of());
@@ -36,6 +38,10 @@ public final class SetModel extends Model {
     @Override
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(UrlId.DATA_STATIC_ITEM_SETS).handleReader(this::handleSetData);
+    }
+
+    public Collection<SetInfo> getSets() {
+        return setData.values();
     }
 
     /**
