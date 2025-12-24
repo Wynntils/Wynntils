@@ -49,6 +49,11 @@ public final class AnimationPercentage {
         return openingProgress;
     }
 
+    public void restart() {
+        this.openingProgress = 0;
+        this.lastTime = Instant.EPOCH;
+    }
+
     private void addOpeningProgress(double openingProgress) {
         setOpeningProgress(this.openingProgress + openingProgress);
     }

@@ -10,8 +10,8 @@ import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -52,7 +52,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 // Note: To run this successfully, you have to have a class with all content trackable in the content book
-@StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class ContentBookDumpFeature extends Feature {
     // Temporary hack...
@@ -75,6 +74,10 @@ public class ContentBookDumpFeature extends Feature {
     private Location lastTrackedLocation = null;
     private DumpableActivityInfo currentlyTracking = null;
     private Queue<DumpableActivityInfo> manualTrackingRequired = new LinkedList<>();
+
+    public ContentBookDumpFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onSetSpawn(SetSpawnEvent event) {

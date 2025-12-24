@@ -6,9 +6,11 @@ package com.wynntils.features.commands;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandSuggestionEvent;
@@ -27,6 +29,10 @@ public class CommandAliasesFeature extends Feature {
             new ArgumentAlias(List.of("guild", "gu", "guilds"), "attack", List.of("a")),
             new ArgumentAlias(List.of("guild", "gu", "guilds"), "manage", List.of("m", "man")),
             new ArgumentAlias(List.of("guild", "gu", "guilds"), "territory", List.of("t", "terr"))));
+
+    public CommandAliasesFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onCommandSent(CommandSentEvent e) {

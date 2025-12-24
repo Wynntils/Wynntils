@@ -6,10 +6,12 @@ package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -31,6 +33,10 @@ public class ExtendedItemCountFeature extends Feature {
     private final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
     private boolean isInventory;
+
+    public ExtendedItemCountFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
     @SubscribeEvent
     public void onRenderSlotPre(SlotRenderEvent.Pre e) {

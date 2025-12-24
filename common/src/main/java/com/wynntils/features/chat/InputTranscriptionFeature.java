@@ -8,10 +8,12 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatScreenSendEvent;
 import com.wynntils.mc.event.CommandSentEvent;
@@ -39,6 +41,13 @@ public class InputTranscriptionFeature extends Feature {
     // Numbers higher than this will be replaced with "∞"
     private static final int MAX_TRANSCRIPTABLE_NUMBER = 5000;
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
+
+    public InputTranscriptionFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent.Pre event) {

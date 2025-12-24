@@ -5,10 +5,12 @@
 package com.wynntils.features.overlays;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.gamebars.AwakenedProgressBarOverlay;
 import com.wynntils.overlays.gamebars.BloodPoolBarOverlay;
@@ -60,4 +62,11 @@ public class GameBarsOverlayFeature extends Feature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final MomentumBarOverlay momentumBarOverlay = new MomentumBarOverlay();
+
+    public GameBarsOverlayFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 }

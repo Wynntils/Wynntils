@@ -7,7 +7,7 @@ package com.wynntils.features.ui;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -33,7 +33,6 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.UI)
 public class CustomLoadingScreenFeature extends Feature {
     private static final String IGNORED_TITLE = "\uE000\uE001\uE000";
@@ -44,6 +43,10 @@ public class CustomLoadingScreenFeature extends Feature {
     private Screen replacedScreen;
     private TickSchedulerManager.ScheduledTask delayedRemoval;
     private boolean allowClosing;
+
+    public CustomLoadingScreenFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     @SubscribeEvent
     public void onTickAlways(TickAlwaysEvent e) {

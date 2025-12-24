@@ -5,7 +5,7 @@
 package com.wynntils.features.players;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -18,7 +18,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.PLAYERS)
 public class PlayerArmorHidingFeature extends Feature {
     @Persisted
@@ -35,6 +34,10 @@ public class PlayerArmorHidingFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> showCosmetics = new Config<>(true);
+
+    public PlayerArmorHidingFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     @SubscribeEvent
     public void onPlayerArmorRender(PlayerRenderLayerEvent.Armor event) {

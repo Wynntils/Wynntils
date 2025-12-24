@@ -11,6 +11,7 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.storage.Storageable;
 
 /**
@@ -22,6 +23,13 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
 
     @Persisted(i18nKey = "feature.wynntils.userFeature.userEnabled")
     public final Config<Boolean> userEnabled = new Config<>(true);
+
+    protected Feature(ProfileDefault profileDefault) {
+        for (ConfigProfile profile : ConfigProfile.values()) {
+            boolean enabled = profileDefault.getDefault(profile);
+            this.userEnabled.withDefault(profile, enabled);
+        }
+    }
 
     @Override
     public String getTypeName() {

@@ -5,8 +5,10 @@
 package com.wynntils.features.combat;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
@@ -29,6 +31,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class AbbreviateMobHealthFeature extends Feature {
     private static final Pattern MOB_HEALTH_PATTERN =
             Pattern.compile("(.*§[cb])(?<current>\\d+)(§.(?<max>\\/\\d+))?(§[cb4]\\s?❤.*)");
+
+    public AbbreviateMobHealthFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onHealthBarEvent(BossHealthUpdateEvent event) {

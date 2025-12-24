@@ -6,7 +6,7 @@ package com.wynntils.features.embellishments;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.EMBELLISHMENTS)
 public class RemoveShinyGlintFeature extends Feature {
     // If this changes, add it to Static-Storage model_data so we don't need to push mod updates to fix
@@ -27,6 +26,10 @@ public class RemoveShinyGlintFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> replaceGlint = new Config<>(true);
+
+    public RemoveShinyGlintFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     // Weapons use potion color
     @SubscribeEvent

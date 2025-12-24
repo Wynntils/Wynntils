@@ -7,6 +7,7 @@ package com.wynntils.features.overlays;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
@@ -15,6 +16,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.mc.event.KeyInputEvent;
@@ -103,6 +105,8 @@ public class NpcDialogueFeature extends Feature {
     private StyledText displayedHelperMessage = null;
 
     public NpcDialogueFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+
         // Add this feature as a dependent of the NpcDialogueModel
         Models.NpcDialogue.addNpcDialogExtractionDependent(this);
     }

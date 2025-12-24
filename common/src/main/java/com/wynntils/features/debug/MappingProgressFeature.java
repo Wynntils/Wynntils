@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
@@ -7,8 +7,8 @@ package com.wynntils.features.debug;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -23,7 +23,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.DEBUG)
-@StartDisabled
 public class MappingProgressFeature extends Feature {
     @RegisterCommand
     private final LiteralCommandNode<CommandSourceStack> resetCommand = Commands.literal("mapping")
@@ -33,6 +32,10 @@ public class MappingProgressFeature extends Feature {
 
     @Persisted
     private final Storage<Set<Long>> mappedChunks = new Storage<>(new TreeSet<>());
+
+    public MappingProgressFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     @SubscribeEvent
     public void onChunkLoaded(ChunkReceivedEvent event) {

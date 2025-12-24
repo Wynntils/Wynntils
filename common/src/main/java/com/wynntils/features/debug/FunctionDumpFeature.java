@@ -7,8 +7,8 @@ package com.wynntils.features.debug;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
@@ -31,7 +31,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
-@StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class FunctionDumpFeature extends Feature {
     // names are used for tablenames, which cascades to function/argument cross referencing & any ORM types generated
@@ -63,6 +62,10 @@ public class FunctionDumpFeature extends Feature {
                 return 0;
             })
             .build();
+
+    public FunctionDumpFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     private void dumpFunctionsToCSV() {
         List<String[]> dataLines = new ArrayList<>();

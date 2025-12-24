@@ -9,12 +9,14 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.NullableConfig;
 import com.wynntils.core.persisted.type.PersistedMetadata;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +111,17 @@ public final class PersistedManager extends Manager {
 
         String jsonName = getPrefix(owner) + owner.getJsonName() + "." + fieldName;
 
-        return new PersistedMetadata<>(owner, fieldName, valueType, defaultValue, i18nKeyOverride, allowNull, jsonName);
+        Map<ConfigProfile, T> profileDefaultValues = new EnumMap<>(ConfigProfile.class);
+        if (persisted instanceof Config<?> config) {
+            Config<T> typedConfig = (Config<T>) config;
+            typedConfig
+                    .getProfileDefaultValues()
+                    .forEach((profile, value) ->
+                            profileDefaultValues.put(profile, Managers.Json.deepCopy(value, valueType)));
+        }
+
+        return new PersistedMetadata<>(
+                owner, fieldName, valueType, defaultValue, profileDefaultValues, i18nKeyOverride, allowNull, jsonName);
     }
 
     private String getPrefix(PersistedOwner owner) {

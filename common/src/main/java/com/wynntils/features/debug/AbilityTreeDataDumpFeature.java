@@ -9,7 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -28,10 +28,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 // NOTE: This feature was intented to be used on fully reset ability trees.
 //       Although support for parsing any tree is present, I would still recommend using a fresh tree to avoid any
 //       issues.
-@StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class AbilityTreeDataDumpFeature extends Feature {
     private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
+
+    public AbilityTreeDataDumpFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInventoryClick(ContainerClickEvent event) {

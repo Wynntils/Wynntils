@@ -6,10 +6,12 @@ package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.MathUtils;
@@ -39,6 +41,12 @@ public class LowHealthVignetteFeature extends Feature {
     private float animation = 10f;
     private float value = INTENSITY;
     private boolean shouldRender = false;
+
+    public LowHealthVignetteFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderGui(RenderEvent.Post event) {

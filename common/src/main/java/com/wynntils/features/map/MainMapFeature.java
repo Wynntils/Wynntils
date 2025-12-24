@@ -7,12 +7,14 @@ package com.wynntils.features.map;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
@@ -124,6 +126,10 @@ public class MainMapFeature extends Feature {
     @RegisterKeyBind
     public final KeyBind newWaypointKeybind =
             new KeyBind("New Waypoint", GLFW.GLFW_KEY_B, true, this::openWaypointSetup);
+
+    public MainMapFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
     private void openMainMap() {
         // If the current screen is already the map, and we get this event, this means we are holding the keybind

@@ -6,8 +6,10 @@ package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -19,6 +21,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
 public class SkillPointLoadoutsFeature extends Feature {
+    public SkillPointLoadoutsFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
+
     @SubscribeEvent
     public void onCharacterInfoScreenOpened(ScreenOpenedEvent.Post e) {
         if (!(e.getScreen() instanceof ContainerScreen screen)) return;

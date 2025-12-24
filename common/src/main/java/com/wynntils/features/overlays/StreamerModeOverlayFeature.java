@@ -5,16 +5,19 @@
 package com.wynntils.features.overlays;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.StreamerModeOverlay;
 
-@StartDisabled
 @ConfigCategory(Category.OVERLAYS)
 public class StreamerModeOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final StreamerModeOverlay streamerModeOverlay = new StreamerModeOverlay();
+
+    public StreamerModeOverlayFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 }

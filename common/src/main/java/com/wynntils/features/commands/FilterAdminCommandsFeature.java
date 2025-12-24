@@ -5,8 +5,10 @@
 package com.wynntils.features.commands;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.CommandSuggestionEvent;
 import java.util.Set;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -32,6 +34,10 @@ public class FilterAdminCommandsFeature extends Feature {
             "sparkbungee",
             "wcl",
             "wynnproxy");
+
+    public FilterAdminCommandsFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
     @SubscribeEvent
     public void onModifySuggestions(CommandSuggestionEvent.Modify event) {

@@ -6,8 +6,10 @@ package com.wynntils.features.chat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
@@ -27,6 +29,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.CHAT)
 public class ChatCoordinatesFeature extends Feature {
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
+
+    public ChatCoordinatesFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatReceived(ChatMessageEvent.Edit e) {

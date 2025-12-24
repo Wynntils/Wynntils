@@ -5,10 +5,12 @@
 package com.wynntils.features.commands;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.CommandSuggestionEvent;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +32,10 @@ public class AddCommandExpansionFeature extends Feature {
     private final Config<AliasCommandLevel> includeAliases = new Config<>(AliasCommandLevel.SHORT_FORMS);
 
     private final Set<String> suggestions = new HashSet<>();
+
+    public AddCommandExpansionFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
     @SubscribeEvent
     public void onCommandSuggestions(CommandSuggestionEvent.Add event) {

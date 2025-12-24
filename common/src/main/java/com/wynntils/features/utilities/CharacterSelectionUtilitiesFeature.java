@@ -6,10 +6,12 @@ package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -29,6 +31,10 @@ public class CharacterSelectionUtilitiesFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> hideCrosshair = new Config<>(true);
+
+    public CharacterSelectionUtilitiesFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent e) {
