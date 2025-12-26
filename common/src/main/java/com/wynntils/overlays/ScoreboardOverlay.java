@@ -5,7 +5,6 @@
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -30,7 +29,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -77,11 +75,9 @@ public class ScoreboardOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (linesToRender.isEmpty()) return;
 
-        PoseStack poseStack = guiGraphics.pose();
         FontRenderer fontRenderer = FontRenderer.getInstance();
 
         float totalUnscaledHeight = fontRenderer.getFont().lineHeight + contentHeight;
@@ -110,16 +106,15 @@ public class ScoreboardOverlay extends Overlay {
         float headerBoxHeight = fontRenderer.getFont().lineHeight * fontScale.get();
         if (renderHeader.get()) {
             RenderUtils.drawRect(
-                    poseStack,
+                    guiGraphics,
                     headerBackgroundColor.get(),
                     bgX - 2f,
                     bgY - 2f,
-                    0f,
                     scaledContentWidth + 4f,
                     headerBoxHeight);
 
             fontRenderer.renderAlignedTextInBox(
-                    poseStack,
+                    guiGraphics,
                     StyledText.fromComponent(SCOREBOARD_TITLE_COMPONENT),
                     bgX - 2f,
                     bgX - 2f + scaledContentWidth + 4f,
@@ -134,11 +129,10 @@ public class ScoreboardOverlay extends Overlay {
         }
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 contentBackgroundColor.get(),
                 bgX - 2f,
                 bgY - 2f + headerBoxHeight,
-                0f,
                 scaledContentWidth + 4f,
                 (contentHeight + 1f) * fontScale.get());
 
@@ -147,7 +141,7 @@ public class ScoreboardOverlay extends Overlay {
 
         for (StyledText line : linesToRender) {
             fontRenderer.renderText(
-                    poseStack,
+                    guiGraphics,
                     line,
                     textX,
                     currentY,

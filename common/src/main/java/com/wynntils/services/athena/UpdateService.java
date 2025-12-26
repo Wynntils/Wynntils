@@ -113,7 +113,7 @@ public final class UpdateService extends Service {
 
                         if (!Objects.equals(
                                 updateInfo.supportedMcVersion(),
-                                SharedConstants.getCurrentVersion().getName())) {
+                                SharedConstants.getCurrentVersion().name())) {
                             future.complete(UpdateResult.INCORRECT_VERSION_RECEIVED);
                             return;
                         }
@@ -257,7 +257,7 @@ public final class UpdateService extends Service {
 
         if (!Objects.equals(
                 updateInfo.supportedMcVersion(),
-                SharedConstants.getCurrentVersion().getName())) {
+                SharedConstants.getCurrentVersion().name())) {
             WynntilsMod.info(
                     "Athena sent an update for a different MC version, not attempting update reminder or auto-update.");
             return false;

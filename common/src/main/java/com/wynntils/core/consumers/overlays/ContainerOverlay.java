@@ -19,7 +19,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     private static final int DEFAULT_SPACING = 3;
@@ -78,20 +77,18 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     protected abstract List<T> getPreviewChildren();
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        children.forEach(o -> o.render(guiGraphics, bufferSource, deltaTracker, window));
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        children.forEach(o -> o.render(guiGraphics, deltaTracker, window));
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         List<T> previewChildren = getPreviewChildren();
         Map<T, OverlaySize> previewSize =
                 previewChildren.stream().collect(Collectors.toMap(Function.identity(), Overlay::getSize));
 
         updateLayout(previewChildren, previewSize);
-        previewChildren.forEach(o -> o.renderPreview(guiGraphics, bufferSource, deltaTracker, window));
+        previewChildren.forEach(o -> o.renderPreview(guiGraphics, deltaTracker, window));
     }
 
     @Override

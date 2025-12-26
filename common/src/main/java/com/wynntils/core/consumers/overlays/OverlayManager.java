@@ -5,7 +5,6 @@
 package com.wynntils.core.consumers.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
@@ -35,16 +34,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.profiling.Profiler;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class OverlayManager extends Manager {
-    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
-            MultiBufferSource.immediate(new ByteBufferBuilder(256));
-
     private final Map<Feature, List<Overlay>> overlayParentMap = new HashMap<>();
     private final Map<Overlay, OverlayInfoContainer> overlayInfoMap = new HashMap<>();
     private final Map<Feature, List<OverlayGroupHolder>> overlayGroupMap = new HashMap<>();
@@ -271,12 +266,10 @@ public final class OverlayManager extends Manager {
                 if (showPreview) {
                     if (selectedOverlay != null && overlay != selectedOverlay && !renderNonSelected) continue;
 
-                    overlay.renderPreview(
-                            event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
+                    overlay.renderPreview(event.getGuiGraphics(), event.getDeltaTracker(), event.getWindow());
                 } else if (shouldRender && overlay.isRendered()) {
                     long startTime = System.currentTimeMillis();
-                    overlay.renderOrErrorMessage(
-                            event.getGuiGraphics(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
+                    overlay.renderOrErrorMessage(event.getGuiGraphics(), event.getDeltaTracker(), event.getWindow());
                     logProfilingData(startTime, overlay);
                 }
             } catch (Throwable t) {
@@ -294,8 +287,6 @@ public final class OverlayManager extends Manager {
                         t);
             }
         }
-
-        BUFFER_SOURCE.endBatch();
 
         // Hopefully we have none :)
         for (Overlay overlay : crashedOverlays) {
