@@ -196,7 +196,7 @@ public final class PartStyle {
                                 .append(STYLE_PREFIX)
                                 .append("{fas:")
                                 .append(atlasId)
-                                .append(":")
+                                .append(";")
                                 .append(spriteId)
                                 .append("}");
                     } else if (font instanceof FontDescription.PlayerSprite(ResolvableProfile profile, boolean hat)) {
@@ -204,9 +204,9 @@ public final class PartStyle {
                                 .append(STYLE_PREFIX)
                                 .append("{fps:")
                                 .append(profile.partialProfile().id())
-                                .append(":")
+                                .append(";")
                                 .append(profile.partialProfile().name())
-                                .append(":")
+                                .append(";")
                                 .append(hat)
                                 .append("}");
                     }

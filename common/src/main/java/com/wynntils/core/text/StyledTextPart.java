@@ -175,7 +175,7 @@ public final class StyledTextPart {
                             fontDescription = FontLookup.getFontFromFromFontCode(fontCode);
                         } else if (special.startsWith("fas:")) {
                             String identifiers = special.substring(4);
-                            String[] split = identifiers.split(":");
+                            String[] split = identifiers.split(";");
 
                             if (split.length != 2) continue;
 
@@ -183,7 +183,7 @@ public final class StyledTextPart {
                                     Identifier.parse(split[0]), Identifier.parse(split[1]));
                         } else if (special.startsWith("fps:")) {
                             String profileDetails = special.substring(4);
-                            String[] split = profileDetails.split(":");
+                            String[] split = profileDetails.split(";");
 
                             if (split.length != 3) continue;
 
