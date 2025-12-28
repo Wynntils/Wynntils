@@ -16,6 +16,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -33,21 +35,18 @@ public class ItemSetGuideButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR,
                 this.getX(),
                 this.getY(),
-                0,
                 this.width,
                 this.height);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(setInfo.name()),
                         this.getX() + 2,
                         this.getY() + 1,
@@ -60,11 +59,11 @@ public class ItemSetGuideButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             equippedCount = Math.min(equippedCount + 1, setInfo.bonuses().size());
             return true;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             equippedCount = Math.max(1, equippedCount - 1);
             return true;
         }
@@ -82,5 +81,5 @@ public class ItemSetGuideButton extends WynntilsButton {
 
     // Not called
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 }
