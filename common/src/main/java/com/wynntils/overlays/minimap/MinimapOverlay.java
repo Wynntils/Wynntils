@@ -151,15 +151,11 @@ public class MinimapOverlay extends Overlay {
 
         if (hideWhenUnmapped.get() != UnmappedOption.NEITHER && maps.isEmpty()) return;
 
+        // FIXME: Reimplement circle mask
         // enable mask
         switch (maskType.get()) {
             case RECTANGULAR ->
                 RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
-            //            case CIRCLE ->
-            //                    RenderUtils.createMask(
-            //                            poseStack, Texture.CIRCLE_MASK, (int) renderX, (int) renderY, (int)
-            // (renderX + width), (int)
-            //                                    (renderY + height));
         }
 
         // Always draw a black background to cover transparent map areas
@@ -214,10 +210,10 @@ public class MinimapOverlay extends Overlay {
                 this.pointerType.get(),
                 followPlayerRotation.get());
 
+        // FIXME: Reimplement circle mask
         // disable mask & render border
         switch (maskType.get()) {
             case RECTANGULAR -> RenderUtils.disableScissor(guiGraphics);
-            case CIRCLE -> RenderUtils.clearMask();
         }
 
         // render border
@@ -330,9 +326,12 @@ public class MinimapOverlay extends Overlay {
 
             if (maskType.get() == MapMaskType.RECTANGULAR) {
                 toBorderScale = Math.min(scaledWidth / Math.abs(normX), scaledHeight / Math.abs(normZ)) / 2f;
-            } else if (maskType.get() == MapMaskType.CIRCLE) {
-                toBorderScale = scaledWidth / (MathUtils.magnitude(normX, normZ * scaledWidth / scaledHeight)) / 2f;
             }
+            // FIXME: Reimplement circle mask
+            //            } else if (maskType.get() == MapMaskType.CIRCLE) {
+            //                toBorderScale = scaledWidth / (MathUtils.magnitude(normX, normZ * scaledWidth /
+            // scaledHeight)) / 2f;
+            //            }
 
             float compassRenderX = poiRenderX;
             float compassRenderZ = poiRenderZ;
@@ -429,9 +428,11 @@ public class MinimapOverlay extends Overlay {
 
             if (maskType.get() == MapMaskType.RECTANGULAR) {
                 toBorderScaleNorth = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
-            } else if (maskType.get() == MapMaskType.CIRCLE) {
-                toBorderScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
             }
+            // FIXME: Reimplement circle mask
+            //            } else if (maskType.get() == MapMaskType.CIRCLE) {
+            //                toBorderScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
+            //            }
 
             northDX *= toBorderScaleNorth;
             northDY *= toBorderScaleNorth;
@@ -462,9 +463,11 @@ public class MinimapOverlay extends Overlay {
 
             if (maskType.get() == MapMaskType.RECTANGULAR) {
                 toBorderScaleEast = Math.min(width / Math.abs(northDY), height / Math.abs(northDX)) / 2;
-            } else if (maskType.get() == MapMaskType.CIRCLE) {
-                toBorderScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
             }
+            // FIXME: Reimplement circle mask
+            //            } else if (maskType.get() == MapMaskType.CIRCLE) {
+            //                toBorderScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
+            //            }
 
             eastDX *= toBorderScaleEast;
             eastDY *= toBorderScaleEast;
@@ -496,9 +499,11 @@ public class MinimapOverlay extends Overlay {
     private void renderMapBorder(GuiGraphics guiGraphics, float renderX, float renderY, float width, float height) {
         Texture texture = borderType.get().texture();
         int grooves = borderType.get().groovesSize();
-        BorderInfo borderInfo = maskType.get() == MapMaskType.CIRCLE
-                ? borderType.get().circle()
-                : borderType.get().square();
+        BorderInfo borderInfo = borderType.get().square();
+        // FIXME: Reimplement circle mask
+        //        BorderInfo borderInfo = maskType.get() == MapMaskType.CIRCLE
+        //                ? borderType.get().circle()
+        //                : borderType.get().square();
         int tx1 = borderInfo.tx1();
         int ty1 = borderInfo.ty1();
         int tx2 = borderInfo.tx2();
@@ -545,7 +550,8 @@ public class MinimapOverlay extends Overlay {
 
     private enum MapMaskType {
         RECTANGULAR,
-        CIRCLE
+        // FIXME: Reimplement circle mask
+        //        CIRCLE
     }
 
     private enum MapBorderType {

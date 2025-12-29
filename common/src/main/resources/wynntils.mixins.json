@@ -49,7 +49,6 @@
     "PackRepositoryMixin",
     "PlayerTabOverlayMixin",
     "ProgressScreenMixin",
-    "RenderTargetMixin",
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",
     "ScreenMixin",

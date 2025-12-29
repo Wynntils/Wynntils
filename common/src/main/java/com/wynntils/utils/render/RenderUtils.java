@@ -51,7 +51,6 @@ import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 
 public final class RenderUtils {
     // used to render player nametags as semi-transparent
@@ -1182,90 +1181,6 @@ public final class RenderUtils {
                 width,
                 colors,
                 guiGraphics.scissorStack.peek()));
-    }
-
-    public static void createMask(GuiGraphics guiGraphics, Texture texture, int x1, int y1, int x2, int y2) {
-        createMask(guiGraphics, texture, x1, y1, x2, y2, 0, 0, texture.width(), texture.height());
-    }
-
-    /**
-     * Creates a mask that will remove anything drawn after
-     * this and before the next {clearMask()}(or {endGL()})
-     * and is not inside the mask.
-     * A mask, is a clear and white texture where anything
-     * white will allow drawing.
-     *
-     * @param texture mask texture(please use Textures.Masks)
-     * @param x1 bottom-left x(on screen)
-     * @param y1 bottom-left y(on screen)
-     * @param x2 top-right x(on screen)
-     * @param y2 top-right y(on screen)
-     */
-    public static void createMask(
-            GuiGraphics guiGraphics,
-            Texture texture,
-            float x1,
-            float y1,
-            float x2,
-            float y2,
-            int tx1,
-            int ty1,
-            int tx2,
-            int ty2) {
-        // See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
-
-        GL11.glEnable(GL11.GL_STENCIL_TEST);
-
-        // Enable writing to stencil
-        //        RenderSystem.stencilMask(0xff);
-        //        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT);
-        //        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
-        //        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
-
-        // Disable writing to color or depth
-        //        RenderSystem.colorMask(false, false, false, false);
-        //        RenderSystem.depthMask(false);
-
-        // Draw textured image
-        int width = texture.width();
-        int height = texture.height();
-        drawTexturedRect(
-                guiGraphics,
-                texture.identifier(),
-                x1,
-                y1,
-                x2 - x1,
-                y2 - y1,
-                tx1,
-                ty1,
-                tx2 - tx1,
-                ty2 - ty1,
-                width,
-                height);
-
-        // Reenable color and depth
-        //        RenderSystem.colorMask(true, true, true, true);
-        //        RenderSystem.depthMask(true);
-
-        // Only write to stencil area
-        //        RenderSystem.stencilMask(0x00);
-        //        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
-        //        RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xff);
-    }
-
-    /**
-     * Clears the active rendering mask from the screen.
-     * Based on Figura <a href="https://github.com/Kingdom-of-The-Moon/FiguraRewriteRewrite"> code</a>.
-     */
-    public static void clearMask() {
-        //        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT);
-
-        // Turn off writing to stencil buffer.
-        //        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
-        //        RenderSystem.stencilMask(0x00);
-
-        // Always succeed in the stencil test, no matter what.
-        //        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
     }
 
     public static void renderDebugGrid(

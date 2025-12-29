@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.sets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.screens.base.widgets.WynntilsButton;
