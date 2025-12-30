@@ -162,6 +162,9 @@ public abstract class LevelRendererMixin {
             SubmitNodeCollector nodeCollector) {
         Entity entity = ((EntityRenderStateExtension) renderState).getEntity();
 
+        // Mods that inject into renderstate extraction may mean our entity is null
+        if (entity == null) return;
+
         if (!((EntityExtension) entity).isRendered()) {
             return;
         }
