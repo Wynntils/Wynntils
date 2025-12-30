@@ -14,6 +14,7 @@ import com.mojang.blaze3d.textures.TextureFormat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
@@ -21,6 +22,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -75,6 +77,10 @@ public class ItemScreenshotFeature extends Feature {
     private final Config<Boolean> saveToDisk = new Config<>(false);
 
     private Slot screenshotSlot = null;
+
+    public ItemScreenshotFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
     private void onInventoryPress(Slot hoveredSlot) {
         screenshotSlot = hoveredSlot;

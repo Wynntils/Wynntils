@@ -6,10 +6,12 @@ package com.wynntils.features.players;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.event.RenderTranslucentCheckEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
@@ -24,6 +26,12 @@ public class PlayerGhostTransparencyFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> transparentPlayerGhostArmor = new Config<>(true);
+
+    public PlayerGhostTransparencyFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onTranslucentCheck(RenderTranslucentCheckEvent.Body e) {

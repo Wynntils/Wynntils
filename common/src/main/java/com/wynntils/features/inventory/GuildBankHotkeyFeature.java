@@ -6,11 +6,13 @@ package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -28,6 +30,13 @@ public class GuildBankHotkeyFeature extends Feature {
     private final KeyBind guildBankKeybind = KeyBindDefinition.OPEN_GUILD_BANK.create(this::onOpenGuildBankKeyPress);
 
     private boolean openGuildBank = false;
+
+    public GuildBankHotkeyFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onMenuOpenPre(MenuEvent.MenuOpenedEvent.Pre event) {

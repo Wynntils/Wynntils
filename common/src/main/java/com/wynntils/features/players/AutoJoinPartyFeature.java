@@ -7,10 +7,12 @@ package com.wynntils.features.players;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -24,6 +26,13 @@ public class AutoJoinPartyFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> onlySameWorld = new Config<>(true);
+
+    public AutoJoinPartyFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onPartyInvite(PartyEvent.Invited event) {

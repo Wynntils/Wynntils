@@ -29,7 +29,6 @@ public class HeldItemCooldownOverlay extends Overlay {
                         HorizontalAlignment.CENTER,
                         OverlayPosition.AnchorSection.MIDDLE),
                 new OverlaySize(80, 14));
-        this.userEnabled.store(false);
     }
 
     @Override

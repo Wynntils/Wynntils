@@ -9,9 +9,9 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
@@ -29,7 +29,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-@StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class LogItemInfoFeature extends Feature {
     @RegisterKeyBind
@@ -39,6 +38,10 @@ public class LogItemInfoFeature extends Feature {
     @RegisterCommand
     private final LiteralCommandNode<CommandSourceStack> commandNode =
             Commands.literal("show").executes(this::showCommand).build();
+
+    public LogItemInfoFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     private void onLogItemInfoPress() {
         logItem(McUtils.player().getItemBySlot(EquipmentSlot.MAINHAND));

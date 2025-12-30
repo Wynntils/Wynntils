@@ -6,6 +6,7 @@ package com.wynntils.features.commands;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
@@ -13,6 +14,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.utils.mc.McUtils;
 
 @ConfigCategory(Category.COMMANDS)
@@ -76,6 +78,12 @@ public class CustomCommandKeybindsFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind executeKeybind6 = KeyBindDefinition.CUSTOM_COMMAND_SIX.create(
             () -> this.executeKeybind(keybindCommand6.get(), commandType6.get()));
+
+    public CustomCommandKeybindsFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
         switch (commandType) {

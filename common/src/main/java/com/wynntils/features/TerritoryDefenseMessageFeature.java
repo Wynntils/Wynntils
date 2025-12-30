@@ -6,8 +6,10 @@ package com.wynntils.features;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
@@ -35,6 +37,12 @@ public class TerritoryDefenseMessageFeature extends Feature {
     // 2 seconds for the server to respond to an attack command
     private static final long MESSAGE_TIMEOUT = 2000;
     private final Queue<QueuedTerritory> queuedTerritories = new LinkedList<>();
+
+    public TerritoryDefenseMessageFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onInventoryClick(InventoryMouseClickedEvent event) {
