@@ -7,11 +7,13 @@ package com.wynntils.features.utilities;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.event.CombatXpGainEvent;
 import com.wynntils.models.profession.event.ProfessionXpGainEvent;
@@ -44,6 +46,13 @@ public class XpGainMessageFeature extends Feature {
 
     private final Map<ProfessionType, MessageContainer> lastProfessionMessages = new EnumMap<>(ProfessionType.class);
     private final Map<ProfessionType, Float> lastRawProfessionXpGains = new EnumMap<>(ProfessionType.class);
+
+    public XpGainMessageFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {

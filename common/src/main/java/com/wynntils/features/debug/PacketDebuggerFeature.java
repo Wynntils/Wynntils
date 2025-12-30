@@ -6,7 +6,7 @@ package com.wynntils.features.debug;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -53,7 +53,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class PacketDebuggerFeature extends Feature {
     /* These packets just spam the log; ignore them. */
@@ -125,6 +124,10 @@ public class PacketDebuggerFeature extends Feature {
 
     @Persisted
     private final Config<PacketFilterType> packetFilterType = new Config<>(PacketFilterType.FILTERED);
+
+    public PacketDebuggerFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     private String describePacket(Packet<?> packet) {
         return ReflectionToStringBuilder.toString(packet, ToStringStyle.SHORT_PREFIX_STYLE)

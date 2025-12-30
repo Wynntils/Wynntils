@@ -8,10 +8,12 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
@@ -125,6 +127,12 @@ public class ItemStatInfoFeature extends Feature {
             TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
 
     private NavigableMap<Float, TextColor> flatMap = createFlatMap();
+
+    public ItemStatInfoFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @Override
     protected void onConfigUpdate(Config<?> config) {

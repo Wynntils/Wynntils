@@ -76,6 +76,7 @@ public class NpcDialogueOverlay extends Overlay {
                 HorizontalAlignment.CENTER,
                 VerticalAlignment.MIDDLE);
         updateTextRenderSettings();
+        // TODO: When issues with NPC Dialogue solved, only disable this for the MINIMAL and BLANK_SLATE profiles
         this.userEnabled.store(false);
     }
 

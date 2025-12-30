@@ -7,10 +7,12 @@ package com.wynntils.features.combat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +25,10 @@ public class MythicBoxScalerFeature extends Feature {
 
     @Persisted
     private final Config<Float> scale = new Config<>(1.5f);
+
+    public MythicBoxScalerFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
     @SubscribeEvent
     public void onItemRendering(GroundItemEntityTransformEvent e) {

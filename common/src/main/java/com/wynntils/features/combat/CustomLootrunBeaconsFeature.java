@@ -6,10 +6,12 @@ package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 
 @ConfigCategory(Category.COMBAT)
 public class CustomLootrunBeaconsFeature extends Feature {
@@ -18,6 +20,10 @@ public class CustomLootrunBeaconsFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
+
+    public CustomLootrunBeaconsFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
     @Override
     protected void onConfigUpdate(Config<?> config) {

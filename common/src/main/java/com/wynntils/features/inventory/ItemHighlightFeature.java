@@ -7,10 +7,12 @@ package com.wynntils.features.inventory;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.DataComponentGetEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -158,6 +160,12 @@ public class ItemHighlightFeature extends Feature {
     @Persisted
     private final Config<Boolean> selectedItemHighlight = new Config<>(true);
 
+    public ItemHighlightFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRenderSlot(SlotRenderEvent.CountPre e) {
         if (!inventoryHighlightEnabled.get()) return;
@@ -244,8 +252,9 @@ public class ItemHighlightFeature extends Feature {
     public void onGetModelData(DataComponentGetEvent.CustomModelData event) {
         CustomModelData itemStackModelData = event.getOriginalValue();
 
+        // The index of model data matters, so instead of removing the tier string, just replace it with an empty string
         List<String> newStrings = itemStackModelData.strings().stream()
-                .filter(s -> DEFAULT_HIGHLIGHT_KEYS.stream().noneMatch(s::startsWith))
+                .map(s -> DEFAULT_HIGHLIGHT_KEYS.stream().anyMatch(s::startsWith) ? "" : s)
                 .toList();
 
         if (!newStrings.equals(itemStackModelData.strings())) {
