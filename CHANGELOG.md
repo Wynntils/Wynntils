@@ -1,41 +1,44 @@
-Auto Attack
-- New config Attack Tick Delay, how long to wait between each attack in ticks, default 2
-  - Setting this value below 1 will treat it as 1
+Add Command Expansion
+- As command arguments are now provided by Wynncraft, this feature will now only suggest command root nodes
+    - This means that commands like `/emote` will now only suggest emotes you own, or `/party` will only suggest arguments based on your current party state
 
-Scoreboard Overlay
-- Renders the vanilla scoreboard as an overlay
-- Text Shadow config for what shadow type to render with, default None
-- Font Scale config for how big/small to render the text, default 1.0
-- Render Header config to render the play.wynncraft.com header or not, default enabled
-- Header Background Color config for what color to render the background behind the header as, default `#00000066`
-- Content Background Color config for what color to render the background behind the content as, default `#00000033`
-- Display Original Scoreboard config for whether the default scoreboard should be rendered, default disabled
+Config Profiles
+- Added 5 config profiles to change the default enabled state of features
+- Existing users will recieve a one time toast on server join to inform them of the profiles
+- Users playing Wynncraft for the first time with Wynntils will be taken to the config profile UI upon reaching the character creation screen
+  - The "New Player" profile will be focused by default in this case
+- Profiles do not modify user configs, they are only used for features that users have not manually enabled/disabled
 
-Functions
-- Character Functions
-  - `guild_objective_event_bonus` returns a boolean for whether your guild objective will give an event reward bonus
-  - `personal_objective_event_bonus` returns a boolean for whether the given personal objective will give an event reward bonus
-    - `index` optional Integer argument, the index of which objective to get default 0
-  - `leaderboard_position` returns an Integer for the position you are in for the given leaderboard
-    - `leaderboardKey` required string argument, the key of the leaderboard to get the position for
-      - This key will be what is used on the Wynncraft website/API.
-      - Updates every 60 seconds
-- Combat Functions
-  - `xp_overflow` returns a Long for how much XP you have over the max level on your current character
-    - Updates every 60 seconds
-- Guild Functions
-  - `contributed_guild_xp` returns a Long for how much XP you have contributed to your guild
-  - `contribution_rank` returns an Integer for the rank you are in for your guild contribution ranking
-    - Both update every 60 seconds
+Gear Sharing
+- Added per character sharing settings
+- By default, global settings are used but by toggling the checkbox on the sharing UI, character specific settings can be set instead
 
-Wynntils Command
-- Added `secrets` argument, opens the Wynntils secrets menu
-    - Do not share the data you enter here with anyone, not even Wynncraft or Wynntils staff
-    - The only option currently is the Wynncraft API token, this may be required for the `leaderboard_position` and `xp_overflow` functions as well as for allowing the `/player` command to work in cases where you should have access to player info
+Guides
+- Added set bonus guide
+- Displays the various item sets available in Wynncraft with their bonuses and eligible items.
+- Note that some bonuses may be innacurate, most were verified but not all so report any mistakes and they can be updated
+
+Held Item Name Overlay
+- Renders the text when changing held item as an overlay
+  - Display Original Name config, whther the original text should be displayed or not, default disabled
+  - Message Display Time config, how long in ticks should the message be displayed for, default 40
+  - Text Shadow config for what shadow type to render with, default Normal
+  - Font Scale config for how big/small to render the text, default 1.0
+
+Settings Screen
+- Added new "Enabled State" filter tag next to the "All" tag
+  - Filters the feature list to only show features that are enabled/disabled based on the current filter state
+  - Defaults to enabled only
+- Added new "Profiles" tag to open the config profile UI
+
+Config Command
+- Added `profile` argument to open the config profile UI
+  - The profile name can also be added as another argument to change profile without the UI
 
 Fixes
-- Player command will no longer error if the user has hidden API data
-- Fixed store tier annotator crashing
-- Fix bomb bell not parsing bombs with an extra space on the 2nd line
-- Fix legacy enchanted items missing glint
-- Possibly fixed cases where the content tracker would keep trailing text from previous stage
+- Add Command Expansion, Command Aliases and Filter Admin Commands will now properly enable/disable without the need to leave and rejoin the server
+- Fixed cases where the scoreboard would not remove lines
+- Fixed some ingredients in the guide not using the correct texture
+- Fixed crash when using ctrl+1-9 to access invalid chat tabs
+- Fixed certain helmets not having a texture in the item guide
+- Checkmark is now displayed on owned cosmetics when previewing crates with custom item highlights enabled
