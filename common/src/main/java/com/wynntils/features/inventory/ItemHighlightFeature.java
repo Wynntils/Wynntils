@@ -252,8 +252,9 @@ public class ItemHighlightFeature extends Feature {
     public void onGetModelData(DataComponentGetEvent.CustomModelData event) {
         CustomModelData itemStackModelData = event.getOriginalValue();
 
+        // The index of model data matters, so instead of removing the tier string, just replace it with an empty string
         List<String> newStrings = itemStackModelData.strings().stream()
-                .filter(s -> DEFAULT_HIGHLIGHT_KEYS.stream().noneMatch(s::startsWith))
+                .map(s -> DEFAULT_HIGHLIGHT_KEYS.stream().anyMatch(s::startsWith) ? "" : s)
                 .toList();
 
         if (!newStrings.equals(itemStackModelData.strings())) {
