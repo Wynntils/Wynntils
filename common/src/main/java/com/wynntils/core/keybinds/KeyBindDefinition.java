@@ -61,7 +61,7 @@ public record KeyBindDefinition(
             "Share Item",
             Managers.KeyBind.CHAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_F4,
+            GLFW.GLFW_KEY_F5,
             true);
 
     public static final KeyBindDefinition SAVE_ITEM_TO_RECORD = register(
