@@ -12,10 +12,12 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenInitEvent;
@@ -78,6 +80,10 @@ public class WynncraftButtonFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> returnToTitle = new Config<>(true);
+
+    public WynncraftButtonFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post event) {

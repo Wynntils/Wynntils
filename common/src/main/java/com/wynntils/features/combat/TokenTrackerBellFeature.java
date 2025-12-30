@@ -6,10 +6,12 @@ package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -21,6 +23,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class TokenTrackerBellFeature extends Feature {
     @Persisted
     private final Config<Boolean> playSound = new Config<>(true);
+
+    public TokenTrackerBellFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onInventoryUpdated(TokenGatekeeperEvent.InventoryUpdated event) {

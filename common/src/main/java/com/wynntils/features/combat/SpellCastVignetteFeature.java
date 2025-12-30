@@ -7,10 +7,12 @@ package com.wynntils.features.combat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.event.SpellEvent;
@@ -41,6 +43,13 @@ public class SpellCastVignetteFeature extends Feature {
 
     private int vignetteTimer;
     private float intensity;
+
+    public SpellCastVignetteFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onSpellCast(SpellEvent.Cast event) {

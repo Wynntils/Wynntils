@@ -7,10 +7,12 @@ package com.wynntils.features.utilities;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
@@ -38,6 +40,12 @@ public class PerCharacterGuildContributionFeature extends Feature {
     private final Config<Boolean> hideContributionMessage = new Config<>(true);
 
     private boolean waitingForCommandResponse = false;
+
+    public PerCharacterGuildContributionFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onCharacterChange(CharacterUpdateEvent e) {

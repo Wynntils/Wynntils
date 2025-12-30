@@ -9,10 +9,12 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
@@ -141,6 +143,12 @@ public class ContainerSearchFeature extends Feature {
     private boolean matchedItems = false;
     private int direction = 0;
     private ItemSearchQuery lastSearchQuery;
+
+    public ContainerSearchFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent.Pre event) {

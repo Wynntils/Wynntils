@@ -7,10 +7,12 @@ package com.wynntils.features.ui;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.containers.containers.CraftingStationContainer;
@@ -30,6 +32,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class CraftingProfessionLevelProgressBarFeature extends Feature {
     @Persisted
     private final Config<ObjectivesTextures> texture = new Config<>(ObjectivesTextures.WYNN);
+
+    public CraftingProfessionLevelProgressBarFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {

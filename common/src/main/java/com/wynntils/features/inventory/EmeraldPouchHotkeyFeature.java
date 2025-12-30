@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -7,10 +7,12 @@ package com.wynntils.features.inventory;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -32,6 +34,13 @@ public class EmeraldPouchHotkeyFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind emeraldPouchKeyBind =
             new KeyBind("Open Emerald Pouch", GLFW.GLFW_KEY_UNKNOWN, true, this::onOpenPouchKeyPress);
+
+    public EmeraldPouchHotkeyFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     private void onOpenPouchKeyPress() {
         if (!Models.WorldState.onWorld()) return;

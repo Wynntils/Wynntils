@@ -5,7 +5,7 @@
 package com.wynntils.features.chat;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -25,7 +25,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.CHAT)
 public class ChatTimestampFeature extends Feature {
     @Persisted
@@ -33,6 +32,10 @@ public class ChatTimestampFeature extends Feature {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern.get(), Locale.ROOT);
     private int timestampWidth = 0;
+
+    public ChatTimestampFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     @Override
     protected void onConfigUpdate(Config<?> config) {

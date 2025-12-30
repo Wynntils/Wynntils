@@ -7,7 +7,6 @@ package com.wynntils.core.consumers.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -464,8 +463,6 @@ public final class FeatureManager extends Manager {
     }
 
     private void initializeFeature(Feature feature) {
-        Class<? extends Feature> featureClass = feature.getClass();
-
         // Set feature category
         ConfigCategory configCategory = feature.getClass().getAnnotation(ConfigCategory.class);
         Category category = configCategory != null ? configCategory.value() : Category.UNCATEGORIZED;
@@ -474,10 +471,6 @@ public final class FeatureManager extends Manager {
         // Register commands and key binds
         commands.discoverCommands(feature);
         Managers.KeyBind.discoverKeyBinds(feature);
-
-        // Determine if feature should be enabled & set default enabled value for user features
-        boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
-        feature.userEnabled.store(!startDisabled);
 
         Managers.Overlay.discoverOverlays(feature);
         Managers.Overlay.discoverOverlayGroups(feature);

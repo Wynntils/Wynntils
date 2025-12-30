@@ -6,8 +6,10 @@ package com.wynntils.features.redirects;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import java.util.regex.Pattern;
@@ -16,6 +18,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.REDIRECTS)
 public class AbilityRefreshRedirectFeature extends Feature {
     private static final Pattern REFRESH_PATTERN = Pattern.compile("\\[⬤\\] (.+) has been refreshed!");
+
+    public AbilityRefreshRedirectFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onChat(ChatMessageEvent.Match event) {

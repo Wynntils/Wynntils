@@ -5,7 +5,7 @@
 package com.wynntils.features.utilities;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -17,11 +17,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.UTILITIES)
 public class AutoSkipCutscenesFeature extends Feature {
     @Persisted
     private final Config<SkipCondition> skipCondition = new Config<>(SkipCondition.ALL);
+
+    public AutoSkipCutscenesFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     @SubscribeEvent
     public void onCutsceneStarted(CutsceneStartedEvent e) {
