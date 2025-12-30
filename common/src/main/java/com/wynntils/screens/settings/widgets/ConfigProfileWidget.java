@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
@@ -12,7 +11,6 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -20,9 +18,11 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ConfigProfileWidget extends WynntilsButton {
     private static final float MAX_SCALE = 1.05f;
@@ -38,7 +38,7 @@ public class ConfigProfileWidget extends WynntilsButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.isHovered) {
             currentScale += 0.01f;
         } else {
@@ -47,39 +47,37 @@ public class ConfigProfileWidget extends WynntilsButton {
 
         currentScale = MathUtils.clamp(currentScale, MIN_SCALE, MAX_SCALE);
 
-        PoseStack poseStack = guiGraphics.pose();
         float centerX = getX() + Texture.CONFIG_PROFILE_BACKGROUND.width() / 2f;
         float centerY = getY() + Texture.CONFIG_PROFILE_BACKGROUND.height() / 2f;
 
-        poseStack.pushPose();
-        poseStack.translate(centerX, centerY, 0);
-        poseStack.scale(currentScale, currentScale, 0);
-        poseStack.translate(-centerX, -centerY, 0);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(centerX, centerY);
+        guiGraphics.pose().scale(currentScale, currentScale);
+        guiGraphics.pose().translate(-centerX, -centerY);
 
         boolean selectedProfile = profile == Managers.Config.getSelectedProfile();
 
         if (selectedProfile) {
             RenderUtils.drawRectBorders(
-                    poseStack,
+                    guiGraphics,
                     CommonColors.ORANGE,
                     getX(),
                     getY(),
                     getX() + Texture.CONFIG_PROFILE_BACKGROUND.width(),
                     getY() + Texture.CONFIG_PROFILE_BACKGROUND.height(),
-                    1,
                     5);
         }
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.CONFIG_PROFILE_BACKGROUND, getX(), getY());
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONFIG_PROFILE_BACKGROUND, getX(), getY());
 
         // TODO: Background texture for profiles
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.literal(EnumUtils.toNiceString(profile))
-                                .withStyle(Style.EMPTY.withFont(
-                                        ResourceLocation.withDefaultNamespace("language/wynncraft")))),
+                                .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
+                                        Identifier.withDefaultNamespace("language/wynncraft"))))),
                         getX() + Texture.CONFIG_PROFILE_BACKGROUND.width() / 2f,
                         getY() + 16,
                         selectedProfile ? CommonColors.PURPLE : CommonColors.WHITE,
@@ -90,7 +88,7 @@ public class ConfigProfileWidget extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable(profile.getShortDescription())),
                         getX() + 8,
                         getX() + getWidth() - 16,
@@ -102,10 +100,10 @@ public class ConfigProfileWidget extends WynntilsButton {
                         VerticalAlignment.BOTTOM,
                         TextShadow.NONE);
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Component.translatable(profile.getDescription()));
+            guiGraphics.setTooltipForNextFrame(Component.translatable(profile.getDescription()), mouseX, mouseY);
         }
     }
 
@@ -114,7 +112,7 @@ public class ConfigProfileWidget extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         Managers.Config.setSelectedProfile(profile);
     }
 }

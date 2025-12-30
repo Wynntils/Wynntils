@@ -436,7 +436,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         if (configurables.isEmpty()) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.settingsScreen.noFeaturesFound")),
                             offsetX,

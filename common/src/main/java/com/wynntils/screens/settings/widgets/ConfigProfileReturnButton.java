@@ -14,13 +14,16 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ConfigProfileReturnButton extends WynntilsButton {
-    private static final ResourceLocation PILL_FONT = ResourceLocation.withDefaultNamespace("banner/pill");
+    private static final FontDescription.Resource PILL_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("banner/pill"));
     private static final MutableComponent RETURN_BACKGROUND = Component.literal(
                     "\uDAFF\uDFFF\uE060\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE044\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE062\uDAFF\uDFDA")
             .withStyle(Style.EMPTY.withFont(PILL_FONT));
@@ -36,10 +39,10 @@ public class ConfigProfileReturnButton extends WynntilsButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(RETURN_BACKGROUND.withStyle(
                                         isHovered ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY))
                                 .append(StyledText.fromComponent(RETURN_FOREGROUND)),
@@ -53,7 +56,7 @@ public class ConfigProfileReturnButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         screen.onClose();
     }
 }
