@@ -10,6 +10,7 @@ import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +34,9 @@ public abstract class HumanoidArmorLayerMixin<T extends HumanoidRenderState, A e
             int packedLight,
             T renderState,
             CallbackInfo ci) {
+        // We only want to trigger this for players, not entities like armor stands which also use HumanoidRenderState
+        if (!(renderState instanceof AvatarRenderState)) return;
+
         PlayerRenderLayerEvent.Armor event = new PlayerRenderLayerEvent.Armor(renderState, slot);
         MixinHelper.post(event);
         if (event.isCanceled()) {
