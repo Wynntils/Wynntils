@@ -977,17 +977,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     private boolean isFeatureFiltered(Feature feature) {
-        boolean hasSearch = !searchWidget.getTextBoxInput().isEmpty();
-
-        boolean enabledMatch =
-                switch (enabledFilterType) {
-                    case NEUTRAL -> true;
-                    case ENABLED -> feature.isEnabled();
-                    case DISABLED -> !feature.isEnabled();
-                };
-
-        if (!hasSearch) {
-            return enabledMatch;
+        if (searchWidget.getTextBoxInput().isEmpty()) {
+            return switch (enabledFilterType) {
+                case NEUTRAL -> true;
+                case ENABLED -> feature.isEnabled();
+                case DISABLED -> !feature.isEnabled();
+            };
         }
 
         boolean featureSearchMatch = searchMatches(feature)
@@ -996,27 +991,22 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         boolean anyOverlayMatches =
                 Managers.Overlay.getFeatureOverlays(feature).stream().anyMatch(this::overlaySearchMatches);
 
-        return enabledMatch && (featureSearchMatch || anyOverlayMatches);
+        return (featureSearchMatch || anyOverlayMatches);
     }
 
     private boolean isOverlayFiltered(Overlay overlay) {
-        boolean hasSearch = !searchWidget.getTextBoxInput().isEmpty();
+        if (searchWidget.getTextBoxInput().isEmpty()) {
+            Feature parent = Managers.Overlay.getOverlayParent(overlay);
+            boolean parentEnabled = parent.isEnabled();
 
-        Feature parent = Managers.Overlay.getOverlayParent(overlay);
-        boolean parentEnabled = parent.isEnabled();
-
-        boolean enabledMatch =
-                switch (enabledFilterType) {
-                    case ENABLED -> parentEnabled;
-                    case DISABLED -> !parentEnabled;
-                    case NEUTRAL -> true;
-                };
-
-        if (!hasSearch) {
-            return enabledMatch;
+            return switch (enabledFilterType) {
+                case ENABLED -> parentEnabled;
+                case DISABLED -> !parentEnabled;
+                case NEUTRAL -> true;
+            };
         }
 
-        return enabledMatch && overlaySearchMatches(overlay);
+        return overlaySearchMatches(overlay);
     }
 
     private void scrollToMatchingConfig() {
