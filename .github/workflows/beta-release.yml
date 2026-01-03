@@ -233,3 +233,51 @@ jobs:
           if [[ -n "$chunk" ]]; then
             post_chunk "$chunk"
           fi
+
+  release-external:
+    name: Release to Modrinth and CurseForge
+    strategy:
+      matrix:
+        modloader: [fabric, neoforge]
+    runs-on: ubuntu-latest
+    needs: [build, set-version, release-github]
+    steps:
+      - name: Checkout beta branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: beta
+          
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Read raw changelog
+        id: changelog
+        run: |
+          echo "raw<<EOF" >> $GITHUB_OUTPUT
+          cat CHANGELOG.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - uses: Kir-Antipov/mc-publish@v3.3.0
+        with:
+          modrinth-id: dU5Gb9Ab
+          modrinth-featured: true
+          modrinth-unfeature-mode: subset
+          modrinth-token: ${{ secrets.MODRINTH_API_TOKEN }}
+
+          curseforge-id: 303451
+          curseforge-token: ${{ secrets.CF_API_TOKEN }}
+
+          files: "**/build/libs/*-${{ matrix.modloader }}*.jar"
+
+          name: Wynntils (${{ matrix.modloader }}) ${{ needs.set-version.outputs.tag }}
+          version: ${{ needs.set-version.outputs.tag }}
+          version-type: beta
+          game-versions: 1.21.4
+          changelog: ${{ steps.changelog.outputs.raw }}
+
+          loaders: ${{ matrix.modloader }}
+          java: 21
