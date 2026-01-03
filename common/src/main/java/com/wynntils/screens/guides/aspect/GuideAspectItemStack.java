@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.aspect;
@@ -10,6 +10,7 @@ import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -111,8 +112,10 @@ public class GuideAspectItemStack extends GuideItemStack {
 
         this.generatedTooltip.add(classLine);
         this.generatedTooltip.add(Component.empty());
-        Style rarityStyle =
-                Style.EMPTY.withColor(aspectInfo.gearTier().getChatFormatting()).withFont(RARITY_TAG_FONT);
+        Style rarityStyle = Style.EMPTY
+                .withColor(aspectInfo.gearTier().getChatFormatting())
+                .withShadowColor(CommonColors.WHITE.withAlpha(0).asInt())
+                .withFont(RARITY_TAG_FONT);
         Component rarityLine = getRarityTag().withStyle(rarityStyle);
 
         this.generatedTooltip.add(rarityLine);
