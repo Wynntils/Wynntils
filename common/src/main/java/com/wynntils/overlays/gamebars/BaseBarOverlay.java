@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -19,14 +18,13 @@ import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 public abstract class BaseBarOverlay extends Overlay {
     @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.textShadow")
@@ -88,32 +86,28 @@ public abstract class BaseBarOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         float renderedProgress = Math.round((flip.get() ? -1 : 1) * currentProgress * 100) / 100f;
-        renderAll(guiGraphics, bufferSource, renderedProgress);
+        renderAll(guiGraphics, renderedProgress);
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (progress() == null) {
-            renderAll(guiGraphics, bufferSource, 50);
+            renderAll(guiGraphics, 50);
             return;
         }
         float renderedProgress = Math.round((flip.get() ? -1 : 1) * currentProgress * 100) / 100f;
-        renderAll(guiGraphics, bufferSource, renderedProgress);
+        renderAll(guiGraphics, renderedProgress);
     }
 
-    private void renderAll(GuiGraphics guiGraphics, MultiBufferSource bufferSource, float renderedProgress) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    private void renderAll(GuiGraphics guiGraphics, float renderedProgress) {
         float barHeight = textureHeight() * (this.getWidth() / 81);
         float renderY = getModifiedRenderY(barHeight + 10);
 
-        renderText(poseStack, bufferSource, renderY, text());
+        renderText(guiGraphics, renderY, text());
 
-        renderBar(poseStack, bufferSource, renderY + 10, barHeight, renderedProgress);
+        renderBar(guiGraphics, renderY + 10, barHeight, renderedProgress);
     }
 
     protected String text() {
@@ -138,11 +132,9 @@ public abstract class BaseBarOverlay extends Overlay {
         };
     }
 
-    protected void renderBar(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
-        BufferedRenderUtils.drawColoredProgressBar(
-                poseStack,
-                bufferSource,
+    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+        RenderUtils.drawColoredProgressBar(
+                guiGraphics,
                 Texture.UNIVERSAL_BAR,
                 this.textColor.get(),
                 getRenderX(),
@@ -156,11 +148,10 @@ public abstract class BaseBarOverlay extends Overlay {
                 progress);
     }
 
-    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, String text) {
-        BufferedFontRenderer.getInstance()
+    protected void renderText(GuiGraphics guiGraphics, float renderY, String text) {
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         StyledText.fromString(text),
                         this.getRenderX(),
                         this.getRenderX() + this.getWidth(),

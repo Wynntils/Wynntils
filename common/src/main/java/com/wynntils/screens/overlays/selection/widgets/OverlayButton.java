@@ -1,12 +1,11 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection.widgets;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -19,7 +18,6 @@ import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -27,6 +25,9 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -106,18 +107,17 @@ public class OverlayButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         boolean enabled = Managers.Overlay.isEnabled(overlay);
 
-        RenderUtils.drawRect(poseStack, getRectColor(enabled).withAlpha(100), getX(), getY(), 0, width, height);
+        RenderUtils.drawRect(guiGraphics, getRectColor(enabled).withAlpha(100), getX(), getY(), width, height);
 
         RenderUtils.drawRectBorders(
-                poseStack, getBorderColor(enabled), getX(), getY(), getX() + width, getY() + height, 1, 2);
+                guiGraphics, getBorderColor(enabled), getX(), getY(), getX() + width, getY() + height, 2);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(textToRender),
                         getX() + 2,
                         getY() + (height / 2f),
@@ -144,35 +144,39 @@ public class OverlayButton extends WynntilsButton {
         // name is being edited
         if (isHovered) {
             if (!overlay.isParentEnabled()) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(
                                 ComponentUtils.wrapTooltips(
                                         List.of(Component.translatable(
                                                 "screens.wynntils.overlaySelection.parentDisabled",
                                                 overlay.getParentTranslatedName())),
                                         200),
-                                Component::getVisualOrderText));
+                                Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
             } else {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(
                                 (editInput != null && editInput.visible) ? SAVE_NAME_TOOLTIP : descriptionTooltip,
-                                Component::getVisualOrderText));
+                                Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
             }
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies and released
-        if ((mouseY <= selectionScreen.getConfigMaskTopY() || mouseY >= selectionScreen.getConfigMaskBottomY())) {
+        if ((event.y() <= selectionScreen.getConfigMaskTopY() || event.y() >= selectionScreen.getConfigMaskBottomY())) {
             return false;
         }
 
-        if (editInput != null && editInput.visible && editInput.mouseClicked(mouseX, mouseY, button)) {
+        if (editInput != null && editInput.visible && editInput.mouseClicked(event, isDoubleClick)) {
             return true;
         }
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (isSelected() && editInput != null) {
                 editInput.visible = true;
                 selectionScreen.setFocusedTextInput(editInput);
@@ -181,29 +185,29 @@ public class OverlayButton extends WynntilsButton {
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies and released
-        if ((mouseY <= selectionScreen.getConfigMaskTopY() || mouseY >= selectionScreen.getConfigMaskBottomY())) {
+        if ((event.y() <= selectionScreen.getConfigMaskTopY() || event.y() >= selectionScreen.getConfigMaskBottomY())) {
             return false;
         }
 
         if (editInput != null) {
-            editInput.mouseReleased(mouseX, mouseY, button);
+            editInput.mouseReleased(event);
         }
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ENTER && editInput != null && editInput.visible) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ENTER && editInput != null && editInput.visible) {
             editInput.visible = false;
 
             if (overlay instanceof CustomNameProperty customNameOverlay) {

@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.MathUtils;
@@ -13,6 +12,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
@@ -50,9 +50,7 @@ public class OverlayOptionsButton extends BasicTexturedButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Only count as hovered if the mouse is outside of the background area as a slight bit
         // of the button is rendered underneath the background
         if (isHovered
@@ -67,11 +65,12 @@ public class OverlayOptionsButton extends BasicTexturedButton {
         }
 
         // When selected or hovered it should use the alternate texture
-        RenderUtils.drawHoverableTexturedRect(poseStack, texture, getX(), getY(), this.isHovered || this.isSelected);
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics, texture, getX(), getY(), this.isHovered || this.isSelected, RenderDirection.VERTICAL);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         message,
                         getX() + 2,
                         getX() + getWidth() - 4,

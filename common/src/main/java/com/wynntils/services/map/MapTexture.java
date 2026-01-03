@@ -1,20 +1,25 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.AddressMode;
+import com.mojang.blaze3d.textures.FilterMode;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.BoundingBox;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class MapTexture {
     private final NativeImage texture;
-    private final ResourceLocation mapResource;
+    private final Identifier mapIdentifier;
 
     private boolean registered = false;
+
+    private final String name;
 
     private final int x1;
     private final int z1;
@@ -25,6 +30,7 @@ public class MapTexture {
     private final int textureHeight;
 
     public MapTexture(String name, NativeImage texture, int x1, int z1, int x2, int z2) {
+        this.name = name;
         this.texture = texture;
         this.x1 = x1;
         this.z1 = z1;
@@ -33,19 +39,27 @@ public class MapTexture {
         this.textureWidth = texture.getWidth();
         this.textureHeight = texture.getHeight();
 
-        this.mapResource = ResourceLocation.fromNamespaceAndPath("wynntils", "/maps/" + name);
+        this.mapIdentifier = Identifier.fromNamespaceAndPath("wynntils", "/maps/" + name);
 
         assert (x2 - x1 + 1 == textureWidth);
         assert (z2 - z1 + 1 == textureHeight);
     }
 
-    public ResourceLocation resource() {
+    public Identifier identifier() {
         if (!registered) {
             registered = true;
-            McUtils.mc().getTextureManager().register(mapResource, new DynamicTexture(texture));
+            DynamicTexture tex = new DynamicTexture(() -> name, texture);
+            tex.sampler = RenderSystem.getSamplerCache()
+                    .getSampler(
+                            AddressMode.CLAMP_TO_EDGE,
+                            AddressMode.CLAMP_TO_EDGE,
+                            FilterMode.NEAREST,
+                            FilterMode.NEAREST,
+                            false);
+            McUtils.mc().getTextureManager().register(mapIdentifier, tex);
         }
 
-        return mapResource;
+        return mapIdentifier;
     }
 
     public float getTextureXPosition(double posX) {

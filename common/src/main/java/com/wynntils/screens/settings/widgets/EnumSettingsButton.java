@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -9,6 +9,8 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.EnumSet;
 import java.util.List;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -31,14 +33,14 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
         int addToIndex;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             addToIndex = 1;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             addToIndex = -1;
         } else {
             return false;
@@ -56,7 +58,7 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         // We use instead AbstractWidget#mouseClicked, because we also want to have an action on the right mouse button
     }
 }

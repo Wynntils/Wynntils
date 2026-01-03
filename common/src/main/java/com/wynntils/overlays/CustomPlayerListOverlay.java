@@ -1,12 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.persisted.Persisted;
@@ -33,12 +31,11 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class CustomPlayerListOverlay extends Overlay {
     private static final Comparator<PlayerInfo> PLAYER_INFO_COMPARATOR =
-            Comparator.comparing(playerInfo -> playerInfo.getProfile().getName(), String::compareToIgnoreCase);
+            Comparator.comparing(playerInfo -> playerInfo.getProfile().name(), String::compareToIgnoreCase);
     private static final int DISTANCE_BETWEEN_CATEGORIES = 114;
     private static final int ROLL_WIDTH = 32;
     private static final int HALF_WIDTH = 233;
@@ -87,14 +84,12 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         renderPlayerList(guiGraphics, animationPercentage.getAnimation());
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         renderPlayerList(guiGraphics, 1);
     }
 
@@ -114,9 +109,6 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     private void renderPlayerList(GuiGraphics guiGraphics, double animation) {
-        RenderSystem.disableDepthTest();
-        PoseStack poseStack = guiGraphics.pose();
-
         if (animation < 1) {
             RenderUtils.enableScissor(
                     guiGraphics,
@@ -126,31 +118,28 @@ public class CustomPlayerListOverlay extends Overlay {
                     McUtils.mc().getWindow().getScreenHeight());
         }
 
-        renderBackground(poseStack);
+        renderBackground(guiGraphics);
 
-        renderPlayerNames(poseStack, availablePlayers.get());
+        renderPlayerNames(guiGraphics, availablePlayers.get());
 
         if (animation < 1) {
             RenderUtils.disableScissor(guiGraphics);
         }
 
         float middle = getRenderX() + HALF_WIDTH + ROLL_WIDTH;
-        renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 11 - HALF_WIDTH * animation), 0);
+        renderRoll(guiGraphics, (float) (middle - ROLL_WIDTH + 11 - HALF_WIDTH * animation), 0);
         renderRoll(
-                poseStack,
+                guiGraphics,
                 (float) (middle - 11 + HALF_WIDTH * animation),
                 Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH);
-
-        RenderSystem.enableDepthTest();
     }
 
-    private void renderRoll(PoseStack poseStack, float xPos, int uOffset) {
+    private void renderRoll(GuiGraphics guiGraphics, float xPos, int uOffset) {
         RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.PLAYER_LIST_OVERLAY.resource(),
+                guiGraphics,
+                Texture.PLAYER_LIST_OVERLAY.identifier(),
                 xPos,
                 getRenderY(),
-                0,
                 ROLL_WIDTH,
                 Texture.PLAYER_LIST_OVERLAY.height(),
                 uOffset,
@@ -161,7 +150,7 @@ public class CustomPlayerListOverlay extends Overlay {
                 Texture.PLAYER_LIST_OVERLAY.height());
     }
 
-    private void renderPlayerNames(PoseStack poseStack, List<StyledText> players) {
+    private void renderPlayerNames(GuiGraphics guiGraphics, List<StyledText> players) {
         for (int i = 0; i < players.size(); i++) {
             int x = i / 20;
             int y = i % 20;
@@ -177,7 +166,7 @@ public class CustomPlayerListOverlay extends Overlay {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             players.get(i),
                             xPos,
                             yPos,
@@ -188,13 +177,12 @@ public class CustomPlayerListOverlay extends Overlay {
         }
     }
 
-    private void renderBackground(PoseStack poseStack) {
+    private void renderBackground(GuiGraphics guiGraphics) {
         RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.PLAYER_LIST_OVERLAY.resource(),
+                guiGraphics,
+                Texture.PLAYER_LIST_OVERLAY.identifier(),
                 getRenderX() + ROLL_WIDTH,
                 getRenderY(),
-                0,
                 Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH,
                 Texture.PLAYER_LIST_OVERLAY.height(),
                 ROLL_WIDTH,

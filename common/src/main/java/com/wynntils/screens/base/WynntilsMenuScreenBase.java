@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -16,14 +15,14 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
-    private static final ResourceLocation BOOK_OPEN_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "ui.book.open");
+    private static final Identifier BOOK_OPEN_ID = Identifier.fromNamespaceAndPath("wynntils", "ui.book.open");
     private static final SoundEvent BOOK_OPEN_SOUND = SoundEvent.createVariableRangeEvent(BOOK_OPEN_ID);
 
     protected int offsetX;
@@ -46,15 +45,15 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         McUtils.playSoundUI(BOOK_OPEN_SOUND);
     }
 
-    protected void renderBackgroundTexture(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
+    protected void renderBackgroundTexture(GuiGraphics guiGraphics) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
-    protected void renderVersion(PoseStack poseStack) {
+    protected void renderVersion(GuiGraphics guiGraphics) {
         String version = WynntilsMod.isDevelopmentBuild() ? "Development Build" : WynntilsMod.getVersion();
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(version),
                         54 + offsetX,
                         127 + offsetX,
@@ -68,12 +67,12 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         0.7f);
     }
 
-    protected void renderTitle(PoseStack poseStack, String titleString) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
+    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(titleString),
                         10 + offsetX,
                         36 + offsetY,
@@ -84,10 +83,10 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         2f);
     }
 
-    protected void renderDescription(PoseStack poseStack, String description, String filterHelper) {
+    protected void renderDescription(GuiGraphics guiGraphics, String description, String filterHelper) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(description),
                         20 + offsetX,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetX,
@@ -99,7 +98,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(filterHelper),
                         20 + offsetX,
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetY,

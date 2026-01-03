@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.charm;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -62,19 +61,17 @@ public final class WynntilsCharmGuideScreen
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        renderBackgroundTexture(guiGraphics);
 
-        renderBackgroundTexture(poseStack);
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.charmGuide.name"));
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.charmGuide.name"));
+        renderVersion(guiGraphics);
 
-        renderVersion(poseStack);
-
-        renderItemsHeader(poseStack);
+        renderItemsHeader(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -82,17 +79,17 @@ public final class WynntilsCharmGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideCharmItemStackButton guideCharmItemStackButton) {
-            guiGraphics.renderTooltip(
+            guiGraphics.setTooltipForNextFrame(
                     FontRenderer.getInstance().getFont(), guideCharmItemStackButton.getItemStack(), mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderItemsHeader(PoseStack poseStack) {
+    private void renderItemsHeader(GuiGraphics guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
                         Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + offsetX,
                         30 + offsetY,

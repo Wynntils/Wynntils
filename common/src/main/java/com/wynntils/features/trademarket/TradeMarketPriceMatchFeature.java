@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.trademarket;
@@ -26,6 +26,7 @@ import com.wynntils.utils.wynn.ContainerUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -163,7 +164,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         }
 
         @Override
-        public void onPress() {
+        public void onPress(InputWithModifiers input) {
             priceToSend = this.price;
             sendPriceMessage = true;
 

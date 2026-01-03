@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -174,16 +174,14 @@ public class ServersCommand extends Command {
 
     private MutableComponent getServerComponent(String server) {
         return Component.literal(server)
-                .withStyle(style -> style.withHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT,
-                        Component.literal("Click to switch to ")
+                .withStyle(
+                        style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to switch to ")
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(Component.literal(server).withStyle(ChatFormatting.WHITE))
                                 .append(Component.literal("\n(Requires ")
                                         .withStyle(ChatFormatting.DARK_PURPLE)
                                         .append(Component.literal("HERO").withStyle(ChatFormatting.LIGHT_PURPLE))
                                         .append(Component.literal(" rank)").withStyle(ChatFormatting.DARK_PURPLE))))))
-                .withStyle(style ->
-                        style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/switch " + server)));
+                .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand("/switch " + server)));
     }
 }

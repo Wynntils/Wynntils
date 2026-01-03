@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.aspect;
@@ -10,13 +10,15 @@ import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
@@ -28,7 +30,8 @@ public class GuideAspectItemStack extends GuideItemStack {
             "\uE060\uDAFF\uDFFF\uE035\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE031\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE062\uDAFF\uDFB2§0\uE005\uE000\uE001\uE00B\uE004\uE003 \uE000\uE012\uE00F\uE004\uE002\uE013\uDB00\uDC02");
     private static final MutableComponent MYTHIC_TAG = Component.literal(
             "\uE060\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE037\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE062\uDAFF\uDFB4§0\uE00C\uE018\uE013\uE007\uE008\uE002 \uE000\uE012\uE00F\uE004\uE002\uE013\uDB00\uDC02");
-    private static final ResourceLocation RARITY_TAG_FONT = ResourceLocation.withDefaultNamespace("banner/box");
+    private static final FontDescription RARITY_TAG_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("banner/box"));
 
     private final AspectInfo aspectInfo;
     private final MutableComponent name;
@@ -109,8 +112,10 @@ public class GuideAspectItemStack extends GuideItemStack {
 
         this.generatedTooltip.add(classLine);
         this.generatedTooltip.add(Component.empty());
-        Style rarityStyle =
-                Style.EMPTY.withColor(aspectInfo.gearTier().getChatFormatting()).withFont(RARITY_TAG_FONT);
+        Style rarityStyle = Style.EMPTY
+                .withColor(aspectInfo.gearTier().getChatFormatting())
+                .withShadowColor(CommonColors.WHITE.withAlpha(0).asInt())
+                .withFont(RARITY_TAG_FONT);
         Component rarityLine = getRarityTag().withStyle(rarityStyle);
 
         this.generatedTooltip.add(rarityLine);

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.features;
@@ -179,8 +179,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.OptionInstance;
-import net.minecraft.client.Options;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -415,23 +413,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ValuableFoundFeature());
         // endregion
 
-        // Reload Minecraft's config files so our own keybinds get loaded
-        // This is needed because we are late to register the keybinds,
-        // but we cannot move it earlier to the init process because of I18n
-        synchronized (McUtils.options()) {
-            Options options = McUtils.options();
-            OptionInstance<Integer> guiScale = options.guiScale();
-
-            // Re-loading the options while the game is running might cause the GUI scale to change,
-            // as it is now clamped by the window size. We need to capture the initial value, then
-            // restore it after the reload.
-            int initialGuiScale = guiScale.get();
-
-            options.load();
-
-            guiScale.value = initialGuiScale;
-        }
-
         commands.init();
 
         addCrashCallbacks();
@@ -616,8 +597,8 @@ public final class FeatureManager extends Manager {
             MutableComponent enableMessage = Component.literal("Click here to enable it again.")
                     .withStyle(ChatFormatting.UNDERLINE)
                     .withStyle(ChatFormatting.RED)
-                    .withStyle(style -> style.withClickEvent(new ClickEvent(
-                            ClickEvent.Action.RUN_COMMAND, "/feature enable " + feature.getShortName())));
+                    .withStyle(style -> style.withClickEvent(
+                            new ClickEvent.RunCommand("/feature enable " + feature.getShortName())));
 
             McUtils.sendMessageToClient(enableMessage);
         }

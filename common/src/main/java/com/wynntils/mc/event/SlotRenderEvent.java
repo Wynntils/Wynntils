@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;
@@ -23,10 +22,6 @@ public abstract class SlotRenderEvent extends Event {
 
     public GuiGraphics getGuiGraphics() {
         return guiGraphics;
-    }
-
-    public PoseStack getPoseStack() {
-        return guiGraphics.pose();
     }
 
     public Screen getScreen() {

@@ -32,7 +32,9 @@ repositories {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", fabric_version)))
+    // Resource loader needs base
+    include(modImplementation(fabricApi.module("fabric-api-base", fabric_version)))
+    include(modImplementation(fabricApi.module("fabric-resource-loader-v1", fabric_version)))
 
     modCompileOnly("com.terraformersmc:modmenu:${modmenu_version}")
 

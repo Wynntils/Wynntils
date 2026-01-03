@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -10,10 +10,12 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
+import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.HashedStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -91,5 +93,9 @@ public final class ItemUtils {
                             GearTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting());
         }
         return null;
+    }
+
+    public static HashedStack createHashedItem(ItemStack itemStack) {
+        return HashedStack.create(itemStack, McUtils.mc().getConnection().decoratedHashOpsGenenerator());
     }
 }

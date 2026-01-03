@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings;
@@ -29,14 +29,18 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
 public class ConfigProfileScreen extends WynntilsScreen {
-    private static final ResourceLocation RIBBON_FONT = ResourceLocation.withDefaultNamespace("banner/ribbon");
+    private static final FontDescription.Resource RIBBON_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("banner/ribbon"));
     private static final Component CONFIG_PROFILE_BANNER_BACKGROUND = Component.literal(
                     "\uDAFF\uDFF9\uE060\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE035\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE062\uDAFF\uDF9E")
             .withStyle(Style.EMPTY.withFont(RIBBON_FONT).withColor(ChatFormatting.AQUA));
@@ -46,11 +50,12 @@ public class ConfigProfileScreen extends WynntilsScreen {
 
     private static final StyledText WYNNCRAFT_LOGO =
             StyledText.fromComponent(Component.literal("\uE005\uDAFF\uDFFF\uE006")
-                    .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("screen/static"))));
+                    .withStyle(Style.EMPTY.withFont(
+                            new FontDescription.Resource(Identifier.withDefaultNamespace("screen/static")))));
     private static final StyledText AMPERSAND_WYNNCRAFT_FONT = StyledText.fromComponent(Component.literal("&")
-            .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("language/wynncraft"))));
-    private static final ResourceLocation WYNNTILS_LOGO_LOCATION =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "logo.png");
+            .withStyle(Style.EMPTY.withFont(
+                    new FontDescription.Resource(Identifier.withDefaultNamespace("language/wynncraft")))));
+    private static final Identifier WYNNTILS_LOGO_LOCATION = Identifier.fromNamespaceAndPath("wynntils", "logo.png");
 
     private static final int WIDGET_SPACING = 180;
     private static final int BANNER_START_Y = -10;
@@ -124,7 +129,7 @@ public class ConfigProfileScreen extends WynntilsScreen {
 
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             WYNNCRAFT_LOGO,
                             logoX,
                             90,
@@ -141,7 +146,7 @@ public class ConfigProfileScreen extends WynntilsScreen {
 
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             AMPERSAND_WYNNCRAFT_FONT,
                             this.width / 2f + 92,
                             45,
@@ -151,13 +156,12 @@ public class ConfigProfileScreen extends WynntilsScreen {
                             TextShadow.OUTLINE,
                             3f);
 
-            RenderUtils.drawTexturedRectWithColor(
-                    guiGraphics.pose(),
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
                     WYNNTILS_LOGO_LOCATION,
                     CommonColors.WHITE.withAlpha(wynntilsFadeAnimation),
                     this.width / 2f + 90,
                     20,
-                    0,
                     90,
                     90,
                     0,
@@ -169,7 +173,7 @@ public class ConfigProfileScreen extends WynntilsScreen {
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             List.of(
                                             StyledText.fromComponent(Component.translatable(
                                                             "screens.wynntils.configProfilesScreen.welcome1")
@@ -204,7 +208,7 @@ public class ConfigProfileScreen extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(CONFIG_PROFILE_BANNER_BACKGROUND)
                                 .append(StyledText.fromComponent(CONFIG_PROFILE_BANNER_FOREGROUND)),
                         this.width / 2f,
@@ -235,7 +239,7 @@ public class ConfigProfileScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (showWelcomePrompt) {
             if (System.currentTimeMillis() < welcomeAnimationStartTime + WELCOME_DELAY_MS + WYNNTILS_FADE_TIME_MS) {
                 return false;
@@ -249,14 +253,14 @@ public class ConfigProfileScreen extends WynntilsScreen {
         }
 
         for (ConfigProfileWidget widget : configProfileWidgets) {
-            if (widget.isMouseOver(mouseX, mouseY)) {
-                return widget.mouseClicked(mouseX, mouseY, button);
+            if (widget.isMouseOver(event.x(), event.y())) {
+                return widget.mouseClicked(event, isDoubleClick);
             }
         }
 
         for (GuiEventListener listener : this.children()) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseClicked(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseClicked(event, isDoubleClick);
             }
         }
 
@@ -271,16 +275,16 @@ public class ConfigProfileScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (McUtils.options().keyLeft.matches(keyCode, scanCode) || keyCode == GLFW.GLFW_KEY_LEFT) {
+    public boolean keyPressed(KeyEvent event) {
+        if (McUtils.options().keyLeft.matches(event) || event.key() == GLFW.GLFW_KEY_LEFT) {
             updateFocusedProfile(-1);
-        } else if (McUtils.options().keyRight.matches(keyCode, scanCode) || keyCode == GLFW.GLFW_KEY_RIGHT) {
+        } else if (McUtils.options().keyRight.matches(event) || event.key() == GLFW.GLFW_KEY_RIGHT) {
             updateFocusedProfile(1);
-        } else if (keyCode == GLFW.GLFW_KEY_SPACE || keyCode == GLFW.GLFW_KEY_ENTER) {
+        } else if (event.key() == GLFW.GLFW_KEY_SPACE || event.key() == GLFW.GLFW_KEY_ENTER) {
             Managers.Config.setSelectedProfile(focusedProfile);
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     private void updateFocusedProfile(int direction) {

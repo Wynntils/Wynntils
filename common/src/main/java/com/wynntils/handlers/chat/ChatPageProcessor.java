@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.chat;
@@ -29,7 +29,7 @@ public final class ChatPageProcessor {
     public void onStatusEffectUpdate(MobEffectEvent.Update event) {
         if (event.getEntity() != McUtils.player()) return;
 
-        if (event.getEffect().equals(MobEffects.MOVEMENT_SLOWDOWN.value())
+        if (event.getEffect().equals(MobEffects.SLOWNESS.value())
                 && event.getEffectAmplifier() == 3
                 && event.getEffectDurationTicks() == 32767) {
             isProtected = true;
@@ -39,7 +39,7 @@ public final class ChatPageProcessor {
     public void onStatusEffectRemove(MobEffectEvent.Remove event) {
         if (event.getEntity() != McUtils.player()) return;
 
-        if (event.getEffect().equals(MobEffects.MOVEMENT_SLOWDOWN.value())) {
+        if (event.getEffect().equals(MobEffects.SLOWNESS.value())) {
             isProtected = false;
         }
     }

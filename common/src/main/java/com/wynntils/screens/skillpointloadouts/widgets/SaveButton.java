@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.skillpointloadouts.widgets;
@@ -10,6 +10,7 @@ import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
 import com.wynntils.utils.type.Pair;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class SaveButton extends WynntilsButton {
@@ -34,7 +35,7 @@ public class SaveButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         String name = parent.saveNameInput.getTextBoxInput();
         if (Models.SkillPoint.hasLoadout(name) && !buttonConfirm) {
             parent.hasSaveNameConflict = true;

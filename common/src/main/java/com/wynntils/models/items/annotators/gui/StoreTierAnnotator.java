@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
@@ -12,11 +12,13 @@ import com.wynntils.models.items.items.gui.StoreItem;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public final class StoreTierAnnotator implements GuiItemAnnotator {
-    private static final ResourceLocation RARITY_FONT = ResourceLocation.withDefaultNamespace("banner/box");
+    private static final FontDescription.Resource RARITY_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("banner/box"));
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {

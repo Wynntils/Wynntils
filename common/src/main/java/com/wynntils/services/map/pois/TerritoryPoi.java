@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.territories.TerritoryInfo;
@@ -15,15 +14,15 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PoiLocation;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.function.Supplier;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class TerritoryPoi implements Poi {
     private final Supplier<TerritoryProfile> territoryProfileSupplier;
@@ -70,8 +69,7 @@ public class TerritoryPoi implements Poi {
 
     @Override
     public void renderAt(
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
+            GuiGraphics guiGraphics,
             float renderX,
             float renderY,
             boolean hovered,
@@ -79,9 +77,6 @@ public class TerritoryPoi implements Poi {
             float zoomRenderScale,
             float zoomLevel,
             boolean showLabels) {
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 100);
-
         final float renderWidth = width * zoomRenderScale;
         final float renderHeight = height * zoomRenderScale;
         final float actualRenderX = renderX - renderWidth / 2f;
@@ -106,41 +101,28 @@ public class TerritoryPoi implements Poi {
                     isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getGuild()));
         }
 
-        BufferedRenderUtils.drawMulticoloredRect(
-                poseStack,
-                bufferSource,
+        RenderUtils.drawMulticoloredRect(
+                guiGraphics,
                 colors.stream().map(x -> x.withAlpha(80)).toList(),
                 actualRenderX,
                 actualRenderZ,
-                0,
                 renderWidth,
                 renderHeight);
-        BufferedRenderUtils.drawMulticoloredRectBorders(
-                poseStack,
-                bufferSource,
-                colors,
-                actualRenderX,
-                actualRenderZ,
-                0,
-                renderWidth,
-                renderHeight,
-                1.5f,
-                0.5f);
+        RenderUtils.drawMulticoloredRectBorders(
+                guiGraphics, colors, actualRenderX, actualRenderZ, renderWidth, renderHeight, 1.5f, 0.5f);
 
         if (isTerritoryInfoUsable() && territoryInfo.isHeadquarters()) {
-            BufferedRenderUtils.drawTexturedRect(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
                     Texture.GUILD_HEADQUARTERS,
                     actualRenderX + renderWidth / 2f - Texture.GUILD_HEADQUARTERS.width() / 2f,
                     actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS.height() / 2f);
         } else {
             String guildPrefix =
                     isTerritoryInfoUsable() ? territoryInfo.getGuildPrefix() : territoryProfile.getGuildPrefix();
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(guildPrefix),
                             actualRenderX,
                             actualRenderX + renderWidth,
@@ -157,10 +139,9 @@ public class TerritoryPoi implements Poi {
                 .ifPresent(attackTimer -> {
                     final String timeLeft = attackTimer.timerString();
 
-                    BufferedFontRenderer.getInstance()
+                    FontRenderer.getInstance()
                             .renderAlignedTextInBox(
-                                    poseStack,
-                                    bufferSource,
+                                    guiGraphics,
                                     StyledText.fromString(timeLeft),
                                     actualRenderX,
                                     actualRenderX + renderWidth,
@@ -174,10 +155,9 @@ public class TerritoryPoi implements Poi {
                 });
 
         if (hovered) {
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(territoryProfile.getFriendlyName()),
                             actualRenderX,
                             actualRenderX + renderWidth,
@@ -189,8 +169,6 @@ public class TerritoryPoi implements Poi {
                             VerticalAlignment.TOP,
                             TextShadow.OUTLINE);
         }
-
-        poseStack.popPose();
     }
 
     private boolean isTerritoryInfoUsable() {

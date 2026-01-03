@@ -1,17 +1,16 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.custombars;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HealthTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class HealthTexturedCustomBarOverlay extends CustomBarOverlayBase {
     @Persisted(i18nKey = "overlay.wynntils.healthBar.healthTexture")
@@ -32,11 +31,9 @@ public class HealthTexturedCustomBarOverlay extends CustomBarOverlayBase {
     }
 
     @Override
-    protected void renderBar(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
-        BufferedRenderUtils.drawProgressBar(
-                poseStack,
-                bufferSource,
+    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+        RenderUtils.drawProgressBar(
+                guiGraphics,
                 Texture.HEALTH_BAR,
                 getRenderX(),
                 renderY,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -17,6 +17,7 @@ import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.GetCameraEntityEvent;
+import com.wynntils.mc.event.NametagBackgroundOpacityEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
@@ -43,9 +44,10 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -57,8 +59,7 @@ public class CustomNametagRendererFeature extends Feature {
     private static final float NAMETAG_HEIGHT = 0.25875f;
     private static final float BADGE_MARGIN = 2;
     private static final int BADGE_SCROLL_SPEED = 40;
-    private static final ResourceLocation WYNNTILS_NAMETAG_LOGO_FONT =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "nametag");
+    private static final Identifier WYNNTILS_NAMETAG_LOGO_FONT = Identifier.fromNamespaceAndPath("wynntils", "nametag");
     private static final String WYNNTILS_NAMETAG_LOGO = "\uE100";
 
     @Persisted
@@ -101,6 +102,8 @@ public class CustomNametagRendererFeature extends Feature {
 
     @SubscribeEvent
     public void onPlayerNameTagRender(PlayerNametagRenderEvent event) {
+        if (event.getEntityRenderState().nameTagAttachment == null) return;
+
         Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (Models.Player.isNpc(player)) return;
@@ -137,11 +140,13 @@ public class CustomNametagRendererFeature extends Feature {
     public void onEntityNameTagRender(EntityNameTagRenderEvent event) {
         if (hideAllNametags.get()) {
             event.setCanceled(true);
-            return;
         }
+    }
 
+    @SubscribeEvent
+    public void onNametagBackgroundOpacityCheck(NametagBackgroundOpacityEvent event) {
         if (hideNametagBackground.get()) {
-            event.setBackgroundOpacity(0f);
+            event.setOpacity(0f);
         }
     }
 
@@ -236,7 +241,7 @@ public class CustomNametagRendererFeature extends Feature {
         if (user == null) {
             if (!nametags.isEmpty()) {
                 // We will cancel vanilla rendering, so we must add back the normal vanilla base nametag
-                Component realName = event.getDisplayName();
+                Component realName = event.getEntityRenderState().nameTag;
                 nametags.add(new CustomNametag(realName, 1f));
             }
             return;
@@ -250,7 +255,7 @@ public class CustomNametagRendererFeature extends Feature {
 
         if (!showWynntilsMarker.get()) {
             // We will cancel vanilla rendering, so we must add back the normal vanilla base nametag
-            Component realName = event.getDisplayName();
+            Component realName = event.getEntityRenderState().nameTag;
             nametags.add(new CustomNametag(realName, 1f));
             return;
         }
@@ -264,17 +269,15 @@ public class CustomNametagRendererFeature extends Feature {
         }
         Component prefixedName = Component.empty()
                 .append(Component.literal(WYNNTILS_NAMETAG_LOGO)
-                        .withStyle(
-                                Style.EMPTY.withFont(WYNNTILS_NAMETAG_LOGO_FONT).withColor(logoColor)))
+                        .withStyle(Style.EMPTY
+                                .withFont(new FontDescription.Resource(WYNNTILS_NAMETAG_LOGO_FONT))
+                                .withColor(logoColor)))
                 .append(" ")
-                .append(event.getDisplayName());
+                .append(event.getEntityRenderState().nameTag);
         nametags.add(new CustomNametag(prefixedName, 1f));
     }
 
     private void drawNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
-        Entity entity = ((EntityRenderStateExtension) event.getEntityRenderState()).getEntity();
-        if (!(entity instanceof AbstractClientPlayer player)) return;
-
         // calculate color of nametag box
         int backgroundColor =
                 hideNametagBackground.get() ? 0 : ((int) (McUtils.options().getBackgroundOpacity(0.25F) * 255f) << 24);
@@ -286,15 +289,13 @@ public class CustomNametagRendererFeature extends Feature {
 
             RenderUtils.renderCustomNametag(
                     event.getPoseStack(),
-                    event.getBuffer(),
-                    event.getPackedLight(),
-                    backgroundColor,
-                    event.getEntityRenderDispatcher(),
-                    player,
                     nametag.nametagComponent(),
-                    event.getFont(),
                     nametag.nametagScale(),
-                    yOffset);
+                    yOffset,
+                    backgroundColor,
+                    event.getEntityRenderState(),
+                    event.getCameraRenderState(),
+                    event.getSubmitNodeCollector());
         }
 
         drawBadges(event, yOffset);
@@ -329,11 +330,12 @@ public class CustomNametagRendererFeature extends Feature {
         }
 
         for (LeaderboardBadge badge : badgesToRender) {
-            RenderUtils.renderProfessionBadge(
+            RenderUtils.renderLeaderboardBadge(
                     event.getPoseStack(),
-                    event.getEntityRenderDispatcher(),
-                    player,
-                    Texture.LEADERBOARD_BADGES.resource(),
+                    event.getSubmitNodeCollector(),
+                    event.getEntityRenderState(),
+                    event.getCameraRenderState(),
+                    Texture.LEADERBOARD_BADGES.identifier(),
                     LeaderboardBadge.WIDTH,
                     LeaderboardBadge.HEIGHT,
                     badge.uOffset(),

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats;
@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
@@ -131,8 +131,8 @@ public final class CharacterStatsModel extends Model {
 
     public CappedValue getItemCooldownTicks(ItemStack itemStack) {
         ItemCooldowns cooldowns = McUtils.player().getCooldowns();
-        ResourceLocation resourceLocation = cooldowns.getCooldownGroup(itemStack);
-        ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(resourceLocation);
+        Identifier identifier = cooldowns.getCooldownGroup(itemStack);
+        ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(identifier);
         if (cooldown == null || cooldown.startTime >= cooldown.endTime) return CappedValue.EMPTY; // Sanity check
 
         int remaining = cooldown.endTime - cooldowns.tickCount;
@@ -160,7 +160,7 @@ public final class CharacterStatsModel extends Model {
         // We trust that Wynncraft do not let us wear invalid gear, so no further validation checks are needed
 
         // Check armor slots
-        player.getArmorSlots().forEach(itemStack -> {
+        player.equipment.items.values().forEach(itemStack -> {
             Optional<GearItem> armorGearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
             if (armorGearItem.isPresent()) {
                 GearInfo gearInfo = armorGearItem.get().getItemInfo();

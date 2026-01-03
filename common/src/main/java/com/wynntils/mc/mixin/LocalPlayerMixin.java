@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -38,8 +38,9 @@ public abstract class LocalPlayerMixin {
         }
     }
 
-    @Inject(method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z", at = @At("HEAD"))
-    private void startRidingPre(Entity vehicle, boolean force, CallbackInfoReturnable<Boolean> ci) {
+    @Inject(method = "startRiding(Lnet/minecraft/world/entity/Entity;ZZ)Z", at = @At("HEAD"))
+    private void startRidingPre(
+            Entity vehicle, boolean force, boolean sendGameEvent, CallbackInfoReturnable<Boolean> ci) {
         SetLocalPlayerVehicleEvent event = new SetLocalPlayerVehicleEvent(vehicle);
         MixinHelper.post(event);
     }

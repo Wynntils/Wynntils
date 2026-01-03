@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 // If a texture is currently in a specific category but you want to use
 // it elsewhere, please move it to a more appropriate location
@@ -385,18 +385,18 @@ public enum Texture {
     VIGNETTE("ui_components/vignette.png", 512, 512);
     // endregion
 
-    private final ResourceLocation resource;
+    private final Identifier identifier;
     private final int width;
     private final int height;
 
     Texture(String name, int width, int height) {
-        this.resource = ResourceLocation.fromNamespaceAndPath("wynntils", "textures/" + name);
+        this.identifier = Identifier.fromNamespaceAndPath("wynntils", "textures/" + name);
         this.width = width;
         this.height = height;
     }
 
-    public ResourceLocation resource() {
-        return resource;
+    public Identifier identifier() {
+        return identifier;
     }
 
     public int width() {

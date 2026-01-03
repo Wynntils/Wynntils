@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -24,7 +24,6 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -36,6 +35,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 
 public class LootrunCommand extends Command {
@@ -120,7 +120,7 @@ public class LootrunCommand extends Command {
                                     Component.literal("/lootrun record")
                                             .withStyle(ChatFormatting.UNDERLINE)
                                             .withStyle((style) -> style.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/lootrun record")))),
+                                                    new ClickEvent.RunCommand("/lootrun record")))),
                             false);
         } else {
             Services.LootrunPaths.stopRecording();
@@ -130,17 +130,16 @@ public class LootrunCommand extends Command {
                                             "command.wynntils.lootrun.recordStop1",
                                             Component.literal("/lootrun clear")
                                                     .withStyle(ChatFormatting.UNDERLINE)
-                                                    .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                                            ClickEvent.Action.RUN_COMMAND, "/lootrun clear"))))
+                                                    .withStyle((style) -> style.withClickEvent(
+                                                            new ClickEvent.RunCommand("/lootrun clear"))))
                                     .withStyle(ChatFormatting.RED)
                                     .append("\n")
                                     .append(Component.translatable(
                                                     "command.wynntils.lootrun.recordStop2",
                                                     Component.literal("/lootrun save <name>")
                                                             .withStyle(ChatFormatting.UNDERLINE)
-                                                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                                                    ClickEvent.Action.SUGGEST_COMMAND,
-                                                                    "/lootrun save "))))
+                                                            .withStyle((style) -> style.withClickEvent(
+                                                                    new ClickEvent.SuggestCommand("/lootrun save "))))
                                             .withStyle(ChatFormatting.GREEN)),
                             false);
         }
@@ -181,7 +180,7 @@ public class LootrunCommand extends Command {
     }
 
     private int addJsonLootrunNote(CommandContext<CommandSourceStack> context) {
-        Component text = ComponentArgument.getComponent(context, "text");
+        Component text = ComponentArgument.getRawComponent(context, "text");
         Entity root = McUtils.player().getRootVehicle();
         BlockPos pos = root.blockPosition();
         context.getSource()
@@ -216,13 +215,12 @@ public class LootrunCommand extends Command {
 
                 component
                         .append("\n")
-                        .append(Component.literal("[X]").withStyle((style) -> style.withHoverEvent(new HoverEvent(
-                                        HoverEvent.Action.SHOW_TEXT,
-                                        Component.translatable("command.wynntils.lootrun.listClickToDelete")))
-                                .withClickEvent(new ClickEvent(
-                                        ClickEvent.Action.RUN_COMMAND,
-                                        "/lootrun note delete " + posString.replace(",", "")))
-                                .withColor(ChatFormatting.RED)))
+                        .append(Component.literal("[X]")
+                                .withStyle((style) -> style.withHoverEvent(new HoverEvent.ShowText(
+                                                Component.translatable("command.wynntils.lootrun.listClickToDelete")))
+                                        .withClickEvent(new ClickEvent.RunCommand(
+                                                "/lootrun note delete " + posString.replace(",", "")))
+                                        .withColor(ChatFormatting.RED)))
                         .append(" " + posString + ": ")
                         .append(note.component());
             }

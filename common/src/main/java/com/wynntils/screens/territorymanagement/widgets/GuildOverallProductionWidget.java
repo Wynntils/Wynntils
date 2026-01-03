@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.territorymanagement.widgets;
@@ -10,7 +10,7 @@ import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.utils.mc.KeyboardUtils;
-import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class GuildOverallProductionWidget extends AbstractWidget {
@@ -121,11 +122,11 @@ public class GuildOverallProductionWidget extends AbstractWidget {
                     .withStyle(ChatFormatting.YELLOW));
         }
 
-        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), lines, this.getX(), this.getY());
+        RenderUtils.renderTooltip(guiGraphics, lines, this.getX(), this.getY());
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         return false;
     }
 

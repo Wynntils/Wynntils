@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.screens;
@@ -13,6 +13,9 @@ import com.wynntils.utils.mc.McUtils;
 import net.minecraft.CrashReport;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -63,21 +66,10 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    // renderMenuBackground causes issues with our texture rendering so until that is fixed we can just overwrite the
-    // call
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (McUtils.mc().level == null) {
-            renderPanorama(guiGraphics, partialTick);
-        }
-
-        renderBlurredBackground();
-    }
-
-    @Override
-    public final boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public final boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         try {
-            return doMouseClicked(mouseX, mouseY, button);
+            return doMouseClicked(event, isDoubleClick);
         } catch (Throwable t) {
             failure("mouseClicked", t);
         }
@@ -85,8 +77,8 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
         return false;
     }
 
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX, mouseY, button);
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     public void wrapCurrentScreenError(CrashReport crashReport) {
@@ -104,15 +96,14 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return (getFocusedTextInput() != null && getFocusedTextInput().charTyped(codePoint, modifiers))
-                || super.charTyped(codePoint, modifiers);
+    public boolean charTyped(CharacterEvent event) {
+        return (getFocusedTextInput() != null && getFocusedTextInput().charTyped(event)) || super.charTyped(event);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
         // When tab is pressed, focus the next text box
-        if (keyCode == GLFW.GLFW_KEY_TAB) {
+        if (event.key() == GLFW.GLFW_KEY_TAB) {
             int index = getFocusedTextInput() == null ? 0 : children().indexOf(getFocusedTextInput());
             int actualIndex = Math.max(index, 0) + 1;
 
@@ -135,14 +126,14 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
         }
 
         if (getFocusedTextInput() != null) {
-            return getFocusedTextInput().keyPressed(keyCode, scanCode, modifiers);
+            return getFocusedTextInput().keyPressed(event);
         }
 
-        if (this instanceof WrappedScreen && this.minecraft.options.keyInventory.matches(keyCode, scanCode)) {
+        if (this instanceof WrappedScreen && this.minecraft.options.keyInventory.matches(event)) {
             this.onClose();
             return true;
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 }

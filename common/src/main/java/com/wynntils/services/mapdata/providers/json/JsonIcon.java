@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.providers.json;
@@ -9,14 +9,14 @@ import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import java.io.IOException;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class JsonIcon implements MapIcon {
     private final String iconId;
     private final NativeImage nativeImage;
     private final int width;
     private final int height;
-    private final ResourceLocation resource;
+    private final Identifier resource;
 
     private boolean registered;
 
@@ -25,15 +25,15 @@ public class JsonIcon implements MapIcon {
         this.nativeImage = NativeImage.read(texture);
         this.width = nativeImage.getWidth();
         this.height = nativeImage.getHeight();
-        this.resource = ResourceLocation.fromNamespaceAndPath("wynntils", "icons/" + iconId.replace(":", "."));
+        this.resource = Identifier.fromNamespaceAndPath("wynntils", "icons/" + iconId.replace(":", "."));
     }
 
     @Override
-    public ResourceLocation getResourceLocation() {
+    public Identifier getIdentifier() {
         if (!registered) {
             // We cannot do this in the constructor since GL is not initiated at that time
             registered = true;
-            McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
+            McUtils.mc().getTextureManager().register(resource, new DynamicTexture(() -> iconId, nativeImage));
         }
 
         return resource;

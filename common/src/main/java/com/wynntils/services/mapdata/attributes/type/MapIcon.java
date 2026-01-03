@@ -1,17 +1,17 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.attributes.type;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface MapIcon {
     String NO_ICON_ID = "none";
 
     String getIconId();
 
-    ResourceLocation getResourceLocation();
+    Identifier getIdentifier();
 
     int getWidth();
 

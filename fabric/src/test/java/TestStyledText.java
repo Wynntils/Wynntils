@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 import com.wynntils.core.WynntilsMod;
@@ -14,10 +14,11 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -30,12 +31,13 @@ public class TestStyledText {
 
     @Test
     public void fontStyle() {
-        ResourceLocation bannerPillFont = ResourceLocation.fromNamespaceAndPath("minecraft", "banner/pill");
+        FontDescription bannerPillFont =
+                new FontDescription.Resource(Identifier.fromNamespaceAndPath("minecraft", "banner/pill"));
         final Component component = Component.empty()
                 .withStyle(ChatFormatting.RED)
                 .withStyle(Style.EMPTY.withFont(bannerPillFont))
                 .append(Component.literal("inherited font"));
-        final String expected = "§c§{f:bp}inherited font";
+        final String expected = "§c§{fr:bp}inherited font";
 
         StyledText styledText = StyledText.fromComponent(component);
 
@@ -70,10 +72,10 @@ public class TestStyledText {
     public void fontStyleInvalidFonts() {
         final Component component = Component.empty()
                 .withStyle(ChatFormatting.RED)
-                .withStyle(
-                        Style.EMPTY.withFont(ResourceLocation.fromNamespaceAndPath("minecraft", "banner/nosuchfont")))
+                .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
+                        Identifier.fromNamespaceAndPath("minecraft", "banner/nosuchfont"))))
                 .append(Component.literal("inherited font"));
-        final String expected = "§c§{f:minecraft:banner/nosuchfont}inherited font";
+        final String expected = "§c§{fr:minecraft:banner/nosuchfont}inherited font";
 
         StyledText styledText = StyledText.fromComponent(component);
 
@@ -102,14 +104,13 @@ public class TestStyledText {
                         .withStyle(ChatFormatting.RED)
                         .append(Component.literal("blue")
                                 .withStyle(ChatFormatting.BLUE)
-                                .withStyle(style -> style.withHoverEvent(
-                                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover")))))
+                                .withStyle(style ->
+                                        style.withHoverEvent(new HoverEvent.ShowText(Component.literal("hover")))))
                         .append(Component.literal("nonitalic").withStyle(Style.EMPTY.withItalic(false)))
                         .append(Component.literal("inherited")
                                 .append(Component.literal("bold").withStyle(ChatFormatting.BOLD))))
                 .append(Component.literal("after")
-                        .withStyle(style ->
-                                style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/command"))));
+                        .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand("/command"))));
 
         final String expectedIncludeEvents = "§c§oitalicred§9§o§<1>blue§cnonitalic§oinherited§lbold§r§[1]after";
         final String expectedDefault = "§c§oitalicred§9§oblue§cnonitalic§oinherited§lbold§rafter";
@@ -157,8 +158,7 @@ public class TestStyledText {
     public void simpleEventInheritance_worksCorrectly() {
         final Component component = Component.empty()
                 .withStyle(ChatFormatting.ITALIC)
-                .withStyle(style ->
-                        style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover"))))
+                .withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("hover"))))
                 .append(Component.literal("inherited hover effect"));
         final String expected = "§o§<1>inherited hover effect";
 
@@ -180,8 +180,7 @@ public class TestStyledText {
     @Test
     public void eventInheritsImplicitly_worksCorrectly() {
         final Component component = Component.empty()
-                .withStyle(style ->
-                        style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover"))))
+                .withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("hover"))))
                 .append(Component.literal("inherited hover effect"))
                 .append(Component.literal("|inherited hover effect 2 without explicit |"))
                 .append(Component.literal("after red effect").withStyle(ChatFormatting.RED));
@@ -207,8 +206,7 @@ public class TestStyledText {
     @Test
     public void eventInheritsImplicitlyAndResetWorks_worksCorrectly() {
         final Component component = Component.empty()
-                .withStyle(style ->
-                        style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover"))))
+                .withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("hover"))))
                 .append(Component.literal("inherited hover effect"))
                 .append(Component.literal("|inherited red hover effect 2 without explicit |")
                         .withStyle(ChatFormatting.RED))
@@ -235,12 +233,11 @@ public class TestStyledText {
     @Test
     public void eventDoesntInheritIfItHasEvent_worksCorrectly() {
         final Component component = Component.empty()
-                .withStyle(style ->
-                        style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover"))))
+                .withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("hover"))))
                 .append(Component.literal("inherited hover effect"))
                 .append(Component.literal("|explicit hover effect |")
-                        .withStyle(style -> style.withHoverEvent(
-                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover2")))));
+                        .withStyle(
+                                style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("hover2")))));
 
         final String expected = "§<1>inherited hover effect§<2>|explicit hover effect |";
 
@@ -262,13 +259,12 @@ public class TestStyledText {
     @Test
     public void differentEventsStack_worksCorrectly() {
         final Component component = Component.empty()
-                .withStyle(style -> style.withHoverEvent(
-                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover")))
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/command")))
+                .withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("hover")))
+                        .withClickEvent(new ClickEvent.RunCommand("/command")))
                 .append(Component.literal("inherited hover effect"))
                 .append(Component.literal("|explicit hover effect |")
-                        .withStyle(style -> style.withHoverEvent(
-                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover2")))));
+                        .withStyle(
+                                style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("hover2")))));
 
         final String expected = "§[1]§<1>inherited hover effect§<2>|explicit hover effect |";
 
@@ -291,9 +287,9 @@ public class TestStyledText {
     public void fromModifiedStringWithEvents_shouldProduceCorrectString() {
         final String stringWithEvents = "§c§oitalicred§9§o§<1>blue§cnonitalic§oinherited§l§<2>bold§r§[1]after";
         final List<HoverEvent> hoverEvents = List.of(
-                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover")),
-                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover2")));
-        final List<ClickEvent> clickEvents = List.of(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/command"));
+                new HoverEvent.ShowText(Component.literal("hover")),
+                new HoverEvent.ShowText(Component.literal("hover2")));
+        final List<ClickEvent> clickEvents = List.of(new ClickEvent.RunCommand("/command"));
         final StyledText originalText = StyledText.fromComponent(Component.empty()
                 .append(Component.literal("italicred")
                         .withStyle(ChatFormatting.ITALIC)
@@ -942,8 +938,7 @@ public class TestStyledText {
     @Test
     public void styledText_inheritsHoverEvents() {
         final Component component = Component.empty()
-                .withStyle(style ->
-                        style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover"))))
+                .withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("hover"))))
                 .append(Component.literal("inherited hover effect"));
 
         StyledText styledText = StyledText.fromComponent(component);

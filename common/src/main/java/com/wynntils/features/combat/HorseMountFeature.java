@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -27,19 +28,17 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMBAT)
 public class HorseMountFeature extends Feature {
-    private static final ResourceLocation HORSE_WHISTLE_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "horse.whistle");
+    private static final Identifier HORSE_WHISTLE_ID = Identifier.fromNamespaceAndPath("wynntils", "horse.whistle");
     private static final SoundEvent HORSE_WHISTLE_SOUND = SoundEvent.createVariableRangeEvent(HORSE_WHISTLE_ID);
 
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
@@ -59,7 +58,7 @@ public class HorseMountFeature extends Feature {
     private boolean cancelMountingHorse = false;
 
     @RegisterKeyBind
-    private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
+    private final KeyBind mountHorseKeyBind = KeyBindDefinition.MOUNT_HORSE.create(this::mountHorse);
 
     @Persisted
     private final Config<Boolean> guaranteedMount = new Config<>(true);
@@ -112,12 +111,12 @@ public class HorseMountFeature extends Feature {
             }
             trySummonAndMountHorse(horseInventorySlot, summonAttempts.get());
         } else { // Horse already exists, mount it
-            mountHorse(horse);
+            tryMountHorse(horse);
         }
     }
 
     /** Horse should be nearby when this is called */
-    private void mountHorse(Entity horse) {
+    private void tryMountHorse(Entity horse) {
         if (playWhistle.get()) {
             McUtils.playSoundAmbient(HORSE_WHISTLE_SOUND);
         }
@@ -181,7 +180,7 @@ public class HorseMountFeature extends Feature {
                     if (horse != null) { // Horse successfully summoned
                         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
                         alreadySetPrevItem = false;
-                        mountHorse(horse);
+                        tryMountHorse(horse);
                         return;
                     }
                     McUtils.sendPacket(new ServerboundSetCarriedItemPacket(horseInventorySlot));

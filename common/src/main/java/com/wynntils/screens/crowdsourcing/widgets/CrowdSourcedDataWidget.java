@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.crowdsourcing.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.text.StyledText;
@@ -30,6 +29,8 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -54,15 +55,13 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         CustomColor backgroundColor = this.isHovered ? BUTTON_COLOR.b() : BUTTON_COLOR.a();
-        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
+        RenderUtils.drawRect(guiGraphics, backgroundColor, this.getX(), this.getY(), this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(crowdSourcedDataType.getTranslatedName()),
                         this.getX() + 14,
                         this.getY() + 1,
@@ -80,20 +79,12 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
                     case UNCONFIRMED -> Texture.QUESTION_MARK;
                 };
 
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                stateTexture.resource(),
-                this.getX() + 1,
-                this.getY() + 1,
-                stateTexture.width(),
-                stateTexture.height(),
-                stateTexture.width(),
-                stateTexture.height());
+        RenderUtils.drawTexturedRect(guiGraphics, stateTexture, this.getX() + 1, this.getY() + 1);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType) == ConfirmedBoolean.TRUE) {
                 Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
                         .crowdSourcedDataTypeEnabledMap
@@ -119,7 +110,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
             return true;
         }
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             ConfirmedBoolean dataCollectionState =
                     Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType);
             if (dataCollectionState == ConfirmedBoolean.UNCONFIRMED) {
@@ -145,7 +136,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     @Override
     public List<Component> getTooltipLines() {

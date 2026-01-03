@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.actionbar;
@@ -16,12 +16,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
-    private static final ResourceLocation COORDINATES_FONT =
-            ResourceLocation.withDefaultNamespace("hud/gameplay/default/top_right");
+    private static final FontDescription COORDINATES_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("hud/gameplay/default/top_right"));
 
     private static final FallBackSegmentMatcher FALLBACK_SEGMENT_MATCHER = new FallBackSegmentMatcher();
     private static final Pattern PERCENT_PATTERN = Pattern.compile("%");

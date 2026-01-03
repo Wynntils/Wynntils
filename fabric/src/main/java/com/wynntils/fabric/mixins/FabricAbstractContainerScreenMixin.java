@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.fabric.mixins;
@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +36,7 @@ public abstract class FabricAbstractContainerScreenMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V"))
+                                    "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"))
     private void renderTooltipPre(
             GuiGraphics instance,
             Font font,
@@ -44,7 +44,7 @@ public abstract class FabricAbstractContainerScreenMixin {
             Optional<TooltipComponent> visualTooltipComponent,
             int mouseX,
             int mouseY,
-            ResourceLocation backgroundTexture,
+            Identifier backgroundTexture,
             Operation<Void> operation,
             @Local ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event =
@@ -62,28 +62,15 @@ public abstract class FabricAbstractContainerScreenMixin {
                 backgroundTexture);
     }
 
-    // See ForgeGuiGraphics#renderTooltipPost for the Forge mixin.
-    @Inject(
-            method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/ResourceLocation;)V",
-                            shift = At.Shift.AFTER))
-    private void renderTooltipPost(GuiGraphics guiGraphics, int x, int y, CallbackInfo ci, @Local ItemStack itemStack) {
-        MixinHelper.post(new ItemTooltipRenderEvent.Post(guiGraphics, itemStack, x, y));
-    }
-
     // See the ForgeAbstractContainerScreenMixin#renderSlotPreCount for the Forge mixin.
     @Inject(
-            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;)V",
+            method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;II)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/gui/GuiGraphics;renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
-    private void renderSlotPreCount(GuiGraphics guiGraphics, Slot slot, CallbackInfo info) {
+    private void renderSlotPreCount(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
         MixinHelper.post(new SlotRenderEvent.CountPre(guiGraphics, (Screen) (Object) this, slot));
     }
 }

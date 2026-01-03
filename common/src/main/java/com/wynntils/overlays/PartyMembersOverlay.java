@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.overlays.ContainerOverlay;
@@ -23,9 +22,9 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.services.hades.event.HadesUserEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.SkinUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.ManaTexture;
@@ -37,8 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -184,36 +182,31 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
         }
 
         @Override
-        public void render(
-                GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-            PoseStack poseStack = guiGraphics.pose();
-            poseStack.pushPose();
+        public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+            guiGraphics.pose().pushMatrix();
 
             float renderX = getRenderX();
             float renderY = getRenderY();
 
-            poseStack.translate(renderX, renderY, 0);
+            guiGraphics.pose().translate(renderX, renderY);
 
             if (showHeads.get()) {
-                ResourceLocation skin = SkinUtils.getSkin(hadesUser.getUuid());
+                Identifier skin = SkinUtils.getSkin(hadesUser.getUuid());
 
                 // head
-                BufferedRenderUtils.drawTexturedRect(
-                        poseStack, bufferSource, skin, 0, 0, 0, HEAD_SIZE, HEAD_SIZE, 8, 8, 8, 8, 64, 64);
+                RenderUtils.drawTexturedRect(guiGraphics, skin, 0, 0, HEAD_SIZE, HEAD_SIZE, 8, 8, 8, 8, 64, 64);
 
                 // hat
-                BufferedRenderUtils.drawTexturedRect(
-                        poseStack, bufferSource, skin, 0, 0, 1, HEAD_SIZE, HEAD_SIZE, 40, 8, 8, 8, 64, 64);
+                RenderUtils.drawTexturedRect(guiGraphics, skin, 0, 0, HEAD_SIZE, HEAD_SIZE, 40, 8, 8, 8, 64, 64);
             }
 
-            poseStack.translate(HEAD_SIZE, 0, 0);
+            guiGraphics.pose().translate(HEAD_SIZE, 0);
 
-            poseStack.translate(3, 0, 0);
+            guiGraphics.pose().translate(3, 0);
 
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(hadesUser.getName()),
                             0,
                             0,
@@ -222,16 +215,15 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
                             VerticalAlignment.TOP,
                             TextShadow.NORMAL);
 
-            poseStack.translate(0, 12, 0);
+            guiGraphics.pose().translate(0, 12);
 
             double healthProgress = hadesUser.getHealth().getProgress();
             double manaProgress = hadesUser.getMana().getProgress();
 
             // health
             HealthTexture healthTexture = PartyMembersOverlay.this.healthTexture.get();
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawProgressBar(
+                    guiGraphics,
                     Texture.HEALTH_BAR,
                     0,
                     0,
@@ -244,9 +236,8 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
                     (float) healthProgress);
 
             if (healthProgress > 1) {
-                BufferedRenderUtils.drawProgressBar(
-                        poseStack,
-                        bufferSource,
+                RenderUtils.drawProgressBar(
+                        guiGraphics,
                         Texture.HEALTH_BAR_OVERFLOW,
                         0,
                         0,
@@ -259,13 +250,12 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
                         (float) healthProgress - 1f);
             }
 
-            poseStack.translate(0, healthTexture.getHeight() * 0.85f, 0);
+            guiGraphics.pose().translate(0, healthTexture.getHeight() * 0.85f);
 
             // mana
             ManaTexture manaTexture = PartyMembersOverlay.this.manaTexture.get();
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawProgressBar(
+                    guiGraphics,
                     Texture.MANA_BAR,
                     0,
                     2,
@@ -277,7 +267,7 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
                     manaTexture.getTextureY2(),
                     (float) manaProgress);
 
-            poseStack.popPose();
+            guiGraphics.pose().popMatrix();
         }
     }
 }

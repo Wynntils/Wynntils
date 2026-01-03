@@ -1,19 +1,19 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.CustomSeaskipperScreen;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.RenderDirection;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class SeaskipperTravelButton extends WynntilsButton {
@@ -25,28 +25,21 @@ public class SeaskipperTravelButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         seaskipperScreen.travelToDestination();
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.TRAVEL_BUTTON.resource(),
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawScalingHoverableTexturedRect(
+                guiGraphics,
+                Texture.TRAVEL_BUTTON,
                 this.getX(),
                 this.getY(),
-                0,
-                this.width,
-                this.height,
-                0,
-                seaskipperScreen.getSelectedDestination() != null ? 0 : Texture.TRAVEL_BUTTON.height() / 2,
-                Texture.TRAVEL_BUTTON.width(),
-                Texture.TRAVEL_BUTTON.height() / 2,
-                Texture.TRAVEL_BUTTON.width(),
-                Texture.TRAVEL_BUTTON.height());
+                width,
+                height,
+                isHovered,
+                RenderDirection.VERTICAL);
 
         if (isHovered && seaskipperScreen.getSelectedDestination() != null) {
             List<Component> tooltip = List.of(Component.translatable(
@@ -54,7 +47,7 @@ public class SeaskipperTravelButton extends WynntilsButton {
                             seaskipperScreen.getSelectedDestination().getName())
                     .withStyle(ChatFormatting.GRAY));
 
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 }

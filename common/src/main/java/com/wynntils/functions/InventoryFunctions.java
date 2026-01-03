@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -65,7 +65,7 @@ public class InventoryFunctions {
             if (inventoryArmor == null) return CappedValue.EMPTY;
 
             Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(
-                    McUtils.inventory().armor.get(inventoryArmor.getArmorSlot()), DurableItemProperty.class);
+                    McUtils.inventory().getItem(inventoryArmor.getInventorySlot()), DurableItemProperty.class);
 
             if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
 

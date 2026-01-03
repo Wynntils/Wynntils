@@ -1,16 +1,14 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -43,15 +41,13 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRoundedRectWithBorder(
-                poseStack,
+                guiGraphics,
                 CommonColors.BLACK,
                 getBackgroundColor(),
                 this.getX(),
                 this.getY(),
-                0,
                 this.width,
                 this.height,
                 1,
@@ -60,7 +56,7 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
 
         FontRenderer.getInstance()
                 .renderScrollingAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(getMessage()),
                         this.getX(),
                         this.getX() + this.width,
@@ -78,7 +74,7 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
         }
 
         if (isHovered) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 

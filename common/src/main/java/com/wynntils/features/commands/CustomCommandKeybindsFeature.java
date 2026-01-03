@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.commands;
@@ -9,13 +9,13 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.utils.mc.McUtils;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMMANDS)
 public class CustomCommandKeybindsFeature extends Feature {
@@ -56,45 +56,27 @@ public class CustomCommandKeybindsFeature extends Feature {
     private final Config<CommandType> commandType6 = new Config<>(CommandType.EXECUTE);
 
     @RegisterKeyBind
-    private final KeyBind executeKeybind1 = new KeyBind(
-            "Execute 1st Custom Command Keybind",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind executeKeybind1 = KeyBindDefinition.CUSTOM_COMMAND_ONE.create(
             () -> this.executeKeybind(keybindCommand1.get(), commandType1.get()));
 
     @RegisterKeyBind
-    private final KeyBind executeKeybind2 = new KeyBind(
-            "Execute 2nd Custom Command Keybind",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind executeKeybind2 = KeyBindDefinition.CUSTOM_COMMAND_TWO.create(
             () -> this.executeKeybind(keybindCommand2.get(), commandType2.get()));
 
     @RegisterKeyBind
-    private final KeyBind executeKeybind3 = new KeyBind(
-            "Execute 3rd Custom Command Keybind",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind executeKeybind3 = KeyBindDefinition.CUSTOM_COMMAND_THREE.create(
             () -> this.executeKeybind(keybindCommand3.get(), commandType3.get()));
 
     @RegisterKeyBind
-    private final KeyBind executeKeybind4 = new KeyBind(
-            "Execute 4th Custom Command Keybind",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind executeKeybind4 = KeyBindDefinition.CUSTOM_COMMAND_FOUR.create(
             () -> this.executeKeybind(keybindCommand4.get(), commandType4.get()));
 
     @RegisterKeyBind
-    private final KeyBind executeKeybind5 = new KeyBind(
-            "Execute 5th Custom Command Keybind",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind executeKeybind5 = KeyBindDefinition.CUSTOM_COMMAND_FIVE.create(
             () -> this.executeKeybind(keybindCommand5.get(), commandType5.get()));
 
     @RegisterKeyBind
-    private final KeyBind executeKeybind6 = new KeyBind(
-            "Execute 6th Custom Command Keybind",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind executeKeybind6 = KeyBindDefinition.CUSTOM_COMMAND_SIX.create(
             () -> this.executeKeybind(keybindCommand6.get(), commandType6.get()));
 
     public CustomCommandKeybindsFeature() {

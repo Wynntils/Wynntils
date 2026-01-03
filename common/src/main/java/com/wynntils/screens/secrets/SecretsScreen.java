@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.secrets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.secrets.widgets.SecretInputWidget;
@@ -21,6 +22,7 @@ import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class SecretsScreen extends WynntilsScreen {
@@ -62,11 +64,11 @@ public class SecretsScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SECRETS_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SECRETS_BACKGROUND, offsetX, offsetY);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.secrets.warning")),
                         offsetX + 75,
                         offsetX + 275,
@@ -81,14 +83,22 @@ public class SecretsScreen extends WynntilsScreen {
         renderSecrets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderScroll(guiGraphics);
+
+        if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
+                mouseX, mouseY, offsetX + 336, offsetX + 336 + Texture.SCROLL_BUTTON.width(), (int) scrollY, (int)
+                        (scrollY + Texture.SCROLL_BUTTON.height()))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     offsetX + 336,
                     offsetX + 336 + Texture.SCROLL_BUTTON.width(),
                     (int) scrollY,
@@ -100,22 +110,22 @@ public class SecretsScreen extends WynntilsScreen {
         }
 
         for (SecretInputWidget secretInput : secretInputs) {
-            if (secretInput.isMouseOver(mouseX, mouseY)) {
-                return secretInput.mouseClicked(mouseX, mouseY, button);
+            if (secretInput.isMouseOver(event.x(), event.y())) {
+                return secretInput.mouseClicked(event, isDoubleClick);
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             int scrollAreaStartY = offsetY + 7 + 17;
             int scrollAreaHeight = SCROLL_AREA_HEIGHT - Texture.SCROLL_BUTTON.height();
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY, scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
+                    (float) event.y(), scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
 
             newOffset = Math.max(0, Math.min(newOffset, getMaxScrollOffset()));
 
@@ -125,25 +135,25 @@ public class SecretsScreen extends WynntilsScreen {
         }
 
         for (SecretInputWidget secretInput : secretInputs) {
-            if (secretInput.isMouseOver(mouseX, mouseY)) {
-                return secretInput.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            if (secretInput.isMouseOver(event.x(), event.y())) {
+                return secretInput.mouseDragged(event, dragX, dragY);
             }
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
         for (SecretInputWidget secretInput : secretInputs) {
-            if (secretInput.isMouseOver(mouseX, mouseY)) {
-                return secretInput.mouseReleased(mouseX, mouseY, button);
+            if (secretInput.isMouseOver(event.x(), event.y())) {
+                return secretInput.mouseReleased(event);
             }
         }
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -197,6 +207,6 @@ public class SecretsScreen extends WynntilsScreen {
                 + 7
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, 135 - Texture.SCROLL_BUTTON.height());
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SCROLL_BUTTON, offsetX + 336, scrollY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, offsetX + 336, scrollY);
     }
 }

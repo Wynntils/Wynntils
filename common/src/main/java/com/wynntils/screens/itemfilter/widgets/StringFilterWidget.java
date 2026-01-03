@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets;
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class StringFilterWidget extends GeneralFilterWidget {
@@ -83,26 +84,26 @@ public class StringFilterWidget extends GeneralFilterWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (entryInput.isMouseOver(mouseX, mouseY)) {
-            return entryInput.mouseClicked(mouseX, mouseY, button);
-        } else if (strictCheckbox.isMouseOver(mouseX, mouseY)) {
-            return strictCheckbox.mouseClicked(mouseX, mouseY, button);
-        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
-            return removeButton.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (entryInput.isMouseOver(event.x(), event.y())) {
+            return entryInput.mouseClicked(event, isDoubleClick);
+        } else if (strictCheckbox.isMouseOver(event.x(), event.y())) {
+            return strictCheckbox.mouseClicked(event, isDoubleClick);
+        } else if (removeButton.isMouseOver(event.x(), event.y())) {
+            return removeButton.mouseClicked(event, isDoubleClick);
         }
 
         return false;
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (entryInput.isMouseOver(mouseX, mouseY)) {
-            return entryInput.mouseReleased(mouseX, mouseY, button);
-        } else if (strictCheckbox.isMouseOver(mouseX, mouseY)) {
-            return strictCheckbox.mouseReleased(mouseX, mouseY, button);
-        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
-            return removeButton.mouseReleased(mouseX, mouseY, button);
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (entryInput.isMouseOver(event.x(), event.y())) {
+            return entryInput.mouseReleased(event);
+        } else if (strictCheckbox.isMouseOver(event.x(), event.y())) {
+            return strictCheckbox.mouseReleased(event);
+        } else if (removeButton.isMouseOver(event.x(), event.y())) {
+            return removeButton.mouseReleased(event);
         }
 
         return false;

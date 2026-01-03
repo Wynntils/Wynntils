@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -29,7 +29,7 @@ public abstract class MouseHandlerMixin {
     }
 
     @WrapOperation(
-            method = "onPress",
+            method = "onButton(JLnet/minecraft/client/input/MouseButtonInfo;I)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -46,7 +46,7 @@ public abstract class MouseHandlerMixin {
     }
 
     @WrapOperation(
-            method = "onPress",
+            method = "onButton(JLnet/minecraft/client/input/MouseButtonInfo;I)V",
             at =
                     @At(
                             value = "INVOKE",

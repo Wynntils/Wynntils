@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.lootrunpaths;
@@ -22,8 +22,8 @@ import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.BoundedFloatFunction;
 import net.minecraft.util.CubicSpline;
-import net.minecraft.util.ToFloatFunction;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2d;
@@ -76,9 +76,12 @@ public final class LootrunCompiler {
         List<LootrunPath> result = new ArrayList<>();
         for (LootrunPath current : positions) {
             float distance = 0f;
-            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderX = CubicSpline.builder(ToFloatFunction.IDENTITY);
-            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderY = CubicSpline.builder(ToFloatFunction.IDENTITY);
-            CubicSpline.Builder<Float, ToFloatFunction<Float>> builderZ = CubicSpline.builder(ToFloatFunction.IDENTITY);
+            CubicSpline.Builder<Float, BoundedFloatFunction<Float>> builderX =
+                    CubicSpline.builder(BoundedFloatFunction.IDENTITY);
+            CubicSpline.Builder<Float, BoundedFloatFunction<Float>> builderY =
+                    CubicSpline.builder(BoundedFloatFunction.IDENTITY);
+            CubicSpline.Builder<Float, BoundedFloatFunction<Float>> builderZ =
+                    CubicSpline.builder(BoundedFloatFunction.IDENTITY);
             for (int i = 0; i < current.points().size(); i++) {
                 Vec3 position = current.points().get(i);
                 if (i > 0) {
@@ -98,9 +101,9 @@ public final class LootrunCompiler {
                 builderY.addPoint(distance, (float) position.y, slopeY);
                 builderZ.addPoint(distance, (float) position.z, slopeZ);
             }
-            CubicSpline<Float, ToFloatFunction<Float>> splineX = builderX.build();
-            CubicSpline<Float, ToFloatFunction<Float>> splineY = builderY.build();
-            CubicSpline<Float, ToFloatFunction<Float>> splineZ = builderZ.build();
+            CubicSpline<Float, BoundedFloatFunction<Float>> splineX = builderX.build();
+            CubicSpline<Float, BoundedFloatFunction<Float>> splineY = builderY.build();
+            CubicSpline<Float, BoundedFloatFunction<Float>> splineZ = builderZ.build();
 
             LootrunPath newResult = new LootrunPath(new ArrayList<>());
             for (float i = 0f; i < distance; i += (1f / sampleRate)) {

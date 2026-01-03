@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.emeraldpouch;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
@@ -80,43 +79,30 @@ public final class WynntilsEmeraldPouchGuideScreen
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        renderBackgroundTexture(guiGraphics);
 
-        renderBackgroundTexture(poseStack);
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.emeraldPouch.name"));
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.emeraldPouch.name"));
+        renderDescription(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.guideDescription"), "");
 
-        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsGuides.guideDescription"), "");
+        renderVersion(guiGraphics);
 
-        renderVersion(poseStack);
-
-        renderItemsHeader(poseStack);
+        renderItemsHeader(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderTitle(PoseStack poseStack, String titleString) {
-        int txWidth = Texture.CONTENT_BOOK_TITLE.width();
-        int txHeight = Texture.CONTENT_BOOK_TITLE.height();
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.CONTENT_BOOK_TITLE.resource(),
-                offsetX,
-                30 + offsetY,
-                0,
-                txWidth,
-                txHeight,
-                txWidth,
-                txHeight);
+    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(titleString),
                         10 + offsetX,
                         36 + offsetY,
@@ -130,17 +116,17 @@ public final class WynntilsEmeraldPouchGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideEmeraldPouchItemStackButton guideEmeraldPouchItemStack) {
-            guiGraphics.renderTooltip(
+            guiGraphics.setTooltipForNextFrame(
                     FontRenderer.getInstance().getFont(), guideEmeraldPouchItemStack.getItemStack(), mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderItemsHeader(PoseStack poseStack) {
+    private void renderItemsHeader(GuiGraphics guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
                         Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f + offsetX,
                         30 + offsetY,

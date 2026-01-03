@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -124,13 +124,11 @@ public class LocateCommand extends Command {
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(service.getName() + " ")
                             .withStyle(ChatFormatting.YELLOW)
-                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND,
+                            .withStyle((style) -> style.withClickEvent(new ClickEvent.RunCommand(
                                     "/compass at " + service.getLocation().asChatCoordinates()))))
                     .append(Component.literal(service.getLocation().toString())
                             .withStyle(ChatFormatting.WHITE)
-                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND,
+                            .withStyle((style) -> style.withClickEvent(new ClickEvent.RunCommand(
                                     "/compass at " + service.getLocation().asChatCoordinates()))));
         }
 
@@ -166,12 +164,12 @@ public class LocateCommand extends Command {
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(place.getName() + " ")
                             .withStyle(ChatFormatting.YELLOW)
-                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND, "/compass place " + place.getName()))))
+                            .withStyle((style) -> style.withClickEvent(
+                                    new ClickEvent.RunCommand("/compass place " + place.getName()))))
                     .append(Component.literal(place.getLocation().toString())
                             .withStyle(ChatFormatting.WHITE)
-                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND, "/compass place " + place.getName()))));
+                            .withStyle((style) -> style.withClickEvent(
+                                    new ClickEvent.RunCommand("/compass place " + place.getName()))));
         }
 
         context.getSource().sendSuccess(() -> response, false);

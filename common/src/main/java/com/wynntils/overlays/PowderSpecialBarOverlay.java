@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -19,9 +18,9 @@ import com.wynntils.models.elements.type.Powder;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
@@ -30,10 +29,10 @@ import com.wynntils.utils.wynn.ItemUtils;
 import java.util.Optional;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class PowderSpecialBarOverlay extends Overlay {
     @Persisted
@@ -66,25 +65,22 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
         if (this.hideIfNoCharge.get() && powderSpecialInfoOpt.isEmpty()) return;
 
         if (this.onlyIfWeaponHeld.get()
-                && !ItemUtils.isWeapon(McUtils.inventory().getSelected())) {
+                && !ItemUtils.isWeapon(McUtils.inventory().getSelectedItem())) {
             return;
         }
 
         PowderSpecialInfo powderSpecialInfo = powderSpecialInfoOpt.orElse(PowderSpecialInfo.EMPTY);
-        renderWithSpecificSpecial(
-                guiGraphics.pose(), bufferSource, powderSpecialInfo.charge() * 100f, powderSpecialInfo.powder());
+        renderWithSpecificSpecial(guiGraphics, powderSpecialInfo.charge() * 100f, powderSpecialInfo.powder());
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        renderWithSpecificSpecial(guiGraphics.pose(), bufferSource, 40, Powder.THUNDER);
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        renderWithSpecificSpecial(guiGraphics, 40, Powder.THUNDER);
     }
 
     @Override
@@ -93,7 +89,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     private void renderWithSpecificSpecial(
-            PoseStack poseStack, MultiBufferSource bufferSource, float powderSpecialCharge, Powder powderSpecialType) {
+            GuiGraphics guiGraphics, float powderSpecialCharge, Powder powderSpecialType) {
         Texture universalBarTexture = Texture.UNIVERSAL_BAR;
 
         final float renderedHeight = barTexture.get().getHeight() * (this.getWidth() / 81);
@@ -115,14 +111,14 @@ public class PowderSpecialBarOverlay extends Overlay {
             text = StyledText.fromComponent(Component.empty()
                     .withStyle(powderSpecialType.getLightColor())
                     .append(Component.literal(String.valueOf(powderSpecialType.getSymbol()))
-                            .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))))
+                            .withStyle(Style.EMPTY.withFont(
+                                    new FontDescription.Resource(Identifier.withDefaultNamespace("common")))))
                     .append(Component.literal(" " + (int) powderSpecialCharge + "%")));
         }
 
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         text,
                         this.getRenderX(),
                         this.getRenderX() + this.getWidth(),
@@ -132,9 +128,8 @@ public class PowderSpecialBarOverlay extends Overlay {
                         this.getRenderHorizontalAlignment(),
                         this.textShadow.get());
 
-        BufferedRenderUtils.drawColoredProgressBar(
-                poseStack,
-                bufferSource,
+        RenderUtils.drawColoredProgressBar(
+                guiGraphics,
                 universalBarTexture,
                 color,
                 this.getRenderX(),

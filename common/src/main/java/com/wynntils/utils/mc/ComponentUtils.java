@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -17,21 +17,25 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class ComponentUtils {
     private static final Pattern COLOR_CODE_PATTERN = Pattern.compile("(§[1-9a-f])+");
     private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
 
-    private static final ResourceLocation PILL_FONT = ResourceLocation.withDefaultNamespace("banner/pill");
+    private static final FontDescription PILL_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("banner/pill"));
     private static final Style BACKGROUND_STYLE =
             Style.EMPTY.withFont(PILL_FONT).withColor(ChatFormatting.AQUA);
-    private static final Style FOREGROUND_STYLE =
-            Style.EMPTY.withFont(PILL_FONT).withColor(ChatFormatting.BLACK);
+    private static final Style FOREGROUND_STYLE = Style.EMPTY
+            .withFont(PILL_FONT)
+            .withColor(ChatFormatting.BLACK)
+            .withShadowColor(CommonColors.WHITE.withAlpha(0).asInt());
     private static final Component WYNNTILS_BACKGROUND_PILL = Component.literal(
                     "\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE062\uDAFF\uDFD0")
             .withStyle(BACKGROUND_STYLE);
