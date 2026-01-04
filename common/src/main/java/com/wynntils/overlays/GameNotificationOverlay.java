@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -15,9 +15,9 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.ListIterator;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class GameNotificationOverlay extends Overlay {
@@ -100,8 +99,7 @@ public class GameNotificationOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         List<TimedMessageContainer> toRender = new ArrayList<>();
 
         ListIterator<TimedMessageContainer> messages = messageQueue.listIterator(messageQueue.size());
@@ -149,10 +147,9 @@ public class GameNotificationOverlay extends Overlay {
             }
         }
 
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         this.getRenderX(),
                         this.getRenderY(),
                         renderedValues.stream()
@@ -173,12 +170,10 @@ public class GameNotificationOverlay extends Overlay {
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        BufferedFontRenderer.getInstance()
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        FontRenderer.getInstance()
                 .renderTextWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         this.getRenderX(),
                         this.getRenderY(),
                         new TextRenderTask(

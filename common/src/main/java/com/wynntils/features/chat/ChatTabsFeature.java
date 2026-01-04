@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -54,7 +54,7 @@ public class ChatTabsFeature extends Feature {
 
     @SubscribeEvent
     public void onChatScreenCreate(ChatScreenCreateEvent event) {
-        event.setScreen(new ChatTabsScreen(event.getDefaultText(), oldTabHotkey.get()));
+        event.setScreen(new ChatTabsScreen(event.getDefaultText(), event.isDraft(), oldTabHotkey.get()));
     }
 
     @SubscribeEvent
@@ -84,7 +84,7 @@ public class ChatTabsFeature extends Feature {
         if (screen instanceof ChatScreen chatScreen) {
             if (screen instanceof ChatTabsScreen) return;
 
-            McUtils.setScreen(new ChatTabsScreen("", oldTabHotkey.get()));
+            McUtils.setScreen(new ChatTabsScreen("", false, oldTabHotkey.get()));
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -7,7 +7,6 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.text.StyledText;
@@ -46,7 +45,8 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.ReceivingLevelScreen;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.CommonListenerCookie;
@@ -96,7 +96,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin extends ClientCommonPacketListenerImpl {
@@ -109,9 +108,6 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     @Shadow
     @Final
     private FeatureFlagSet enabledFeatures;
-
-    @Shadow
-    protected abstract ParseResults<SharedSuggestionProvider> parseCommand(String command);
 
     protected ClientPacketListenerMixin(
             Minecraft minecraft, Connection connection, CommonListenerCookie commonListenerCookie) {
@@ -141,14 +137,20 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         }
     }
 
-    @Inject(method = "sendUnsignedCommand(Ljava/lang/String;)Z", at = @At("HEAD"), cancellable = true)
-    private void onUnsignedCommandPre(String command, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(
+            method = "sendUnattendedCommand(Ljava/lang/String;Lnet/minecraft/client/gui/screens/Screen;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"),
+            cancellable = true)
+    private void onSendUnattendedCommand(String command, Screen previousScreen, CallbackInfo ci) {
         CommandSentEvent event = new CommandSentEvent(command, false);
         MixinHelper.post(event);
         if (event.isCanceled()) {
-            // Return true here, to signal to MC that we handled the command.
-            cir.setReturnValue(true);
-            cir.cancel();
+            // Prevent sending the packet
+            ci.cancel();
         }
     }
 
@@ -189,7 +191,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         for (ClientboundPlayerInfoUpdatePacket.Entry entry : packet.newEntries()) {
             GameProfile profile = entry.profile();
             if (profile == null) continue;
-            MixinHelper.post(new PlayerInfoEvent.PlayerLogInEvent(profile.getId(), profile.getName()));
+            MixinHelper.post(new PlayerInfoEvent.PlayerLogInEvent(profile.id(), profile.name()));
         }
 
         for (ClientboundPlayerInfoUpdatePacket.Entry entry : packet.entries()) {
@@ -286,21 +288,21 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (!isRenderThread()) return;
 
         ContainerSetContentEvent.Pre event = new ContainerSetContentEvent.Pre(
-                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId());
+                packet.items(), packet.carriedItem(), packet.containerId(), packet.stateId());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
         }
 
-        if (!packet.getItems().equals(event.getItems())) {
-            if (packet.getContainerId() == 0) {
+        if (!packet.items().equals(event.getItems())) {
+            if (packet.containerId() == 0) {
                 McUtils.player()
                         .inventoryMenu
-                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
-            } else if (packet.getContainerId() == McUtils.containerMenu().containerId) {
+                        .initializeContents(packet.stateId(), packet.items(), packet.carriedItem());
+            } else if (packet.containerId() == McUtils.containerMenu().containerId) {
                 McUtils.player()
                         .containerMenu
-                        .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
+                        .initializeContents(packet.stateId(), packet.items(), packet.carriedItem());
             }
 
             ci.cancel();
@@ -315,7 +317,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (!isRenderThread()) return;
 
         MixinHelper.post(new ContainerSetContentEvent.Post(
-                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
+                packet.items(), packet.carriedItem(), packet.containerId(), packet.stateId()));
     }
 
     @Inject(
@@ -381,15 +383,15 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        SetSpawnEvent event = new SetSpawnEvent(packet.getPos());
+        SetSpawnEvent event = new SetSpawnEvent(packet.respawnData().pos());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
 
             // Signal loading complete to the loading screen,
             // or else we are stuck in an "infinite" loading state
-            if (McUtils.screen() instanceof ReceivingLevelScreen receivingLevelScreen) {
-                receivingLevelScreen.onClose();
+            if (McUtils.screen() instanceof LevelLoadingScreen levelLoadingScreen) {
+                levelLoadingScreen.onClose();
             }
         }
     }

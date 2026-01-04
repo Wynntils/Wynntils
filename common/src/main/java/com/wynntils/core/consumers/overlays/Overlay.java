@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -17,14 +17,13 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
@@ -109,33 +108,29 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         return "Overlay";
     }
 
-    public abstract void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window);
+    public abstract void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window);
 
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        this.render(guiGraphics, bufferSource, deltaTracker, window);
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        this.render(guiGraphics, deltaTracker, window);
     }
 
-    protected void renderOrErrorMessage(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (this.enabledTemplateCache != null && this.enabledTemplateCache.hasError()) {
-            renderEnabledTemplateErrorMessage(guiGraphics, bufferSource);
+            renderEnabledTemplateErrorMessage(guiGraphics);
         } else {
-            render(guiGraphics, bufferSource, deltaTracker, window);
+            render(guiGraphics, deltaTracker, window);
         }
     }
 
-    private void renderEnabledTemplateErrorMessage(GuiGraphics guiGraphics, MultiBufferSource bufferSource) {
+    private void renderEnabledTemplateErrorMessage(GuiGraphics guiGraphics) {
         StyledText[] errorMessage = {
             StyledText.fromString(
                     "§c§l" + I18n.get("overlay.wynntils.overlay.enabledTemplate.error") + " " + getTranslatedName()),
             StyledText.fromUnformattedString(enabledTemplateCache.getError())
         };
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         errorMessage,
                         getRenderX(),
                         getRenderX() + getWidth(),

@@ -1,10 +1,13 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class InfoButton extends WynntilsButton {
@@ -14,7 +17,14 @@ public class InfoButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    protected void handleCursor(GuiGraphics guiGraphics) {
+        if (this.isHovered()) {
+            guiGraphics.requestCursor(CursorTypes.NOT_ALLOWED);
+        }
+    }
+
+    @Override
+    public void onPress(InputWithModifiers input) {
         // Do nothing
     }
 }

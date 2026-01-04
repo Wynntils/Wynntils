@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemsharing;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -24,7 +23,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -37,6 +35,8 @@ import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -166,8 +166,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        BufferedRenderUtils.drawTexturedRect(
-                guiGraphics.pose(), guiGraphics.bufferSource, Texture.ITEM_RECORD, this.leftPos, this.topPos);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_RECORD, this.leftPos, this.topPos);
     }
 
     @Override
@@ -205,12 +204,11 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
 
         if (!addingCategory && !editingCategory) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(currentCategory),
                             this.leftPos + 37,
                             this.leftPos + 37 + 97,
@@ -224,32 +222,30 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         }
 
         for (int selectedSlot : selectedSlots) {
-            BufferedRenderUtils.drawRectBorders(
-                    poseStack,
-                    guiGraphics.bufferSource,
+            RenderUtils.drawRectBorders(
+                    guiGraphics,
                     CommonColors.WHITE,
                     this.leftPos + this.getMenu().getSlot(selectedSlot).x,
                     this.topPos + this.getMenu().getSlot(selectedSlot).y,
                     this.leftPos + this.getMenu().getSlot(selectedSlot).x + 16,
                     this.topPos + this.getMenu().getSlot(selectedSlot).y + 16,
-                    200,
                     1);
         }
 
-        renderScrollButton(poseStack);
+        renderScrollButton(guiGraphics);
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         float scrollButtonRenderX = this.leftPos + 155;
         float scrollButtonRenderY =
                 this.topPos + 18 + MathUtils.map(itemScrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
 
         if (MathUtils.isInside(
-                (int) mouseX,
-                (int) mouseY,
+                (int) event.x(),
+                (int) event.y(),
                 (int) scrollButtonRenderX,
                 (int) (scrollButtonRenderX + Texture.ITEM_RECORD_SCROLL.width()),
                 (int) scrollButtonRenderY,
@@ -266,8 +262,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 && !editingCategory
                 && !addingCategory
                 && MathUtils.isInside(
-                        (int) mouseX,
-                        (int) mouseY,
+                        (int) event.x(),
+                        (int) event.y(),
                         (int) categoryRenderX,
                         (int) (categoryRenderX + 97),
                         (int) categoryRenderY,
@@ -278,27 +274,27 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             return true;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (!draggingScroll) return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (!draggingScroll) return super.mouseDragged(event, dragX, dragY);
 
         int renderY = this.topPos + 18;
         int newValue = Math.round(
-                MathUtils.map((float) mouseY, renderY, renderY + SCROLL_AREA_HEIGHT, 0, getMaxScrollOffset()));
+                MathUtils.map((float) event.y(), renderY, renderY + SCROLL_AREA_HEIGHT, 0, getMaxScrollOffset()));
 
         scrollItems(newValue - itemScrollOffset);
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
-        Slot dragSelectionEndSlot = getHoveredSlot(mouseX, mouseY);
+        Slot dragSelectionEndSlot = getHoveredSlot(event.x(), event.y());
 
         if (dragSelectionStartIndex != -1) {
             int dragSelectionEndIndex =
@@ -324,7 +320,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             dragSelectionStartIndex = -1;
         }
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -341,9 +337,9 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
         // Enter can also be used to submit name for new category title
-        if ((addingCategory || editingCategory) && keyCode == GLFW.GLFW_KEY_ENTER) {
+        if ((addingCategory || editingCategory) && event.key() == GLFW.GLFW_KEY_ENTER) {
             addCategory(KeyboardUtils.isShiftDown());
 
             if (addingCategory) {
@@ -354,7 +350,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             return false;
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     public void scrollCategories(int scrollDirection) {
@@ -381,12 +377,12 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         populateItems();
     }
 
-    private void renderScrollButton(PoseStack poseStack) {
+    private void renderScrollButton(GuiGraphics guiGraphics) {
         float renderX = this.leftPos + 155;
         float renderY =
                 this.topPos + 18 + MathUtils.map(itemScrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.ITEM_RECORD_SCROLL, renderX, renderY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_RECORD_SCROLL, renderX, renderY);
     }
 
     private void addCategoryInput() {

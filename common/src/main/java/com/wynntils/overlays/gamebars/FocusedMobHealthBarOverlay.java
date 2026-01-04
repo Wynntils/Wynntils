@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -18,12 +17,12 @@ import com.wynntils.models.combat.type.FocusedDamageEvent;
 import com.wynntils.models.combat.type.MobElementals;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -66,11 +65,10 @@ public class FocusedMobHealthBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, String text) {
-        BufferedFontRenderer.getInstance()
+    protected void renderText(GuiGraphics guiGraphics, float renderY, String text) {
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         barText,
                         this.getRenderX(),
                         this.getRenderX() + this.getWidth(),

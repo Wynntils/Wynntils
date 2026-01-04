@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities;
@@ -151,7 +151,8 @@ public final class ActivityModel extends Model {
                 ((EntityExtension) event.getEntity()).setRendered(false);
             }
             if (feature.autoTrackCoordinates.get()) {
-                Location spawn = new Location(McUtils.mc().level.getSharedSpawnPos());
+                Location spawn =
+                        new Location(McUtils.mc().level.getRespawnData().pos());
                 ACTIVITY_MARKER_PROVIDER.setSpawnLocation(activityBeaconMarker.getActivityType(), spawn);
 
                 if (trackedActivity == null) return;

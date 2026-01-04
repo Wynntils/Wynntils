@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.lootrunpaths;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -127,7 +127,8 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                                 .withStyle(ChatFormatting.RED));
             }
 
-            guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
             return;
         }
 
@@ -136,33 +137,31 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        renderBackgroundTexture(guiGraphics);
 
-        renderBackgroundTexture(poseStack);
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.lootruns.name"));
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.lootruns.name"));
-
-        renderVersion(poseStack);
+        renderVersion(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         if (elements.isEmpty()) {
-            renderNoElementsHelper(poseStack, I18n.get("screens.wynntils.lootruns.noLootruns"));
+            renderNoElementsHelper(guiGraphics, I18n.get("screens.wynntils.lootruns.noLootruns"));
         }
 
-        renderDescription(poseStack);
+        renderDescription(guiGraphics);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderDescription(PoseStack poseStack) {
+    private void renderDescription(GuiGraphics guiGraphics) {
         LootrunPathInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
         if (currentLootrun != null) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(currentLootrun.name()),
                             20 + offsetX,
                             80 + offsetY,
@@ -174,7 +173,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.chests") + ": "
                                     + currentLootrun.chests().size()),
                             20 + offsetX,
@@ -186,7 +185,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.notes") + ": "
                                     + currentLootrun.notes().size()),
                             20 + offsetX,
@@ -199,7 +198,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
             Position start = currentLootrun.path().points().getFirst();
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.start") + ": "
                                     + String.format("[%d, %d, %d]", (int) start.x(), (int) start.y(), (int) start.z())),
                             20 + offsetX,
@@ -212,7 +211,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
             Position end = currentLootrun.path().points().getLast();
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.end") + ": "
                                     + String.format("[%d, %d, %d]", (int) end.x(), (int) end.y(), (int) end.z())),
                             20 + offsetX,
@@ -224,7 +223,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.description1")),
                             20 + offsetX,
                             Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetX,
@@ -236,7 +235,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.description2")),
                             20 + offsetX,
                             Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10 + offsetX,

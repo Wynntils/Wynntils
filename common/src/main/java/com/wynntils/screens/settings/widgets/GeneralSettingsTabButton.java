@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -48,9 +47,7 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Don't count as hovered if mouse is hovering the book as the tags render
         // slightly underneath the book
         if (isHovered
@@ -91,18 +88,18 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
             yOffset = hoverOffset;
         }
 
-        RenderUtils.drawTexturedRect(poseStack, tagTexture, this.getX() + xOffset, this.getY() + yOffset);
+        RenderUtils.drawTexturedRect(guiGraphics, tagTexture, this.getX() + xOffset, this.getY() + yOffset);
 
         // Render icon on tag
         if (offsetDirection == OffsetDirection.UP || offsetDirection == OffsetDirection.DOWN) {
             RenderUtils.drawTexturedRect(
-                    poseStack,
+                    guiGraphics,
                     iconTexture,
                     getX() + (getWidth() - iconTexture.width()) / 2f + xOffset,
                     getY() + 14 + yOffset);
         } else {
             RenderUtils.drawTexturedRect(
-                    poseStack,
+                    guiGraphics,
                     iconTexture,
                     getX() + 14 + xOffset,
                     getY() + (getHeight() - iconTexture.height()) / 2f + yOffset);

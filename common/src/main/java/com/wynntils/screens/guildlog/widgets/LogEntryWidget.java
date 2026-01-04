@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guildlog.widgets;
@@ -49,16 +49,16 @@ public class LogEntryWidget extends AbstractWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int renderY = getY();
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_TOP, getX(), renderY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.LOG_ENTRY_TOP, getX(), renderY);
 
         renderY += Texture.LOG_ENTRY_BOTTOM.height();
 
         for (StyledText logLine : logLines) {
-            RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_MIDDLE, getX(), renderY);
+            RenderUtils.drawTexturedRect(guiGraphics, Texture.LOG_ENTRY_MIDDLE, getX(), renderY);
 
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             logLine,
                             getX() + 6,
                             renderY,
@@ -70,11 +70,11 @@ public class LogEntryWidget extends AbstractWidget {
             renderY += Texture.LOG_ENTRY_MIDDLE.height();
         }
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_MIDDLE, getX(), renderY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.LOG_ENTRY_MIDDLE, getX(), renderY);
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         timeText,
                         getX() + width - 6,
                         renderY + 1,
@@ -85,7 +85,7 @@ public class LogEntryWidget extends AbstractWidget {
 
         renderY += Texture.LOG_ENTRY_MIDDLE.height();
 
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_ENTRY_BOTTOM, getX(), renderY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.LOG_ENTRY_BOTTOM, getX(), renderY);
     }
 
     @Override

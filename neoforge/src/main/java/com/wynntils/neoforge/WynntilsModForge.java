@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.neoforge;
@@ -32,7 +32,7 @@ public class WynntilsModForge {
                         .getModInfo()
                         .getVersion()
                         .toString(),
-                !FMLEnvironment.production,
+                !FMLEnvironment.isProduction(),
                 modFile);
 
         ModLoadingContext.get()

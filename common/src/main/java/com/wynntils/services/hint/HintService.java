@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hint;
@@ -143,8 +143,7 @@ public class HintService extends Service {
         String fullCommand = "/" + command + " " + argument;
         return Component.literal(fullCommand).withStyle(style -> style.withColor(ChatFormatting.GOLD)
                 .withUnderlined(true)
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, fullCommand))
-                .withHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to run " + fullCommand))));
+                .withClickEvent(new ClickEvent.RunCommand(fullCommand))
+                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to run " + fullCommand))));
     }
 }

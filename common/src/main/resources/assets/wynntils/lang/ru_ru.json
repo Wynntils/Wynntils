@@ -3342,7 +3342,6 @@
   "service.wynntils.itemFilter.stat.uses.name": "Оставшиеся Использования",
   "service.wynntils.itemFilter.unknownStat": "%s: неизвестная статистика",
   "service.wynntils.itemRecord.cleanupComplete": "Очистка записей предметов завершена. Удалено %d поврежденных записей. Повторно добавлено %d записей, которые теперь можно декодировать.",
-  "service.wynntils.lootrunPaths.fabulousWarning": "Обнаружена потрясающая графика - пути lootrun могут быть не видны в этой настройке. Переключитесь на изящную или быструю графику, чтобы увидеть их.",
   "service.wynntils.lootrunPaths.lootrunCouldNotBeLoaded": "Не удалось загрузить lootrun \"%s\".",
   "service.wynntils.lootrunPaths.lootrunStart": "Lootrun начинается в [%s %s %s].",
   "service.wynntils.updates.result.error": "Ошибка при применении обновления Wynntils.",

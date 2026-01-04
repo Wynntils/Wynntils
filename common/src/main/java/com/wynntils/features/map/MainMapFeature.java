@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -42,7 +43,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
 public class MainMapFeature extends Feature {
@@ -121,11 +121,10 @@ public class MainMapFeature extends Feature {
     private BlockPos lastChestPos;
 
     @RegisterKeyBind
-    public final KeyBind openMapKeybind = new KeyBind("Open Main Map", GLFW.GLFW_KEY_M, false, this::openMainMap);
+    public final KeyBind openMapKeybind = KeyBindDefinition.OPEN_MAIN_MAP.create(this::openMainMap);
 
     @RegisterKeyBind
-    public final KeyBind newWaypointKeybind =
-            new KeyBind("New Waypoint", GLFW.GLFW_KEY_B, true, this::openWaypointSetup);
+    public final KeyBind newWaypointKeybind = KeyBindDefinition.NEW_WAYPOINT.create(this::openWaypointSetup);
 
     public MainMapFeature() {
         super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());

@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.custombars;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
@@ -13,9 +12,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
@@ -23,7 +22,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 
 public class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
@@ -55,8 +53,7 @@ public class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
     }
 
     @Override
-    protected void renderOrErrorMessage(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (colorCache.hasError()) {
             StyledText[] errorMessage = {
                 StyledText.fromString("§c§l"
@@ -65,10 +62,9 @@ public class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
                         + " " + getTranslatedName()),
                 StyledText.fromUnformattedString(colorCache.getError())
             };
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            guiGraphics.pose(),
-                            bufferSource,
+                            guiGraphics,
                             errorMessage,
                             getRenderX(),
                             getRenderX() + getWidth(),
@@ -82,16 +78,14 @@ public class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
                             1);
 
         } else {
-            super.renderOrErrorMessage(guiGraphics, bufferSource, deltaTracker, window);
+            super.renderOrErrorMessage(guiGraphics, deltaTracker, window);
         }
     }
 
     @Override
-    protected void renderBar(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
-        BufferedRenderUtils.drawColoredProgressBar(
-                poseStack,
-                bufferSource,
+    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+        RenderUtils.drawColoredProgressBar(
+                guiGraphics,
                 Texture.UNIVERSAL_BAR,
                 colorCache.getValue(),
                 getRenderX(),

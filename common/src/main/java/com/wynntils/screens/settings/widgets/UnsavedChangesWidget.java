@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class UnsavedChangesWidget extends AbstractWidget {
@@ -45,11 +46,11 @@ public class UnsavedChangesWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.SETTINGS_WARNING_BACKGROUND, getX(), getY());
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SETTINGS_WARNING_BACKGROUND, getX(), getY());
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.settingsScreen.saveChanges")
                                 .withStyle(ChatFormatting.BOLD)),
                         getX() + 5,
@@ -68,11 +69,11 @@ public class UnsavedChangesWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (yesButton.isMouseOver(mouseX, mouseY)) {
-            return yesButton.mouseClicked(mouseX, mouseY, button);
-        } else if (noButton.isMouseOver(mouseX, mouseY)) {
-            return noButton.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (yesButton.isMouseOver(event.x(), event.y())) {
+            return yesButton.mouseClicked(event, isDoubleClick);
+        } else if (noButton.isMouseOver(event.x(), event.y())) {
+            return noButton.mouseClicked(event, isDoubleClick);
         }
 
         return false;

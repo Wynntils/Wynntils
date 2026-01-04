@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.update;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
@@ -15,8 +14,8 @@ import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
@@ -121,11 +120,9 @@ public final class UpdateScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
-
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                         "screens.wynntils.update.title",
                                         Services.Update.getModUpdateInfo().version())
@@ -141,7 +138,7 @@ public final class UpdateScreen extends WynntilsScreen {
         if (Services.Update.getUpdateProgress() != -1f) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(Component.translatable("screens.wynntils.update.downloading")),
                             this.width / 2f,
                             60,
@@ -153,7 +150,7 @@ public final class UpdateScreen extends WynntilsScreen {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString((int) (Services.Update.getUpdateProgress() * 100) + "%"),
                             this.width / 2f,
                             this.height / 2f - Texture.UNIVERSAL_BAR.height(),
@@ -162,9 +159,8 @@ public final class UpdateScreen extends WynntilsScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            BufferedRenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    guiGraphics.bufferSource,
+            RenderUtils.drawColoredProgressBar(
+                    guiGraphics,
                     Texture.UNIVERSAL_BAR,
                     CommonColors.LIGHT_GREEN,
                     this.width / 2f - Texture.UNIVERSAL_BAR.width(),
@@ -183,7 +179,7 @@ public final class UpdateScreen extends WynntilsScreen {
             if (updateResult == UpdateResult.SUCCESSFUL) {
                 FontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromComponent(Component.translatable("screens.wynntils.update.downloaded")),
                                 this.width / 2f,
                                 60,
@@ -196,7 +192,7 @@ public final class UpdateScreen extends WynntilsScreen {
                 if (completionTrigger == CompletionTrigger.CONNECT) {
                     FontRenderer.getInstance()
                             .renderText(
-                                    poseStack,
+                                    guiGraphics,
                                     StyledText.fromComponent(Component.translatable(
                                             "screens.wynntils.update.connecting",
                                             (int) Math.ceil((completionFinish - System.currentTimeMillis()) / 1000f))),
@@ -210,7 +206,7 @@ public final class UpdateScreen extends WynntilsScreen {
                 } else {
                     FontRenderer.getInstance()
                             .renderText(
-                                    poseStack,
+                                    guiGraphics,
                                     StyledText.fromComponent(
                                             Component.translatable("screens.wynntils.update.exiting", (int) Math.ceil(
                                                     (completionFinish - System.currentTimeMillis()) / 1000f))),
@@ -225,7 +221,7 @@ public final class UpdateScreen extends WynntilsScreen {
             } else {
                 FontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromComponent(updateResult.getMessage()),
                                 this.width / 2f,
                                 60,
@@ -243,7 +239,7 @@ public final class UpdateScreen extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.update.description")),
                         this.width / 2f - 200,
                         this.width / 2f + 200,

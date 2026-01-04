@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -26,6 +25,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class ConfigTile extends WynntilsButton {
@@ -71,30 +72,30 @@ public class ConfigTile extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         resetButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderDisplayName(poseStack);
+        renderDisplayName(guiGraphics);
 
         RenderUtils.drawLine(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 this.getX(),
                 this.getY() + this.height,
                 this.getX() + this.width,
                 this.getY() + this.height,
-                0,
                 1);
 
         configOptionElement.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderDisplayName(PoseStack poseStack) {
+    @Override
+    protected void handleCursor(GuiGraphics guiGraphics) {}
+
+    private void renderDisplayName(GuiGraphics guiGraphics) {
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         displayName,
                         getRenderX(),
                         this.getY() + 3,
@@ -107,31 +108,29 @@ public class ConfigTile extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies to drag and released
-        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
+        if ((event.y() <= maskTopY || event.y() >= maskBottomY)) return false;
 
         if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.changesMade();
         }
 
-        return resetButton.mouseClicked(mouseX, mouseY, button)
-                || configOptionElement.mouseClicked(mouseX, mouseY, button);
+        return resetButton.mouseClicked(event, isDoubleClick) || configOptionElement.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
+    public boolean mouseDragged(MouseButtonEvent event, double deltaX, double deltaY) {
+        if ((event.y() <= maskTopY || event.y() >= maskBottomY)) return false;
 
-        return configOptionElement.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
-                || super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        return configOptionElement.mouseDragged(event, deltaX, deltaY) || super.mouseDragged(event, deltaX, deltaY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if ((event.y() <= maskTopY || event.y() >= maskBottomY)) return false;
 
-        return configOptionElement.mouseReleased(mouseX, mouseY, button) || super.mouseReleased(mouseX, mouseY, button);
+        return configOptionElement.mouseReleased(event) || super.mouseReleased(event);
     }
 
     @Override
@@ -143,7 +142,7 @@ public class ConfigTile extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         // noop
     }
 

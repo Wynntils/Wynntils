@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.cosmetics;
@@ -24,25 +24,25 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
-import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 
 public class CosmeticsService extends Service {
     private static final BiFunction<
-                    LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                    LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel>,
                     EntityRendererProvider.Context,
                     WynntilsLayer>
             CAPE_LAYER = (playerRenderer, renderProviderContext) ->
                     new WynntilsCapeLayer(playerRenderer, renderProviderContext);
     private static final BiFunction<
-                    LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                    LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel>,
                     EntityRendererProvider.Context,
                     WynntilsLayer>
             ELYTRA_LAYER = (playerRenderer, renderProviderContext) ->
@@ -50,12 +50,12 @@ public class CosmeticsService extends Service {
 
     private static final List<
                     BiFunction<
-                            LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                            LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel>,
                             EntityRendererProvider.Context,
                             WynntilsLayer>>
             REGISTERED_LAYERS = List.of(CAPE_LAYER, ELYTRA_LAYER);
 
-    private final Map<UUID, ResourceLocation[]> cosmeticTextures = new ConcurrentHashMap<>();
+    private final Map<UUID, Identifier[]> cosmeticTextures = new ConcurrentHashMap<>();
 
     public CosmeticsService() {
         super(List.of());
@@ -65,7 +65,7 @@ public class CosmeticsService extends Service {
     // We don't want to reference Models in the mixin this is called, due to it's unpredictable class loading.
     public static List<
                     BiFunction<
-                            LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel>,
+                            LivingEntityRenderer<AbstractClientPlayer, AvatarRenderState, PlayerModel>,
                             EntityRendererProvider.Context,
                             WynntilsLayer>>
             getRegisteredLayers() {
@@ -89,8 +89,8 @@ public class CosmeticsService extends Service {
         return (elytra ? cosmetics.hasElytra() : cosmetics.hasCape());
     }
 
-    public ResourceLocation getCapeTexture(Player player) {
-        ResourceLocation[] textures = getUserCosmeticTexture(player);
+    public Identifier getCapeTexture(Player player) {
+        Identifier[] textures = getUserCosmeticTexture(player);
         if (textures == null) return null;
 
         int frames = textures.length;
@@ -115,19 +115,22 @@ public class CosmeticsService extends Service {
             int frames = (image.getHeight() * 2) / image.getWidth();
             int frameHeight = image.getHeight() / frames;
 
-            ResourceLocation[] locations = new ResourceLocation[frames];
+            Identifier[] locations = new Identifier[frames];
             String baseLocation = "wynntils:capes/" + uuid.toString().replace("-", "");
 
             if (frames == 1) { // not animated
-                locations[0] = ResourceLocation.parse(baseLocation);
-                McUtils.mc().getTextureManager().register(locations[0], new DynamicTexture(image));
+                locations[0] = Identifier.parse(baseLocation);
+                McUtils.mc()
+                        .getTextureManager()
+                        .register(locations[0], new DynamicTexture(() -> uuid + " Wynntils Cape", image));
             } else { // animated
                 for (int i = 0; i < frames; i++) {
                     NativeImage frame = new NativeImage(frameHeight * 2, frameHeight, false);
                     image.copyRect(frame, 0, frameHeight * i, 0, 0, frameHeight * 2, frameHeight, false, false);
 
-                    locations[i] = ResourceLocation.parse(baseLocation + "/" + i);
-                    McUtils.mc().getTextureManager().register(locations[i], new DynamicTexture(frame));
+                    locations[i] = Identifier.parse(baseLocation + "/" + i);
+                    String label = uuid + " Wynntils Cape frame " + i;
+                    McUtils.mc().getTextureManager().register(locations[i], new DynamicTexture(() -> label, frame));
                 }
             }
 
@@ -137,7 +140,7 @@ public class CosmeticsService extends Service {
         }
     }
 
-    private ResourceLocation[] getUserCosmeticTexture(Player player) {
+    private Identifier[] getUserCosmeticTexture(Player player) {
         return cosmeticTextures.getOrDefault(Models.Player.getUserUUID(player), null);
     }
 }

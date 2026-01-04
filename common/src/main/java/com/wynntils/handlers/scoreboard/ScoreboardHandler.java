@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.scoreboard;
@@ -354,7 +354,7 @@ public final class ScoreboardHandler extends Handler {
     }
 
     private void createScoreboardFromSegments() {
-        Scoreboard scoreboard = McUtils.player().getScoreboard();
+        Scoreboard scoreboard = McUtils.player().level().getScoreboard();
 
         Objective oldObjective = scoreboard.getObjective(SCOREBOARD_KEY);
         if (oldObjective != null) {

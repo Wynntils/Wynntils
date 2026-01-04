@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -11,6 +12,8 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 
@@ -33,6 +36,13 @@ public class ResetButton extends GeneralSettingsButton {
     }
 
     @Override
+    protected void handleCursor(GuiGraphics guiGraphics) {
+        if (this.isHovered()) {
+            guiGraphics.requestCursor(config.valueChanged() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
+        }
+    }
+
+    @Override
     protected CustomColor getTextColor() {
         return config.valueChanged() ? CommonColors.WHITE : CommonColors.GRAY;
     }
@@ -49,7 +59,7 @@ public class ResetButton extends GeneralSettingsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         if (!config.valueChanged()) return;
         config.reset();
         onClick.run();

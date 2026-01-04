@@ -1,9 +1,11 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.territorymanagement;
 
+import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -49,6 +51,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -287,17 +290,14 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
         // Screen background
-        RenderUtils.drawTexturedRect(
-                guiGraphics.pose(), Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.TERRITORY_SIDEBAR, getRenderX() - 22, getRenderY());
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_SIDEBAR, getRenderX() - 22, getRenderY());
 
         // Render title
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(wrappedScreenInfo.screen().getTitle()),
                         getRenderX() + 8,
                         getRenderY() + 9,
@@ -347,7 +347,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 getRenderY() + RENDER_AREA_POSITION.b(),
                 getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b());
         RenderUtils.drawTexturedRect(
-                guiGraphics.pose(),
+                guiGraphics,
                 Texture.SCROLLBAR_BUTTON,
                 getRenderX()
                         + RENDER_AREA_POSITION.a()
@@ -361,17 +361,16 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         int xOffset = getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5;
 
         RenderUtils.drawRect(
-                guiGraphics.pose(),
+                guiGraphics,
                 CommonColors.BLACK.withAlpha(80),
                 xOffset,
                 getRenderY(),
-                0,
                 QUICK_FILTER_WIDTH,
                 Texture.TERRITORY_MANAGEMENT_BACKGROUND.height());
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.translatable("feature.wynntils.customTerritoryManagementScreen.filters")),
                         xOffset,
@@ -384,7 +383,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.translatable("feature.wynntils.customTerritoryManagementScreen.sorts")),
                         xOffset,
@@ -402,6 +401,28 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         for (TerritoryQuickSortWidget quickSort : quickSorts) {
             quickSort.render(guiGraphics, mouseX, mouseY, partialTick);
         }
+
+        if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else {
+            float scrollX = getRenderX()
+                    + RENDER_AREA_POSITION.a()
+                    + RENDER_AREA_SIZE.a()
+                    + 10f
+                    - Texture.SCROLL_BUTTON.width() / 2f;
+            float scrollY = MathUtils.map(
+                    scrollOffset,
+                    0,
+                    getMaxScrollOffset(),
+                    getRenderY() + RENDER_AREA_POSITION.b(),
+                    getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b());
+            if (mouseX >= scrollX
+                    && mouseX <= scrollX + Texture.SCROLL_BUTTON.width()
+                    && mouseY >= scrollY - Texture.SCROLL_BUTTON.height() / 2f
+                    && mouseY <= scrollY + Texture.SCROLL_BUTTON.height() / 2f) {
+                guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+            }
+        }
     }
 
     private void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
@@ -412,33 +433,36 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         List<Component> tooltipLines = tooltipProvider.getTooltipLines();
         if (tooltipLines.isEmpty()) return;
 
-        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
+        guiGraphics.setTooltipForNextFrame(
+                Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Render area widgets need to handle the scroll offset
         // Check if mouse is over the render area
-        if (mouseX >= getRenderX() + RENDER_AREA_POSITION.a()
-                && mouseX <= getRenderX() + RENDER_AREA_POSITION.a() + RENDER_AREA_SIZE.a()
-                && mouseY >= getRenderY() + RENDER_AREA_POSITION.b()
-                && mouseY <= getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b()) {
+        if (event.x() >= getRenderX() + RENDER_AREA_POSITION.a()
+                && event.x() <= getRenderX() + RENDER_AREA_POSITION.a() + RENDER_AREA_SIZE.a()
+                && event.y() >= getRenderY() + RENDER_AREA_POSITION.b()
+                && event.y() <= getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b()) {
             for (AbstractWidget widget : renderAreaWidgets) {
-                if (widget.isMouseOver(mouseX, mouseY + scrollOffset)) {
-                    return widget.mouseClicked(mouseX, mouseY + scrollOffset, button);
+                if (widget.isMouseOver(event.x(), event.y() + scrollOffset)) {
+                    return widget.mouseClicked(
+                            new MouseButtonEvent(event.x(), event.y() + scrollOffset, event.buttonInfo()),
+                            isDoubleClick);
                 }
             }
         }
 
         for (TerritoryQuickFilterWidget quickFilter : quickFilters) {
-            if (quickFilter.isMouseOver(mouseX, mouseY)) {
-                return quickFilter.mouseClicked(mouseX, mouseY, button);
+            if (quickFilter.isMouseOver(event.x(), event.y())) {
+                return quickFilter.mouseClicked(event, isDoubleClick);
             }
         }
 
         for (TerritoryQuickSortWidget quickSort : quickSorts) {
-            if (quickSort.isMouseOver(mouseX, mouseY)) {
-                return quickSort.mouseClicked(mouseX, mouseY, button);
+            if (quickSort.isMouseOver(event.x(), event.y())) {
+                return quickSort.mouseClicked(event, isDoubleClick);
             }
         }
 
@@ -454,21 +478,21 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 getMaxScrollOffset(),
                 getRenderY() + RENDER_AREA_POSITION.b(),
                 getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b());
-        if (mouseX >= scrollX
-                && mouseX <= scrollX + Texture.SCROLL_BUTTON.width()
-                && mouseY >= scrollY - Texture.SCROLL_BUTTON.height() / 2f
-                && mouseY <= scrollY + Texture.SCROLL_BUTTON.height() / 2f) {
+        if (event.x() >= scrollX
+                && event.x() <= scrollX + Texture.SCROLL_BUTTON.width()
+                && event.y() >= scrollY - Texture.SCROLL_BUTTON.height() / 2f
+                && event.y() <= scrollY + Texture.SCROLL_BUTTON.height() / 2f) {
             draggingScroll = true;
             return true;
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -480,11 +504,11 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             // Calculate the new scroll offset
             float newScrollOffset = MathUtils.map(
-                    (float) mouseY,
+                    (float) event.y(),
                     getRenderY() + RENDER_AREA_POSITION.b(),
                     getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b(),
                     0,
@@ -494,7 +518,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
             return true;
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     public void updateTerritoryItems() {

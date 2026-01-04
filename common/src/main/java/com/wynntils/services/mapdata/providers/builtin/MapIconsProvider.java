@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.providers.builtin;
@@ -8,7 +8,7 @@ import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.stream.Stream;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class MapIconsProvider extends BuiltInProvider {
     public static final String FALLBACK_ICON_ID = "wynntils:icon:symbols:waypoint";
@@ -75,7 +75,7 @@ public class MapIconsProvider extends BuiltInProvider {
 
     public static String getIconIdFromTexture(Texture texture) {
         for (MapIcon icon : PROVIDED_ICONS) {
-            if (icon.getResourceLocation().equals(texture.resource())) {
+            if (icon.getIdentifier().equals(texture.identifier())) {
                 return icon.getIconId();
             }
         }
@@ -98,8 +98,8 @@ public class MapIconsProvider extends BuiltInProvider {
         }
 
         @Override
-        public ResourceLocation getResourceLocation() {
-            return texture.resource();
+        public Identifier getIdentifier() {
+            return texture.identifier();
         }
 
         @Override

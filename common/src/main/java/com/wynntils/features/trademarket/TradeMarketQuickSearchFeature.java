@@ -1,16 +1,16 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.trademarket;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -44,13 +44,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private final Config<Boolean> hidePrompt = new Config<>(false);
 
     @RegisterKeyBind
-    private final KeyBind quickSearchKeyBind = new KeyBind(
-            "Quick Search TM",
-            GLFW.GLFW_MOUSE_BUTTON_MIDDLE,
-            InputConstants.Type.MOUSE,
-            true,
-            null,
-            this::tryQuickSearch);
+    private final KeyBind quickSearchKeyBind = KeyBindDefinition.QUICK_SEARCH_TRADE_MARKET.create(this::tryQuickSearch);
 
     // The TM is very peculiar...
     // 'Emerald Pouch' results in all Tiers of Pouches, to find a specific tier one needs to search only the tier.
