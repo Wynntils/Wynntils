@@ -182,10 +182,10 @@ jobs:
         with:
           webhook-url: ${{ secrets.DISCORD_RELEASE_WEBHOOK_URL }}
           embed-color: "9498256"
-          embed-title: ${{ format('Wynntils {0}', needs.set-version.outputs.tag) }}
+          embed-title: ${{ format('Wynntils v{0}', needs.set-version.outputs.tag) }}
           embed-url: https://github.com/Wynntils/Wynntils/releases/tag/v${{ needs.set-version.outputs.tag }}
           embed-description: |
-            # Wynntils v${{ needs.set-version.outputs.tag }}
+            # v${{ needs.set-version.outputs.tag }} (${{ steps.date.outputs.today }})
 
             **Download Links**
             ${{ steps.artifact_links.outputs.links }}
