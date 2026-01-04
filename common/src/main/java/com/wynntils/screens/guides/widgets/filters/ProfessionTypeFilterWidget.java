@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.widgets.filters;
@@ -15,7 +15,6 @@ import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.ConfirmedBoolean;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -59,12 +59,12 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         boolean clicked = false;
 
         for (ProfessionTypeButton professionTypeButton : professionTypeButtons) {
-            if (professionTypeButton.isMouseOver(mouseX, mouseY)) {
-                clicked = professionTypeButton.mouseClicked(mouseX, mouseY, button);
+            if (professionTypeButton.isMouseOver(event.x(), event.y())) {
+                clicked = professionTypeButton.mouseClicked(event, isDoubleClick);
                 break;
             }
         }
@@ -121,7 +121,9 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
 
         @Override
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX(), getY());
+            RenderUtils.drawTexturedRect(guiGraphics, texture, getX(), getY());
+
+            handleCursor(guiGraphics);
 
             if (!isHovered && state == ConfirmedBoolean.UNCONFIRMED) return;
 
@@ -134,39 +136,35 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
             }
 
             RenderUtils.drawRect(
-                    guiGraphics.pose(),
-                    color.withAlpha(isHovered ? 0.7f : 0.5f),
-                    getX(),
-                    getY(),
-                    0,
-                    getWidth(),
-                    getHeight());
+                    guiGraphics, color.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), getWidth(), getHeight());
 
             if (isHovered) {
-                McUtils.screen()
-                        .setTooltipForNextRenderPass(Lists.transform(
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(
                                 ComponentUtils.wrapTooltips(
                                         List.of(Component.translatable(
                                                 "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
                                                 getFilterName())),
                                         200),
-                                Component::getVisualOrderText));
+                                Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
             }
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT || button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT || event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 if (state != ConfirmedBoolean.TRUE) {
                     state = ConfirmedBoolean.TRUE;
                 } else if (state != ConfirmedBoolean.FALSE) {
                     state = ConfirmedBoolean.FALSE;
                 }
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
                 state = ConfirmedBoolean.UNCONFIRMED;
             }
 
-            return super.mouseClicked(mouseX, mouseY, button);
+            return super.mouseClicked(event, isDoubleClick);
         }
 
         @Override

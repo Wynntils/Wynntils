@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.territorymanagement.widgets;
@@ -14,6 +14,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class TerritoryApplyLoadoutButton extends WynntilsButton implements TooltipProvider {
@@ -39,16 +41,16 @@ public class TerritoryApplyLoadoutButton extends WynntilsButton implements Toolt
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), textureSupplier.get(), this.getX(), this.getY());
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawTexturedRect(guiGraphics, textureSupplier.get(), this.getX(), this.getY());
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
-        onClick.accept(button);
+        onClick.accept(event.button());
 
         return true;
     }
@@ -59,7 +61,7 @@ public class TerritoryApplyLoadoutButton extends WynntilsButton implements Toolt
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         // Unused
     }
 }

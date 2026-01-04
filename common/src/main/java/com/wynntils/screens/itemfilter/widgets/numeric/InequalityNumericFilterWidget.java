@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets.numeric;
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -61,16 +62,16 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (entryInput.isMouseOver(mouseX, mouseY)) {
-            return entryInput.mouseClicked(mouseX, mouseY, button);
-        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
-            return removeButton.mouseClicked(mouseX, mouseY, button);
-        } else if (inequalityButton.isMouseOver(mouseX, mouseY)) {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (entryInput.isMouseOver(event.x(), event.y())) {
+            return entryInput.mouseClicked(event, isDoubleClick);
+        } else if (removeButton.isMouseOver(event.x(), event.y())) {
+            return removeButton.mouseClicked(event, isDoubleClick);
+        } else if (inequalityButton.isMouseOver(event.x(), event.y())) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 cycleInequality(1);
                 return true;
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 cycleInequality(-1);
                 return true;
             }
@@ -80,13 +81,13 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (entryInput.isMouseOver(mouseX, mouseY)) {
-            return entryInput.mouseReleased(mouseX, mouseY, button);
-        } else if (inequalityButton.isMouseOver(mouseX, mouseY)) {
-            return inequalityButton.mouseReleased(mouseX, mouseY, button);
-        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
-            return removeButton.mouseReleased(mouseX, mouseY, button);
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (entryInput.isMouseOver(event.x(), event.y())) {
+            return entryInput.mouseReleased(event);
+        } else if (inequalityButton.isMouseOver(event.x(), event.y())) {
+            return inequalityButton.mouseReleased(event);
+        } else if (removeButton.isMouseOver(event.x(), event.y())) {
+            return removeButton.mouseReleased(event);
         }
 
         return false;

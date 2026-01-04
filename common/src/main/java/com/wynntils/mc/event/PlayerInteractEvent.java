@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -34,7 +34,7 @@ public abstract class PlayerInteractEvent extends PlayerEvent {
     }
 
     public Level getWorld() {
-        return this.getPlayer().getCommandSenderWorld();
+        return this.getPlayer().level();
     }
 
     public InteractionResult getCancellationResult() {

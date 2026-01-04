@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -26,8 +27,8 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Optional;
@@ -38,19 +39,17 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemFavoriteFeature extends Feature {
-    // This should really move to FavoritesModel, but for now, models cannot have configs
-
     @RegisterKeyBind
-    private final KeyBind itemFavoriteKeyBind = new KeyBind(
-            "Favorite/Unfavorite Item", GLFW.GLFW_KEY_UNKNOWN, true, null, this::tryChangeFavoriteStateOnHoveredSlot);
+    private final KeyBind itemFavoriteKeyBind =
+            KeyBindDefinition.TOGGLE_FAVORITE.create(this::tryChangeFavoriteStateOnHoveredSlot);
 
     @Persisted
     private final Config<Boolean> allowFavoritingAllItems = new Config<>(false);
 
+    // This should really move to FavoritesModel, but for now, models cannot have configs
     @Persisted
     public final HiddenConfig<Set<String>> favoriteItems = new HiddenConfig<>(new TreeSet<>());
 
@@ -102,7 +101,7 @@ public class ItemFavoriteFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.CountPre event) {
+    public void onRenderSlot(SlotRenderEvent.Post event) {
         if (Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
 
         ItemStack itemStack = event.getSlot().getItem();
@@ -130,14 +129,12 @@ public class ItemFavoriteFeature extends Feature {
         return isFavorite;
     }
 
-    private static void renderFavoriteItem(SlotRenderEvent.CountPre event) {
-        BufferedRenderUtils.drawScalingTexturedRect(
-                event.getPoseStack(),
-                event.getGuiGraphics().bufferSource,
-                Texture.FAVORITE_ICON.resource(),
+    private static void renderFavoriteItem(SlotRenderEvent.Post event) {
+        RenderUtils.drawScalingTexturedRect(
+                event.getGuiGraphics(),
+                Texture.FAVORITE_ICON.identifier(),
                 event.getSlot().x + 10,
                 event.getSlot().y,
-                200,
                 9,
                 9,
                 Texture.FAVORITE_ICON.width(),

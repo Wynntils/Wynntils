@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core;
@@ -200,7 +200,7 @@ public final class WynntilsMod {
                 "Wynntils: Starting version {} (using {} on Minecraft {})",
                 version,
                 modLoader,
-                SharedConstants.getCurrentVersion().getName());
+                SharedConstants.getCurrentVersion().name());
 
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 

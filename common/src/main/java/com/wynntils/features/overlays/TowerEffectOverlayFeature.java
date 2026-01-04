@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -24,6 +23,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.neoforged.bus.api.EventPriority;
@@ -98,20 +98,20 @@ public class TowerEffectOverlayFeature extends Feature {
         if (event.getType() != RenderEvent.ElementType.GUI) return;
 
         if (vignetteOnAura.get()) {
-            renderAuraVignette(event.getPoseStack());
+            renderAuraVignette(event.getGuiGraphics());
         }
 
         if (vignetteOnVolley.get()) {
-            renderVolleyVignette(event.getPoseStack());
+            renderVolleyVignette(event.getGuiGraphics());
         }
     }
 
-    private void renderAuraVignette(PoseStack poseStack) {
+    private void renderAuraVignette(GuiGraphics guiGraphics) {
         long remainingTimeUntilAura = Models.GuildWarTower.getRemainingTimeUntilAura();
         if (remainingTimeUntilAura <= 0) return;
 
         RenderUtils.renderVignetteOverlay(
-                poseStack,
+                guiGraphics,
                 auraVignetteColor.get(),
                 MathUtils.map(
                         remainingTimeUntilAura,
@@ -121,12 +121,12 @@ public class TowerEffectOverlayFeature extends Feature {
                         auraVignetteIntensity.get()));
     }
 
-    private void renderVolleyVignette(PoseStack poseStack) {
+    private void renderVolleyVignette(GuiGraphics guiGraphics) {
         long remainingTimeUntilVolley = Models.GuildWarTower.getRemainingTimeUntilVolley();
         if (remainingTimeUntilVolley <= 0) return;
 
         RenderUtils.renderVignetteOverlay(
-                poseStack,
+                guiGraphics,
                 volleyVignetteColor.get(),
                 MathUtils.map(
                         remainingTimeUntilVolley,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -52,8 +52,7 @@ public class DataCrowdSourcingFeature extends Feature {
 
         MutableComponent component =
                 Component.literal("Wynntils Crowd Sourcing\n").withStyle(ChatFormatting.AQUA);
-        component.append(Component.literal(
-                        """
+        component.append(Component.literal("""
                         Wynntils can collect data during your
                         gameplay to improve the mod.
                         This data does not contain any personal information,
@@ -61,8 +60,7 @@ public class DataCrowdSourcingFeature extends Feature {
                         To share this data with the Wynntils team,
                         you must copy it to the clipboard and send it to us,
                         during periods when we are collecting data.
-                        """)
-                .withStyle(ChatFormatting.GRAY));
+                        """).withStyle(ChatFormatting.GRAY));
 
         component.append(Component.literal("\nThe following data types are not confirmed to be collected:\n"));
         for (CrowdSourcedDataType dataType : nonConfirmedDataTypes) {
@@ -78,8 +76,7 @@ public class DataCrowdSourcingFeature extends Feature {
                 .append(Component.literal("here.")
                         .withStyle(ChatFormatting.GREEN)
                         .withStyle(ChatFormatting.UNDERLINE)
-                        .withStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils crowdsourcing"))));
+                        .withStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/wynntils crowdsourcing"))));
 
         McUtils.sendMessageToClient(component);
     }

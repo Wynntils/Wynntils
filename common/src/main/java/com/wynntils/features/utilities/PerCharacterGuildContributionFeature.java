@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -105,8 +105,8 @@ public class PerCharacterGuildContributionFeature extends Feature {
         contributionMessage.append(Component.literal("Click here")
                 .withStyle(ChatFormatting.AQUA)
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND, "/wynntils feature disable " + this.getShortName()))));
+                .withStyle(style -> style.withClickEvent(
+                        new ClickEvent.RunCommand("/wynntils feature disable " + this.getShortName()))));
 
         contributionMessage.append(
                 Component.literal(" to disable this functionality.").withStyle(ChatFormatting.DARK_AQUA));

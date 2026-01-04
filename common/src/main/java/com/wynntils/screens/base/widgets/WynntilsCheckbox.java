@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -19,18 +18,19 @@ import java.util.function.BiConsumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class WynntilsCheckbox extends AbstractButton {
-    private static final ResourceLocation CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE =
-            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected_highlighted.png");
-    private static final ResourceLocation CHECKBOX_SELECTED_SPRITE =
-            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected.png");
-    private static final ResourceLocation CHECKBOX_HIGHLIGHTED_SPRITE =
-            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox_highlighted.png");
-    private static final ResourceLocation CHECKBOX_SPRITE =
-            ResourceLocation.withDefaultNamespace("textures/gui/sprites/widget/checkbox.png");
+    private static final Identifier CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE =
+            Identifier.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected_highlighted.png");
+    private static final Identifier CHECKBOX_SELECTED_SPRITE =
+            Identifier.withDefaultNamespace("textures/gui/sprites/widget/checkbox_selected.png");
+    private static final Identifier CHECKBOX_HIGHLIGHTED_SPRITE =
+            Identifier.withDefaultNamespace("textures/gui/sprites/widget/checkbox_highlighted.png");
+    private static final Identifier CHECKBOX_SPRITE =
+            Identifier.withDefaultNamespace("textures/gui/sprites/widget/checkbox.png");
 
     public boolean selected;
     private final int maxTextWidth;
@@ -89,28 +89,28 @@ public class WynntilsCheckbox extends AbstractButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         this.selected = !this.selected;
         this.onClick.accept(this, this.selected);
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        ResourceLocation resourceLocation;
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        Identifier identifier;
         if (this.selected) {
-            resourceLocation = this.isFocused() || this.isHovered()
+            identifier = this.isFocused() || this.isHovered()
                     ? CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE
                     : CHECKBOX_SELECTED_SPRITE;
         } else {
-            resourceLocation = this.isFocused() || this.isHovered() ? CHECKBOX_HIGHLIGHTED_SPRITE : CHECKBOX_SPRITE;
+            identifier = this.isFocused() || this.isHovered() ? CHECKBOX_HIGHLIGHTED_SPRITE : CHECKBOX_SPRITE;
         }
 
         RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(), resourceLocation, this.getX(), this.getY(), 0, this.width, this.height, 20, 20);
+                guiGraphics, identifier, this.getX(), this.getY(), this.width, this.height, 20, 20);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(this.getMessage()),
                         this.getX() + this.width + 2,
                         this.getY() + (this.height / 2f),
@@ -122,7 +122,7 @@ public class WynntilsCheckbox extends AbstractButton {
                         1f);
 
         if (isHovered && tooltip != null) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
     }
 

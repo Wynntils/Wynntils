@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.neoforged.bus.api.Event;
@@ -30,10 +29,6 @@ public abstract class RenderEvent extends Event {
 
     public GuiGraphics getGuiGraphics() {
         return guiGraphics;
-    }
-
-    public PoseStack getPoseStack() {
-        return guiGraphics.pose();
     }
 
     public DeltaTracker getDeltaTracker() {

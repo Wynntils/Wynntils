@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.wynntilsmenu;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.google.common.collect.Lists;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -42,6 +42,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -329,12 +330,11 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-        renderBackgroundTexture(poseStack);
+        renderBackgroundTexture(guiGraphics);
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
 
-        renderVersion(poseStack);
+        renderVersion(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -346,23 +346,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    protected void renderTitle(PoseStack poseStack, String titleString) {
-        int txWidth = Texture.CONTENT_BOOK_TITLE.width();
-        int txHeight = Texture.CONTENT_BOOK_TITLE.height();
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.CONTENT_BOOK_TITLE.resource(),
-                offsetX,
-                15 + offsetY,
-                0,
-                txWidth,
-                txHeight,
-                txWidth,
-                txHeight);
+    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 15 + offsetY);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(titleString),
                         10 + offsetX,
                         21 + offsetY,
@@ -374,14 +363,12 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     private void renderPlayerInfo(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        PoseStack poseStack = guiGraphics.pose();
-
         if (!Models.Guild.getGuildName().isEmpty()) {
             String rank = Models.Guild.getGuildRank().getGuildDescription();
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(rank + " of"),
                             Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
                             Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
@@ -393,7 +380,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(Models.Guild.getGuildName()),
                             Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
                             Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
@@ -406,7 +393,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(McUtils.player().getDisplayName())
                                 .withoutFormatting(),
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
@@ -418,7 +405,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(
                                 "Level " + Models.CombatXp.getCombatLevel().current() + " "
                                         + Models.Character.getClassType().getName()),
@@ -436,7 +423,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             CappedValue progress = Models.Activity.getOverallProgress();
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(ChatFormatting.BLACK + "Progress: " + ChatFormatting.DARK_AQUA
                                     + progress.getPercentageInt() + "%" + ChatFormatting.BLACK + " ["
                                     + ChatFormatting.DARK_AQUA + progress + ChatFormatting.BLACK + "]"),
@@ -456,7 +443,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         for (int i = 0; i < wrappedSplash.length; i++) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             wrappedSplash[i],
                             Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + offsetX,
                             Texture.CONTENT_BOOK_BACKGROUND.width() + offsetX,
@@ -492,10 +479,10 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (this.hovered == null) return false;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             this.hovered.getClickAction().run();
         }
 
@@ -504,9 +491,10 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     private void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (this.hovered != null) {
-            guiGraphics.renderComponentTooltip(
-                    FontRenderer.getInstance().getFont(),
-                    ComponentUtils.wrapTooltips(this.hovered.getTooltipList(), 250),
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(
+                            ComponentUtils.wrapTooltips(this.hovered.getTooltipList(), 250),
+                            Component::getVisualOrderText),
                     mouseX,
                     mouseY);
         }

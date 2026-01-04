@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
@@ -36,7 +35,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -390,13 +391,6 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderBlurredBackground();
-
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-        RenderSystem.enableDepthTest();
         renderMap(guiGraphics);
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -415,12 +409,8 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                     selectedIcon,
                     selectedVisibility);
 
-            MultiBufferSource.BufferSource bufferSource =
-                    McUtils.mc().renderBuffers().bufferSource();
-
             poi.renderAt(
-                    poseStack,
-                    bufferSource,
+                    guiGraphics,
                     MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
                     MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
                     hovered == poi,
@@ -428,12 +418,10 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                     zoomRenderScale,
                     zoomLevel,
                     true);
-
-            bufferSource.endBatch();
         }
 
         renderCursor(
-                poseStack,
+                guiGraphics,
                 1.5f,
                 Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .pointerColor
@@ -444,12 +432,12 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         RenderUtils.disableScissor(guiGraphics);
 
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        renderMapBorder(guiGraphics);
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.waypointName") + ":"),
                         (int) (dividedWidth * 4),
                         (int) (dividedHeight * 12.5f),
@@ -460,7 +448,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("X:"),
                         dividedWidth,
                         dividedHeight * 34.5f,
@@ -470,7 +458,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("Y:"),
                         dividedWidth * 9.0f,
                         dividedHeight * 34.5f,
@@ -480,7 +468,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("Z:"),
                         dividedWidth * 17.0f,
                         dividedHeight * 34.5f,
@@ -493,7 +481,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.color") + ":"),
                         dividedWidth * 19f,
                         (int) (dividedHeight * 12.5f),
@@ -504,7 +492,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.visibility") + ":"),
                         dividedWidth * 10.0f,
                         dividedHeight * 45.5f,
@@ -514,7 +502,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get(selectedVisibility.getTranslationKey())),
                         dividedWidth * 15.0f,
                         dividedWidth * 15.0f,
@@ -525,6 +513,10 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
+
+        if (isPanning) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        }
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -543,33 +535,32 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
-            int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            int gameX = (int) ((event.x() - centerX) / zoomRenderScale + mapCenterX);
+            int gameZ = (int) ((event.y() - centerZ) / zoomRenderScale + mapCenterZ);
             xInput.setTextBoxInput(String.valueOf(gameX));
             zInput.setTextBoxInput(String.valueOf(gameZ));
         }
 
         for (IconButton iconButton : iconButtons) {
-            if (iconButton.isMouseOver(mouseX, mouseY)) {
-                return iconButton.mouseClicked(mouseX, mouseY, button);
+            if (iconButton.isMouseOver(event.x(), event.y())) {
+                return iconButton.mouseClicked(event, isDoubleClick);
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
-                || super.charTyped(codePoint, modifiers);
+    public boolean charTyped(CharacterEvent event) {
+        return (focusedTextInput != null && focusedTextInput.charTyped(event)) || super.charTyped(event);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
         // When tab is pressed, focus the next text box
-        if (keyCode == GLFW.GLFW_KEY_TAB) {
+        if (event.key() == GLFW.GLFW_KEY_TAB) {
             int index = focusedTextInput == null ? 0 : children().indexOf(focusedTextInput);
             int actualIndex = Math.max(index, 0) + 1;
 
@@ -591,8 +582,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             }
         }
 
-        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
-                || super.keyPressed(keyCode, scanCode, modifiers);
+        return (focusedTextInput != null && focusedTextInput.keyPressed(event)) || super.keyPressed(event);
     }
 
     @Override

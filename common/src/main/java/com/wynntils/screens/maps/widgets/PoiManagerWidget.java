@@ -1,12 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.PoiCreationScreen;
@@ -26,6 +24,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -111,13 +110,11 @@ public class PoiManagerWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderIcon(poseStack);
+        renderIcon(guiGraphics);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(poi.getName()),
                         getX() + (int) (dividedWidth * 3),
                         getY() + 10,
@@ -130,7 +127,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(String.valueOf(poi.getLocation().getX())),
                         getX() + (int) (dividedWidth * 20),
                         getY() + 10,
@@ -143,7 +140,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         poiY.map(integer -> StyledText.fromString(String.valueOf(integer)))
                                 .orElse(StyledText.EMPTY),
                         getX() + (int) (dividedWidth * 23),
@@ -155,7 +152,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(String.valueOf(poi.getLocation().getZ())),
                         getX() + (int) (dividedWidth * 26),
                         getY() + 10,
@@ -170,13 +167,12 @@ public class PoiManagerWidget extends AbstractWidget {
 
             // Border to show selected pois, orange when selected, white if not
             RenderUtils.drawRectBorders(
-                    poseStack,
+                    guiGraphics,
                     selected ? CommonColors.ORANGE : CommonColors.WHITE,
                     getX(),
                     getY() + 1,
                     getX() + width,
                     getY() + height - 1,
-                    0,
                     1f);
         } else {
             editButton.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -184,19 +180,23 @@ public class PoiManagerWidget extends AbstractWidget {
             upButton.render(guiGraphics, mouseX, mouseY, partialTick);
             downButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
+
+        if (this.isHovered) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
             Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
                     poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor(), poi.getName());
             return true;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
                     poi.getLocation().asLocation());
             return true;
@@ -206,12 +206,12 @@ public class PoiManagerWidget extends AbstractWidget {
 
         // Determine if a button was clicked or should we select the widget
         if (selectionMode) {
-            clickedButton = selectButton.mouseClicked(mouseX, mouseY, button);
+            clickedButton = selectButton.mouseClicked(event, isDoubleClick);
         } else {
-            clickedButton = editButton.mouseClicked(mouseX, mouseY, button)
-                    || deleteButton.mouseClicked(mouseX, mouseY, button)
-                    || upButton.mouseClicked(mouseX, mouseY, button)
-                    || downButton.mouseClicked(mouseX, mouseY, button);
+            clickedButton = editButton.mouseClicked(event, isDoubleClick)
+                    || deleteButton.mouseClicked(event, isDoubleClick)
+                    || upButton.mouseClicked(event, isDoubleClick)
+                    || downButton.mouseClicked(event, isDoubleClick);
         }
 
         if (clickedButton) {
@@ -222,21 +222,13 @@ public class PoiManagerWidget extends AbstractWidget {
         }
     }
 
-    private void renderIcon(PoseStack poseStack) {
-        float[] poiColor = CustomColor.fromInt(poi.getColor().asInt()).asFloatArray();
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(poiColor[0], poiColor[1], poiColor[2], 1);
-
+    private void renderIcon(GuiGraphics guiGraphics) {
         RenderUtils.drawTexturedRect(
-                poseStack,
+                guiGraphics,
                 poi.getIcon(),
+                poi.getColor(),
                 getX() + dividedWidth - (poi.getIcon().width() / 2f),
                 getY() + 10 - (poi.getIcon().height() / 2f));
-
-        RenderSystem.disableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
     @Override

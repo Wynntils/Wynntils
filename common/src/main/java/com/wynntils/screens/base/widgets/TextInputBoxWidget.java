@@ -1,11 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.MathUtils;
@@ -27,7 +27,9 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -92,8 +94,6 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         Pair<String, Integer> renderedTextDetails = getRenderedText(getMaxTextWidth());
         String renderedText = renderedTextDetails.a();
         int renderedTextStart = renderedTextDetails.b();
@@ -114,7 +114,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         int lastWidth = font.width(lastPortion);
 
         doRenderWidget(
-                poseStack,
+                guiGraphics,
                 renderedText,
                 renderedTextStart,
                 firstPortion,
@@ -123,11 +123,13 @@ public class TextInputBoxWidget extends AbstractWidget {
                 font,
                 firstWidth,
                 highlightedWidth,
-                lastWidth);
+                lastWidth,
+                mouseX,
+                mouseY);
     }
 
     protected void doRenderWidget(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -136,27 +138,26 @@ public class TextInputBoxWidget extends AbstractWidget {
             Font font,
             int firstWidth,
             int highlightedWidth,
-            int lastWidth) {
-        poseStack.pushPose();
+            int lastWidth,
+            int mouseX,
+            int mouseY) {
+        if (this.isHovered) {
+            guiGraphics.requestCursor(CursorTypes.IBEAM);
+        }
 
-        poseStack.translate(this.getX(), this.getY(), 0);
+        guiGraphics.pose().pushMatrix();
 
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
+        guiGraphics.pose().translate(this.getX(), this.getY());
+
+        RenderUtils.drawRect(guiGraphics, CommonColors.BLACK, 0, 0, this.width, this.height);
         RenderUtils.drawRectBorders(
-                poseStack,
-                isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
-                0,
-                0,
-                this.width,
-                this.height,
-                1,
-                2);
+                guiGraphics, isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY, 0, 0, this.width, this.height, 2);
 
         boolean defaultText = Objects.equals(textBoxInput, "");
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(defaultText ? DEFAULT_TEXT.getString() : firstPortion),
                         textPadding,
                         this.width - lastWidth - highlightedWidth,
@@ -171,7 +172,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         if (!defaultText) {
             FontRenderer.getInstance()
                     .renderAlignedHighlightedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(highlightedPortion),
                             textPadding + firstWidth,
                             this.width - lastWidth,
@@ -185,7 +186,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(lastPortion),
                             textPadding + firstWidth + highlightedWidth,
                             this.width,
@@ -199,17 +200,17 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         drawCursor(
-                poseStack,
+                guiGraphics,
                 font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))),
                 (textPadding + this.height - textPadding) / 2,
                 VerticalAlignment.MIDDLE,
                 false);
 
         if (isHovered && tooltip != null) {
-            McUtils.screen().setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     protected int getMaxTextWidth() {
@@ -285,14 +286,14 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (this.isHovered) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-            if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_2) {
                 setTextBoxInput("");
                 setCursorAndHighlightPositions(0);
             } else {
-                setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+                setCursorAndHighlightPositions(getIndexAtPosition(event.x()));
             }
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
@@ -310,15 +311,15 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         isDragging = false;
         return true;
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (isDragging) {
-            setCursorPosition(getIndexAtPosition(mouseX));
+            setCursorPosition(getIndexAtPosition(event.x()));
         }
 
         return true;
@@ -356,7 +357,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
+    public boolean charTyped(CharacterEvent event) {
         if (!isFocused()) return false;
 
         if (textBoxInput == null) {
@@ -364,10 +365,11 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         if (hasHighlighted()) {
-            replaceHighlighted(String.valueOf(codePoint));
+            replaceHighlighted(event.codepointAsString());
         } else {
-            textBoxInput =
-                    textBoxInput.substring(0, cursorPosition) + codePoint + textBoxInput.substring(cursorPosition);
+            textBoxInput = textBoxInput.substring(0, cursorPosition)
+                    + event.codepointAsString()
+                    + textBoxInput.substring(cursorPosition);
             setCursorPosition(cursorPosition + 1);
             setHighlightPosition(cursorPosition);
         }
@@ -378,17 +380,17 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
             removeFocus();
             return true;
         }
 
         KeyboardHandler keyboardHandler = Minecraft.getInstance().keyboardHandler;
-        if (Screen.isCopy(keyCode)) {
+        if (event.isCopy()) {
             keyboardHandler.setClipboard(hasHighlighted() ? getHighlightedText() : getTextBoxInput());
             return true;
-        } else if (Screen.isPaste(keyCode)) {
+        } else if (event.isPaste()) {
             if (hasHighlighted()) {
                 replaceHighlighted(keyboardHandler.getClipboard());
             } else {
@@ -398,7 +400,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             }
 
             return true;
-        } else if (Screen.isCut(keyCode)) {
+        } else if (event.isCut()) {
             if (hasHighlighted()) {
                 keyboardHandler.setClipboard(getHighlightedText());
                 replaceHighlighted("");
@@ -408,13 +410,13 @@ public class TextInputBoxWidget extends AbstractWidget {
             }
 
             return true;
-        } else if (Screen.isSelectAll(keyCode)) {
+        } else if (event.isSelectAll()) {
             setCursorPosition(textBoxInput.length());
             setHighlightPosition(0);
             return true;
         }
 
-        if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
+        if (event.key() == GLFW.GLFW_KEY_BACKSPACE) {
             if (textBoxInput.isEmpty()) {
                 return true;
             }
@@ -424,7 +426,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                 return true;
             }
 
-            if (Screen.hasControlDown()) {
+            if (event.hasControlDown()) {
                 setTextBoxInput(textBoxInput.substring(cursorPosition));
                 setCursorAndHighlightPositions(0);
                 return true;
@@ -437,7 +439,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
-        if (keyCode == GLFW.GLFW_KEY_DELETE) {
+        if (event.key() == GLFW.GLFW_KEY_DELETE) {
             if (textBoxInput.isEmpty()) {
                 return true;
             }
@@ -447,7 +449,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                 return true;
             }
 
-            if (Screen.hasControlDown()) {
+            if (event.hasControlDown()) {
                 setTextBoxInput(textBoxInput.substring(0, cursorPosition));
                 return true;
             }
@@ -458,21 +460,21 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
-        if (keyCode == GLFW.GLFW_KEY_LEFT) {
-            if (hasHighlighted() && !Screen.hasShiftDown() && !Screen.hasControlDown()) {
+        if (event.key() == GLFW.GLFW_KEY_LEFT) {
+            if (hasHighlighted() && !event.hasShiftDown() && !event.hasControlDown()) {
                 setCursorAndHighlightPositions(Math.min(cursorPosition, highlightPosition));
                 return true;
             }
 
-            if (Screen.hasControlDown() && Screen.hasShiftDown()) {
+            if (event.hasControlDown() && event.hasShiftDown()) {
                 // this should move the cursor all the way left and highlight everything
                 setCursorPosition(0);
                 return true;
-            } else if (Screen.hasControlDown()) {
+            } else if (event.hasControlDown()) {
                 // this should move cursor all the way left and not highlight anything
                 setCursorAndHighlightPositions(0);
                 return true;
-            } else if (Screen.hasShiftDown()) {
+            } else if (event.hasShiftDown()) {
                 // this should move the cursor left and highlight the text
                 setCursorPosition(cursorPosition - 1);
                 return true;
@@ -485,16 +487,16 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true; // no need to call onUpdateConsumer here because we aren't changing the text
         }
 
-        if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-            if (Screen.hasControlDown() && Screen.hasShiftDown()) {
+        if (event.key() == GLFW.GLFW_KEY_RIGHT) {
+            if (event.hasControlDown() && event.hasShiftDown()) {
                 // this should move the cursor all the way right and highlight everything
                 setCursorPosition(textBoxInput.length());
                 return true;
-            } else if (Screen.hasControlDown()) {
+            } else if (event.hasControlDown()) {
                 // this should move cursor all the way right and not highlight anything
                 setCursorAndHighlightPositions(textBoxInput.length());
                 return true;
-            } else if (Screen.hasShiftDown()) {
+            } else if (event.hasShiftDown()) {
                 // this should move the cursor right and highlight the text
                 setCursorPosition(cursorPosition + 1);
                 return true;
@@ -507,12 +509,12 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true; // no need to call onUpdateConsumer here because we aren't changing the text
         }
 
-        if (keyCode == GLFW.GLFW_KEY_HOME) {
+        if (event.key() == GLFW.GLFW_KEY_HOME) {
             setCursorAndHighlightPositions(0);
             return true;
         }
 
-        if (keyCode == GLFW.GLFW_KEY_END) {
+        if (event.key() == GLFW.GLFW_KEY_END) {
             setCursorAndHighlightPositions(textBoxInput.length());
             return true;
         }
@@ -548,7 +550,11 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     protected void drawCursor(
-            PoseStack poseStack, float x, float y, VerticalAlignment verticalAlignment, boolean forceUnfocusedCursor) {
+            GuiGraphics guiGraphics,
+            float x,
+            float y,
+            VerticalAlignment verticalAlignment,
+            boolean forceUnfocusedCursor) {
         if (isDragging || hasHighlighted()) return;
 
         if (System.currentTimeMillis() - lastCursorSwitch > CURSOR_TICK) {
@@ -568,7 +574,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                         case BOTTOM -> y - font.lineHeight - (CURSOR_PADDING - 1);
                     };
 
-            RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, cursorRenderY, 0, 1, font.lineHeight + 3);
+            RenderUtils.drawRect(guiGraphics, CommonColors.WHITE, x + 1, cursorRenderY, 1, font.lineHeight + 3);
         }
     }
 

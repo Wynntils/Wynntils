@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.embellishments;
@@ -13,13 +13,13 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.territories.event.GuildWarQueuedEvent;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.EMBELLISHMENTS)
 public class WarHornFeature extends Feature {
-    private static final ResourceLocation WAR_HORN_ID = ResourceLocation.fromNamespaceAndPath("wynntils", "war.horn");
+    private static final Identifier WAR_HORN_ID = Identifier.fromNamespaceAndPath("wynntils", "war.horn");
     private static final SoundEvent WAR_HORN_SOUND = SoundEvent.createVariableRangeEvent(WAR_HORN_ID);
 
     @Persisted

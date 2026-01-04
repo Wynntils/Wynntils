@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -225,7 +225,7 @@ public final class HadesService extends Service {
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.AQUA)
                                 .withUnderlined(true)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
+                                .withClickEvent(new ClickEvent.RunCommand("/wynntils reauth"))));
                 failed.append(Component.translatable("service.wynntils.hades.clickToConnect3")
                         .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
@@ -433,7 +433,7 @@ public final class HadesService extends Service {
 
     private void updateArmorCache(InventoryArmor inventoryArmor) {
         Optional<WynnItem> armorItemOpt =
-                Models.Item.getWynnItem(McUtils.inventory().armor.get(inventoryArmor.getArmorSlot()));
+                Models.Item.getWynnItem(McUtils.inventory().getItem(inventoryArmor.getInventorySlot()));
 
         if (armorItemOpt.isEmpty()
                 || (armorItemOpt.get() instanceof CraftedGearItem

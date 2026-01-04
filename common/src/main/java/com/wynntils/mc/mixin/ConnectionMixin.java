@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -10,6 +10,7 @@ import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.PacketEvent;
 import com.wynntils.utils.mc.McUtils;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,6 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.Connection;
 import net.minecraft.network.DisconnectionDetails;
 import net.minecraft.network.PacketListener;
-import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -97,10 +97,10 @@ public abstract class ConnectionMixin {
     }
 
     @Inject(
-            method = "sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;Z)V",
+            method = "sendPacket(Lnet/minecraft/network/protocol/Packet;Lio/netty/channel/ChannelFutureListener;Z)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void sendPre(Packet<?> packet, PacketSendListener sendListener, boolean flush, CallbackInfo ci) {
+    private void sendPre(Packet<?> packet, ChannelFutureListener sendListener, boolean flush, CallbackInfo ci) {
         PacketEvent.PacketSentEvent<? extends Packet<?>> event = new PacketEvent.PacketSentEvent<>(packet);
         MixinHelper.postAlways(event);
         if (event.isCanceled()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -9,11 +9,13 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.ChatScreenCreateEvent;
 import java.io.File;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
 import net.minecraft.client.player.LocalPlayer;
@@ -178,6 +180,11 @@ public final class McUtils {
     }
 
     public static void openChatScreen(String keybindCommand) {
-        mc().openChatScreen(keybindCommand);
+        // TODO: Improve mixin to not require event posting here
+        Screen chatScreen = new ChatScreen(keybindCommand, false);
+        ChatScreenCreateEvent event = new ChatScreenCreateEvent(chatScreen, keybindCommand, false);
+        WynntilsMod.postEvent(event);
+
+        setScreen(event.getScreen());
     }
 }

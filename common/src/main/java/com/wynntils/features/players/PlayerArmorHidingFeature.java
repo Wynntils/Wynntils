@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -49,7 +49,7 @@ public class PlayerArmorHidingFeature extends Feature {
                     return;
                 }
 
-                Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+                Entity entity = ((EntityRenderStateExtension) event.getHumanoidRenderState()).getEntity();
                 if (!(entity instanceof AbstractClientPlayer player)) return;
 
                 // Only cancel if the helmet item isn't cosmetic.

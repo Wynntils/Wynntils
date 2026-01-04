@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
@@ -12,6 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class MaskedTextInputWidget extends AbstractWidget {
@@ -56,32 +56,32 @@ public class MaskedTextInputWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (toggleMaskButton.isMouseOver(mouseX, mouseY)) {
-            return toggleMaskButton.mouseClicked(mouseX, mouseY, button);
-        } else if (maskedTextInputBoxWidget.isMouseOver(mouseX, mouseY)) {
-            return maskedTextInputBoxWidget.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (toggleMaskButton.isMouseOver(event.x(), event.y())) {
+            return toggleMaskButton.mouseClicked(event, isDoubleClick);
+        } else if (maskedTextInputBoxWidget.isMouseOver(event.x(), event.y())) {
+            return maskedTextInputBoxWidget.mouseClicked(event, isDoubleClick);
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (maskedTextInputBoxWidget.isMouseOver(mouseX, mouseY)) {
-            return maskedTextInputBoxWidget.mouseReleased(mouseX, mouseY, button);
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (maskedTextInputBoxWidget.isMouseOver(event.x(), event.y())) {
+            return maskedTextInputBoxWidget.mouseReleased(event);
         }
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (maskedTextInputBoxWidget.isMouseOver(mouseX, mouseY)) {
-            return maskedTextInputBoxWidget.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (maskedTextInputBoxWidget.isMouseOver(event.x(), event.y())) {
+            return maskedTextInputBoxWidget.mouseDragged(event, dragX, dragY);
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class MaskedTextInputWidget extends AbstractWidget {
 
         @Override
         protected void doRenderWidget(
-                PoseStack poseStack,
+                GuiGraphics guiGraphics,
                 String renderedText,
                 int renderedTextStart,
                 String firstPortion,
@@ -120,9 +120,11 @@ public class MaskedTextInputWidget extends AbstractWidget {
                 Font font,
                 int firstWidth,
                 int highlightedWidth,
-                int lastWidth) {
+                int lastWidth,
+                int mouseX,
+                int mouseY) {
             super.doRenderWidget(
-                    poseStack,
+                    guiGraphics,
                     masked ? "*".repeat(renderedText.length()) : renderedText,
                     renderedTextStart,
                     masked ? "*".repeat(firstPortion.length()) : firstPortion,
@@ -131,7 +133,9 @@ public class MaskedTextInputWidget extends AbstractWidget {
                     font,
                     firstWidth,
                     highlightedWidth,
-                    lastWidth);
+                    lastWidth,
+                    mouseX,
+                    mouseY);
         }
     }
 }
