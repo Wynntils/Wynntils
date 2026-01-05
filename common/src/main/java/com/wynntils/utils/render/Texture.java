@@ -183,6 +183,7 @@ public enum Texture {
     SHARE_ICON("icons/generic/share_icon.png", 16, 14),
     SIGN_ICON("icons/generic/sign_icon.png", 17, 18),
     SMALL_ADD_ICON("icons/generic/small_add_icon.png", 16, 16),
+    TREASURY("icons/generic/treasury.png", 16, 14),
     UP_COLORED_ICON("icons/generic/up_colored.png", 16, 16),
     WAYPOINT_FOCUS_ICON("icons/generic/waypoint_focus_icon.png", 12, 16),
     WAYPOINT_MANAGER_ICON("icons/generic/waypoint_manager_icon.png", 12, 16),

@@ -18,7 +18,7 @@ import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
-import com.wynntils.services.map.type.TerritoryDefenseFilterType;
+import com.wynntils.services.map.type.TerritoryFilterType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -33,6 +33,8 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -44,12 +46,16 @@ import org.lwjgl.glfw.GLFW;
 public final class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
     private boolean territoryDefenseFilterEnabled = false;
+    private boolean territoryTreasuryFilterEnabled = false;
     private boolean hybridMode = true;
 
     private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VERY_HIGH;
-    private TerritoryDefenseFilterType territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
+    private GuildResourceValues territoryTreasuryFilterLevel = GuildResourceValues.VERY_HIGH;
+    private TerritoryFilterType territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
+    private TerritoryFilterType territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
 
     private MapButton territoryDefenseFilterButton;
+    private MapButton territoryTreasuryFilterButton;
     private MapButton hybridModeButton;
 
     private GuildMapScreen() {}
@@ -78,33 +84,67 @@ public final class GuildMapScreen extends AbstractMapScreen {
                     // Left and right clicks cycle through the defense levels, middle click resets to OFF
                     if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
                         territoryDefenseFilterEnabled = false;
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
-                        territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
+                        territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
+                        territoryDefenseFilterButton.setTooltip(getCompleteDefenseFilterTooltip());
                         return;
                     }
 
                     // Holding shift filters higher, ctrl filters lower
                     if (KeyboardUtils.isShiftDown()) {
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.HIGHER;
+                        territoryDefenseFilterType = TerritoryFilterType.HIGHER;
                     } else if (KeyboardUtils.isControlDown()) {
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.LOWER;
+                        territoryDefenseFilterType = TerritoryFilterType.LOWER;
                     } else {
-                        territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
+                        territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
                     }
 
                     territoryDefenseFilterEnabled = true;
                     if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                         territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterNext(
-                                territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
+                                territoryDefenseFilterType != TerritoryFilterType.DEFAULT);
                     } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                         territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterPrevious(
-                                territoryDefenseFilterType != TerritoryDefenseFilterType.DEFAULT);
+                                territoryDefenseFilterType != TerritoryFilterType.DEFAULT);
                     }
 
-                    territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
+                    territoryDefenseFilterButton.setTooltip(getCompleteDefenseFilterTooltip());
                 },
-                getCompleteFilterTooltip());
+                getCompleteDefenseFilterTooltip());
         addMapButton(territoryDefenseFilterButton);
+
+        territoryTreasuryFilterButton = new MapButton(
+                Texture.TREASURY,
+                (b) -> {
+                    // Left and right clicks cycle through the treasury levels, middle click resets to OFF
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                        territoryTreasuryFilterEnabled = false;
+                        territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
+                        territoryTreasuryFilterButton.setTooltip(getCompleteTreasuryFilterTooltip());
+                        return;
+                    }
+
+                    // Holding shift filters higher, ctrl filters lower
+                    if (KeyboardUtils.isShiftDown()) {
+                        territoryTreasuryFilterType = TerritoryFilterType.HIGHER;
+                    } else if (KeyboardUtils.isControlDown()) {
+                        territoryTreasuryFilterType = TerritoryFilterType.LOWER;
+                    } else {
+                        territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
+                    }
+
+                    territoryTreasuryFilterEnabled = true;
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                        territoryTreasuryFilterLevel = territoryTreasuryFilterLevel.getFilterNext(
+                                territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
+                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                        territoryTreasuryFilterLevel = territoryTreasuryFilterLevel.getFilterPrevious(
+                                territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
+                    }
+
+                    territoryTreasuryFilterButton.setTooltip(getCompleteTreasuryFilterTooltip());
+                },
+                getCompleteTreasuryFilterTooltip());
+        addMapButton(territoryTreasuryFilterButton);
 
         hybridModeButton = new MapButton(
                 Texture.OVERLAY_EXTRA_ICON,
@@ -242,7 +282,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        for (GuiEventListener child : children()) {
+        for (GuiEventListener child :
+                Stream.concat(children().stream(), mapButtons.stream()).toList()) {
             if (child.isMouseOver(event.x(), event.y())) {
                 child.mouseClicked(event, isDoubleClick);
                 return true;
@@ -282,10 +323,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        List<TerritoryPoi> advancementPois = territoryDefenseFilterEnabled
-                ? Models.Territory.getFilteredTerritoryPoisFromAdvancement(
-                        territoryDefenseFilterLevel.getLevel(), territoryDefenseFilterType)
-                : Models.Territory.getTerritoryPoisFromAdvancement();
+        List<TerritoryPoi> advancementPois = Models.Territory.getTerritoryPoisFromAdvancement().stream()
+                .filter(this::filterDefense)
+                .filter(this::filterTreasury)
+                .toList();
 
         List<Poi> renderedPois = new ArrayList<>();
 
@@ -322,6 +363,39 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     public boolean isResourceMode() {
         return resourceMode;
+    }
+
+    private boolean filterDefense(TerritoryPoi territoryArea) {
+        return !territoryDefenseFilterEnabled
+                || filterTerritory(
+                        territoryArea,
+                        territoryDefenseFilterType,
+                        territoryDefenseFilterLevel,
+                        area -> area.getTerritoryInfo().getDefences());
+    }
+
+    private boolean filterTreasury(TerritoryPoi territoryArea) {
+        return !territoryTreasuryFilterEnabled
+                || filterTerritory(
+                        territoryArea,
+                        territoryTreasuryFilterType,
+                        territoryTreasuryFilterLevel,
+                        area -> area.getTerritoryInfo().getTreasury());
+    }
+
+    private boolean filterTerritory(
+            TerritoryPoi territoryArea,
+            TerritoryFilterType filterType,
+            GuildResourceValues filterLevel,
+            Function<TerritoryPoi, GuildResourceValues> getter) {
+        GuildResourceValues guildResourceValue = getter.apply(territoryArea);
+        if (guildResourceValue == null) return false;
+
+        return switch (filterType) {
+            case HIGHER -> guildResourceValue.getLevel() >= filterLevel.getLevel();
+            case LOWER -> guildResourceValue.getLevel() <= filterLevel.getLevel();
+            case DEFAULT -> guildResourceValue.getLevel() == filterLevel.getLevel();
+        };
     }
 
     private static void renderTerritoryTooltip(
@@ -558,25 +632,48 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         TextShadow.OUTLINE);
     }
 
-    private List<Component> getCompleteFilterTooltip() {
+    private List<Component> getCompleteDefenseFilterTooltip() {
         Component lastLine = territoryDefenseFilterEnabled
-                ? Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
+                ? Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
                         .withStyle(ChatFormatting.GRAY)
                         .append(territoryDefenseFilterLevel.getDefenceColor()
                                 + territoryDefenseFilterLevel.getAsString())
                         .append(territoryDefenseFilterType.asComponent())
-                : Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
+                : Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
                         .withStyle(ChatFormatting.GRAY)
                         .append("Off");
         return List.of(
                 Component.literal("[>] ")
                         .withStyle(ChatFormatting.BLUE)
                         .append(Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.name")),
-                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description1")
+                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description")
                         .withStyle(ChatFormatting.GRAY),
-                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description2")
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description1")
                         .withStyle(ChatFormatting.GRAY),
-                Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description3")
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description2")
+                        .withStyle(ChatFormatting.GRAY),
+                lastLine);
+    }
+
+    private List<Component> getCompleteTreasuryFilterTooltip() {
+        Component lastLine = territoryTreasuryFilterEnabled
+                ? Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(territoryTreasuryFilterLevel.getTreasuryColor()
+                                + territoryTreasuryFilterLevel.getAsString())
+                        .append(territoryTreasuryFilterType.asComponent())
+                : Component.translatable("screens.wynntils.guildMap.cycleFilter.description3")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append("Off");
+        return List.of(
+                Component.literal("[>] ")
+                        .withStyle(ChatFormatting.YELLOW)
+                        .append(Component.translatable("screens.wynntils.guildMap.cycleTerritoryFilter.name")),
+                Component.translatable("screens.wynntils.guildMap.cycleTerritoryFilter.description")
+                        .withStyle(ChatFormatting.GRAY),
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description1")
+                        .withStyle(ChatFormatting.GRAY),
+                Component.translatable("screens.wynntils.guildMap.cycleFilter.description2")
                         .withStyle(ChatFormatting.GRAY),
                 lastLine);
     }

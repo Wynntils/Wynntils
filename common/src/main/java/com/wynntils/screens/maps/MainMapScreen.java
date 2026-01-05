@@ -346,7 +346,8 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        for (GuiEventListener child : children()) {
+        for (GuiEventListener child :
+                Stream.concat(children().stream(), mapButtons.stream()).toList()) {
             if (child.isMouseOver(event.x(), event.y())) {
                 child.mouseClicked(event, isDoubleClick);
                 return true;
