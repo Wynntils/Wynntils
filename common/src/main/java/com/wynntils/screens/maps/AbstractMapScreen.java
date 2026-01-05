@@ -63,6 +63,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected boolean holdingMapKey = false;
     protected boolean firstInit = true;
+    protected boolean shouldCenterMap = true;
     protected boolean isPanning = false;
 
     protected float renderWidth;
@@ -95,6 +96,15 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected AbstractMapScreen(float mapCenterX, float mapCenterZ) {
         super(Component.literal("Map"));
         updateMapCenter(mapCenterX, mapCenterZ);
+    }
+
+    protected AbstractMapScreen(float mapCenterX, float mapCenterZ, float zoomLevel) {
+        super(Component.literal("Map"));
+        updateMapCenter(mapCenterX, mapCenterZ);
+        setZoomLevel(zoomLevel);
+
+        // Overwrite so map is not centered
+        shouldCenterMap = false;
     }
 
     @Override
@@ -469,6 +479,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void centerMapOnWorld() {
+        if (!shouldCenterMap) return;
+
         updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
         setZoomLevel(CENTER_ZOOM_LEVEL);
     }
