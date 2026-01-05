@@ -125,7 +125,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 12,
                 16,
                 Texture.WAYPOINT_MANAGER_ICON,
-                (b) -> McUtils.setScreen(PoiManagementScreen.create(this)),
+                (b) -> McUtils.setScreen(WaypointManagementScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.RED)

@@ -8,7 +8,7 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.PoiCreationScreen;
-import com.wynntils.screens.maps.PoiManagementScreen;
+import com.wynntils.screens.maps.WaypointManagementScreen;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -29,83 +29,99 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
-public class PoiManagerWidget extends AbstractWidget {
-    private final boolean selected;
-    private final boolean selectionMode;
+public class WaypointManagerWidget extends AbstractWidget {
     private final Button editButton;
     private final Button deleteButton;
     private final Button upButton;
     private final Button downButton;
     private final Button selectButton;
+    private final WaypointManagementScreen managementScreen;
+
+    private final boolean selected;
+    private final boolean selectionMode;
+
+    private final float iconRenderX;
+    private float iconRenderY;
+    private final float iconWidth;
+    private final float iconHeight;
+
     private final CustomColor color;
     private final CustomPoi poi;
-    private final float dividedWidth;
-    private final PoiManagementScreen managementScreen;
 
-    public PoiManagerWidget(
+    public WaypointManagerWidget(
             int x,
             int y,
             int width,
             int height,
-            CustomPoi poi,
-            PoiManagementScreen managementScreen,
-            float dividedWidth,
+            CustomPoi waypoint,
+            WaypointManagementScreen managementScreen,
             boolean selectionMode,
             boolean selected) {
-        super(x, y, width, height, Component.literal(poi.getName()));
-        this.poi = poi;
+        super(x, y, width, height, Component.literal(waypoint.getName()));
+        this.poi = waypoint;
         this.managementScreen = managementScreen;
-        this.dividedWidth = dividedWidth;
         this.selectionMode = selectionMode;
         this.selected = selected;
 
-        int manageButtonsWidth = (int) (dividedWidth * 4);
-
-        color = poi.getVisibility() == CustomPoi.Visibility.HIDDEN ? CommonColors.GRAY : CommonColors.WHITE;
+        color = waypoint.getVisibility() == CustomPoi.Visibility.HIDDEN ? CommonColors.GRAY : CommonColors.WHITE;
 
         editButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.edit"),
-                        (button) -> McUtils.setScreen(PoiCreationScreen.create(managementScreen, poi)))
-                .pos(x + width - 20 - (manageButtonsWidth * 2), y)
-                .size(manageButtonsWidth, 20)
+                        Component.translatable("screens.wynntils.waypointManagementGui.edit"),
+                        (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, waypoint)))
+                .pos(x + width - 20 - (40 * 2), y)
+                .size(40, 20)
                 .build();
 
         deleteButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.delete"),
-                        (button) -> managementScreen.deletePoi(poi, true))
-                .pos(x + width - 20 - manageButtonsWidth, y)
-                .size(manageButtonsWidth, 20)
+                        Component.translatable("screens.wynntils.waypointManagementGui.delete"), (button) -> {
+                            managementScreen.deleteWaypoint(waypoint, true);
+                        })
+                .pos(x + width - 20 - 40, y)
+                .size(40, 20)
                 .build();
 
-        upButton = new Button.Builder(Component.literal("ʌ"), (button) -> managementScreen.updatePoiPosition(poi, -1))
+        upButton = new Button.Builder(
+                        Component.literal("ʌ"), (button) -> managementScreen.updateWaypointPosition(waypoint, -1))
                 .pos(x + width - 20, y)
                 .size(10, 20)
                 .build();
 
-        downButton = new Button.Builder(Component.literal("v"), (button) -> managementScreen.updatePoiPosition(poi, 1))
+        downButton = new Button.Builder(
+                        Component.literal("v"), (button) -> managementScreen.updateWaypointPosition(waypoint, 1))
                 .pos(x + width - 10, y)
                 .size(10, 20)
                 .build();
 
         Component selectButtonText = selected
-                ? Component.translatable("screens.wynntils.poiManagementGui.deselect")
-                : Component.translatable("screens.wynntils.poiManagementGui.select");
+                ? Component.translatable("screens.wynntils.waypointManagementGui.deselect")
+                : Component.translatable("screens.wynntils.waypointManagementGui.select");
 
-        selectButton = new Button.Builder(selectButtonText, (button) -> managementScreen.selectPoi(poi))
-                .pos(x + width - (manageButtonsWidth * 2 + 20), y)
-                .size(manageButtonsWidth * 2 + 20, 20)
+        selectButton = new Button.Builder(selectButtonText, (button) -> managementScreen.selectWaypoint(waypoint))
+                .pos(x + width - (40 * 2 + 20), y)
+                .size(40 * 2 + 20, 20)
                 .build();
 
-        List<CustomPoi> pois = managementScreen.getPois();
+        List<CustomPoi> pois = managementScreen.getWaypoints();
 
-        // Don't allow pois to be moved if at the top/bottom of the list
-        if (pois.indexOf(poi) == 0) {
+        // Don't allow waypoints to be moved if at the top/bottom of the list
+        if (pois.indexOf(waypoint) == 0) {
             upButton.active = false;
         }
 
-        if (pois.indexOf(poi) == (pois.size() - 1)) {
+        if (pois.indexOf(waypoint) == (pois.size() - 1)) {
             downButton.active = false;
         }
+
+        // Scale the icon to fill 80% of the button
+        float scaleFactor = 0.8f
+                * Math.min(width, height)
+                / Math.max(poi.getIcon().width(), poi.getIcon().height());
+        iconWidth = poi.getIcon().width() * scaleFactor;
+        iconHeight = poi.getIcon().height() * scaleFactor;
+
+        // Calculate x/y position of the icon to keep it centered
+        iconRenderX = x + 2;
+        iconRenderY = (y + height / 2f) - iconHeight / 2f;
     }
 
     @Override
@@ -116,22 +132,21 @@ public class PoiManagerWidget extends AbstractWidget {
                 .renderScrollingText(
                         guiGraphics,
                         StyledText.fromString(poi.getName()),
-                        getX() + (int) (dividedWidth * 3),
+                        getX() + 25,
                         getY() + 10,
-                        (int) (dividedWidth * 15),
+                        95,
                         color,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL,
-                        1f);
+                        TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
                         StyledText.fromString(String.valueOf(poi.getLocation().getX())),
-                        getX() + (int) (dividedWidth * 20),
+                        getX() + 140,
                         getY() + 10,
-                        color,
+                        CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
@@ -143,7 +158,7 @@ public class PoiManagerWidget extends AbstractWidget {
                         guiGraphics,
                         poiY.map(integer -> StyledText.fromString(String.valueOf(integer)))
                                 .orElse(StyledText.EMPTY),
-                        getX() + (int) (dividedWidth * 23),
+                        getX() + 170,
                         getY() + 10,
                         color,
                         HorizontalAlignment.CENTER,
@@ -154,7 +169,7 @@ public class PoiManagerWidget extends AbstractWidget {
                 .renderText(
                         guiGraphics,
                         StyledText.fromString(String.valueOf(poi.getLocation().getZ())),
-                        getX() + (int) (dividedWidth * 26),
+                        getX() + 200,
                         getY() + 10,
                         color,
                         HorizontalAlignment.CENTER,
@@ -165,12 +180,12 @@ public class PoiManagerWidget extends AbstractWidget {
         if (selectionMode) {
             selectButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
-            // Border to show selected pois, orange when selected, white if not
+            // Border to show selected waypoints, orange when selected, white if not
             RenderUtils.drawRectBorders(
                     guiGraphics,
                     selected ? CommonColors.ORANGE : CommonColors.WHITE,
                     getX(),
-                    getY() + 1,
+                    getY(),
                     getX() + width,
                     getY() + height - 1,
                     1f);
@@ -217,18 +232,35 @@ public class PoiManagerWidget extends AbstractWidget {
         if (clickedButton) {
             return clickedButton;
         } else {
-            managementScreen.selectPoi(poi);
+            managementScreen.selectWaypoint(poi);
             return true;
         }
     }
 
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+
+        editButton.setY(y);
+        deleteButton.setY(y);
+        upButton.setY(y);
+        downButton.setY(y);
+        selectButton.setY(y);
+
+        iconRenderY = (y + height / 2f) - iconHeight / 2f;
+    }
+
     private void renderIcon(GuiGraphics guiGraphics) {
-        RenderUtils.drawTexturedRect(
+        RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
-                poi.getIcon(),
-                poi.getColor(),
-                getX() + dividedWidth - (poi.getIcon().width() / 2f),
-                getY() + 10 - (poi.getIcon().height() / 2f));
+                poi.getIcon().identifier(),
+                poi.getIconColor(),
+                iconRenderX,
+                iconRenderY,
+                iconWidth,
+                iconHeight,
+                poi.getIcon().width(),
+                poi.getIcon().height());
     }
 
     @Override
