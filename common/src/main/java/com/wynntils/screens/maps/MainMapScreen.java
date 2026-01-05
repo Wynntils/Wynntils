@@ -151,7 +151,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         addMapButton(new MapButton(
                 Texture.DEFENSE_FILTER_ICON,
-                (b) -> McUtils.mc().setScreen(GuildMapScreen.create(mapCenterX, mapCenterZ, zoomLevel)),
+                (b) -> changeToGuildMap(),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.BLUE)
@@ -286,6 +286,10 @@ public final class MainMapScreen extends AbstractMapScreen {
         }
 
         renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    public void changeToGuildMap() {
+        McUtils.mc().setScreen(GuildMapScreen.create(mapCenterX, mapCenterZ, zoomLevel));
     }
 
     private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {

@@ -166,7 +166,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         addMapButton(new MapButton(
                 Texture.MAP,
-                (b) -> McUtils.mc().setScreen(MainMapScreen.create(mapCenterX, mapCenterZ, zoomLevel)),
+                (b) -> changeToMainMap(),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.BLUE)
@@ -250,6 +250,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
         }
 
         renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    public void changeToMainMap() {
+        McUtils.mc().setScreen(MainMapScreen.create(mapCenterX, mapCenterZ, zoomLevel));
     }
 
     @Override
