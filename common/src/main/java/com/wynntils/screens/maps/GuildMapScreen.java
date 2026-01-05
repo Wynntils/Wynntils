@@ -14,7 +14,7 @@ import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
-import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
@@ -49,8 +49,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
     private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VERY_HIGH;
     private TerritoryDefenseFilterType territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
 
-    private BasicTexturedButton territoryDefenseFilterButton;
-    private BasicTexturedButton hybridModeButton;
+    private MapButton territoryDefenseFilterButton;
+    private MapButton hybridModeButton;
 
     private GuildMapScreen() {}
 
@@ -62,56 +62,17 @@ public final class GuildMapScreen extends AbstractMapScreen {
     protected void doInit() {
         super.doInit();
 
-        // Buttons have to be added in reverse order (right to left) so they don't overlap
-
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 7 + 20 * 6,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 8),
-                10,
-                16,
-                Texture.HELP_ICON,
-                (b) -> {},
+        addMapButton(new MapButton(
+                Texture.ADD_ICON,
+                (b) -> resourceMode = !resourceMode,
                 List.of(
                         Component.literal("[>] ")
-                                .withStyle(ChatFormatting.YELLOW)
-                                .append(Component.translatable("screens.wynntils.map.help.name")),
-                        Component.literal("- ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.guildMap.help.description1")),
-                        Component.literal("- ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.guildMap.help.description2")),
-                        Component.literal("- ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.guildMap.help.description3")))));
+                                .withStyle(ChatFormatting.GOLD)
+                                .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
+                        Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
+                                .withStyle(ChatFormatting.GRAY))));
 
-        this.addRenderableWidget(
-                hybridModeButton = new BasicTexturedButton(
-                        width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
-                        (int) (this.renderHeight
-                                - this.renderedBorderYOffset
-                                - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                                - 8),
-                        16,
-                        16,
-                        Texture.OVERLAY_EXTRA_ICON,
-                        (b) -> {
-                            hybridMode = !hybridMode;
-                            hybridModeButton.setTooltip(getHybridModeTooltip());
-                        },
-                        getHybridModeTooltip()));
-
-        territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 8),
-                16,
-                16,
+        territoryDefenseFilterButton = new MapButton(
                 Texture.DEFENSE_FILTER_ICON,
                 (b) -> {
                     // Left and right clicks cycle through the defense levels, middle click resets to OFF
@@ -142,24 +103,34 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
                     territoryDefenseFilterButton.setTooltip(getCompleteFilterTooltip());
                 },
-                getCompleteFilterTooltip()));
+                getCompleteFilterTooltip());
+        addMapButton(territoryDefenseFilterButton);
 
-        this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6,
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 7),
-                14,
-                14,
-                Texture.ADD_ICON,
-                (b) -> resourceMode = !resourceMode,
+        hybridModeButton = new MapButton(
+                Texture.OVERLAY_EXTRA_ICON,
+                (b) -> {
+                    hybridMode = !hybridMode;
+                    hybridModeButton.setTooltip(getHybridModeTooltip());
+                },
+                getHybridModeTooltip());
+        addMapButton(hybridModeButton);
+
+        addMapButton(new MapButton(
+                Texture.HELP_ICON,
+                (b) -> {},
                 List.of(
                         Component.literal("[>] ")
-                                .withStyle(ChatFormatting.GOLD)
-                                .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
-                        Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
-                                .withStyle(ChatFormatting.GRAY))));
+                                .withStyle(ChatFormatting.YELLOW)
+                                .append(Component.translatable("screens.wynntils.map.help.name")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description1")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description2")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description3")))));
 
         if (firstInit) {
             // When outside of the main map, center to the middle of the map

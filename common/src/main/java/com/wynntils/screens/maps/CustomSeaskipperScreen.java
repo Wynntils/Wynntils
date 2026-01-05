@@ -9,7 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
-import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.screens.maps.widgets.SeaskipperDestinationButton;
 import com.wynntils.screens.maps.widgets.SeaskipperTravelButton;
 import com.wynntils.services.map.pois.SeaskipperDestinationPoi;
@@ -61,7 +61,6 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
     // UI Size, position etc
     private boolean draggingScroll = false;
-    private boolean firstInit = true;
     private double currentUnusedScroll = 0;
     private float currentTextureScale;
     private float departureBoardY;
@@ -92,21 +91,14 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         mapWidth -= (departureListWidth) - 5;
         departureBoardY = (this.height
                         - (Texture.DESTINATION_LIST.height() * currentTextureScale
-                                + (Texture.TRAVEL_BUTTON.height() / 2) * currentTextureScale))
+                                + (Texture.TRAVEL_BUTTON.height() / 2f) * currentTextureScale))
                 / 2;
         scrollButtonRenderX = 5 + departureListWidth * 0.933f;
         destinationButtonsRenderX = 5 + departureListWidth * 0.027f;
         scrollAreaHeight = (int) (SCROLL_HEIGHT * currentTextureScale);
 
         // region Map buttons
-        this.addRenderableWidget(new BasicTexturedButton(
-                (int) (width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 7 + 20 * 3 + (departureListWidth) / 2),
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 8),
-                12,
-                16,
+        addMapButton(new MapButton(
                 Texture.WAYPOINT_MANAGER_ICON,
                 (b) -> toggleRoutes(),
                 List.of(
@@ -117,14 +109,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                         Component.translatable("screens.wynntils.customSeaskipperScreen.showRoutes.description")
                                 .withStyle(ChatFormatting.GRAY))));
 
-        this.addRenderableWidget(new BasicTexturedButton(
-                (int) (width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 2 + (departureListWidth) / 2),
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 7),
-                14,
-                14,
+        addMapButton(new MapButton(
                 Texture.ADD_ICON,
                 (b) -> toggleDestinations(),
                 List.of(
@@ -136,14 +121,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                                         "screens.wynntils.customSeaskipperScreen.showInaccessibleLocations.description")
                                 .withStyle(ChatFormatting.GRAY))));
 
-        this.addRenderableWidget(new BasicTexturedButton(
-                (int) (width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 5 + 20 + (departureListWidth) / 2),
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 8),
-                16,
-                16,
+        addMapButton(new MapButton(
                 Texture.OVERLAY_EXTRA_ICON,
                 (b) -> toggleBorders(),
                 List.of(
@@ -154,14 +132,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                         Component.translatable("screens.wynntils.customSeaskipperScreen.showBorders.description")
                                 .withStyle(ChatFormatting.GRAY))));
 
-        this.addRenderableWidget(new BasicTexturedButton(
-                (int) (width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + (departureListWidth) / 2),
-                (int) (this.renderHeight
-                        - this.renderedBorderYOffset
-                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 7),
-                15,
-                14,
+        addMapButton(new MapButton(
                 Texture.BOAT_ICON,
                 (b) -> Models.Seaskipper.purchaseBoat(),
                 List.of(
@@ -220,6 +191,8 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         renderCoordinates(guiGraphics, mouseX, mouseY);
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
+
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderHoveredSeaskipperDestination(guiGraphics);
 
