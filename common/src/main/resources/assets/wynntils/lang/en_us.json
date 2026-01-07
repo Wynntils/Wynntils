@@ -3022,6 +3022,8 @@
   "screens.wynntils.map.share.name": "Share Location",
   "screens.wynntils.map.waypoints.add.description": "Click here to create a new waypoint.",
   "screens.wynntils.map.waypoints.add.name": "Create a new Waypoint",
+  "screens.wynntils.map.zoomDecrement": "Press to decrement zoom level by 5. Hold shift to decrement by 1",
+  "screens.wynntils.map.zoomIncrement": "Press to increment zoom level by 5. Hold shift to increment by 1",
   "screens.wynntils.overlayManagement.apply": "Apply",
   "screens.wynntils.overlayManagement.applyTooltip": "Click here to apply changes to current overlay.",
   "screens.wynntils.overlayManagement.close": "Close",

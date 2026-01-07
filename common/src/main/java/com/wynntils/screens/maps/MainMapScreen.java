@@ -275,13 +275,17 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         renderCoordinates(guiGraphics, mouseX, mouseY);
 
-        renderZoomWidget(guiGraphics, mouseX, mouseY);
+        renderZoomText(guiGraphics);
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
+        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+
         if (isPanning) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
-        } else if (this.hovered != null) {
+        } else if (holdingZoomHandle) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (this.hovered != null || isMouseOverZoomHandle(mouseX, mouseY)) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 

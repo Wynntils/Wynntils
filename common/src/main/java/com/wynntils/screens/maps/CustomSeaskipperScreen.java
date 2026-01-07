@@ -192,7 +192,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderHoveredSeaskipperDestination(guiGraphics);
 
@@ -216,16 +216,11 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         if (isPanning) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
-        } else if (draggingScroll) {
+        } else if (draggingScroll || holdingZoomHandle) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (this.hoveredPoi != null
-                || MathUtils.isInside(
-                        mouseX,
-                        mouseY,
-                        (int) scrollButtonRenderX,
-                        (int) (scrollButtonRenderX + Texture.SCROLL_BUTTON.width() * currentTextureScale),
-                        (int) scrollButtonRenderY,
-                        (int) (scrollButtonRenderY + Texture.SCROLL_BUTTON.height() * currentTextureScale))) {
+                || isMouseOverScrollButton(mouseX, mouseY)
+                || isMouseOverZoomHandle(mouseX, mouseY)) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
@@ -271,13 +266,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         }
 
         if (!draggingScroll && (availablePois.size() > MAX_DESTINATIONS)) {
-            if (MathUtils.isInside(
-                    (int) event.x(),
-                    (int) event.y(),
-                    (int) scrollButtonRenderX,
-                    (int) (scrollButtonRenderX + Texture.SCROLL_BUTTON.width() * currentTextureScale),
-                    (int) scrollButtonRenderY,
-                    (int) (scrollButtonRenderY + Texture.SCROLL_BUTTON.height() * currentTextureScale))) {
+            if (isMouseOverScrollButton(event.x(), event.y())) {
                 draggingScroll = true;
 
                 return true;
@@ -669,6 +658,16 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
             buttonY += (int) ((Texture.DESTINATION_BUTTON.height() / 2) * currentTextureScale) + buttonOffset;
         }
+    }
+
+    private boolean isMouseOverScrollButton(double mouseX, double mouseY) {
+        return MathUtils.isInside(
+                (int) mouseX,
+                (int) mouseY,
+                (int) scrollButtonRenderX,
+                (int) (scrollButtonRenderX + Texture.SCROLL_BUTTON.width() * currentTextureScale),
+                (int) scrollButtonRenderY,
+                (int) (scrollButtonRenderY + Texture.SCROLL_BUTTON.height() * currentTextureScale));
     }
 
     private void toggleBorders() {

@@ -324,6 +324,8 @@ public enum Texture {
     MAP_INFO_TOOLTIP_CENTER("map/map_components/map_info_tooltip_center.png", 200, 5),
     MAP_INFO_TOOLTIP_TOP("map/map_components/map_info_tooltip_top.png", 200, 10),
     MAP_POINTERS("map/map_components/map_pointers.png", 256, 256),
+    ZOOM_BAR("map/map_components/zoom_bar.png", 4, 10),
+    ZOOM_HANDLE("map/map_components/zoom_handle.png", 12, 5),
     // endregion
 
     // region Overlays

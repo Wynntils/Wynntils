@@ -40,7 +40,9 @@ import java.util.Set;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -81,6 +83,10 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected float mapCenterX;
     protected float mapCenterZ;
+
+    protected boolean holdingZoomHandle = false;
+    protected float zoomHandleRenderX;
+    private float zoomHandleRenderY;
 
     // Zooming updates zoomLevel, but we also cache zoomRenderScale for rendering
     protected float zoomLevel = MapRenderer.DEFAULT_ZOOM_LEVEL;
@@ -135,7 +141,31 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         centerX = renderX + renderedBorderXOffset + mapWidth / 2f;
         centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
 
+        zoomHandleRenderX = this.renderWidth - renderedBorderXOffset - 15;
+
         mapButtons = new ArrayList<>();
+
+        // region Zoom slider & buttons
+        this.addRenderableWidget(Button.builder(Component.literal("-"), (button -> {
+                    int adjustment = KeyboardUtils.isShiftDown() ? 1 : 5;
+                    setZoomLevel(zoomLevel - adjustment);
+                }))
+                .pos((int) (this.renderWidth - renderedBorderXOffset - 16), (int)
+                        (this.renderHeight - renderedBorderYOffset - 16))
+                .size(14, 14)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.map.zoomDecrement")))
+                .build());
+
+        this.addRenderableWidget(Button.builder(Component.literal("+"), (button -> {
+                    int adjustment = KeyboardUtils.isShiftDown() ? 1 : 5;
+                    setZoomLevel(zoomLevel + adjustment);
+                }))
+                .pos((int) (this.renderWidth - renderedBorderXOffset - 16), (int)
+                        (this.renderHeight - renderedBorderYOffset - 16 - 100))
+                .size(14, 14)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.map.zoomIncrement")))
+                .build());
+        // endregion
     }
 
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
@@ -250,11 +280,21 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             }
         }
 
+        if (!holdingZoomHandle && isMouseOverZoomHandle(event.x(), event.y())) {
+            holdingZoomHandle = true;
+            return true;
+        }
+
         return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (holdingZoomHandle) {
+            updateZoomLevel(event.y());
+            return true;
+        }
+
         if (event.button() == 0
                 && event.x() >= renderX
                 && event.x() <= renderX + renderWidth
@@ -271,6 +311,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
         isPanning = false;
+        holdingZoomHandle = false;
 
         return super.mouseReleased(event);
     }
@@ -330,22 +371,38 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderZoomWidget(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderZoomText(GuiGraphics guiGraphics) {
         if (!KeyboardUtils.isShiftDown()) return;
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
                         StyledText.fromString("Zoom " + Math.round(zoomLevel)),
-                        renderX + renderedBorderXOffset + mapWidth - 40,
-                        this.renderHeight - this.renderedBorderYOffset - 10,
+                        renderX + renderedBorderXOffset + mapWidth - 50,
+                        this.renderHeight - this.renderedBorderYOffset - 9,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
     }
 
-    protected void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void renderZoomWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        RenderUtils.drawScalingTexturedRect(
+                guiGraphics,
+                Texture.ZOOM_BAR,
+                zoomHandleRenderX + 4,
+                renderHeight - renderedBorderYOffset - 2 - 100,
+                4,
+                86);
+
+        zoomHandleRenderY = renderHeight
+                - renderedBorderYOffset
+                - 2
+                - 100
+                + MathUtils.map(zoomLevel, MapRenderer.ZOOM_LEVELS, 0, 0, 87 - Texture.ZOOM_HANDLE.height());
+
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.ZOOM_HANDLE, zoomHandleRenderX, zoomHandleRenderY);
+
         for (Renderable renderable : this.renderables) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
         }
@@ -488,6 +545,29 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected boolean isPlayerInsideMainArea() {
         return MathUtils.isInside(
                 (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z);
+    }
+
+    protected boolean isMouseOverZoomHandle(double mouseX, double mouseY) {
+        return MathUtils.isInside(
+                (int) mouseX,
+                (int) mouseY,
+                (int) zoomHandleRenderX,
+                (int) (zoomHandleRenderX + Texture.ZOOM_HANDLE.width()),
+                (int) zoomHandleRenderY,
+                (int) (zoomHandleRenderY + Texture.ZOOM_HANDLE.height()));
+    }
+
+    protected void updateZoomLevel(double mouseY) {
+        int scrollAreaStartY = (int) (this.renderHeight - renderedBorderYOffset - 2 - 100);
+
+        int newZoom = Math.round(MathUtils.map(
+                (float) mouseY,
+                scrollAreaStartY,
+                scrollAreaStartY + 87 - Texture.ZOOM_HANDLE.height(),
+                MapRenderer.ZOOM_LEVELS,
+                0));
+
+        setZoomLevel(newZoom);
     }
 
     protected void setZoomLevel(float zoomLevel) {

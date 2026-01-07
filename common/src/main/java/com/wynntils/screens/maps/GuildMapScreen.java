@@ -241,11 +241,16 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
+        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+
         renderHoveredTerritoryInfo(guiGraphics);
 
         if (isPanning) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
-        } else if (this.hovered != null && !(this.hovered instanceof TerritoryPoi)) {
+        } else if (holdingZoomHandle) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if ((this.hovered != null && !(this.hovered instanceof TerritoryPoi))
+                || isMouseOverZoomHandle(mouseX, mouseY)) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
