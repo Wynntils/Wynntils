@@ -134,7 +134,7 @@ public final class LootrunModel extends Model {
     private static final Pattern ORANGE_AMOUNT_PATTERN =
             Pattern.compile("(?:.+)?§7(?:.+?)?for (?:§b)?(\\d+)(?:§r)? Challenges");
     private static final Pattern RAINBOW_AMOUNT_PATTERN =
-            Pattern.compile("(?:.+)§7(?:.+?)?next (?:§b)?(\\d+)(§(r|7))? Challenges");
+            Pattern.compile("(?:.+)?§7(?:.+?)?next (?:§b)?(\\d+)(§(r|7))? Challenges");
     private static final Pattern MISSION_COMPLETED_PATTERN =
             Pattern.compile("(?:[^\u0000-\u007F]+)?§b§lMission Completed");
 
