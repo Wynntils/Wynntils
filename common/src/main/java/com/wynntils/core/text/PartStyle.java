@@ -129,7 +129,7 @@ public final class PartStyle {
         //    short code given to the font, if such is present, or the full identifier if not.
         //    §{fas:X:Y} for AltasSprite where X is the Atlas identifier and Y is the Sprite Identifier.
         //    §{fps:X:Y:Z} for PlayerSprite where X is the profile UUID, Y is the profile name and Z is if the
-        //    hate layer is included or not.
+        //    hat layer is included or not.
 
         if (!type.includeBasicFormatting()) return "";
 
