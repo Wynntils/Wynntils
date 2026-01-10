@@ -1,18 +1,11 @@
-Updated to Minecraft 1.21.11
+Downloads
+- All downloads that came from GitHub are now downloaded by our own cdn. This should fix download issues for those in regions where GitHub is blocked
 
-(Fabric only) Updated required Fabric version to 0.18.4
-
-(NeoForge only) Updated required NeoForge version to 21.11.23-beta
-
-Categorised keybinds by their respective features category
-
-Custom Item Highlights
-- Added new highlight texture option Wynn, changed default to this
-
-Minimap
-- Temporarily removed circle map mask type
-  - Will be reimplemented as soon as possible
+Lootruns
+- A few Corkus challenge names were updated to match the Wynncraft Wiki
+  - Fruit Crate -> Fruit Basket
+  - Sanitizing Robots -> Armistice Sapling
+  - Robot Pirates -> Pirate Toll
 
 Fixes
-- Fixed item screenshots being off-center on NeoForge
-- Fixed crashing with VulkanMod, Auto Apply Resource Pack still causes issues for now
+- Fix orange and rainbow beacon effect counters not increasing
