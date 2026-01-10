@@ -78,6 +78,23 @@ public class InventoryFunctions {
         }
     }
 
+    public static class EquippedArmorSlotFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            InventoryArmor inventoryArmor =
+                    InventoryArmor.fromString(arguments.getArgument("armor").getStringValue());
+            if (inventoryArmor == null) return false;
+
+            ItemStack armorStack = McUtils.inventory().armor.get(inventoryArmor.getArmorSlot());
+            return !armorStack.isEmpty();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("armor", String.class, null)));
+        }
+    }
+
     public static class CappedInventorySlotsFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
