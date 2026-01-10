@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun;
@@ -132,9 +132,9 @@ public final class LootrunModel extends Model {
     private static final Pattern BEACONS_PATTERN = Pattern.compile(
             "[\uDAFF\uDFFF-\uDB00\uDC78]§(?<beaconOneColor>[a-z0-9#]+)§l(?<beaconOneVibrant>Vibrant )?.+? Beacon(§r[\uDAFF\uDFFF-\uDB00\uDC78]§(?<beaconTwoColor>[a-z0-9#]+)§l(?<beaconTwoVibrant>Vibrant )?.+ Beacon)?");
     private static final Pattern ORANGE_AMOUNT_PATTERN =
-            Pattern.compile(".+§7(?:.+?)?for (?:§b)?(\\d+)(?:§r)? Challenges");
+            Pattern.compile("(?:.+)?§7(?:.+?)?for (?:§b)?(\\d+)(?:§r)? Challenges");
     private static final Pattern RAINBOW_AMOUNT_PATTERN =
-            Pattern.compile(".+§7(?:.+?)?next (?:§b)?(\\d+)(§(r|7))? Challenges");
+            Pattern.compile("(?:.+)?§7(?:.+?)?next (?:§b)?(\\d+)(§(r|7))? Challenges");
     private static final Pattern MISSION_COMPLETED_PATTERN =
             Pattern.compile("(?:[^\u0000-\u007F]+)?§b§lMission Completed");
 
