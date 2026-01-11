@@ -14,6 +14,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ public class RevealNicknamesFeature extends Feature {
     @Persisted
     private final Config<NicknameReplaceOption> nicknameReplaceOption =
             new Config<>(NicknameReplaceOption.PREPEND_USERNAME);
+
+    @Persisted
+    private final Config<Boolean> keepOwnNickname = new Config<>(false);
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerChat(ChatMessageEvent.Edit event) {
@@ -67,6 +71,10 @@ public class RevealNicknamesFeature extends Feature {
 
             // If the nickname or username is null, it's not a nickname text part
             if (nickname == null || username == null) {
+                return IterationDecision.CONTINUE;
+            }
+
+            if (username.equals(McUtils.playerName()) && keepOwnNickname.get()) {
                 return IterationDecision.CONTINUE;
             }
 
