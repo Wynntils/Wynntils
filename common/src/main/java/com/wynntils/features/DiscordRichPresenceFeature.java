@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
@@ -123,7 +123,7 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        if (config == disableInStream && Models.WorldState.isInStream()) {
+        if (config == disableInStream && Models.StreamerMode.isInStream()) {
             if (disableInStream.get()) {
                 disableRichPresence();
             } else {
