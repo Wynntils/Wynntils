@@ -1344,6 +1344,8 @@
   "feature.wynntils.removeWynncraftChatWrap.description": "Removes the default Wynncraft chat wrap that's applied to most messages.",
   "feature.wynntils.removeWynncraftChatWrap.name": "Remove Wynncraft Chat Wrap",
   "feature.wynntils.revealNicknames.description": "Reveals nicknames of players in chat.",
+  "feature.wynntils.revealNicknames.keepOwnNickname.description": "Should your nickname not be revealed?",
+  "feature.wynntils.revealNicknames.keepOwnNickname.name": "Keep Own Nickname",
   "feature.wynntils.revealNicknames.name": "Reveal Nicknames",
   "feature.wynntils.revealNicknames.nicknameReplaceOption.description": "How should the nickname be replaced in chat?",
   "feature.wynntils.revealNicknames.nicknameReplaceOption.name": "Nickname Replace Option",
