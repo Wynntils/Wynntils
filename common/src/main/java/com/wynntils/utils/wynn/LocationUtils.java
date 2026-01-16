@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -7,6 +7,7 @@ package com.wynntils.utils.wynn;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.CardinalDirection;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,6 +49,12 @@ public final class LocationUtils {
         String locationString = "My compass is at " + compass;
 
         LocationUtils.sendShareMessage(target, locationString);
+    }
+
+    public static CardinalDirection getCardinalDirection(float yawDegrees) {
+        yawDegrees = ((yawDegrees + 180f) % 360f + 360f) % 360f - 180f;
+        int index = Math.floorMod((int) Math.floor((yawDegrees + 202.5f) / 45f), 8);
+        return CardinalDirection.values()[index];
     }
 
     private static void sendShareMessage(String target, String locationString) {
