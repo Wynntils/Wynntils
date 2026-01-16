@@ -59,15 +59,11 @@ public final class OverlayManager extends Manager {
     // region Initialization and Registration
 
     private void registerOverlay(
-            Overlay overlay,
-            Feature parent,
-            RenderElementType elementType,
-            RenderState renderAt,
-            boolean enabledByDefault) {
+            Overlay overlay, Feature parent, RenderElementType elementType, boolean enabledByDefault) {
         overlayParentMap.putIfAbsent(parent, new LinkedList<>());
         overlayParentMap.get(parent).add(overlay);
 
-        overlayInfoMap.put(overlay, new OverlayInfoContainer(parent, elementType, renderAt, enabledByDefault));
+        overlayInfoMap.put(overlay, new OverlayInfoContainer(parent, elementType, enabledByDefault));
     }
 
     private void unregisterOverlay(Overlay overlay) {
@@ -116,8 +112,7 @@ public final class OverlayManager extends Manager {
                 }
 
                 OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
-                Managers.Overlay.registerOverlay(
-                        overlay, feature, annotation.renderType(), annotation.renderAt(), annotation.enabled());
+                Managers.Overlay.registerOverlay(overlay, feature, annotation.renderType(), annotation.enabled());
 
                 assert !overlay.getTranslatedName().startsWith("feature.wynntils.")
                         : "Fix i18n for " + overlay.getTranslatedName();
@@ -132,8 +127,7 @@ public final class OverlayManager extends Manager {
                 .filter(f -> f.isAnnotationPresent(OverlayGroup.class))
                 .map(field -> {
                     OverlayGroup annotation = field.getAnnotation(OverlayGroup.class);
-                    return new OverlayGroupHolder(
-                            field, feature, annotation.renderType(), annotation.renderAt(), annotation.instances());
+                    return new OverlayGroupHolder(field, feature, annotation.renderType(), annotation.instances());
                 })
                 .toList();
 
@@ -189,8 +183,7 @@ public final class OverlayManager extends Manager {
         holder.initGroup(ids);
 
         holder.getOverlays()
-                .forEach(overlay -> registerOverlay(
-                        overlay, holder.getParent(), holder.getElementType(), holder.getRenderState(), true));
+                .forEach(overlay -> registerOverlay(overlay, holder.getParent(), holder.getElementType(), true));
     }
 
     // endregion
@@ -210,19 +203,22 @@ public final class OverlayManager extends Manager {
 
     @SubscribeEvent
     public void onRenderPre(RenderEvent.Pre event) {
-        Profiler.get().push("preRenOverlay");
-        renderOverlays(event, RenderState.PRE);
+        Profiler.get().push("preRenOverlay" + event.getType().name());
+        renderOverlays(event);
         Profiler.get().pop();
     }
 
     @SubscribeEvent
     public void onRenderPost(RenderEvent.Post event) {
+        // Only GUI_POST is used for rendering overlays
+        if (event.getType() != RenderElementType.GUI_POST) return;
+
         Profiler.get().push("postRenOverlay");
-        renderOverlays(event, RenderState.POST);
+        renderOverlays(event);
         Profiler.get().pop();
     }
 
-    private void renderOverlays(RenderEvent event, RenderState renderState) {
+    private void renderOverlays(RenderEvent event) {
         boolean showPreview = false;
         boolean renderNonSelected = true;
         boolean shouldRender = true;
@@ -246,10 +242,6 @@ public final class OverlayManager extends Manager {
             OverlayInfoContainer renderInfo = overlayInfoMap.get(overlay);
 
             if (renderInfo.elementType() != event.getType()) {
-                continue;
-            }
-
-            if (renderInfo.renderState() != renderState) {
                 continue;
             }
 
@@ -399,6 +391,5 @@ public final class OverlayManager extends Manager {
         return overlayGroupMap.getOrDefault(feature, List.of());
     }
 
-    private record OverlayInfoContainer(
-            Feature parent, RenderElementType elementType, RenderState renderState, boolean enabledByDefault) {}
+    private record OverlayInfoContainer(Feature parent, RenderElementType elementType, boolean enabledByDefault) {}
 }

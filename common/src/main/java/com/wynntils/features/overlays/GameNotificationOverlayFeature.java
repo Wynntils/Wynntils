@@ -16,7 +16,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GameNotificationOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay gameNotificationOverlay = new GameNotificationOverlay();
 
     public GameNotificationOverlayFeature() {

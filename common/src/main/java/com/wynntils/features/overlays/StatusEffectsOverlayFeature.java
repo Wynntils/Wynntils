@@ -14,7 +14,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class StatusEffectsOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     public final StatusEffectsOverlay statusEffectsOverlay = new StatusEffectsOverlay();
 
     public StatusEffectsOverlayFeature() {

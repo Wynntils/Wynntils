@@ -16,10 +16,10 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class SpellCastMessageOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay spellCastOverlay = new SpellCastMessageOverlay();
 
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay spellInputsOverlay = new SpellInputsOverlay();
 
     public SpellCastMessageOverlayFeature() {

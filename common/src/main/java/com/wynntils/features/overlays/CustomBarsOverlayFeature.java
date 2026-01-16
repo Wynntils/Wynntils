@@ -6,7 +6,6 @@ package com.wynntils.features.overlays;
 
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
-import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayGroup;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -22,19 +21,19 @@ import java.util.List;
 @ConfigCategory(Category.OVERLAYS)
 public class CustomBarsOverlayFeature extends Feature {
     // If adding a new bar, make sure to update CustomBarSelectionScreen
-    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI, renderAt = RenderState.PRE)
+    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI_PRE)
     private final List<UniversalTexturedCustomBarOverlay> customUniversalBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI, renderAt = RenderState.PRE)
+    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI_PRE)
     private final List<HealthTexturedCustomBarOverlay> customHealthBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI, renderAt = RenderState.PRE)
+    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI_PRE)
     private final List<ManaTexturedCustomBarOverlay> customManaBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI, renderAt = RenderState.PRE)
+    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI_PRE)
     private final List<ExperienceTexturedCustomBarOverlay> customExperienceBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI, renderAt = RenderState.PRE)
+    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI_PRE)
     private final List<BubbleTexturedCustomBarOverlay> customBubbleBarOverlays = new ArrayList<>();
 
     public CustomBarsOverlayFeature() {

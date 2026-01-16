@@ -11,7 +11,6 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
@@ -56,7 +55,7 @@ public class StopwatchFeature extends Feature {
             })
             .build();
 
-    @OverlayInfo(renderType = RenderElementType.GUI, renderAt = RenderState.PRE)
+    @OverlayInfo(renderType = RenderElementType.GUI_PRE)
     private final Overlay stopwatchOverlay = new StopwatchOverlay();
 
     public StopwatchFeature() {

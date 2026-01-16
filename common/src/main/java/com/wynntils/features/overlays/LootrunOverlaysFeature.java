@@ -19,16 +19,16 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class LootrunOverlaysFeature extends Feature {
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay lootrunTaskNameOverlay = new LootrunTaskNameOverlay();
 
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay lootrunBeaconCountOverlay = new LootrunBeaconCountOverlay();
 
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay lootrunMissionOverlay = new LootrunMissionsOverlay();
 
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay lootrunTrialOverlay = new LootrunTrialsOverlay();
 
     public LootrunOverlaysFeature() {

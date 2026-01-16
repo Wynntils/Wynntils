@@ -17,7 +17,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class TerritoryAttackTimerOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay territoryAttackTimerOverlay = new TerritoryAttackTimerOverlay();
 
     @Persisted

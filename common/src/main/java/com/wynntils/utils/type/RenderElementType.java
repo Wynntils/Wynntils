@@ -5,9 +5,10 @@
 package com.wynntils.utils.type;
 
 public enum RenderElementType {
-    GUI, // This is called before and after Gui#render
+    GUI_PRE,
     CROSSHAIR,
     PLAYER_TAB_LIST,
     SCOREBOARD,
-    SELECTED_ITEM
+    SELECTED_ITEM,
+    GUI_POST
 }

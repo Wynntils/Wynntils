@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.consumers.overlays.annotations;
 
-import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.utils.type.RenderElementType;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -18,6 +17,4 @@ public @interface OverlayInfo {
     boolean enabled() default true;
 
     RenderElementType renderType();
-
-    RenderState renderAt() default RenderState.POST;
 }

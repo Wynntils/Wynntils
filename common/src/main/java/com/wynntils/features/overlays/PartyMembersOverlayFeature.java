@@ -16,7 +16,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class PartyMembersOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay partyMembersOverlay = new PartyMembersOverlay();
 
     public PartyMembersOverlayFeature() {

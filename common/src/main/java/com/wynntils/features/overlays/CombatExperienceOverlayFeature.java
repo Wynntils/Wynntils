@@ -7,7 +7,6 @@ package com.wynntils.features.overlays;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -17,7 +16,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CombatExperienceOverlayFeature extends Feature {
-    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_PRE)
     private final Overlay combatExperienceOverlay = new CombatExperienceOverlay();
 
     public CombatExperienceOverlayFeature() {

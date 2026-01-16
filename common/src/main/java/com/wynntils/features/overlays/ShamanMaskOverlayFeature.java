@@ -15,7 +15,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class ShamanMaskOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay shamanMaskOverlay = new ShamanMaskOverlay();
 
     public ShamanMaskOverlayFeature() {

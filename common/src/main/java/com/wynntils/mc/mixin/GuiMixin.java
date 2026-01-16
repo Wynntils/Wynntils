@@ -94,7 +94,7 @@ public abstract class GuiMixin {
         if (this.minecraft.screen instanceof LevelLoadingScreen) return;
         if (McUtils.options().hideGui) return;
         MixinHelper.post(
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.GUI));
+                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.GUI_PRE));
     }
 
     @Inject(
@@ -103,8 +103,8 @@ public abstract class GuiMixin {
     private void onRenderGuiPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (this.minecraft.screen instanceof LevelLoadingScreen) return;
         if (McUtils.options().hideGui) return;
-        MixinHelper.post(
-                new RenderEvent.Post(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.GUI));
+        MixinHelper.post(new RenderEvent.Post(
+                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.GUI_POST));
     }
 
     @Inject(

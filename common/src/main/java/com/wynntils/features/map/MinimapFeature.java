@@ -8,7 +8,6 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
@@ -22,13 +21,13 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.MAP)
 public class MinimapFeature extends Feature {
-    @OverlayInfo(renderType = RenderElementType.GUI, renderAt = RenderState.PRE)
+    @OverlayInfo(renderType = RenderElementType.GUI_PRE)
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
-    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_PRE)
     private final Overlay coordinatesOverlay = new CoordinateOverlay();
 
-    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_PRE)
     private final Overlay territoryOverlay = new TerritoryOverlay();
 
     @RegisterKeyBind

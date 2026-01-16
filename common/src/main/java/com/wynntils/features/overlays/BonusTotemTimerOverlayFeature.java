@@ -16,10 +16,10 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class BonusTotemTimerOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay mobTotemTimerOverlay = new MobTotemTimerOverlay();
 
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay gatheringTotemTimerOverlay = new GatheringTotemTimerOverlay();
 
     public BonusTotemTimerOverlayFeature() {

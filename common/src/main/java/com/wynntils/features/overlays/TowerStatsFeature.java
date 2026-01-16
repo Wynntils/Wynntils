@@ -31,7 +31,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class TowerStatsFeature extends Feature {
     private static final int SEPARATOR_LENGTH = 40;
 
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     public final Overlay towerStatsOverlay = new TowerStatsOverlay();
 
     @Persisted

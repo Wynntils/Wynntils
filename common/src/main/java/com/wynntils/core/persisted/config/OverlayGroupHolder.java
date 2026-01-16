@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.utils.type.RenderElementType;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -22,16 +21,13 @@ public class OverlayGroupHolder {
     private final Feature parent;
     private final int defaultCount;
     private final RenderElementType elementType;
-    private final RenderState renderState;
 
     private final Class<?> overlayClass;
 
-    public OverlayGroupHolder(
-            Field field, Feature parent, RenderElementType elementType, RenderState renderState, int defaultCount) {
+    public OverlayGroupHolder(Field field, Feature parent, RenderElementType elementType, int defaultCount) {
         this.field = field;
         this.parent = parent;
         this.elementType = elementType;
-        this.renderState = renderState;
         this.defaultCount = defaultCount;
 
         Type genericType = this.field.getGenericType();
@@ -66,10 +62,6 @@ public class OverlayGroupHolder {
 
     public RenderElementType getElementType() {
         return elementType;
-    }
-
-    public RenderState getRenderState() {
-        return renderState;
     }
 
     public int getDefaultCount() {

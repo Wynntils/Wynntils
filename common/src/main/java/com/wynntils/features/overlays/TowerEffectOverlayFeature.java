@@ -34,10 +34,10 @@ public class TowerEffectOverlayFeature extends Feature {
     private static final SoundEvent AURA_SOUND = SoundEvents.ANVIL_LAND;
     private static final SoundEvent VOLLEY_SOUND = SoundEvents.BLAZE_SHOOT;
 
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay auraTimerOverlay = new TowerAuraTimerOverlay();
 
-    @OverlayInfo(renderType = RenderElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI_POST)
     private final Overlay volleyTimerOverlay = new TowerVolleyTimerOverlay();
 
     // Sound configs
@@ -92,7 +92,7 @@ public class TowerEffectOverlayFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderGui(RenderEvent.Post event) {
-        if (event.getType() != RenderElementType.GUI) return;
+        if (event.getType() != RenderElementType.GUI_POST) return;
 
         if (vignetteOnAura.get()) {
             renderAuraVignette(event.getGuiGraphics());
