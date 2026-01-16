@@ -107,18 +107,6 @@ public abstract class GuiMixin {
     }
 
     @Inject(
-            method = "renderVehicleHealth(Lnet/minecraft/client/gui/GuiGraphics;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void onRenderVehicleHealth(GuiGraphics guiGraphics, CallbackInfo ci) {
-        if (!MixinHelper.onWynncraft()) return;
-
-        // On Wynncraft we always cancel vehicle health; it has no purpose and it interferes
-        // with our foodbar event above
-        ci.cancel();
-    }
-
-    @Inject(
             method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("HEAD"),
             cancellable = true)
@@ -126,35 +114,6 @@ public abstract class GuiMixin {
         RenderEvent.Pre event = new RenderEvent.Pre(
                 guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.CROSSHAIR);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(
-            method =
-                    "renderHearts(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void onRenderHeartsPre(
-            GuiGraphics guiGraphics,
-            Player player,
-            int x,
-            int y,
-            int height,
-            int offsetHeartIndex,
-            float maxHealth,
-            int currentHealth,
-            int displayHealth,
-            int absorptionAmount,
-            boolean renderHighlight,
-            CallbackInfo ci) {
-        if (!MixinHelper.onWynncraft()) return;
-
-        RenderEvent.Pre event = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.HEALTH_BAR);
-        MixinHelper.post(event);
-
         if (event.isCanceled()) {
             ci.cancel();
         }

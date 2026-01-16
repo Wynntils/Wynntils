@@ -42,8 +42,6 @@ public abstract class RenderEvent extends Event {
     public enum ElementType {
         GUI, // This is called before and after Gui#render
         CROSSHAIR,
-        HEALTH_BAR,
-        FOOD_BAR,
         PLAYER_TAB_LIST,
         SCOREBOARD,
         SELECTED_ITEM
