@@ -876,8 +876,6 @@
   "feature.wynntils.minimap.description": "Ajoute une mini-carte en tant que superposition.",
   "feature.wynntils.minimap.name": "Minicartes",
   "feature.wynntils.minimap.overlay.coordinate.name": "Coordonnées",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "Les coordonnées doivent-elles être colorées selon les couleurs de l'écran de débogage ?",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "Coloré",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "Les coordonnées originales doivent-elles être affichées ?",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "Afficher les Coordonnées Originales",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "Quel style doit avoir la bordure de la mini-carte ?",

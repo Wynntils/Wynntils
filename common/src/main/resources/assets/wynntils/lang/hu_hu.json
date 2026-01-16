@@ -876,8 +876,6 @@
   "feature.wynntils.minimap.description": "Hozzáad egy minitérképet átfedésként.",
   "feature.wynntils.minimap.name": "Minitérképek",
   "feature.wynntils.minimap.overlay.coordinate.name": "Koordináták",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "A koordináták színezve legyenek a hibakereső képernyő színei szerint?",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "Színezett",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "Megjelenjenek az eredeti koordináták?",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "Eredeti Koordináták Megjelenítése",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "Milyen stílusú legyen a minitérkép kerete?",

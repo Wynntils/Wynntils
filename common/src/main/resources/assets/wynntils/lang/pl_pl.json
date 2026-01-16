@@ -876,8 +876,6 @@
   "feature.wynntils.minimap.description": "Dodaje minimapę jako nakładkę.",
   "feature.wynntils.minimap.name": "Minimapy",
   "feature.wynntils.minimap.overlay.coordinate.name": "Koordynaty",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "Czy koordynaty powinny być kolorowane zgodnie z kolorami ekranu debugowania?",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "Kolorowane",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "Czy wyświetlać oryginalne koordynaty?",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "Wyświetl Oryginalne Koordynaty",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "Jaki styl powinna mieć ramka minimapy?",
