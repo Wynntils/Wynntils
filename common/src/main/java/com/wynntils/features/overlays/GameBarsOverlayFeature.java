@@ -26,13 +26,13 @@ import com.wynntils.overlays.gamebars.OphanimBarOverlay;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GameBarsOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.HEALTH_BAR, renderAt = RenderState.REPLACE)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final HealthBarOverlay healthBarOverlay = new HealthBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.FOOD_BAR, renderAt = RenderState.REPLACE)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final ManaBarOverlay manaBarOverlay = new ManaBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)

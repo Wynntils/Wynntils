@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import net.minecraft.util.profiling.Profiler;
-import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -249,17 +248,8 @@ public final class OverlayManager extends Manager {
                 continue;
             }
 
-            if (renderInfo.renderState() == RenderState.REPLACE) {
-                if (renderState != RenderState.PRE) {
-                    continue;
-                }
-                if (event instanceof ICancellableEvent cancellableEvent) {
-                    cancellableEvent.setCanceled(true);
-                }
-            } else {
-                if (renderInfo.renderState() != renderState) {
-                    continue;
-                }
+            if (renderInfo.renderState() != renderState) {
+                continue;
             }
 
             try {
