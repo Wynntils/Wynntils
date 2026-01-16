@@ -23,6 +23,7 @@ import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.type.RenderElementType;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public final class OverlayManager extends Manager {
     private void registerOverlay(
             Overlay overlay,
             Feature parent,
-            RenderEvent.ElementType elementType,
+            RenderElementType elementType,
             RenderState renderAt,
             boolean enabledByDefault) {
         overlayParentMap.putIfAbsent(parent, new LinkedList<>());
@@ -399,5 +400,5 @@ public final class OverlayManager extends Manager {
     }
 
     private record OverlayInfoContainer(
-            Feature parent, RenderEvent.ElementType elementType, RenderState renderState, boolean enabledByDefault) {}
+            Feature parent, RenderElementType elementType, RenderState renderState, boolean enabledByDefault) {}
 }

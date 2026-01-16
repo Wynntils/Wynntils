@@ -8,6 +8,7 @@ import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -92,8 +93,8 @@ public abstract class GuiMixin {
     private void onRenderGuiPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (this.minecraft.screen instanceof LevelLoadingScreen) return;
         if (McUtils.options().hideGui) return;
-        MixinHelper.post(new RenderEvent.Pre(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
+        MixinHelper.post(
+                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.GUI));
     }
 
     @Inject(
@@ -102,8 +103,8 @@ public abstract class GuiMixin {
     private void onRenderGuiPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (this.minecraft.screen instanceof LevelLoadingScreen) return;
         if (McUtils.options().hideGui) return;
-        MixinHelper.post(new RenderEvent.Post(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
+        MixinHelper.post(
+                new RenderEvent.Post(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.GUI));
     }
 
     @Inject(
@@ -111,8 +112,8 @@ public abstract class GuiMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void onRenderCrosshairPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        RenderEvent.Pre event = new RenderEvent.Pre(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.CROSSHAIR);
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.CROSSHAIR);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
@@ -128,7 +129,7 @@ public abstract class GuiMixin {
         if (!MixinHelper.onWynncraft()) return;
 
         RenderEvent.Pre event = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.SCOREBOARD);
+                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderElementType.SCOREBOARD);
         MixinHelper.post(event);
 
         if (event.isCanceled()) {
@@ -144,7 +145,7 @@ public abstract class GuiMixin {
         if (!MixinHelper.onWynncraft()) return;
 
         RenderEvent.Pre event = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.SELECTED_ITEM);
+                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderElementType.SELECTED_ITEM);
         MixinHelper.post(event);
 
         if (event.isCanceled()) {

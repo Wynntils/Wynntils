@@ -15,20 +15,20 @@ import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.minimap.CoordinateOverlay;
 import com.wynntils.overlays.minimap.MinimapOverlay;
 import com.wynntils.overlays.minimap.TerritoryOverlay;
+import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.MAP)
 public class MinimapFeature extends Feature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
+    @OverlayInfo(renderType = RenderElementType.GUI, renderAt = RenderState.PRE)
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
-    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderElementType.GUI)
     private final Overlay coordinatesOverlay = new CoordinateOverlay();
 
-    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderElementType.GUI)
     private final Overlay territoryOverlay = new TerritoryOverlay();
 
     @RegisterKeyBind

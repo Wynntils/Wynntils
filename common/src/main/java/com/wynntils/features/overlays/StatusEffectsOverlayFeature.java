@@ -9,12 +9,12 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.StatusEffectsOverlay;
+import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class StatusEffectsOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI)
     public final StatusEffectsOverlay statusEffectsOverlay = new StatusEffectsOverlay();
 
     public StatusEffectsOverlayFeature() {

@@ -11,12 +11,12 @@ import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.ContentTrackerOverlay;
+import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class ContentTrackerOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI)
     private final Overlay trackerOverlay = new ContentTrackerOverlay();
 
     public ContentTrackerOverlayFeature() {

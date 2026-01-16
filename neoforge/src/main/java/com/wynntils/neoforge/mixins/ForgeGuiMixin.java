@@ -31,7 +31,7 @@ public abstract class ForgeGuiMixin {
         if (!MixinHelper.onWynncraft()) return;
 
         RenderEvent.Pre event = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.SELECTED_ITEM);
+                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderElementType.SELECTED_ITEM);
         MixinHelper.post(event);
 
         if (event.isCanceled()) {

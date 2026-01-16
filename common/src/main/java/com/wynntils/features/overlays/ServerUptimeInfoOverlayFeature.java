@@ -11,12 +11,12 @@ import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.ServerUptimeInfoOverlay;
+import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class ServerUptimeInfoOverlayFeature extends Feature {
-    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderElementType.GUI)
     private final Overlay ServerUptimeInfoOverlay = new ServerUptimeInfoOverlay();
 
     public ServerUptimeInfoOverlayFeature() {

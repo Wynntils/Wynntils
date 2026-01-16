@@ -23,6 +23,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.type.RenderElementType;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -186,7 +187,7 @@ public class ScoreboardOverlay extends Overlay {
 
     @SubscribeEvent
     public void onScoreboardRender(RenderEvent.Pre event) {
-        if (event.getType() != RenderEvent.ElementType.SCOREBOARD) return;
+        if (event.getType() != RenderElementType.SCOREBOARD) return;
         if (shouldDisplayOriginal.get()) return;
 
         event.setCanceled(true);

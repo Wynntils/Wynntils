@@ -21,13 +21,13 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.PacketEvent;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.overlays.NpcDialogueOverlay;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.RenderElementType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -57,7 +57,7 @@ public class NpcDialogueFeature extends Feature {
     private static final StyledText PRESS_SHIFT_TO_CONTINUE =
             StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.pressShiftToContinue"));
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI)
     private final NpcDialogueOverlay npcDialogueOverlay = new NpcDialogueOverlay();
 
     @RegisterKeyBind

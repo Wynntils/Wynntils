@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -7,6 +7,7 @@ package com.wynntils.mc.mixin;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
@@ -27,7 +28,7 @@ public class PlayerTabOverlayMixin {
     private void render(
             GuiGraphics guiGraphics, int width, Scoreboard scoreboard, Objective objective, CallbackInfo ci) {
         RenderEvent.Pre renderEvent = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, McUtils.window(), RenderEvent.ElementType.PLAYER_TAB_LIST);
+                guiGraphics, DeltaTracker.ZERO, McUtils.window(), RenderElementType.PLAYER_TAB_LIST);
         MixinHelper.post(renderEvent);
 
         if (renderEvent.isCanceled()) {

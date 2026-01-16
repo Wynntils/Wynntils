@@ -11,12 +11,12 @@ import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.PartyMembersOverlay;
+import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class PartyMembersOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI)
     private final Overlay partyMembersOverlay = new PartyMembersOverlay();
 
     public PartyMembersOverlayFeature() {

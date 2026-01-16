@@ -13,13 +13,13 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.war.event.GuildWarEvent;
 import com.wynntils.models.war.type.WarBattleInfo;
 import com.wynntils.models.war.type.WarTowerState;
 import com.wynntils.overlays.TowerStatsOverlay;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -31,7 +31,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class TowerStatsFeature extends Feature {
     private static final int SEPARATOR_LENGTH = 40;
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI)
     public final Overlay towerStatsOverlay = new TowerStatsOverlay();
 
     @Persisted

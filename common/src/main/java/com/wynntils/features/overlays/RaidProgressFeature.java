@@ -12,12 +12,12 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
 import com.wynntils.overlays.RaidProgressOverlay;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,7 +29,7 @@ public class RaidProgressFeature extends Feature {
     private static final String TIME_FORMAT_MILLISECONDS = "%02d:%02d.%03d";
     private static final String TIME_FORMAT_SECONDS = "%02d:%02d";
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderElementType.GUI)
     private final RaidProgressOverlay raidProgressOverlay = new RaidProgressOverlay();
 
     @Persisted
