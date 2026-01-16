@@ -6,9 +6,15 @@ package com.wynntils.utils.type;
 
 public enum RenderElementType {
     GUI_PRE,
+    CAMERA_OVERLAYS,
     CROSSHAIR,
-    PLAYER_TAB_LIST,
-    SCOREBOARD,
+    HOTBAR,
     SELECTED_ITEM,
+    BOSS_BARS,
+    SCOREBOARD,
+    ACTION_BAR,
+    TITLE,
+    CHAT,
+    PLAYER_TAB_LIST,
     GUI_POST
 }

@@ -6,6 +6,7 @@ package com.wynntils.neoforge.mixins;
 
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -22,6 +23,14 @@ public abstract class ForgeGuiMixin {
     @Shadow
     @Final
     protected Minecraft minecraft;
+
+    @Inject(
+            method = "renderHotbar(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
+            at = @At("HEAD"))
+    private void onRenderHotbarPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        MixinHelper.post(
+                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.HOTBAR));
+    }
 
     @Inject(
             method = "renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;I)V",
