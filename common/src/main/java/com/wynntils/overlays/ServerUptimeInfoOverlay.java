@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -34,7 +34,7 @@ public class ServerUptimeInfoOverlay extends TextOverlay {
 
     @Override
     protected String getTemplate() {
-        String currentWorldStr = !showWorldInStream.get() && Models.WorldState.isInStream() ? "-" : "{current_world}";
+        String currentWorldStr = !showWorldInStream.get() && Models.StreamerMode.isInStream() ? "-" : "{current_world}";
 
         return "§7Your World: §b(" + currentWorldStr
                 + ") §e{current_world_uptime}\n§7Newest World: §b({newest_world}) §e{world_uptime(newest_world)}";

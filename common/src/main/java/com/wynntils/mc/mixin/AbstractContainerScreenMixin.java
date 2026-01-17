@@ -101,9 +101,15 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(
             method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;II)V",
-            at = @At("HEAD"))
+            at = @At("HEAD"),
+            cancellable = true)
     private void renderSlotPre(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
-        MixinHelper.post(new SlotRenderEvent.Pre(guiGraphics, (Screen) (Object) this, slot));
+        SlotRenderEvent.Pre event = new SlotRenderEvent.Pre(guiGraphics, (Screen) (Object) this, slot);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            info.cancel();
+        }
     }
 
     @Inject(

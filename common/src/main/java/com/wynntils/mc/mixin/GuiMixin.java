@@ -31,7 +31,8 @@ public abstract class GuiMixin {
     @Inject(
             method =
                     "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/client/DeltaTracker;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
-            at = @At("HEAD"))
+            at = @At("HEAD"),
+            cancellable = true)
     private void renderSlotPre(
             GuiGraphics guiGraphics,
             int x,
@@ -41,7 +42,12 @@ public abstract class GuiMixin {
             ItemStack itemStack,
             int i,
             CallbackInfo info) {
-        MixinHelper.post(new HotbarSlotRenderEvent.Pre(guiGraphics, itemStack, x, y));
+        HotbarSlotRenderEvent.Pre event = new HotbarSlotRenderEvent.Pre(guiGraphics, itemStack, x, y);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            info.cancel();
+        }
     }
 
     @Inject(

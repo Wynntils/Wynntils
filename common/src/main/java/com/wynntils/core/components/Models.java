@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -65,6 +65,7 @@ import com.wynntils.models.war.GuildWarTowerModel;
 import com.wynntils.models.war.WarModel;
 import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.ServerListModel;
+import com.wynntils.models.worlds.StreamerModeModel;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.wynnalphabet.WynnAlphabetModel;
 import com.wynntils.models.wynnfont.WynnFontModel;
@@ -124,6 +125,7 @@ public final class Models {
     public static final SpellModel Spell = new SpellModel();
     public static final StatModel Stat = new StatModel();
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
+    public static final StreamerModeModel StreamerMode = new StreamerModeModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
     public static final TradeMarketModel TradeMarket = new TradeMarketModel();
