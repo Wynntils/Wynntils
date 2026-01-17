@@ -29,7 +29,6 @@ import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.Equippable;
 
@@ -63,38 +62,33 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
         if (texture == null) return;
 
         if (!renderState.isInvisible && renderState.showCape) {
-            PlayerSkin playerSkin = renderState.skin;
-            if (playerSkin.cape() != null) {
-                if (!this.hasLayer(renderState.chestEquipment, EquipmentClientInfo.LayerType.WINGS)) {
-                    poseStack.pushPose();
-                    if (this.hasLayer(renderState.chestEquipment, EquipmentClientInfo.LayerType.HUMANOID)) {
-                        poseStack.translate(0.0F, -0.053125F, 0.06875F);
-                    }
-
-                    RenderTranslucentCheckEvent.Cape translucentCheckEvent =
-                            new RenderTranslucentCheckEvent.Cape(false, renderState, 1.0f);
-                    MixinHelper.post(translucentCheckEvent);
-
-                    RenderType renderType = translucentCheckEvent.getTranslucence() == 1.0f
-                            ? RenderTypes.entityCutout(texture)
-                            : RenderTypes.entityTranslucent(texture);
-
-                    nodeCollector.submitModel(
-                            this.model,
-                            renderState,
-                            poseStack,
-                            renderType,
-                            packedLight,
-                            OverlayTexture.NO_OVERLAY,
-                            CommonColors.WHITE
-                                    .withAlpha(translucentCheckEvent.getTranslucence())
-                                    .asInt(),
-                            null,
-                            renderState.outlineColor,
-                            null);
-                    poseStack.popPose();
-                }
+            poseStack.pushPose();
+            if (this.hasLayer(renderState.chestEquipment, EquipmentClientInfo.LayerType.HUMANOID)) {
+                poseStack.translate(0.0F, -0.053125F, 0.06875F);
             }
+
+            RenderTranslucentCheckEvent.Cape translucentCheckEvent =
+                    new RenderTranslucentCheckEvent.Cape(false, renderState, 1.0f);
+            MixinHelper.post(translucentCheckEvent);
+
+            RenderType renderType = translucentCheckEvent.getTranslucence() == 1.0f
+                    ? RenderTypes.entityCutout(texture)
+                    : RenderTypes.entityTranslucent(texture);
+
+            nodeCollector.submitModel(
+                    this.model,
+                    renderState,
+                    poseStack,
+                    renderType,
+                    packedLight,
+                    OverlayTexture.NO_OVERLAY,
+                    CommonColors.WHITE
+                            .withAlpha(translucentCheckEvent.getTranslucence())
+                            .asInt(),
+                    null,
+                    renderState.outlineColor,
+                    null);
+            poseStack.popPose();
         }
     }
 
