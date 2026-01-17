@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -22,11 +22,19 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
 
 public class BombBellCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> BOMB_TYPE_SUGGESTION_PROVIDER = (context, builder) ->
             SharedSuggestionProvider.suggest(Arrays.stream(BombType.values()).map(Enum::name), builder);
+
+    private static final Component CHAMPION_CHARACTER = Component.literal("\uE003")
+            .withStyle(Style.EMPTY
+                    .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("chat/rank")))
+                    .withColor(ChatFormatting.WHITE));
 
     @Override
     public String getCommandName() {
@@ -83,7 +91,7 @@ public class BombBellCommand extends Command {
             response.append(Component.literal(
                                     "There are no active bombs at the moment! This might be because there are no bombs currently, or you do not have the ")
                             .withStyle(ChatFormatting.RED))
-                    .append(Component.literal("CHAMPION").withStyle(ChatFormatting.YELLOW))
+                    .append(CHAMPION_CHARACTER)
                     .append(Component.literal(
                                     " rank on Wynncraft, which is necessary to receive bomb alerts from other servers.")
                             .withStyle(ChatFormatting.RED));

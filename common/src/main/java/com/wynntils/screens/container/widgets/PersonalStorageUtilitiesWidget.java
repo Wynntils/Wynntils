@@ -27,9 +27,14 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
 
 public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     private static final int BUTTON_SPACING = 18;
+    private static final Style TEXT_STYLE =
+            Style.EMPTY.withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("language/wynncraft")));
 
     private final PersonalStorageContainer container;
     private final List<QuickJumpButton> quickJumpButtons = new ArrayList<>();
@@ -78,7 +83,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
             FontRenderer.getInstance()
                     .renderScrollingText(
                             guiGraphics,
-                            StyledText.fromString(pageName),
+                            StyledText.fromComponent(Component.literal(pageName).withStyle(TEXT_STYLE)),
                             getX() + 4,
                             getY() + 11,
                             getWidth() - 18,
