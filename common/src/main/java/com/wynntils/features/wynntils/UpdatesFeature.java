@@ -68,13 +68,14 @@ public class UpdatesFeature extends Feature {
 
                         WynntilsMod.info("Attempting to auto-update.");
 
-                        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.updates.updating")
-                                .withStyle(ChatFormatting.YELLOW));
+                        McUtils.sendMessageToClientWithPillHeader(
+                                Component.translatable("feature.wynntils.updates.updating")
+                                        .withStyle(ChatFormatting.YELLOW));
 
                         CompletableFuture<UpdateResult> completableFuture = Services.Update.tryUpdate();
 
                         completableFuture.whenCompleteAsync(
-                                (result, t) -> McUtils.sendMessageToClient(result.getMessage()));
+                                (result, t) -> McUtils.sendMessageToClientWithPillHeader(result.getMessage()));
                     }
                 })));
     }
@@ -87,11 +88,9 @@ public class UpdatesFeature extends Feature {
                 .withUnderlined(true)
                 .withBold(true));
 
-        McUtils.sendMessageToClient(Component.literal("[Wynntils]: ")
-                .withStyle(ChatFormatting.GREEN)
-                .append(Component.translatable(
-                                "feature.wynntils.updates.reminder", WynntilsMod.getVersion(), newVersion)
+        McUtils.sendMessageToClientWithPillHeader(
+                Component.translatable("feature.wynntils.updates.reminder", WynntilsMod.getVersion(), newVersion)
                         .append(clickable)
-                        .withStyle(ChatFormatting.GREEN)));
+                        .withStyle(ChatFormatting.GREEN));
     }
 }
