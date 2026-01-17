@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.screens.maps.GuildMapScreen;
+import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.PointerType;
@@ -41,6 +42,9 @@ public class GuildMapFeature extends Feature {
         // and should signal that we should close when the key is not held anymore.
         if (McUtils.screen() instanceof GuildMapScreen guildMapScreen) {
             guildMapScreen.setHoldingMapKey(true);
+            return;
+        } else if (McUtils.screen() instanceof MainMapScreen mainMapScreen) {
+            mainMapScreen.changeToGuildMap();
             return;
         }
 

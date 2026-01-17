@@ -6,7 +6,7 @@ package com.wynntils.screens.maps.widgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.maps.PoiManagementScreen;
+import com.wynntils.screens.maps.WaypointManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -17,22 +17,22 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
-public class PoiSortButton extends WynntilsButton {
+public class WaypointSortButton extends WynntilsButton {
     private final Component title;
-    private final PoiManagementScreen managementScreen;
-    private final PoiManagementScreen.PoiSortType sortType;
+    private final WaypointManagementScreen managementScreen;
+    private final WaypointManagementScreen.WaypointSortType sortType;
 
     private boolean ascending = true;
     private StyledText titleToRender;
 
-    public PoiSortButton(
+    public WaypointSortButton(
             int x,
             int y,
             int width,
             int height,
             Component title,
-            PoiManagementScreen managementScreen,
-            PoiManagementScreen.PoiSortType sortType) {
+            WaypointManagementScreen managementScreen,
+            WaypointManagementScreen.WaypointSortType sortType) {
         super(x, y, width, height, title);
 
         this.title = title;
