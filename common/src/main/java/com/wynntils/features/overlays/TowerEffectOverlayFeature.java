@@ -13,7 +13,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.war.event.GuildWarTowerEffectEvent;
 import com.wynntils.overlays.TowerAuraTimerOverlay;
@@ -73,10 +72,7 @@ public class TowerEffectOverlayFeature extends Feature {
     private final Config<Float> volleyVignetteIntensity = new Config<>(0.4f);
 
     public TowerEffectOverlayFeature() {
-        super(new ProfileDefault.Builder()
-                .disableFor(
-                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
-                .build());
+        super(ProfileDefault.onlyDefault());
     }
 
     @SubscribeEvent
