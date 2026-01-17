@@ -5,7 +5,6 @@
 package com.wynntils.screens.guides.aspect;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.components.Services;
 import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.screens.guides.GuideItemStack;
@@ -58,14 +57,7 @@ public class GuideAspectItemStack extends GuideItemStack {
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag flag) {
         List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
 
-        tooltipLines.add(Component.empty());
-        if (Services.Favorites.isFavorite(this)) {
-            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
-                    .withStyle(ChatFormatting.YELLOW));
-        } else {
-            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
-                    .withStyle(ChatFormatting.GREEN));
-        }
+        appendFavoriteInfo(tooltipLines);
 
         return tooltipLines;
     }

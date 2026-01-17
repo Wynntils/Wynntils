@@ -4,13 +4,16 @@
  */
 package com.wynntils.screens.guides.tome;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -72,7 +75,10 @@ public class GuideTomeItemStackButton extends WynntilsButton {
 
         String unformattedName =
                 StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_ITEM_LOOKUP, Map.of("itemname", unformattedName));
+            return true;
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Services.Favorites.toggleFavorite(unformattedName);
         }
 
