@@ -4,6 +4,7 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderTarget;
@@ -35,7 +36,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelRenderer.class)
@@ -143,7 +143,7 @@ public abstract class LevelRendererMixin {
                 this.levelRenderState.cameraRenderState));
     }
 
-    @Redirect(
+    @WrapWithCondition(
             method =
                     "submitEntities(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/state/LevelRenderState;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V",
             at =
@@ -151,7 +151,7 @@ public abstract class LevelRendererMixin {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;submit(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lnet/minecraft/client/renderer/state/CameraRenderState;DDDLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V"))
-    private void onSubmitEntity(
+    private boolean onSubmitEntity(
             EntityRenderDispatcher entityRenderDispatcher,
             EntityRenderState renderState,
             CameraRenderState cameraRenderState,
@@ -163,12 +163,8 @@ public abstract class LevelRendererMixin {
         Entity entity = ((EntityRenderStateExtension) renderState).getEntity();
 
         // Mods that inject into renderstate extraction may mean our entity is null
-        if (entity == null) return;
+        if (entity == null) return true;
 
-        if (!((EntityExtension) entity).isRendered()) {
-            return;
-        }
-
-        entityRenderDispatcher.submit(renderState, cameraRenderState, camX, camY, camZ, poseStack, nodeCollector);
+        return ((EntityExtension) entity).isRendered();
     }
 }
