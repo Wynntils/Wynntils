@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -20,7 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class DialogueOptionOverrideFeature extends Feature {
     public DialogueOptionOverrideFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER)
                 .build());
     }
 

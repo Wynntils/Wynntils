@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -23,7 +23,7 @@ public class WynntilsHintMessagesFeature extends Feature {
 
     public WynntilsHintMessagesFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER)
                 .build());
     }
 

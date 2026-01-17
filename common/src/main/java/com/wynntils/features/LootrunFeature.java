@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
@@ -33,9 +33,9 @@ public class LootrunFeature extends Feature {
     public final Config<Boolean> showNotes = new Config<>(true);
 
     public LootrunFeature() {
-        // Enabled status for this doesn't really matter, but just for settings filters we disable it
+        // Enabled status for this doesn't really matter, but just for settings filters we enable it
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
                 .build());
     }
 

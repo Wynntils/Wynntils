@@ -9,7 +9,6 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.gear.type.GearType;
@@ -81,7 +80,7 @@ public class ValuableFoundFeature extends Feature {
     private final Config<Float> soundPitch = new Config<>(1.0f);
 
     public ValuableFoundFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent

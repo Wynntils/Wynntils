@@ -34,7 +34,7 @@ public class CraftingProfessionLevelProgressBarFeature extends Feature {
 
     public CraftingProfessionLevelProgressBarFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
                 .build());
     }
 

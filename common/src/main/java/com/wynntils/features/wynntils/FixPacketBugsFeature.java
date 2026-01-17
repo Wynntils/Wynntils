@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -8,7 +8,6 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.AddEntityLookupEvent;
 import com.wynntils.mc.event.PlayerInfoUpdateEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
@@ -28,7 +27,7 @@ public class FixPacketBugsFeature extends Feature {
     private static final int METHOD_ADD = 0;
 
     public FixPacketBugsFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

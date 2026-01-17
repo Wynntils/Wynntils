@@ -12,7 +12,6 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.utils.wynn.InventoryUtils;
 
 @ConfigCategory(Category.INVENTORY)
@@ -22,10 +21,7 @@ public class IngredientPouchHotkeyFeature extends Feature {
             KeyBindDefinition.OPEN_INGREDIENT_POUCH.create(this::onOpenIngredientPouchKeyPress);
 
     public IngredientPouchHotkeyFeature() {
-        super(new ProfileDefault.Builder()
-                .disableFor(
-                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
-                .build());
+        super(ProfileDefault.onlyDefault());
     }
 
     private void onOpenIngredientPouchKeyPress() {
