@@ -97,17 +97,19 @@ public final class RenderedStringUtils {
         }
     }
 
-    public static String substringMaxWidth(String input, int maxWidth) {
+    public static StyledText substringMaxWidth(StyledText input, int maxWidth) {
         Font font = McUtils.mc().font;
-        if (font.width(input) <= maxWidth) return input;
+        String strInput = input.getStringWithoutFormatting();
+        if (font.width(strInput) <= maxWidth) return input;
 
         StringBuilder builder = new StringBuilder();
-        for (char c : input.toCharArray()) {
+        for (char c : strInput.toCharArray()) {
             if (font.width(builder.toString() + c) > maxWidth) break;
             builder.append(c);
         }
 
-        return builder.toString();
+        int length = builder.toString().length();
+        return input.substring(0, length);
     }
 
     public static Component getPercentageComponent(int count, int totalCount, int tickCount) {
