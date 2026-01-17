@@ -884,8 +884,6 @@
   "feature.wynntils.minimap.description": "Lägger till en minimap som ett överlägg.",
   "feature.wynntils.minimap.name": "Minikartor",
   "feature.wynntils.minimap.overlay.coordinate.name": "Koordinater",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "Ska koordinaterna färgas enligt felsökningsskärmens färger?",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "Färgade",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "Ska de ursprungliga koordinaterna visas?",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "Visa Ursprungliga Koordinater",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "Vilken stil ska minimapens kant ha?",

@@ -876,8 +876,6 @@
   "feature.wynntils.minimap.description": "オーバーレイとしてミニマップを追加します。",
   "feature.wynntils.minimap.name": "ミニマップ",
   "feature.wynntils.minimap.overlay.coordinate.name": "座標",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "座標はデバッグ画面の色に従って色付けされるべきですか？",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "カラー",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "元の座標を表示しますか？",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "元の座標を表示",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "ミニマップの境界線はどのようなスタイルにしますか？",

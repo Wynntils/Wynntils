@@ -1024,8 +1024,6 @@
   "feature.wynntils.minimap.description": "미니맵을 제공합니다.",
   "feature.wynntils.minimap.name": "미니맵",
   "feature.wynntils.minimap.overlay.coordinate.name": "좌표",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "F3 화면의 좌표축 색으로 좌표를 색칠할까요?",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "좌표 색",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "기존 좌표 표시를 보이게 할까요? 이 기능은 좌표 기능이 비활성화되어 있어도 동작합니다.",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "기존 좌표 표시 출력",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "미니맵의 외곽선 모양을 어떻게 할까요?",

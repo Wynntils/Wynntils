@@ -876,8 +876,6 @@
   "feature.wynntils.minimap.description": "Añade un minimapa como superposición.",
   "feature.wynntils.minimap.name": "Minimapas",
   "feature.wynntils.minimap.overlay.coordinate.name": "Coordenadas",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "¿Deben colorearse las coordenadas según los colores de la pantalla de depuración?",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "Coloreado",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "¿Deben mostrarse las coordenadas originales?",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "Mostrar Coordenadas Originales",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "¿Qué estilo debe tener el borde del minimapa?",

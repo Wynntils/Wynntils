@@ -876,8 +876,6 @@
   "feature.wynntils.minimap.description": "Voegt een minimap toe als overlay.",
   "feature.wynntils.minimap.name": "Minimaps",
   "feature.wynntils.minimap.overlay.coordinate.name": "Coördinaten",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "Moeten de coördinaten worden gekleurd volgens de kleuren van het debugscherm?",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "Gekleurd",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "Moeten de originele coördinaten worden weergegeven?",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "Toon Originele Coördinaten",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "Welke stijl moet de rand van de minimap hebben?",
