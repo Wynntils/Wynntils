@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -243,7 +243,7 @@ public class CustomNametagRendererFeature extends Feature {
         }
 
         AccountType accountType = user.accountType();
-        if (accountType.getComponent() != null) {
+        if (accountType != null && accountType.getComponent() != null) {
             nametags.add(
                     new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
         }
