@@ -4,7 +4,9 @@
  */
 package com.wynntils.screens.maps.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.screens.maps.PoiCreationScreen;
+import com.wynntils.screens.maps.WaypointManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -16,12 +18,13 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class IconButton extends AbstractWidget {
-    private final boolean selected;
     private final float iconRenderX;
     private final float iconRenderY;
     private final float iconWidth;
     private final float iconHeight;
     private final Texture mapIcon;
+
+    private boolean selected;
 
     public IconButton(int x, int y, int width, Texture mapIcon, boolean selected) {
         super(x, y, width, 20, Component.literal("Icon Button"));
@@ -57,12 +60,20 @@ public class IconButton extends AbstractWidget {
         if (selected) {
             RenderUtils.drawRect(guiGraphics, CommonColors.LIGHT_BLUE.withAlpha(35), getX(), getY(), width, height);
         }
+
+        if (this.isHovered) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (McUtils.screen() instanceof PoiCreationScreen poiCreationScreen) {
             poiCreationScreen.setSelectedIcon(mapIcon);
+        } else if (McUtils.screen() instanceof WaypointManagementScreen waypointManagementScreen) {
+            this.selected = !selected;
+
+            waypointManagementScreen.toggleIcon(mapIcon, selected);
         }
 
         return true;

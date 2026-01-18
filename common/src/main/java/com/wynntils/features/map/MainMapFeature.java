@@ -21,6 +21,7 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.type.LootChestTier;
+import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -134,6 +135,9 @@ public class MainMapFeature extends Feature {
         // and should signal that we should close when the key is not held anymore.
         if (McUtils.screen() instanceof MainMapScreen mainMapScreen) {
             mainMapScreen.setHoldingMapKey(true);
+            return;
+        } else if (McUtils.screen() instanceof GuildMapScreen guildMapScreen) {
+            guildMapScreen.changeToMainMap();
             return;
         }
 
