@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
+import com.wynntils.services.cosmetics.event.PlayerArmorVisibilityEvent;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -71,6 +72,43 @@ public class PlayerArmorHidingFeature extends Feature {
             case FEET -> {
                 if (hideBoots.get()) {
                     event.setCanceled(true);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerArmorVisibilityCheck(PlayerArmorVisibilityEvent event) {
+        switch (event.getSlot()) {
+            case HEAD -> {
+                if (!hideHelmets.get()) return;
+                if (!showCosmetics.get()) { // helmet is hidden regardless, no extra logic needed
+                    event.setVisible(false);
+                    return;
+                }
+
+                Entity entity = ((EntityRenderStateExtension) event.getRenderState()).getEntity();
+                if (!(entity instanceof AbstractClientPlayer player)) return;
+
+                // Only not visible if the item isn't cosmetic.
+                ItemStack headItem = player.getItemBySlot(event.getSlot());
+                if (headItem.getItem() != Items.POTION) {
+                    event.setVisible(false);
+                }
+            }
+            case CHEST -> {
+                if (hideChestplates.get()) {
+                    event.setVisible(false);
+                }
+            }
+            case LEGS -> {
+                if (hideLeggings.get()) {
+                    event.setVisible(false);
+                }
+            }
+            case FEET -> {
+                if (hideBoots.get()) {
+                    event.setVisible(false);
                 }
             }
         }
