@@ -99,11 +99,11 @@ public final class RenderedStringUtils {
 
     public static StyledText substringMaxWidth(StyledText input, int maxWidth) {
         Font font = McUtils.mc().font;
-        String strInput = input.getStringWithoutFormatting();
-        if (font.width(strInput) <= maxWidth) return input;
+        Component component = input.getComponent();
+        if (font.width(component) <= maxWidth) return input;
 
         StringBuilder builder = new StringBuilder();
-        for (char c : strInput.toCharArray()) {
+        for (char c : component.getString().toCharArray()) {
             if (font.width(builder.toString() + c) > maxWidth) break;
             builder.append(c);
         }
