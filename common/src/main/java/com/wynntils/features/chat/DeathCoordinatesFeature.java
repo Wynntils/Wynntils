@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -21,7 +21,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class DeathCoordinatesFeature extends Feature {
     public DeathCoordinatesFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER)
                 .build());
     }
 

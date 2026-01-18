@@ -42,7 +42,7 @@ public class DurabilityOverlayFeature extends Feature {
 
     public DurabilityOverlayFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
                 .build());
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -11,7 +11,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
@@ -56,10 +55,7 @@ public class TranscribeMessagesFeature extends Feature {
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 
     public TranscribeMessagesFeature() {
-        super(new ProfileDefault.Builder()
-                .disableFor(
-                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
-                .build());
+        super(ProfileDefault.onlyDefault());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

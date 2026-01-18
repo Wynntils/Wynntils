@@ -11,7 +11,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.TooltipRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -42,7 +41,7 @@ public class TooltipFittingFeature extends Feature {
     private float lastScaleFactor = 1f;
 
     public TooltipFittingFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     // scaling should only happen after every other feature has updated tooltip

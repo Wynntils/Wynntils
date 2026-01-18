@@ -24,7 +24,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class SkillPointLoadoutsFeature extends Feature {
     public SkillPointLoadoutsFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
                 .build());
     }
 

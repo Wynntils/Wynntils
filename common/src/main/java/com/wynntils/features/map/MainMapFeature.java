@@ -15,7 +15,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
@@ -127,7 +126,7 @@ public class MainMapFeature extends Feature {
     public final KeyBind newWaypointKeybind = KeyBindDefinition.NEW_WAYPOINT.create(this::openWaypointSetup);
 
     public MainMapFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     private void openMainMap() {

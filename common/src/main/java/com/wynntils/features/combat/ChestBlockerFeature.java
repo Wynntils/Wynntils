@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -11,7 +11,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
@@ -40,7 +39,7 @@ public class ChestBlockerFeature extends Feature {
     private final Config<EmeraldPouchTier> emeraldPouchTier = new Config<>(EmeraldPouchTier.EIGHT);
 
     public ChestBlockerFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent

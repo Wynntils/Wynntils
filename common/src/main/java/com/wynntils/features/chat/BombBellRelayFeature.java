@@ -34,7 +34,7 @@ public class BombBellRelayFeature extends Feature {
 
     public BombBellRelayFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
                 .build());
     }
 

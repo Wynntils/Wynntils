@@ -32,7 +32,7 @@ public class GuildMapFeature extends Feature {
 
     public GuildMapFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
                 .build());
     }
 

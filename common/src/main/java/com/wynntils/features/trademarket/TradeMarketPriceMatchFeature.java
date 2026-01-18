@@ -12,7 +12,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.trademarket.TradeMarketModel;
@@ -40,10 +39,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
     private long priceToSend = 0;
 
     public TradeMarketPriceMatchFeature() {
-        super(new ProfileDefault.Builder()
-                .disableFor(
-                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
-                .build());
+        super(ProfileDefault.onlyDefault());
     }
 
     @SubscribeEvent

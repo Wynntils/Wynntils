@@ -24,7 +24,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class FixCrosshairPositionFeature extends Feature {
     public FixCrosshairPositionFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
                 .build());
     }
 

@@ -14,7 +14,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
@@ -57,7 +56,7 @@ public class ItemLockFeature extends Feature {
     private final Config<Boolean> allowClickOnMultiHealthPotionsInBlockingMode = new Config<>(true);
 
     public ItemLockFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent
