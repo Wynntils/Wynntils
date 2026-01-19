@@ -10,7 +10,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.annotations.OverlayGroup;
-import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Config;
@@ -102,7 +102,7 @@ public final class OverlayManager extends Manager {
     }
 
     public void discoverOverlays(Feature feature) {
-        Field[] overlayFields = FieldUtils.getFieldsWithAnnotation(feature.getClass(), OverlayInfo.class);
+        Field[] overlayFields = FieldUtils.getFieldsWithAnnotation(feature.getClass(), RegisterOverlay.class);
         for (Field overlayField : overlayFields) {
             try {
                 Object fieldValue = FieldUtils.readField(overlayField, feature, true);
@@ -111,8 +111,8 @@ public final class OverlayManager extends Manager {
                     throw new RuntimeException("A non-Overlay class was marked with OverlayInfo annotation.");
                 }
 
-                OverlayInfo annotation = overlayField.getAnnotation(OverlayInfo.class);
-                Managers.Overlay.registerOverlay(overlay, feature, annotation.renderType(), annotation.enabled());
+                RegisterOverlay annotation = overlayField.getAnnotation(RegisterOverlay.class);
+                Managers.Overlay.registerOverlay(overlay, feature, annotation.renderType(), overlay.isUserEnabled());
 
                 assert !overlay.getTranslatedName().startsWith("feature.wynntils.")
                         : "Fix i18n for " + overlay.getTranslatedName();

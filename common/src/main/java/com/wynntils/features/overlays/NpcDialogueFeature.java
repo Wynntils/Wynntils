@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
-import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.notifications.MessageContainer;
@@ -57,7 +57,7 @@ public class NpcDialogueFeature extends Feature {
     private static final StyledText PRESS_SHIFT_TO_CONTINUE =
             StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.pressShiftToContinue"));
 
-    @OverlayInfo(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
     private final NpcDialogueOverlay npcDialogueOverlay = new NpcDialogueOverlay();
 
     @RegisterKeyBind

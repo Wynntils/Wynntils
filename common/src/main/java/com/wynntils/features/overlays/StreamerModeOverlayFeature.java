@@ -6,7 +6,7 @@ package com.wynntils.features.overlays;
 
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
-import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.overlays.StreamerModeOverlay;
@@ -14,7 +14,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class StreamerModeOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
     private final StreamerModeOverlay streamerModeOverlay = new StreamerModeOverlay();
 
     public StreamerModeOverlayFeature() {

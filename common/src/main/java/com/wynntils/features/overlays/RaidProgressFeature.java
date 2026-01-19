@@ -7,7 +7,7 @@ package com.wynntils.features.overlays;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
-import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -29,7 +29,7 @@ public class RaidProgressFeature extends Feature {
     private static final String TIME_FORMAT_MILLISECONDS = "%02d:%02d.%03d";
     private static final String TIME_FORMAT_SECONDS = "%02d:%02d";
 
-    @OverlayInfo(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
     private final RaidProgressOverlay raidProgressOverlay = new RaidProgressOverlay();
 
     @Persisted
