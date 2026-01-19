@@ -41,21 +41,14 @@ public abstract class GuideItemStack extends ItemStack {
     }
 
     protected void appendFavoriteInfo(List<Component> tooltipLines) {
-        MutableComponent component = Component.empty()
-                .append(Component.literal("\uE004\uDB00\uDC02\uE014\uDB00\uDC02\uE000")
-                        .withStyle(Style.EMPTY.withFont(
-                                new FontDescription.Resource(Identifier.withDefaultNamespace("keybind")))));
-
+        tooltipLines.add(Component.empty());
         if (Services.Favorites.isFavorite(this)) {
-            component.append(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                     .withStyle(ChatFormatting.YELLOW));
         } else {
-            component.append(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
                     .withStyle(ChatFormatting.GREEN));
         }
-
-        tooltipLines.add(Component.empty());
-        tooltipLines.add(component);
     }
 
     protected void appendWebGuideInfo(List<Component> tooltipLines) {
