@@ -52,6 +52,6 @@ public class ServerUptimeInfoOverlay extends TextOverlay {
 
     @Override
     public boolean isVisible() {
-        return McUtils.mc().gui.getTabList().visible || Models.WorldState.getCurrentState() == WorldState.HUB;
+        return McUtils.options().keyPlayerList.isDown() || Models.WorldState.getCurrentState() == WorldState.HUB;
     }
 }
