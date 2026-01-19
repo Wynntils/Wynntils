@@ -141,7 +141,7 @@ public final class McUtils {
         Handlers.Chat.setLocalMessage(false);
     }
 
-    public static void sendMessageToClientWithPillHeader(Component component) {
+    public static void sendWynntilsMessage(Component component) {
         sendMessageToClient(ComponentUtils.addWynntilsPillHeader(component));
     }
 
