@@ -85,7 +85,7 @@ public class InventoryFunctions {
                     InventoryArmor.fromString(arguments.getArgument("armor").getStringValue());
             if (inventoryArmor == null) return "NONE";
 
-            ItemStack armorStack = McUtils.inventory().armor.get(inventoryArmor.getArmorSlot());
+            ItemStack armorStack = McUtils.inventory().getItem(inventoryArmor.getInventorySlot());
             if (armorStack.isEmpty()) return "NONE";
 
             StyledText hoverName = StyledText.fromComponent(armorStack.getHoverName());
