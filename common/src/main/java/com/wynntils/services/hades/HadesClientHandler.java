@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2026.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -95,7 +95,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
         }
 
         if (Managers.Connection.onServer()) {
-            McUtils.sendMessageToClientWithPillHeader(userComponent);
+            McUtils.sendMessageToClient(userComponent);
         }
     }
 
@@ -137,7 +137,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
         WynntilsMod.info("Disconnected from the remote player server. Reason: " + packet.getReason());
 
         if (Managers.Connection.onServer()) {
-            McUtils.sendMessageToClientWithPillHeader(Component.literal("Disconnected from the remote player server.")
+            McUtils.sendMessageToClient(Component.literal("[Wynntils] Disconnected from the remote player server.")
                     .withStyle(ChatFormatting.YELLOW));
         }
 
