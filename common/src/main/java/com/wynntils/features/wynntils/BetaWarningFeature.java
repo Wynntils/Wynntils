@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2026.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -16,7 +16,6 @@ import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.PlayerInfoEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.function.Supplier;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -46,7 +45,7 @@ public class BetaWarningFeature extends Feature {
     public void onDisplayNameChange(PlayerInfoEvent.PlayerDisplayNameChangeEvent e) {
         if (warnType == WarnType.NONE) return;
 
-        McUtils.sendMessageToClientWithPillHeader(warnType.getWarning());
+        McUtils.sendMessageToClient(warnType.getWarning());
         warnType = WarnType.NONE;
     }
 
@@ -54,12 +53,10 @@ public class BetaWarningFeature extends Feature {
     // to access the Component which will only be after joining the server and urls should be loaded by then.
     private enum WarnType {
         NONE(Component::empty),
-        BETA(() -> Component.translatable("feature.wynntils.betaWarning.usingBetaOnNormalServer")
-                .withStyle(ChatFormatting.RED)),
+        BETA(() -> Component.translatable("feature.wynntils.betaWarning.usingBetaOnNormalServer")),
         RELEASE(() -> Component.translatable(
-                        "feature.wynntils.betaWarning.usingReleaseOnBetaServer",
-                        Managers.Url.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE))
-                .withStyle(ChatFormatting.RED));
+                "feature.wynntils.betaWarning.usingReleaseOnBetaServer",
+                Managers.Url.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE)));
 
         private final Supplier<Component> warningSupplier;
 
