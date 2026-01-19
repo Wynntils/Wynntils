@@ -248,7 +248,7 @@ public class CustomNametagRendererFeature extends Feature {
         }
 
         AccountType accountType = user.accountType();
-        if (accountType.getComponent() != null) {
+        if (accountType != null && accountType.getComponent() != null) {
             nametags.add(
                     new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
         }
