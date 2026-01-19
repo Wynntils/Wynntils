@@ -1,0 +1,26 @@
+{
+  "providers": [
+    {
+      "ascent": 8,
+      "chars": [
+        "ABCDEFGHIJKLMNOP",
+        "QRSTUVWXYZ?[]/%&",
+        "0123456789!()<=>",
+        "\uE100\uE101\uE102-\uE103\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"
+      ],
+      "file": "wynntils:font/coordinates/location.png",
+      "height": 10,
+      "type": "bitmap"
+    },
+    {
+      "ascent": 11,
+      "chars": [
+        "\uE104\uE105\uE106\uE107\uE108\uE109\uE10A\uE10B",
+        "\uE10C\uE10D\uE10E\uE10F\uE110\uE111\uE112\uE113"
+      ],
+      "file": "wynntils:font/coordinates/compass.png",
+      "height": 12,
+      "type": "bitmap"
+    }
+  ]
+}

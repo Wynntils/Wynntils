@@ -1081,8 +1081,6 @@
   "feature.wynntils.minimap.description": "Добавляет миникарту в виде наложения.",
   "feature.wynntils.minimap.name": "Миникарты",
   "feature.wynntils.minimap.overlay.coordinate.name": "Координаты",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "Следует ли окрашивать координаты в соответствии с цветами экрана отладки?",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "Цветной",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "Следует ли отображать оригинальные координаты?",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "Показать оригинальные координаты",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "Какой стиль должен иметь граница миникарты?",

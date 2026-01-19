@@ -876,8 +876,6 @@
   "feature.wynntils.minimap.description": "添加一個小地圖作為疊加。",
   "feature.wynntils.minimap.name": "小地圖",
   "feature.wynntils.minimap.overlay.coordinate.name": "坐標",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "坐標是否應根據調試屏幕顏色進行著色？",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "著色",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "是否應顯示原始坐標？",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "顯示原始坐標",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "小地圖的邊框應該是什麼樣式？",

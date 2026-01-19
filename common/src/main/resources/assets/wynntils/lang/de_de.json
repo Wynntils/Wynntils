@@ -879,8 +879,6 @@
   "feature.wynntils.minimap.description": "Fügt eine Minikarte als Overlay hinzu.",
   "feature.wynntils.minimap.name": "Minikarten",
   "feature.wynntils.minimap.overlay.coordinate.name": "Koordinaten",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "Sollen die Koordinaten gemäß den Farben des Debug-Bildschirms eingefärbt werden?",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "Eingefärbt",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "Sollen die Originalkoordinaten angezeigt werden?",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "Originalkoordinaten anzeigen",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "Welchen Stil soll der Rand der Minikarte haben?",
