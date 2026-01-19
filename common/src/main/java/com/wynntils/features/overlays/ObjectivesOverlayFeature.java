@@ -16,10 +16,10 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class ObjectivesOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.SCOREBOARD)
     public final Overlay guildObjectiveOverlay = new GuildObjectiveOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.SCOREBOARD)
     public final Overlay dailyObjectiveOverlay = new DailyObjectiveOverlay();
 
     public ObjectivesOverlayFeature() {

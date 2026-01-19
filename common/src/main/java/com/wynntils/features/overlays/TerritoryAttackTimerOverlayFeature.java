@@ -13,11 +13,10 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.overlays.TerritoryAttackTimerOverlay;
-import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class TerritoryAttackTimerOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay territoryAttackTimerOverlay = new TerritoryAttackTimerOverlay();
 
     @Persisted

@@ -15,7 +15,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class PowderSpecialBarOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
     private final Overlay powderSpecialBarOverlay = new PowderSpecialBarOverlay();
 
     public PowderSpecialBarOverlayFeature() {

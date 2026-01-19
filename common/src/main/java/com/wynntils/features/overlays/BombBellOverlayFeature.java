@@ -11,11 +11,10 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.overlays.BombBellOverlay;
-import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class BombBellOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     public final BombBellOverlay bombBellOverlay = new BombBellOverlay();
 
     public BombBellOverlayFeature() {

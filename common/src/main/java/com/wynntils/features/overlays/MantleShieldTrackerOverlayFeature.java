@@ -11,11 +11,10 @@ import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.overlays.MantleShieldTrackerOverlay;
-import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class MantleShieldTrackerOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay mantleShieldTrackerOverlay = new MantleShieldTrackerOverlay();
 
     public MantleShieldTrackerOverlayFeature() {

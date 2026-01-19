@@ -57,7 +57,7 @@ public class NpcDialogueFeature extends Feature {
     private static final StyledText PRESS_SHIFT_TO_CONTINUE =
             StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.pressShiftToContinue"));
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.PLAYER_TAB_LIST)
     private final NpcDialogueOverlay npcDialogueOverlay = new NpcDialogueOverlay();
 
     @RegisterKeyBind

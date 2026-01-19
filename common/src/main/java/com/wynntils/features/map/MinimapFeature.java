@@ -21,13 +21,13 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.MAP)
 public class MinimapFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
     private final Overlay coordinatesOverlay = new CoordinateOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay
     private final Overlay territoryOverlay = new TerritoryOverlay();
 
     @RegisterKeyBind

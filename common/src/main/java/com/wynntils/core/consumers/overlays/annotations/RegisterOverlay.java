@@ -13,5 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface RegisterOverlay {
-    RenderElementType renderType();
+    // This will make all overlays render above everything besides chat and the player tab list by default
+    RenderElementType renderType() default RenderElementType.CHAT;
 }

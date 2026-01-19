@@ -16,5 +16,6 @@ public @interface OverlayGroup {
     // How many instances of this overlay should exist by default
     int instances() default 1;
 
-    RenderElementType renderType();
+    // This will make all overlays render above everything besides chat and the player tab list by default
+    RenderElementType renderType() default RenderElementType.CHAT;
 }

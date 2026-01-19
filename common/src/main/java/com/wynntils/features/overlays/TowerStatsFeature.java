@@ -19,7 +19,6 @@ import com.wynntils.models.war.type.WarTowerState;
 import com.wynntils.overlays.TowerStatsOverlay;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -31,7 +30,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class TowerStatsFeature extends Feature {
     private static final int SEPARATOR_LENGTH = 40;
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     public final Overlay towerStatsOverlay = new TowerStatsOverlay();
 
     @Persisted

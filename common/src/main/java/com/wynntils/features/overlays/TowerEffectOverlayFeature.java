@@ -34,10 +34,10 @@ public class TowerEffectOverlayFeature extends Feature {
     private static final SoundEvent AURA_SOUND = SoundEvents.ANVIL_LAND;
     private static final SoundEvent VOLLEY_SOUND = SoundEvents.BLAZE_SHOOT;
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay auraTimerOverlay = new TowerAuraTimerOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay volleyTimerOverlay = new TowerVolleyTimerOverlay();
 
     // Sound configs

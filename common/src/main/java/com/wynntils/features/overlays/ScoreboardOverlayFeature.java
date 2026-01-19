@@ -15,7 +15,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class ScoreboardOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.SCOREBOARD)
     private final Overlay scoreboardOverlay = new ScoreboardOverlay();
 
     public ScoreboardOverlayFeature() {

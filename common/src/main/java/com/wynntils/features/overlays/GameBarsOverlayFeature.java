@@ -25,40 +25,40 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GameBarsOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
     private final HealthBarOverlay healthBarOverlay = new HealthBarOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
     private final ManaBarOverlay manaBarOverlay = new ManaBarOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final ManaBankBarOverlay manaBankBarOverlay = new ManaBankBarOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final FocusBarOverlay focusBarOverlay = new FocusBarOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final AwakenedProgressBarOverlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final OphanimBarOverlay ophanimBarOverlay = new OphanimBarOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final HolyPowerBarOverlay holyPowerBarOverlay = new HolyPowerBarOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final FocusedMobHealthBarOverlay focusedMobHealthBarOverlay = new FocusedMobHealthBarOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final CommanderBarOverlay commanderBarOverlay = new CommanderBarOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final MomentumBarOverlay momentumBarOverlay = new MomentumBarOverlay();
 
     public GameBarsOverlayFeature() {

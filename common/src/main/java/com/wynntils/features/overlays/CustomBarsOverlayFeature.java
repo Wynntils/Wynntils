@@ -14,26 +14,25 @@ import com.wynntils.overlays.custombars.ExperienceTexturedCustomBarOverlay;
 import com.wynntils.overlays.custombars.HealthTexturedCustomBarOverlay;
 import com.wynntils.overlays.custombars.ManaTexturedCustomBarOverlay;
 import com.wynntils.overlays.custombars.UniversalTexturedCustomBarOverlay;
-import com.wynntils.utils.type.RenderElementType;
 import java.util.ArrayList;
 import java.util.List;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CustomBarsOverlayFeature extends Feature {
     // If adding a new bar, make sure to update CustomBarSelectionScreen
-    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI_PRE)
+    @OverlayGroup(instances = 0)
     private final List<UniversalTexturedCustomBarOverlay> customUniversalBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI_PRE)
+    @OverlayGroup(instances = 0)
     private final List<HealthTexturedCustomBarOverlay> customHealthBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI_PRE)
+    @OverlayGroup(instances = 0)
     private final List<ManaTexturedCustomBarOverlay> customManaBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI_PRE)
+    @OverlayGroup(instances = 0)
     private final List<ExperienceTexturedCustomBarOverlay> customExperienceBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderElementType.GUI_PRE)
+    @OverlayGroup(instances = 0)
     private final List<BubbleTexturedCustomBarOverlay> customBubbleBarOverlays = new ArrayList<>();
 
     public CustomBarsOverlayFeature() {

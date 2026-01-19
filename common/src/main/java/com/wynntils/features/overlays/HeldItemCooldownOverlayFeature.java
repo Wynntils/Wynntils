@@ -15,7 +15,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class HeldItemCooldownOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.CROSSHAIR)
     private final Overlay heldItemCooldownOverlay = new HeldItemCooldownOverlay();
 
     public HeldItemCooldownOverlayFeature() {

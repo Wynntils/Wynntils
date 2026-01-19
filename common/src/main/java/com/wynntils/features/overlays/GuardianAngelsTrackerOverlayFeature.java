@@ -11,11 +11,10 @@ import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.overlays.GuardianAngelsTrackerOverlay;
-import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GuardianAngelsTrackerOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay guardianAngelsTrackerOverlay = new GuardianAngelsTrackerOverlay();
 
     public GuardianAngelsTrackerOverlayFeature() {

@@ -10,13 +10,12 @@ import com.wynntils.core.consumers.overlays.annotations.OverlayGroup;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.overlays.infobox.InfoBoxOverlay;
-import com.wynntils.utils.type.RenderElementType;
 import java.util.ArrayList;
 import java.util.List;
 
 @ConfigCategory(Category.OVERLAYS)
 public class InfoBoxFeature extends Feature {
-    @OverlayGroup(instances = 7, renderType = RenderElementType.GUI_PRE)
+    @OverlayGroup(instances = 7)
     private final List<InfoBoxOverlay> infoBoxOverlays = new ArrayList<>();
 
     public InfoBoxFeature() {

@@ -15,7 +15,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class ServerUptimeInfoOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.PLAYER_TAB_LIST)
     private final Overlay ServerUptimeInfoOverlay = new ServerUptimeInfoOverlay();
 
     public ServerUptimeInfoOverlayFeature() {

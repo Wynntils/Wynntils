@@ -17,7 +17,6 @@ import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.overlays.stopwatch.StopwatchOverlay;
-import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
@@ -55,7 +54,7 @@ public class StopwatchFeature extends Feature {
             })
             .build();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay
     private final Overlay stopwatchOverlay = new StopwatchOverlay();
 
     public StopwatchFeature() {

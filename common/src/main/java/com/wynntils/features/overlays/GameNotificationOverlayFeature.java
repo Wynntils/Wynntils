@@ -12,11 +12,10 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.overlays.GameNotificationOverlay;
-import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GameNotificationOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay gameNotificationOverlay = new GameNotificationOverlay();
 
     public GameNotificationOverlayFeature() {

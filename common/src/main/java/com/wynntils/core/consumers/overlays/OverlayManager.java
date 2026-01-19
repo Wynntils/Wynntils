@@ -112,6 +112,8 @@ public final class OverlayManager extends Manager {
                 }
 
                 RegisterOverlay annotation = overlayField.getAnnotation(RegisterOverlay.class);
+                assert annotation.renderType().isRootRender() : "Overlay render type must use a root renderer";
+                assert annotation.renderType() != RenderElementType.GUI_PRE : "Overlay render type cannot be GUI_PRE";
                 Managers.Overlay.registerOverlay(overlay, feature, annotation.renderType(), overlay.isUserEnabled());
 
                 assert !overlay.getTranslatedName().startsWith("feature.wynntils.")
@@ -201,14 +203,20 @@ public final class OverlayManager extends Manager {
 
     // region Rendering
 
-    @SubscribeEvent
+    // We need to receive canceled events as some features cancel certain element types if they are replacing it
+    @SubscribeEvent(receiveCanceled = true)
     public void onRenderPre(RenderEvent.Pre event) {
+        // Overlays can only use root render events
+        if (!event.getType().isRootRender()) return;
+        // We don't use GUI_PRE for rendering overlays
+        if (event.getType() == RenderElementType.GUI_PRE) return;
+
         Profiler.get().push("preRenOverlay" + event.getType().name());
         renderOverlays(event);
         Profiler.get().pop();
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(receiveCanceled = true)
     public void onRenderPost(RenderEvent.Post event) {
         // Only GUI_POST is used for rendering overlays
         if (event.getType() != RenderElementType.GUI_POST) return;

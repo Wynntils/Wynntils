@@ -15,7 +15,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class HeldItemNameOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.HOTBAR)
     private final Overlay heldItemNameOverlay = new HeldItemNameOverlay();
 
     public HeldItemNameOverlayFeature() {

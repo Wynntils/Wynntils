@@ -16,7 +16,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CombatExperienceOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_PRE)
+    @RegisterOverlay(renderType = RenderElementType.HOTBAR)
     private final Overlay combatExperienceOverlay = new CombatExperienceOverlay();
 
     public CombatExperienceOverlayFeature() {

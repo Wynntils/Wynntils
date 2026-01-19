@@ -14,7 +14,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class StreamerModeOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final StreamerModeOverlay streamerModeOverlay = new StreamerModeOverlay();
 
     public StreamerModeOverlayFeature() {

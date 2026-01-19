@@ -12,14 +12,13 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.overlays.GatheringTotemTimerOverlay;
 import com.wynntils.overlays.MobTotemTimerOverlay;
-import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class BonusTotemTimerOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay mobTotemTimerOverlay = new MobTotemTimerOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay gatheringTotemTimerOverlay = new GatheringTotemTimerOverlay();
 
     public BonusTotemTimerOverlayFeature() {

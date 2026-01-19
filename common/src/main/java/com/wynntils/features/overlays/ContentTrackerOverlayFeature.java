@@ -16,7 +16,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class ContentTrackerOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay(renderType = RenderElementType.SCOREBOARD)
     private final Overlay trackerOverlay = new ContentTrackerOverlay();
 
     public ContentTrackerOverlayFeature() {

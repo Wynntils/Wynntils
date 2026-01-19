@@ -15,20 +15,19 @@ import com.wynntils.overlays.lootrun.LootrunBeaconCountOverlay;
 import com.wynntils.overlays.lootrun.LootrunMissionsOverlay;
 import com.wynntils.overlays.lootrun.LootrunTaskNameOverlay;
 import com.wynntils.overlays.lootrun.LootrunTrialsOverlay;
-import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class LootrunOverlaysFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay lootrunTaskNameOverlay = new LootrunTaskNameOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay lootrunBeaconCountOverlay = new LootrunBeaconCountOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay lootrunMissionOverlay = new LootrunMissionsOverlay();
 
-    @RegisterOverlay(renderType = RenderElementType.GUI_POST)
+    @RegisterOverlay
     private final Overlay lootrunTrialOverlay = new LootrunTrialsOverlay();
 
     public LootrunOverlaysFeature() {
