@@ -446,10 +446,9 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 && event.y() >= getRenderY() + RENDER_AREA_POSITION.b()
                 && event.y() <= getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b()) {
             for (AbstractWidget widget : renderAreaWidgets) {
-                if (widget.isMouseOver(event.x(), event.y() + scrollOffset)) {
+                if (widget.isMouseOver(event.x(), event.y())) {
                     return widget.mouseClicked(
-                            new MouseButtonEvent(event.x(), event.y() + scrollOffset, event.buttonInfo()),
-                            isDoubleClick);
+                            new MouseButtonEvent(event.x(), event.y(), event.buttonInfo()), isDoubleClick);
                 }
             }
         }

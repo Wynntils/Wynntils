@@ -113,11 +113,12 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
     }
 
     private boolean hasVisibleChestplate(AvatarRenderState renderState) {
-        boolean hasLayer;
+        boolean hasLayer = true;
 
         DyedItemColor dyeColor = renderState.chestEquipment.get(DataComponents.DYED_COLOR);
-
-        hasLayer = dyeColor.rgb() != HIDE_GLINT_COLOR;
+        if (dyeColor != null) {
+            hasLayer = dyeColor.rgb() != HIDE_GLINT_COLOR;
+        }
 
         if (hasLayer) {
             PlayerArmorVisibilityEvent event = new PlayerArmorVisibilityEvent(EquipmentSlot.CHEST, renderState);
