@@ -14,6 +14,7 @@ import com.wynntils.core.consumers.features.AbstractConfigurable;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.utils.colors.CommonColors;
@@ -22,6 +23,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
+import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
@@ -39,6 +41,9 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.userEnabled")
     protected final Config<Boolean> userEnabled = new Config<>(true);
+
+    @Persisted(i18nKey = "overlay.wynntils.overlay.renderElement")
+    protected final HiddenConfig<RenderElementType> renderElement = new HiddenConfig<>(RenderElementType.CHAT);
 
     // This is used in rendering.
     // Initially we use the overlay position horizontal alignment
@@ -169,6 +174,8 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
                 // (worst case overlay.shouldBeEnabled() will return false)
                 Managers.Overlay.enableOverlay(this);
             }
+        } else if (config.getFieldName().equals("renderElement")) {
+            Managers.Overlay.rebuildRenderOrder();
         }
 
         callOnConfigUpdate(config);

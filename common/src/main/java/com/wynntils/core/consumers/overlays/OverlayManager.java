@@ -26,6 +26,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.RenderElementType;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -45,6 +46,7 @@ public final class OverlayManager extends Manager {
     private final Map<Feature, List<OverlayGroupHolder>> overlayGroupMap = new HashMap<>();
 
     private final Set<Overlay> enabledOverlays = new HashSet<>();
+    private Map<RenderElementType, List<Overlay>> renderMap = new HashMap<>();
 
     private final List<SectionCoordinates> sections = new ArrayList<>(9);
     private final Map<Class<?>, Integer> profilingTimes = new HashMap<>();
@@ -63,7 +65,8 @@ public final class OverlayManager extends Manager {
         overlayParentMap.putIfAbsent(parent, new LinkedList<>());
         overlayParentMap.get(parent).add(overlay);
 
-        overlayInfoMap.put(overlay, new OverlayInfoContainer(parent, elementType, enabledByDefault));
+        overlay.renderElement.store(elementType);
+        overlayInfoMap.put(overlay, new OverlayInfoContainer(parent, enabledByDefault));
     }
 
     private void unregisterOverlay(Overlay overlay) {
@@ -99,6 +102,8 @@ public final class OverlayManager extends Manager {
         WynntilsMod.registerEventListener(enabledOverlay);
 
         enabledOverlay.getConfigOptionFromString("userEnabled").ifPresent(enabledOverlay::callOnConfigUpdate);
+
+        rebuildRenderOrder();
     }
 
     public void discoverOverlays(Feature feature) {
@@ -136,6 +141,24 @@ public final class OverlayManager extends Manager {
         holders.forEach(this::createOverlayGroupWithDefaults);
 
         overlayGroupMap.put(feature, holders);
+    }
+
+    public void rebuildRenderOrder() {
+        Map<RenderElementType, List<Overlay>> newRenderMap = new HashMap<>();
+
+        for (RenderElementType elementType : RenderElementType.values()) {
+            if (elementType == RenderElementType.GUI_PRE) continue;
+            if (!elementType.isRootRender()) continue;
+
+            List<Overlay> filteredOverlays = enabledOverlays.stream()
+                    .filter(overlay -> overlay.renderElement.get() == elementType)
+                    .sorted(Comparator.comparing(Overlay::getShortName))
+                    .toList();
+
+            newRenderMap.put(elementType, filteredOverlays);
+        }
+
+        renderMap = newRenderMap;
     }
 
     // endregion
@@ -246,13 +269,7 @@ public final class OverlayManager extends Manager {
         }
 
         List<Overlay> crashedOverlays = new LinkedList<>();
-        for (Overlay overlay : enabledOverlays) {
-            OverlayInfoContainer renderInfo = overlayInfoMap.get(overlay);
-
-            if (renderInfo.elementType() != event.getType()) {
-                continue;
-            }
-
+        for (Overlay overlay : renderMap.getOrDefault(event.getType(), new ArrayList<>())) {
             try {
                 if (showPreview) {
                     if (selectedOverlay != null && overlay != selectedOverlay && !renderNonSelected) continue;
@@ -399,5 +416,5 @@ public final class OverlayManager extends Manager {
         return overlayGroupMap.getOrDefault(feature, List.of());
     }
 
-    private record OverlayInfoContainer(Feature parent, RenderElementType elementType, boolean enabledByDefault) {}
+    private record OverlayInfoContainer(Feature parent, boolean enabledByDefault) {}
 }

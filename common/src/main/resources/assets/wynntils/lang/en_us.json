@@ -2816,6 +2816,8 @@
   "overlay.wynntils.overlay.horizontalAlignmentOverride.name": "Horizontal Alignment Override",
   "overlay.wynntils.overlay.position.description": "The position the overlay is displayed at",
   "overlay.wynntils.overlay.position.name": "Overlay Position",
+  "overlay.wynntils.overlay.renderElement.description": "Which GUI element should this overlay render before?",
+  "overlay.wynntils.overlay.renderElement.name": "GUI Render Element",
   "overlay.wynntils.overlay.size.description": "The size of the overlay",
   "overlay.wynntils.overlay.size.name": "Overlay Size",
   "overlay.wynntils.overlay.spacing.description": "The spacing between parts in this overlay",
