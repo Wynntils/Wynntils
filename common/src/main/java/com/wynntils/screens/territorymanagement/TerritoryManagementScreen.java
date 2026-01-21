@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.territorymanagement;
@@ -424,8 +424,8 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 && mouseY >= getRenderY() + RENDER_AREA_POSITION.b()
                 && mouseY <= getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b()) {
             for (AbstractWidget widget : renderAreaWidgets) {
-                if (widget.isMouseOver(mouseX, mouseY + scrollOffset)) {
-                    return widget.mouseClicked(mouseX, mouseY + scrollOffset, button);
+                if (widget.isMouseOver(mouseX, mouseY)) {
+                    return widget.mouseClicked(mouseX, mouseY, button);
                 }
             }
         }

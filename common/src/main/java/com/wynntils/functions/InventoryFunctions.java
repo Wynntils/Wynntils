@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -70,6 +70,26 @@ public class InventoryFunctions {
             if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
 
             return durableItemOpt.get().getDurability();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("armor", String.class, null)));
+        }
+    }
+
+    public static class EquippedArmorNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            InventoryArmor inventoryArmor =
+                    InventoryArmor.fromString(arguments.getArgument("armor").getStringValue());
+            if (inventoryArmor == null) return "NONE";
+
+            ItemStack armorStack = McUtils.inventory().armor.get(inventoryArmor.getArmorSlot());
+            if (armorStack.isEmpty()) return "NONE";
+
+            StyledText hoverName = StyledText.fromComponent(armorStack.getHoverName());
+            return hoverName.getString(StyleType.NONE);
         }
 
         @Override

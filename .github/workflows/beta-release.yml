@@ -193,7 +193,7 @@ jobs:
 
       - name: Post changelog on Discord
         env:
-          WEBHOOK_URL: ${{ secrets.DISCORD_RELEASE_NOTES_WEBHOOK_URL }}
+          WEBHOOK_URL: ${{ secrets.DISCORD_BETA_RELEASE_NOTES_WEBHOOK_URL }}
         run: |
           VERSION="v${{ needs.set-version.outputs.tag }}"
           TITLE="# Wynntils ${VERSION} Changelog"
@@ -273,8 +273,8 @@ jobs:
 
           files: "**/build/libs/*-${{ matrix.modloader }}*.jar"
 
-          name: Wynntils (${{ matrix.modloader }}) ${{ needs.set-version.outputs.tag }}
-          version: ${{ needs.set-version.outputs.tag }}
+          name: Wynntils v(${{ matrix.modloader }}) ${{ needs.set-version.outputs.tag }}
+          version: v${{ needs.set-version.outputs.tag }}
           version-type: beta
           game-versions: 1.21.4
           changelog: ${{ steps.changelog.outputs.raw }}
