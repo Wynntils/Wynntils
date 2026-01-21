@@ -79,48 +79,40 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private Texture selectedIcon;
     private CustomPoi.Visibility selectedVisibility = CustomPoi.Visibility.DEFAULT;
 
-    private PoiCreationScreen(MainMapScreen oldMapScreen) {
+    private PoiCreationScreen(Screen oldScreen) {
         super();
-        this.returnScreen = oldMapScreen;
+        this.returnScreen = oldScreen;
 
         this.firstSetup = true;
     }
 
-    private PoiCreationScreen(MainMapScreen oldMapScreen, Location setupLocation) {
-        this(oldMapScreen);
+    private PoiCreationScreen(Screen oldScreen, Location setupLocation) {
+        this(oldScreen);
 
         this.setupLocation = setupLocation;
         this.firstSetup = true;
     }
 
-    private PoiCreationScreen(MainMapScreen oldMapScreen, CustomPoi poi) {
-        this(oldMapScreen);
+    private PoiCreationScreen(Screen oldScreen, CustomPoi poi) {
+        this(oldScreen);
 
         this.oldPoi = poi;
         this.firstSetup = true;
     }
 
-    private PoiCreationScreen(PoiManagementScreen managementScreen, CustomPoi poi) {
-        super();
-        this.returnScreen = managementScreen;
-
-        this.oldPoi = poi;
-        this.firstSetup = true;
+    public static Screen create(Screen oldScreen) {
+        return new PoiCreationScreen(oldScreen);
     }
 
-    public static Screen create(MainMapScreen oldMapScreen) {
-        return new PoiCreationScreen(oldMapScreen);
+    public static Screen create(Screen oldScreen, Location setupLocation) {
+        return new PoiCreationScreen(oldScreen, setupLocation);
     }
 
-    public static Screen create(MainMapScreen oldMapScreen, Location setupLocation) {
-        return new PoiCreationScreen(oldMapScreen, setupLocation);
+    public static Screen create(Screen oldScreen, CustomPoi poi) {
+        return new PoiCreationScreen(oldScreen, poi);
     }
 
-    public static Screen create(MainMapScreen oldMapScreen, CustomPoi poi) {
-        return new PoiCreationScreen(oldMapScreen, poi);
-    }
-
-    public static Screen create(PoiManagementScreen managementScreen, CustomPoi poi) {
+    public static Screen create(WaypointManagementScreen managementScreen, CustomPoi poi) {
         return new PoiCreationScreen(managementScreen, poi);
     }
 

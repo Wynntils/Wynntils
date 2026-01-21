@@ -13,7 +13,6 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -35,10 +34,7 @@ public class EmeraldPouchHotkeyFeature extends Feature {
     private final KeyBind emeraldPouchKeyBind = KeyBindDefinition.OPEN_EMERALD_POUCH.create(this::onOpenPouchKeyPress);
 
     public EmeraldPouchHotkeyFeature() {
-        super(new ProfileDefault.Builder()
-                .disableFor(
-                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
-                .build());
+        super(ProfileDefault.onlyDefault());
     }
 
     private void onOpenPouchKeyPress() {

@@ -44,7 +44,7 @@ public class LowHealthVignetteFeature extends Feature {
 
     public LowHealthVignetteFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER)
                 .build());
     }
 

@@ -7,6 +7,7 @@ package com.wynntils.mc.event;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class HotbarSlotRenderEvent extends Event {
     private final GuiGraphics guiGraphics;
@@ -37,7 +38,7 @@ public abstract class HotbarSlotRenderEvent extends Event {
         return y;
     }
 
-    public static class Pre extends HotbarSlotRenderEvent {
+    public static class Pre extends HotbarSlotRenderEvent implements ICancellableEvent {
         public Pre(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
             super(guiGraphics, itemStack, x, y);
         }

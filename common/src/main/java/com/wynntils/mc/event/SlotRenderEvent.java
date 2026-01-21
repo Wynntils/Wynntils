@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class SlotRenderEvent extends Event {
     private final GuiGraphics guiGraphics;
@@ -32,7 +33,7 @@ public abstract class SlotRenderEvent extends Event {
         return slot;
     }
 
-    public static class Pre extends SlotRenderEvent {
+    public static class Pre extends SlotRenderEvent implements ICancellableEvent {
         public Pre(GuiGraphics guiGraphics, Screen screen, Slot slot) {
             super(guiGraphics, screen, slot);
         }

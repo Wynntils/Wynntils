@@ -83,7 +83,7 @@ public abstract class ChatComponentMixin {
     }
 
     @WrapOperation(
-            method = "method_75802",
+            method = "method_75802", // forEachLine in render
             at =
                     @At(
                             value = "INVOKE",

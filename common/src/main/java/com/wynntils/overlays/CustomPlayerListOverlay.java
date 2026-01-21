@@ -102,9 +102,7 @@ public class CustomPlayerListOverlay extends Overlay {
                 .map(defaultTabList::getNameForDisplay)
                 .map(StyledText::fromComponent)
                 .map(StyledText::trim)
-                .map(StyledText::getString)
                 .map(styledText -> RenderedStringUtils.substringMaxWidth(styledText, MAX_WIDTH))
-                .map(StyledText::fromString)
                 .toList();
     }
 

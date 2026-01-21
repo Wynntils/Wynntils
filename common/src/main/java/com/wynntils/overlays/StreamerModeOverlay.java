@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -59,6 +59,6 @@ public class StreamerModeOverlay extends TextOverlay {
 
     @Override
     public boolean isVisible() {
-        return Models.WorldState.isInStream();
+        return Models.StreamerMode.isInStream();
     }
 }

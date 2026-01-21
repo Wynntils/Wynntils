@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds.bossbars;
@@ -17,13 +17,13 @@ public class StreamerModeBar extends TrackedBar {
 
     @Override
     public void onUpdateProgress(float progress) {
-        Models.WorldState.setStreamerMode(true);
+        Models.StreamerMode.setStreamerMode(true);
     }
 
     @Override
     protected void reset() {
         super.reset();
 
-        Models.WorldState.setStreamerMode(false);
+        Models.StreamerMode.setStreamerMode(false);
     }
 }

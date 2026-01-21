@@ -152,6 +152,7 @@ import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.AutoSkipCutscenesFeature;
 import com.wynntils.features.utilities.CharacterSelectionUtilitiesFeature;
+import com.wynntils.features.utilities.EnhancedStreamerModeFeature;
 import com.wynntils.features.utilities.FixCrosshairPositionFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
@@ -382,6 +383,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new AutoSkipCutscenesFeature());
         registerFeature(new CharacterSelectionUtilitiesFeature());
+        registerFeature(new EnhancedStreamerModeFeature());
         registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new ValuablesProtectionFeature());

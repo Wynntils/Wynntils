@@ -78,6 +78,26 @@ public class InventoryFunctions {
         }
     }
 
+    public static class EquippedArmorNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            InventoryArmor inventoryArmor =
+                    InventoryArmor.fromString(arguments.getArgument("armor").getStringValue());
+            if (inventoryArmor == null) return "NONE";
+
+            ItemStack armorStack = McUtils.inventory().getItem(inventoryArmor.getInventorySlot());
+            if (armorStack.isEmpty()) return "NONE";
+
+            StyledText hoverName = StyledText.fromComponent(armorStack.getHoverName());
+            return hoverName.getString(StyleType.NONE);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("armor", String.class, null)));
+        }
+    }
+
     public static class CappedInventorySlotsFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {

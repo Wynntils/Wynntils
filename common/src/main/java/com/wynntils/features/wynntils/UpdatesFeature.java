@@ -13,7 +13,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.mc.McUtils;
@@ -33,7 +32,7 @@ public class UpdatesFeature extends Feature {
     private final Config<Boolean> autoUpdate = new Config<>(false);
 
     public UpdatesFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent

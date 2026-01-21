@@ -5,12 +5,14 @@
 package com.wynntils.services.cosmetics.type;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
 import com.wynntils.mc.event.RenderTranslucentCheckEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
+import com.wynntils.services.cosmetics.event.PlayerArmorVisibilityEvent;
 import com.wynntils.utils.colors.CommonColors;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -29,11 +31,15 @@ import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.PlayerSkin;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.equipment.Equippable;
 
 public final class WynntilsCapeLayer extends WynntilsLayer {
+    // If this changes, add it to Static-Storage model_data so we don't need to push mod updates to fix
+    private static final int HIDE_GLINT_COLOR = 16777215;
+
     private final HumanoidModel<AvatarRenderState> model;
     private final EquipmentAssetManager equipmentAssets;
 
@@ -63,38 +69,35 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
         if (texture == null) return;
 
         if (!renderState.isInvisible && renderState.showCape) {
-            PlayerSkin playerSkin = renderState.skin;
-            if (playerSkin.cape() != null) {
-                if (!this.hasLayer(renderState.chestEquipment, EquipmentClientInfo.LayerType.WINGS)) {
-                    poseStack.pushPose();
-                    if (this.hasLayer(renderState.chestEquipment, EquipmentClientInfo.LayerType.HUMANOID)) {
-                        poseStack.translate(0.0F, -0.053125F, 0.06875F);
-                    }
-
-                    RenderTranslucentCheckEvent.Cape translucentCheckEvent =
-                            new RenderTranslucentCheckEvent.Cape(false, renderState, 1.0f);
-                    MixinHelper.post(translucentCheckEvent);
-
-                    RenderType renderType = translucentCheckEvent.getTranslucence() == 1.0f
-                            ? RenderTypes.entityCutout(texture)
-                            : RenderTypes.entityTranslucent(texture);
-
-                    nodeCollector.submitModel(
-                            this.model,
-                            renderState,
-                            poseStack,
-                            renderType,
-                            packedLight,
-                            OverlayTexture.NO_OVERLAY,
-                            CommonColors.WHITE
-                                    .withAlpha(translucentCheckEvent.getTranslucence())
-                                    .asInt(),
-                            null,
-                            renderState.outlineColor,
-                            null);
-                    poseStack.popPose();
+            poseStack.pushPose();
+            if (this.hasLayer(renderState.chestEquipment, EquipmentClientInfo.LayerType.HUMANOID)) {
+                if (hasVisibleChestplate(renderState)) {
+                    poseStack.translate(0.0F, -0.053125F, 0.06875F);
                 }
             }
+
+            RenderTranslucentCheckEvent.Cape translucentCheckEvent =
+                    new RenderTranslucentCheckEvent.Cape(false, renderState, 1.0f);
+            MixinHelper.post(translucentCheckEvent);
+
+            RenderType renderType = translucentCheckEvent.getTranslucence() == 1.0f
+                    ? RenderTypes.entityCutout(texture)
+                    : RenderTypes.entityTranslucent(texture);
+
+            nodeCollector.submitModel(
+                    this.model,
+                    renderState,
+                    poseStack,
+                    renderType,
+                    packedLight,
+                    OverlayTexture.NO_OVERLAY,
+                    CommonColors.WHITE
+                            .withAlpha(translucentCheckEvent.getTranslucence())
+                            .asInt(),
+                    null,
+                    renderState.outlineColor,
+                    null);
+            poseStack.popPose();
         }
     }
 
@@ -107,5 +110,23 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
         } else {
             return false;
         }
+    }
+
+    private boolean hasVisibleChestplate(AvatarRenderState renderState) {
+        boolean hasLayer = true;
+
+        DyedItemColor dyeColor = renderState.chestEquipment.get(DataComponents.DYED_COLOR);
+        if (dyeColor != null) {
+            hasLayer = dyeColor.rgb() != HIDE_GLINT_COLOR;
+        }
+
+        if (hasLayer) {
+            PlayerArmorVisibilityEvent event = new PlayerArmorVisibilityEvent(EquipmentSlot.CHEST, renderState);
+            WynntilsMod.postEvent(event);
+
+            hasLayer = event.isVisible();
+        }
+
+        return hasLayer;
     }
 }
