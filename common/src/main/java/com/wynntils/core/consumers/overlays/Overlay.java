@@ -45,6 +45,10 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     @Persisted(i18nKey = "overlay.wynntils.overlay.renderElement")
     protected final HiddenConfig<RenderElementType> renderElement = new HiddenConfig<>(RenderElementType.CHAT);
 
+    // We set the default as -1 here but it will be set to a proper default in OverlayManager#rebuildRenderOrder
+    @Persisted(i18nKey = "overlay.wynntils.overlay.renderOrder")
+    protected final HiddenConfig<Integer> renderOrder = new HiddenConfig<>(-1);
+
     // This is used in rendering.
     // Initially we use the overlay position horizontal alignment
     // but the user can modify this config field to use an override.

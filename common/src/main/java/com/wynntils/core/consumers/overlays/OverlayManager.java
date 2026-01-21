@@ -150,12 +150,34 @@ public final class OverlayManager extends Manager {
             if (elementType == RenderElementType.GUI_PRE) continue;
             if (!elementType.isRootRender()) continue;
 
-            List<Overlay> filteredOverlays = enabledOverlays.stream()
+            // Get all the overlays that do not have a valid render order, this will be all overlays
+            // on first run, then afterwards only new overlays
+            List<Overlay> newOverlays = enabledOverlays.stream()
                     .filter(overlay -> overlay.renderElement.get() == elementType)
+                    .filter(overlay -> overlay.renderOrder.get() == -1)
                     .sorted(Comparator.comparing(Overlay::getShortName))
                     .toList();
 
-            newRenderMap.put(elementType, filteredOverlays);
+            // Then we get the overlays that already have a valid order so that we can
+            // add the new overlays to the end of the list and set a render order based on the size
+            // of this and the new list
+            List<Overlay> orderedOverlays = enabledOverlays.stream()
+                    .filter(overlay -> overlay.renderElement.get() == elementType)
+                    .filter(overlay -> overlay.renderOrder.get() != -1)
+                    .sorted(Comparator.comparing(overlay -> overlay.renderOrder.get()))
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            int newOrder = orderedOverlays.size();
+
+            // Set and save the render order for each of the new overlays
+            for (int i = 0; i < newOverlays.size(); i++) {
+                Overlay overlay = newOverlays.get(i);
+                overlay.renderOrder.store(newOrder + i);
+                overlay.renderOrder.touched();
+                orderedOverlays.add(overlay);
+            }
+
+            newRenderMap.put(elementType, orderedOverlays);
         }
 
         renderMap = newRenderMap;

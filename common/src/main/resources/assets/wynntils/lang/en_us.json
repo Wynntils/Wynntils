@@ -2818,6 +2818,8 @@
   "overlay.wynntils.overlay.position.name": "Overlay Position",
   "overlay.wynntils.overlay.renderElement.description": "Which GUI element should this overlay render before?",
   "overlay.wynntils.overlay.renderElement.name": "GUI Render Element",
+  "overlay.wynntils.overlay.renderOrder.description": "The order in which this overlay should be rendered. Lower numbers are rendered first.",
+  "overlay.wynntils.overlay.renderOrder.name": "Render Order",
   "overlay.wynntils.overlay.size.description": "The size of the overlay",
   "overlay.wynntils.overlay.size.name": "Overlay Size",
   "overlay.wynntils.overlay.spacing.description": "The spacing between parts in this overlay",
