@@ -318,6 +318,24 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         };
     }
 
+    public RenderElementType getRenderElementType() {
+        return renderElement.get();
+    }
+
+    public void setRenderElementType(RenderElementType renderElementType) {
+        renderElement.store(renderElementType);
+        renderElement.touched();
+    }
+
+    public int getRenderOrder() {
+        return renderOrder.get();
+    }
+
+    public void setRenderOrder(int renderOrder) {
+        this.renderOrder.store(renderOrder);
+        this.renderOrder.touched();
+    }
+
     @Override
     public int compareTo(Overlay other) {
         return ComparisonChain.start()

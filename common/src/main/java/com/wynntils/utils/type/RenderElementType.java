@@ -28,4 +28,19 @@ public enum RenderElementType {
     public boolean isRootRender() {
         return rootRender;
     }
+
+    public static RenderElementType[] overlayValues() {
+        return new RenderElementType[] {
+            CAMERA_OVERLAYS,
+            CROSSHAIR,
+            HOTBAR,
+            BOSS_BARS,
+            SCOREBOARD,
+            ACTION_BAR,
+            TITLE,
+            CHAT,
+            PLAYER_TAB_LIST,
+            GUI_POST
+        };
+    }
 }
