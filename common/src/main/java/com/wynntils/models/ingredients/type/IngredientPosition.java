@@ -12,7 +12,7 @@ public enum IngredientPosition {
     ABOVE("above"),
     UNDER("under"),
     TOUCHING("touching"),
-    NOT_TOUCHING("not touching", "notTouching");
+    NOT_TOUCHING("not touching");
 
     private final String displayName;
     private final String apiName;
