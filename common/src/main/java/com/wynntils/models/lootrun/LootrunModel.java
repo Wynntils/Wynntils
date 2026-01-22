@@ -132,7 +132,7 @@ public final class LootrunModel extends Model {
     private static final Pattern BEACONS_PATTERN = Pattern.compile(
             "[\uDAFF\uDFFF-\uDB00\uDC78]§(?<beaconOneColor>[a-z0-9#]+)§l(?<beaconOneVibrant>Vibrant )?.+? Beacon(§r[\uDAFF\uDFFF-\uDB00\uDC78]§(?<beaconTwoColor>[a-z0-9#]+)§l(?<beaconTwoVibrant>Vibrant )?.+ Beacon)?");
     private static final Pattern ORANGE_AMOUNT_PATTERN =
-            Pattern.compile("(?:.+)?§7(?:.+?)?for (?:§b)?(\\d+)(?:§r)? Challenges");
+            Pattern.compile("(?:.+)?§7(?:.+?)?for (?:§b)?(\\d+)(?:§r|7)? Challenges");
     private static final Pattern RAINBOW_AMOUNT_PATTERN =
             Pattern.compile("(?:.+)?§7(?:.+?)?next (?:§b)?(\\d+)(§(r|7))? Challenges");
     private static final Pattern MISSION_COMPLETED_PATTERN =
@@ -860,6 +860,10 @@ public final class LootrunModel extends Model {
         return getCurrentLootrunDetails().getRedBeaconTaskCount();
     }
 
+    public List<Integer> getOrangeBeaconCounts() {
+        return getCurrentLootrunDetails().getOrangeBeaconCounts();
+    }
+
     public int getActiveOrangeBeacons() {
         return getCurrentLootrunDetails().getOrangeBeaconCounts().size();
     }
@@ -1030,6 +1034,7 @@ public final class LootrunModel extends Model {
             lootrunDetailsStorage.touched();
 
             setLastTaskBeaconColor(color);
+            LootrunDetails details = getCurrentLootrunDetails();
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(
                     closestBeacon,
                     beacons.get(closestBeacon.beaconKind()).taskLocation(),
@@ -1037,7 +1042,6 @@ public final class LootrunModel extends Model {
 
             possibleTaskLocations = new HashSet<>();
 
-            // We selected a beacon, so other beacons are no longer relevant.
             beacons.clear();
             vibrantBeacons.clear();
             activeBeacons.clear();
@@ -1045,7 +1049,6 @@ public final class LootrunModel extends Model {
             setClosestBeacon(null);
             expectOrangeBeacon = false;
             expectRainbowBeacon = false;
-            reduceBeaconCounts();
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
             return;
         }
@@ -1061,23 +1064,25 @@ public final class LootrunModel extends Model {
 
                 int newCount = Math.max(oldCount + lootrunDetails.getRainbowAmount(), 0);
                 lootrunDetails.setRainbowBeaconCount(newCount);
+
+                lootrunDetails.setRainbowAmount(-1);
             } else {
                 WynntilsMod.warn("Completed rainbow beacon challenge but had no rainbow amount");
             }
         } else if (color == LootrunBeaconKind.ORANGE) {
             if (lootrunDetails.getOrangeAmount() != -1) {
-                List<Integer> orangeList =
-                        new ArrayList<>(getCurrentLootrunDetails().getOrangeBeaconCounts());
+                List<Integer> orangeList = new ArrayList<>(lootrunDetails.getOrangeBeaconCounts());
 
                 orangeList.add(lootrunDetails.getOrangeAmount());
                 lootrunDetails.setOrangeBeaconCounts(orangeList);
+
+                lootrunDetails.setOrangeAmount(-1);
             } else {
                 WynntilsMod.warn("Completed orange beacon challenge but had no orange amount");
             }
         }
 
-        lootrunDetails.setOrangeAmount(-1);
-        lootrunDetails.setRainbowAmount(-1);
+        reduceBeaconCounts();
         lootrunDetailsStorage.get().put(Models.Character.getId(), lootrunDetails);
     }
 
@@ -1093,6 +1098,7 @@ public final class LootrunModel extends Model {
 
         getCurrentLootrunDetails().setOrangeAmount(-1);
         getCurrentLootrunDetails().setRainbowAmount(-1);
+        reduceBeaconCounts();
         lootrunDetailsStorage.touched();
     }
 

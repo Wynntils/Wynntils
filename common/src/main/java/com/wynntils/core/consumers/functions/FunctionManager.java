@@ -613,6 +613,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunMissionFunction());
         registerFunction(new LootrunFunctions.LootrunNextOrangeExpireFunction());
         registerFunction(new LootrunFunctions.LootrunOrangeBeaconCountFunction());
+        registerFunction(new LootrunFunctions.LootrunOrangeBeaconIndexFunction());
         registerFunction(new LootrunFunctions.LootrunRainbowBeaconCountFunction());
         registerFunction(new LootrunFunctions.LootrunRedBeaconChallengeCountFunction());
         registerFunction(new LootrunFunctions.LootrunRerollsFunction());
