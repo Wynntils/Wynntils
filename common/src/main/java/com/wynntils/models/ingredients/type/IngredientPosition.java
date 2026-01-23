@@ -22,11 +22,6 @@ public enum IngredientPosition {
         this.apiName = this.name().toLowerCase(Locale.ROOT);
     }
 
-    IngredientPosition(String displayName, String apiName) {
-        this.displayName = displayName;
-        this.apiName = apiName;
-    }
-
     public String getDisplayName() {
         return displayName;
     }
