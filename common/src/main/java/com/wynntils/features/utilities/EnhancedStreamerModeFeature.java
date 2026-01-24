@@ -15,8 +15,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -107,13 +105,11 @@ public class EnhancedStreamerModeFeature extends Feature {
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_SPACE)) return;
         if (!McUtils.inventory().contains(event.getItemStack())) return;
 
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
-        if (wynnItemOpt.isEmpty()) return;
-        WynnItem wynnItem = wynnItemOpt.get();
+        Optional<GearTypeItemProperty> gearItemOpt =
+                Models.Item.asWynnItemProperty(event.getItemStack(), GearTypeItemProperty.class);
+        if (gearItemOpt.isEmpty()) return;
 
-        if (wynnItem instanceof GearItem) {
-            event.setTooltips(List.of(Component.translatable("feature.wynntils.enhancedStreamerMode.tooltipHidden")));
-        }
+        event.setTooltips(List.of(Component.translatable("feature.wynntils.enhancedStreamerMode.tooltipHidden")));
     }
 
     private void handleWeapon(ICancellableEvent event, ItemStack itemStack, GuiGraphics guiGraphics, int x, int y) {
