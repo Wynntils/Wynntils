@@ -4,30 +4,43 @@
  */
 package com.wynntils.screens.overlays.ordering.widgets;
 
+import com.google.common.collect.Lists;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.overlays.ordering.OverlayOrderingScreen;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 
 public class OverlayOrderWidget extends AbstractWidget {
+    private static final List<Component> TOOLTIP =
+            List.of(Component.translatable("screens.wynntils.overlayOrdering.overlayWidget.tooltip"));
+    private static final List<Component> UP_TOOLTIP =
+            List.of(Component.translatable("screens.wynntils.overlayOrdering.overlayWidget.upTooltip"));
+    private static final List<Component> DOWN_TOOLTIP =
+            List.of(Component.translatable("screens.wynntils.overlayOrdering.overlayWidget.downTooltip"));
+
     private final Overlay overlay;
     private final OverlayOrderingScreen orderingScreen;
     private final Button upButton;
     private final Button downButton;
+    private Style textStyle = Style.EMPTY;
 
     public OverlayOrderWidget(int x, int y, Overlay overlay, OverlayOrderingScreen orderingScreen) {
-        super(x, y, 200, 20, Component.literal(overlay.getTranslatedName()));
+        super(x, y, 198, 20, Component.literal(overlay.getTranslatedName()));
 
         this.overlay = overlay;
         this.orderingScreen = orderingScreen;
@@ -45,30 +58,42 @@ public class OverlayOrderWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawRect(
-                guiGraphics,
-                CommonColors.AQUA.withAlpha(isHovered ? 200 : 255),
-                getX(),
-                getY(),
-                getWidth(),
-                getHeight());
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.WIDGET_BACKGROUND_LONG, getX(), getY());
+
+        textStyle = textStyle.withBold(isHovered);
 
         FontRenderer.getInstance()
-                .renderAlignedTextInBox(
+                .renderScrollingAlignedTextInBox(
                         guiGraphics,
-                        StyledText.fromString(overlay.getTranslatedName()),
+                        StyledText.fromComponent(
+                                Component.literal(overlay.getTranslatedName()).withStyle(textStyle)),
                         getX(),
                         getX() + width - 40,
                         getY(),
                         getY() + height,
                         width - 40,
-                        CommonColors.BLACK,
+                        CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.NONE);
+                        TextShadow.NORMAL);
 
         upButton.render(guiGraphics, mouseX, mouseY, partialTick);
         downButton.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        if (this.isHovered) {
+            List<Component> tooltipToRender = TOOLTIP;
+
+            if (upButton.isHovered()) {
+                tooltipToRender = UP_TOOLTIP;
+            } else if (downButton.isHovered()) {
+                tooltipToRender = DOWN_TOOLTIP;
+            }
+
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(ComponentUtils.wrapTooltips(tooltipToRender, 250), Component::getVisualOrderText),
+                    mouseX,
+                    mouseY);
+        }
     }
 
     @Override
