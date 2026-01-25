@@ -21,9 +21,15 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class QuickJumpButton extends WynntilsButton {
+    private static final Style NUMBER_STYLE =
+            Style.EMPTY.withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("language/wynncraft")));
+
     private final int destination;
     private final CustomColor lockedColor;
     private final CustomColor selectedColor;
@@ -69,7 +75,8 @@ public class QuickJumpButton extends WynntilsButton {
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
-                            StyledText.fromString(String.valueOf(destination)),
+                            StyledText.fromComponent(Component.literal(String.valueOf(destination))
+                                    .withStyle(NUMBER_STYLE)),
                             getX() + 8,
                             getY() + 8,
                             color,
