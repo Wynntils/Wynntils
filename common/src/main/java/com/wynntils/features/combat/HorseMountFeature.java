@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -79,6 +79,7 @@ public class HorseMountFeature extends Feature {
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (!guaranteedMount.get()) return;
+        if (Models.WorldState.inCharacterWardrobe()) return;
 
         ItemStack itemStack = McUtils.player().getMainHandItem();
         Optional<HorseItem> horseItemOpt = Models.Item.asWynnItem(itemStack, HorseItem.class);

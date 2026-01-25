@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -72,6 +72,7 @@ public class HealthPotionBlockerFeature extends Feature {
     private boolean checkPotionUse() {
         ItemStack itemStack = McUtils.inventory().getSelected();
         if (!isHealingPotion(itemStack)) return false;
+        if (Models.WorldState.inCharacterWardrobe()) return false;
 
         Optional<CappedValue> healthOpt = Models.CharacterStats.getHealth();
         if (healthOpt.isEmpty()) {
