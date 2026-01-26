@@ -5,6 +5,7 @@
 package com.wynntils.screens.overlays.ordering.widgets;
 
 import com.google.common.collect.Lists;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.overlays.ordering.OverlayOrderingScreen;
@@ -37,6 +38,7 @@ public class OverlayOrderWidget extends AbstractWidget {
     private final OverlayOrderingScreen orderingScreen;
     private final Button upButton;
     private final Button downButton;
+    private final String textToRender;
     private Style textStyle = Style.EMPTY;
 
     public OverlayOrderWidget(int x, int y, Overlay overlay, OverlayOrderingScreen orderingScreen) {
@@ -44,6 +46,16 @@ public class OverlayOrderWidget extends AbstractWidget {
 
         this.overlay = overlay;
         this.orderingScreen = orderingScreen;
+
+        if (overlay instanceof CustomNameProperty customNameProperty) {
+            if (!customNameProperty.getCustomName().get().isEmpty()) {
+                textToRender = customNameProperty.getCustomName().get();
+            } else {
+                textToRender = overlay.getTranslatedName();
+            }
+        } else {
+            textToRender = overlay.getTranslatedName();
+        }
 
         upButton = new Button.Builder(Component.literal("🠝"), (button) -> orderingScreen.reorderOverlay(overlay, -1))
                 .pos(x + width - 40, y)
@@ -65,8 +77,7 @@ public class OverlayOrderWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderScrollingAlignedTextInBox(
                         guiGraphics,
-                        StyledText.fromComponent(
-                                Component.literal(overlay.getTranslatedName()).withStyle(textStyle)),
+                        StyledText.fromComponent(Component.literal(textToRender).withStyle(textStyle)),
                         getX(),
                         getX() + width - 40,
                         getY(),
