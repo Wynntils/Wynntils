@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.chat;
@@ -95,8 +95,13 @@ public final class ChatTabService extends Service {
         tabDataMap.remove(chatTab);
     }
 
-    public ChatComponent getChatComponent(ChatTab tab) {
-        return tabDataMap.get(tab).getChatComponent();
+    public Optional<ChatComponent> getChatComponent(ChatTab tab) {
+        if (!tabDataMap.containsKey(tab)) {
+            WynntilsMod.warn("Chat Tab " + tab.name() + " not found in tabDataMap");
+            return Optional.empty();
+        }
+
+        return Optional.of(tabDataMap.get(tab).getChatComponent());
     }
 
     public boolean hasUnreadMessages(ChatTab tab) {
@@ -154,7 +159,10 @@ public final class ChatTabService extends Service {
             RecipientType recipientType = Handlers.Chat.getRecipientType(styledText, MessageType.FOREGROUND);
             List<ChatTab> recipientTabs = Services.ChatTab.getRecipientTabs(recipientType, styledText);
 
-            recipientTabs.forEach(tab -> Services.ChatTab.getChatComponent(tab).addMessage(component));
+            recipientTabs.forEach(tab -> {
+                Optional<ChatComponent> chatComponent = Services.ChatTab.getChatComponent(tab);
+                chatComponent.ifPresent(value -> value.addMessage(component));
+            });
         });
 
         vanillaChatComponent = McUtils.mc().gui.chat;
@@ -202,7 +210,8 @@ public final class ChatTabService extends Service {
 
             List<ChatTab> recipientTabs = getRecipientTabs(recipientType, styledText);
             recipientTabs.forEach(tab -> {
-                getChatComponent(tab).addMessage(component);
+                Optional<ChatComponent> chatComponent = getChatComponent(tab);
+                chatComponent.ifPresent(value -> value.addMessage(component));
                 markAsNewMessages(tab);
             });
         } catch (Throwable t) {
@@ -215,7 +224,8 @@ public final class ChatTabService extends Service {
                         "<< WARNING: A chat message was lost due to a crash in a mod other than Wynntils. See log for details. >>")
                 .withStyle(ChatFormatting.RED);
         vanillaChatComponent.addMessage(warning);
-        getChatComponent(focusedTab).addMessage(warning);
+        Optional<ChatComponent> chatComponent = Services.ChatTab.getChatComponent(focusedTab);
+        chatComponent.ifPresent(value -> value.addMessage(component));
 
         // We have seen many issues with badly written mods that inject into addMessage, and
         // throws exceptions. Instead of considering it a Wynntils crash, dump it to the log and
