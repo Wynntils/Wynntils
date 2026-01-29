@@ -501,6 +501,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
         registerFunction(new CombatFunctions.BlocksAboveGroundFunction());
+        registerFunction(new CombatFunctions.DebuffsInRadiusValueFunction());
         registerFunction(new CombatFunctions.FocusedMobHealthFunction());
         registerFunction(new CombatFunctions.FocusedMobHealthPercentFunction());
         registerFunction(new CombatFunctions.FocusedMobNameFunction());
@@ -509,6 +510,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.LastKillFunction());
         registerFunction(new CombatFunctions.LastSpellNameFunction());
         registerFunction(new CombatFunctions.LastSpellRepeatCountFunction());
+        registerFunction(new CombatFunctions.TargetedMobDebuffValueFunction());
         registerFunction(new CombatFunctions.TicksSinceLastSpellFunction());
         registerFunction(new CombatFunctions.TimeSinceLastDamageDealtFunction());
         registerFunction(new CombatFunctions.TimeSinceLastKillFunction());
