@@ -36,8 +36,8 @@ public class OverlayOrderWidget extends AbstractWidget {
 
     private final Overlay overlay;
     private final OverlayOrderingScreen orderingScreen;
-    private final Button upButton;
     private final Button downButton;
+    private final Button upButton;
     private final String textToRender;
     private Style textStyle = Style.EMPTY;
 
@@ -57,12 +57,12 @@ public class OverlayOrderWidget extends AbstractWidget {
             textToRender = overlay.getTranslatedName();
         }
 
-        upButton = new Button.Builder(Component.literal("🠝"), (button) -> orderingScreen.reorderOverlay(overlay, -1))
+        downButton = new Button.Builder(Component.literal("🠟"), (button) -> orderingScreen.reorderOverlay(overlay, -1))
                 .pos(x + width - 40, y)
                 .size(20, 20)
                 .build();
 
-        downButton = new Button.Builder(Component.literal("🠟"), (button) -> orderingScreen.reorderOverlay(overlay, 1))
+        upButton = new Button.Builder(Component.literal("🠝"), (button) -> orderingScreen.reorderOverlay(overlay, 1))
                 .pos(x + width - 20, y)
                 .size(20, 20)
                 .build();
@@ -88,15 +88,15 @@ public class OverlayOrderWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        upButton.render(guiGraphics, mouseX, mouseY, partialTick);
         downButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        upButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
         if (this.isHovered) {
             List<Component> tooltipToRender = TOOLTIP;
 
-            if (upButton.isHovered()) {
+            if (downButton.isHovered()) {
                 tooltipToRender = UP_TOOLTIP;
-            } else if (downButton.isHovered()) {
+            } else if (upButton.isHovered()) {
                 tooltipToRender = DOWN_TOOLTIP;
             }
 
@@ -110,18 +110,18 @@ public class OverlayOrderWidget extends AbstractWidget {
     @Override
     public void setY(int y) {
         super.setY(y);
-        upButton.setY(y);
         downButton.setY(y);
+        upButton.setY(y);
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!isMouseOver(event.x(), event.y())) return false;
 
-        if (upButton.isMouseOver(event.x(), event.y())) {
-            return upButton.mouseClicked(event, isDoubleClick);
-        } else if (downButton.isMouseOver(event.x(), event.y())) {
+        if (downButton.isMouseOver(event.x(), event.y())) {
             return downButton.mouseClicked(event, isDoubleClick);
+        } else if (upButton.isMouseOver(event.x(), event.y())) {
+            return upButton.mouseClicked(event, isDoubleClick);
         }
 
         return super.mouseClicked(event, isDoubleClick);

@@ -52,9 +52,7 @@ public class OverlayOrderingScreen extends WynntilsScreen {
         StyledText.fromString(""),
         StyledText.fromComponent(Component.translatable("screens.wynntils.overlayOrdering.help2")),
         StyledText.fromString(""),
-        StyledText.fromComponent(Component.translatable("screens.wynntils.overlayOrdering.help3")),
-        StyledText.fromString(""),
-        StyledText.fromComponent(Component.translatable("screens.wynntils.overlayOrdering.help4"))
+        StyledText.fromComponent(Component.translatable("screens.wynntils.overlayOrdering.help3"))
     };
 
     private OverlayOrderingScreen(Screen previousScreen) {
@@ -223,16 +221,24 @@ public class OverlayOrderingScreen extends WynntilsScreen {
 
         int renderY = offsetY + 15;
         int renderX = offsetX + 10;
-        for (RenderElementType type : RenderElementType.values()) {
+        RenderElementType[] types = RenderElementType.values();
+        for (int i = types.length - 1; i >= 0; i--) {
+            RenderElementType type = types[i];
             if (!type.isRootRender() || type == RenderElementType.GUI_PRE) continue;
 
-            for (Overlay overlay : overlays.get(type)) {
-                widgets.add(new OverlayOrderWidget(renderX, renderY, overlay, this));
+            // We don't need to add a widget for GUI_POST as nothing can render after it
+            // so this prevents it from always appearing at the top
+            if (type != RenderElementType.GUI_POST) {
+                widgets.add(new ElementTypeWidget(renderX, renderY, type));
                 renderY += 20;
             }
 
-            widgets.add(new ElementTypeWidget(renderX, renderY, type));
-            renderY += 20;
+            List<Overlay> overlayList = overlays.get(type);
+            for (int j = overlayList.size() - 1; j >= 0; j--) {
+                Overlay overlay = overlayList.get(j);
+                widgets.add(new OverlayOrderWidget(renderX, renderY, overlay, this));
+                renderY += 20;
+            }
         }
 
         scroll(scrollOffset);
