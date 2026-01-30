@@ -73,7 +73,13 @@ public final class NetManager extends Manager {
      */
     public Download download(UrlId urlId) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
-        URI uri = URI.create(urlInfo.url());
+        URI uri;
+        if (urlInfo.path().isPresent()) {
+            uri = URI.create(
+                    Managers.Url.getDownloadSourceUrl() + urlInfo.path().get());
+        } else {
+            uri = URI.create(urlInfo.url());
+        }
         String localFileName = urlId.getId();
         File localFile = new File(CACHE_DIR, localFileName);
 
@@ -157,7 +163,13 @@ public final class NetManager extends Manager {
             JsonObject jsonArgs = new JsonObject();
             arguments.forEach(jsonArgs::addProperty);
 
-            URI uri = URI.create(urlInfo.url());
+            URI uri;
+            if (urlInfo.path().isPresent()) {
+                uri = URI.create(
+                        Managers.Url.getDownloadSourceUrl() + urlInfo.path().get());
+            } else {
+                uri = URI.create(urlInfo.url());
+            }
             HttpRequest request = createPostRequest(uri, headers, jsonArgs);
             return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
         }
