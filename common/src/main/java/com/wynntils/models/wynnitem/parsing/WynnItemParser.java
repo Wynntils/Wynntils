@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem.parsing;
@@ -410,8 +410,9 @@ public final class WynnItemParser {
                 // parse possible values for this stat
                 if (statMatcher.group(4) != null && possibleValuesMap != null) {
                     int maxValue = Integer.parseInt(statMatcher.group(4));
-                    // minimum value is 10% of maximum value, rounded
-                    int minValue = (int) Math.round(maxValue * 0.1);
+                    // For positive stats, minimum value is 10% of maximum value, rounded.
+                    // For negative stats, minimum value is always the same as maximum
+                    int minValue = maxValue <= 0 ? maxValue : (int) Math.round(maxValue * 0.1);
 
                     // Add possible values for this stat
                     StatPossibleValues calculatedPossibleValues =
