@@ -90,6 +90,8 @@ public class QuickCastFeature extends Feature {
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
+        if (Models.WorldState.inCharacterWardrobe()) return;
+
         lastSpellTick = McUtils.player().tickCount;
 
         if (!blockAttacks.get()) return;

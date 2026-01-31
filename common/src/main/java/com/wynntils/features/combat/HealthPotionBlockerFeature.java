@@ -68,6 +68,7 @@ public class HealthPotionBlockerFeature extends Feature {
     private boolean checkPotionUse() {
         ItemStack itemStack = McUtils.inventory().getSelectedItem();
         if (!isHealingPotion(itemStack)) return false;
+        if (Models.WorldState.inCharacterWardrobe()) return false;
 
         Optional<CappedValue> healthOpt = Models.CharacterStats.getHealth();
         if (healthOpt.isEmpty()) {
