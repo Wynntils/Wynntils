@@ -1,7 +1,5 @@
-Functions
-- Inventory Functions
-  - `equipped_armor_name` returns the name of the given armor type as a String, if no armor found then "NONE" is returned
-    - Required String argument `armor`, the armor type to retrieve such as "Helmet" or "Boots"
-
 Fixes
-- Fix not being able to click territories that are only visible after scrolling in the custom territory management screen
+- Fix ingredients "not touching" modifier not being parsed
+- Fix per character gear sharing settings not saving
+- Prevent health potion blocker, horse mounting, prevent trades & duels, quick casts and custom content book from working whilst in the wardrobe
+- Fix crashing when handling errors with chat tabs
