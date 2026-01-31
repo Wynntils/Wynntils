@@ -18,6 +18,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.RenderElementType;
 import java.util.Optional;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -50,7 +51,7 @@ public class LowHealthVignetteFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderGui(RenderEvent.Post event) {
-        if (!shouldRender || event.getType() != RenderEvent.ElementType.GUI) return;
+        if (!shouldRender || event.getType() != RenderElementType.GUI_POST) return;
         if (!Models.WorldState.onWorld()) return;
 
         RenderUtils.renderVignetteOverlay(event.getGuiGraphics(), color.get(), value);

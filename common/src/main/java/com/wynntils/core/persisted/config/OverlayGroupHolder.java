@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -8,8 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.RenderState;
-import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.utils.type.RenderElementType;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -21,21 +20,14 @@ public class OverlayGroupHolder {
     private final Field field;
     private final Feature parent;
     private final int defaultCount;
-    private final RenderEvent.ElementType elementType;
-    private final RenderState renderState;
+    private final RenderElementType elementType;
 
     private final Class<?> overlayClass;
 
-    public OverlayGroupHolder(
-            Field field,
-            Feature parent,
-            RenderEvent.ElementType elementType,
-            RenderState renderState,
-            int defaultCount) {
+    public OverlayGroupHolder(Field field, Feature parent, RenderElementType elementType, int defaultCount) {
         this.field = field;
         this.parent = parent;
         this.elementType = elementType;
-        this.renderState = renderState;
         this.defaultCount = defaultCount;
 
         Type genericType = this.field.getGenericType();
@@ -68,12 +60,8 @@ public class OverlayGroupHolder {
         }
     }
 
-    public RenderEvent.ElementType getElementType() {
+    public RenderElementType getElementType() {
         return elementType;
-    }
-
-    public RenderState getRenderState() {
-        return renderState;
     }
 
     public int getDefaultCount() {
