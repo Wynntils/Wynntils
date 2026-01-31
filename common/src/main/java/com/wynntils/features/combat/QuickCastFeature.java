@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -93,6 +93,8 @@ public class QuickCastFeature extends Feature {
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
+        if (Models.WorldState.inCharacterWardrobe()) return;
+
         lastSpellTick = McUtils.player().tickCount;
 
         if (!blockAttacks.get()) return;

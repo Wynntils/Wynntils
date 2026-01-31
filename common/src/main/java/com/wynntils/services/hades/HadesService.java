@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -251,6 +251,11 @@ public final class HadesService extends Service {
 
     @SubscribeEvent
     public void onClassChange(CharacterUpdateEvent event) {
+        String id = Models.Character.getId();
+
+        characterGearShareOptions.get().putIfAbsent(id, new GearShareOptions());
+        characterGearShareOptions.touched();
+
         tryResendWorldData();
     }
 
@@ -401,6 +406,7 @@ public final class HadesService extends Service {
 
     public void saveGearShareOptions() {
         gearShareOptions.touched();
+        characterGearShareOptions.touched();
         refreshGear();
     }
 

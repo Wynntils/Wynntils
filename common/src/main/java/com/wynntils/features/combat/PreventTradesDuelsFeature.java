@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -53,6 +53,7 @@ public class PreventTradesDuelsFeature extends Feature {
 
     private void handlePlayerClick(ICancellableEvent event, Player player, ItemStack itemStack, Entity target) {
         if (!player.isShiftKeyDown() || !(target instanceof Player p) || !Models.Player.isLocalPlayer(p)) return;
+        if (Models.WorldState.inCharacterWardrobe()) return;
 
         int timeSinceLastFight =
                 (int) ((System.currentTimeMillis() - Models.Combat.getLastDamageDealtTimestamp()) / 1000);
