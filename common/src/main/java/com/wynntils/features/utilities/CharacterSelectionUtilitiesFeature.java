@@ -18,6 +18,7 @@ import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.RenderElementType;
 import java.util.List;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.KeyMapping;
@@ -73,7 +74,7 @@ public class CharacterSelectionUtilitiesFeature extends Feature {
     @SubscribeEvent
     public void onRenderCrosshair(RenderEvent.Pre event) {
         if (!hideCrosshair.get()) return;
-        if (event.getType() != RenderEvent.ElementType.CROSSHAIR) return;
+        if (event.getType() != RenderElementType.CROSSHAIR) return;
         if (Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 
         event.setCanceled(true);

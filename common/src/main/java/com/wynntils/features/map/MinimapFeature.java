@@ -8,27 +8,26 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.RenderState;
-import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.minimap.CoordinateOverlay;
 import com.wynntils.overlays.minimap.MinimapOverlay;
 import com.wynntils.overlays.minimap.TerritoryOverlay;
+import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.MAP)
 public class MinimapFeature extends Feature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
+    @RegisterOverlay
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
-    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
     private final Overlay coordinatesOverlay = new CoordinateOverlay();
 
-    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay
     private final Overlay territoryOverlay = new TerritoryOverlay();
 
     @RegisterKeyBind

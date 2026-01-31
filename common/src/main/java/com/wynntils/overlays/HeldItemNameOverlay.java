@@ -20,6 +20,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
@@ -59,7 +60,7 @@ public class HeldItemNameOverlay extends Overlay {
     public void onRenderSelectedItemName(RenderEvent.Pre event) {
         if (shouldDisplayOriginal.get()) return;
 
-        if (event.getType() == RenderEvent.ElementType.SELECTED_ITEM) {
+        if (event.getType() == RenderElementType.SELECTED_ITEM) {
             event.setCanceled(true);
         }
     }

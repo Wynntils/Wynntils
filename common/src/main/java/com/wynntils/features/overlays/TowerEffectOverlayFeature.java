@@ -8,7 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -22,6 +22,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -33,10 +34,10 @@ public class TowerEffectOverlayFeature extends Feature {
     private static final SoundEvent AURA_SOUND = SoundEvents.ANVIL_LAND;
     private static final SoundEvent VOLLEY_SOUND = SoundEvents.BLAZE_SHOOT;
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay
     private final Overlay auraTimerOverlay = new TowerAuraTimerOverlay();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay
     private final Overlay volleyTimerOverlay = new TowerVolleyTimerOverlay();
 
     // Sound configs
@@ -91,7 +92,7 @@ public class TowerEffectOverlayFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderGui(RenderEvent.Post event) {
-        if (event.getType() != RenderEvent.ElementType.GUI) return;
+        if (event.getType() != RenderElementType.GUI_POST) return;
 
         if (vignetteOnAura.get()) {
             renderAuraVignette(event.getGuiGraphics());

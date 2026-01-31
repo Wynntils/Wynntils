@@ -7,11 +7,10 @@ package com.wynntils.features.overlays;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.lootrun.LootrunBeaconCountOverlay;
 import com.wynntils.overlays.lootrun.LootrunMissionsOverlay;
 import com.wynntils.overlays.lootrun.LootrunTaskNameOverlay;
@@ -19,16 +18,16 @@ import com.wynntils.overlays.lootrun.LootrunTrialsOverlay;
 
 @ConfigCategory(Category.OVERLAYS)
 public class LootrunOverlaysFeature extends Feature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay
     private final Overlay lootrunTaskNameOverlay = new LootrunTaskNameOverlay();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay
     private final Overlay lootrunBeaconCountOverlay = new LootrunBeaconCountOverlay();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay
     private final Overlay lootrunMissionOverlay = new LootrunMissionsOverlay();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay
     private final Overlay lootrunTrialOverlay = new LootrunTrialsOverlay();
 
     public LootrunOverlaysFeature() {

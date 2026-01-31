@@ -273,7 +273,7 @@ jobs:
 
           files: "**/build/libs/*-${{ matrix.modloader }}*.jar"
 
-          name: Wynntils v(${{ matrix.modloader }}) ${{ needs.set-version.outputs.tag }}
+          name: Wynntils (${{ matrix.modloader }}) v${{ needs.set-version.outputs.tag }}
           version: v${{ needs.set-version.outputs.tag }}
           version-type: beta
           game-versions: 1.21.11

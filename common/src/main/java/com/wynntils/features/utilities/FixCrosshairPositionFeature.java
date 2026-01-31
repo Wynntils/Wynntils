@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -38,7 +39,7 @@ public class FixCrosshairPositionFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderCrosshair(RenderEvent.Pre event) {
-        if (event.getType() != RenderEvent.ElementType.CROSSHAIR) return;
+        if (event.getType() != RenderElementType.CROSSHAIR) return;
         if (!shouldOverrideCrosshair()) return;
         event.setCanceled(true);
 

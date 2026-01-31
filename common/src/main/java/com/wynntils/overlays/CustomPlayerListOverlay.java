@@ -21,6 +21,7 @@ import com.wynntils.utils.render.type.AnimationPercentage;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.RenderElementType;
 import com.wynntils.utils.type.ThrottledSupplier;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -68,7 +69,7 @@ public class CustomPlayerListOverlay extends Overlay {
 
     @SubscribeEvent
     public void onRender(RenderEvent.Pre event) {
-        if (event.getType() == RenderEvent.ElementType.PLAYER_TAB_LIST) {
+        if (event.getType() == RenderElementType.PLAYER_TAB_LIST) {
             event.setCanceled(true);
         }
     }

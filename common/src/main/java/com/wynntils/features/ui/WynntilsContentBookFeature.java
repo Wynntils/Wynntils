@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -133,6 +134,7 @@ public class WynntilsContentBookFeature extends Feature {
     @SubscribeEvent
     public void onWrappedScreenOpen(WrappedScreenOpenEvent event) {
         if (event.getWrappedScreenClass() != WynntilsContentBookScreen.class) return;
+        if (Models.WorldState.inCharacterWardrobe()) return;
 
         boolean shouldOpen = false;
 
@@ -159,6 +161,8 @@ public class WynntilsContentBookFeature extends Feature {
     }
 
     private void handleClick(ICancellableEvent cancellableEvent) {
+        if (Models.WorldState.inCharacterWardrobe()) return;
+
         shiftClickedBookItem = McUtils.player().isShiftKeyDown();
 
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);

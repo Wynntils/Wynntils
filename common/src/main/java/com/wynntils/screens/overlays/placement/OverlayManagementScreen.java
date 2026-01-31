@@ -18,6 +18,7 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
+import com.wynntils.screens.overlays.ordering.OverlayOrderingScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -795,7 +796,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         int yPos = buttonsAtBottom ? this.height - 25 : 5;
 
         this.addRenderableWidget(new WynntilsCheckbox(
-                this.width / 2 - BUTTON_WIDTH - 12 - 100,
+                this.width / 2 - BUTTON_WIDTH - 23 - 100,
                 yPos,
                 BUTTON_HEIGHT,
                 Component.translatable("screens.wynntils.overlayManagement.showPreview"),
@@ -811,7 +812,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                             onClose();
                             McUtils.setScreen(previousScreen);
                         })
-                .pos(this.width / 2 - BUTTON_WIDTH - 12, yPos)
+                .pos(this.width / 2 - BUTTON_WIDTH - 23, yPos)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.closeTooltip")))
                 .build());
@@ -821,12 +822,22 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                             buttonsAtBottom = !buttonsAtBottom;
                             setupButtons();
                         })
-                .pos(this.width / 2 - 10, yPos)
+                .pos(this.width / 2 - 21, yPos)
                 .size(BUTTON_SHORT_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(
                         buttonsAtBottom
                                 ? Component.translatable("screens.wynntils.overlayManagement.moveButtonsUpTooltip")
                                 : Component.translatable("screens.wynntils.overlayManagement.moveButtonsDownTooltip")))
+                .build());
+
+        this.addRenderableWidget(new Button.Builder(Component.literal("☰"), button -> {
+                    Managers.Config.saveConfig();
+                    onClose();
+                    McUtils.setScreen(OverlayOrderingScreen.create(this));
+                })
+                .pos(this.width / 2 + 1, yPos)
+                .size(BUTTON_SHORT_WIDTH, BUTTON_HEIGHT)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.orderTooltip")))
                 .build());
 
         this.addRenderableWidget(new Button.Builder(
@@ -835,14 +846,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                             onClose();
                             McUtils.setScreen(previousScreen);
                         })
-                .pos(this.width / 2 + 12, yPos)
+                .pos(this.width / 2 + 23, yPos)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.applyTooltip")))
                 .build());
 
         if (selectedOverlay != null) {
             this.addRenderableWidget(new WynntilsCheckbox(
-                    this.width / 2 + 12 + BUTTON_WIDTH + 10,
+                    this.width / 2 + 23 + BUTTON_WIDTH + 10,
                     yPos,
                     BUTTON_HEIGHT,
                     Component.translatable("screens.wynntils.overlayManagement.showOthers"),

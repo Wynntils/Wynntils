@@ -1,12 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.ingredient;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.components.Services;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.ingredients.type.IngredientPosition;
@@ -48,16 +47,8 @@ public final class GuideIngredientItemStack extends GuideItemStack {
 
         appendObtainInfo(tooltip, Models.Ingredient.getObtainInfo(ingredientInfo));
 
-        tooltip.add(Component.empty());
-        if (Services.Favorites.isFavorite(ingredientInfo.name())) {
-            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
-                    .withStyle(ChatFormatting.YELLOW));
-        } else {
-            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
-                    .withStyle(ChatFormatting.GREEN));
-        }
-        tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.open")
-                .withStyle(ChatFormatting.RED));
+        appendFavoriteInfo(tooltip);
+        appendWebGuideInfo(tooltip);
 
         return tooltip;
     }

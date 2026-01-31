@@ -7,15 +7,15 @@ package com.wynntils.features.overlays;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.PowderSpecialBarOverlay;
+import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class PowderSpecialBarOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
     private final Overlay powderSpecialBarOverlay = new PowderSpecialBarOverlay();
 
     public PowderSpecialBarOverlayFeature() {

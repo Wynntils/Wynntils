@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.emeraldpouch;
 
-import com.wynntils.core.components.Services;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.screens.guides.GuideItemStack;
@@ -112,14 +111,7 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
         tooltip.add(getHoverName());
         tooltip.addAll(generatedTooltip);
 
-        tooltip.add(Component.empty());
-        if (Services.Favorites.isFavorite(this)) {
-            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
-                    .withStyle(ChatFormatting.YELLOW));
-        } else {
-            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
-                    .withStyle(ChatFormatting.GREEN));
-        }
+        appendFavoriteInfo(tooltip);
 
         return tooltip;
     }

@@ -378,6 +378,7 @@ public enum Texture {
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     LIST_SEARCH("ui_components/list_search.png", 133, 23),
+    OVERLAY_ORDERING_BACKGROUND("ui_components/overlay_ordering_background.png", 234, 206),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
     PLAYER_VIEWER_BACKGROUND("ui_components/player_viewer_background.png", 126, 88),
     QUICK_JUMP_BUTTON("ui_components/quick_jump_button.png", 16, 32),
@@ -388,7 +389,9 @@ public enum Texture {
     SCROLLBAR_BACKGROUND("ui_components/generic_container_scrollbar.png", 25, 136),
     SCROLLBAR_BUTTON("ui_components/scroll_button_container.png", 12, 15),
     VIGNETTE("ui_components/vignette.png", 512, 512),
-    WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 358, 206);
+    WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 358, 206),
+    WIDGET_BACKGROUND_LONG("ui_components/widget_background_long.png", 198, 20),
+    WOOD_STRIP("ui_components/wood_strip.png", 198, 20);
     // endregion
 
     private final Identifier identifier;
