@@ -232,10 +232,10 @@ public final class OverlayManager extends Manager {
         // Check that render orders start at 0 and increment by 1, no duplicates or gaps
         // We do this here and not in rebuildRenderOrder since we want to make sure all overlays
         // are present in the list and rebuild is called before all overlays have been initialized
-        validateRenderOrders();
+        normalizeRenderOrders();
     }
 
-    private void validateRenderOrders() {
+    private void normalizeRenderOrders() {
         for (RenderElementType elementType : RenderElementType.values()) {
             if (elementType == RenderElementType.GUI_PRE) continue;
             if (!elementType.isRootRender()) continue;
