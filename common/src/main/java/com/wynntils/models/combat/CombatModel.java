@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.combat;
@@ -9,24 +9,35 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
+import com.wynntils.handlers.labels.event.TextDisplayChangedEvent;
+import com.wynntils.handlers.labels.type.LabelInfo;
 import com.wynntils.models.combat.bossbar.DamageBar;
 import com.wynntils.models.combat.label.DamageLabelInfo;
 import com.wynntils.models.combat.label.DamageLabelParser;
+import com.wynntils.models.combat.label.DebuffType;
 import com.wynntils.models.combat.label.KillLabelInfo;
 import com.wynntils.models.combat.label.KillLabelParser;
+import com.wynntils.models.combat.label.MobDebuffsLabelInfo;
+import com.wynntils.models.combat.label.MobDebuffsLabelParser;
 import com.wynntils.models.combat.type.DamageDealtEvent;
+import com.wynntils.models.combat.type.DebuffLabelEntry;
 import com.wynntils.models.combat.type.FocusedDamageEvent;
 import com.wynntils.models.combat.type.KillCreditType;
 import com.wynntils.models.combat.type.MobElementals;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
+import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CombatModel extends Model {
@@ -41,6 +52,8 @@ public final class CombatModel extends Model {
     private final Map<Integer, Map<DamageType, Long>> liveDamageInfo = new HashMap<>();
 
     private final TimedSet<KillCreditType> killSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
+
+    private final Map<Integer, DebuffLabelEntry> debuffTextDisplays = new HashMap<>();
 
     private String focusedMobName = "";
     private MobElementals focusedMobElementals = MobElementals.EMPTY;
@@ -58,6 +71,7 @@ public final class CombatModel extends Model {
         Handlers.BossBar.registerBar(damageBar);
         Handlers.Label.registerParser(new DamageLabelParser());
         Handlers.Label.registerParser(new KillLabelParser());
+        Handlers.Label.registerParser(new MobDebuffsLabelParser());
     }
 
     @SubscribeEvent
@@ -105,10 +119,32 @@ public final class CombatModel extends Model {
     }
 
     @SubscribeEvent
+    public void onTextDisplayChanged(TextDisplayChangedEvent.Text event) {
+        int id = event.getTextDisplay().getId();
+        Optional<LabelInfo> labelInfo = event.getLabelInfo();
+
+        if (labelInfo.isEmpty()) {
+            debuffTextDisplays.remove(id);
+            return;
+        }
+
+        if (labelInfo.get() instanceof MobDebuffsLabelInfo debuffInfo) {
+            debuffTextDisplays.put(
+                    debuffInfo.getEntity().getId(),
+                    new DebuffLabelEntry(debuffInfo, (Display.TextDisplay) debuffInfo.getEntity()));
+        } else {
+            debuffTextDisplays.remove(id);
+        }
+    }
+
+    @SubscribeEvent
     public void onLabelsRemoved(LabelsRemovedEvent event) {
-        event.getRemovedLabels()
-                .forEach(
-                        labelInfo -> liveDamageInfo.remove(labelInfo.getEntity().getId()));
+        event.getRemovedLabels().forEach(label -> {
+            int id = label.getEntity().getId();
+
+            debuffTextDisplays.remove(id);
+            liveDamageInfo.remove(id);
+        });
     }
 
     @SubscribeEvent
@@ -121,6 +157,52 @@ public final class CombatModel extends Model {
         focusedMobExpiryTime = -1L;
         lastDamageDealtTimestamp = 0L;
         liveDamageInfo.clear();
+    }
+
+    public int getTargetedDebuffCount(
+            double range, double horizontalFovDegrees, double verticalFovDegrees, DebuffType debuffType) {
+        if (debuffTextDisplays.isEmpty()) return 0;
+
+        Optional<Display.TextDisplay> targeted = RaycastUtils.getTargetedLabel(
+                debuffTextDisplays.values().stream()
+                        .map(DebuffLabelEntry::entity)
+                        .toList(),
+                range,
+                horizontalFovDegrees,
+                verticalFovDegrees);
+
+        if (targeted.isEmpty()) return 0;
+
+        int id = targeted.get().getId();
+        DebuffLabelEntry entry = debuffTextDisplays.get(id);
+
+        if (entry == null) return 0;
+
+        return entry.info().getDebuffs().getOrDefault(debuffType, 0);
+    }
+
+    public int getDebuffCountInRadius(double radius, DebuffType debuffType) {
+        if (debuffTextDisplays.isEmpty()) return 0;
+
+        Vec3 center = McUtils.mc().gameRenderer.getMainCamera().position();
+
+        int total = 0;
+
+        for (DebuffLabelEntry entry : debuffTextDisplays.values()) {
+            int count = entry.info().getDebuffs().getOrDefault(debuffType, 0);
+            if (count == 0) continue;
+
+            Display.TextDisplay display = entry.entity();
+            Vec3 pos = display.position();
+            double dx = pos.x - center.x;
+            double dz = pos.z - center.z;
+
+            if (dx * dx + dz * dz > radius * radius) continue;
+
+            total += count;
+        }
+
+        return total;
     }
 
     public long getLastDamageDealtTimestamp() {
