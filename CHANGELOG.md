@@ -14,14 +14,14 @@ Personal Storage Utilities
 
 Functions
 - Combat Functions
-  - ⁨⁨⁨⁨⁨`debuffs_in_radius_value`⁩⁩⁩⁩⁩ returns the total value of the given debuff in the given radius around you
-    - ⁨⁨⁨⁨⁨`radius`⁩⁩⁩⁩⁩ required double argument, the radius around you to check for debuffs
-    - ⁨⁨⁨⁨⁨`debuffName`⁩⁩⁩⁩⁩ required string argument, the name of the debuff to get the value for
-   - ⁨⁨⁨⁨⁨`targeted_mob_debuff_value`⁩⁩⁩⁩⁩ returns the value of the given debuff for the targeted mob
-    - ⁨⁨⁨`range`⁩⁩⁩ required double argument, the range to check for targeted mob
-    - ⁨⁨⁨`horizontalDegrees`⁩⁩⁩ required douuble argument, horizontal field of view in degrees to check for targeted mob
-    - ⁨⁨⁨`verticalDegrees`⁩⁩⁩ required douuble argument, vertical field of view in degrees to check for targeted mob
-    - ⁨⁨⁨`debuffName`⁩⁩ ⁩required string argument, the name of the debuff to get the value for
+  - `debuffs_in_radius_value`⁩⁩⁩⁩⁩ returns the total value of the given debuff in the given radius around you
+    - `radius`⁩⁩⁩⁩⁩ required double argument, the radius around you to check for debuffs
+    - `debuffName`⁩⁩⁩⁩⁩ required string argument, the name of the debuff to get the value for
+  - `targeted_mob_debuff_value`⁩⁩⁩⁩⁩ returns the value of the given debuff for the targeted mob
+    - `range`⁩⁩⁩ required double argument, the range to check for targeted mob
+    - `horizontalDegrees`⁩⁩⁩ required douuble argument, horizontal field of view in degrees to check for targeted mob
+    - `verticalDegrees`⁩⁩⁩ required douuble argument, vertical field of view in degrees to check for targeted mob
+    - `debuffName`⁩⁩ ⁩required string argument, the name of the debuff to get the value for
 
 Available debuff types for functions are: Bleeding, Blindness, Burning, Confused, Contaminated, Discombobulated, Enkindled, Freezing, Marked, Poison, Provoked, Resistance, Slowness, Trick, Weakness, Whipped and Winded
 
