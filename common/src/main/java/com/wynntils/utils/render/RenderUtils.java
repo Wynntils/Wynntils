@@ -31,13 +31,9 @@ import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.SubmitNodeCollection;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -48,9 +44,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
-import org.joml.Matrix4f;
 
 public final class RenderUtils {
     // used to render player nametags as semi-transparent
@@ -991,63 +987,29 @@ public final class RenderUtils {
     public static void renderCustomNametag(
             PoseStack poseStack,
             Component nametag,
-            float nametagScale,
             float customOffset,
-            int backgroundColor,
             EntityRenderState entityRenderState,
             CameraRenderState cameraRenderState,
-            SubmitNodeCollector collector) {
-        poseStack.pushPose();
-        poseStack.translate(
+            OrderedSubmitNodeCollector collector) {
+        Vec3 pos = new Vec3(
                 entityRenderState.nameTagAttachment.x,
-                entityRenderState.nameTagAttachment.y + 0.3F + customOffset,
+                entityRenderState.nameTagAttachment.y - 0.2F + customOffset,
                 entityRenderState.nameTagAttachment.z);
-        poseStack.mulPose(cameraRenderState.orientation);
-        poseStack.scale(0.025F * nametagScale, -0.025F * nametagScale, 0.025F * nametagScale);
-        Matrix4f matrix4f = new Matrix4f(poseStack.last().pose());
-        float xOffset = -McUtils.mc().font.width(nametag) / 2.0F;
 
-        SubmitNodeStorage nodeStorage = (SubmitNodeStorage) collector;
-        SubmitNodeCollection nodeCollection = nodeStorage.order(0);
-        NameTagFeatureRenderer.Storage rendererStorage = nodeCollection.getNameTagSubmits();
-
-        if (!entityRenderState.isDiscrete) {
-            rendererStorage.nameTagSubmitsNormal.add(new SubmitNodeStorage.NameTagSubmit(
-                    matrix4f,
-                    xOffset,
-                    0,
-                    nametag,
-                    LightTexture.lightCoordsWithEmission(entityRenderState.lightCoords, 2),
-                    -1,
-                    0,
-                    entityRenderState.distanceToCameraSq));
-            rendererStorage.nameTagSubmitsSeethrough.add(new SubmitNodeStorage.NameTagSubmit(
-                    matrix4f,
-                    xOffset,
-                    0,
-                    nametag,
-                    entityRenderState.lightCoords,
-                    NAMETAG_COLOR,
-                    backgroundColor,
-                    entityRenderState.distanceToCameraSq));
-        } else {
-            rendererStorage.nameTagSubmitsNormal.add(new SubmitNodeStorage.NameTagSubmit(
-                    matrix4f,
-                    xOffset,
-                    0,
-                    nametag,
-                    entityRenderState.lightCoords,
-                    NAMETAG_COLOR,
-                    backgroundColor,
-                    entityRenderState.distanceToCameraSq));
-        }
-
-        poseStack.popPose();
+        collector.submitNameTag(
+                poseStack,
+                pos,
+                0,
+                nametag,
+                !entityRenderState.isDiscrete,
+                entityRenderState.lightCoords,
+                entityRenderState.distanceToCameraSq,
+                cameraRenderState);
     }
 
     public static void renderLeaderboardBadge(
             PoseStack poseStack,
-            SubmitNodeCollector collector,
+            OrderedSubmitNodeCollector collector,
             EntityRenderState entityState,
             CameraRenderState cameraState,
             Identifier texture,
@@ -1086,33 +1048,31 @@ public final class RenderUtils {
             badgeColor = CommonColors.WHITE;
         }
 
-        ((SubmitNodeStorage) collector)
-                .order(0)
-                .submitCustomGeometry(poseStack, RenderTypes.text(texture), (pose, vertexConsumer) -> {
-                    vertexConsumer
-                            .addVertex(pose, -halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
-                            .setUv(u1, v1)
-                            .setLight(entityState.lightCoords)
-                            .setColor(badgeColor.asInt());
+        collector.submitCustomGeometry(poseStack, RenderTypes.text(texture), (pose, vertexConsumer) -> {
+            vertexConsumer
+                    .addVertex(pose, -halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
+                    .setUv(u1, v1)
+                    .setLight(entityState.lightCoords)
+                    .setColor(badgeColor.asInt());
 
-                    vertexConsumer
-                            .addVertex(pose, -halfWidth + horizontalShift, halfHeight - verticalShift, 0)
-                            .setUv(u1, v2)
-                            .setLight(entityState.lightCoords)
-                            .setColor(badgeColor.asInt());
+            vertexConsumer
+                    .addVertex(pose, -halfWidth + horizontalShift, halfHeight - verticalShift, 0)
+                    .setUv(u1, v2)
+                    .setLight(entityState.lightCoords)
+                    .setColor(badgeColor.asInt());
 
-                    vertexConsumer
-                            .addVertex(pose, halfWidth + horizontalShift, halfHeight - verticalShift, 0)
-                            .setUv(u2, v2)
-                            .setLight(entityState.lightCoords)
-                            .setColor(badgeColor.asInt());
+            vertexConsumer
+                    .addVertex(pose, halfWidth + horizontalShift, halfHeight - verticalShift, 0)
+                    .setUv(u2, v2)
+                    .setLight(entityState.lightCoords)
+                    .setColor(badgeColor.asInt());
 
-                    vertexConsumer
-                            .addVertex(pose, halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
-                            .setUv(u2, v1)
-                            .setLight(entityState.lightCoords)
-                            .setColor(badgeColor.asInt());
-                });
+            vertexConsumer
+                    .addVertex(pose, halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
+                    .setUv(u2, v1)
+                    .setLight(entityState.lightCoords)
+                    .setColor(badgeColor.asInt());
+        });
 
         poseStack.popPose();
     }
