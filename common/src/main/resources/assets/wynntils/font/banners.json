@@ -1,0 +1,58 @@
+{
+  "providers": [
+    {
+      "ascent": 7,
+      "chars": [
+        ""
+      ],
+      "file": "wynntils:font/chat/box_start.png",
+      "height": 7,
+      "type": "bitmap"
+    },
+    {
+      "ascent": 7,
+      "chars": [
+        ""
+      ],
+      "file": "wynntils:font/chat/box_end.png",
+      "height": 7,
+      "type": "bitmap"
+    },
+    {
+      "ascent": 7,
+      "chars": [
+        ""
+      ],
+      "file": "wynntils:font/chat/flag_start.png",
+      "height": 7,
+      "type": "bitmap"
+    },
+    {
+      "ascent": 7,
+      "chars": [
+        ""
+      ],
+      "file": "wynntils:font/chat/flag_end.png",
+      "height": 7,
+      "type": "bitmap"
+    },
+    {
+      "ascent": 7,
+      "chars": [
+        ""
+      ],
+      "file": "wynntils:font/chat/ribbon_start.png",
+      "height": 8,
+      "type": "bitmap"
+    },
+    {
+      "ascent": 7,
+      "chars": [
+        ""
+      ],
+      "file": "wynntils:font/chat/ribbon_end.png",
+      "height": 8,
+      "type": "bitmap"
+    }
+  ]
+}
