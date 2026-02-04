@@ -18,6 +18,7 @@ import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.GetCameraEntityEvent;
 import com.wynntils.mc.event.NametagBackgroundOpacityEvent;
+import com.wynntils.mc.event.NametagScaleEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
@@ -92,6 +93,7 @@ public class CustomNametagRendererFeature extends Feature {
     @Persisted
     private final Config<Float> customNametagScale = new Config<>(0.5f);
 
+    private float nextNametagScale = 1f;
     private Player hitPlayerCache = null;
 
     public CustomNametagRendererFeature() {
@@ -148,6 +150,13 @@ public class CustomNametagRendererFeature extends Feature {
         if (hideNametagBackground.get()) {
             event.setOpacity(0f);
         }
+    }
+
+    @SubscribeEvent
+    public void onNametagScaleCheck(NametagScaleEvent event) {
+        event.setScale(nextNametagScale);
+
+        nextNametagScale = 1f;
     }
 
     @SubscribeEvent
@@ -278,21 +287,17 @@ public class CustomNametagRendererFeature extends Feature {
     }
 
     private void drawNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
-        // calculate color of nametag box
-        int backgroundColor =
-                hideNametagBackground.get() ? 0 : ((int) (McUtils.options().getBackgroundOpacity(0.25F) * 255f) << 24);
-
         float yOffset = 0f;
         for (CustomNametag nametag : nametags) {
             // move rendering up to fit the next line, plus a small gap
             yOffset += nametag.nametagScale() * NAMETAG_HEIGHT;
 
+            nextNametagScale = nametag.nametagScale();
+
             RenderUtils.renderCustomNametag(
                     event.getPoseStack(),
                     nametag.nametagComponent(),
-                    nametag.nametagScale(),
                     yOffset,
-                    backgroundColor,
                     event.getEntityRenderState(),
                     event.getCameraRenderState(),
                     event.getSubmitNodeCollector());
