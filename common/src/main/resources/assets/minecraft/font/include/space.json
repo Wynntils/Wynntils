@@ -1,6 +1,15 @@
 {
   "providers": [
-    { "advances": { " ": 4, "‌": 0 }, "type": "space" },
-    { "id": "wynntils:banners", "type": "reference" }
+    {
+      "advances": {
+        " ": 4,
+        "‌": 0
+      },
+      "type": "space"
+    },
+    {
+      "id": "wynntils:banners",
+      "type": "reference"
+    }
   ]
 }
