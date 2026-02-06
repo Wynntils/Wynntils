@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -118,7 +117,6 @@ public final class UrlManager extends Manager {
     @Persisted
     private final Storage<String> customSourceurl = new Storage<>("");
 
-    private Set<String> downloadSources = new HashSet<>();
     private UrlMapper urlMapper = UrlMapper.EMPTY;
 
     public UrlManager(NetManager netManager) {
@@ -132,9 +130,6 @@ public final class UrlManager extends Manager {
             WynntilsMod.info("Loading urls.json from " + urlListOverride.get() + ". Url cache is "
                     + (ignoreCache.get() ? "ignored" : "used") + ".");
         }
-
-        registerDownloadSource(WYNNTILS_CDN_URL);
-        registerDownloadSource(STATIC_STORAGE_GITHUB_URL);
     }
 
     public UrlInfo getUrlInfo(UrlId urlId) {
@@ -235,11 +230,6 @@ public final class UrlManager extends Manager {
             // Then trigger a (re-)download from the net to the cache
             downloadAndReadRemoteUrls(urlListOverride.get());
         }
-    }
-
-    // Keep this public to allow other mods to add their own
-    public void registerDownloadSource(String source) {
-        downloadSources.add(source);
     }
 
     public String getDownloadSourceUrl() {
